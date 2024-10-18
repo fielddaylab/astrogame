@@ -1,0 +1,38 @@
+{
+    "name": "FieldDay.Core.Editor",
+    "rootNamespace": "",
+    "references": [
+        "BeauUtil",
+        "Unity.TextMeshPro",
+        "EasyBugReporter",
+        "BeauRoutine",
+        "BeauPools",
+        "BeauUtil.Editor",
+        "FieldDay.Core",
+        "ScriptableBake",
+        "Whinarn.UnityMeshSimplifier.Runtime",
+        "Whinarn.UnityMeshSimplifier.Editor"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.render-pipelines.universal",
+            "expression": "0.0.1",
+            "define": "HAS_URP"
+        },
+        {
+            "name": "com.whinarn.unitymeshsimplifier",
+            "expression": "0.0.1",
+            "define": "HAS_MESHSIMPLIFIER"
+        }
+    ],
+    "noEngineReferences": false
+}
