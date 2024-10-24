@@ -7,7 +7,7 @@ namespace Astro {
         public string Label;
     }
 
-    public sealed class ClassificationId : AssetNameAttribute {
-        public ClassificationId() : base(typeof(ReferenceClassification)) { }
+    public sealed class ClassificationIdAttribute : AssetNameAttribute {
+        public ClassificationIdAttribute() : base(typeof(ReferenceClassification)) { }
     }
 }

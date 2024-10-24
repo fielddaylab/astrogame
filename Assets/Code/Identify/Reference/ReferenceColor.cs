@@ -9,7 +9,7 @@ namespace Astro {
         public uint MaxTemperature;
     }
 
-    public sealed class ColorId : AssetNameAttribute {
-        public ColorId() : base(typeof(ReferenceColor)) { }
+    public sealed class ColorIdAttribute : AssetNameAttribute {
+        public ColorIdAttribute() : base(typeof(ReferenceColor)) { }
     }
 }

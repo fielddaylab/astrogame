@@ -7,7 +7,7 @@ namespace Astro {
 
     }
 
-    public sealed class ReferenceEntryId : AssetNameAttribute {
-        public ReferenceEntryId() : base(typeof(ReferenceEntry)) { }
+    public sealed class ReferenceEntryIdAttribute : AssetNameAttribute {
+        public ReferenceEntryIdAttribute() : base(typeof(ReferenceEntry)) { }
     }
 }

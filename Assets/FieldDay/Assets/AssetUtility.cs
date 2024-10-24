@@ -91,6 +91,17 @@ namespace FieldDay.Assets {
         }
 
         /// <summary>
+        /// Id of the given named asset.
+        /// </summary>
+        static public StringHash32 IdOf(NamedAsset asset) {
+            if (asset == null) {
+                return StringHash32.Null;
+            }
+
+            return asset.AssetId;
+        }
+
+        /// <summary>
         /// Returns the name of the given object.
         /// </summary>
         static public string NameOf(UnityEngine.Object obj) {
