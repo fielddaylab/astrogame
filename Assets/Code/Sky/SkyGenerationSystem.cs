@@ -27,11 +27,14 @@ namespace Astro
             var dome = Find.State<SkyDome>();
 
             // populate sky with celestial objects
-            var newCelestialObj = Instantiate(m_State.CelestialObjPrefab).transform;
             var center = dome.Position;
-            CelestialAsset currAsset = layout.TestAsset;
-            CelestialPositionerUtility.PositionObject(center, newCelestialObj, currAsset.Coords.RightAscension, currAsset.Coords.Declination);
-            newCelestialObj.name = currAsset.DisplayName;
+            for (int i = 0; i < layout.AllCelestialObjs.Length; i++)
+            {
+                var newCelestialObj = Instantiate(m_State.CelestialObjPrefab).transform;
+                CelestialAsset currAsset = layout.AllCelestialObjs[i];
+                CelestialPositionerUtility.PositionObject(center, newCelestialObj, currAsset.Coords.RightAscension, currAsset.Coords.Declination);
+                newCelestialObj.name = currAsset.DisplayName;
+            }
 
             m_State.Initialized = true;
         }
