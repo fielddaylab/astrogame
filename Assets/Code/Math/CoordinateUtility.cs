@@ -22,14 +22,14 @@ namespace Astro
             return RAscDeclRadiansToCartesianCoordinates((float)raRad, (float)decRad);
         }
 
-        public static double DegreeToRadian(double degree)
+        public static float DegreeToRadian(float degree)
         {
-            return degree * Math.PI / 180.0;
+            return degree * (float)Math.PI / 180.0f;
         }
 
-        public static double RadianToDegree(double radian)
+        public static float RadianToDegree(float radian)
         {
-            return radian * 180 / Math.PI;
+            return radian * 180 / (float)Math.PI;
         }
 
         /// <summary>
@@ -146,26 +146,26 @@ namespace Astro
         /// <param name="minutes"></param>
         /// <param name="seconds"></param>
         /// <returns></returns>
-        public static double DegreesToDecimalDegrees(int hours, int minutes, double seconds)
+        public static float DegreesToDecimalDegrees(short hours, short minutes, float seconds)
         {
             // Convert hours, minutes, and seconds to degrees
-            double totalHours = hours + (minutes / 60.0) + (seconds / 3600.0);
-            double degrees = totalHours;
+            float totalHours = hours + (minutes / 60.0f) + (seconds / 3600.0f);
+            float degrees = totalHours;
             return degrees;
         }
 
-        public static HmsCoords DecimalDegreesToDegrees(double decimalDegrees)
+        public static HmsCoords DecimalDegreesToDegrees(float decimalDegrees)
         {
-            int hrs, minutes = 0;
-            double seconds = 0;
+            short hrs, minutes = 0;
+            float seconds = 0;
 
-            hrs = (int)decimalDegrees;
+            hrs = (short)decimalDegrees;
             decimalDegrees -= hrs;
-            minutes = (int)(decimalDegrees * 60);
+            minutes = (short)(decimalDegrees * 60);
             decimalDegrees -= minutes / 60.0f;
             seconds = decimalDegrees * 3600;
 
-            return new HmsCoords(hrs, minutes, (float)seconds);
+            return new HmsCoords(hrs, minutes, seconds);
         }
 
         /// <summary>
