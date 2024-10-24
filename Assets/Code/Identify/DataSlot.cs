@@ -5,7 +5,7 @@ using FieldDay.Components;
 namespace Astro {
     public sealed class DataSlot : BatchedComponent {
         public DataTypeMask Type;
-        [Required] public DataDisplay Display;
+        [Required] public DataDisplay[] Displays;
 
         [NonSerialized] public bool HasData;
         [NonSerialized] public DataPacket CurrentData;
@@ -23,7 +23,9 @@ namespace Astro {
             if (!slot.HasData || !slot.CurrentData.Equals(packet)) {
                 slot.HasData = true;
                 slot.CurrentData = packet;
-                PopulateDisplay(slot.Display, packet);
+                foreach (var display in slot.Displays) {
+                    PopulateDisplay(display, packet);
+                }
                 slot.OnDataModified.Invoke(packet);
             }
             return true;
@@ -33,7 +35,9 @@ namespace Astro {
             if (slot.HasData) {
                 slot.HasData = false;
                 slot.CurrentData = default;
-                ClearDisplay(slot.Display);
+                foreach(var display in slot.Displays) {
+                    ClearDisplay(display);
+                }
                 slot.OnDataModified.Invoke(default);
             }
         }
