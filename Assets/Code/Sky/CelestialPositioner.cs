@@ -1,3 +1,4 @@
+using FieldDay;
 using FieldDay.Components;
 using UnityEngine;
 
@@ -15,15 +16,14 @@ namespace Astro {
         /// <param name="toPosition"></param>
         /// <param name="ra"></param>
         /// <param name="decl"></param>
-        public static void PositionObject(Vector3 centerPos, GameObject toPosition, HmsCoords ra, HmsCoords decl)
+        public static void PositionObject(Vector3 centerPos, Transform toPosition, HmsCoords ra, HmsCoords decl)
         {
-            // TODO: store skybox dist as a const
-            int skyboxDist = 1000; // FindObjectOfType<GameConsts>().SkyboxDist;
+            float skyboxDist = Find.State<SkyDome>().Radius;
 
             float raDegrees = (float)CoordinateUtility.RAToDegrees((int)ra.Hours, (int)ra.Minutes, ra.Seconds);
             float declDegrees = (float)CoordinateUtility.DeclensionToDecimalDegrees((int)decl.Hours, (int)decl.Minutes, decl.Seconds);
             var posOffset = CoordinateUtility.RAscDeclDegreesToCartesianCoordinates(raDegrees, declDegrees);
-            toPosition.transform.position = centerPos + posOffset * skyboxDist;
+            toPosition.position = centerPos + posOffset * skyboxDist;
         }
 
         /// <summary>
@@ -33,13 +33,12 @@ namespace Astro {
         /// <param name="toPosition"></param>
         /// <param name="ra"></param>
         /// <param name="decl"></param>
-        public static void PositionObject(Vector3 centerPos, GameObject toPosition, float raRad, float declRad)
+        public static void PositionObject(Vector3 centerPos, Transform toPosition, float raRad, float declRad)
         {
-            // TODO: store skybox dist as a const
-            int skyboxDist = 1000; // FindObjectOfType<GameConsts>().SkyboxDist;
+            float skyboxDist = Find.State<SkyDome>().Radius;
 
             var posOffset = CoordinateUtility.RAscDeclRadiansToCartesianCoordinates(raRad, declRad);
-            toPosition.transform.position = centerPos + posOffset * skyboxDist;
+            toPosition.position = centerPos + posOffset * skyboxDist;
         }
     }
 }

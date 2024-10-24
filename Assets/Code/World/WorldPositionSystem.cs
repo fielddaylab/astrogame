@@ -9,7 +9,7 @@ namespace Astro
 {
     public class WorldPositionSystem : SystemBehaviour
     {
-
+        
     }
 
     /// <summary>

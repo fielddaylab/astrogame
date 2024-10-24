@@ -54,12 +54,6 @@ namespace Astro
             double correctedY = y;
             double correctedZ = z;
 
-            /*
-            correctedX = -y;
-            correctedY = z;
-            correctedZ = x;
-            */
-
             return new Vector3((float)correctedX, (float)correctedY, (float)correctedZ);
         }
 

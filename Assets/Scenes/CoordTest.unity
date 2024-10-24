@@ -920,67 +920,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 686167753}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &786317543
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 786317545}
-  - component: {fileID: 786317546}
-  m_Layer: 0
-  m_Name: WorldPositioner
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &786317545
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 786317543}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1784728261}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &786317546
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 786317543}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c8fcc1cf90118841878bdaa52975602, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_toPosition: {fileID: 1989411897}
-  m_relativeTo: {fileID: 139854398}
-  m_plane: {fileID: 1220296044}
-  m_light: {fileID: 7161529}
-  m_heightOffset: 2
-  m_lat: {x: 90, y: 0, z: 0}
-  m_long: {x: 0, y: 0, z: 0}
-  m_rightAscension:
-    Hours: 5
-    Minutes: 56
-    Seconds: 30
-  m_declination:
-    Hours: 7
-    Minutes: 24
-    Seconds: 34
-  m_camRoot: {fileID: 1989411898}
-  m_cam: {fileID: 871745300}
 --- !u!1 &871745299
 GameObject:
   m_ObjectHideFlags: 0
@@ -994,6 +933,7 @@ GameObject:
   - component: {fileID: 871745302}
   - component: {fileID: 871745301}
   - component: {fileID: 871745305}
+  - component: {fileID: 871745306}
   m_Layer: 0
   m_Name: Space Camera (Telescope View)
   m_TagString: Untagged
@@ -1134,6 +1074,15 @@ MonoBehaviour:
   m_Target: {fileID: 0}
   m_Height: 2
   m_Zoom: 1
+--- !u!45 &871745306
+Skybox:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 871745299}
+  m_Enabled: 1
+  m_CustomSkybox: {fileID: 2100000, guid: 43cf997479c7b1648bc4df1c83250333, type: 2}
 --- !u!1001 &932154930
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1502,12 +1451,12 @@ GameObject:
   - component: {fileID: 1642428838}
   - component: {fileID: 1642428837}
   m_Layer: 0
-  m_Name: Sample Beetlegeuse
+  m_Name: Sample Betlegeuse
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!135 &1642428837
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1624,7 +1573,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1989411898}
-  - {fileID: 786317545}
   - {fileID: 1220296045}
   - {fileID: 139854402}
   - {fileID: 1642428840}

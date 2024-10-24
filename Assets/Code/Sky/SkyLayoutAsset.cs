@@ -7,6 +7,6 @@ using UnityEngine;
 namespace Astro {
     [CreateAssetMenu(menuName = "AstroGame/Sky Layout")]
     public sealed class SkyLayoutAsset : GlobalAsset {
-        
+        public CelestialAsset TestAsset;
     }
 }

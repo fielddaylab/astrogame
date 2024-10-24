@@ -12,7 +12,7 @@ namespace Astro
         public override void ProcessWorkForComponent(TelescopeAnimator animator, float deltaTime)
         {
             if (animator.AutoSync) {
-                var rig = Game.SharedState.Get<SpaceCameraRig>();
+                var rig = Find.State<SpaceCameraRig>();
 
                 animator.AimPivot.transform.localRotation = rig.transform.rotation;
             }
