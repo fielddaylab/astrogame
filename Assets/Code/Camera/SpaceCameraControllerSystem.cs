@@ -164,20 +164,20 @@ namespace Astro
             if (Input.GetKeyDown(KeyCode.I))
             {
                 // Zoom in
-                float newZoom = m_State.Camera.Camera.fieldOfView;
+                float newZoom = m_State.Camera.FOVPlane.Zoom;
 
                 newZoom = Mathf.Clamp(newZoom - m_State.ZoomIncrement, m_State.ZoomBounds.x, m_State.ZoomBounds.y);
 
-                m_State.Camera.Camera.fieldOfView = newZoom;
+                m_State.Camera.FOVPlane.Zoom = newZoom;
             }
             if (Input.GetKeyDown(KeyCode.K))
             {
                 // Zoom out
-                float newZoom = m_State.Camera.Camera.fieldOfView;
+                float newZoom = m_State.Camera.FOVPlane.Zoom;
 
                 newZoom = Mathf.Clamp(newZoom + m_State.ZoomIncrement, m_State.ZoomBounds.x, m_State.ZoomBounds.y);
 
-                m_State.Camera.Camera.fieldOfView = newZoom;
+                m_State.Camera.FOVPlane.Zoom = newZoom;
             }
         }
 
