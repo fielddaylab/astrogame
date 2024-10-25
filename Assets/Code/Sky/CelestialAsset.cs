@@ -31,6 +31,9 @@ namespace Astro {
         [Header("Materials")]
         public SpectrographMaterialMask Spectrograph;
 
+        [Header("Distance")]
+        public float Distance;
+
         [Header("Constellation Path")]
         [AssetName(typeof(SkyRegionBounds))] public StringHash32 ConstellationBoundaryId;
 
