@@ -4,10 +4,11 @@ using FieldDay.Assets;
 using UnityEngine;
 
 namespace Astro {
+    [CreateAssetMenu(menuName = "AstroGame/Puzzle Asset")]
     public sealed class PuzzleAsset : NamedAsset {
         [Serializable]
         public struct Row {
-            [AssetName(typeof(CelestialObject))] public StringHash32 Object;
+            [AssetName(typeof(CelestialAsset))] public StringHash32 Object;
             public DataTypeMask ProvidedProperties;
         }
         
