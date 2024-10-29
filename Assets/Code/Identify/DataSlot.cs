@@ -31,9 +31,6 @@ namespace Astro {
             return true;
         }
 
-        /* TODO: TryAddData() ? 
-         */
-
         static public void ClearData(DataSlot slot) {
             if (slot.HasData) {
                 slot.HasData = false;

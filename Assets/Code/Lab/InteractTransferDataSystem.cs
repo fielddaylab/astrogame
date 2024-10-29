@@ -6,6 +6,7 @@ using FieldDay;
 
 namespace Astro
 {
+    [SysUpdate(GameLoopPhase.Update, 1000)] // After RowSelectSystem
     public class InteractTransferDataSystem : ComponentSystemBehaviour<LabInteractable, InteractTransferData>
     {
         public override void ProcessWorkForComponent(LabInteractable primary, InteractTransferData secondary, float deltaTime)

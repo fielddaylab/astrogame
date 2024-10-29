@@ -6,6 +6,7 @@ using FieldDay;
 
 namespace Astro
 {
+    [SysUpdate(GameLoopPhase.Update, 500)] // After LabInteractTriggerSystem
     public class RowSelectSystem : ComponentSystemBehaviour<InteractRowSelector, LabInteractable>
     {
         public override void ProcessWorkForComponent(InteractRowSelector primary, LabInteractable secondary, float deltaTime)
@@ -14,8 +15,13 @@ namespace Astro
 
             var puzzleState = Find.State<PuzzleState>();
             var dataState = Find.State<DataTransferState>();
-            PuzzleUtility.TrySetSelectedRow(puzzleState, puzzleState.SelectedRow + primary.SelectDir);
-
+            if (puzzleState.GroupCellsByRow) { 
+                PuzzleUtility.TrySetSelectedRow(puzzleState, puzzleState.SelectedRow + primary.SelectDir);
+            }
+            else
+            {
+                PuzzleUtility.TrySetSelectedCellInCol(puzzleState, primary.Col, primary.SelectDir);
+            }
         }
     }
 }

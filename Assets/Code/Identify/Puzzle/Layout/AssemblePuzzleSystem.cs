@@ -19,6 +19,16 @@ namespace Astro
 
             }
 
+            int numCols = PuzzleUtility.NumCols(state.QueuedPuzzle);
+            state.SelectedCells = new bool[state.QueuedPuzzle.Rows.Length, numCols];
+            // select first row by default
+            for (int i = 0; i < numCols; i++) {
+                state.SelectedCells[0, i] = true;
+            }
+            state.CellsUpdated = true;
+
+            Debug.Log("[AssemblePuzzle] New puzzle cols: " + numCols);
+
             state.ActivePuzzle = state.QueuedPuzzle;
             state.QueuedPuzzle = null;
         }

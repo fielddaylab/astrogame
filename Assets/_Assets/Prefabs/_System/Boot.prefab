@@ -158,6 +158,8 @@ GameObject:
   - component: {fileID: 2929121149464141676}
   - component: {fileID: 7432715682185344644}
   - component: {fileID: 8916275751843808810}
+  - component: {fileID: 6941028432493469473}
+  - component: {fileID: 5368173493181181832}
   m_Layer: 0
   m_Name: World Systems
   m_TagString: Untagged
@@ -330,6 +332,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_InitialCapacity: 64
+--- !u!114 &6941028432493469473
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5290410587728248189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb20f17f5aa4e7e4bb976df8d487574d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_InitialCapacity: 64
+--- !u!114 &5368173493181181832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5290410587728248189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9dc97f532e41eb94bbc24348e895f07e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_InitialCapacity: 64
 --- !u!1 &9193859588559889003
 GameObject:
   m_ObjectHideFlags: 0
@@ -416,9 +444,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   QueuedPuzzle: {fileID: 11400000, guid: 866595658f266004093355d97a7d82b6, type: 2}
   ActivePuzzle: {fileID: 0}
+  CellsUpdated: 0
+  GroupCellsByRow: 0
   SelectedRow: -1
-  RowUpdated: 0
   RowCellPrefab: {fileID: 0}
+  UnselectedCellMat: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  SelectedCellMat: {fileID: 2100000, guid: aae69f2c36185ea4bb6e7a4738f5b080, type: 2}
 --- !u!1001 &5502758588094337030
 PrefabInstance:
   m_ObjectHideFlags: 0

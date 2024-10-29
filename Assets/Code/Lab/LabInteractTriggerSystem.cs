@@ -9,6 +9,8 @@ namespace Astro
     /// <summary>
     /// Responsible for triggering Lab Interactables
     /// </summary>
+    /// 
+    [SysUpdate(GameLoopPhase.Update, 0)]
     public class LabInteractTriggerSystem : SystemBehaviour
     {
         private int INTERACTABLE_MASK = -1;

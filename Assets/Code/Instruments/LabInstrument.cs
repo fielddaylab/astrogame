@@ -16,4 +16,18 @@ namespace Astro {
             InstrumentInventoryUtility.RegisterInstrument(this);
         }
     }
+
+    public static class InstrumentUtility
+    {
+        public static DataTypeMask GenerateTypeMask(LabInstrument instrument)
+        {
+            DataTypeMask allTypes = 0;
+            foreach (var slot in instrument.AutoPopulated)
+            {
+                allTypes |= slot.Type;
+            }
+
+            return allTypes;
+        }
+    }
 }
