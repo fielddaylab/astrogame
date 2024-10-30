@@ -37,7 +37,7 @@ namespace Astro
 
         private void GatherRelevantDataTypes() {
             foreach (var instrument in m_StateB.ActiveInstruments) {
-                m_AvailableInstrumentTypes = InstrumentUtility.GenerateTypeMask(instrument);
+                m_AvailableInstrumentTypes |= InstrumentUtility.GenerateTypeMask(instrument);
             }
         }
 
