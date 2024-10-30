@@ -22,7 +22,6 @@ namespace Astro
                     {
                         for (int c = 0; c < puzzleState.SelectedCells.GetLength(0); c++)
                         {
-                            // TODO: filter by selected source type
                             bool visible = puzzleState.SelectedCells[r, c] && ((component.Rows[r].Cells[c].DataSlot.Type & puzzleState.RelevantColFilter) != 0);
                             PuzzleUtility.UpdateCellVisuals(puzzleState, component.Rows[r].Cells[c], visible);
                         }

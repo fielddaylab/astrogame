@@ -16,6 +16,5 @@ namespace Astro
             puzzleState.RelevantColFilter = InstrumentUtility.GenerateTypeMask(secondary.Instrument);
             puzzleState.CellsUpdated = true;
         }
-
     }
 }

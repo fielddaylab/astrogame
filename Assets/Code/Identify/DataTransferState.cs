@@ -6,6 +6,8 @@ namespace Astro {
     public sealed class DataTransferState : SharedStateComponent {
         [NonSerialized] public DataSlot SelectedSource;
         [NonSerialized] public DataSlot SelectedTarget;
+
+        public bool SourceUpdated = false;
     }
 
     static public partial class DataUtility {
@@ -20,6 +22,12 @@ namespace Astro {
             }
 
             return false;
+        }
+
+        static public void AssignSelectedSource(DataTransferState state, DataSlot source)
+        {
+            state.SelectedSource = source;
+            state.SourceUpdated = true;
         }
     }
 }

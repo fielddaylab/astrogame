@@ -6,6 +6,7 @@ namespace Astro {
     public sealed class DataSlot : BatchedComponent {
         public DataTypeMask Type;
         [Required] public DataDisplay[] Displays;
+        public bool IsSource;
 
         [NonSerialized] public bool HasData;
         [NonSerialized] public DataPacket CurrentData;
