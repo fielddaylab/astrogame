@@ -16,7 +16,7 @@ namespace Astro
             if (!transferState.SelectedSource.IsSource) { return; }
 
             var highlightState = Find.State<SlotHighlightState>();
-            bool isHighlighted = (component.Type & transferState.SelectedSource.Type) != 0;
+            bool isHighlighted = (transferState.SelectedTarget == null) && (component.Type & transferState.SelectedSource.Type) != 0;
             SlotHighlightUtility.SetHighlight(highlightState, highlight, isHighlighted);
         }
     }

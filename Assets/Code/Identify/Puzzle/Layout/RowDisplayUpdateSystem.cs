@@ -24,7 +24,7 @@ namespace Astro
                         if (currIndex == puzzleState.SelectedRow)
                         {
                             var dataState = Find.State<DataTransferState>();
-                            dataState.SelectedTarget = cell.DataSlot;
+                            DataUtility.AssignSelectedTarget(dataState, cell.DataSlot);
                         }
                     }
 

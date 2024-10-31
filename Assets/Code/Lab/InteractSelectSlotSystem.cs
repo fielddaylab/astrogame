@@ -14,7 +14,23 @@ namespace Astro
             if (!primary.InteractReceived) { return; }
 
             var transferState = Find.State<DataTransferState>();
-            DataUtility.AssignSelectedSource(transferState, secondary.DataSlot);
+
+            // If nothing selected, and component can be a source, set source
+            if (transferState.SelectedSource == null && transferState.SelectedTarget == null && secondary.DataSlot.IsSource) {
+                DataUtility.AssignSelectedSource(transferState, secondary.DataSlot);
+            }
+            // If some source is selected...
+            else if (transferState.SelectedSource != null)
+            {
+                // If target is valid
+                if (((transferState.SelectedSource.Type & secondary.DataSlot.Type) != 0) && !transferState.SelectedSource.Equals(secondary.DataSlot)) {
+                    DataUtility.AssignSelectedTarget(transferState, secondary.DataSlot);
+                }
+                // Else target is not valid. If a valid source, set as current source
+                else if (secondary.DataSlot.IsSource) {
+                    DataUtility.AssignSelectedSource(transferState, secondary.DataSlot);
+                }
+            }
         }
     }
 }
