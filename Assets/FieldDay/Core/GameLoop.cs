@@ -68,6 +68,9 @@ namespace FieldDay {
         [SerializeField]
         private bool m_AllowMultiTouchInput = false;
 
+        [SerializeField]
+        private ReflectionBootData m_ReflectionData;
+
         [Header("Modules")]
 
         [SerializeField]
@@ -220,6 +223,10 @@ namespace FieldDay {
             Log.Msg("[GameLoop] Starting...");
             Log.Msg("[GameLoop] Word Size = {0} ({1})", Unsafe.PointerSize, Unsafe.IsPointerSizeCompileTimeConstant ? "compile-time" : "runtime");
 
+            if (ReflectionBootData.ShouldUse()) {
+                ReflectionBootData.Mount(m_ReflectionData);
+            }
+
             using (Profiling.Time("GameLoop.Awake")) {
                 Frame.MarkTimestampOffset();
                 Frame.CreateAllocator(m_SingleFrameAllocBufferSize);
@@ -290,8 +297,8 @@ namespace FieldDay {
                 SharedCanvasResources.DefaultWhiteSprite = m_DefaultPixelSprite;
 
                 // find all pre-boot
-                foreach (var entrypoint in Reflect.FindMethods<InvokePreBootAttribute>(ReflectionCache.UserAssemblies, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)) {
-                    entrypoint.Info.Invoke(null, null);
+                foreach (var entrypoint in ReflectionBootData.GetPreBoot()) {
+                    ((MethodInfo) entrypoint.Info).Invoke(null, null);
                 }
 
                 enabled = false;
@@ -307,7 +314,6 @@ namespace FieldDay {
 #if !UNITY_EDITOR
                 CrashHandler.Enabled = true;
 #endif // UNITY_EDITOR
-
             }
         }
 
@@ -332,8 +338,8 @@ namespace FieldDay {
                 FinishCallbackRegistration();
 
                 // find all boot
-                foreach (var entrypoint in Reflect.FindMethods<InvokeOnBootAttribute>(ReflectionCache.UserAssemblies, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)) {
-                    entrypoint.Info.Invoke(null, null);
+                foreach (var entrypoint in ReflectionBootData.GetBoot()) {
+                    ((MethodInfo) entrypoint.Info).Invoke(null, null);
                 }
 
 #if PREVIEW || DEVELOPMENT

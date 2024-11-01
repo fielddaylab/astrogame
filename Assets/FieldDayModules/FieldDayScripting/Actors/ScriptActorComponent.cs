@@ -2,8 +2,10 @@ using System;
 using BeauUtil;
 using FieldDay.Components;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace FieldDay.Scripting {
+    [Preserve]
     public interface IScriptActorComponent {
         ScriptActor Actor { get; }
         void OnScriptRegister(ScriptActor actor);

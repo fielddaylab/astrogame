@@ -1,4 +1,7 @@
+using System;
+using BeauRoutine;
 using FieldDay;
+using FieldDay.Scripting;
 
 namespace Astro {
     public sealed class AstroGame : Game {
@@ -12,7 +15,9 @@ namespace Astro {
 
         [InvokeOnBoot]
         static private void OnBoot() {
-
+            Scenes.OnMainSceneReady.Register(() => {
+                ScriptUtility.Trigger("SceneReady");
+            });
         }
     }
 }

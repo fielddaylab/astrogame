@@ -29,13 +29,20 @@ namespace FieldDay {
 
                 if (info.Info is FieldInfo) {
                     FieldInfo field = (FieldInfo) info.Info;
-                    Assert.True(refType.IsAssignableFrom(field.FieldType), "[StaticInjector] Field '{0} {1}::{2}' is not a '{3}'", field.FieldType.Name, field.DeclaringType.FullName, field.Name, refType.FullName);
-                    fields.Add(field);
+                    if (!refType.IsAssignableFrom(field.FieldType)) {
+                        Log.Error("[StaticInjector] Field '{0} {1}::{2}' is not a '{3}'", field.FieldType.Name, field.DeclaringType.FullName, field.Name, refType.FullName);
+                    } else {
+                        fields.Add(field);
+                    }
                 } else if (info.Info is PropertyInfo) {
                     PropertyInfo prop = (PropertyInfo) info.Info;
-                    Assert.True(refType.IsAssignableFrom(prop.PropertyType), "[StaticInjector] Property '{0} {1}::{2}' is not a '{3}'", prop.PropertyType.Name, prop.DeclaringType.FullName, prop.Name, refType.FullName);
-                    Assert.True(prop.CanWrite, "[StaticInjector] Property '{0} {1}::{2}' is not writable", prop.PropertyType.Name, prop.DeclaringType.FullName, prop.Name);
-                    properties.Add((PropertyInfo) info.Info);
+                    if (!refType.IsAssignableFrom(prop.PropertyType)) {
+                        Log.Error("[StaticInjector] Property '{0} {1}::{2}' is not a '{3}'", prop.PropertyType.Name, prop.DeclaringType.FullName, prop.Name, refType.FullName);
+                    } else if (!prop.CanWrite) {
+                        Log.Error("[StaticInjector] Property '{0} {1}::{2}' is not writable", prop.PropertyType.Name, prop.DeclaringType.FullName, prop.Name);
+                    } else {
+                        properties.Add(prop);
+                    }
                 }
             }
 

@@ -1,12 +1,15 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using BeauPools;
 using BeauRoutine;
 using BeauUtil;
+using BeauUtil.Debugger;
 using BeauUtil.Tags;
 using BeauUtil.Variants;
+using FieldDay.Scenes;
 using FieldDay.SharedState;
 using FieldDay.Vox;
 using Leaf;
@@ -14,7 +17,8 @@ using Leaf.Runtime;
 using UnityEngine;
 
 namespace FieldDay.Scripting {
-    public class ScriptRuntimeState : ISharedState, IRegistrationCallbacks {
+    [SharedStateInitOrder(-10)]
+    public class ScriptRuntimeState : ISharedState, IRegistrationCallbacks, ISceneLoadDependency {
         #region State
 
         // Thread Tracking
@@ -27,7 +31,7 @@ namespace FieldDay.Scripting {
 
         // Plugin
         internal ScriptPlugin Plugin;
-        internal IMethodCache MethodCache;
+        internal MethodCache<LeafMember> MethodCache;
 
         // Tag String
         internal CustomTagParserConfig TagParserConfig;
@@ -56,6 +60,8 @@ namespace FieldDay.Scripting {
         // temporary script table
         internal VariantTable SceneLocalTable;
 
+        private Routine m_BootRoutine;
+
         #endregion // State
 
         #region Callbacks
@@ -67,6 +73,7 @@ namespace FieldDay.Scripting {
         #region IRegistrationCallbacks
 
         void IRegistrationCallbacks.OnDeregister() {
+            Game.Scenes?.DeregisterLoadDependency(this);
         }
 
         void IRegistrationCallbacks.OnRegister() {
@@ -114,11 +121,26 @@ namespace FieldDay.Scripting {
                 SceneLocalTable.Clear();
             });
 
+            Game.Scenes.QueueOnEnable(InitialMethodCache);
+        }
+
+        // TODO: Figure out why this needs to be called later in the scene loading process
+        // when in WebGL. Also why LoadStaticAsync is broken
+        private void InitialMethodCache() {
             MethodCache.Load(typeof(ScriptActor));
-            Game.Scenes.RegisterLoadDependency(Async.Schedule(MethodCache.LoadStaticAsync(), AsyncFlags.LowPriority));
+            MethodCache.LoadStatic();
+            GC.Collect();
         }
 
         #endregion // IRegistrationCallbacks
+
+        #region ISceneLoadDependency
+
+        bool ISceneLoadDependency.IsLoaded(SceneLoadPhase loadPhase) {
+            return loadPhase != SceneLoadPhase.BeforeLateEnable || !m_BootRoutine;
+        }
+
+        #endregion // ISceneLoadDependency
     }
 
     internal struct QueuedScriptEvent {

@@ -2,7 +2,7 @@ using System;
 using BeauUtil;
 using FieldDay;
 using FieldDay.Components;
-using FieldDay.Scripting;
+//using FieldDay.Scripting;
 using UnityEngine;
 
 namespace Astro {

@@ -24,7 +24,7 @@ using Leaf.Runtime;
 using UnityEngine;
 
 namespace FieldDay.Scripting {
-    [DisallowMultipleComponent, SharedStateInitOrder(-10)]
+    [DisallowMultipleComponent, SharedStateInitOrder(-11)]
     public sealed class ScriptDatabase : ISharedState, ISceneLoadDependency, IRegistrationCallbacks {
         public const int MaxLoadedPackages = 32;
 
@@ -301,7 +301,15 @@ namespace FieldDay.Scripting {
                         } else {
                             return request.Randomizer.Choose(lookupList);
                         }
+                    } else {
+                        if (DebugFlags.IsFlagSet(ScriptDebugFlags.LogNodeEvaluation)) {
+                            Log.Trace("[ScriptUtility] No triggers valid for buckete '{0}'", bucketId);
+                        }
                     }
+                }
+            } else {
+                if (DebugFlags.IsFlagSet(ScriptDebugFlags.LogNodeEvaluation)) {
+                    Log.Trace("[ScriptUtility] No triggers loaded for bucket '{0}'", bucketId);
                 }
             }
 

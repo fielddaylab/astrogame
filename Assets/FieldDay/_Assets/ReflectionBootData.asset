@@ -1,0 +1,148 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18dcec45f946ddd449599ee19b5ba3a4, type: 3}
+  m_Name: ReflectionBootData
+  m_EditorClassIdentifier: 
+  InvokePreBoot:
+    AttributeTypeName: FieldDay.InvokePreBootAttribute
+    LookupFlags: 58
+    LookupInherit: 0
+    Assemblies:
+    - AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      TypeCount: 1
+    - AssemblyName: FieldDay.Vox, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      TypeCount: 2
+    - AssemblyName: FieldDay.Scripting, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      TypeCount: 1
+    Types:
+    - TypeName: Astro.AstroGame
+      Self: 0
+      MemberCount: 1
+      OverloadCount: 0
+    - TypeName: FieldDay.Vox.VoxUtility
+      Self: 0
+      MemberCount: 1
+      OverloadCount: 0
+    - TypeName: FieldDay.Vox.SubtitleUtility
+      Self: 0
+      MemberCount: 1
+      OverloadCount: 0
+    - TypeName: FieldDay.Scripting.ScriptUtility
+      Self: 0
+      MemberCount: 1
+      OverloadCount: 0
+    Members:
+    - MemberName: OnPreBoot
+      Type: 8
+    - MemberName: Initialize
+      Type: 8
+    - MemberName: Initialize
+      Type: 8
+    - MemberName: Initialize
+      Type: 8
+    OverloadedMethods: []
+    TypeReferences: []
+  InvokeBoot:
+    AttributeTypeName: FieldDay.InvokeOnBootAttribute
+    LookupFlags: 58
+    LookupInherit: 0
+    Assemblies:
+    - AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      TypeCount: 1
+    Types:
+    - TypeName: Astro.AstroGame
+      Self: 0
+      MemberCount: 1
+      OverloadCount: 0
+    Members:
+    - MemberName: OnBoot
+      Type: 8
+    OverloadedMethods: []
+    TypeReferences: []
+  ConfigVars:
+    AttributeTypeName: FieldDay.Data.ConfigVar
+    LookupFlags: 58
+    LookupInherit: 0
+    Assemblies: []
+    Types: []
+    Members: []
+    OverloadedMethods: []
+    TypeReferences: []
+  DebugMenu:
+    AttributeTypeName: FieldDay.Debugging.DebugMenuFactoryAttribute
+    LookupFlags: 58
+    LookupInherit: 0
+    Assemblies:
+    - AssemblyName: FieldDay.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      TypeCount: 1
+    - AssemblyName: FieldDay.Scripting, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      TypeCount: 1
+    Types:
+    - TypeName: FieldDay.Data.ConfigVar
+      Self: 0
+      MemberCount: 1
+      OverloadCount: 0
+    - TypeName: FieldDay.Scripting.ScriptDebugHooks
+      Self: 0
+      MemberCount: 1
+      OverloadCount: 0
+    Members:
+    - MemberName: DebugMenuFactory
+      Type: 8
+    - MemberName: CreateDebugMenu
+      Type: 8
+    OverloadedMethods: []
+    TypeReferences: []
+  EngineMenu:
+    AttributeTypeName: FieldDay.Debugging.EngineMenuFactoryAttribute
+    LookupFlags: 58
+    LookupInherit: 0
+    Assemblies:
+    - AssemblyName: FieldDay.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      TypeCount: 4
+    Types:
+    - TypeName: FieldDay.Memory.MemoryMgr
+      Self: 0
+      MemberCount: 1
+      OverloadCount: 0
+    - TypeName: FieldDay.Rendering.RenderMgr
+      Self: 0
+      MemberCount: 1
+      OverloadCount: 0
+    - TypeName: FieldDay.Debugging.CrashHandler
+      Self: 0
+      MemberCount: 1
+      OverloadCount: 0
+    - TypeName: FieldDay.Debugging.DebugDraw
+      Self: 0
+      MemberCount: 1
+      OverloadCount: 0
+    Members:
+    - MemberName: CreateDebugMenu
+      Type: 8
+    - MemberName: CreateRenderDebugMenu
+      Type: 8
+    - MemberName: CreateDebugMenu
+      Type: 8
+    - MemberName: CreateDrawingEngineMenu
+      Type: 8
+    OverloadedMethods: []
+    TypeReferences: []
+  QuickMenu:
+    AttributeTypeName: FieldDay.Debugging.QuickMenuFactoryAttribute
+    LookupFlags: 58
+    LookupInherit: 0
+    Assemblies: []
+    Types: []
+    Members: []
+    OverloadedMethods: []
+    TypeReferences: []

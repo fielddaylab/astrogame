@@ -193,8 +193,21 @@ namespace FieldDay.Memory {
             DMInfo info = new DMInfo("MemoryMgr");
 
             DebugFlags.Menu.AddFlagToggle(info, "Log All GC Events", DebuggingFlags.LogGCState);
+            info.AddButton("Force GC Collect (Manual)", () => GC.Collect());
+            info.AddButton("Add Memory Pressure (128KiB)", () => GenerateMemoryPressure(Unsafe.KiB * 128));
+            info.AddButton("Add Memory Pressure (1MiB)", () => GenerateMemoryPressure(Unsafe.MiB));
 
             return info;
+        }
+
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static private void GenerateMemoryPressure(int amount) {
+            Log.Msg("[MemoryMgr] Adding {0} bytes of memory pressure", amount);
+            int blockSize = 64;
+            int blocks = Unsafe.AlignUpN(amount, blockSize) / blockSize;
+            while(blocks-- > 0) {
+                var bytes = new byte[blockSize];
+            }
         }
 
 #endif // DEVELOPMENT

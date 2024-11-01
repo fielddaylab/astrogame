@@ -10,10 +10,12 @@ GameObject:
   m_Component:
   - component: {fileID: 569496443562942237}
   - component: {fileID: 4066611542661436826}
-  - component: {fileID: 5333346241004987980}
   - component: {fileID: 6585026485493137920}
   - component: {fileID: 3844696730023602168}
   - component: {fileID: 234998566036644298}
+  - component: {fileID: 5581944997963433016}
+  - component: {fileID: 371663767346159318}
+  - component: {fileID: 7963103701282583893}
   m_Layer: 0
   m_Name: Boot
   m_TagString: Untagged
@@ -55,6 +57,7 @@ MonoBehaviour:
   m_TargetFramerate: 60
   m_DefaultPixelSprite: {fileID: 21300000, guid: aea27dc6ce88f5c4497743feb0d84326, type: 3}
   m_AllowMultiTouchInput: 0
+  m_ReflectionData: {fileID: 11400000, guid: 8ba8df1aface7ec459a93e8b4abf6d1c, type: 2}
   m_AudioConfig:
     Is3D: 1
     DefaultEmitterProfile: {fileID: 11400000, guid: 6c47c72f492a25649a5f978f9edec9dd, type: 2}
@@ -65,31 +68,6 @@ MonoBehaviour:
     UnmanagedBudgetMB: 6
   m_GlobalAssetPacks:
   - {fileID: 11400000, guid: 2f95f7dcf69b0b44b9a1003142f7696f, type: 2}
---- !u!114 &5333346241004987980
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5025946979303998804}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c6f9f75e296baa5498bf192cbf09c503, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Capacity: 32
-  m_TweenPool: 32
-  m_DebugMode: 1
-  m_Profiling: 0
-  m_Snapshots: 0
-  m_HandleExceptions: 0
-  m_DefaultPhase: 0
-  m_ThinkUpdateInterval: 0.1
-  m_CustomUpdateInterval: 0.125
-  m_FrameBudget: -1
-  m_AsyncBudgetMin: -1
-  m_AsyncBudgetMax: -1
-  m_ForceSingleThreaded: 1
 --- !u!114 &6585026485493137920
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -137,6 +115,57 @@ MonoBehaviour:
   m_InputActionsPerSecond: 10
   m_RepeatDelay: 0.5
   m_ForceModuleActive: 0
+--- !u!114 &5581944997963433016
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5025946979303998804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cfefc0c42079f74cb2e74439ce50c1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UniqueID: 383cf079-81dc-4309-9ad7-15af5250fff6
+  m_WakeUpChildren: 1
+--- !u!114 &371663767346159318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5025946979303998804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99d443299734bde40a3522afeaaa1074, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7963103701282583893
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5025946979303998804}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6f9f75e296baa5498bf192cbf09c503, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Capacity: 32
+  m_TweenPool: 32
+  m_DebugMode: 1
+  m_Profiling: 1
+  m_Snapshots: 0
+  m_HandleExceptions: 1
+  m_DefaultPhase: 0
+  m_ThinkUpdateInterval: 0.1
+  m_CustomUpdateInterval: 0.125
+  m_FrameBudget: -1
+  m_AsyncBudgetMin: -1
+  m_AsyncBudgetMax: -1
+  m_ForceSingleThreaded: 1
 --- !u!1 &5290410587728248189
 GameObject:
   m_ObjectHideFlags: 0

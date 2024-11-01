@@ -3,6 +3,7 @@ using BeauUtil;
 using BeauUtil.Variants;
 using FieldDay.Components;
 using FieldDay.SharedState;
+using Leaf.Runtime;
 using UnityEngine;
 
 namespace FieldDay.Scripting {
@@ -18,6 +19,11 @@ namespace FieldDay.Scripting {
 
         private void OnDisable() {
             ScriptUtility.UnbindTable(m_Id);
+        }
+
+        [LeafMember("ClearBlackboard")]
+        public void Clear() {
+            m_Table?.Clear();
         }
     }
 }

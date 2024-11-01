@@ -10,6 +10,7 @@ using BeauUtil;
 using BeauUtil.Debugger;
 using BeauUtil.UI;
 using EasyBugReporter;
+using FieldDay.Data;
 using FieldDay.HID;
 using FieldDay.HID.XR;
 using UnityEngine;
@@ -213,18 +214,20 @@ namespace FieldDay.Debugging {
             s_RootMenu = new DMInfo("Debug", 16);
 
             // load menus from user assemblies
-            foreach (var pair in Reflect.FindMethods<DebugMenuFactoryAttribute>(ReflectionCache.UserAssemblies, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly)) {
-                if (pair.Info.ReturnType != typeof(DMInfo)) {
+            foreach (var pair in ReflectionBootData.DebugMenus()) {
+                MethodInfo method = (MethodInfo) pair.Info;
+
+                if (method.ReturnType != typeof(DMInfo)) {
                     Log.Error("[DebugConsole] Method '{0}::{1}' does not return DMInfo", pair.Info.DeclaringType.Name, pair.Info.Name);
                     continue;
                 }
 
-                if (pair.Info.GetParameters().Length != 0) {
+                if (method.GetParameters().Length != 0) {
                     Log.Error("[DebugConsole] Method '{0}::{1}' has parameters", pair.Info.DeclaringType.Name, pair.Info.Name);
                     continue;
                 }
 
-                DMInfo menu = (DMInfo) pair.Info.Invoke(null, Array.Empty<object>());
+                DMInfo menu = (DMInfo) method.Invoke(null, Array.Empty<object>());
 
                 if (menu != null) {
                     DMInfo.MergeSubmenu(s_RootMenu, menu, true);
@@ -233,18 +236,20 @@ namespace FieldDay.Debugging {
 
             // load engine menus from user assemblies
             DMInfo engineMenu = new DMInfo("Engine", 16);
-            foreach (var pair in Reflect.FindMethods<EngineMenuFactoryAttribute>(ReflectionCache.UserAssemblies, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly)) {
-                if (pair.Info.ReturnType != typeof(DMInfo)) {
+            foreach (var pair in ReflectionBootData.EngineMenus()) {
+                MethodInfo method = (MethodInfo) pair.Info;
+
+                if (method.ReturnType != typeof(DMInfo)) {
                     Log.Error("[DebugConsole] Method '{0}::{1}' does not return DMInfo", pair.Info.DeclaringType.Name, pair.Info.Name);
                     continue;
                 }
 
-                if (pair.Info.GetParameters().Length != 0) {
+                if (method.GetParameters().Length != 0) {
                     Log.Error("[DebugConsole] Method '{0}::{1}' has parameters", pair.Info.DeclaringType.Name, pair.Info.Name);
                     continue;
                 }
 
-                DMInfo menu = (DMInfo) pair.Info.Invoke(null, Array.Empty<object>());
+                DMInfo menu = (DMInfo) method.Invoke(null, Array.Empty<object>());
 
                 if (menu != null) {
                     DMInfo.MergeSubmenu(engineMenu, menu, true);
@@ -261,18 +266,20 @@ namespace FieldDay.Debugging {
             s_QuickMenu = new DMInfo("Quick", 16);
 
             // load menus from user assemblies
-            foreach (var pair in Reflect.FindMethods<QuickMenuFactoryAttribute>(ReflectionCache.UserAssemblies, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly)) {
-                if (pair.Info.ReturnType != typeof(DMInfo)) {
+            foreach (var pair in ReflectionBootData.QuickMenus()) {
+                MethodInfo method = (MethodInfo) pair.Info;
+
+                if (method.ReturnType != typeof(DMInfo)) {
                     Log.Error("[DebugConsole] Method '{0}::{1}' does not return DMInfo", pair.Info.DeclaringType.FullName, pair.Info.Name);
                     continue;
                 }
 
-                if (pair.Info.GetParameters().Length != 0) {
+                if (method.GetParameters().Length != 0) {
                     Log.Error("[DebugConsole] Method '{0}::{1}' has parameters", pair.Info.DeclaringType.FullName, pair.Info.Name);
                     continue;
                 }
 
-                DMInfo menu = (DMInfo) pair.Info.Invoke(null, Array.Empty<object>());
+                DMInfo menu = (DMInfo) method.Invoke(null, Array.Empty<object>());
 
                 if (menu != null) {
                     DMInfo.MergeSubmenu(s_QuickMenu, menu);
