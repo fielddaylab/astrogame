@@ -14,7 +14,14 @@ namespace Astro
 
     public static class SlotHighlightUtility
     {
-        static public void SetHighlight(SlotHighlightState highlightState, RelevantSlotHighlight highlight, bool active)
+        static public void SetAvailableHighlight(SlotHighlightState highlightState, RelevantSlotHighlight highlight, bool active)
+        {
+            var mats = highlight.Mesh.sharedMaterials;
+            mats[0] = active ? highlightState.AvailableCellMat : highlightState.UnselectedCellMat;
+            highlight.Mesh.sharedMaterials = mats;
+        }
+
+        static public void SetSelectedHighlight(SlotHighlightState highlightState, RelevantSlotHighlight highlight, bool active)
         {
             var mats = highlight.Mesh.sharedMaterials;
             mats[0] = active ? highlightState.SelectedCellMat : highlightState.UnselectedCellMat;

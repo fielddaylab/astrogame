@@ -18,6 +18,7 @@ namespace Astro {
 
         public bool Equals(DataSlot slot)
         {
+            if (slot == null) { return false; }
             return GetInstanceID() == slot.GetInstanceID();
         }
 

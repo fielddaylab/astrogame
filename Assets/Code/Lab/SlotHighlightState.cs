@@ -9,6 +9,7 @@ namespace Astro
     {
         [Header("Consts")]
         public Material UnselectedCellMat;
+        public Material AvailableCellMat;
         public Material SelectedCellMat;
     }
 }
