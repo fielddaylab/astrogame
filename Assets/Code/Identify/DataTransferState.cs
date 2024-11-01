@@ -24,9 +24,16 @@ namespace Astro {
             return false;
         }
 
-        static public void AssignSelectedSource(DataTransferState state, DataSlot source)
+        static public void AssignSelectedSource(DataTransferState state, DataSlot source, bool preserveTarget = false)
         {
             state.SelectedSource = source;
+            if (!preserveTarget) { state.SelectedTarget = null; }
+            state.SourceUpdated = true;
+        }
+
+        static public void AssignSelectedTarget(DataTransferState state, DataSlot target)
+        {
+            state.SelectedTarget = target;
             state.SourceUpdated = true;
         }
     }

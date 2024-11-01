@@ -13,6 +13,8 @@ namespace Astro
             if (!primary.InteractReceived) { return; }
 
             var puzzleState = Find.State<PuzzleState>();
+            var transferState = Find.State<DataTransferState>();
+
             puzzleState.RelevantColFilter = InstrumentUtility.GenerateTypeMask(secondary.Instrument);
             puzzleState.CellsUpdated = true;
         }

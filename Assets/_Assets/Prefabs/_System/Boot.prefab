@@ -442,6 +442,7 @@ GameObject:
   - component: {fileID: 2631811238112681399}
   - component: {fileID: 7819171369226552524}
   - component: {fileID: 570733142633194342}
+  - component: {fileID: 2675594497932884165}
   m_Layer: 0
   m_Name: State
   m_TagString: Untagged
@@ -521,7 +522,7 @@ MonoBehaviour:
   SelectedRow: -1
   RelevantColFilter: 0
   RowCellPrefab: {fileID: 0}
-  UnselectedCellMat: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  UnselectedCellMat: {fileID: 2100000, guid: 6f982a7548130cd4792cd7f22f45ddef, type: 2}
   SelectedCellMat: {fileID: 2100000, guid: aae69f2c36185ea4bb6e7a4738f5b080, type: 2}
 --- !u!114 &570733142633194342
 MonoBehaviour:
@@ -535,8 +536,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ba5d8daa4d0d724286dab32ce6b5645, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UnselectedCellMat: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  UnselectedCellMat: {fileID: 2100000, guid: 6f982a7548130cd4792cd7f22f45ddef, type: 2}
+  AvailableCellMat: {fileID: 2100000, guid: 5b5b740736694ef43976fbc452c348a6, type: 2}
   SelectedCellMat: {fileID: 2100000, guid: aae69f2c36185ea4bb6e7a4738f5b080, type: 2}
+--- !u!114 &2675594497932884165
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9193859588559889003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c932512ddb8da894cb7d37609858d82c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Cells:
+    m_Prefab: {fileID: 0}
+    m_Name: 
+    m_InitialCapacity: 12
+    m_PrewarmOnInitialize: 1
+    m_InitialPrewarm: 8
+    m_DefaultPoolRoot: {fileID: 0}
+    m_DefaultSpawnRoot: {fileID: 0}
+    m_ResetTransformOnAlloc: 1
+  PoolRoot: {fileID: 0}
 --- !u!1001 &5502758588094337030
 PrefabInstance:
   m_ObjectHideFlags: 0

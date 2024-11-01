@@ -13,6 +13,30 @@ namespace Astro {
 
         public readonly CastableEvent<DataPacket> OnDataModified = new CastableEvent<DataPacket>();
         public readonly CastableEvent<DataSlot> OnDataTransferred = new CastableEvent<DataSlot>();
+
+        #region Overrides
+
+        public bool Equals(DataSlot slot)
+        {
+            if (slot == null) { return false; }
+            return GetInstanceID() == slot.GetInstanceID();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is DataSlot)
+            {
+                return Equals((DataSlot)obj);
+            }
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        #endregion // Overrides
     }
 
     static public partial class DataUtility {
