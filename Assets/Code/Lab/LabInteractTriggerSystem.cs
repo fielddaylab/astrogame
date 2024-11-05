@@ -25,7 +25,7 @@ namespace Astro
                     var interactable = hit.collider.GetComponent<LabInteractable>();
                     if (interactable) {
                         interactable.InteractReceived = true;
-
+                        ViewNavUtility.MoveToNode(Find.State<ViewState>(), interactable.ConnectedViewNode);
                         // consume input
                         Game.Input.ConsumeAllInputForFrame();
                     }

@@ -1,3 +1,4 @@
+using FieldDay;
 using FieldDay.SharedState;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace Astro
         public Transform HorizonPlane;
         public bool EnableMouseControls;
         public bool EnableMouseAutoControls;
+        public bool InputEnabled = true;
 
         [Space(5)]
         [Header("Look")]
@@ -46,6 +48,10 @@ namespace Astro
             var angles = camRoot.localEulerAngles;
             angles.x = 0;
             camRoot.localEulerAngles = angles;
+        }
+
+        public static void SetCameraInputEnabled(bool enabled) {
+            Find.State<SpaceCameraState>().InputEnabled = enabled;
         }
     }
 }

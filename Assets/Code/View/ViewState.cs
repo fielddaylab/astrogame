@@ -67,7 +67,7 @@ namespace Astro {
         /// Moves the view to a new node.
         /// </summary>
         static public void MoveToNode(ViewState state, ViewNode node) {
-            if (state.ActiveNode == node) {
+            if (node == null || state.ActiveNode == node) {
                 return;
             }
 
@@ -78,7 +78,7 @@ namespace Astro {
         /// Snaps directly to a node.
         /// </summary>
         static public void SnapToNode(ViewState state, ViewNode node) {
-            if (state.ActiveNode == node) {
+            if (node == null || state.ActiveNode == node) {
                 return;
             }
 
@@ -96,6 +96,7 @@ namespace Astro {
         static private IEnumerator TransitionRoutine(ViewState state, ViewNode nextNode, ViewLink byLink) {
             Transform controlPoint = null;
             TweenSettings tween = state.DefaultTransition;
+            InputUtility.SetInputEnabled(false);
             if (byLink) {
                 controlPoint = byLink.TransitionControlPoint;
                 if (byLink.Transition.Time > 0) {
@@ -128,6 +129,7 @@ namespace Astro {
 
             ActivateNode(nextNode, true);
             UpdateActiveLinks(state);
+            InputUtility.SetInputEnabled(true);
         }
 
         static private void InstantTransition(ViewState state, ViewNode nextNode) {

@@ -11,7 +11,6 @@ namespace Astro
         public override void ProcessWorkForComponent(LabInteractable primary, InteractSelectInstrument secondary, float deltaTime)
         {
             if (!primary.InteractReceived) { return; }
-
             var puzzleState = Find.State<PuzzleState>();
             var transferState = Find.State<DataTransferState>();
 

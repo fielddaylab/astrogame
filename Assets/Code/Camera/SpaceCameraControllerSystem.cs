@@ -20,6 +20,8 @@ namespace Astro
 
         private void ProcessInputs()
         {
+            if (!m_State.InputEnabled) return;
+
             ProcessLook();
 
             ProcessZoom();
