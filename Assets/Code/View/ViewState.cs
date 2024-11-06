@@ -30,6 +30,7 @@ namespace Astro {
         void IRegistrationCallbacks.OnRegister() {
             Game.Scenes.QueueOnLoad(this, () => {
                 ViewNavUtility.SnapToNode(this, DefaultNode);
+                ViewNavUtility.RegisterNodeCallbacks();
             });
         }
     }
@@ -126,7 +127,6 @@ namespace Astro {
             if (oldNode) {
                 DeactivateNode(oldNode, false);
             }
-
             ActivateNode(nextNode, true);
             UpdateActiveLinks(state);
             InputUtility.SetInputEnabled(true);
