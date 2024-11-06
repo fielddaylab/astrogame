@@ -1,7 +1,5 @@
 using BeauRoutine;
 using FieldDay;
-using FieldDay.Assets;
-using FieldDay.Components;
 using FieldDay.SharedState;
 using System.Collections;
 using UnityEngine;

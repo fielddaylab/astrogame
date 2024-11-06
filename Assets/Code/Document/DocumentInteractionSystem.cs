@@ -14,6 +14,7 @@ namespace Astro {
             if (!m_State.EnableDocumentInteraction) return;
 
             if (m_State.SelectedDocument != null && !m_State.DocumentRoutine.Exists()) {
+                // waits to complete current routine before moving - "jerky" movement
                 DocumentUtility.MoveSelectedToMouse(m_State);
             }
 
