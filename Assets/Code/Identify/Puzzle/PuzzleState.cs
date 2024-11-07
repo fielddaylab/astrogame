@@ -29,6 +29,9 @@ namespace Astro {
 
     public static partial class PuzzleUtility
     {
+        public static bool CheckFullyPopulated(PuzzleState state) {
+            return false;
+        }
         public static bool TrySetSelectedRow(PuzzleState state, int index)
         {
             if (state.ActivePuzzle == null) { return false; }
