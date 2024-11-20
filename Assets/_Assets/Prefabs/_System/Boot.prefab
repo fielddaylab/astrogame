@@ -193,6 +193,7 @@ GameObject:
   - component: {fileID: 7625413198036772067}
   - component: {fileID: 8490885078304488659}
   - component: {fileID: 7818480242374329998}
+  - component: {fileID: 7343991956635743007}
   m_Layer: 0
   m_Name: World Systems
   m_TagString: Untagged
@@ -441,6 +442,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90ad44b3ffa696741bd667cc545759aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7343991956635743007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5290410587728248189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f3d00f5ce6afe447ac88fb9fbdbb8a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_InitialCapacity: 2
 --- !u!1 &9193859588559889003
 GameObject:
   m_ObjectHideFlags: 0
@@ -531,6 +545,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   QueuedPuzzle: {fileID: 11400000, guid: 866595658f266004093355d97a7d82b6, type: 2}
   ActivePuzzle: {fileID: 0}
+  Display: {fileID: 0}
   CellsUpdated: 0
   GroupCellsByRow: 0
   SelectedRow: -1
@@ -593,6 +608,8 @@ MonoBehaviour:
   DocumentHoverDistance: 0.1
   FollowSpeed: 5
   FollowRadius: 80
+  DocumentParent: {fileID: 0}
+  DocumentAssets: {fileID: 0}
 --- !u!1001 &5502758588094337030
 PrefabInstance:
   m_ObjectHideFlags: 0

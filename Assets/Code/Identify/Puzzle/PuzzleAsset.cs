@@ -21,7 +21,7 @@ namespace Astro {
 
         [Header("Data")]
         public DataTypeMask RequiredProperties;
-        public Row[] Rows;
+        public Row[] Rows;  
 
         #endregion // Inspector
     }

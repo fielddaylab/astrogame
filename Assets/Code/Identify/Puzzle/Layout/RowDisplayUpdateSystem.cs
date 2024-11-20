@@ -30,7 +30,6 @@ namespace Astro
 
                     currIndex++;
                 }
-
                 puzzleState.CellsUpdated = false;
             }
         }
