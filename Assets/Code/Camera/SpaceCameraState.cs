@@ -13,7 +13,10 @@ namespace Astro
         public Transform HorizonPlane;
         public bool EnableMouseControls;
         public bool EnableMouseAutoControls;
+        public bool EnableSmoothKeyboardControls = true;
         public bool InputEnabled = true;
+
+        public Canvas Canvas;
 
         [Space(5)]
         [Header("Look")]
@@ -22,6 +25,7 @@ namespace Astro
         public float LookSpeed;
         public float LookRapidSpeed;
         public float LookIncrement;
+        public float SmoothLookIncrement;
         public Vector2 LookXClamp; // rotation limits in given direction (x is min X, y is max X)
         public Vector2 LookYClamp; // rotation limits in given direction (x is min Y, y is max Y)
         public float LookDragMod;

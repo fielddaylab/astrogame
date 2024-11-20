@@ -25,6 +25,9 @@ namespace Astro
         {
             var layout = Find.GlobalAsset<SkyLayoutAsset>();
             var dome = Find.State<SkyDome>();
+            var focusPools = Find.State<FocusPools>();
+            var focusState = Find.State<FocusState>();
+            var spaceCamera = Find.State<SpaceCameraState>();
 
             // populate sky with celestial objects
             var center = dome.Position;
@@ -32,6 +35,12 @@ namespace Astro
             {
                 var newCelestialObj = Instantiate(m_State.CelestialObjPrefab).transform;
                 CelestialAsset currAsset = layout.AllCelestialObjs[i];
+                // Use UIFocus pool
+                var newFocus = focusPools.Focii.Alloc(spaceCamera.Canvas.transform);
+                // TODO: assign relevant 2D representation
+                FocusableUtility.InitFocusable(newFocus, newCelestialObj.transform, null);
+                focusState.ActiveFocii.PushBack(newFocus);
+
                 CelestialPositionerUtility.PositionObject(center, newCelestialObj, currAsset.Coords.RightAscension, currAsset.Coords.Declination);
                 newCelestialObj.name = currAsset.DisplayName;
             }

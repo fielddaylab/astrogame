@@ -2255,7 +2255,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 640088613}
-  - component: {fileID: 640088612}
+  - component: {fileID: 640088615}
   - component: {fileID: 640088611}
   - component: {fileID: 640088610}
   - component: {fileID: 640088614}
@@ -2285,8 +2285,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 9.971608, y: 0.06252396, z: 9.982072}
+  m_Center: {x: -0.05412371, y: 0.0063999444, z: -0.05836391}
 --- !u!23 &640088611
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2307,7 +2307,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 1410e728133e9804d9cf64c979cb4427, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2329,14 +2329,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &640088612
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 640088609}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!4 &640088613
 Transform:
   m_ObjectHideFlags: 0
@@ -2345,14 +2337,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 640088609}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.803, z: 0}
-  m_LocalScale: {x: 3.3089, y: 2.3105, z: 0.1}
+  m_LocalRotation: {x: 0, y: -0.7071068, z: 0.7071068, w: 0}
+  m_LocalPosition: {x: 0, y: 1.7262259, z: -0.0028501553}
+  m_LocalScale: {x: 0.3072, y: 2.3105, z: 0.17280002}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 733636638}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: -180, z: 0}
 --- !u!114 &640088614
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2370,6 +2362,14 @@ MonoBehaviour:
   CelestialAssets:
   - {fileID: 11400000, guid: 03838e7c0531e814ab6195135870321e, type: 2}
   - {fileID: 11400000, guid: 049ae50d6253e084da828c7266f84596, type: 2}
+--- !u!33 &640088615
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 640088609}
+  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!4 &665121829 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 804670594870120608, guid: 6f9a5902b3dedf54080fa5f61ccb37d9, type: 3}
@@ -2581,7 +2581,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.9777, y: 1.4595127, z: 0.15577}
+  m_LocalScale: {x: 3.072, y: 1.4595127, z: 0.15577}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 963132617}
@@ -2995,7 +2995,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &733636638
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9027,6 +9027,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2074639120450517978, guid: ec06e5f8b4c234f489057732d2c945c4, type: 3}
+      propertyPath: PoolRoot
+      value: 
+      objectReference: {fileID: 1799412586}
     - target: {fileID: 2348247301363869649, guid: ec06e5f8b4c234f489057732d2c945c4, type: 3}
       propertyPath: DocumentParent
       value: 
@@ -9252,13 +9256,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: Interface View Dome
       objectReference: {fileID: 0}
+    - target: {fileID: 3585839230946322705, guid: 6f9a5902b3dedf54080fa5f61ccb37d9, type: 3}
+      propertyPath: m_MatchWidthOrHeight
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4396754113412102360, guid: 6f9a5902b3dedf54080fa5f61ccb37d9, type: 3}
       propertyPath: m_CameraType
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8058402043837510232, guid: 6f9a5902b3dedf54080fa5f61ccb37d9, type: 3}
       propertyPath: field of view
-      value: 90
+      value: 53.130104
       objectReference: {fileID: 0}
     - target: {fileID: 8164922381700019465, guid: 6f9a5902b3dedf54080fa5f61ccb37d9, type: 3}
       propertyPath: m_IsActive

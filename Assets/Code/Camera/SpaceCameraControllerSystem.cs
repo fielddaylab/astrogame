@@ -38,7 +38,14 @@ namespace Astro
                 ProcessMouseDragLook();
             }
 
-            ProcessKeyboardLook();
+            if (m_State.EnableSmoothKeyboardControls)
+            {
+                ProcessKeyboardLookSmooth();
+            }
+            else
+            {
+                ProcessKeyboardLookDiscrete();
+            }
         }
 
         private void ProcessMouseAutoLook()
@@ -113,7 +120,7 @@ namespace Astro
             m_State.Camera.RootTransform.localEulerAngles = angles;
         }
 
-        private void ProcessKeyboardLook()
+        private void ProcessKeyboardLookDiscrete()
         {
             if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
             {
@@ -134,6 +141,30 @@ namespace Astro
             {
                 // look right
                 AdjustHorizLook(m_State.LookIncrement);
+            }
+        }
+
+        private void ProcessKeyboardLookSmooth()
+        {
+            if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W))
+            {
+                // look up
+                AdjustVertLook(-m_State.SmoothLookIncrement);
+            }
+            else if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S))
+            {
+                // look down
+                AdjustVertLook(m_State.SmoothLookIncrement);
+            }
+            if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
+            {
+                // look left
+                AdjustHorizLook(-m_State.SmoothLookIncrement);
+            }
+            else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
+            {
+                // look right
+                AdjustHorizLook(m_State.SmoothLookIncrement);
             }
         }
 
