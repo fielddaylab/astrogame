@@ -1,9 +1,6 @@
 using BeauUtil;
 using FieldDay.Components;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Astro
 {
@@ -14,12 +11,15 @@ namespace Astro
         public Transform CellAnchorPos;
         public float RowSpacing;
         public float ColSpacing;
+        public LabInteractable SubmitButton;
     }
 
     public static partial class PuzzleUtility
     {
         public static void LoadCells(PuzzleDisplay display, RingBuffer<PuzzleCell> cells, int numCols)
         {
+            display.SubmitButton.gameObject.SetActive(false);
+
             int numRows = cells.Count / numCols;
             display.Cells = new PuzzleCell[numRows * numCols];
             display.NumCols = numCols;

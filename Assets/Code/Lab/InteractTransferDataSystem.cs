@@ -17,12 +17,13 @@ namespace Astro
             var dataState = Find.State<DataTransferState>();
             if (dataState.SelectedTarget != null && secondary.DataSlot.HasData) {
                 DataUtility.AssignSelectedSource(dataState, secondary.DataSlot, true);
-                DataUtility.TryTransferData(dataState.SelectedSource, dataState.SelectedTarget);
-                Debug.Log("[InteractTransferSystem] Transfer success");
+                if (DataUtility.TryTransferData(dataState.SelectedSource, dataState.SelectedTarget)) {
+                    Debug.Log("[InteractTransferSystem] Transfer success");
+                    PuzzleUtility.CheckEnableSubmit(Find.State<PuzzleState>());
+                    return;
+                }
             }
-            else {
-                Debug.Log("[InteractTransferSystem] Transfer unsuccessful");
-            }
+            Debug.Log("[InteractTransferSystem] Transfer unsuccessful");
         }
     }
 

@@ -193,8 +193,9 @@ GameObject:
   - component: {fileID: 7625413198036772067}
   - component: {fileID: 8490885078304488659}
   - component: {fileID: 7818480242374329998}
-  - component: {fileID: 5936937910427673796}
-  - component: {fileID: 3945602204664508650}
+  - component: {fileID: 7343991956635743007}
+  - component: {fileID: 257639824633732548}
+  - component: {fileID: 4061882839824130036}
   m_Layer: 0
   m_Name: World Systems
   m_TagString: Untagged
@@ -443,7 +444,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90ad44b3ffa696741bd667cc545759aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &5936937910427673796
+--- !u!114 &7343991956635743007
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -452,10 +453,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 5290410587728248189}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 19546e374f8d23443a269f23ed61f371, type: 3}
+  m_Script: {fileID: 11500000, guid: 4f3d00f5ce6afe447ac88fb9fbdbb8a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &3945602204664508650
+  m_InitialCapacity: 2
+--- !u!114 &257639824633732548
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -468,6 +470,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_InitialCapacity: 64
+--- !u!114 &4061882839824130036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5290410587728248189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19546e374f8d23443a269f23ed61f371, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &9193859588559889003
 GameObject:
   m_ObjectHideFlags: 0
@@ -484,8 +498,8 @@ GameObject:
   - component: {fileID: 570733142633194342}
   - component: {fileID: 2675594497932884165}
   - component: {fileID: 2348247301363869649}
-  - component: {fileID: 1872794428212733475}
-  - component: {fileID: 2074639120450517978}
+  - component: {fileID: 1396959793695618962}
+  - component: {fileID: 2382060319574174615}
   m_Layer: 0
   m_Name: State
   m_TagString: Untagged
@@ -560,6 +574,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   QueuedPuzzle: {fileID: 11400000, guid: 866595658f266004093355d97a7d82b6, type: 2}
   ActivePuzzle: {fileID: 0}
+  Display: {fileID: 0}
   CellsUpdated: 0
   GroupCellsByRow: 0
   SelectedRow: -1
@@ -624,7 +639,7 @@ MonoBehaviour:
   FollowRadius: 80
   DocumentParent: {fileID: 0}
   DocumentAssets: {fileID: 0}
---- !u!114 &1872794428212733475
+--- !u!114 &1396959793695618962
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -636,7 +651,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cdfcaa2b3a2591646a33f592df96b308, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &2074639120450517978
+--- !u!114 &2382060319574174615
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

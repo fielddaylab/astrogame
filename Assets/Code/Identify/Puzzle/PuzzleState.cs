@@ -1,5 +1,9 @@
 using BeauPools;
+using FieldDay;
 using FieldDay.SharedState;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Astro {
@@ -7,6 +11,7 @@ namespace Astro {
         public PuzzleAsset QueuedPuzzle;
         public PuzzleAsset ActivePuzzle;
 
+        public PuzzleDisplay Display;
         public bool CellsUpdated = false;
 
         // Temp flag for grouped vs individual cell implementation
@@ -29,9 +34,6 @@ namespace Astro {
 
     public static partial class PuzzleUtility
     {
-        public static bool CheckFullyPopulated(PuzzleState state) {
-            return false;
-        }
         public static bool TrySetSelectedRow(PuzzleState state, int index)
         {
             if (state.ActivePuzzle == null) { return false; }

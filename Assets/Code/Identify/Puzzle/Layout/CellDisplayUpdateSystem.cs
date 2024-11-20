@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using FieldDay;
 using FieldDay.Systems;
 
@@ -23,9 +20,23 @@ namespace Astro
                         }
                     }
                 }
-
                 puzzleState.CellsUpdated = false;
             }
+        }
+    }
+
+    public static partial class PuzzleUtility {
+
+        public static void CheckEnableSubmit(PuzzleState state) {
+            if (CheckFullyPopulated(state)) {
+                state.Display.SubmitButton.gameObject.SetActive(true);
+            } 
+        }
+        public static bool CheckFullyPopulated(PuzzleState state) {
+            for (int i = 0; i < state.Display.Cells.Length; i++) {
+                if (!state.Display.Cells[i].DataSlot.HasData) return false;
+            }
+            return true;
         }
     }
 }
