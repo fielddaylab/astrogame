@@ -38,7 +38,7 @@ namespace Astro
                 // Use UIFocus pool
                 var newFocus = focusPools.Focii.Alloc(spaceCamera.Canvas.transform);
                 // TODO: assign relevant 2D representation
-                FocusableUtility.InitFocusable(newFocus, newCelestialObj.transform, null);
+                FocusableUtility.InitFocusable(focusState, newFocus, newCelestialObj, currAsset, DetermineSprite(currAsset.Category));
                 focusState.ActiveFocii.PushBack(newFocus);
 
                 CelestialPositionerUtility.PositionObject(center, newCelestialObj, currAsset.Coords.RightAscension, currAsset.Coords.Declination);
@@ -46,6 +46,27 @@ namespace Astro
             }
 
             m_State.Initialized = true;
+        }
+
+        private Sprite DetermineSprite(CelestialObjectCategory category)
+        {
+            switch(category)
+            {
+                case CelestialObjectCategory.Star:
+                    return m_State.DefaultStarSprite;
+                case CelestialObjectCategory.Planet:
+                    return m_State.DefaultPlanetSprite;
+                case CelestialObjectCategory.Satellite:
+                    return null;
+                case CelestialObjectCategory.Constellation:
+                    return null;
+                case CelestialObjectCategory.Galaxy:
+                    return null;
+                case CelestialObjectCategory.Comet:
+                    return null;
+                default:
+                    return null;
+            }
         }
     }
 }

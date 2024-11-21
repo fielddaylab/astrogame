@@ -9,5 +9,7 @@ namespace Astro
     {
         [HideInInspector] public bool Initialized = false;
         public GameObject CelestialObjPrefab;
+        public Sprite DefaultStarSprite;
+        public Sprite DefaultPlanetSprite;
     }
 }

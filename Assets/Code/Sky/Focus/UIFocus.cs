@@ -1,3 +1,4 @@
+using FieldDay;
 using FieldDay.Components;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,20 +9,27 @@ namespace Astro
 {
     public class UIFocus : BatchedComponent
     {
-        public Transform Target;
+        [HideInInspector] public Transform Target;
+        [HideInInspector] public CelestialAsset TargetData;
 
         public RectTransform Rect;
         public Image Represent2D;
-        // public Image Outline;
-        // public Button Button;
+        public Button Button;
     }
 
-    public static class FocusableUtility
+    public static partial class FocusableUtility
     {
-        public static void InitFocusable(UIFocus focus, Transform target, Sprite represent2D)
+        public static void InitFocusable(FocusState state, UIFocus focus, Transform target, CelestialAsset asset, Sprite represent2D)
         {
             focus.Target = target;
             focus.Represent2D.sprite = represent2D;
+            if (represent2D == null) {
+                focus.Represent2D.enabled = false;
+            }
+            focus.TargetData = asset;
+
+            focus.Button.onClick.RemoveAllListeners();
+            focus.Button.onClick.AddListener(() => { FocusableUtility.SetCurrentFocus(state, focus); });
         }
     }
 }

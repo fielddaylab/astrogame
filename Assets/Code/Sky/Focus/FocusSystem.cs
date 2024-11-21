@@ -12,17 +12,13 @@ namespace Astro {
         {
             var focusState = Find.State<FocusState>();
 
-            // reveal or hide according to visible on camera
+            // do things according to whether visible on camera
             if (secondary.BecameVisible)
             {
-                // focusState.ActiveFocii.PushBack(secondary);
-                // ent2D.enabled = false;
-                // TODO: map from focusable to focusState.ActiveFocii?
                 secondary.BecameVisible = false;
             }
             else if (secondary.BecameInvisible)
             {
-                // secondary.Represent2D.enabled = false;
                 secondary.BecameInvisible = false;
             }
         }
