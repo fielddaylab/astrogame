@@ -11,15 +11,16 @@ namespace Astro
         public override void ProcessWorkForComponent(SubmitButton primary, LabInteractable secondary, float deltaTime)
         {
             if (!secondary.InteractReceived) { return; }
-
-            if (PuzzleUtility.CheckSolutionCorrect(Find.State<PuzzleState>())) {
+            PuzzleState puzzle = Find.State<PuzzleState>();
+            if (PuzzleUtility.CheckSolutionCorrect(puzzle)) {
                 Log.Msg("[SubmitPuzzleSystem] Puzzle CORRECT! :D");
-                // TODO: submit to peer review, score points
-                primary.gameObject.SetActive(false);
+                DocumentUtility.SpawnDocument("CorrectDocument");
             } else {
                 Log.Msg("[SubmitPuzzleSystem] Puzzle INCORRECT! D:");
-                // TODO: highlight incorrect
+                // reload puzzle
+                PuzzleUtility.ClearCells(puzzle.Display);
             }
+            primary.gameObject.SetActive(false);
         }
     }
 

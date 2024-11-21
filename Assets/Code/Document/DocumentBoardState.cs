@@ -1,4 +1,5 @@
 using BeauRoutine;
+using BeauUtil;
 using FieldDay;
 using FieldDay.Assets;
 using FieldDay.SharedState;
@@ -37,6 +38,11 @@ namespace Astro {
             DocumentRenderer spawned = GameObject.Instantiate(asset.Prefab, state.DocumentParent);
             spawned.Title.SetText(asset.TitleText);
             spawned.Body.SetText(asset.BodyText);
+            spawned.transform.localPosition = Vector3.zero;
+        }
+
+        public static void SpawnDocument(StringHash32 id) {
+            SpawnDocument(Find.NamedAsset<DocumentAsset>(id));
         }
 
         #region Enable/Disable
@@ -70,7 +76,7 @@ namespace Astro {
         }
 
         private static IEnumerator ShiftZ(Transform doc, float deltaZ) {
-            yield return doc.MoveTo(doc.localPosition.z + deltaZ, 0.1f, Axis.Z).Ease(Curve.Smooth);
+            yield return doc.MoveTo(doc.position.z + deltaZ, 0.1f, Axis.Z).Ease(Curve.Smooth);
             yield return null;
         }
 

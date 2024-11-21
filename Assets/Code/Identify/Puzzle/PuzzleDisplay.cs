@@ -45,5 +45,11 @@ namespace Astro
                 }
             }
         }
+
+        public static void ClearCells(PuzzleDisplay display) {
+            foreach (PuzzleCell cell in display.Cells) {
+                DataUtility.ClearData(cell.DataSlot);
+            }
+        }
     }
 }
