@@ -14,6 +14,13 @@ namespace Astro
         [HideInInspector] public RingBuffer<UIFocus> ActiveFocii = new RingBuffer<UIFocus>(8);
         [HideInInspector] public UIFocus CurrentFocus = null;
         public Graphic FocusOutline;
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+
+            Game.Events.Register(GameEvents.MonitorEmptySpaceClicked, FocusableUtility.ClickEmptySpace);
+        }
     }
 
     public static partial class FocusableUtility
@@ -35,7 +42,14 @@ namespace Astro
             // Set new focus
             state.CurrentFocus = focus;
             var dataState = Find.State<DataPacketDistributionState>();
-            DataDistributionUtility.QueueConversion(dataState, focus.TargetData);
+            var data = focus == null ? null : focus.TargetData;
+            DataDistributionUtility.QueueConversion(dataState, data);
+        }
+
+        public static void ClickEmptySpace()
+        {
+            FocusState state = Find.State<FocusState>();
+            SetCurrentFocus(state, null);
         }
     }
 

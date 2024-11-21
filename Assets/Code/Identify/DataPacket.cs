@@ -9,23 +9,26 @@ namespace Astro {
     /// Packet of data.
     /// </summary>
     public struct DataPacket : IEquatable<DataPacket> {
+        public bool IsValid;
         public readonly DataTypeMask Type;
         public readonly StringHash32 HistoricalPatternId;
         public readonly Datum Value;
 
         #region Constructors
 
-        private DataPacket(DataTypeMask type, StringHash32 patternId, Datum value) {
+        private DataPacket(DataTypeMask type, StringHash32 patternId, Datum value, bool isValid = true) {
             Assert.True((type & (type - 1)) == 0, "Cannot specify combined mask '{0}' as type for data packet", type);
             Assert.True(type >= DataTypeMask.Historical_Coordinates, "Cannot specify pattern for non-historical data type '{0}'", type);
+            IsValid = isValid;
             Type = type;
             HistoricalPatternId = patternId;
             Value = value;
         }
 
-        private DataPacket(DataTypeMask type, Datum value) {
+        private DataPacket(DataTypeMask type, Datum value, bool isValid = true) {
             Assert.True((type & (type - 1)) == 0, "Cannot specify combined mask '{0}' as type for data packet", type);
             Assert.True(type < DataTypeMask.Historical_Coordinates, "Pattern required for historical data type '{0}'", type);
+            IsValid = isValid;
             Type = type;
             HistoricalPatternId = default;
             Value = value;
@@ -34,6 +37,10 @@ namespace Astro {
         #endregion // Constructors
 
         #region Factory
+
+        static public DataPacket Null(DataTypeMask type) {
+            return new DataPacket(type, new Datum(), false);
+        }
 
         static public DataPacket Name(CelestialAsset asset) {
             return new DataPacket(DataTypeMask.Name, new Datum() {

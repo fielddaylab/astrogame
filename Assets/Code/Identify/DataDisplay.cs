@@ -28,6 +28,7 @@ namespace Astro {
     }
 
     static public partial class DataUtility {
+        static readonly string EMPTY_OUTPUT = "[Null]";
         /// <summary>
         /// Populates a data display.
         /// </summary>
@@ -35,7 +36,13 @@ namespace Astro {
             bool displayedDefault = false;
             if (display.DefaultOutput) {
                 using(PooledStringBuilder psb = PooledStringBuilder.Create()) {
-                    displayedDefault = TryFormatForDefaultOutput(packet, display.Formatting, psb);
+                    if (packet.IsValid) {
+                        displayedDefault = TryFormatForDefaultOutput(packet, display.Formatting, psb);
+                    }
+                    else {
+                        psb.Builder.Append(EMPTY_OUTPUT);
+                        displayedDefault = true;
+                    }
                     display.DefaultOutput.SetText(psb);
                 }
             }

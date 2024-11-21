@@ -10,6 +10,7 @@ namespace Astro
     public class DataPacketDistributionState : SharedStateComponent
     {
         [HideInInspector] public CelestialAsset ToConvert;
+        [HideInInspector] public bool ReadyToConvert;
         public RingBuffer<DataPacket> DistributeQueue = new RingBuffer<DataPacket>(8);
     }
 
@@ -19,6 +20,7 @@ namespace Astro
         {
             // Current implementation only needs to handle 1 selected object at a time
             state.ToConvert = toConvert;
+            state.ReadyToConvert = true;
         }
     }
 }

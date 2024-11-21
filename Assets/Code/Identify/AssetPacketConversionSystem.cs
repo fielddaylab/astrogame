@@ -13,7 +13,7 @@ namespace Astro
         private DataTypeMask m_AvailableInstrumentTypes;
 
         public override void ProcessWork(float deltaTime) {
-            if (m_StateA.ToConvert == null) { return; }
+            if (!m_StateA.ReadyToConvert) { return; }
 
             // Setup
             
@@ -33,6 +33,7 @@ namespace Astro
             // Cleanup
             m_ConvertedPackets.Clear();
             m_StateA.ToConvert = null;
+            m_StateA.ReadyToConvert = false;
         }
 
         private void GatherRelevantDataTypes() {
@@ -44,11 +45,23 @@ namespace Astro
         private void GenerateNewPackets()
         {
             if ((m_AvailableInstrumentTypes & DataTypeMask.Name) != 0) {
-                DataPacket newPacket = DataPacket.Name(m_StateA.ToConvert);
+                DataPacket newPacket;
+                if (m_StateA.ToConvert != null) {
+                    newPacket = DataPacket.Name(m_StateA.ToConvert);
+                }
+                else {
+                    newPacket = DataPacket.Null(DataTypeMask.Name);
+                }
                 m_ConvertedPackets.PushBack(newPacket);
             }
             if ((m_AvailableInstrumentTypes & DataTypeMask.Coordinates) != 0) {
-                DataPacket newPacket = DataPacket.Coordinates(m_StateA.ToConvert.Coords);
+                DataPacket newPacket;
+                if (m_StateA.ToConvert != null) {
+                    newPacket = DataPacket.Coordinates(m_StateA.ToConvert.Coords);
+                }
+                else {
+                    newPacket = DataPacket.Null(DataTypeMask.Coordinates);
+                }
                 m_ConvertedPackets.PushBack(newPacket);
             }
             /* TODO: special handling for color
