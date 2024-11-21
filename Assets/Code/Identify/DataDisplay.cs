@@ -101,7 +101,7 @@ namespace Astro {
                         coords.RightAscension.ToString(sb, HmsPrefix.Hms);
                     }
                     if (hasSeparator) {
-                        sb.Append(", ");
+                        sb.Append(",\n");
                     }
                     if (decl) {
                         coords.Declination.ToString(sb, HmsPrefix.Quotes);

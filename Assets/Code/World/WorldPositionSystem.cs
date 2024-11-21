@@ -1,15 +1,24 @@
 using Astro;
+using FieldDay;
 using FieldDay.Systems;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Astro
 {
-    public class WorldPositionSystem : SystemBehaviour
+    public class WorldPositionSystem : SharedStateSystemBehaviour<WorldPositionState, SpaceCameraState>
     {
-        
+        public override void ProcessWork(float deltaTime)
+        {
+            if (m_StateA.Initialized) { return; }
+
+            WorldPositionUtility.TryLook(m_StateB.HorizonPlane, m_StateB.Camera.RootTransform, m_StateA.StartingLookCoords);
+
+            m_StateA.Initialized = true;
+        }
     }
 
     /// <summary>
@@ -78,35 +87,26 @@ namespace Astro
             */
         }
 
-        /*
-        public void MenuPositionAtLatLong()
+        public static void TryLook(Transform horizonPlaneRoot, Transform spaceCamRoot, EqCoords coords)
         {
-            float latDegrees = (float)CoordinateUtility.DegreesToDecimalDegrees(
-                (int)m_lat.x,
-                (int)m_lat.y,
-                m_lat.z);
 
-            float longDegrees = (float)CoordinateUtility.DegreesToDecimalDegrees(
-                (int)m_long.x,
-                (int)m_long.y,
-                m_long.z);
+            SpaceCameraState state = Find.State<SpaceCameraState>();
+            var dome = Find.State<SkyDome>();
+            float skyboxDist = dome.Radius;
 
-            PositionAtLatLongDegrees(latDegrees, longDegrees);
+            float raDegrees = (float)CoordinateUtility.RAToDegrees((int)coords.RightAscension.Hours, (int)coords.RightAscension.Minutes, coords.RightAscension.Seconds);
+            float declDegrees = (float)CoordinateUtility.DeclensionToDecimalDegrees((int)coords.Declination.Hours, (int)coords.Declination.Minutes, coords.Declination.Seconds);
+            var posOffset = CoordinateUtility.RAscDeclDegreesToCartesianCoordinates(raDegrees, declDegrees) * skyboxDist;
+
+            var lookPos = dome.Position + posOffset * skyboxDist;
+
+            spaceCamRoot.LookAt(lookPos, horizonPlaneRoot.up);
+            var angles = spaceCamRoot.transform.localEulerAngles;
+            angles.z = 0;
+            spaceCamRoot.transform.localEulerAngles = angles;
+
+            state.HorizLook = angles.y;
+            state.VertLook = angles.x > 90 ? angles.x - 360 : angles.x;
         }
-
-        private void MenuLookRascDecl()
-        {
-            int skyboxDist = 1000;
-
-            float raDegrees = (float)CoordinateUtility.RAToDegrees((int)m_rightAscension.Hours, (int)m_rightAscension.Minutes, m_rightAscension.Seconds);
-            float declDegrees = (float)CoordinateUtility.DeclensionToDecimalDegrees((int)m_declination.Hours, (int)m_declination.Minutes, m_declination.Seconds);
-            var pos = CoordinateUtility.RAscDeclDegreesToCartesianCoordinates(raDegrees, declDegrees) * skyboxDist;
-
-            m_camRoot.LookAt(pos, m_toPosition.transform.up);
-            var angles = m_camRoot.transform.localEulerAngles;
-            angles.x = 0;
-            m_camRoot.transform.localEulerAngles = angles;
-        }
-        */
     }
 }
