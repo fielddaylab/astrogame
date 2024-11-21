@@ -31,6 +31,12 @@ namespace Astro
                     for (int c = 0; c < numCols; c++) {
                         var newCell = pools.Cells.Alloc(display.transform.position);
                         newCell.DataSlot.Type = types[c];
+                        if ((state.QueuedPuzzle.Rows[r].ProvidedProperties & types[c]) != 0) {
+                            // load provided data directly
+                            CelestialAsset asset = Find.NamedAsset<CelestialAsset>(state.QueuedPuzzle.Rows[r].Object);
+                            var newPacket = GenerateProvidedPacket(types[c], asset);
+                            DataUtility.TrySetData(newCell.DataSlot, newPacket);
+                        }
                         m_CellWorkList.PushBack(newCell);
                     }
                 }
@@ -51,6 +57,65 @@ namespace Astro
             state.ActivePuzzle = state.QueuedPuzzle;
             state.QueuedPuzzle = null;
             m_CellWorkList.Clear();
+        }
+
+        /// <summary>
+        /// TODO: merge this with AssetPacketConversionSystem
+        /// </summary>
+        private DataPacket GenerateProvidedPacket(DataTypeMask type, CelestialAsset asset)
+        {
+            if ((type & DataTypeMask.Name) != 0)
+            {
+                return DataPacket.Name(asset);
+            }
+            if ((type & DataTypeMask.Coordinates) != 0)
+            {
+                return DataPacket.Coordinates(asset.Coords);
+            }
+            /* TODO: special handling for color
+            if ((type & DataTypeMask.Color) != 0) {
+                return DataPacket.Color(asset.ColorId);
+            }
+            */
+            if ((type & DataTypeMask.ApparentMagnitude) != 0)
+            {
+                return DataPacket.ApparentMagnitude(asset.ApparentMagnitude);
+            }
+            if ((type & DataTypeMask.AbsoluteMagnitude) != 0)
+            {
+                return DataPacket.AbsoluteMagnitude(asset.AbsoluteMagnitude);
+            }
+            if ((type & DataTypeMask.MaterialSpectrum) != 0)
+            {
+                return DataPacket.Spectrograph(asset.Spectrograph);
+            }
+            if ((type & DataTypeMask.Temperature) != 0)
+            {
+                return DataPacket.Temperature(asset.Temperature);
+            }
+            if ((type & DataTypeMask.Distance) != 0)
+            {
+                return DataPacket.Distance(asset.Distance);
+            }
+            /* TODO: historical data handling
+            if ((type & DataTypeMask.Historical_Coordinates) != 0) {
+                return DataPacket.HistoricalCoordinates(asset.Coords, );
+            }
+            if ((type & DataTypeMask.Historical_ApparentMagnitude) != 0) {
+                return DataPacket.HistoricalApparentMagnitude(asset.ApparentMagnitude, );
+            }
+            if ((type & DataTypeMask.Historical_Temperature) != 0) {
+                return DataPacket.HistoricalTemperature(asset.Temperature, );
+            }
+            if ((type & DataTypeMask.Historical_Distance) != 0) {
+                return DataPacket.HistoricalDistance(asset.Distance, );
+            }
+            if ((type & DataTypeMask.Historical_Color) != 0) {
+                return DataPacket.HistoricalColor(asset.Color, );
+            }
+            */
+
+            return new DataPacket();
         }
     }
 }
