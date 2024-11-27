@@ -6,6 +6,8 @@ using BeauUtil.Debugger;
 namespace Astro
 {
     [SysUpdate(GameLoopPhase.Update, 501)] // After RowSelectSystem
+
+    // TODO: connect/merge with PointsReviewSystem
     public class SubmitPuzzleSystem : ComponentSystemBehaviour<SubmitButton, LabInteractable>
     {
         public override void ProcessWorkForComponent(SubmitButton primary, LabInteractable secondary, float deltaTime)
