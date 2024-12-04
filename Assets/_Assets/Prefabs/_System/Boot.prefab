@@ -197,6 +197,7 @@ GameObject:
   - component: {fileID: 7343991956635743007}
   - component: {fileID: 257639824633732548}
   - component: {fileID: 4061882839824130036}
+  - component: {fileID: 5429548766460902429}
   m_Layer: 0
   m_Name: World Systems
   m_TagString: Untagged
@@ -483,6 +484,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19546e374f8d23443a269f23ed61f371, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5429548766460902429
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5290410587728248189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 980ddb753c1f98b448bae14e2d1aef83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &9193859588559889003
 GameObject:
   m_ObjectHideFlags: 0
@@ -502,6 +515,7 @@ GameObject:
   - component: {fileID: 1396959793695618962}
   - component: {fileID: 2382060319574174615}
   - component: {fileID: 245878779192898914}
+  - component: {fileID: 7693949449527044517}
   m_Layer: 0
   m_Name: State
   m_TagString: Untagged
@@ -700,6 +714,31 @@ MonoBehaviour:
       Hours: 9
       Minutes: 24
       Seconds: 26
+--- !u!114 &7693949449527044517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9193859588559889003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 577efc74bc9a0f7419aded9a7b8a63a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ReviewModule: {fileID: 0}
+  ReviewTimer:
+    Period: 5
+    Behavior: 1
+  ReviewCooldown:
+    Period: 2
+    Behavior: 1
+  PipCorrect: {fileID: 21300000, guid: 7426592a3050c034e8fd29145e1b9c4b, type: 3}
+  PipIncorrect: {fileID: 21300000, guid: 1c86999c9c9c4f042ab4c513aa91a976, type: 3}
+  ActivePips: 0
+  SubmittedPuzzle: 0
+  SubmittedObject: 0
+  SciencePoints: 0
 --- !u!1001 &5502758588094337030
 PrefabInstance:
   m_ObjectHideFlags: 0
