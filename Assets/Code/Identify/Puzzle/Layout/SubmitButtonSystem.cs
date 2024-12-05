@@ -3,21 +3,46 @@ using FieldDay;
 using System;
 using BeauUtil.Debugger;
 
-namespace Astro
-{
+namespace Astro {
     [SysUpdate(GameLoopPhase.Update, 501)] // After RowSelectSystem
 
     // TODO: connect/merge with PointsReviewSystem
-    public class SubmitPuzzleSystem : ComponentSystemBehaviour<SubmitButton, LabInteractable>
-    {
-        public override void ProcessWorkForComponent(SubmitButton primary, LabInteractable secondary, float deltaTime)
-        {
+    public class SubmitButtonSystem : ComponentSystemBehaviour<SubmitButton, LabInteractable> {
+        public override void ProcessWorkForComponent(SubmitButton primary, LabInteractable secondary, float deltaTime) {
             if (!secondary.InteractReceived) { return; }
+            switch (primary.ButtonType) {
+                case SubmitButtonType.SubmitPuzzle: {
+                        TrySubmitPuzzle(primary);
+                        break;
+                    }
+                case SubmitButtonType.SubmitIdentification: {
+                        TrySubmitIdentification(primary);
+                        break;
+                    }
+                default: {
+                        break;
+                    }
+            }
+
+        }
+
+        private bool TrySubmitPuzzle(SubmitButton btn) {
             PlayerPointsState pps = Find.State<PlayerPointsState>();
             if (!pps.SubmittedPuzzle) {
                 pps.SubmittedPuzzle = true;
-                primary.gameObject.SetActive(false);
+                btn.gameObject.SetActive(false);
+                return true;
             }
+            return false;
+        }
+        private bool TrySubmitIdentification(SubmitButton btn) {
+            PlayerPointsState pps = Find.State<PlayerPointsState>();
+            if (!pps.SubmittedObject) {
+                pps.SubmittedObject = true;
+                btn.gameObject.SetActive(false);
+                return true;
+            }
+            return false;
         }
     }
 

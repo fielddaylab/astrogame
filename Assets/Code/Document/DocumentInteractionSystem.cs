@@ -9,7 +9,6 @@ namespace Astro {
 
     [SysUpdate(GameLoopPhase.Update, 1)]
     public class DocumentInteractionSystem : SharedStateSystemBehaviour<DocumentBoardState> {
-        private int DOCUMENT_MASK = -1;
         public override void ProcessWork(float deltaTime) {
             if (!m_State.EnableDocumentInteraction) return;
 
@@ -18,18 +17,6 @@ namespace Astro {
                 DocumentUtility.MoveSelectedToMouse(m_State);
             }
 
-            if (Game.Input.IsMousePressed(FieldDay.HID.MouseButton.Left)) {
-                var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, DOCUMENT_MASK)) {
-                    var doc = hit.collider.GetComponent<DocumentInteractable>();
-                    if (doc) {
-                        DocumentUtility.SelectDocument(doc, m_State);
-                    }
-                }
-            }
-        }
-        public override void Initialize() {
-            DOCUMENT_MASK = LayerMask.GetMask("DocumentInteract");
         }
 
     }
