@@ -1,14 +1,15 @@
 
+using FieldDay.Assets;
 using FieldDay.Components;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Astro {
 
-    public class RefGuidePage : BatchedComponent {
+    [CreateAssetMenu(menuName = "AstroGame/Reference/Page")]
+    public class ReferencePageAsset : NamedAsset {
         public ReferenceEntry[] EntriesLeft;
         public ReferenceEntry[] EntriesRight;
-        public Graphic Background;
+        public Sprite BackgroundSprite;
     }
-
 }

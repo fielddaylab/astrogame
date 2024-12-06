@@ -1,5 +1,6 @@
 
 
+using BeauUtil;
 using FieldDay;
 using FieldDay.SharedState;
 using UnityEngine;
@@ -8,9 +9,53 @@ namespace Astro {
     public class RefGuideState : SharedStateComponent {
         public ReferenceEntry SelectedRefEntry;
         public SpriteRenderer SelectionSprite;
+        public ReferencePageAsset CurrentPage;
+
+        [Header("Colliders")]
+        public RefGuideRegion[] LeftRegions;
+        public RefGuideRegion BackRegion;
+        public RefGuideRegion[] RightRegions;
+        public RefGuideRegion ForwardRegion;
     }
 
     public static partial class ReferenceUtility {
+
+        public static void LoadPage(StringHash32 pageId, RefGuideState rgs = null) {
+            if (rgs == null) {
+                rgs = Find.State<RefGuideState>();
+            }
+            ReferencePageAsset newPage = Find.NamedAsset<ReferencePageAsset>(pageId);
+            if (rgs.CurrentPage == newPage) return;
+            PopulateReferenceCanvas(newPage);
+            PopulateReferenceColliders(newPage, rgs);
+        }
+
+        private static void PopulateReferenceColliders(ReferencePageAsset page, RefGuideState rgs = null) {
+            if (rgs == null) {
+                rgs = Find.State<RefGuideState>();
+            }
+            
+            if (page == null) {
+                ClearReferenceColliders(rgs);
+                return;
+            }
+
+            for (int i = 0; i < rgs.LeftRegions.Length; i++) {
+                if (i < page.EntriesLeft.Length) {
+                    rgs.LeftRegions[i].ConnectedEntry = page.EntriesLeft[i];
+                }
+                if (i < page.EntriesRight.Length) {
+                    rgs.RightRegions[i].ConnectedEntry = page.EntriesRight[i];
+                }
+            }
+        }
+
+        private static void ClearReferenceColliders(RefGuideState rgs) {
+            for (int i = 0; i < rgs.LeftRegions.Length; i++) {
+                rgs.LeftRegions[i].ConnectedEntry = null;
+                rgs.RightRegions[i].ConnectedEntry = null;
+            }
+        }
 
         public static void SelectRegion(RefGuideRegion region) {
             RefGuideState rgs = Find.State<RefGuideState>();
