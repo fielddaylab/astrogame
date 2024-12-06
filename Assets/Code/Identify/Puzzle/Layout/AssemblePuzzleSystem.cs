@@ -26,11 +26,11 @@ namespace Astro
             foreach (var display in m_Components)
             {
                 // generate header labels
-                TMP_Text[] headers = new TMP_Text[numCols];
+                PuzzleHeader[] headers = new PuzzleHeader[numCols];
                 for (int c = 0; c < numCols; c++)
                 {
                     var newHeader = pools.Headers.Alloc(display.transform.position);
-                    newHeader.SetText(GenerateHeaderText(types[c]));
+                    newHeader.Text.SetText(GenerateHeaderText(types[c]));
                     headers[c] = newHeader;
                 }
 
@@ -50,7 +50,7 @@ namespace Astro
                 }
 
                 PuzzleUtility.LoadCells(display, m_CellWorkList, headers, numCols);
-                PuzzleUtility.LayoutCells(display);
+                PuzzleUtility.LayoutCells(display, types);
             }
 
             state.SelectedCells = new bool[state.QueuedPuzzle.Rows.Length, numCols];

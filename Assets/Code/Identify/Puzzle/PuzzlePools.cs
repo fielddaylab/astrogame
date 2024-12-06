@@ -12,7 +12,7 @@ namespace Astro
         #region Types
 
         [Serializable] public class PuzzleCellPool : SerializablePool<PuzzleCell> { }
-        [Serializable] public class PuzzleHeaderPool : SerializablePool<TMP_Text> { }
+        [Serializable] public class PuzzleHeaderPool : SerializablePool<PuzzleHeader> { }
 
         #endregion // Types
 
