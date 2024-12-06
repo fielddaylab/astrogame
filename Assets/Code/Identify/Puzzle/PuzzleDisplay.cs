@@ -16,6 +16,7 @@ namespace Astro
         public Transform HeaderAnchorPos;
         public float RowSpacing;
         public float ColSpacing;
+        public float BaseCellWidth;
         public LabInteractable SubmitButton;
     }
 
@@ -42,15 +43,12 @@ namespace Astro
             var colDims = GenerateColDims(types);
 
             // position and scale headers
+            var cumulativePos = new Vector3(-display.BaseCellWidth, 0, 0);
+
             for (int c = 0; c < display.NumCols; c++)
             {
                 var currHeader = display.Headers[c];
                 currHeader.transform.SetParent(display.HeaderAnchorPos);
-
-                // pos
-                var newPos = Vector3.zero;
-                newPos.x += display.ColSpacing * c;
-                currHeader.transform.localPosition = newPos;
 
                 // scale
                 var currScale = currHeader.transform.lossyScale;
@@ -63,20 +61,22 @@ namespace Astro
                     origTextScaleLossy.z / currHeader.Text.transform.lossyScale.z
                     );
                 currHeader.Text.transform.SetScale(origTextScaleLocal.x * scaleRatio, Axis.X);
+
+                // pos
+                // uniform spacing regardless of previous element scaling
+                cumulativePos.x += (display.BaseCellWidth * colDims[c].x + display.ColSpacing) / 2.0f;
+                currHeader.transform.localPosition = cumulativePos;
+                cumulativePos.x += (display.BaseCellWidth * colDims[c].x + display.ColSpacing) / 2.0f;
             }
 
             // position and scale cells
             int numRows = display.Cells.Length / display.NumCols;
+            cumulativePos = Vector3.zero;
             for (int r = 0; r < numRows; r++) {
+                cumulativePos.x = -display.BaseCellWidth;
                 for (int c = 0; c < display.NumCols; c++) {
                     var currCell = display.Cells[r * display.NumCols + c];
                     currCell.transform.SetParent(display.CellAnchorPos);
-
-                    //pos
-                    var newPos = Vector3.zero;
-                    newPos.y += display.RowSpacing * r;
-                    newPos.x += display.ColSpacing * c;
-                    currCell.transform.localPosition = newPos;
 
                     // scale
                     if (currCell.DataSlot.Displays.Length == 0) { continue; }
@@ -92,7 +92,14 @@ namespace Astro
                     for (int i = 0; i < currCell.DataSlot.Displays.Length; i++) {
                         currCell.DataSlot.Displays[i].DefaultOutput.transform.SetScale(origTextScaleLocal.x * scaleRatio, Axis.X);
                     }
+
+                    //pos
+                    // uniform spacing regardless of previous element scaling
+                    cumulativePos.x += (display.BaseCellWidth * colDims[c].x + display.ColSpacing) / 2.0f;
+                    currCell.transform.localPosition = cumulativePos;
+                    cumulativePos.x += (display.BaseCellWidth * colDims[c].x + display.ColSpacing) / 2.0f;
                 }
+                cumulativePos.y += display.RowSpacing;
             }
         }
 
@@ -137,7 +144,7 @@ namespace Astro
                 return defaultDims;
             }
             if ((type & DataTypeMask.Distance) != 0) {
-                return defaultDims;
+                return defaultDims * 0.8f;
             }
             if ((type & DataTypeMask.Historical_Coordinates) != 0) {
                 return defaultDims;
