@@ -4,6 +4,7 @@ using UnityEngine;
 using FieldDay.Systems;
 using FieldDay;
 using BeauUtil;
+using TMPro;
 
 namespace Astro
 {
@@ -24,7 +25,14 @@ namespace Astro
 
             foreach (var display in m_Components)
             {
-                // TODO: generate header labels
+                // generate header labels
+                TMP_Text[] headers = new TMP_Text[numCols];
+                for (int c = 0; c < numCols; c++)
+                {
+                    var newHeader = pools.Headers.Alloc(display.transform.position);
+                    newHeader.SetText(GenerateHeaderText(types[c]));
+                    headers[c] = newHeader;
+                }
 
                 // generate and organize puzzle cells
                 for (int r = 0; r < state.QueuedPuzzle.Rows.Length; r++) {
@@ -41,7 +49,7 @@ namespace Astro
                     }
                 }
 
-                    PuzzleUtility.LoadCells(display, m_CellWorkList, numCols);
+                PuzzleUtility.LoadCells(display, m_CellWorkList, headers, numCols);
                 PuzzleUtility.LayoutCells(display);
             }
 
@@ -116,6 +124,51 @@ namespace Astro
             */
 
             return new DataPacket();
+        }
+
+        private string GenerateHeaderText(DataTypeMask type)
+        {
+            if ((type & DataTypeMask.Name) != 0) {
+                return DataTypeLabels.Name;
+            }
+            if ((type & DataTypeMask.Coordinates) != 0) {
+                return DataTypeLabels.Coordinates;
+            }
+            if ((type & DataTypeMask.Color) != 0) {
+                return DataTypeLabels.Color;
+            }
+            if ((type & DataTypeMask.ApparentMagnitude) != 0) {
+                return DataTypeLabels.ApparentMagnitude;
+            }
+            if ((type & DataTypeMask.AbsoluteMagnitude) != 0) {
+                return DataTypeLabels.AbsoluteMagnitude;
+            }
+            if ((type & DataTypeMask.MaterialSpectrum) != 0) {
+                return DataTypeLabels.MaterialSpectrum;
+            }
+            if ((type & DataTypeMask.Temperature) != 0) {
+                return DataTypeLabels.Temperature;
+            }
+            if ((type & DataTypeMask.Distance) != 0) {
+                return DataTypeLabels.Distance;
+            }
+            if ((type & DataTypeMask.Historical_Coordinates) != 0) {
+                return DataTypeLabels.HistoricalCoordinates;
+            }
+            if ((type & DataTypeMask.Historical_ApparentMagnitude) != 0) {
+                return DataTypeLabels.HistoricalApparentMagnitude;
+            }
+            if ((type & DataTypeMask.Historical_Temperature) != 0) {
+                return DataTypeLabels.HistoricalTemperature;
+            }
+            if ((type & DataTypeMask.Historical_Distance) != 0) {
+                return DataTypeLabels.HistoricalDistance;
+            }
+            if ((type & DataTypeMask.Historical_Color) != 0) {
+                return DataTypeLabels.HistoricalColor;
+            }
+
+            return string.Empty;
         }
     }
 }

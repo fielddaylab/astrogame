@@ -3,6 +3,7 @@ using FieldDay.SharedState;
 using FieldDay;
 using System;
 using UnityEngine;
+using TMPro;
 
 namespace Astro
 {
@@ -11,11 +12,13 @@ namespace Astro
         #region Types
 
         [Serializable] public class PuzzleCellPool : SerializablePool<PuzzleCell> { }
+        [Serializable] public class PuzzleHeaderPool : SerializablePool<TMP_Text> { }
 
         #endregion // Types
 
         [Header("Puzzle")]
         public PuzzleCellPool Cells;
+        public PuzzleHeaderPool Headers;
 
         [Header("Shared")]
         public Transform PoolRoot;
@@ -23,6 +26,7 @@ namespace Astro
         void IRegistrationCallbacks.OnRegister()
         {
             Cells.TryInitialize(PoolRoot);
+            Headers.TryInitialize(PoolRoot);
         }
 
         void IRegistrationCallbacks.OnDeregister()
