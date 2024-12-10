@@ -11,6 +11,8 @@ namespace Astro {
         public SpriteRenderer SelectionSprite;
         public ReferencePageAsset CurrentPage;
 
+        public SubmitButton SubmitButton;
+
         [Header("Colliders")]
         public RefGuideRegion[] LeftRegions;
         public RefGuideRegion BackRegion;
@@ -68,8 +70,15 @@ namespace Astro {
             rgs.SelectionSprite.enabled = true;
             rgs.SelectionSprite.transform.SetParent(region.transform, true);
             rgs.SelectionSprite.transform.localPosition = Vector3.zero;
-            
+
+            rgs.SubmitButton.gameObject.SetActive(Find.State<FocusState>().CurrentFocus != null && !PointsUtility.ReviewInProgress());         
         }
+
+        public static void TryEnableIDSubmit(bool focusActive) {
+            RefGuideState rgs = Find.State<RefGuideState>();
+            rgs.SubmitButton.gameObject.SetActive(focusActive && rgs.SelectedRefEntry != null && !PointsUtility.ReviewInProgress());
+        }
+
         public static ReferenceEntry GetSelectedRef() {
             return Find.State<RefGuideState>().SelectedRefEntry;
         }

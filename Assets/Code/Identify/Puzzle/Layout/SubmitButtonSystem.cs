@@ -8,7 +8,7 @@ namespace Astro {
 
     // TODO: connect/merge with PointsReviewSystem
     public class SubmitButtonSystem : ComponentSystemBehaviour<SubmitButton, LabInteractable> {
-        public override void ProcessWorkForComponent(SubmitButton primary, LabInteractable secondary, float deltaTime) {
+        public override void ProcessWorkForComponent(SubmitButton primary, LabInteractable secondary, float deltaTime) {          
             if (!secondary.InteractReceived) { return; }
             switch (primary.ButtonType) {
                 case SubmitButtonType.SubmitPuzzle: {

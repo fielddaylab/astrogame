@@ -2,10 +2,16 @@ using System;
 using System.Collections.Generic;
 using FieldDay;
 using FieldDay.Components;
+using TMPro;
+using UnityEngine;
 
 namespace Astro {
     public sealed class LabInstrument : BatchedComponent, IRegistrationCallbacks {
         public DataSlot[] AutoPopulated;
+        public GameObject LockPanel;
+
+        public int PointsToUnlock;
+        public TMP_Text UnlockText;
         
         [NonSerialized] public bool Unlocked;
 

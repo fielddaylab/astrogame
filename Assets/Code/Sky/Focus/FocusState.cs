@@ -44,6 +44,8 @@ namespace Astro
             var dataState = Find.State<DataPacketDistributionState>();
             var data = focus == null ? null : focus.TargetData;
             DataDistributionUtility.QueueConversion(dataState, data);
+
+            ReferenceUtility.TryEnableIDSubmit(focus != null);
         }
 
         public static void ClickEmptySpace()

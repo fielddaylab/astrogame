@@ -22,6 +22,13 @@ namespace Astro {
 
 
     public static partial class PointsUtility {
+
+        public static bool ReviewInProgress(PlayerPointsState state = null) {
+            if (state == null) {
+                state = Find.State<PlayerPointsState>();
+            }
+            return state.ReviewTimer.GetProgress() > 0 || state.ReviewCooldown.GetProgress() > 0;
+        }
         public static int GetPoints(PlayerPointsState state = null) {
             if (state == null) {
                 state = Find.State<PlayerPointsState>();
