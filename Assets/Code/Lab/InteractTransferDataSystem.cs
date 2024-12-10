@@ -15,8 +15,7 @@ namespace Astro
 
             // Transfer data on interact if there is a valid destination
             var dataState = Find.State<DataTransferState>();
-            if (dataState.SelectedTarget != null && secondary.DataSlot.HasData) {
-                DataUtility.AssignSelectedSource(dataState, secondary.DataSlot, true);
+            if (dataState.SelectedTarget != null && dataState.SelectedSource != null && dataState.SelectedSource.HasData) {
                 if (DataUtility.TryTransferData(dataState.SelectedSource, dataState.SelectedTarget)) {
                     Debug.Log("[InteractTransferSystem] Transfer success");
                     PuzzleUtility.CheckEnableSubmit(Find.State<PuzzleState>());
