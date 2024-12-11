@@ -7,10 +7,13 @@ using UnityEngine;
 
 namespace Astro {
     public class RefGuideState : SharedStateComponent {
+        [Header("Data")]
         public ReferenceEntry SelectedRefEntry;
-        public SpriteRenderer SelectionSprite;
         public ReferencePageAsset CurrentPage;
 
+        [Header("Game Objects")]
+        public Transform RefGuideRoot;
+        public SpriteRenderer SelectionSprite;
         public SubmitButton SubmitButton;
 
         [Header("Colliders")]
@@ -96,5 +99,11 @@ namespace Astro {
             return RefMatchesCelestialAsset(refEntry, focus.TargetData);
 
         }
+
+        public static void ToggleReferenceActive() {
+            RefGuideState guide = Find.State<RefGuideState>();
+            guide.RefGuideRoot.gameObject.SetActive(!guide.RefGuideRoot.gameObject.activeSelf);
+        }
+
     }
 }

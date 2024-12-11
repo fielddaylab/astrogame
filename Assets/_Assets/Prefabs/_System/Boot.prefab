@@ -200,6 +200,7 @@ GameObject:
   - component: {fileID: 4061882839824130036}
   - component: {fileID: 5429548766460902429}
   - component: {fileID: 7967020039113082974}
+  - component: {fileID: 8949707677050844603}
   m_Layer: 0
   m_Name: World Systems
   m_TagString: Untagged
@@ -510,6 +511,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2444494f57e0b074b9cd9ee65866d61b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8949707677050844603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5290410587728248189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a91931bdea09764d927fcd96cc1e8f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_InitialCapacity: 64
 --- !u!1 &9193859588559889003
 GameObject:
   m_ObjectHideFlags: 0
@@ -530,6 +544,7 @@ GameObject:
   - component: {fileID: 2382060319574174615}
   - component: {fileID: 245878779192898914}
   - component: {fileID: 7693949449527044517}
+  - component: {fileID: 2617033555420481094}
   m_Layer: 0
   m_Name: State
   m_TagString: Untagged
@@ -762,6 +777,37 @@ MonoBehaviour:
   SubmittedPuzzle: 0
   SubmittedObject: 0
   SciencePoints: 0
+--- !u!114 &2617033555420481094
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9193859588559889003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb1f2f354c26eba4da7950ace1e6accc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SelectedRefEntry: {fileID: 0}
+  CurrentPage: {fileID: 0}
+  RefGuideRoot: {fileID: 0}
+  SelectionSprite: {fileID: 0}
+  SubmitButton: {fileID: 0}
+  LeftRegions:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  BackRegion: {fileID: 0}
+  RightRegions:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  ForwardRegion: {fileID: 0}
 --- !u!1001 &5502758588094337030
 PrefabInstance:
   m_ObjectHideFlags: 0
