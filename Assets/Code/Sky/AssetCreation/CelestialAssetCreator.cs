@@ -14,6 +14,9 @@ namespace Astro
     {
         private const string ASSET_DELIM = "::";
         private const string FEATURE_DELIM = "@";
+        private const string SUBGROUP_OPEN = "(";
+        private const string SUBGROUP_CLOSE = ")";
+        private const string SUBGROUP_SEP = ",";
         private const string DEF_FILENAME = "CelestialAssetDefinitions";
         private const string NEW_ASSET_DIR = "_Assets/Data/Sky/Stars/";
 
@@ -55,7 +58,7 @@ namespace Astro
                     Debug.Log("[CelestialAssetCreator] Modifying existing asset " + assetName + ".");
                 }
 
-                currAsset.DisplayName = "TEST";
+                currAsset.DisplayName = string.Empty;
 
                 for (int f = 1; f < features.Length; f++) {
                     string feature = features[f];
@@ -63,23 +66,46 @@ namespace Astro
                     if (spaceIndex == -1) { continue; }
                     string id = feature.Substring(0, spaceIndex).ToLower();
                     string data = feature.Substring(spaceIndex).Trim();
+                    string workingData = data;
 
                     if (id.Contains(NAME_ID)) {
                         currAsset.DisplayName = data;
                     }
-                    else if (id.Contains(COORD_ID))
-                    {
-                        // TODO
-                        // newAsset.Coords = new EqCoords();
+                    else if (id.Contains(COORD_ID)) {
+                        currAsset.Coords = new EqCoords();
+                        int hrs;
+                        int mins;
+                        float secs;
+
+                        // RA
+                        int openIdx = workingData.IndexOf(SUBGROUP_OPEN) + 1;
+                        int closeIdx = workingData.IndexOf(SUBGROUP_CLOSE);
+                        string ra = workingData.Substring(openIdx, closeIdx - openIdx);
+                        string[] vals = ra.Split(SUBGROUP_SEP, System.StringSplitOptions.RemoveEmptyEntries);
+                        hrs = int.Parse(vals[0].Trim());
+                        mins = int.Parse(vals[1].Trim());
+                        secs = float.Parse(vals[2].Trim());
+
+                        currAsset.Coords.RightAscension = new HmsCoords(hrs, mins, secs);
+                        workingData = workingData.Substring(closeIdx + 1).Trim();
+
+                        // Declination
+                        openIdx = workingData.IndexOf(SUBGROUP_OPEN) + 1;
+                        closeIdx = workingData.IndexOf(SUBGROUP_CLOSE);
+                        string decl = workingData.Substring(openIdx, closeIdx - openIdx);
+                        vals = decl.Split(SUBGROUP_SEP, System.StringSplitOptions.RemoveEmptyEntries);
+                        hrs = int.Parse(vals[0].Trim());
+                        mins = int.Parse(vals[1].Trim());
+                        secs = float.Parse(vals[2].Trim());
+                        currAsset.Coords.Declination = new HmsCoords(hrs, mins, secs);
                     }
-                    else if (id.Contains(CATEGORY_ID))
-                    {
+                    else if (id.Contains(CATEGORY_ID)) {
                         // TODO
-                        // newAsset.Coords = new EqCoords();
+                        // currAsset.Category = ;
                     }
                     else if (id.Contains(COLOR_ID)) {
                         // TODO
-                        // newAsset.ColorId = data;
+                        // currAsset.ColorId = data;
                     }
                 }
 
