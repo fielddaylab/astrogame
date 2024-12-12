@@ -3,13 +3,14 @@ using System;
 namespace Astro {
     [Flags]
     public enum SpectrographMaterialMask {
-        Hydrogen = 0x01,
-        Helium = 0x02,
-        Carbon = 0x04,
-        Iron = 0x08,
-        Calcium = 0x10,
-        Sodium = 0x20,
-        Magnesium = 0x40,
-        Oxygen = 0x80
+        Hydrogen = 0x001,
+        Helium = 0x002,
+        Carbon = 0x004,
+        Iron = 0x008,
+        Calcium = 0x010,
+        Sodium = 0x020,
+        Magnesium = 0x040,
+        Oxygen = 0x080,
+        Titanium = 0x100,
     }
 }
