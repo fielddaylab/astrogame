@@ -156,7 +156,6 @@ namespace Astro
 
             Debug.Log("[CelestialAssetCreator] Loading Completed!");
         }
-#endif // UNITY_EDITOR
 
         #region Helpers
 
@@ -272,5 +271,8 @@ namespace Astro
         }
 
         #endregion // Helpers
+
+#endif // UNITY_EDITOR
+
     }
 }
