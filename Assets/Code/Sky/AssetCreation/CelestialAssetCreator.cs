@@ -32,11 +32,13 @@ namespace Astro
 
         private const string NEW_ASSET_DIR = "_Assets/Data/Sky/";
         private const string CONSTELLATION_DIR = "_Assets/Data/Sky/Constellations/";
+        private const string ENTRY_DIR = "_Assets/Data/Reference/Pages/";
         private const string COLOR_DIR = "_Assets/Data/Reference/Colors/";
 
         private const string NAME_ID = "name";
         private const string COORD_ID = "coords";
         private const string CATEGORY_ID = "category";
+        private const string REF_ENTRY_ID = "entry";
         private const string CONSTELLATION_ID = "constellation";
         private const string TEMPERATURE_ID = "temperature";
         private const string COLOR_ID = "color";
@@ -106,6 +108,10 @@ namespace Astro
                             else if (id.Contains(CATEGORY_ID))
                             {
                                 ReadCategory(ref currAsset, workingData);
+                            }
+                            else if (id.Contains(REF_ENTRY_ID))
+                            {
+                                ReadReferenceEntry(ref currAsset, workingData);
                             }
                             else if (id.Contains(CONSTELLATION_ID))
                             {
@@ -201,6 +207,16 @@ namespace Astro
             }
             else {
                 Debug.LogWarning("[CelestialAssetCreator] Unable to read category for asset " + currAsset.DisplayName);
+            }
+        }
+
+        private static void ReadReferenceEntry(ref CelestialAsset currAsset, string workingData)
+        {
+            string assetName = workingData;
+            string entryAssetPath = "Assets/" + ENTRY_DIR + assetName + ".asset";
+            ReferenceEntry entryAsset = AssetDatabase.LoadAssetAtPath<ReferenceEntry>(entryAssetPath);
+            if (entryAsset != null) {
+                currAsset.ReferenceId = entryAsset.AssetId;
             }
         }
 
