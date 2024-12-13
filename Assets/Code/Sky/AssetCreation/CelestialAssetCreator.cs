@@ -40,12 +40,12 @@ namespace Astro
         private const string CATEGORY_ID = "category";
         private const string REF_ENTRY_ID = "entry";
         private const string CONSTELLATION_ID = "constellation";
-        private const string TEMPERATURE_ID = "temperature";
+        private const string TEMPERATURE_ID = "temperature"; // Kelvin
         private const string COLOR_ID = "color";
         private const string APP_MAG_ID = "appmag";
         private const string ABS_MAG_ID = "absmag";
         private const string SPECTROGRAPH_ID = "materials";
-        private const string DISTANCE_ID = "distance";
+        private const string DISTANCE_ID = "distance"; // parsecs
 
 #if UNITY_EDITOR
         [MenuItem("Astro/Load Celestial Assets")]
