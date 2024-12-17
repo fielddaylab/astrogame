@@ -39,7 +39,6 @@ namespace Astro {
                 } else if (Physics.Raycast(ray, out RaycastHit docHit, Mathf.Infinity, DOCUMENT_MASK)) {
                     var doc = docHit.collider.GetComponent<DocumentInteractable>();
                     if (doc) {
-                        ReferenceUtility.LoadPage("TestPage");
                         DocumentUtility.SelectDocument(doc, Find.State<DocumentBoardState>());
                         Game.Input.ConsumeAllInputForFrame();
                     }

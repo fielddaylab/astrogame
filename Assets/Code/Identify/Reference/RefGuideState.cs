@@ -3,13 +3,16 @@
 using BeauUtil;
 using FieldDay;
 using FieldDay.SharedState;
+using System;
 using UnityEngine;
 
 namespace Astro {
     public class RefGuideState : SharedStateComponent {
         [Header("Data")]
-        public ReferenceEntry SelectedRefEntry;
-        public ReferencePageAsset CurrentPage;
+        [HideInInspector] public ReferenceEntry SelectedRefEntry;
+        [HideInInspector] public ReferencePageAsset CurrentPage;
+        [HideInInspector] public int CurrentPageNum;
+        [HideInInspector] public ReferencePageList PageList;
 
         [Header("Game Objects")]
         public Transform RefGuideRoot;
@@ -21,18 +24,58 @@ namespace Astro {
         public RefGuideRegion BackRegion;
         public RefGuideRegion[] RightRegions;
         public RefGuideRegion ForwardRegion;
+
     }
 
     public static partial class ReferenceUtility {
+
+        public static void InitializeRefGuide(RefGuideState rgs) {
+            rgs.PageList = Find.GlobalAsset<ReferencePageList>();
+            LoadPage(0, rgs);
+        }
 
         public static void LoadPage(StringHash32 pageId, RefGuideState rgs = null) {
             if (rgs == null) {
                 rgs = Find.State<RefGuideState>();
             }
-            ReferencePageAsset newPage = Find.NamedAsset<ReferencePageAsset>(pageId);
+            LoadPage(Find.NamedAsset<ReferencePageAsset>(pageId), rgs);
+        }
+
+        public static void LoadPage(int pageNum, RefGuideState rgs = null) {
+            if (rgs == null) {
+                rgs = Find.State<RefGuideState>();
+            }
+            if (pageNum < 0 || pageNum >= rgs.PageList.Pages.Count) {
+                throw new IndexOutOfRangeException("[ReferenceUtility.LoadPage] Index out of bounds!");
+            }
+            LoadPage(rgs.PageList.Pages[pageNum], rgs, pageNum);
+        }
+
+        public static void LoadPage(ReferencePageAsset newPage, RefGuideState rgs, int overrideNum = -1) {
             if (rgs.CurrentPage == newPage) return;
+            if (overrideNum < 0) {
+                rgs.CurrentPageNum = rgs.PageList.Pages.BinarySearch(newPage);
+            } else {
+                rgs.CurrentPageNum = overrideNum;
+            }
             PopulateReferenceCanvas(newPage);
             PopulateReferenceColliders(newPage, rgs);
+        }
+
+        public static void LoadNextPage(RefGuideState rgs) {
+            if (rgs.CurrentPageNum >= rgs.PageList.Pages.Count - 1) {
+                LoadPage(0, rgs);
+                return;
+            }
+            LoadPage(rgs.CurrentPageNum + 1, rgs);
+        }
+
+        public static void LoadPreviousPage(RefGuideState rgs) {
+            if (rgs.CurrentPageNum <= 0) {
+                LoadPage(rgs.PageList.Pages.Count - 1, rgs);
+                return;
+            }
+            LoadPage(rgs.CurrentPageNum - 1, rgs);
         }
 
         private static void PopulateReferenceColliders(ReferencePageAsset page, RefGuideState rgs = null) {
@@ -70,11 +113,20 @@ namespace Astro {
                 return;
             }
             rgs.SelectedRefEntry = region.ConnectedEntry;
-            rgs.SelectionSprite.enabled = true;
-            rgs.SelectionSprite.transform.SetParent(region.transform, true);
-            rgs.SelectionSprite.transform.localPosition = Vector3.zero;
 
-            rgs.SubmitButton.gameObject.SetActive(Find.State<FocusState>().CurrentFocus != null && !PointsUtility.ReviewInProgress());         
+            if (region.PageChange == RefGuidePageChange.Previous) {
+                LoadPreviousPage(rgs);
+                rgs.SelectionSprite.enabled = false;
+            } else if (region.PageChange == RefGuidePageChange.Next) {
+                LoadNextPage(rgs);
+                rgs.SelectionSprite.enabled = false;
+            } else {
+                rgs.SelectionSprite.enabled = true;
+                rgs.SelectionSprite.transform.SetParent(region.transform, true);
+                rgs.SelectionSprite.transform.localPosition = Vector3.zero;
+            }
+
+            TryEnableIDSubmit(Find.State<FocusState>().CurrentFocus != null);
         }
 
         public static void TryEnableIDSubmit(bool focusActive) {
@@ -102,6 +154,9 @@ namespace Astro {
 
         public static void ToggleReferenceActive() {
             RefGuideState guide = Find.State<RefGuideState>();
+            if (guide.PageList == null) {
+                InitializeRefGuide(guide);
+            }
             guide.RefGuideRoot.gameObject.SetActive(!guide.RefGuideRoot.gameObject.activeSelf);
         }
 

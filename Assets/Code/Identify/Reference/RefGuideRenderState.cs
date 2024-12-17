@@ -33,6 +33,8 @@ namespace Astro {
                 return;
             }
 
+            rgrs.LeftTitle.SetText(page.TitleLeft);
+            rgrs.RightTitle.SetText(page.TitleRight);
             for (int i = 0; i < rgrs.LeftRows.Length; i++) {
                 if (i < page.EntriesLeft.Length) {
                     rgrs.LeftRows[i].SetText(page.EntriesLeft[i].DisplayText);
