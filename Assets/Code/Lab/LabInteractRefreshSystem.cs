@@ -12,6 +12,7 @@ namespace Astro
         public override void ProcessWorkForComponent(LabInteractable component, float deltaTime)
         {
             component.InteractReceived = false;
+            component.InteractEnded = false;
         }
     }
 }

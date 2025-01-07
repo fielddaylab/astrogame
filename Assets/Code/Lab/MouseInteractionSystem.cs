@@ -10,7 +10,7 @@ namespace Astro {
     /// </summary>
     /// 
     [SysUpdate(GameLoopPhase.Update, 0)]
-    public class MouseInteractionSystem : SystemBehaviour {
+    public class MouseInteractionSystem : SharedStateSystemBehaviour<LabInteractableState> {
         private int LAB_INTERACT_MASK = -1;
         private int DOCUMENT_MASK = -1;
         private int REFERENCE_MASK = -1;
@@ -34,6 +34,9 @@ namespace Astro {
                         ViewNavUtility.MoveToNode(Find.State<ViewState>(), interactable.ConnectedViewNode);
                         // consume input
                         Game.Input.ConsumeAllInputForFrame();
+                        m_State.CurrInteractable = interactable;
+                        m_State.StartMousePos = Input.mousePosition;
+                        m_State.CurrMousePos = Input.mousePosition;
                     }
                     return;
                 } else if (Physics.Raycast(ray, out RaycastHit docHit, Mathf.Infinity, DOCUMENT_MASK)) {
@@ -43,6 +46,27 @@ namespace Astro {
                         Game.Input.ConsumeAllInputForFrame();
                     }
                     return;
+                }
+            }
+
+            // drag
+            if (Game.Input.IsMouseDown(FieldDay.HID.MouseButton.Left)) {
+                if (m_State.CurrInteractable && m_State.CurrInteractable.IsDraggable)
+                {
+                    m_State.CurrMousePos = Input.mousePosition;
+                    m_State.CurrInteractable.IsDragging = true;
+                }
+            }
+
+            // mouse up
+            if (Game.Input.IsMouseUp(FieldDay.HID.MouseButton.Left))
+            {
+                if (m_State.CurrInteractable)
+                {
+                    m_State.CurrInteractable.IsDragging = false;
+                    m_State.CurrInteractable.InteractEnded = true;
+                    m_State.CurrInteractable = null;
+                    m_State.StartMousePos = m_State.CurrMousePos = Vector2.zero;
                 }
             }
         }

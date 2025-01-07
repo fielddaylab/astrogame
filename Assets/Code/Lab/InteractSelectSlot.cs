@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Astro
 {
-    public class InteractSelectSlot: BatchedComponent
+    public class InteractSelectSlot : BatchedComponent
     {
         public DataSlot DataSlot;
     }
