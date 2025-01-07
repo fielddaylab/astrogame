@@ -44,6 +44,8 @@ namespace Astro
                             CelestialAsset asset = Find.NamedAsset<CelestialAsset>(state.QueuedPuzzle.Rows[r].Object);
                             var newPacket = GenerateProvidedPacket(types[c], asset);
                             DataUtility.TrySetData(newCell.DataSlot, newPacket);
+                            // provided data is not modifiable
+                            newCell.DataSlot.Modifiable = false;
                         }
                         m_CellWorkList.PushBack(newCell);
                     }

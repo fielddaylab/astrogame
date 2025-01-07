@@ -15,7 +15,10 @@ namespace Astro
                 foreach (var component in m_Components) {
                     for (int r = 0; r < puzzleState.SelectedCells.GetLength(0); r++) {
                         for (int c = 0; c < puzzleState.SelectedCells.GetLength(1); c++) {
-                            bool visible = puzzleState.SelectedCells[r, c] && ((component.Cells[r * component.NumCols + c].DataSlot.Type & puzzleState.RelevantColFilter) != 0);
+                            bool visible =
+                                puzzleState.SelectedCells[r, c]
+                                && ((component.Cells[r * component.NumCols + c].DataSlot.Type & puzzleState.RelevantColFilter) != 0)
+                                && component.Cells[r * component.NumCols + c].DataSlot.Modifiable;
                             PuzzleUtility.UpdateCellVisuals(puzzleState, component.Cells[r * component.NumCols + c], visible);
                         }
                     }

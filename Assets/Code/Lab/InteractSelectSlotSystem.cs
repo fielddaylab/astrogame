@@ -23,7 +23,9 @@ namespace Astro
             else if (transferState.SelectedSource != null)
             {
                 // If target is valid
-                if (((transferState.SelectedSource.Type & secondary.DataSlot.Type) != 0) && !transferState.SelectedSource.Equals(secondary.DataSlot)) {
+                if (((transferState.SelectedSource.Type & secondary.DataSlot.Type) != 0)
+                    && !transferState.SelectedSource.Equals(secondary.DataSlot)
+                    && secondary.DataSlot.Modifiable) {
                     DataUtility.AssignSelectedTarget(transferState, secondary.DataSlot);
                 }
                 // Else target is not valid. If a valid source, set as current source

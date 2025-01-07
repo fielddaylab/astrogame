@@ -9,6 +9,7 @@ namespace Astro {
         public bool IsSource;
 
         [NonSerialized] public bool HasData;
+        [NonSerialized] public bool Modifiable = true;
         [NonSerialized] public DataPacket CurrentData;
 
         public readonly CastableEvent<DataPacket> OnDataModified = new CastableEvent<DataPacket>();
