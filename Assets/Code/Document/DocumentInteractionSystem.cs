@@ -10,6 +10,7 @@ namespace Astro {
     [SysUpdate(GameLoopPhase.Update, 1)]
     public class DocumentInteractionSystem : SharedStateSystemBehaviour<DocumentBoardState> {
         public override void ProcessWork(float deltaTime) {
+            m_State.InteractedThisFrame = false;
             if (!m_State.EnableDocumentInteraction) return;
 
             if (m_State.SelectedDocument != null && !m_State.DocumentRoutine.Exists()) {
@@ -23,20 +24,22 @@ namespace Astro {
 
     public static partial class DocumentUtility {
         public static void MoveSelectedToMouse(DocumentBoardState state) {
-            if (Vector3.Distance(Input.mousePosition, state.LastMousePos) < state.FollowRadius) {
-                return;
-            }
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             state.LastMousePos = Input.mousePosition;
-            if (Physics.Raycast(ray, out RaycastHit hit, 10f)) {
-                state.DocumentRoutine.Replace(MoveToPoint(state.SelectedDocument.transform, hit.point, state.FollowSpeed));
+            if (Physics.Raycast(ray, out RaycastHit hit, 10f, LayerMask.GetMask("DocumentSurface"))) {
+                // lerp document from current position to new target position
+                LerpToTarget(state.SelectedDocument.transform, hit.point, state.FollowSpeed);
+                //state.DocumentRoutine.Replace(MoveToPoint(state.SelectedDocument.transform, hit.point, state.FollowSpeed));
+            } else {
+                DeselectDocument(state);
             }
         }
 
-
-        private static IEnumerator MoveToPoint(Transform doc, Vector3 point, float speed) {
-            yield return doc.MoveToWithSpeed(new Vector3(point.x, point.y, doc.position.z), speed, Axis.XY).Ease(Curve.Smooth);
+        private static void LerpToTarget(Transform transform, Vector3 target, float percent) {
+            transform.SetPosition(Vector3.Lerp(transform.position, target, percent), Axis.XY);
+            if (Vector3.Distance(transform.position, target) < 0.1f) {
+                transform.SetPosition(target);
+            }
         }
     }
-
 }

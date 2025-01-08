@@ -11,11 +11,11 @@ namespace Astro {
         [HideInInspector] public bool EnableDocumentInteraction;
         [HideInInspector] public DocumentInteractable SelectedDocument;
         [HideInInspector] public Vector3 LastMousePos;
+        [HideInInspector] public bool InteractedThisFrame;
 
 
         [Range(0f, 1f)] public float DocumentHoverDistance;
-        [Range(0f, 30f)] public float FollowSpeed;
-        [Range(0, 200)]public int FollowRadius;
+        [Range(0f, 1f)] public float FollowSpeed;
         public Transform DocumentParent;
 
         public AssetPack DocumentAssets;
@@ -62,21 +62,29 @@ namespace Astro {
         #endregion // Enable/Disable
 
         #region Selection
-        public static void SelectDocument(DocumentInteractable doc, DocumentBoardState state = null) {
+        public static void SelectDocument(DocumentInteractable newDoc, DocumentBoardState state = null) {
             if (state == null) {
                 state = Find.State<DocumentBoardState>();
             }
-            if (state.SelectedDocument != doc) {
-                state.SelectedDocument = doc;
-                state.DocumentRoutine.Replace(ShiftZ(doc.transform, -state.DocumentHoverDistance));
-            } else {
-                state.SelectedDocument = null;
-                state.DocumentRoutine.Replace(ShiftZ(doc.transform, state.DocumentHoverDistance));
+            if (state.DocumentRoutine.Exists()) {
+                return;
             }
+            if (newDoc != null && state.SelectedDocument != newDoc) {
+                state.SelectedDocument = newDoc;
+                state.DocumentRoutine.Replace(ShiftZ(state.SelectedDocument.transform, -state.DocumentHoverDistance));
+            } else {
+                state.DocumentRoutine.Replace(ShiftZ(state.SelectedDocument.transform, state.DocumentHoverDistance));
+                state.SelectedDocument = null;
+            }
+            state.InteractedThisFrame = true;
+        }
+
+        public static void DeselectDocument(DocumentBoardState state) {
+            SelectDocument(null, state);
         }
 
         private static IEnumerator ShiftZ(Transform doc, float deltaZ) {
-            yield return doc.MoveTo(doc.position.z + deltaZ, 0.1f, Axis.Z).Ease(Curve.Smooth);
+            yield return doc.MoveTo(doc.position.z + deltaZ, 0.3f, Axis.Z).Ease(Curve.CubeIn);
             yield return null;
         }
 

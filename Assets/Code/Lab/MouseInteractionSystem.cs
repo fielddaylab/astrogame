@@ -24,29 +24,32 @@ namespace Astro {
                     var region = refHit.collider.GetComponent<RefGuideRegion>();
                     if (region) {
                         ReferenceUtility.SelectRegion(region);
-                        Game.Input.ConsumeAllInputForFrame();
                     }
-                    return;
-                } else if (Physics.Raycast(ray, out RaycastHit labHit, Mathf.Infinity, LAB_INTERACT_MASK)) {
+                } 
+
+                if (Physics.Raycast(ray, out RaycastHit docHit, Mathf.Infinity, DOCUMENT_MASK)) {
+                    var doc = docHit.collider.GetComponent<DocumentInteractable>();
+                    if (doc) {
+                        DocumentUtility.SelectDocument(doc, Find.State<DocumentBoardState>());
+                        if (Find.State<DocumentBoardState>().InteractedThisFrame) {
+                            return;
+                        }
+                    }
+                }
+
+                if (Physics.Raycast(ray, out RaycastHit labHit, Mathf.Infinity, LAB_INTERACT_MASK)) {
                     var interactable = labHit.collider.GetComponent<LabInteractable>();
                     if (interactable) {
                         interactable.InteractReceived = true;
                         ViewNavUtility.MoveToNode(Find.State<ViewState>(), interactable.ConnectedViewNode);
                         // consume input
-                        Game.Input.ConsumeAllInputForFrame();
                         m_State.CurrInteractable = interactable;
                         m_State.StartMousePos = Input.mousePosition;
                         m_State.CurrMousePos = Input.mousePosition;
                     }
-                    return;
-                } else if (Physics.Raycast(ray, out RaycastHit docHit, Mathf.Infinity, DOCUMENT_MASK)) {
-                    var doc = docHit.collider.GetComponent<DocumentInteractable>();
-                    if (doc) {
-                        DocumentUtility.SelectDocument(doc, Find.State<DocumentBoardState>());
-                        Game.Input.ConsumeAllInputForFrame();
-                    }
-                    return;
                 }
+
+                Game.Input.ConsumeAllInputForFrame();
             }
 
             // drag

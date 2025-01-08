@@ -1840,7 +1840,7 @@ MonoBehaviour:
   Mode: 0
   Target: {fileID: 681061799}
   Height: 4
-  Zoom: 1
+  Zoom: 0.85
   FieldOfView: 30
 --- !u!114 &256036725
 MonoBehaviour:
@@ -1871,7 +1871,7 @@ Transform:
   m_GameObject: {fileID: 256036723}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.25, y: 0, z: -6.5}
+  m_LocalPosition: {x: -1.5, y: 0, z: -6.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2420,7 +2420,7 @@ GameObject:
   - component: {fileID: 330137899}
   - component: {fileID: 330137898}
   - component: {fileID: 330137897}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: DocumentsBoard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4174,6 +4174,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d5b06be8f1cdcc4b862158da906d7cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BaseVal: 0
 --- !u!1 &530868142
 GameObject:
   m_ObjectHideFlags: 0
@@ -14977,6 +14978,10 @@ PrefabInstance:
       propertyPath: PoolRoot
       value: 
       objectReference: {fileID: 1799412586}
+    - target: {fileID: 2348247301363869649, guid: ec06e5f8b4c234f489057732d2c945c4, type: 3}
+      propertyPath: FollowRadius
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 2348247301363869649, guid: ec06e5f8b4c234f489057732d2c945c4, type: 3}
       propertyPath: DocumentParent
       value: 
