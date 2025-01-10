@@ -15,7 +15,8 @@ namespace Astro
 
             if (primary.InteractEnded)
             {
-                secondary.BaseVal = secondary.CurrVal;
+                secondary.BaseVal = secondary.CurrConstrainedVal;
+                secondary.PassThroughOffset = 0;
             }
 
             if (!primary.IsDragging) { return; }
@@ -24,8 +25,6 @@ namespace Astro
             var delta = interactState.CurrMousePos - interactState.StartMousePos;
 
             DialUtility.TryAdjustDial(secondary, delta.x);
-
-            Debug.Log("[AdjustDial] curr dial val: " + secondary.CurrVal);
         }
     }
 }
