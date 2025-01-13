@@ -20,14 +20,14 @@ namespace Astro {
             // on click, try cast ray for lab interactable
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Game.Input.IsMousePressed(FieldDay.HID.MouseButton.Left)) {
-                if (Physics.Raycast(ray, out RaycastHit refHit, Mathf.Infinity, REFERENCE_MASK)) {
+                if (Physics.Raycast(ray, out RaycastHit refHit, 10f, REFERENCE_MASK)) {
                     var region = refHit.collider.GetComponent<RefGuideRegion>();
                     if (region) {
                         ReferenceUtility.SelectRegion(region);
                     }
                 } 
 
-                if (Physics.Raycast(ray, out RaycastHit docHit, Mathf.Infinity, DOCUMENT_MASK)) {
+                if (Physics.Raycast(ray, out RaycastHit docHit, 10f, DOCUMENT_MASK)) {
                     var doc = docHit.collider.GetComponent<DocumentInteractable>();
                     if (doc) {
                         DocumentUtility.SelectDocument(doc, Find.State<DocumentBoardState>());
@@ -37,11 +37,13 @@ namespace Astro {
                     }
                 }
 
-                if (Physics.Raycast(ray, out RaycastHit labHit, Mathf.Infinity, LAB_INTERACT_MASK)) {
+                if (Physics.Raycast(ray, out RaycastHit labHit, 10f, LAB_INTERACT_MASK)) {
                     var interactable = labHit.collider.GetComponent<LabInteractable>();
                     if (interactable) {
                         interactable.InteractReceived = true;
-                        ViewNavUtility.MoveToNode(Find.State<ViewState>(), interactable.ConnectedViewNode);
+                        if (!interactable.MaintainExistingView) {
+                            ViewNavUtility.MoveToNode(Find.State<ViewState>(), interactable.ConnectedViewNode);
+                        }
                         // consume input
                         m_State.CurrInteractable = interactable;
                         m_State.StartMousePos = Input.mousePosition;

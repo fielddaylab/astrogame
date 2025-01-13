@@ -830,6 +830,7 @@ MonoBehaviour:
   InteractReceived: 0
   InteractEnded: 0
   IsDragging: 0
+  MaintainExistingView: 0
   ConnectedViewNode: {fileID: 1009699565}
 --- !u!65 &73867729
 BoxCollider:
@@ -1002,7 +1003,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &103705427
 Transform:
   m_ObjectHideFlags: 0
@@ -1034,6 +1035,7 @@ MonoBehaviour:
   InteractReceived: 0
   InteractEnded: 0
   IsDragging: 0
+  MaintainExistingView: 0
   ConnectedViewNode: {fileID: 1009699565}
 --- !u!65 &103705429
 BoxCollider:
@@ -1159,6 +1161,7 @@ MonoBehaviour:
   InteractReceived: 0
   InteractEnded: 0
   IsDragging: 0
+  MaintainExistingView: 0
   ConnectedViewNode: {fileID: 2143273356}
 --- !u!65 &127536401
 BoxCollider:
@@ -1735,6 +1738,7 @@ MonoBehaviour:
   InteractReceived: 0
   InteractEnded: 0
   IsDragging: 0
+  MaintainExistingView: 0
   ConnectedViewNode: {fileID: 0}
 --- !u!65 &254247031
 BoxCollider:
@@ -1840,7 +1844,7 @@ MonoBehaviour:
   Mode: 0
   Target: {fileID: 681061799}
   Height: 4
-  Zoom: 0.85
+  Zoom: 0.9
   FieldOfView: 30
 --- !u!114 &256036725
 MonoBehaviour:
@@ -1871,7 +1875,7 @@ Transform:
   m_GameObject: {fileID: 256036723}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.5, y: 0, z: -6.5}
+  m_LocalPosition: {x: -1.5, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2792,6 +2796,7 @@ MonoBehaviour:
   InteractReceived: 0
   InteractEnded: 0
   IsDragging: 0
+  MaintainExistingView: 0
   ConnectedViewNode: {fileID: 0}
 --- !u!65 &360759478
 BoxCollider:
@@ -3051,6 +3056,7 @@ MonoBehaviour:
   InteractReceived: 0
   InteractEnded: 0
   IsDragging: 0
+  MaintainExistingView: 0
   ConnectedViewNode: {fileID: 2143273356}
 --- !u!65 &394617914
 BoxCollider:
@@ -3395,7 +3401,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &431715059
 Transform:
   m_ObjectHideFlags: 0
@@ -3427,6 +3433,7 @@ MonoBehaviour:
   InteractReceived: 0
   InteractEnded: 0
   IsDragging: 0
+  MaintainExistingView: 0
   ConnectedViewNode: {fileID: 1009699565}
 --- !u!65 &431715061
 BoxCollider:
@@ -3530,6 +3537,7 @@ MonoBehaviour:
   InteractReceived: 0
   InteractEnded: 0
   IsDragging: 0
+  MaintainExistingView: 0
   ConnectedViewNode: {fileID: 256036725}
 --- !u!114 &470517754 stripped
 MonoBehaviour:
@@ -4089,6 +4097,7 @@ MonoBehaviour:
   InteractReceived: 0
   InteractEnded: 0
   IsDragging: 0
+  MaintainExistingView: 0
   ConnectedViewNode: {fileID: 2143273356}
 --- !u!136 &516317302
 CapsuleCollider:
@@ -4485,6 +4494,7 @@ MonoBehaviour:
   InteractReceived: 0
   InteractEnded: 0
   IsDragging: 0
+  MaintainExistingView: 0
   ConnectedViewNode: {fileID: 2143273356}
 --- !u!65 &559297365
 BoxCollider:
@@ -4990,6 +5000,7 @@ MonoBehaviour:
   InteractReceived: 0
   InteractEnded: 0
   IsDragging: 0
+  MaintainExistingView: 0
   ConnectedViewNode: {fileID: 1009699565}
 --- !u!65 &637286217
 BoxCollider:
@@ -5496,7 +5507,8 @@ GameObject:
   - component: {fileID: 681061797}
   - component: {fileID: 681061796}
   - component: {fileID: 681061800}
-  m_Layer: 0
+  - component: {fileID: 681061801}
+  m_Layer: 6
   m_Name: Puzzle Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5625,6 +5637,24 @@ MonoBehaviour:
   ColSpacing: 0.1
   BaseCellWidth: 0.5518495
   SubmitButton: {fileID: 127536400}
+--- !u!114 &681061801
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 681061795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38d587e5b249a5141b2b8e4cc3bb1223, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsDraggable: 0
+  InteractReceived: 0
+  InteractEnded: 0
+  IsDragging: 0
+  MaintainExistingView: 1
+  ConnectedViewNode: {fileID: 0}
 --- !u!1 &696767862
 GameObject:
   m_ObjectHideFlags: 0
@@ -5802,7 +5832,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &705029099
 Transform:
   m_ObjectHideFlags: 0
@@ -5834,6 +5864,7 @@ MonoBehaviour:
   InteractReceived: 0
   InteractEnded: 0
   IsDragging: 0
+  MaintainExistingView: 0
   ConnectedViewNode: {fileID: 1009699565}
 --- !u!65 &705029101
 BoxCollider:
@@ -6400,6 +6431,7 @@ MonoBehaviour:
   InteractReceived: 0
   InteractEnded: 0
   IsDragging: 0
+  MaintainExistingView: 0
   ConnectedViewNode: {fileID: 2143273356}
 --- !u!65 &886524784
 BoxCollider:
@@ -6949,6 +6981,7 @@ MonoBehaviour:
   InteractReceived: 0
   InteractEnded: 0
   IsDragging: 0
+  MaintainExistingView: 0
   ConnectedViewNode: {fileID: 0}
 --- !u!65 &935974507
 BoxCollider:
@@ -7631,6 +7664,7 @@ MonoBehaviour:
   InteractReceived: 0
   InteractEnded: 0
   IsDragging: 0
+  MaintainExistingView: 0
   ConnectedViewNode: {fileID: 0}
 --- !u!65 &1000378853
 BoxCollider:
@@ -7947,7 +7981,7 @@ MonoBehaviour:
   Mode: 0
   Target: {fileID: 681061799}
   Height: 4
-  Zoom: 0.7
+  Zoom: 0.75
   FieldOfView: 30
 --- !u!114 &1009699565
 MonoBehaviour:
@@ -8051,6 +8085,7 @@ MonoBehaviour:
   InteractReceived: 0
   InteractEnded: 0
   IsDragging: 0
+  MaintainExistingView: 0
   ConnectedViewNode: {fileID: 0}
 --- !u!65 &1010984795
 BoxCollider:
@@ -8209,6 +8244,7 @@ MonoBehaviour:
   InteractReceived: 0
   InteractEnded: 0
   IsDragging: 0
+  MaintainExistingView: 0
   ConnectedViewNode: {fileID: 1009699565}
 --- !u!65 &1052146418
 BoxCollider:
@@ -8868,6 +8904,7 @@ MonoBehaviour:
   InteractReceived: 0
   InteractEnded: 0
   IsDragging: 0
+  MaintainExistingView: 0
   ConnectedViewNode: {fileID: 1009699565}
 --- !u!65 &1210447190
 BoxCollider:
@@ -8956,6 +8993,7 @@ MonoBehaviour:
   InteractReceived: 0
   InteractEnded: 0
   IsDragging: 0
+  MaintainExistingView: 0
   ConnectedViewNode: {fileID: 0}
 --- !u!65 &1215632564
 BoxCollider:
@@ -9840,7 +9878,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1346640514
 Transform:
   m_ObjectHideFlags: 0
@@ -9872,6 +9910,7 @@ MonoBehaviour:
   InteractReceived: 0
   InteractEnded: 0
   IsDragging: 0
+  MaintainExistingView: 0
   ConnectedViewNode: {fileID: 1009699565}
 --- !u!65 &1346640516
 BoxCollider:
@@ -9992,6 +10031,7 @@ MonoBehaviour:
   InteractReceived: 0
   InteractEnded: 0
   IsDragging: 0
+  MaintainExistingView: 0
   ConnectedViewNode: {fileID: 0}
 --- !u!65 &1366193392
 BoxCollider:
@@ -10307,6 +10347,7 @@ MonoBehaviour:
   InteractReceived: 0
   InteractEnded: 0
   IsDragging: 0
+  MaintainExistingView: 0
   ConnectedViewNode: {fileID: 2143273356}
 --- !u!114 &1413828309
 MonoBehaviour:
@@ -10753,6 +10794,7 @@ MonoBehaviour:
   InteractReceived: 0
   InteractEnded: 0
   IsDragging: 0
+  MaintainExistingView: 0
   ConnectedViewNode: {fileID: 0}
 --- !u!65 &1527828139
 BoxCollider:
@@ -11332,6 +11374,7 @@ MonoBehaviour:
   InteractReceived: 0
   InteractEnded: 0
   IsDragging: 0
+  MaintainExistingView: 0
   ConnectedViewNode: {fileID: 0}
 --- !u!65 &1733406387
 BoxCollider:
@@ -11831,6 +11874,7 @@ MonoBehaviour:
   InteractReceived: 0
   InteractEnded: 0
   IsDragging: 0
+  MaintainExistingView: 0
   ConnectedViewNode: {fileID: 2143273356}
 --- !u!65 &1771596679
 BoxCollider:
@@ -12409,7 +12453,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1820487728
 Transform:
   m_ObjectHideFlags: 0
@@ -12441,6 +12485,7 @@ MonoBehaviour:
   InteractReceived: 0
   InteractEnded: 0
   IsDragging: 0
+  MaintainExistingView: 0
   ConnectedViewNode: {fileID: 1009699565}
 --- !u!65 &1820487730
 BoxCollider:
@@ -12512,6 +12557,7 @@ MonoBehaviour:
   InteractReceived: 0
   InteractEnded: 0
   IsDragging: 0
+  MaintainExistingView: 0
   ConnectedViewNode: {fileID: 2143273356}
 --- !u!65 &1821711652
 BoxCollider:
@@ -12588,6 +12634,7 @@ MonoBehaviour:
   InteractReceived: 0
   InteractEnded: 0
   IsDragging: 0
+  MaintainExistingView: 0
   ConnectedViewNode: {fileID: 2143273356}
 --- !u!65 &1833224154
 BoxCollider:
@@ -13156,6 +13203,7 @@ MonoBehaviour:
   InteractReceived: 0
   InteractEnded: 0
   IsDragging: 0
+  MaintainExistingView: 0
   ConnectedViewNode: {fileID: 1009699565}
 --- !u!65 &1880496207
 BoxCollider:
@@ -13302,6 +13350,7 @@ MonoBehaviour:
   InteractReceived: 0
   InteractEnded: 0
   IsDragging: 0
+  MaintainExistingView: 0
   ConnectedViewNode: {fileID: 2143273356}
 --- !u!114 &1883002282
 MonoBehaviour:
@@ -13809,6 +13858,7 @@ MonoBehaviour:
   InteractReceived: 0
   InteractEnded: 0
   IsDragging: 0
+  MaintainExistingView: 0
   ConnectedViewNode: {fileID: 0}
 --- !u!65 &1950840747
 BoxCollider:
@@ -14463,6 +14513,7 @@ MonoBehaviour:
   InteractReceived: 0
   InteractEnded: 0
   IsDragging: 0
+  MaintainExistingView: 0
   ConnectedViewNode: {fileID: 2143273356}
 --- !u!65 &2084914958
 BoxCollider:
@@ -14725,7 +14776,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2095935400
 Transform:
   m_ObjectHideFlags: 0
@@ -14757,6 +14808,7 @@ MonoBehaviour:
   InteractReceived: 0
   InteractEnded: 0
   IsDragging: 0
+  MaintainExistingView: 0
   ConnectedViewNode: {fileID: 1009699565}
 --- !u!65 &2095935402
 BoxCollider:
@@ -14983,7 +15035,7 @@ MonoBehaviour:
   Mode: 0
   Target: {fileID: 681061799}
   Height: 4
-  Zoom: 0.85
+  Zoom: 0.9
   FieldOfView: 30
 --- !u!114 &2143273356
 MonoBehaviour:
@@ -15015,7 +15067,7 @@ Transform:
   m_GameObject: {fileID: 2143273354}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.25, y: 0, z: -6.5}
+  m_LocalPosition: {x: 1.25, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

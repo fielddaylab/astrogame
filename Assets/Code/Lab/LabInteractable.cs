@@ -8,6 +8,8 @@ namespace Astro {
         [HideInInspector] public bool InteractReceived = false;
         [HideInInspector] public bool InteractEnded = false;
         [HideInInspector] public bool IsDragging = false;
+        [Space(10)]
+        public bool MaintainExistingView = false;
         public ViewNode ConnectedViewNode;
     }
 }
