@@ -28,6 +28,9 @@ namespace Astro
             }
             focus.TargetData = asset;
 
+            float scaleFactor = 1.5f * Mathf.Pow(0.63f, asset.ApparentMagnitude);
+            focus.Rect.localScale = new Vector3(scaleFactor, scaleFactor, 1);
+
             focus.Button.onClick.RemoveAllListeners();
             focus.Button.onClick.AddListener(() => { FocusableUtility.SetCurrentFocus(state, focus); });
         }
