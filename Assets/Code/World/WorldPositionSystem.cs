@@ -95,7 +95,7 @@ namespace Astro
             float skyboxDist = dome.Radius;
 
             float raDegrees = (float)CoordinateUtility.RAToDegrees((int)coords.RightAscension.Hours, (int)coords.RightAscension.Minutes, coords.RightAscension.Seconds);
-            float declDegrees = (float)CoordinateUtility.DeclensionToDecimalDegrees((int)coords.Declination.Hours, (int)coords.Declination.Minutes, coords.Declination.Seconds);
+            float declDegrees = (float)CoordinateUtility.DeclinationToDecimalDegrees((int)coords.Declination.Hours, (int)coords.Declination.Minutes, coords.Declination.Seconds);
             var posOffset = CoordinateUtility.RAscDeclDegreesToCartesianCoordinates(raDegrees, declDegrees) * skyboxDist;
 
             var lookPos = dome.Position + posOffset * skyboxDist;

@@ -21,7 +21,7 @@ namespace Astro {
             float skyboxDist = Find.State<SkyDome>().Radius;
 
             float raDegrees = (float)CoordinateUtility.RAToDegrees((int)ra.Hours, (int)ra.Minutes, ra.Seconds);
-            float declDegrees = (float)CoordinateUtility.DeclensionToDecimalDegrees((int)decl.Hours, (int)decl.Minutes, decl.Seconds);
+            float declDegrees = (float)CoordinateUtility.DeclinationToDecimalDegrees((int)decl.Hours, (int)decl.Minutes, decl.Seconds);
             var posOffset = CoordinateUtility.RAscDeclDegreesToCartesianCoordinates(raDegrees, declDegrees);
             toPosition.position = centerPos + posOffset * skyboxDist;
         }

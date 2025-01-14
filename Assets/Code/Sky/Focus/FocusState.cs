@@ -18,7 +18,7 @@ namespace Astro
         protected override void OnEnable()
         {
             base.OnEnable();
-
+            ActiveFocii.BufferMode = RingBufferMode.Expand;
             Game.Events.Register(GameEvents.MonitorEmptySpaceClicked, FocusableUtility.ClickEmptySpace);
         }
     }

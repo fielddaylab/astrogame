@@ -119,13 +119,13 @@ namespace Astro
 
 
         /// <summary>
-        /// Converts declension hours, minutes, and seconds into degrees
+        /// Converts declination hours, minutes, and seconds into degrees
         /// </summary>
         /// <param name="hours"></param>
         /// <param name="minutes"></param>
         /// <param name="seconds"></param>
         /// <returns></returns>
-        public static double DeclensionToDecimalDegrees(int hours, int minutes, double seconds)
+        public static double DeclinationToDecimalDegrees(int hours, int minutes, double seconds)
         {
             // Convert hours, minutes, and seconds to degrees
             double totalHours = hours + (minutes / 60.0) + (seconds / 3600.0);
