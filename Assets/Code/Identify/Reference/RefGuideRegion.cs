@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Astro {
     public class RefGuideRegion : BatchedComponent {
-        public ReferenceEntry ConnectedEntry;
+        public ReferenceClassification ConnectedEntry;
         public RefGuidePageChange PageChange;
     }
 

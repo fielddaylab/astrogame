@@ -37,10 +37,10 @@ namespace Astro {
             rgrs.RightTitle.SetText(page.TitleRight);
             for (int i = 0; i < rgrs.LeftRows.Length; i++) {
                 if (i < page.EntriesLeft.Length) {
-                    rgrs.LeftRows[i].SetText(page.EntriesLeft[i].DisplayText);
+                    rgrs.LeftRows[i].SetText(page.EntriesLeft[i].Label);
                 }
                 if (i < page.EntriesRight.Length) {
-                    rgrs.RightRows[i].SetText(page.EntriesRight[i].DisplayText);
+                    rgrs.RightRows[i].SetText(page.EntriesRight[i].Label);
                 }
             }
 

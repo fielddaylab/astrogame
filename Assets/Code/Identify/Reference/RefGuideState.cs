@@ -9,7 +9,7 @@ using UnityEngine;
 namespace Astro {
     public class RefGuideState : SharedStateComponent {
         [Header("Data")]
-        [HideInInspector] public ReferenceEntry SelectedRefEntry;
+        [HideInInspector] public ReferenceClassification SelectedRefClassification;
         [HideInInspector] public ReferencePageAsset CurrentPage;
         [HideInInspector] public int CurrentPageNum;
         [HideInInspector] public ReferencePageList PageList;
@@ -108,11 +108,11 @@ namespace Astro {
         public static void SelectRegion(RefGuideRegion region) {
             RefGuideState rgs = Find.State<RefGuideState>();
             if (region == null) {
-                rgs.SelectedRefEntry = null;
+                rgs.SelectedRefClassification = null;
                 rgs.SelectionSprite.enabled = false;
                 return;
             }
-            rgs.SelectedRefEntry = region.ConnectedEntry;
+            rgs.SelectedRefClassification = region.ConnectedEntry;
 
             if (region.PageChange == RefGuidePageChange.Previous) {
                 LoadPreviousPage(rgs);
@@ -131,24 +131,33 @@ namespace Astro {
 
         public static void TryEnableIDSubmit(bool focusActive) {
             RefGuideState rgs = Find.State<RefGuideState>();
-            rgs.SubmitButton.gameObject.SetActive(focusActive && rgs.SelectedRefEntry != null && !PointsUtility.ReviewInProgress());
+            rgs.SubmitButton.gameObject.SetActive(focusActive && rgs.SelectedRefClassification != null && !PointsUtility.ReviewInProgress());
         }
 
-        public static ReferenceEntry GetSelectedRef() {
-            return Find.State<RefGuideState>().SelectedRefEntry;
+        public static ReferenceClassification GetSelectedRef() {
+            return Find.State<RefGuideState>().SelectedRefClassification;
         }
 
-        public static bool RefMatchesCelestialAsset(ReferenceEntry refEntry, CelestialAsset asset) {
+        public static bool RefEntryMatchesAsset(ReferenceEntry refEntry, CelestialAsset asset) {
             return asset.ReferenceId.Equals(refEntry.AssetId);
         }
 
+        public static bool RefClassMatchesAsset(ReferenceClassification refClass, CelestialAsset asset) {
+            for (int i = 0; i < asset.ClassIds.Length; i++) {
+                if (asset.ClassIds[i].Equals(refClass.name)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public static bool CurrentRefMatchesFocus() {
-            ReferenceEntry refEntry = Find.State<RefGuideState>().SelectedRefEntry;
+            ReferenceClassification refClass = Find.State<RefGuideState>().SelectedRefClassification;
             UIFocus focus = Find.State<FocusState>().CurrentFocus;
-            if (refEntry == null || focus == null) {
+            if (refClass == null || focus == null) {
                 return false;
             }
-            return RefMatchesCelestialAsset(refEntry, focus.TargetData);
+            return RefClassMatchesAsset(refClass, focus.TargetData);
 
         }
 
