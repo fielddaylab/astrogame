@@ -37,7 +37,14 @@ namespace Astro
                 // generate and organize puzzle cells
                 for (int r = 0; r < state.QueuedPuzzle.Rows.Length; r++) {
                     for (int c = 0; c < numCols; c++) {
-                        var newCell = pools.Cells.Alloc(display.transform.position);
+
+                        PuzzleCell newCell = null;
+                        if ((types[c] & DataTypeMask.Color) != 0) {
+                            newCell = pools.ColorCells.Alloc(display.transform.position);
+                        }
+                        else {
+                            newCell = pools.Cells.Alloc(display.transform.position);
+                        }
                         newCell.DataSlot.Type = types[c];
                         if ((state.QueuedPuzzle.Rows[r].ProvidedProperties & types[c]) != 0) {
                             // load provided data directly

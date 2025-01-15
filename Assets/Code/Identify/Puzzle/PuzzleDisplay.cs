@@ -79,18 +79,29 @@ namespace Astro
                     currCell.transform.SetParent(display.CellAnchorPos);
 
                     // scale
-                    if (currCell.DataSlot.Displays.Length == 0) { continue; }
-                    var currScale = currCell.transform.lossyScale;
-                    var origTextScaleLocal = currCell.DataSlot.Displays[0].DefaultOutput.transform.localScale;
-                    var origTextScaleLossy = currCell.DataSlot.Displays[0].DefaultOutput.transform.lossyScale;
-                    currCell.transform.SetScale(currScale * colDims[c], Axis.X);
-                    var scaleRatio = new Vector3(
-                        origTextScaleLossy.x / currCell.DataSlot.Displays[0].DefaultOutput.transform.lossyScale.x,
-                        origTextScaleLossy.y / currCell.DataSlot.Displays[0].DefaultOutput.transform.lossyScale.y,
-                        origTextScaleLossy.z / currCell.DataSlot.Displays[0].DefaultOutput.transform.lossyScale.z
-                        );
-                    for (int i = 0; i < currCell.DataSlot.Displays.Length; i++) {
-                        currCell.DataSlot.Displays[i].DefaultOutput.transform.SetScale(origTextScaleLocal.x * scaleRatio, Axis.X);
+                    if (currCell.DataSlot.Displays.Length != 0)
+                    {
+                        if (currCell.DataSlot.Displays[0].OutputTransform != null)
+                        {
+                            var currScale = currCell.transform.lossyScale;
+                            var origTextScaleLocal = currCell.DataSlot.Displays[0].OutputTransform.transform.localScale;
+                            var origTextScaleLossy = currCell.DataSlot.Displays[0].OutputTransform.transform.lossyScale;
+                            currCell.transform.SetScale(currScale * colDims[c], Axis.X);
+                            var scaleRatio = new Vector3(
+                                origTextScaleLossy.x / currCell.DataSlot.Displays[0].OutputTransform.transform.lossyScale.x,
+                                origTextScaleLossy.y / currCell.DataSlot.Displays[0].OutputTransform.transform.lossyScale.y,
+                                origTextScaleLossy.z / currCell.DataSlot.Displays[0].OutputTransform.transform.lossyScale.z
+                                );
+                            for (int i = 0; i < currCell.DataSlot.Displays.Length; i++)
+                            {
+                                currCell.DataSlot.Displays[i].OutputTransform.transform.SetScale(origTextScaleLocal.x * scaleRatio, Axis.X);
+                            }
+                        }
+                        else
+                        {
+                            var currScale = currCell.transform.lossyScale;
+                            currCell.transform.SetScale(currScale * colDims[c], Axis.X);
+                        }
                     }
 
                     //pos

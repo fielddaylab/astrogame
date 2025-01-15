@@ -12,12 +12,14 @@ namespace Astro
         #region Types
 
         [Serializable] public class PuzzleCellPool : SerializablePool<PuzzleCell> { }
+        [Serializable] public class PuzzleColorCellPool : SerializablePool<PuzzleCell> { }
         [Serializable] public class PuzzleHeaderPool : SerializablePool<PuzzleHeader> { }
 
         #endregion // Types
 
         [Header("Puzzle")]
         public PuzzleCellPool Cells;
+        public PuzzleCellPool ColorCells;
         public PuzzleHeaderPool Headers;
 
         [Header("Shared")]
@@ -26,6 +28,7 @@ namespace Astro
         void IRegistrationCallbacks.OnRegister()
         {
             Cells.TryInitialize(PoolRoot);
+            ColorCells.TryInitialize(PoolRoot);
             Headers.TryInitialize(PoolRoot);
         }
 

@@ -55,7 +55,7 @@ namespace Astro {
                         return DataPacket.Coordinates(asset.Coords);
                     }
                 case DataTypeMask.Color: {
-                        return DataPacket.Color(Find.NamedAsset<ReferenceColor>(asset.ColorId));
+                        return DataPacket.Color(asset.ColorId);
                     }
                 case DataTypeMask.ApparentMagnitude: {
                         return DataPacket.ApparentMagnitude(asset.ApparentMagnitude);

@@ -60,9 +60,9 @@ namespace Astro {
             });
         }
 
-        static public DataPacket Color(ReferenceColor colorRef) {
+        static public DataPacket Color(StringHash32 colorId) {
             return new DataPacket(DataTypeMask.Color, new Datum() {
-                AssetId = colorRef.AssetId
+                AssetId = colorId
             });
         }
 

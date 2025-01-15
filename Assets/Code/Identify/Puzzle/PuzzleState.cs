@@ -24,9 +24,6 @@ namespace Astro {
         public bool[,] SelectedCells;
         public DataTypeMask RelevantColFilter;
 
-        // public Pool CellPool;
-        public GameObject RowCellPrefab;
-
         [Header("Consts")]
         public Material UnselectedCellMat;
         public Material SelectedCellMat;

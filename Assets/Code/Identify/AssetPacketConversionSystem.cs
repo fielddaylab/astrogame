@@ -64,12 +64,16 @@ namespace Astro
                 }
                 m_ConvertedPackets.PushBack(newPacket);
             }
-            /* TODO: special handling for color
             if ((m_AvailableInstrumentTypes & DataTypeMask.Color) != 0) {
-                DataPacket newPacket = DataPacket.Color(m_StateA.ToConvert.ColorId);
+                DataPacket newPacket;
+                if (m_StateA.ToConvert != null) {
+                    newPacket = DataPacket.Color(m_StateA.ToConvert.ColorId);
+                }
+                else {
+                    newPacket = DataPacket.Null(DataTypeMask.Color);
+                }
                 m_ConvertedPackets.PushBack(newPacket);
             }
-            */
             if ((m_AvailableInstrumentTypes & DataTypeMask.ApparentMagnitude) != 0) {
                 DataPacket newPacket = DataPacket.ApparentMagnitude(m_StateA.ToConvert.ApparentMagnitude);
                 m_ConvertedPackets.PushBack(newPacket);

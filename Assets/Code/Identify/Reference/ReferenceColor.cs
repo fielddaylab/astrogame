@@ -7,6 +7,7 @@ namespace Astro {
         public string Label;
         public uint MinTemperature;
         public uint MaxTemperature;
+        public Material Texture;
     }
 
     public sealed class ColorIdAttribute : AssetNameAttribute {
