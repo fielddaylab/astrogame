@@ -75,23 +75,53 @@ namespace Astro
                 m_ConvertedPackets.PushBack(newPacket);
             }
             if ((m_AvailableInstrumentTypes & DataTypeMask.ApparentMagnitude) != 0) {
-                DataPacket newPacket = DataPacket.ApparentMagnitude(m_StateA.ToConvert.ApparentMagnitude);
+                DataPacket newPacket;
+                if (m_StateA.ToConvert != null) {
+                    newPacket = DataPacket.ApparentMagnitude(m_StateA.ToConvert.ApparentMagnitude);
+                }
+                else {
+                    newPacket = DataPacket.Null(DataTypeMask.ApparentMagnitude);
+                }
                 m_ConvertedPackets.PushBack(newPacket);
             }
             if ((m_AvailableInstrumentTypes & DataTypeMask.AbsoluteMagnitude) != 0) {
-                DataPacket newPacket = DataPacket.AbsoluteMagnitude(m_StateA.ToConvert.AbsoluteMagnitude);
+                DataPacket newPacket;
+                if (m_StateA.ToConvert != null) {
+                    newPacket = DataPacket.AbsoluteMagnitude(m_StateA.ToConvert.AbsoluteMagnitude);
+                }
+                else {
+                    newPacket = DataPacket.Null(DataTypeMask.AbsoluteMagnitude);
+                }
                 m_ConvertedPackets.PushBack(newPacket);
             }
             if ((m_AvailableInstrumentTypes & DataTypeMask.MaterialSpectrum) != 0) {
-                DataPacket newPacket = DataPacket.Spectrograph(m_StateA.ToConvert.Spectrograph);
+                DataPacket newPacket;
+                if (m_StateA.ToConvert != null) {
+                    newPacket = DataPacket.Spectrograph(m_StateA.ToConvert.Spectrograph);
+                }
+                else {
+                    newPacket = DataPacket.Null(DataTypeMask.MaterialSpectrum);
+                }
                 m_ConvertedPackets.PushBack(newPacket);
             }
             if ((m_AvailableInstrumentTypes & DataTypeMask.Temperature) != 0) {
-                DataPacket newPacket = DataPacket.Temperature(m_StateA.ToConvert.Temperature);
+                DataPacket newPacket;
+                if (m_StateA.ToConvert != null) {
+                    newPacket = DataPacket.Temperature(m_StateA.ToConvert.Temperature);
+                }
+                else {
+                    newPacket = DataPacket.Null(DataTypeMask.Temperature);
+                }
                 m_ConvertedPackets.PushBack(newPacket);
             }
             if ((m_AvailableInstrumentTypes & DataTypeMask.Distance) != 0) {
-                DataPacket newPacket = DataPacket.Distance(m_StateA.ToConvert.Distance);
+                DataPacket newPacket;
+                if (m_StateA.ToConvert != null) {
+                    newPacket = DataPacket.Distance(m_StateA.ToConvert.Distance);
+                }
+                else {
+                    newPacket = DataPacket.Null(DataTypeMask.Distance);
+                }
                 m_ConvertedPackets.PushBack(newPacket);
             }
             /* TODO: historical data handling
