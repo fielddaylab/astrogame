@@ -17,7 +17,7 @@ namespace Astro {
         #region Inspector
 
         public string DisplayName;
-        public string[] HintText;
+        public string[] ClueText;
 
         [Header("Data")]
         public DataTypeMask RequiredProperties;

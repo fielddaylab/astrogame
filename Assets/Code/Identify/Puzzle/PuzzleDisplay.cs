@@ -11,6 +11,7 @@ namespace Astro
     {
         public PuzzleCell[] Cells;
         public PuzzleHeader[] Headers;
+        public PuzzleHeader Clues;
         public int NumCols;
         public Transform CellAnchorPos;
         public Transform HeaderAnchorPos;

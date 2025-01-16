@@ -5,6 +5,9 @@ using FieldDay.Systems;
 using FieldDay;
 using BeauUtil;
 using TMPro;
+using System.Text;
+using BeauPools;
+using FieldDay.UI;
 
 namespace Astro
 {
@@ -32,6 +35,16 @@ namespace Astro
                     var newHeader = pools.Headers.Alloc(display.transform.position);
                     newHeader.Text.SetText(GenerateHeaderText(types[c]));
                     headers[c] = newHeader;
+                }
+
+                // TEMPORARY, TODO: streamline this
+                using (PooledStringBuilder psb = PooledStringBuilder.Create()) {
+                    for (int i = 0; i < state.QueuedPuzzle.ClueText.Length; i++) {
+                        psb.Builder.Append("- ");
+                        psb.Builder.Append(state.QueuedPuzzle.ClueText[i]);
+                        psb.Builder.Append("\n");
+                    }
+                    display.Clues.Text.SetTextAndActive(psb.Builder.Flush());
                 }
 
                 // generate and organize puzzle cells
