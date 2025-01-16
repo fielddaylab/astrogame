@@ -38,9 +38,13 @@ namespace Astro {
             for (int i = 0; i < rgrs.LeftRows.Length; i++) {
                 if (i < page.EntriesLeft.Length) {
                     rgrs.LeftRows[i].SetText(page.EntriesLeft[i].Label);
+                } else {
+                    rgrs.LeftRows[i].SetText("");
                 }
                 if (i < page.EntriesRight.Length) {
                     rgrs.RightRows[i].SetText(page.EntriesRight[i].Label);
+                } else {
+                    rgrs.RightRows[i].SetText("");
                 }
             }
 
