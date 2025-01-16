@@ -2364,7 +2364,10 @@ GameObject:
   - component: {fileID: 288656477}
   - component: {fileID: 288656479}
   - component: {fileID: 288656478}
-  m_Layer: 0
+  - component: {fileID: 288656482}
+  - component: {fileID: 288656481}
+  - component: {fileID: 288656480}
+  m_Layer: 6
   m_Name: LockPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2437,6 +2440,58 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 288656476}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &288656480
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 288656476}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99eb8178091c1cf42804cb0b80d524fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Instrument: {fileID: 40622596}
+--- !u!114 &288656481
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 288656476}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38d587e5b249a5141b2b8e4cc3bb1223, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsDraggable: 0
+  InteractReceived: 0
+  InteractEnded: 0
+  IsDragging: 0
+  MaintainExistingView: 0
+  ConnectedViewNode: {fileID: 2143273356}
+--- !u!65 &288656482
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 288656476}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 0.99999994, z: 1}
+  m_Center: {x: -0.00000023841858, y: 0, z: 0}
 --- !u!1 &309415018
 GameObject:
   m_ObjectHideFlags: 0
