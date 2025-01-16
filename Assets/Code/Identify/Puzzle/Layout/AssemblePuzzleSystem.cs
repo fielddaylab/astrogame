@@ -10,7 +10,7 @@ namespace Astro
 {
     public class AssemblePuzzleSystem : ComponentSystemBehaviour<PuzzleDisplay>
     {
-        private readonly RingBuffer<PuzzleCell> m_CellWorkList = new RingBuffer<PuzzleCell>(12);
+        private readonly RingBuffer<PuzzleCell> m_CellWorkList = new RingBuffer<PuzzleCell>(12, RingBufferMode.Expand);
 
         public override void ProcessWork(float deltaTime)
         {
