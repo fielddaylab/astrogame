@@ -16,6 +16,7 @@ namespace FieldDay.Assets {
     public class AssetNameAttribute : PropertyAttribute {
         public readonly Type AssetType;
         internal readonly bool UseDropdown;
+        internal string DropdownNullName;
 
         protected internal virtual bool Predicate(UnityEngine.Object obj) { return true; }
         protected internal virtual string Name(UnityEngine.Object obj) { return obj.name; }

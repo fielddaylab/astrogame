@@ -107,6 +107,8 @@ namespace Astro
 
             state.HorizLook = angles.y;
             state.VertLook = angles.x > 90 ? angles.x - 360 : angles.x;
+
+            state.OnLookUpdated.Invoke(state);
         }
     }
 }

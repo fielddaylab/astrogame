@@ -11,11 +11,11 @@ namespace FieldDay.Audio {
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
     public struct AudioPropertyBlock {
-        public float Volume;
-        public float Pitch;
-        public float Pan;
-        public float LoPass;
-        public float HiPass;
+        [Range(0, 1)] public float Volume;
+        [Range(-3, 3)] public float Pitch;
+        [Range(-1, 1)] public float Pan;
+        [Range(0, 1)] public float LoPass;
+        [Range(0, 1)] public float HiPass;
         public bool Pause;
         public bool Mute;
 
@@ -82,6 +82,8 @@ namespace FieldDay.Audio {
             target.Volume = sourceA.Volume * sourceB.Volume;
             target.Pitch = sourceA.Pitch * sourceB.Pitch;
             target.Pan = sourceA.Pan + sourceB.Pan;
+            target.LoPass = sourceA.LoPass + sourceB.LoPass;
+            target.HiPass = sourceA.HiPass + sourceB.HiPass;
             target.Pause = sourceA.Pause || sourceB.Pause;
             target.Mute = sourceA.Mute || sourceB.Mute;
         }
@@ -95,6 +97,8 @@ namespace FieldDay.Audio {
             } else if (mixFactor < 1) {
                 target.Volume = MixVal1(target.Volume, mixFactor);
                 target.Pitch = MixVal1(target.Pitch, mixFactor);
+                target.LoPass *= mixFactor;
+                target.HiPass *= mixFactor;
                 target.Pan *= mixFactor;
             }
         }
@@ -117,6 +121,8 @@ namespace FieldDay.Audio {
             Volume = 1,
             Pitch = 1,
             Pan = 0,
+            LoPass = 0,
+            HiPass = 0,
             Pause = false,
             Mute = false
         };

@@ -181,7 +181,7 @@ namespace FieldDay.Debugging {
 
         private void UpdateMenu() {
 
-            bool canHaveMenuOpen = !Game.Scenes.IsMainLoading();
+            bool canHaveMenuOpen = !GameLoop.IsLoading;
 
             if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.W) && canHaveMenuOpen) {
                 SetMenuVisible(!m_MenuOpen);

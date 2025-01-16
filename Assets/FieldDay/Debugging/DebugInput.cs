@@ -28,8 +28,11 @@ namespace FieldDay.Debugging {
         static private DigitalControlStates<XRHandButtons> s_XRButtonsRight;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static private DigitalControlStates<XRHandButtons> HandInput(XRHandIndex index) {
-            return index == XRHandIndex.Right ? s_XRButtonsRight : s_XRButtonsLeft;
+        static private ref DigitalControlStates<XRHandButtons> HandInput(XRHandIndex index) {
+            if (index == XRHandIndex.Right) {
+                return ref s_XRButtonsRight;
+            }
+            return ref s_XRButtonsLeft;
         }
 #endif // USING_XR && !UNITY_WEBGL
 
@@ -321,9 +324,27 @@ namespace FieldDay.Debugging {
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static public bool ConsumePress(DebugInputButtons button) {
+#if DEVELOPMENT
+            return s_ButtonStates.ConsumePress(button);
+#else
+            return false;
+#endif // DEVELOPMENT
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public bool IsPressed(InputModifierKeys modifiers, DebugInputButtons button) {
 #if DEVELOPMENT
             return s_ModifierStates.IsDownAll(modifiers) && s_ButtonStates.IsPressed(button);
+#else
+            return false;
+#endif // DEVELOPMENT
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static public bool ConsumePress(InputModifierKeys modifiers, DebugInputButtons button) {
+#if DEVELOPMENT
+            return s_ModifierStates.IsDownAll(modifiers) && s_ButtonStates.ConsumePress(button);
 #else
             return false;
 #endif // DEVELOPMENT
@@ -379,9 +400,27 @@ namespace FieldDay.Debugging {
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static public bool ConsumePress(XRHandIndex hand, XRHandButtons xrButton) {
+#if DEVELOPMENT && USING_XR && !UNITY_WEBGL
+            return HandInput(hand).ConsumePress(xrButton);
+#else
+            return false;
+#endif // DEVELOPMENT && USING_XR && !UNITY_WEBGL
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public bool IsPressed(InputModifierKeys modifiers, XRHandIndex hand, XRHandButtons xrButton) {
 #if DEVELOPMENT && USING_XR && !UNITY_WEBGL
             return s_ModifierStates.IsDownAll(modifiers) && HandInput(hand).IsPressed(xrButton);
+#else
+            return false;
+#endif // DEVELOPMENT && USING_XR && !UNITY_WEBGL
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static public bool ConsumePress(InputModifierKeys modifiers, XRHandIndex hand, XRHandButtons xrButton) {
+#if DEVELOPMENT && USING_XR && !UNITY_WEBGL
+            return s_ModifierStates.IsDownAll(modifiers) && HandInput(hand).ConsumePress(xrButton);
 #else
             return false;
 #endif // DEVELOPMENT && USING_XR && !UNITY_WEBGL

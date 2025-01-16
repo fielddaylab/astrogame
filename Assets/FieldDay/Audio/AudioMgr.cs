@@ -1,4 +1,9 @@
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#define DEVELOPMENT
+#endif // UNITY_EDITOR || DEVELOPMENT_BUILD
+
 using System;
+using System.Collections.Generic;
 using BeauPools;
 using BeauUtil;
 using BeauUtil.Debugger;
@@ -29,7 +34,8 @@ namespace FieldDay.Audio {
         private float m_PreloadWorkerTimeSlice;
 
         private Pipe<AudioCommand> m_CommandPipe = new Pipe<AudioCommand>(128, true);
-        private UniqueIdAllocator16 m_VoiceIdAllocator = new UniqueIdAllocator16(MaxVoices);
+        private Pipe<PlayCommandData> m_PlayCommandPipe = new Pipe<PlayCommandData>(64, true);
+        private UniqueIdAllocator16 m_VoiceIdAllocator = new UniqueIdAllocator16(MaxVoices + MaxBuses);
 
         private Unsafe.ArenaHandle m_Arena;
         private UnsafeResourcePool<AudioPropertyBlock> m_TargetablePropertyBlocks;
@@ -43,23 +49,56 @@ namespace FieldDay.Audio {
         private IPool<AudioVoiceComponents> m_VoiceComponentPool;
         private IPool<VoiceData> m_VoiceDataPool;
 
-        private RingBuffer<VoiceData> m_ActiveVoices = new RingBuffer<VoiceData>(MaxVoices);
+        private BusData[] m_BusData;
+        private int m_BusCount;
 
+        private AudioListener m_ListenerReference;
+
+#if DEVELOPMENT
+        private AudioPropertyBlock[] m_DebugBusProperties;
+#endif // DEVELOPMENT
+
+        private RingBuffer<VoiceData> m_ActiveVoices = new RingBuffer<VoiceData>(MaxVoices);
         private RingBuffer<AudioClip> m_PreloadQueue = new RingBuffer<AudioClip>(32, RingBufferMode.Expand);
+        private RingBuffer<AudioEvent> m_EventLateBindQueue = new RingBuffer<AudioEvent>(128, RingBufferMode.Expand);
+        private RingBuffer<AudioBus> m_BusLateBindQueue = new RingBuffer<AudioBus>(MaxBuses);
+
+        private readonly Dictionary<uint, int> m_BusNameToIndex = new Dictionary<uint, int>(MaxBuses);
 
         #endregion // State
 
-        internal AudioMgr(Config config) {
+        internal unsafe AudioMgr(Config config) {
             m_Arena = Unsafe.CreateArena(1 * Unsafe.MiB, "Audio", Unsafe.AllocatorFlags.ZeroOnAllocate);
             m_TargetablePropertyBlocks.Create(m_Arena, (MaxVoices + MaxBuses) * 2);
             m_PreloadWorkerTimeSlice = config.PreloadWorkerTimeSlice;
 
             m_PositionSyncTable = new LLTable<PositionSyncData>(MaxVoices);
-            m_FloatTweenTable = new LLTable<FloatParamTweenData>(MaxVoices * 2);
+            m_FloatTweenTable = new LLTable<FloatParamTweenData>((MaxVoices + MaxBuses) * 2);
             m_PositionSyncList = m_FloatTweenList = LLIndexList.Empty;
 
             m_VoiceDataPool = new FixedPool<VoiceData>(MaxVoices, Pool.DefaultConstructor<VoiceData>());
             m_VoiceDataPool.Prewarm(MaxVoices);
+
+            m_BusData = new BusData[MaxBuses];
+            for(int i = 0; i < MaxBuses; i++) {
+                ref BusData bus = ref m_BusData[i];
+                bus.ScriptProperties = m_TargetablePropertyBlocks.Alloc();
+
+                *bus.ScriptProperties = AudioPropertyBlock.Default;
+                bus.LastKnownProperties = AudioPropertyBlock.Default;
+
+                bus.ConfigVolume = 1;
+
+                bus.Handle = m_VoiceIdAllocator.Alloc();
+                bus.FloatTweens.Reset();
+            }
+
+#if DEVELOPMENT
+            m_DebugBusProperties = new AudioPropertyBlock[MaxBuses];
+            for(int i = 0; i < MaxBuses; i++) {
+                m_DebugBusProperties[i] = AudioPropertyBlock.Default;
+            }
+#endif // DEVELOPMENT
 
             m_AudioSourceRoot = new GameObject("AudioMgr");
             m_AudioSourceRoot.hideFlags |= HideFlags.NotEditable | HideFlags.DontSave;
@@ -89,12 +128,17 @@ namespace FieldDay.Audio {
             m_HasSpatializationPlugin = !string.IsNullOrEmpty(AudioSettings.GetSpatializerPluginName());
 
             Game.Assets.SetNamedAssetLoadCallbacks<AudioEvent>(OnAudioEventLoaded, OnAudioEventUnloaded);
+            Game.Assets.SetNamedAssetLoadCallbacks<AudioBus>(OnAudioBusLoaded, OnAudioBusUnloaded);
+
+            m_BusNameToIndex.Add(0, 0);
+            CreateBus(AudioBus.Master, AudioPropertyBlock.Default, default);
         }
 
         #region Events
 
         internal void PreUpdate(float deltaTime) {
             using (Profiling.Sample("AudioMgr::PreUpdate")) {
+                ProcessLateBindings();
                 CullFinishedVoices();
                 FlushCommandPipe();
             }
@@ -102,6 +146,8 @@ namespace FieldDay.Audio {
 
         internal void Update(float deltaTime) {
             using (Profiling.Sample("AudioMgr::Update")) {
+                ProcessLateBindings();
+
                 FlushCommandPipe();
 
                 if (m_PreloadQueue.Count > 0) {
@@ -112,6 +158,8 @@ namespace FieldDay.Audio {
 
         internal void LateUpdate(float deltaTime) {
             using (Profiling.Sample("AudioMgr::LateUpdate")) {
+                ProcessLateBindings();
+
                 FlushCommandPipe();
 
                 if (m_PreloadQueue.Count > 0) {
@@ -120,6 +168,7 @@ namespace FieldDay.Audio {
 
                 SyncEmitterLocations();
                 UpdateTweens(deltaTime);
+                UpdateBuses();
                 UpdateVoices(deltaTime, Time.realtimeSinceStartupAsDouble);
 
                 switch (Frame.Index % 60) {
@@ -171,13 +220,68 @@ namespace FieldDay.Audio {
                     m_PreloadQueue.PushBack(clip);
                 }
             }
+
+            if (evt.CachedBusIndex < 0) {
+                m_EventLateBindQueue.PushBack(evt);
+            }
         }
 
         private void OnAudioEventUnloaded(AudioEvent evt) {
+            // nothing
+        }
 
+        private void OnAudioBusLoaded(AudioBus bus) {
+            if (m_BusNameToIndex.ContainsKey(bus.AssetId.HashValue)) {
+                Log.Error("[AudioMgr] Bus '{0}' already loaded!", bus.AssetId);
+                return;
+            }
+
+            if (m_BusCount > 1) {
+                Log.Error("[AudioMgr] Buses must all be registered at startup.");
+                return;
+            }
+
+            m_BusLateBindQueue.PushBack(bus);
+        }
+
+        private void OnAudioBusUnloaded(AudioBus bus) {
+            // should never be unloaded whyyyyyy
         }
 
         #endregion // Asset Handlers
+
+        #region Listener
+
+        /// <summary>
+        /// Sets the global AudioListener reference.
+        /// </summary>
+        public void SetListener(AudioListener listener) {
+            m_ListenerReference = listener;
+        }
+
+        /// <summary>
+        /// Sets the global AudioListener reference.
+        /// </summary>
+        public void RemoveListener(AudioListener listener) {
+            if (m_ListenerReference == listener) {
+                m_ListenerReference = null;
+            }
+        }
+
+        /// <summary>
+        /// Global audio listener.
+        /// </summary>
+        public AudioListener Listener {
+            get {
+                if (!m_ListenerReference) {
+                    Log.Error("[AudioMgr] AudioListener reference not assigned - make sure to attach an 'AudioListenerReference' component!");
+                    m_ListenerReference = Find.Any<AudioListener>();
+                }
+                return m_ListenerReference;
+            }
+        }
+
+        #endregion // Listener
 
         #region Command Pipe
 
@@ -185,10 +289,13 @@ namespace FieldDay.Audio {
             m_CommandPipe.Write(cmd);
         }
 
-        internal AudioHandle QueuePlayAudioCommand(AudioCommand cmd) {
+        internal AudioHandle QueuePlayAudioCommand(AudioCommandType cmdType, PlayCommandData cmdData) {
             UniqueId16 id = m_VoiceIdAllocator.Alloc();
-            cmd.Play.Handle = id;
-            m_CommandPipe.Write(cmd);
+            cmdData.Handle = id;
+            m_CommandPipe.Write(new AudioCommand() {
+                Type = cmdType
+            });
+            m_PlayCommandPipe.Write(cmdData);
             return new AudioHandle(id);
         }
 

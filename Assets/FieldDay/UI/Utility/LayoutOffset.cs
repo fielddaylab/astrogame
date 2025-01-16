@@ -13,6 +13,7 @@ namespace UnityEngine.UI {
         [SerializeField] private Vector2 m_Offset0;
         [SerializeField] private Vector2 m_Offset1;
         [SerializeField] private Vector2 m_Offset2;
+        [SerializeField] private Vector2 m_Offset3;
 
         #endregion // Inspector
 
@@ -46,6 +47,16 @@ namespace UnityEngine.UI {
             set {
                 if (m_Offset2 != value) {
                     m_Offset2 = value;
+                    ApplyCurrentOffset();
+                }
+            }
+        }
+
+        public Vector2 Offset3 {
+            get { return m_Offset3; }
+            set {
+                if (m_Offset3 != value) {
+                    m_Offset3 = value;
                     ApplyCurrentOffset();
                 }
             }
@@ -98,7 +109,7 @@ namespace UnityEngine.UI {
         #endregion // Events
 
         private void ApplyCurrentOffset() {
-            ApplyOffset(m_Offset0 + m_Offset1 + m_Offset2);
+            ApplyOffset(m_Offset0 + m_Offset1 + m_Offset2 + m_Offset3);
         }
 
         private void ApplyOffset(Vector2 offset) {
@@ -217,6 +228,30 @@ namespace UnityEngine.UI {
             }
         }
 
+        private class Offset3Tween : ITweenData {
+            private LayoutOffset m_Offset;
+            private Vector2 m_Target;
+            private Vector2 m_Start;
+            private Vector2 m_Delta;
+
+            public Offset3Tween(LayoutOffset offset, Vector2 target) {
+                m_Offset = offset;
+                m_Target = target;
+            }
+
+            public void ApplyTween(float inPercent) {
+                m_Offset.Offset3 = m_Start + m_Delta * inPercent;
+            }
+
+            public void OnTweenEnd() {
+            }
+
+            public void OnTweenStart() {
+                m_Start = m_Offset.m_Offset3;
+                m_Delta = m_Target - m_Start;
+            }
+        }
+
         public Tween Offset0To(Vector2 offset, float duration) {
             return Tween.Create(new Offset0Tween(this, offset), duration);
         }
@@ -227,6 +262,10 @@ namespace UnityEngine.UI {
 
         public Tween Offset2To(Vector2 offset, float duration) {
             return Tween.Create(new Offset2Tween(this, offset), duration);
+        }
+
+        public Tween Offset3To(Vector2 offset, float duration) {
+            return Tween.Create(new Offset3Tween(this, offset), duration);
         }
 
         #endregion // Tweens

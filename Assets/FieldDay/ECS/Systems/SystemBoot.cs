@@ -6,8 +6,12 @@ namespace FieldDay.Systems {
     /// </summary>
     [DefaultExecutionOrder(-21000), DisallowMultipleComponent]
     public sealed class SystemBoot : MonoBehaviour {
+        private ISystem[] m_Systems;
+
         private void Awake() {
-            foreach(var system in gameObject.GetComponentsInChildren<ISystem>(true)) {
+            m_Systems = gameObject.GetComponentsInChildren<ISystem>(true);
+
+            foreach(var system in m_Systems) {
                 Game.Systems.Register(system);
             }
             Game.Systems.ProcessInitQueue();
@@ -18,7 +22,7 @@ namespace FieldDay.Systems {
                 return;
             }
 
-            foreach (var system in gameObject.GetComponentsInChildren<ISystem>(true)) {
+            foreach (var system in m_Systems) {
                 Game.Systems.Deregister(system);
             }
         }

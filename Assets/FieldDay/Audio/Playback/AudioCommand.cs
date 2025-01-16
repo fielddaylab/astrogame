@@ -29,7 +29,8 @@ namespace FieldDay.Audio {
         SetVoiceFloatParameter,
         SetVoiceBoolParameter,
         SetBusFloatParameter,
-        SetBusBoolParameter
+        SetBusBoolParameter,
+        SetBusConfigVolume,
     }
 
     #endregion // Enums
@@ -55,6 +56,23 @@ namespace FieldDay.Audio {
 
         static public implicit operator AudioIdRef(AudioSource source) {
             return new AudioIdRef() { InstanceId = UnityHelper.Id(source) };
+        }
+    }
+
+    /// <summary>
+    /// Reference to a playing instance, or a bus.
+    /// </summary>
+    [StructLayout(LayoutKind.Explicit)]
+    internal struct AudioIdOrBusRef {
+        [FieldOffset(0)] public StringHash32 BusId;
+        [FieldOffset(0)] public UniqueId16 Handle;
+
+        static public implicit operator AudioIdOrBusRef(StringHash32 id) {
+            return new AudioIdOrBusRef() { BusId = id };
+        }
+
+        static public implicit operator AudioIdOrBusRef(UniqueId16 handle) {
+            return new AudioIdOrBusRef() { Handle = handle };
         }
     }
 
@@ -119,20 +137,28 @@ namespace FieldDay.Audio {
     /// Data for SetFloatParameter
     /// </summary>
     internal struct FloatParamChangeCommandData {
-        public UniqueId16 Handle;
+        public AudioIdOrBusRef Handle;
         public AudioFloatPropertyType Property;
+        public Curve Easing;
         public float Target;
         public float Duration;
-        public Curve Easing;
     }
 
     /// <summary>
     /// Data for SetBoolParameter
     /// </summary>
     internal struct BoolParamChangeCommandData {
-        public UniqueId16 Handle;
+        public AudioIdOrBusRef Handle;
         public AudioBoolPropertyType Property;
         public bool Target;
+    }
+
+    /// <summary>
+    /// Data for SetConfigVolume
+    /// </summary>
+    internal struct ConfigVolumeChangeCommandData {
+        public StringHash32 BusId;
+        public float Target;
     }
 
     #endregion // Command Data
@@ -140,10 +166,11 @@ namespace FieldDay.Audio {
     [StructLayout(LayoutKind.Explicit)]
     internal struct AudioCommand {
         [FieldOffset(0)] public AudioCommandType Type;
-        [FieldOffset(4)] public PlayCommandData Play;
+        //[FieldOffset(4)] public PlayCommandData Play;
         [FieldOffset(4)] public PlayExistingCommandData Resume;
         [FieldOffset(4)] public StopCommandData Stop;
         [FieldOffset(4)] public FloatParamChangeCommandData FloatParam;
         [FieldOffset(4)] public BoolParamChangeCommandData BoolParam;
+        [FieldOffset(4)] public ConfigVolumeChangeCommandData ConfigVolume;
     }
 }

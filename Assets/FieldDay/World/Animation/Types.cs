@@ -1,3 +1,4 @@
+using System;
 using System.Runtime.CompilerServices;
 using BeauUtil.Debugger;
 
@@ -5,6 +6,7 @@ namespace FieldDay.Animation {
     /// <summary>
     /// Fixed-size float array of 8 elements.
     /// </summary>
+    [Serializable]
     public unsafe struct Float8 {
         public fixed float Values[8];
 
@@ -35,6 +37,7 @@ namespace FieldDay.Animation {
     /// <summary>
     /// Fixed-size double array of 8 elements.
     /// </summary>
+    [Serializable]
     public unsafe struct Double8 {
         public fixed double Values[8];
 

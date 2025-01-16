@@ -1343,6 +1343,9 @@ namespace FieldDay.Scenes {
                         counter.Increment();
                     } else {
                         data.TryVisit(SceneDataExt.VisitFlags.LateEnabled);
+                        foreach (ISceneCustomData custom in data.CustomData) {
+                            custom.OnLateEnable();
+                        }
                         FlushCallbacks(data.LateEnableCallbackQueue);
                         if (!OnAnySceneEnabled.IsEmpty) {
                             OnAnySceneEnabled.Invoke();
@@ -1542,6 +1545,18 @@ namespace FieldDay.Scenes {
         /// </summary>
         static public bool IsPersistent(Component component) {
             return component.TryGetComponent(out Persist _);
+        }
+
+        /// <summary>
+        /// Returns if any scenes are baking.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static public bool IsBaking() {
+#if UNITY_EDITOR
+            return Editor.AreDelayedSceneProcessorsRunning();
+#else
+            return false;
+#endif // UNITY_EDITOR
         }
 
         static public class Editor {

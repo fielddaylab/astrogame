@@ -100,14 +100,23 @@ namespace FieldDay.Rendering {
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public bool IsGameCamera(Camera camera) {
-            switch (camera.cameraType) {
-                case CameraType.SceneView:
-                case CameraType.Preview:
-                    return false;
+            return camera.cameraType == CameraType.Game;
+        }
+    
+        /// <summary>
+        /// Gets a matrix that faces towards the given camera.
+        /// </summary>
+        static public void GetBillboardingMatrix(Camera camera, out Matrix4x4 matrix) {
+            Transform cameraTransform = camera.transform;
+            matrix = Matrix4x4.Rotate(Quaternion.LookRotation(-Geom.Forward(cameraTransform.rotation), Vector3.up));
+        }
 
-                default:
-                    return true;
-            }
+        /// <summary>
+        /// Gets a matrix that faces towards the given camera.
+        /// </summary>
+        static public void GetBillboardingMatrix(Camera camera, Vector3 upVector, out Matrix4x4 matrix) {
+            Transform cameraTransform = camera.transform;
+            matrix = Matrix4x4.Rotate(Quaternion.LookRotation(-Geom.Forward(cameraTransform.rotation), upVector));
         }
     }
 }

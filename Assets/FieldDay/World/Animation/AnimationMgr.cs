@@ -46,6 +46,13 @@ namespace FieldDay.Animation {
             }, phase);
         }
 
+        public AnimHandle AddLiteAnimator<T>(ILiteAnimator<T> animator, T target, float duration, GameLoopPhase phase = GameLoopPhase.Update) where T : class {
+            return AddLiteAnimator(animator, target, new LiteAnimatorState() {
+                Duration = duration,
+                TimeRemaining = duration
+            }, phase);
+        }
+
         public AnimHandle AddLiteAnimator(ILiteAnimator animator, LiteAnimatorState state, GameLoopPhase phase = GameLoopPhase.Update) {
             return AddLiteAnimator(animator, animator, state, phase);
         }
@@ -59,6 +66,33 @@ namespace FieldDay.Animation {
             for (int i = 0; i < liteAnimators.Count; i++) {
                 ref LiteAnimatorRecord record = ref liteAnimators[i];
                 if (record.Animator == animator && record.Target == target) {
+                    m_HandleIdGenerator.Free(record.Handle);
+                    record.State = state;
+                    var newId = m_HandleIdGenerator.Alloc();
+                    record.Handle = newId;
+                    return new AnimHandle(newId, phase, AnimationType.Lite);
+                }
+            }
+
+            var id = m_HandleIdGenerator.Alloc();
+            liteAnimators.PushBack(new LiteAnimatorRecord() {
+                Animator = animator,
+                Target = target,
+                State = state,
+                Handle = id
+            });
+            return new AnimHandle(id, phase, AnimationType.Lite);
+        }
+
+        public AnimHandle AddLiteAnimator<T>(ILiteAnimator<T> animator, T target, LiteAnimatorState state, GameLoopPhase phase = GameLoopPhase.Update) where T : class {
+            Assert.NotNull(animator);
+            var liteAnimators = GetLiteAnimators(phase);
+
+            animator.InitAnimation(target, ref state);
+
+            for (int i = 0; i < liteAnimators.Count; i++) {
+                ref LiteAnimatorRecord record = ref liteAnimators[i];
+                if (record.Animator == animator && ReferenceEquals(record.Target, target)) {
                     m_HandleIdGenerator.Free(record.Handle);
                     record.State = state;
                     var newId = m_HandleIdGenerator.Alloc();
@@ -99,6 +133,30 @@ namespace FieldDay.Animation {
                     break;
                 }
             }
+        }
+
+        /// <summary>
+        /// Cancels an animation.
+        /// </summary>
+        public void CancelLiteAnimator<T>(ILiteAnimator<T> animator, T target, GameLoopPhase phase = GameLoopPhase.Update) where T : class {
+            Assert.NotNull(animator);
+            var liteAnimators = GetLiteAnimators(phase);
+            for (int i = 0; i < liteAnimators.Count; i++) {
+                LiteAnimatorRecord animRecord = liteAnimators[i];
+                if (animRecord.Animator == animator && ReferenceEquals(animRecord.Target, target)) {
+                    animRecord.Animator.ResetAnimation(animRecord.Target, ref animRecord.State);
+                    m_HandleIdGenerator.Free(animRecord.Handle);
+                    liteAnimators.FastRemoveAt(i);
+                    break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Returns if an animation is currently executing.
+        /// </summary>
+        public bool IsAnimationRunning(AnimHandle handle) {
+            return m_HandleIdGenerator.IsValid(handle.Id);
         }
 
         private RingBuffer<LiteAnimatorRecord> GetLiteAnimators(GameLoopPhase phase) {
@@ -183,11 +241,14 @@ namespace FieldDay.Animation {
                 LiteAnimatorRecord animRecord = liteAnimators.PopFront();
                 if (animRecord.Animator.UpdateAnimation(animRecord.Target, ref animRecord.State, deltaTime)) {
                     liteAnimators.PushBack(animRecord);
+                } else {
+                    m_HandleIdGenerator.Free(animRecord.Handle);
                 }
             }
         }
 
         internal void Shutdown() {
+            m_FixedUpdateLiteAnimators.Clear();
             m_UpdateLiteAnimators.Clear();
             m_UnscaledUpdateLiteAnimators.Clear();
         }

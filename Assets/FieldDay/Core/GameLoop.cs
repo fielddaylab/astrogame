@@ -945,6 +945,11 @@ namespace FieldDay {
         #region Update Mask
 
         /// <summary>
+        /// Returns if the main scene was loading at the start of this frame.
+        /// </summary>
+        static public bool IsLoading { get { return s_WasLoadingSceneAtFrameStart; } }
+
+        /// <summary>
         /// Mask of all process and system categories allowed to update.
         /// </summary>
         static public int UpdateMask { get { return s_UpdateMask; } }

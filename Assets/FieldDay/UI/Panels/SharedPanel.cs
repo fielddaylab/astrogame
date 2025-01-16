@@ -43,6 +43,10 @@ namespace FieldDay.UI {
             gameObject.SetActive(true);
         }
 
+        public virtual void SetVisibleNow(bool visible) {
+            gameObject.SetActive(visible);
+        }
+
         public virtual bool IsTransitioning() {
             return false;
         }

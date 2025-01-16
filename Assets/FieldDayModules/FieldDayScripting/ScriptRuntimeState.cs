@@ -61,7 +61,6 @@ namespace FieldDay.Scripting {
         internal VariantTable SceneLocalTable;
 
         private Routine m_BootRoutine;
-
         #endregion // State
 
         #region Callbacks
@@ -123,7 +122,6 @@ namespace FieldDay.Scripting {
 
             Game.Scenes.QueueOnEnable(InitialMethodCache);
         }
-
         // TODO: Figure out why this needs to be called later in the scene loading process
         // when in WebGL. Also why LoadStaticAsync is broken
         private void InitialMethodCache() {
@@ -407,6 +405,7 @@ namespace FieldDay.Scripting {
                 foreach (var node in funcNodes) {
                     Runtime.Plugin.Run(node, targetId, actor, vars, "Function Invokation", true);
                 }
+                Log.Msg("[ScriptUtility] Invoked '{0}', {1} response(s)", functionId.ToDebugString(), funcNodes.Count.ToStringLookup());
             }
         }
 
@@ -436,9 +435,11 @@ namespace FieldDay.Scripting {
 
             ScriptNode node = ScriptDBUtility.FindRandomTrigger(DB, triggerId, lookup);
             if (node != null) {
+                Log.Msg("[ScriptUtility] Triggered '{0}', found response '{1}'", triggerId.ToDebugString(), node.FullName);
                 return Runtime.Plugin.Run(node, targetId, actor, vars, "Trigger Invokation", true);
             }
 
+            Log.Msg("[ScriptUtility] Triggered '{0}', no response", triggerId.ToDebugString());
             return default;
         }
 
@@ -463,6 +464,22 @@ namespace FieldDay.Scripting {
             for(int i = table.Count - 1; i >= 0; i--) {
                 var thread = table[i].GetThread();
                 if (thread != null && thread.Actor == actor) {
+                    table[i].Kill();
+                    killed++;
+                }
+            }
+            return killed;
+        }
+
+        /// <summary>
+        /// Kills all running threads.
+        /// </summary>
+        static public int KillAllThreads() {
+            int killed = 0;
+            var table = Runtime.ActiveThreads;
+            for (int i = table.Count - 1; i >= 0; i--) {
+                var thread = table[i].GetThread();
+                if (thread != null) {
                     table[i].Kill();
                     killed++;
                 }

@@ -7,6 +7,7 @@ namespace FieldDay.Assets {
     /// <summary>
     /// Preloads a set of asset packages.
     /// </summary>
+    [PreloadOrder(int.MinValue)]
     public sealed class AssetPackageLoader : MonoBehaviour, IScenePreload {
         [SerializeField] private AssetPack[] m_Packs;
 

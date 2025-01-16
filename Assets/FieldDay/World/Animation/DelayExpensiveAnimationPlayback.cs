@@ -1,12 +1,9 @@
-using System;
 using System.Collections.Generic;
-using BeauPools;
 using BeauUtil;
 using FieldDay.Scenes;
 using ScriptableBake;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static UnityEngine.ParticleSystem;
 
 namespace FieldDay.Animation {
     /// <summary>

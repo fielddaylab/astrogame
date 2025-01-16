@@ -71,7 +71,7 @@ namespace FieldDay.Editor {
                 items = new NamedItemList<string>(simpleCache.Count + 1);
             }
 
-            items.Add(string.Empty, "[Null]", -1);
+            items.Add(string.Empty, attr.DropdownNullName ?? "[Null]", -1);
 
             foreach(var obj in simpleCache.Values) {
                 if (!attr.Predicate(obj)) {

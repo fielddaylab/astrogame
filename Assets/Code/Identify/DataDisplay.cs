@@ -15,6 +15,7 @@ namespace Astro {
         [Header("Components")]
         public TMP_Text DefaultOutput;
         public Transform OutputTransform;
+        public RenderAtlasOutput OutputRender;
 
         public readonly CastableEvent<DataPacket, DataFormattingFlags> OnDisplayRequested = new CastableEvent<DataPacket, DataFormattingFlags>();
         public readonly ActionEvent OnDisplayCleared = new ActionEvent();
@@ -52,6 +53,10 @@ namespace Astro {
                 Log.Error("[DataUtility] Data display accepted type '{0}' but was unable to display data");
             } else {
                 display.OnDisplayRequested.Invoke(packet, display.Formatting);
+            }
+
+            if (display.OutputRender) {
+                display.OutputRender.MarkDirty();
             }
         }
 

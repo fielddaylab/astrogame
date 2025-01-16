@@ -48,7 +48,7 @@ namespace FieldDay.Components {
     }
 
     /// <summary>
-    /// Tuple of three component types.
+    /// Tuple of four component types.
     /// </summary>
     public struct ComponentTuple<TPrimary, TComponentA, TComponentB, TComponentC>
         where TPrimary : class, IComponentData

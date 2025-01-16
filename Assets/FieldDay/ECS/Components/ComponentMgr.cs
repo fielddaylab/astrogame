@@ -130,11 +130,11 @@ namespace FieldDay.Components
             Assert.True(m_ModificationLock > 0, "Unbalanced Lock/Unlock calls");
             if (m_ModificationLock-- == 1)
             {
-                while (m_RemovalQueue.TryPopBack(out IComponentData component))
+                while (m_RemovalQueue.TryPopFront(out IComponentData component))
                 {
                     DeregisterImpl(component);
                 }
-                while (m_AddQueue.TryPopBack(out IComponentData component))
+                while (m_AddQueue.TryPopFront(out IComponentData component))
                 {
                     RegisterImpl(component);
                 }

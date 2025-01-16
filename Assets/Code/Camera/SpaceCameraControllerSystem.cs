@@ -107,6 +107,8 @@ namespace Astro
             var angles = m_State.Camera.RootTransform.localEulerAngles;
             angles.x = m_State.VertLook;
             m_State.Camera.RootTransform.localEulerAngles = angles;
+
+            m_State.OnLookUpdated.Invoke(m_State);
         }
 
         private void AdjustHorizLook(float adjustment)
@@ -118,6 +120,8 @@ namespace Astro
             var angles = m_State.Camera.RootTransform.localEulerAngles;
             angles.y = m_State.HorizLook;
             m_State.Camera.RootTransform.localEulerAngles = angles;
+
+            m_State.OnLookUpdated.Invoke(m_State);
         }
 
         private void ProcessKeyboardLookDiscrete()

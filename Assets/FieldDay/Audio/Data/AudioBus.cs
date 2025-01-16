@@ -1,0 +1,29 @@
+using System;
+using BeauUtil;
+using FieldDay.Assets;
+using UnityEngine;
+
+namespace FieldDay.Audio {
+    /// <summary>
+    /// Audio bus information.
+    /// </summary>
+    [CreateAssetMenu(menuName = "Field Day/Audio/Audio Bus")]
+    public sealed class AudioBus : NamedAsset {
+        [AudioBusId] public StringHash32 ParentId;
+
+        [Inline(InlineAttribute.DisplayType.HeaderLabel)]
+        public AudioPropertyBlock Properties = AudioPropertyBlock.Default;
+
+        #region Lookup
+
+        static public readonly StringHash32 Master = "Master";
+
+        #endregion // Lookup
+    }
+
+    public sealed class AudioBusIdAttribute : AssetNameAttribute {
+        public AudioBusIdAttribute() : base(typeof(AudioBus), true) {
+            DropdownNullName = "[Master]";
+        }
+    }
+}

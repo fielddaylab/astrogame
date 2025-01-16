@@ -1,7 +1,6 @@
 using System;
 using System.Runtime.CompilerServices;
 using BeauUtil;
-using TinyIL;
 
 namespace FieldDay.HID {
     /// <summary>
@@ -251,7 +250,7 @@ namespace FieldDay.HID {
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static private bool NotZero(TEnum a) {
-            return !Enums.AreEqual(a, default(TEnum));
+            return Enums.IsNotZero(a);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

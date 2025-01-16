@@ -94,6 +94,9 @@ namespace FieldDay.Assets {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [Il2CppSetOption(Option.NullChecks, false)]
         public void Clear() {
+            foreach(var asset in m_Lookup.Values) {
+                RegistrationCallbacks.InvokeDeregister(asset);
+            }
             m_Lookup.Clear();
         }
 

@@ -1,4 +1,7 @@
+using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using BeauRoutine;
 using BeauUtil;
 using UnityEngine;
 
@@ -9,13 +12,73 @@ namespace FieldDay.Animation {
         void ResetAnimation(object target, ref LiteAnimatorState state);
     }
 
+    public interface ILiteAnimator<T> : ILiteAnimator where T : class {
+        void InitAnimation(T target, ref LiteAnimatorState state);
+        bool UpdateAnimation(T target, ref LiteAnimatorState state, float deltaTime);
+        void ResetAnimation(T target, ref LiteAnimatorState state);
+    }
+
+    public abstract class LiteAnimator<T> : ILiteAnimator<T> where T : class {
+        public abstract void InitAnimation(T target, ref LiteAnimatorState state);
+
+        public abstract void ResetAnimation(T target, ref LiteAnimatorState state);
+
+        public abstract bool UpdateAnimation(T target, ref LiteAnimatorState state, float deltaTime);
+
+        void ILiteAnimator.InitAnimation(object target, ref LiteAnimatorState state) {
+            InitAnimation(Unsafe.FastCast<T>(target), ref state);
+        }
+
+        void ILiteAnimator.ResetAnimation(object target, ref LiteAnimatorState state) {
+            ResetAnimation(Unsafe.FastCast<T>(target), ref state);
+        }
+
+        bool ILiteAnimator.UpdateAnimation(object target, ref LiteAnimatorState state, float deltaTime) {
+            return UpdateAnimation(Unsafe.FastCast<T>(target), ref state, deltaTime);
+        }
+    }
+
     public struct LiteAnimatorState {
         public float TimeRemaining;
         public float Duration;
-        public BitSet32 Flags;
+        public Curve Easing;
+        public ushort Flags;
         public int StateId;
-        public LiteAnimatorStateParam InitParam;
+        public LiteAnimatorStateParam InitParamA;
+        public LiteAnimatorStateParam InitParamB;
         public LiteAnimatorStateParam StateParam;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void ResetTime(float duration) {
+            TimeRemaining = Duration = duration;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void ResetTimeWithDelay(float duration, float delay) {
+            Duration = duration;
+            TimeRemaining = duration + delay;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void ScaleTime(float scale) {
+            TimeRemaining *= scale;
+            Duration *= scale;
+        }
+
+        public float PercentRemaining {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get { return Math.Max(0, TimeRemaining / Duration); }
+        }
+
+        public float PercentProgress {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get { return 1f - Math.Max(0, TimeRemaining / Duration); }
+        }
+
+        public bool IsStarted {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get { return TimeRemaining < Duration; }
+        }
     }
 
     [StructLayout(LayoutKind.Explicit)]

@@ -5,6 +5,7 @@ using UnityEngine;
 namespace Astro {
     public sealed class TelescopeAnimator : BatchedComponent {
         public Transform AimPivot;
+        public Transform BasePivot;
         public bool AutoSync;
     }
 }

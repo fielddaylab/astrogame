@@ -340,6 +340,18 @@ namespace ScriptableBake {
             }
         }
 
+        /// <summary>
+        /// Unpacks the root prefab instance of the given transform.
+        /// </summary>
+        static public bool UnpackPrefabIfNecessary(Transform transform) {
+            GameObject root = PrefabUtility.GetOutermostPrefabInstanceRoot(transform);
+            if (root != null) {
+                PrefabUtility.UnpackPrefabInstance(root, PrefabUnpackMode.Completely, InteractionMode.AutomatedAction);
+                return true;
+            }
+            return false;
+        }
+
         #endregion // Hierarchy
 
         #region Static Flags

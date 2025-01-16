@@ -1,3 +1,4 @@
+using BeauUtil;
 using FieldDay;
 using FieldDay.SharedState;
 using System.Collections;
@@ -42,6 +43,8 @@ namespace Astro
 
         [HideInInspector] public bool MouseDragLookActive;
         [HideInInspector] public Vector3 PrevMousePos;
+
+        public CastableEvent<SpaceCameraState> OnLookUpdated = new CastableEvent<SpaceCameraState>();
     }
 
     public static class SpaceCameraUtility

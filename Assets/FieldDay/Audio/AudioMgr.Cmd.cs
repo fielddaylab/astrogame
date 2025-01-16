@@ -38,13 +38,28 @@ namespace FieldDay.Audio {
                         break;
                     }
 
+                    case AudioCommandType.SetBusBoolParameter: {
+                        Cmd_SetBusBoolParameter(cmd.BoolParam);
+                        break;
+                    }
+
+                    case AudioCommandType.SetBusFloatParameter: {
+                        Cmd_SetBusFloatParameter(cmd.FloatParam);
+                        break;
+                    }
+
+                    case AudioCommandType.SetBusConfigVolume: {
+                        Cmd_SetBusConfigVolume(cmd.ConfigVolume);
+                        break;
+                    }
+
                     case AudioCommandType.PlayClipFromName: {
-                        Cmd_PlayFromName(cmd.Play);
+                        Cmd_PlayFromName(m_PlayCommandPipe.Read());
                         break;
                     }
 
                     case AudioCommandType.PlayClipFromAssetRef: {
-                        Cmd_PlayFromAsset(cmd.Play);
+                        Cmd_PlayFromAsset(m_PlayCommandPipe.Read());
                         break;
                     }
 
@@ -136,14 +151,14 @@ namespace FieldDay.Audio {
         #region Params
 
         private unsafe void Cmd_SetVoiceBoolParameter(BoolParamChangeCommandData paramChange) {
-            VoiceData voice = FindVoiceForId(paramChange.Handle);
+            VoiceData voice = FindVoiceForId(paramChange.Handle.Handle);
             if (voice != null) {
                 (*voice.VoiceProperties).SetBool(paramChange.Property, paramChange.Target);
             }
         }
 
         private unsafe void Cmd_SetVoiceFloatParameter(FloatParamChangeCommandData paramChange) {
-            VoiceData voice = FindVoiceForId(paramChange.Handle);
+            VoiceData voice = FindVoiceForId(paramChange.Handle.Handle);
             if (voice != null) {
                 FreeTween(ref voice.FloatTweens.Indices[(int) paramChange.Property], voice.Handle);
 
@@ -166,7 +181,43 @@ namespace FieldDay.Audio {
             }
         }
 
-        // TODO: Setting bus parameters
+        private unsafe void Cmd_SetBusBoolParameter(BoolParamChangeCommandData paramChange) {
+            ref BusData bus = ref FindBusForId(paramChange.Handle.BusId);
+            if (!Unsafe.IsNullRef(ref bus)) {
+                (*bus.ScriptProperties).SetBool(paramChange.Property, paramChange.Target);
+            }
+        }
+
+        private unsafe void Cmd_SetBusFloatParameter(FloatParamChangeCommandData paramChange) {
+            ref BusData bus = ref FindBusForId(paramChange.Handle.BusId);
+            if (!Unsafe.IsNullRef(ref bus)) {
+                FreeTween(ref bus.FloatTweens.Indices[(int) paramChange.Property], bus.Handle);
+
+                if (paramChange.Duration <= 0) {
+                    bus.ScriptProperties->SetFloat(paramChange.Property, paramChange.Target);
+                } else {
+                    FloatParamTweenData tween;
+                    tween.Source = bus.ScriptProperties;
+                    tween.Start = bus.ScriptProperties->GetFloat(paramChange.Property);
+                    tween.Delta = paramChange.Target - tween.Start;
+                    tween.InvDeltaTime = 1f / paramChange.Duration;
+                    tween.Progress = 0;
+                    tween.Property = paramChange.Property;
+                    tween.Curve = paramChange.Easing;
+                    tween.Linked = bus.Handle;
+                    tween.KillOnFinish = false;
+
+                    bus.FloatTweens.Indices[(int) paramChange.Property] = (short) m_FloatTweenTable.PushBack(ref m_FloatTweenList, tween);
+                }
+            }
+        }
+
+        private unsafe void Cmd_SetBusConfigVolume(ConfigVolumeChangeCommandData volumeChange) {
+            ref BusData bus = ref FindBusForId(volumeChange.BusId);
+            if (!Unsafe.IsNullRef(ref bus)) {
+                bus.ConfigVolume = volumeChange.Target;
+            }
+        }
 
         #endregion // Params
 
@@ -315,6 +366,7 @@ namespace FieldDay.Audio {
             voice.VoiceProperties->Pitch = cmd.Pitch;
 
             voice.EventId = evt ? evt.CachedId : default;
+            voice.BusIndex = evt ? evt.CachedBusIndex : 0;
 
             if ((cmd.Flags & AudioPlaybackFlags.UseProvidedSource) == 0) {
                 if (playbackPos) {

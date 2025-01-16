@@ -53,6 +53,9 @@ Shader "Sprites/Cutout"
             {
                 v2f_cutout OUT;
 
+				UNITY_SETUP_INSTANCE_ID(IN);
+                UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(OUT);
+
             #ifdef UNITY_INSTANCING_ENABLED
                 IN.vertex.xy *= _Flip.xy;
             #endif

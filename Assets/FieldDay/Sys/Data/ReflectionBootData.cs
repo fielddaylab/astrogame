@@ -64,41 +64,41 @@ namespace FieldDay.Data {
             return Reflect.FindMembers<ConfigVar>(ReflectionCache.UserAssemblies, DefaultFlags, false);
         }
 
-        static internal IEnumerable<AttributeBinding<InvokePreBootAttribute, MemberInfo>> GetPreBoot() {
+        static internal IEnumerable<AttributeBinding<InvokePreBootAttribute, MethodInfo>> GetPreBoot() {
             if (s_Mounted != null && !string.IsNullOrEmpty(s_Mounted.InvokePreBoot.AttributeTypeName)) {
-                return s_Mounted.InvokePreBoot.Read<InvokePreBootAttribute>(ReflectionCache.UserAssemblies);
+                return s_Mounted.InvokePreBoot.Read<InvokePreBootAttribute, MethodInfo>(ReflectionCache.UserAssemblies);
             }
-            return Reflect.FindMembers<InvokePreBootAttribute>(ReflectionCache.UserAssemblies, DefaultFlags);
+            return Reflect.FindMethods<InvokePreBootAttribute>(ReflectionCache.UserAssemblies, DefaultFlags);
         }
 
-        static internal IEnumerable<AttributeBinding<InvokeOnBootAttribute, MemberInfo>> GetBoot() {
+        static internal IEnumerable<AttributeBinding<InvokeOnBootAttribute, MethodInfo>> GetBoot() {
             if (s_Mounted != null && !string.IsNullOrEmpty(s_Mounted.InvokeBoot.AttributeTypeName)) {
-                return s_Mounted.InvokeBoot.Read<InvokeOnBootAttribute>(ReflectionCache.UserAssemblies);
+                return s_Mounted.InvokeBoot.Read<InvokeOnBootAttribute, MethodInfo>(ReflectionCache.UserAssemblies);
             }
-            return Reflect.FindMembers<InvokeOnBootAttribute>(ReflectionCache.UserAssemblies, DefaultFlags);
+            return Reflect.FindMethods<InvokeOnBootAttribute>(ReflectionCache.UserAssemblies, DefaultFlags);
         }
 
 #if DEVELOPMENT
 
-        static internal IEnumerable<AttributeBinding<DebugMenuFactoryAttribute, MemberInfo>> DebugMenus() {
+        static internal IEnumerable<AttributeBinding<DebugMenuFactoryAttribute, MethodInfo>> DebugMenus() {
             if (s_Mounted != null && !string.IsNullOrEmpty(s_Mounted.DebugMenu.AttributeTypeName)) {
-                return s_Mounted.DebugMenu.Read<DebugMenuFactoryAttribute>(ReflectionCache.UserAssemblies);
+                return s_Mounted.DebugMenu.Read<DebugMenuFactoryAttribute, MethodInfo>(ReflectionCache.UserAssemblies);
             }
-            return Reflect.FindMembers<DebugMenuFactoryAttribute>(ReflectionCache.UserAssemblies, DefaultFlags);
+            return Reflect.FindMethods<DebugMenuFactoryAttribute>(ReflectionCache.UserAssemblies, DefaultFlags);
         }
 
-        static internal IEnumerable<AttributeBinding<EngineMenuFactoryAttribute, MemberInfo>> EngineMenus() {
+        static internal IEnumerable<AttributeBinding<EngineMenuFactoryAttribute, MethodInfo>> EngineMenus() {
             if (s_Mounted != null && !string.IsNullOrEmpty(s_Mounted.EngineMenu.AttributeTypeName)) {
-                return s_Mounted.EngineMenu.Read<EngineMenuFactoryAttribute>(ReflectionCache.UserAssemblies);
+                return s_Mounted.EngineMenu.Read<EngineMenuFactoryAttribute, MethodInfo>(ReflectionCache.UserAssemblies);
             }
-            return Reflect.FindMembers<EngineMenuFactoryAttribute>(ReflectionCache.UserAssemblies, DefaultFlags);
+            return Reflect.FindMethods<EngineMenuFactoryAttribute>(ReflectionCache.UserAssemblies, DefaultFlags);
         }
 
-        static internal IEnumerable<AttributeBinding<QuickMenuFactoryAttribute, MemberInfo>> QuickMenus() {
+        static internal IEnumerable<AttributeBinding<QuickMenuFactoryAttribute, MethodInfo>> QuickMenus() {
             if (s_Mounted != null && !string.IsNullOrEmpty(s_Mounted.QuickMenu.AttributeTypeName)) {
-                return s_Mounted.QuickMenu.Read<QuickMenuFactoryAttribute>(ReflectionCache.UserAssemblies);
+                return s_Mounted.QuickMenu.Read<QuickMenuFactoryAttribute, MethodInfo>(ReflectionCache.UserAssemblies);
             }
-            return Reflect.FindMembers<QuickMenuFactoryAttribute>(ReflectionCache.UserAssemblies, DefaultFlags);
+            return Reflect.FindMethods<QuickMenuFactoryAttribute>(ReflectionCache.UserAssemblies, DefaultFlags);
         }
 
 #endif // DEVELOPMENT

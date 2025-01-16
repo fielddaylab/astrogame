@@ -22,11 +22,13 @@ namespace FieldDay.Audio {
         public bool RandomizeStartTime;
 
         [Header("Other Parameters")]
+        [AudioBusId] public StringHash32 Bus;
         [Range(0, 256)] public byte Priority = 128;
         [AssetName(typeof(AudioEmitterProfile))] public StringHash32 EmitterConfiguration;
         public SerializedHash32 Tag;
 
         [NonSerialized] internal StringHash32 CachedId;
+        [NonSerialized] internal int CachedBusIndex = -1;
         [NonSerialized] internal AudioEmitterProfile CachedEmitterProfile;
         [NonSerialized] internal RandomDeck<AudioClip> SampleSelector;
         

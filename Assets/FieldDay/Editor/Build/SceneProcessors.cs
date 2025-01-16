@@ -360,6 +360,10 @@ namespace FieldDay.Editor {
 
         private void EvaluateDelayedImportedScenes(Scene scene, BuildReport report) {
             while(delayedImports.TryPopFront(out DelayedImportArgs args)) {
+                if (!args.Scene.isLoaded) {
+                    delayedImports.PushFront(args);
+                    return;
+                }
                 FinishMerge(scene, report, args.Scene, args.Settings);
                 Debug.LogFormat("[ImportMergeScenesSceneProcessor] Finished importing '{0}'", args.Settings.Path);
             }

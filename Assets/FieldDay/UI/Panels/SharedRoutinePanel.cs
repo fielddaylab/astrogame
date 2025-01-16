@@ -43,6 +43,14 @@ namespace FieldDay.UI {
             Show(0);
         }
 
+        public void SetVisibleNow(bool visible) {
+            if (visible) {
+                InstantShow();
+            } else {
+                InstantHide();
+            }
+        }
+
         #endregion // ISharedGuiPanel
     }
 }

@@ -14,6 +14,10 @@ namespace FieldDay.Audio {
     public sealed partial class AudioMgr {
         private const int FloatPropertyCount = 5;
 
+        private const float MinLowHighPassCutoff = 17;
+        private const float MaxLowHighPassCutoff = 20000;
+        private const float LowHighPassCutoffRange = MaxLowHighPassCutoff - MinLowHighPassCutoff;
+
         #region Voice Data
 
         private sealed unsafe class VoiceData {
@@ -23,6 +27,7 @@ namespace FieldDay.Audio {
             public StringHash32 EventId;
             public float PlaybackDelay;
             public VoiceState State;
+            public int BusIndex;
             public AudioPropertyBlock* EventProperties;
             public AudioPropertyBlock* VoiceProperties;
             public AudioPropertyBlock LastKnownProperties;
@@ -90,6 +95,10 @@ namespace FieldDay.Audio {
         }
 
         static private void ForceSyncEmitterLocation(PositionSyncData data) {
+            if (!data.Reference) {
+                return;
+            }
+
             data.Reference.GetPositionAndRotation(out Vector3 pos, out Quaternion rot);
             if (IsNonDefault(data.RefOffset)) {
                 switch (data.RefOffsetSpace) {
@@ -222,10 +231,15 @@ namespace FieldDay.Audio {
             return culled;
         }
 
-        private void UpdateVoices(float deltaTime, double currentTime) {
+        private unsafe void UpdateVoices(float deltaTime, double currentTime) {
+            AudioPropertyBlock* busValues = stackalloc AudioPropertyBlock[m_BusCount];
+            for(int i = 0; i < m_BusCount; i++) {
+                busValues[i] = m_BusData[i].LastKnownProperties;
+            }
+
             for(int i = m_ActiveVoices.Count - 1; i >= 0; i--) {
                 VoiceData voice = m_ActiveVoices[i];
-                UpdateVoicePropertyBlock(voice, AudioPropertyBlock.Default); // TODO: Retrieve bus state
+                UpdateVoicePropertyBlock(voice, busValues[voice.BusIndex]);
 
                 switch (voice.State) {
                     case VoiceState.Idle: {
@@ -315,12 +329,16 @@ namespace FieldDay.Audio {
 
             if (components.LowPass != null) {
                 components.LowPass.enabled = block.LoPass > 0;
-                components.LowPass.lowpassResonanceQ = block.LoPass;
+                if (block.LoPass > 0) {
+                    components.LowPass.cutoffFrequency = CalculateCutoffFrequency(1f - block.LoPass);
+                }
             }
 
             if (components.HighPass != null) {
                 components.HighPass.enabled = block.HiPass > 0;
-                components.HighPass.highpassResonanceQ = block.HiPass;
+                if (block.HiPass > 0) {
+                    components.HighPass.cutoffFrequency = CalculateCutoffFrequency(block.HiPass);
+                }
             }
 
 #endif // SUPPORTS_AUDIOEFFECTS
@@ -332,13 +350,20 @@ namespace FieldDay.Audio {
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static private void RequestImmediateStop(VoiceData voice) {
             voice.Components.Source.Stop();
             voice.State = VoiceState.Stopped;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static private bool IsVoiceLoaded(VoiceData voice) {
             return voice.Components.Source.clip.loadState == AudioDataLoadState.Loaded;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static private float CalculateCutoffFrequency(float value) {
+            return MinLowHighPassCutoff + LowHighPassCutoffRange * (value * value * value);
         }
 
         #endregion // Voice Update
@@ -424,7 +449,9 @@ namespace FieldDay.Audio {
         }
 
         private unsafe void KillVoice(VoiceData voice) {
-            voice.Components.Source.Stop();
+            if (voice.Components && voice.Components.Source) {
+                voice.Components.Source.Stop();
+            }
             voice.Components.PlayingHandle = default;
 
             FreeHandle(ref voice.Handle);

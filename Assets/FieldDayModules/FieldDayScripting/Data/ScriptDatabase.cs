@@ -303,7 +303,7 @@ namespace FieldDay.Scripting {
                         }
                     } else {
                         if (DebugFlags.IsFlagSet(ScriptDebugFlags.LogNodeEvaluation)) {
-                            Log.Trace("[ScriptUtility] No triggers valid for buckete '{0}'", bucketId);
+                            Log.Trace("[ScriptUtility] No triggers valid for bucket '{0}'", bucketId);
                         }
                     }
                 }

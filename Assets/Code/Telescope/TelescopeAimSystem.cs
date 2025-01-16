@@ -14,7 +14,8 @@ namespace Astro
             if (animator.AutoSync) {
                 var rig = Find.State<SpaceCameraState>().Camera.RootTransform;
 
-                animator.AimPivot.transform.localRotation = rig.transform.rotation;
+                animator.AimPivot.localRotation = rig.rotation;
+                //animator.BasePivot.localEulerAngles = new Vector3(0, rig.localEulerAngles.y, 0);
             }
         }
     }
