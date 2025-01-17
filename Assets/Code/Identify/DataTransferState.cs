@@ -1,13 +1,26 @@
 using System;
+using FieldDay;
 using FieldDay.Components;
 using FieldDay.SharedState;
 
 namespace Astro {
-    public sealed class DataTransferState : SharedStateComponent {
+    public sealed class DataTransferState : SharedStateComponent, IRegistrationCallbacks {
         [NonSerialized] public DataSlot SelectedSource;
         [NonSerialized] public DataSlot SelectedTarget;
 
         public bool SourceUpdated = false;
+
+        public void OnDeregister()
+        {
+        }
+
+        public void OnRegister()
+        {
+            Game.Events.Register(GameEvents.MonitorEmptySpaceClicked, () => {
+                var transferState = Find.State<DataTransferState>();
+                DataUtility.AssignSelectedSource(transferState, null); 
+            });
+        }
     }
 
     static public partial class DataUtility {

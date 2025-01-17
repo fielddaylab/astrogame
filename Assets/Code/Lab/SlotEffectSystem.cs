@@ -6,20 +6,23 @@ using FieldDay.Systems;
 
 namespace Astro
 {
-    [SysUpdate(GameLoopPhase.Update, 1000)] // After InteractSelectSlotSystem
+    [SysUpdate(GameLoopPhase.Update, 2000)] // After InteractSelectSlotSystem
     public class SlotEffectSystem : ComponentSystemBehaviour<DataSlot, RelevantSlotHighlight>
     {
         public override void ProcessWorkForComponent(DataSlot component, RelevantSlotHighlight highlight, float deltaTime)
         {
             var transferState = Find.State<DataTransferState>();
             if (!transferState.SourceUpdated) { return; }
-            if (!transferState.SelectedSource.IsSource) { return; }
+            if (transferState.SelectedSource != null && !transferState.SelectedSource.IsSource) { return; }
 
             var highlightState = Find.State<SlotHighlightState>();
-            bool isHighlightedAvailable =
-                (transferState.SelectedTarget == null)
-                && (component.Type & transferState.SelectedSource.Type) != 0
-                && component.Modifiable;
+
+            bool sourceNotNull = transferState.SelectedSource != null;
+            bool targetIsNull = transferState.SelectedTarget == null;
+            bool typesMatch = sourceNotNull && ((component.Type & transferState.SelectedSource.Type) != 0);
+            bool slotIsModifiable = component.Modifiable;
+
+            bool isHighlightedAvailable = sourceNotNull && targetIsNull && typesMatch && slotIsModifiable;
             bool isHighlightedSelected = component.Equals(transferState.SelectedTarget);
 
             if (isHighlightedSelected) {

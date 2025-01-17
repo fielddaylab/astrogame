@@ -14,6 +14,8 @@ namespace Astro
             if (!primary.InteractReceived) { return; }
 
             var transferState = Find.State<DataTransferState>();
+            var cancelInputState = Find.State<CancelInputState>();
+            cancelInputState.SlotClicked = true;
 
             // If nothing selected, and component can be a source, set source
             if (transferState.SelectedSource == null && transferState.SelectedTarget == null && secondary.DataSlot.IsSource) {

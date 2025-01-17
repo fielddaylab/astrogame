@@ -205,6 +205,8 @@ GameObject:
   - component: {fileID: 8340417227038046044}
   - component: {fileID: 6150272563456338582}
   - component: {fileID: 1403726568521646212}
+  - component: {fileID: 4577230220694195865}
+  - component: {fileID: 5310919963563272697}
   m_Layer: 0
   m_Name: World Systems
   m_TagString: Untagged
@@ -580,6 +582,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_InitialCapacity: 64
+--- !u!114 &4577230220694195865
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5290410587728248189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88946f389e10f914a901623967942319, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5310919963563272697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5290410587728248189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1902457626406b43a7aa9706b560fd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &9193859588559889003
 GameObject:
   m_ObjectHideFlags: 0
@@ -603,6 +629,7 @@ GameObject:
   - component: {fileID: 2617033555420481094}
   - component: {fileID: 8850630737029749464}
   - component: {fileID: 722205139889171421}
+  - component: {fileID: 2310581255530838532}
   m_Layer: 0
   m_Name: State
   m_TagString: Untagged
@@ -855,7 +882,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb1f2f354c26eba4da7950ace1e6accc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SelectedRefEntry: {fileID: 0}
+  SelectedRefClassification: {fileID: 0}
   CurrentPage: {fileID: 0}
   CurrentPageNum: 0
   PageList: {fileID: 0}
@@ -906,6 +933,20 @@ MonoBehaviour:
   IndicatorInactive: {fileID: 2100000, guid: 6f982a7548130cd4792cd7f22f45ddef, type: 2}
   IndicatorActive: {fileID: 2100000, guid: b5387f676c51e0a42976517ac32e56ec, type: 2}
   PanelBlank: {fileID: 2100000, guid: 6f982a7548130cd4792cd7f22f45ddef, type: 2}
+--- !u!114 &2310581255530838532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9193859588559889003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6389a912a23c8ab4593ecdd94d3beb49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ClickedThisFrame: 0
+  SlotClicked: 0
 --- !u!1001 &5502758588094337030
 PrefabInstance:
   m_ObjectHideFlags: 0
