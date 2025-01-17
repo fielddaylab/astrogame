@@ -1,0 +1,16 @@
+#basePath	Day1
+
+:: Welcome
+@trigger SceneReady
+@who    Radio
+{@Radio} This is a public service broadcast coming to you live from Celestial Station!
+{@Radio} Identify those stars you crazy kids!
+
+:: PointsUpdated
+@trigger	PointsUpdated
+
+$if local:SciencePoints > 2
+    {@Radio} Nice work identifying those starts! Your next mission will require your astral color instrument. 
+    {@Radio} Unlocking now. Stand By...
+    $call SetInstrumentUnlocked(ColorInstrument, true)
+$endif

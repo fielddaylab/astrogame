@@ -1,7 +1,0 @@
-#basePath	LeafTest
-
-:: MoreLeafTest
-@trigger	SceneReady
-$call MonitorThing->Deactivate()
-$call Wait(5)
-$call MonitorThing->SetActive(true)
