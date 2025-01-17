@@ -8,9 +8,9 @@
 
 :: PointsUpdated
 @trigger	PointsUpdated
+@when SciencePoints > 2
+@once
 
-$if local:SciencePoints > 2
-    {@Radio} Nice work identifying those starts! Your next mission will require your astral color instrument. 
-    {@Radio} Unlocking now. Stand By...
-    $call SetInstrumentUnlocked(ColorInstrument, true)
-$endif
+{@Radio} Nice work identifying those starts! Your next mission will require your astral color instrument. 
+{@Radio} Unlocking now. Stand By...
+$call SetInstrumentUnlocked(ColorInstrument, true)
