@@ -106,12 +106,16 @@ namespace Astro {
         }
 
         public static void SelectRegion(RefGuideRegion region) {
+            if (Find.State<PlayerPointsState>().SubmittedObject) {
+                return;
+            }
             RefGuideState rgs = Find.State<RefGuideState>();
             if (region == null) {
                 rgs.SelectedRefClassification = null;
                 rgs.SelectionSprite.enabled = false;
                 return;
             }
+
             rgs.SelectedRefClassification = region.ConnectedEntry;
 
             if (region.PageChange == RefGuidePageChange.Previous) {
@@ -144,7 +148,12 @@ namespace Astro {
 
         public static bool RefClassMatchesAsset(ReferenceClassification refClass, CelestialAsset asset) {
             for (int i = 0; i < asset.ClassIds.Length; i++) {
+                if (asset.ClassificationsCompleted[i]) {
+                    // Already completed!
+                    return false;
+                }
                 if (asset.ClassIds[i].Equals(refClass.name)) {
+                    asset.ClassificationsCompleted[i] = true;
                     return true;
                 }
             }

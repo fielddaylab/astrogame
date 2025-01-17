@@ -3,6 +3,7 @@ using BeauUtil.Debugger;
 using FieldDay;
 using FieldDay.Assets;
 using System;
+using System.Collections;
 using UnityEngine;
 
 namespace Astro {
@@ -16,6 +17,7 @@ namespace Astro {
         [Header("Categorization")]
         public CelestialObjectCategory Category;
         [ClassificationId] public StringHash32[] ClassIds;
+        public BitArray ClassificationsCompleted;
         [ReferenceEntryId] public StringHash32 ReferenceId;
         [ConstellationId] public StringHash32 ConstellationId;
 
@@ -84,6 +86,13 @@ namespace Astro {
                     }
                     
             }
+        }
+
+        static public bool TryInitializeClassificationsCompleted(CelestialAsset asset) {
+            if (asset.ClassificationsCompleted == null) {
+                asset.ClassificationsCompleted = new BitArray(asset.ClassIds.Length);
+                return true;
+            } else return false;
         }
     }
 
