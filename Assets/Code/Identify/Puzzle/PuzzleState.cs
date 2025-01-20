@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Astro {
-    public sealed class PuzzleState : SharedStateComponent {
+    public sealed class PuzzleState : SharedStateComponent, IRegistrationCallbacks {
         public PuzzleAsset QueuedPuzzle;
         public PuzzleAsset ActivePuzzle;
 
@@ -27,6 +27,21 @@ namespace Astro {
         [Header("Consts")]
         public Material UnselectedCellMat;
         public Material SelectedCellMat;
+
+        public void OnRegister()
+        {
+            Game.Events.Register(GameEvents.OpenModeStart, () => {
+               PuzzleUtility.DeactivatePuzzlePanel(); 
+            });
+            Game.Events.Register(GameEvents.PuzzleModeStart, () => {
+               PuzzleUtility.ActivatePuzzlePanel(); 
+            });
+        }
+
+        public void OnDeregister()
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public static partial class PuzzleUtility
@@ -66,5 +81,20 @@ namespace Astro {
 
             return true;
         }
+
+        public static void DeactivatePuzzlePanel() {
+            PuzzleDisplay display = Find.State<PuzzleState>().Display;
+
+            display.CellAnchorPos.gameObject.SetActive(false);
+            display.HeaderAnchorPos.gameObject.SetActive(false);
+        }
+
+        public static void ActivatePuzzlePanel() {
+            PuzzleDisplay display = Find.State<PuzzleState>().Display;
+
+            display.CellAnchorPos.gameObject.SetActive(true);
+            display.HeaderAnchorPos.gameObject.SetActive(true);
+        }
+
     }
 }

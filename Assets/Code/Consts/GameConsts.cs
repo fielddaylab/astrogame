@@ -6,6 +6,8 @@ using BeauUtil;
 public static class GameEvents {
     public static readonly StringHash32 DocumentSelected = "input:document-selected";
     public static readonly StringHash32 MonitorEmptySpaceClicked = "input:monitor-empty-space-clicked";
+        static public readonly StringHash32 OpenModeStart = new StringHash32("OpenModeStart");
+        static public readonly StringHash32 PuzzleModeStart = new StringHash32("PuzzleModeStart");
 }
 
 public static class DataTypeLabels

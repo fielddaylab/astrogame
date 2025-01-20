@@ -20,8 +20,6 @@ namespace Astro {
         [HideInInspector] public int SciencePoints = 0;
     }
 
-
-
     public static partial class PointsUtility {
         public static bool ReviewInProgress(PlayerPointsState state = null) {
             if (state == null) {
