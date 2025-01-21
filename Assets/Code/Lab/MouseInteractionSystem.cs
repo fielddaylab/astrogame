@@ -25,16 +25,15 @@ namespace Astro {
                     if (region) {
                         ReferenceUtility.SelectRegion(region);
                     }
-                } 
+                }
 
                 if (Physics.Raycast(ray, out RaycastHit docHit, 10f, DOCUMENT_MASK)) {
-                    var doc = docHit.collider.GetComponent<DocumentInteractable>();
-                    if (doc) {
-                        DocumentUtility.SelectDocument(doc, Find.State<DocumentBoardState>());
+                    if (docHit.collider.TryGetComponent(out DocumentPart docPart)) {
+                        DocumentUtility.ProcessDocPartInteraction(docPart);
                         if (Find.State<DocumentBoardState>().InteractedThisFrame) {
                             return;
                         }
-                    }
+                    } 
                 }
 
                 if (Physics.Raycast(ray, out RaycastHit labHit, 10f, LAB_INTERACT_MASK)) {
