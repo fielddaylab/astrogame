@@ -11,9 +11,9 @@ namespace Astro {
         [Header("Data")]
         [HideInInspector] public ReferenceClassification SelectedRefClassification;
         [HideInInspector] public ReferencePageAsset CurrentPage;
-        [HideInInspector] public bool SubmissionActive;
         [HideInInspector] public int CurrentPageNum;
         [HideInInspector] public ReferencePageList PageList;
+        [HideInInspector] public bool SubmissionActive;
 
         [Header("Game Objects")]
         public Transform RefGuideRoot;
@@ -37,10 +37,7 @@ namespace Astro {
             });
         }
 
-        public void OnDeregister()
-        {
-            throw new NotImplementedException();
-        }
+        public void OnDeregister(){ return; }
     }
 
     public static partial class ReferenceUtility {

@@ -3243,7 +3243,6 @@ Transform:
   m_Children:
   - {fileID: 466190674}
   - {fileID: 910882300}
-  - {fileID: 2038351079}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &330137897
@@ -8915,7 +8914,7 @@ Transform:
   m_GameObject: {fileID: 910882299}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.51}
+  m_LocalPosition: {x: 0, y: 0, z: -0.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -19443,28 +19442,28 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2038351079}
+  - component: {fileID: 2036107373}
   m_Layer: 0
-  m_Name: DocumentHoverOffset
+  m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2038351079
+--- !u!4 &2036107373
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2038351078}
+  m_GameObject: {fileID: 2036107372}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.1}
+  m_LocalPosition: {x: -3, y: 1.2529541, z: -0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 330137896}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2065877339
 GameObject:
@@ -20643,6 +20642,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1799412586}
     - target: {fileID: 2348247301363869649, guid: ec06e5f8b4c234f489057732d2c945c4, type: 3}
+      propertyPath: DocumentRoot
+      value: 
+      objectReference: {fileID: 910882300}
+    - target: {fileID: 2348247301363869649, guid: ec06e5f8b4c234f489057732d2c945c4, type: 3}
       propertyPath: FollowRadius
       value: 2
       objectReference: {fileID: 0}
@@ -20651,9 +20654,9 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 910882300}
     - target: {fileID: 2348247301363869649, guid: ec06e5f8b4c234f489057732d2c945c4, type: 3}
-      propertyPath: DocumentHoverOffset
+      propertyPath: DocumentHoverRoot
       value: 
-      objectReference: {fileID: 2038351079}
+      objectReference: {fileID: 0}
     - target: {fileID: 2382060319574174615, guid: ec06e5f8b4c234f489057732d2c945c4, type: 3}
       propertyPath: PoolRoot
       value: 
@@ -21065,6 +21068,12 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 0}
     - targetCorrespondingSourceObject: {fileID: 5593432240232861318, guid: e04c2984167367d49b4e4bb4588f8434, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+    - targetCorrespondingSourceObject: {fileID: 4109702049419956196, guid: e04c2984167367d49b4e4bb4588f8434, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
+    - targetCorrespondingSourceObject: {fileID: 5685152995580687365, guid: e04c2984167367d49b4e4bb4588f8434, type: 3}
       insertIndex: -1
       addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: e04c2984167367d49b4e4bb4588f8434, type: 3}
@@ -21795,4 +21804,4 @@ SceneRoots:
   - {fileID: 1420856759}
   - {fileID: 991789286}
   - {fileID: 1931264334}
-  - {fileID: 90577941}
+  - {fileID: 2036107373}

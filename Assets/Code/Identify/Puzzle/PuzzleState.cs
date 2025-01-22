@@ -30,17 +30,13 @@ namespace Astro {
 
         public void OnRegister()
         {
-            Game.Events.Register(GameEvents.OpenModeStart, () => {
-               PuzzleUtility.DeactivatePuzzlePanel(); 
-            });
-            Game.Events.Register(GameEvents.PuzzleModeStart, () => {
-               PuzzleUtility.ActivatePuzzlePanel(); 
-            });
+            Game.Events.Register(GameEvents.OpenModeStart, PuzzleUtility.DeactivatePuzzlePanel);
+            Game.Events.Register(GameEvents.PuzzleModeStart,PuzzleUtility.ActivatePuzzlePanel);
         }
 
-        public void OnDeregister()
-        {
-            throw new NotImplementedException();
+        public void OnDeregister() {
+            Game.Events?.Deregister(GameEvents.OpenModeStart, PuzzleUtility.DeactivatePuzzlePanel);
+            Game.Events?.Deregister(GameEvents.PuzzleModeStart,PuzzleUtility.ActivatePuzzlePanel);
         }
     }
 

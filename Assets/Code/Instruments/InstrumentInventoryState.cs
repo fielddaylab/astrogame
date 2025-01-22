@@ -35,7 +35,7 @@ namespace Astro
         }
 
         [LeafMember("SetInstrumentUnlocked")]
-        public static void SetInstrumentUnlocked(ScriptActor actor, bool unlocked) {
+        private static void LeafSetInstrumentUnlocked(ScriptActor actor, bool unlocked) {
             LabInstrument instrument = actor.GetComponent<LabInstrument>();
             SetInstrumentUnlocked(instrument, unlocked);
         }

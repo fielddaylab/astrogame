@@ -6,8 +6,15 @@ using BeauUtil;
 public static class GameEvents {
     public static readonly StringHash32 DocumentSelected = "input:document-selected";
     public static readonly StringHash32 MonitorEmptySpaceClicked = "input:monitor-empty-space-clicked";
-        static public readonly StringHash32 OpenModeStart = new StringHash32("OpenModeStart");
-        static public readonly StringHash32 PuzzleModeStart = new StringHash32("PuzzleModeStart");
+    public static readonly StringHash32 OpenModeStart = "start-open-mode";
+    public static readonly StringHash32 PuzzleModeStart = "start-puzzle-mode";
+}
+
+public static class ScriptEvents {
+    public static readonly StringHash32 OpenModeStart = "OpenModeStart";
+    public static readonly StringHash32 PuzzleModeStart = "PuzzleModeStart";
+    public static readonly StringHash32 PointsUpdated = "PointsUpdated";
+    public static readonly StringHash32 CorrectPuzzleSubmission = "CorrectPuzzleSubmission";
 }
 
 public static class DataTypeLabels
