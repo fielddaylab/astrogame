@@ -13,7 +13,7 @@ namespace Astro {
         [HideInInspector] public Vector3 LastMousePos;
         [HideInInspector] public bool InteractedThisFrame;
         [HideInInspector] public Vector3 StoredDocPos;
-        [HideInInspector] public bool DocZoomed;
+        [HideInInspector] public DocumentInteractable DocZoomed;
         [HideInInspector] public Routine DocumentRoutine;
 
         public Transform DocumentParent;
@@ -42,6 +42,7 @@ namespace Astro {
             spawned.Title.SetText(asset.TitleText);
             spawned.Body.SetText(asset.BodyText);
             spawned.transform.localPosition = Vector3.zero;
+            spawned.ZoomOffsetOverride = asset.ZoomOffsetOverride;
         }
 
         public static void SpawnDocument(StringHash32 id) {
@@ -69,6 +70,9 @@ namespace Astro {
         public static void ProcessDocPartInteraction(DocumentPart docPart) {
 
             DocumentBoardState state = Find.State<DocumentBoardState>();
+            if (state.DocumentRoutine.Exists()) {
+                return;
+            }
             switch (docPart.PartType) {
                 case DocPartFunction.Move: {
                         StartMoveDoc(docPart.Document, state);
@@ -121,15 +125,19 @@ namespace Astro {
             if (state.DocZoomed) {
                 state.DocumentRoutine.Replace(MoveDocToPos(doc.transform, state.StoredDocPos));
                 state.StoredDocPos = Vector3.zero;
-                state.DocZoomed = false;
+                state.DocZoomed = null;
             } else {
                 state.StoredDocPos = doc.transform.position;
                 state.StoredDocPos.z = state.DocumentParent.position.z;
-                Vector3 zoomOffset = doc.ZoomOffsetOverride == Vector3.zero ? state.DocZoomOffset : doc.ZoomOffsetOverride;
+                Vector3 zoomOffset = doc.Renderer.ZoomOffsetOverride == default ? state.DocZoomOffset : doc.Renderer.ZoomOffsetOverride;
                 state.DocumentRoutine.Replace(MoveDocToCam(doc.transform, Camera.main.transform, zoomOffset));
-                state.DocZoomed = true;
+                state.DocZoomed = doc;
             }
             state.InteractedThisFrame = true;
+        }
+
+        public static void CancelZoom(DocumentBoardState state) {
+            state.DocumentRoutine.OnComplete(() => ToggleZoomDoc(state.DocZoomed, state));
         }
 
         public static void FlipDoc(DocumentInteractable doc, DocumentBoardState state = null) {

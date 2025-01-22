@@ -10,6 +10,7 @@ namespace Astro {
         [SerializeField] public string TitleText;
         [TextArea] 
         [SerializeField] public string BodyText;
+        public Vector3 ZoomOffsetOverride;
     }
 
     public enum DocumentCategory {

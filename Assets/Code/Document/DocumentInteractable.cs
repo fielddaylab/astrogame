@@ -11,7 +11,6 @@ namespace Astro {
         [NonSerialized] public DocumentRenderer Renderer;
         [HideInInspector] public bool Flipped;
         public Transform Paper;
-        public Vector3 ZoomOffsetOverride;
 
         public void OnDeregister() {
         }
