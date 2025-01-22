@@ -67,9 +67,7 @@ namespace Astro {
 
         #region Interaction
 
-        public static void ProcessDocPartInteraction(DocumentPart docPart) {
-
-            DocumentBoardState state = Find.State<DocumentBoardState>();
+        public static void ProcessDocPartInteraction(DocumentPart docPart, DocumentBoardState state) {
             if (state.DocumentRoutine.Exists()) {
                 return;
             }

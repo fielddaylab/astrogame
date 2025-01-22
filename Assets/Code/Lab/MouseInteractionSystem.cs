@@ -10,75 +10,65 @@ namespace Astro {
     /// </summary>
     /// 
     [SysUpdate(GameLoopPhase.Update, 0)]
-    public class MouseInteractionSystem : SharedStateSystemBehaviour<LabInteractableState> {
-        private int LAB_INTERACT_MASK = -1;
-        private int DOCUMENT_MASK = -1;
-        private int REFERENCE_MASK = -1;
-
+    public class MouseInteractionSystem : SharedStateSystemBehaviour<LabInteractableState, DocumentBoardState, InputState> {
 
         public override void ProcessWork(float deltaTime) {
             // on click, try cast ray for lab interactable
-            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Game.Input.IsMousePressed(FieldDay.HID.MouseButton.Left)) {
-                if (Physics.Raycast(ray, out RaycastHit refHit, 10f, REFERENCE_MASK)) {
-                    var region = refHit.collider.GetComponent<RefGuideRegion>();
-                    if (region) {
-                        ReferenceUtility.SelectRegion(region);
-                    }
-                }
 
-                if (Physics.Raycast(ray, out RaycastHit docHit, 10f, DOCUMENT_MASK)) {
-                    if (docHit.collider.TryGetComponent(out DocumentPart docPart)) {
-                        DocumentUtility.ProcessDocPartInteraction(docPart);
-                        if (Find.State<DocumentBoardState>().InteractedThisFrame) {
+            if (Game.Input.IsMousePressed(FieldDay.HID.MouseButton.Left)) {
+                var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+                if (Physics.Raycast(ray, out RaycastHit hit, 10f, m_StateC.ClickableLayerMask)) {
+
+                    if (hit.collider.TryGetComponent(out RefGuideRegion refRegion)) {
+                        ReferenceUtility.SelectRegion(refRegion);
+                    }
+
+                    if (hit.collider.TryGetComponent(out DocumentPart docPart)) {
+                        DocumentUtility.ProcessDocPartInteraction(docPart, m_StateB);
+                        if (m_StateB.InteractedThisFrame) {
                             return;
                         }
-                    } 
-                }
-
-                if (Physics.Raycast(ray, out RaycastHit labHit, 10f, LAB_INTERACT_MASK)) {
-                    var interactable = labHit.collider.GetComponent<LabInteractable>();
-                    if (interactable) {
-                        interactable.InteractReceived = true;
-                        if (!interactable.MaintainExistingView) {
-                            ViewNavUtility.MoveToNode(Find.State<ViewState>(), interactable.ConnectedViewNode);
-                        }
-                        // consume input
-                        m_State.CurrInteractable = interactable;
-                        m_State.StartMousePos = Input.mousePosition;
-                        m_State.CurrMousePos = Input.mousePosition;
                     }
+                    if (hit.collider.TryGetComponent(out LabInteractable interactable)) {
+                        UseLabInteractable(interactable);
+                    }
+
+                    Game.Input.ConsumeAllInputForFrame();
                 }
 
-                Game.Input.ConsumeAllInputForFrame();
             }
 
             // drag
             if (Game.Input.IsMouseDown(FieldDay.HID.MouseButton.Left)) {
-                if (m_State.CurrInteractable && m_State.CurrInteractable.IsDraggable)
+                if (m_StateA.CurrInteractable && m_StateA.CurrInteractable.IsDraggable)
                 {
-                    m_State.CurrMousePos = Input.mousePosition;
-                    m_State.CurrInteractable.IsDragging = true;
+                    m_StateA.CurrMousePos = Input.mousePosition;
+                    m_StateA.CurrInteractable.IsDragging = true;
                 }
             }
 
             // mouse up
             if (Game.Input.IsMouseUp(FieldDay.HID.MouseButton.Left))
             {
-                if (m_State.CurrInteractable)
+                if (m_StateA.CurrInteractable)
                 {
-                    m_State.CurrInteractable.IsDragging = false;
-                    m_State.CurrInteractable.InteractEnded = true;
-                    m_State.CurrInteractable = null;
-                    m_State.StartMousePos = m_State.CurrMousePos = Vector2.zero;
+                    m_StateA.CurrInteractable.IsDragging = false;
+                    m_StateA.CurrInteractable.InteractEnded = true;
+                    m_StateA.CurrInteractable = null;
+                    m_StateA.StartMousePos = m_StateA.CurrMousePos = Vector2.zero;
                 }
             }
         }
 
-        public override void Initialize() {
-            LAB_INTERACT_MASK = LayerMask.GetMask("LabInteract");
-            DOCUMENT_MASK = LayerMask.GetMask("DocumentInteract");
-            REFERENCE_MASK = LayerMask.GetMask("ReferenceInteract");
+        private void UseLabInteractable(LabInteractable interactable) {
+            interactable.InteractReceived = true;
+            if (!interactable.MaintainExistingView) {
+                ViewNavUtility.MoveToNode(Find.State<ViewState>(), interactable.ConnectedViewNode);
+            }
+            m_StateA.CurrInteractable = interactable;
+            m_StateA.StartMousePos = Input.mousePosition;
+            m_StateA.CurrMousePos = Input.mousePosition;
         }
     }
 }
