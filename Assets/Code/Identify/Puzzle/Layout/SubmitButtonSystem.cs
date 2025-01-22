@@ -35,6 +35,7 @@ namespace Astro {
             }
             return false;
         }
+
         private bool TrySubmitIdentification(SubmitButton btn) {
             PlayerPointsState pps = Find.State<PlayerPointsState>();
             if (!pps.SubmittedObject) {

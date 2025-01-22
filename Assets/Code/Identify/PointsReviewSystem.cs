@@ -1,3 +1,4 @@
+using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay;
 using FieldDay.Systems;
@@ -63,7 +64,9 @@ namespace Astro {
         private void CheckPuzzle() {
             PuzzleState puzzle = Find.State<PuzzleState>();
             if (PuzzleUtility.CheckSolutionCorrect(puzzle)) {
+                OnCorrectPuzzleSubmission.Invoke(puzzle.ActivePuzzle.DisplayName);
                 ShowResultSprite(true, m_State);
+
                 PointsUtility.AddPoints(1, m_State);
 
                 Log.Msg("[PointsReviewSystem] Puzzle CORRECT! :D");
@@ -86,6 +89,6 @@ namespace Astro {
             }
         }
 
-
+        static public readonly CastableEvent<string> OnCorrectPuzzleSubmission = new CastableEvent<string>();
     }
 }

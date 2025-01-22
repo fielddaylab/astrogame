@@ -7,12 +7,13 @@ using System;
 using UnityEngine;
 
 namespace Astro {
-    public class RefGuideState : SharedStateComponent {
+    public class RefGuideState : SharedStateComponent, IRegistrationCallbacks {
         [Header("Data")]
         [HideInInspector] public ReferenceClassification SelectedRefClassification;
         [HideInInspector] public ReferencePageAsset CurrentPage;
         [HideInInspector] public int CurrentPageNum;
         [HideInInspector] public ReferencePageList PageList;
+        [HideInInspector] public bool SubmissionActive;
 
         [Header("Game Objects")]
         public Transform RefGuideRoot;
@@ -25,6 +26,18 @@ namespace Astro {
         public RefGuideRegion[] RightRegions;
         public RefGuideRegion ForwardRegion;
 
+        public void OnRegister()
+        {
+            Game.Events.Register(GameEvents.OpenModeStart, () => {
+                SubmissionActive = true;
+            });
+            Game.Events.Register(GameEvents.PuzzleModeStart, () => {
+                SubmissionActive = false;
+                ReferenceUtility.SelectRegion(null);
+            });
+        }
+
+        public void OnDeregister(){ return; }
     }
 
     public static partial class ReferenceUtility {
@@ -106,9 +119,11 @@ namespace Astro {
         }
 
         public static void SelectRegion(RefGuideRegion region) {
+            // Disallow new selections if we already have an object in review
             if (Find.State<PlayerPointsState>().SubmittedObject) {
                 return;
             }
+
             RefGuideState rgs = Find.State<RefGuideState>();
             if (region == null) {
                 rgs.SelectedRefClassification = null;
@@ -135,6 +150,9 @@ namespace Astro {
 
         public static void TryEnableIDSubmit(bool focusActive) {
             RefGuideState rgs = Find.State<RefGuideState>();
+
+            if (!rgs.SubmissionActive) return;
+
             rgs.SubmitButton.gameObject.SetActive(focusActive && rgs.SelectedRefClassification != null && !PointsUtility.ReviewInProgress());
         }
 

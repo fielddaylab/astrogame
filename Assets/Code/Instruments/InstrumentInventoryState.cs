@@ -5,6 +5,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using Leaf.Runtime;
+using FieldDay.Scripting;
+
+
 namespace Astro
 {
     public class InstrumentInventoryState : SharedStateComponent
@@ -28,6 +32,12 @@ namespace Astro
             } else {
                 SetInstrumentUnlocked(instrument, true);
             }
+        }
+
+        [LeafMember("SetInstrumentUnlocked")]
+        private static void LeafSetInstrumentUnlocked(ScriptActor actor, bool unlocked) {
+            LabInstrument instrument = actor.GetComponent<LabInstrument>();
+            SetInstrumentUnlocked(instrument, unlocked);
         }
 
         public static void SetInstrumentUnlocked(LabInstrument instrument, bool unlocked) {

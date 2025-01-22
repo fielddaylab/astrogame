@@ -1,0 +1,26 @@
+#basePath	Day1
+
+:: Welcome
+@trigger    SceneReady
+@who    Radio
+$call StartOpenMode()
+{@Radio} This is a public service broadcast coming to you live from Celestial Station!
+{@Radio} Identify those stars you crazy kids!
+
+:: PointsUpdated
+@trigger    PointsUpdated
+@when   sciencePoints > 2
+@once
+
+$call StartPuzzleMode()
+{@Radio} Nice work identifying those starts! Your next mission will require your astral color instrument. 
+{@Radio} Unlocking now. Stand By...
+$call SetInstrumentUnlocked(ColorInstrument, true)
+
+:: PerseusPuzzleComplete
+@trigger    CorrectPuzzleSubmission
+@when   puzzleName == "Perseus"
+@once
+
+{@Radio} You have correctly identifyied these stars. Kudos!
+$call StartOpenMode()

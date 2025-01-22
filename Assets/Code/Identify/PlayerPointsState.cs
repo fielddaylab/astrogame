@@ -1,4 +1,5 @@
 
+using BeauUtil;
 using FieldDay;
 using FieldDay.SharedState;
 using System;
@@ -19,10 +20,7 @@ namespace Astro {
         [HideInInspector] public int SciencePoints = 0;
     }
 
-
-
     public static partial class PointsUtility {
-
         public static bool ReviewInProgress(PlayerPointsState state = null) {
             if (state == null) {
                 state = Find.State<PlayerPointsState>();
@@ -40,7 +38,9 @@ namespace Astro {
             if (state == null) {
                 state = Find.State<PlayerPointsState>();
             }
+
             state.SciencePoints = newPoints;
+            OnPointsUpdated.Invoke(newPoints);
             UpdatePointDisplay(state);
         }
 
@@ -51,5 +51,7 @@ namespace Astro {
             int newTotal = state.SciencePoints + delta;
             SetPoints(Math.Max(0, newTotal), state);
         }
+ 
+        static public readonly CastableEvent<int> OnPointsUpdated = new CastableEvent<int>();
     }
 }
