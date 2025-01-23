@@ -1,7 +1,9 @@
 using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay;
+using FieldDay.Debugging;
 using FieldDay.Systems;
+using System.Collections;
 using UnityEngine;
 
 namespace Astro {
@@ -63,10 +65,9 @@ namespace Astro {
 
         private void CheckPuzzle() {
             PuzzleState puzzle = Find.State<PuzzleState>();
-            if (PuzzleUtility.CheckSolutionCorrect(puzzle)) {
+            if (PuzzleUtility.CheckSolutionCorrect(puzzle, out BitArray rowsCorrectness)) {
                 OnCorrectPuzzleSubmission.Invoke(puzzle.ActivePuzzle.DisplayName);
                 ShowResultSprite(true, m_State);
-
                 PointsUtility.AddPoints(1, m_State);
 
                 Log.Msg("[PointsReviewSystem] Puzzle CORRECT! :D");
@@ -75,7 +76,7 @@ namespace Astro {
                 ShowResultSprite(false, m_State);
                 Log.Msg("[SubmitPuzzleSystem] Puzzle INCORRECT! D:");
                 // TODO: show incorrect cells
-                PuzzleUtility.ClearCells(puzzle.Display);
+                PuzzleUtility.ClearRows(puzzle, rowsCorrectness);
             }
         }
 

@@ -35,6 +35,8 @@ namespace Astro
             else if (!(focus == null || state.CurrentFocus == null) && state.CurrentFocus.TargetData.DisplayName.Equals(focus.TargetData.DisplayName)) {
                 // already focused on this object
                 return;
+            } else if (PointsUtility.ReviewInProgress()) {
+                return;
             }
 
             // TODO: anything that needs to happen to previous focus

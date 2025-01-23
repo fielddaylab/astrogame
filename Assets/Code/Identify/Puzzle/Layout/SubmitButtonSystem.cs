@@ -2,6 +2,7 @@ using FieldDay.Systems;
 using FieldDay;
 using System;
 using BeauUtil.Debugger;
+using System.Collections;
 
 namespace Astro {
     [SysUpdate(GameLoopPhase.Update, 501)] // After RowSelectSystem
@@ -48,13 +49,16 @@ namespace Astro {
     }
 
     public static partial class PuzzleUtility {
-        public static bool CheckSolutionCorrect(PuzzleState state) {
+        public static bool CheckSolutionCorrect(PuzzleState state, out BitArray rowsCorrect) {
             // convert combined flags to array of single flags
             DataTypeMask[] types = Array.FindAll((DataTypeMask[])Enum.GetValues(typeof(DataTypeMask)), t => state.ActivePuzzle.RequiredProperties.HasFlag(t));
             DataPacket refData;
             PuzzleCell currentCell;
+            bool allCorrect = true;
             // iterate through rows: each row is a CelestialAsset
+            rowsCorrect = new BitArray(state.ActivePuzzle.Rows.Length);
             for (int r = 0; r < state.ActivePuzzle.Rows.Length; r++) {
+                rowsCorrect[r] = true;
                 CelestialAsset asset = Find.NamedAsset<CelestialAsset>(state.ActivePuzzle.Rows[r].Object);
                 // iterate through columns: each column is a required property
                 for (int c = 0; c < types.Length; c++) {
@@ -62,11 +66,13 @@ namespace Astro {
                     refData = CelestialAsset.MaskAssetToData(types[c], asset);
                     currentCell = state.Display.Cells[r * state.Display.NumCols + c];
                     if (!currentCell.DataSlot.CurrentData.Equals(refData)) {
-                        return false;
+                        rowsCorrect[r] = false;
+                        allCorrect = false;
+                        break;
                     }
                 }
             }
-            return true;
+            return allCorrect;
         }
     }
 }

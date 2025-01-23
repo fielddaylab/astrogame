@@ -1,6 +1,8 @@
 
 using BeauUtil;
+using BeauUtil.Debugger;
 using FieldDay;
+using FieldDay.Debugging;
 using FieldDay.SharedState;
 using System;
 using UnityEngine;
@@ -51,7 +53,16 @@ namespace Astro {
             int newTotal = state.SciencePoints + delta;
             SetPoints(Math.Max(0, newTotal), state);
         }
- 
+
+        [DebugMenuFactory]
+        private static DMInfo PointsMenu() {
+            DMInfo info = new DMInfo("Points");
+            info.AddButton("Add Point", () => {
+                AddPoints(1);
+            });
+            return info;
+        }
+
         static public readonly CastableEvent<int> OnPointsUpdated = new CastableEvent<int>();
     }
 }
