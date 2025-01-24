@@ -470,7 +470,7 @@ namespace FieldDay.Rendering {
             }
 #endif // DEVELOPMENT
 
-            AttemptRenderLetterboxing();
+            AttemptRenderLetterboxing(inCamera);
 
 #if DEVELOPMENT
             if (m_DebugPrimaryCameraRestore.CameraId == 0 && m_DebugPrimaryCameraAdjustments.CachedActive && ReferenceEquals(inCamera, m_PrimaryCamera)) {
@@ -505,7 +505,10 @@ namespace FieldDay.Rendering {
 #endif // DEVELOPMENT
         }
 
-        private void AttemptRenderLetterboxing() {
+        private void AttemptRenderLetterboxing(Camera camera) {
+            if (camera.targetTexture != null) {
+                return;
+            }
 
             if (m_LastLetterboxFrameRendered != Frame.Index) {
                 m_LastLetterboxFrameRendered = Frame.Index;
@@ -537,11 +540,14 @@ namespace FieldDay.Rendering {
                         Graphics.SetRenderTarget(null);
                     }
 
+                    GL.PushMatrix();
+                    GL.LoadOrtho();
                     GL.Viewport(new Rect(0, 0, m_LastKnownResolution.width, m_LastKnownResolution.height));
                     if (DebugFlags.IsFlagSet(DebuggingFlags.TraceExecution)) {
                         Log.Trace("[RenderMgr] Rendering letterboxing for viewport {0}", m_VirtualViewport.ToString());
                     }
                     CameraHelper.RenderLetterboxing(m_VirtualViewport, Color.black);
+                    GL.PopMatrix();
                 }
 
                 if (DebugFlags.IsFlagSet(DebuggingFlags.VisualizeEntireScreen)) {

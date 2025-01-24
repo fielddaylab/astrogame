@@ -3,6 +3,7 @@ using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay;
 using FieldDay.Components;
+using FieldDay.Rendering;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
@@ -15,9 +16,12 @@ namespace Astro {
         [Header("Local")]
         [Required] public Camera Contents;
         [Required] public Renderer TargetRenderer;
+        [Required] public MeshFilter TargetMeshFilter;
 
         [NonSerialized] public int RenderHandle = -1;
         [NonSerialized] public RenderAtlas.TextureRegion RenderRegion;
+        [NonSerialized] public Mesh OriginalMesh;
+        [NonSerialized] public Mesh RemappedMesh;
 
         public void MarkDirty() {
             RenderAtlasUtility.MarkRegionDirty(Group, RenderHandle);
@@ -26,22 +30,22 @@ namespace Astro {
         #region IRegistrationCallbacks
 
         void IRegistrationCallbacks.OnDeregister() {
-            // TODO: deregister
+            UnityHelper.SafeDestroy(ref RemappedMesh);
+            TargetMeshFilter.sharedMesh = OriginalMesh;
         }
 
         void IRegistrationCallbacks.OnRegister() {
             RenderHandle = RenderAtlasUtility.RegisterRegion(Group, Contents, RegionId, out RenderRegion);
 
-            Vector4 st;
-            st.z = RenderRegion.UVRect.x;
-            st.w = RenderRegion.UVRect.y;
-            st.x = RenderRegion.UVRect.width;
-            st.y = RenderRegion.UVRect.height;
+            Rect st = RenderRegion.UVRect;
+            OriginalMesh = TargetMeshFilter.sharedMesh;
+            RemappedMesh = Instantiate(OriginalMesh);
+            MeshUVUtility.RemapUVs(RemappedMesh, 0, st);
+            RemappedMesh.UploadMeshData(true);
+            TargetMeshFilter.sharedMesh = RemappedMesh;
 
-            MaterialPropertyBlock b = new MaterialPropertyBlock();
-            b.SetTexture("_MainTex", RenderRegion.Texture);
-            b.SetVector("_MainTex_ST", st);
-            TargetRenderer.SetPropertyBlock(b);
+            Material mat = TargetRenderer.sharedMaterial;
+            mat.mainTexture = RenderRegion.Texture;
         }
 
         #endregion // IRegistrationCallbacks

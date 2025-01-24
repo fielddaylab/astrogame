@@ -22,6 +22,7 @@ namespace FieldDay.Audio {
         PlayClipFromName,
         PlayClipFromAssetRef,
         PlayFromHandle,
+        SetTagWithHandle,
         StopWithHandle,
         StopWithAudioSource,
         StopWithTag,
@@ -125,6 +126,14 @@ namespace FieldDay.Audio {
     }
 
     /// <summary>
+    /// Data for SetTagForHandle
+    /// </summary>
+    internal struct OverwriteTagCommandData {
+        public UniqueId16 Handle;
+        public StringHash32 Tag;
+    }
+
+    /// <summary>
     /// Data for StopWithHandle and StopWithTag
     /// </summary>
     internal struct StopCommandData {
@@ -168,6 +177,7 @@ namespace FieldDay.Audio {
         [FieldOffset(0)] public AudioCommandType Type;
         //[FieldOffset(4)] public PlayCommandData Play;
         [FieldOffset(4)] public PlayExistingCommandData Resume;
+        [FieldOffset(4)] public OverwriteTagCommandData SetTag;
         [FieldOffset(4)] public StopCommandData Stop;
         [FieldOffset(4)] public FloatParamChangeCommandData FloatParam;
         [FieldOffset(4)] public BoolParamChangeCommandData BoolParam;

@@ -2,6 +2,7 @@ using BeauRoutine;
 using BeauUtil;
 using FieldDay;
 using FieldDay.Assets;
+using FieldDay.HID;
 using FieldDay.SharedState;
 using System.Collections;
 using UnityEngine;
@@ -73,7 +74,7 @@ namespace Astro {
             }
             switch (docPart.PartType) {
                 case DocPartFunction.Move: {
-                        StartMoveDoc(docPart.Document, state);
+                        StartMoveDoc(docPart.Document, docPart.Cursor, state);
                         break;
                     }
                 case DocPartFunction.Zoom: {
@@ -89,7 +90,7 @@ namespace Astro {
                     }
             }
         }
-        public static void StartMoveDoc(DocumentInteractable newDoc, DocumentBoardState state = null) {
+        public static void StartMoveDoc(DocumentInteractable newDoc, CursorHint partHint, DocumentBoardState state = null) {
             if (state == null) {
                 state = Find.State<DocumentBoardState>();
             }
@@ -99,7 +100,9 @@ namespace Astro {
             if (newDoc != null && state.SelectedDocument != newDoc) {
                 state.SelectedDocument = newDoc;
                 state.DocumentRoutine.Replace(ShiftZ(state.SelectedDocument.transform, state.DocumentParent.localPosition + state.DocHoverOffset));
-            } else {            
+                CursorHint.TryLock(partHint);
+            } else {
+                CursorHint.Unlock();
                 state.DocumentRoutine.Replace(ShiftZ(state.SelectedDocument.transform, state.DocumentParent.localPosition));
                 state.SelectedDocument = null;
             }
@@ -107,7 +110,7 @@ namespace Astro {
         }
 
         public static void DeselectDocument(DocumentBoardState state) {
-            StartMoveDoc(null, state);
+            StartMoveDoc(null, null, state);
         }
 
         public static void ToggleZoomDoc(DocumentInteractable doc, DocumentBoardState state = null) {

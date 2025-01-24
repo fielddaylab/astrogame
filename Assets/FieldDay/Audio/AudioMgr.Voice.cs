@@ -150,10 +150,15 @@ namespace FieldDay.Audio {
                 tween.Source->SetFloat(tween.Property, newVal);
 
                 if (finalProgress >= 1) {
-                    if (tween.Linked != UniqueId16.Invalid && tween.KillOnFinish) {
+                    if (tween.Linked != UniqueId16.Invalid) {
                         VoiceData voice = FindVoiceForId(tween.Linked);
                         if (voice != null) {
-                            RequestImmediateStop(voice);
+                            if (tween.KillOnFinish) {
+                                voice.KillTweenIndex = -1;
+                                RequestImmediateStop(voice);
+                            } else {
+                                voice.FloatTweens.Indices[(int) tween.Property] = -1;
+                            }
                         }
                     }
 

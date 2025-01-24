@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using FieldDay.Systems;
 using FieldDay;
+using BeauUtil;
 
 namespace Astro {
     [SysUpdate(GameLoopPhaseMask.LateUpdate)]
@@ -11,6 +12,9 @@ namespace Astro {
         public override void ProcessWork(float deltaTime)
         {
             var spaceCam = Find.State<SpaceCameraState>();
+            CanvasSpaceTransformation canvasTransform;
+            // canvasTransform.CanvasSpace = 
+
             foreach (UIFocus focus in m_State.ActiveFocii) {
                 // position 2D representation in screen space
                 var point = spaceCam.Camera.Camera.WorldToScreenPoint(focus.Target.transform.position);

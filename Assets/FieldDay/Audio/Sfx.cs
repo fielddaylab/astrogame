@@ -133,6 +133,29 @@ namespace FieldDay.Audio {
             });
         }
 
+        static public void StopAllWithTag(StringHash32 tag) {
+            Game.Audio?.QueueAudioCommand(new AudioCommand() {
+                Type = AudioCommandType.StopWithTag,
+                Stop = new StopCommandData() {
+                    Id = new AudioIdRef() {
+                        Id = tag
+                    }
+                }
+            });
+        }
+
+        static public void StopAllWithTag(StringHash32 tag, float fadeDuration) {
+            Game.Audio?.QueueAudioCommand(new AudioCommand() {
+                Type = AudioCommandType.StopWithTag,
+                Stop = new StopCommandData() {
+                    Id = new AudioIdRef() {
+                        Id = tag
+                    },
+                    FadeOut = fadeDuration
+                }
+            });
+        }
+
         static public void StopAll() {
             Game.Audio?.QueueAudioCommand(new AudioCommand() {
                 Type = AudioCommandType.StopAll
@@ -154,6 +177,16 @@ namespace FieldDay.Audio {
         #endregion // Queries
 
         #region Properties
+
+        static public void OverrideTag(AudioHandle handle, StringHash32 tag) {
+            Game.Audio.QueueAudioCommand(new AudioCommand() {
+                Type = AudioCommandType.SetTagWithHandle,
+                SetTag = new OverwriteTagCommandData() {
+                    Handle = handle.m_Id,
+                    Tag = tag
+                }
+            });
+        }
 
         static public void SetVolume(AudioHandle handle, float volume, float transitionTime = 0, Curve transitionCurve = Curve.Linear) {
             Game.Audio.QueueAudioCommand(new AudioCommand() {

@@ -335,6 +335,15 @@ namespace FieldDay.Assets {
             return new NamedAssetIterator<T>(typedCollection.GetAll());
         }
 
+        /// <summary>
+        /// Returns if a named asset with the given name and type is loaded.
+        /// </summary>
+        [Il2CppSetOption(Option.NullChecks, false)]
+        public bool HasNamed<T>(StringHash32 id) where T : class, INamedAsset {
+            NamedAssetCollection typedCollection = GetNamedCollection<T>(true);
+            return typedCollection.TryLookup(id, out var _);
+        }
+
         #endregion // Named
 
         #region Lite

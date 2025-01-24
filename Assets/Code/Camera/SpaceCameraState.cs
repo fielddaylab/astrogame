@@ -1,6 +1,7 @@
 using BeauUtil;
 using FieldDay;
 using FieldDay.SharedState;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -38,11 +39,13 @@ namespace Astro
 
         public Vector2 ZoomBounds; // x is min, y is max
 
-        [HideInInspector] public float VertLook; // accumulated rotation vertically
-        [HideInInspector] public float HorizLook; // accumulated rotation horizontally
+        [NonSerialized] public float VertLook; // accumulated rotation vertically
+        [NonSerialized] public float HorizLook; // accumulated rotation horizontally
 
-        [HideInInspector] public bool MouseDragLookActive;
-        [HideInInspector] public Vector3 PrevMousePos;
+        [NonSerialized] public bool MouseDragLookActive;
+        [NonSerialized] public Vector3 PrevMousePos;
+
+        [NonSerialized] public ulong StateHash;
 
         public CastableEvent<SpaceCameraState> OnLookUpdated = new CastableEvent<SpaceCameraState>();
     }

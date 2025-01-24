@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using static UnityEngine.EventSystems.PointerEventData;
 using UnityEngine.UIElements;
 using FieldDay;
 
@@ -21,7 +20,6 @@ namespace Astro {
         // Called by Unity when a Raycaster should raycast because it extends BaseRaycaster.
         public override void Raycast(PointerEventData eventData, List<RaycastResult> resultAppendList)
         {
-            copyEventData = new PointerEventData(EventSystem.current);
             copyEventData.eligibleForClick = false;
 
             copyEventData.pointerId = eventData.pointerId;
