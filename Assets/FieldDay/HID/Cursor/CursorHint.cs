@@ -63,6 +63,9 @@ namespace FieldDay.HID {
         static private CursorHint s_Locked;
         static private CursorHint s_Effective;
         
+        /// <summary>
+        /// The currently active cursor hint.
+        /// </summary>
         static public CursorHint Current {
             get { return s_Effective; }
         }
@@ -86,7 +89,14 @@ namespace FieldDay.HID {
             }
         }
 
+        /// <summary>
+        /// Invoked when a CursorHint is activated as the current hover.
+        /// </summary>
         static public readonly CastableEvent<CursorHint> OnHoverStart = new CastableEvent<CursorHint>();
+
+        /// <summary>
+        /// Invoked when a CursorHint is deactivated as the current hover.
+        /// </summary>
         static public readonly CastableEvent<CursorHint> OnHoverStop = new CastableEvent<CursorHint>();
 
         #endregion // Current Tracking

@@ -44,6 +44,10 @@ namespace FieldDay.UI {
             } else {
                 CursorUtility.HideCursor();
             }
+#elif UNITY_WEBGL // necessary in case htmlcanvas is not fully initialized yet
+            if (Time.frameCount < 5) {
+                CursorUtility.HideCursor();
+            }
 #endif // UNITY_EDITOR
 
             m_Position.position = Input.mousePosition;
