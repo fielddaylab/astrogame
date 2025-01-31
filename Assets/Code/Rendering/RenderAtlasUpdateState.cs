@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay;
@@ -7,27 +8,67 @@ using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
 namespace Astro {
-    [DefaultExecutionOrder(-1000)]
-    public sealed class RenderAtlasUpdateState : BatchedComponent, IRegistrationCallbacks {
+    public sealed class RenderAtlasUpdateState : IComponentData, IRefCounted, IRegistrationCallbacks {
         public RenderAtlas Atlas;
-        
-        [NonSerialized] public RenderAtlasRegionSetup[] Regions;
-        [NonSerialized] public int RegionCount;
-        [NonSerialized] public BitSet64 DirtyRegions;
+        public RenderAtlasRegionSetup[] Regions;
+        public int RegionCount;
+        public BitSet64 DirtyRegions;
+
+        public RenderAtlasUpdateState(RenderAtlas atlas) {
+            Atlas = atlas;
+            Regions = new RenderAtlasRegionSetup[Atlas.RegionCount];
+            RegionCount = 0;
+            DirtyRegions.Clear();
+        }
 
         #region IRegistrationCallbacks
 
         void IRegistrationCallbacks.OnDeregister() {
             Game.Assets?.RemoveNamed(Atlas.AssetId, Atlas);
+            s_Cache.Remove(Atlas.AssetId);
         }
 
         void IRegistrationCallbacks.OnRegister() {
             Game.Assets.AddNamed(Atlas.AssetId, Atlas);
-
-            Regions = new RenderAtlasRegionSetup[Atlas.RegionCount];
+            s_Cache.Add(Atlas.AssetId, this);
         }
 
         #endregion // IRegistrationCallbacks
+
+        #region IRefCounted
+
+        int IRefCounted.ReferenceCount { get; set; }
+
+        void IRefCounted.OnReferenced() {
+            Game.Components.Register(this);
+        }
+
+        void IRefCounted.OnReleased() {
+            Game.Components.Deregister(this);
+        }
+
+        #endregion // IRefCounted
+
+        #region Cache
+
+        static private Dictionary<StringHash32, RenderAtlasUpdateState> s_Cache = new Dictionary<StringHash32, RenderAtlasUpdateState>(3);
+
+        static public RenderAtlasUpdateState RetrieveState(RenderAtlas atlas) {
+            if (!s_Cache.TryGetValue(atlas.AssetId, out var state)) {
+                state = new RenderAtlasUpdateState(atlas);
+            }
+            state.AcquireRef();
+            return state;
+        }
+
+        static public void ReleaseState(ref RenderAtlasUpdateState updateState) {
+            if (updateState != null) {
+                updateState.ReleaseRef();
+                updateState = null;
+            }
+        }
+
+        #endregion // Cache
     }
 
     public struct RenderAtlasRegionSetup {

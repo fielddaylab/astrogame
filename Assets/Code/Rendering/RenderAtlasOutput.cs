@@ -10,7 +10,7 @@ using UnityEngine.Rendering.Universal;
 namespace Astro {
     public sealed class RenderAtlasOutput : BatchedComponent, IRegistrationCallbacks {
         [Header("Texture Destination")]
-        [Required] public RenderAtlasUpdateState Group;
+        [Required] public RenderAtlas Atlas;
         public SerializedHash32 RegionId;
 
         [Header("Local")]
@@ -18,6 +18,7 @@ namespace Astro {
         [Required] public Renderer TargetRenderer;
         [Required] public MeshFilter TargetMeshFilter;
 
+        [NonSerialized] public RenderAtlasUpdateState Group;
         [NonSerialized] public int RenderHandle = -1;
         [NonSerialized] public RenderAtlas.TextureRegion RenderRegion;
         [NonSerialized] public Mesh OriginalMesh;
@@ -32,9 +33,11 @@ namespace Astro {
         void IRegistrationCallbacks.OnDeregister() {
             UnityHelper.SafeDestroy(ref RemappedMesh);
             TargetMeshFilter.sharedMesh = OriginalMesh;
+            RenderAtlasUpdateState.ReleaseState(ref Group);
         }
 
         void IRegistrationCallbacks.OnRegister() {
+            Group = RenderAtlasUpdateState.RetrieveState(Atlas);
             RenderHandle = RenderAtlasUtility.RegisterRegion(Group, Contents, RegionId, out RenderRegion);
 
             Rect st = RenderRegion.UVRect;

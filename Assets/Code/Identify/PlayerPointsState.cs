@@ -13,13 +13,10 @@ namespace Astro {
         public Timer ReviewTimer;
         public Timer ReviewCooldown;
 
-        public Sprite PipCorrect;
-        public Sprite PipIncorrect;
-
-        [HideInInspector] public int ActivePips;
-        [HideInInspector] public bool SubmittedPuzzle = false;
-        [HideInInspector] public bool SubmittedObject = false;
-        [HideInInspector] public int SciencePoints = 0;
+        [NonSerialized] public int ActivePips;
+        [NonSerialized] public bool SubmittedPuzzle = false;
+        [NonSerialized] public bool SubmittedObject = false;
+        [NonSerialized] public int SciencePoints = 0;
     }
 
     public static partial class PointsUtility {
