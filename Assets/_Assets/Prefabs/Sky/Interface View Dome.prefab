@@ -355,6 +355,7 @@ GameObject:
   - component: {fileID: 4147787589945361151}
   - component: {fileID: 8899061780277381331}
   - component: {fileID: 7810197793230534581}
+  - component: {fileID: 5604649430858485993}
   m_Layer: 0
   m_Name: Interface View Dome
   m_TagString: Untagged
@@ -428,10 +429,6 @@ MonoBehaviour:
   ZoomSpeed: 1.2
   ZoomIncrement: 0.5
   ZoomBounds: {x: 0.5, y: 5}
-  VertLook: 0
-  HorizLook: 0
-  MouseDragLookActive: 0
-  PrevMousePos: {x: 0, y: 0, z: 0}
 --- !u!114 &7810197793230534581
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -448,6 +445,28 @@ MonoBehaviour:
   CelestialObjPrefab: {fileID: 8141813431883896341, guid: 8d46f6ec2431bbd4a80caaffc0435f36, type: 3}
   DefaultStarSprite: {fileID: 21300000, guid: 208f65aeeed718f42b159bd6a8fcd586, type: 3}
   DefaultPlanetSprite: {fileID: 0}
+--- !u!114 &5604649430858485993
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1847470837429980404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 467f45d0498031f48b598a791c711987, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Initialized: 0
+  StartingLookCoords:
+    RightAscension:
+      Hours: 10
+      Minutes: 22
+      Seconds: 19.8
+    Declination:
+      Hours: 9
+      Minutes: 0
+      Seconds: 0
 --- !u!1 &1918226578584948163
 GameObject:
   m_ObjectHideFlags: 0
