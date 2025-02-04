@@ -15,53 +15,38 @@ namespace Astro {
         [Header("Config")]
         public Vector3 RotationOffset;
 
+        public bool AutoSync = true;
+
         [NonSerialized] public Vector2 LastAppliedRotation;
-
-        private void Awake() {
-            float ra = 45;
-            float dec = 25;
-            TelescopeUtility.UpdateTelescopeRigRotation(this, ra, dec);
-
-            Routine.StartLoop(this, () => {
-                bool updated = false;
-                if (DebugInput.IsDown(DebugInputButtons.DPadLeft)) {
-                    ra -= 30 * Frame.DeltaTime;
-                    updated = true;
-                }
-                if (DebugInput.IsDown(DebugInputButtons.DPadRight)) {
-                    ra += 30 * Frame.DeltaTime;
-                    updated = true;
-                }
-                if (DebugInput.IsDown(DebugInputButtons.DPadUp)) {
-                    dec += 15 * Frame.DeltaTime;
-                    updated = true;
-                }
-                if (DebugInput.IsDown(DebugInputButtons.DPadDown)) {
-                    dec -= 15 * Frame.DeltaTime;
-                    updated = true;
-                }
-
-                if (updated) {
-                    TelescopeUtility.UpdateTelescopeRigRotation(this, ra, dec);
-                }
-            });
-        }
     }
 
     static public partial class TelescopeUtility {
-        static public void UpdateTelescopeRigRotation(TelescopeRig rig, float raDeg, float decDeg) {
-            rig.LastAppliedRotation.x = raDeg;
-            rig.LastAppliedRotation.y = decDeg;
+        static public void UpdateTelescopeRigRotation(TelescopeRig rig, Transform spaceCam)
+        {
+            rig.LastAppliedRotation.x = spaceCam.localEulerAngles.x;
+            rig.LastAppliedRotation.y = spaceCam.localEulerAngles.y;
 
-            Vector3 baseRot = rig.RotationOffset;
-            baseRot.y += raDeg;
+            // up/down (NOTE: space cam up/down is oriented along x, whereas the telescope up/down is oriented along z)
+            float xRot = spaceCam.localEulerAngles.x;
 
-            rig.Base.localEulerAngles = rig.Dome.localEulerAngles = baseRot;
+            // left/right
+            float yRot = spaceCam.localEulerAngles.y;
 
-            Vector3 bodyRot = baseRot;
-            bodyRot.z += -decDeg;
+            var localBase = rig.Base.localEulerAngles;
+            localBase.y = yRot + rig.RotationOffset.y;
+            rig.Base.localEulerAngles = localBase;
 
-            rig.Shaft.localEulerAngles = bodyRot;
+            var localDome = rig.Dome.localEulerAngles;
+            localDome.y = yRot + rig.RotationOffset.y;
+            rig.Dome.localEulerAngles = localDome;
+
+            var localShaft = rig.Shaft.localEulerAngles;
+            localShaft.y = yRot + rig.RotationOffset.y;
+            rig.Shaft.localEulerAngles = localShaft;
+
+            localShaft = rig.Shaft.localEulerAngles;
+            localShaft.z = xRot + rig.RotationOffset.z;
+            rig.Shaft.localEulerAngles = localShaft;
         }
     }
 }
