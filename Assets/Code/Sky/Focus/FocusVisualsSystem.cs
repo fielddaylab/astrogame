@@ -17,7 +17,7 @@ namespace Astro {
 
             foreach (UIFocus focus in m_State.ActiveFocii) {
                 // position 2D representation in screen space
-                var point = spaceCam.Camera.Camera.WorldToScreenPoint(focus.Target.transform.position);
+                Vector2 point = spaceCam.Camera.Camera.WorldToScreenPoint(focus.Target.transform.position);
                 focus.Rect.anchoredPosition = point;
             }
 
