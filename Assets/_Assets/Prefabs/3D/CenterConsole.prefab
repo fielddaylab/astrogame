@@ -509,6 +509,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2504653073650945066}
   - component: {fileID: 2712880839896442600}
+  - component: {fileID: 451367190266127404}
   m_Layer: 0
   m_Name: CenterConsole
   m_TagString: Untagged
@@ -551,6 +552,19 @@ MonoBehaviour:
   Recursive: 0
   DestroyGameObject: 1
   IgnoreAnimators: 1
+--- !u!114 &451367190266127404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2993064301725374096}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 240cecc9d07982f4e84ae7d1aa610136, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ScreenTransform: {fileID: 3977075633602135940}
 --- !u!1 &3558211541929717083
 GameObject:
   m_ObjectHideFlags: 0
@@ -646,6 +660,7 @@ GameObject:
   - component: {fileID: 3977075633602135940}
   - component: {fileID: 5647722607009318171}
   - component: {fileID: 8217897254273910605}
+  - component: {fileID: 5681234492506326763}
   m_Layer: 0
   m_Name: centerMonitor_screen
   m_TagString: Untagged
@@ -718,6 +733,28 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &5681234492506326763
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3578335344753082924}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 190352107308551751, guid: 0b7dbb343f2d7c94ba69eb8214c1bd13, type: 3}
 --- !u!1 &3986798966482608496
 GameObject:
   m_ObjectHideFlags: 0
