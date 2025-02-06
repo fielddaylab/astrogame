@@ -56,10 +56,10 @@ namespace Astro {
 
         public string ToString(HmsPrefix prefix) {
             if (prefix == HmsPrefix.Hms) {
-                return string.Format("{0}h {1}m {2:F4}s", Hours.ToStringLookup(), Minutes.ToStringLookup(), Seconds);
+                return string.Format("{0}h {1}m {2:F1}s", Hours.ToStringLookup(), Minutes.ToStringLookup(), Seconds);
             }
 
-            return string.Format("{0}{1}\u00B0 {2}' {3:F4}\"", Hours >= 0 ? "+" : "", Hours.ToStringLookup(), Minutes.ToStringLookup(), Seconds);
+            return string.Format("{0}{1}\u00B0 {2}' {3:F1}\"", Hours >= 0 ? "+" : "", Hours.ToStringLookup(), Minutes.ToStringLookup(), Seconds);
         }
 
         public void ToString(StringBuilder sb, HmsPrefix prefix) {
