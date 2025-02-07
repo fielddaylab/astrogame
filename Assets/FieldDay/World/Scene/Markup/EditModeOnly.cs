@@ -11,7 +11,7 @@ namespace FieldDay.Scenes {
         public int Order { get { return FlattenHierarchy.Order - 500; } }
 
         public bool Bake(BakeFlags flags, BakeContext context) {
-            Baking.Destroy(gameObject);
+            Baking.Destroy(gameObject, true);
             return true;
         }
 

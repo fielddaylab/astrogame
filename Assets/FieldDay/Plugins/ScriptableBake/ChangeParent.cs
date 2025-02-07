@@ -23,7 +23,7 @@ namespace ScriptableBake {
         bool IBaked.Bake(BakeFlags flags, BakeContext context) {
             Baking.UnpackPrefabIfNecessary(transform);
             transform.SetParent(NewParent);
-            Baking.Destroy(this);
+            Baking.Destroy(this, true);
             return true;
         }
 

@@ -23,7 +23,7 @@ namespace ScriptableBake {
 
         bool IBaked.Bake(BakeFlags flags, BakeContext context) {
             Baking.ResetStaticFlags(gameObject, Recursive);
-            Baking.Destroy(this);
+            Baking.Destroy(this, true);
             return true;
         }
 
