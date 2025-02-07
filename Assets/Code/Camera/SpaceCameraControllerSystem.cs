@@ -108,7 +108,7 @@ namespace Astro
             angles.x = m_State.VertLook;
             m_State.Camera.RootTransform.localEulerAngles = angles;
 
-            m_State.OnLookUpdated.Invoke(m_State);
+            RecordLookUpdated();
         }
 
         private void AdjustHorizLook(float adjustment)
@@ -121,7 +121,7 @@ namespace Astro
             angles.y = m_State.HorizLook;
             m_State.Camera.RootTransform.localEulerAngles = angles;
 
-            m_State.OnLookUpdated.Invoke(m_State);
+            RecordLookUpdated();
         }
 
         private void ProcessKeyboardLookDiscrete()
@@ -193,6 +193,7 @@ namespace Astro
                 newZoom = Mathf.Clamp(newZoom - yScrollDelta * m_State.ZoomSpeed, m_State.ZoomBounds.x, m_State.ZoomBounds.y);
 
                 m_State.Camera.Camera.fieldOfView = newZoom;
+                RecordLookUpdated();
             }
         }
 
@@ -207,6 +208,7 @@ namespace Astro
 
                 m_State.Zoom = newZoom;
                 m_State.Camera.Camera.fieldOfView = m_State.Camera.OriginalFOV / newZoom;
+                RecordLookUpdated();
             }
             if (Input.GetKeyDown(KeyCode.K))
             {
@@ -217,7 +219,14 @@ namespace Astro
 
                 m_State.Zoom = newZoom;
                 m_State.Camera.Camera.fieldOfView = m_State.Camera.OriginalFOV / newZoom;
+                RecordLookUpdated();
             }
+        }
+
+        private void RecordLookUpdated()
+        {
+            m_State.OnLookUpdated.Invoke(m_State);
+            m_State.LookUpdatedThisFrame = true;
         }
 
         #endregion // Input Processing
@@ -235,23 +244,5 @@ namespace Astro
 
             return Mathf.Clamp(lfAngle, lfMin, lfMax);
         }
-
-        /* TODO: revisit once monitors are re-implemented
-        #region Handlers
-
-        private void HandleUnfocusDown()
-        {
-            m_State.MouseDragLookActive = true;
-            m_State.PrevMousePos = m_State.Camera.Camera.ScreenToViewportPoint(Input.mousePosition);
-        }
-
-        private void HandleUnfocusUp()
-        {
-            m_State.MouseDragLookActive = false;
-            m_State.PrevMousePos = Vector3.zero;
-        }
-
-        #endregion // Handlers
-        */
     }
 }

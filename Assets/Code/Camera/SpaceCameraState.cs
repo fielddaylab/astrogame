@@ -48,6 +48,8 @@ namespace Astro
 
         [NonSerialized] public ulong StateHash;
 
+        [NonSerialized] public bool LookUpdatedThisFrame = false;
+
         public CastableEvent<SpaceCameraState> OnLookUpdated = new CastableEvent<SpaceCameraState>();
     }
 
