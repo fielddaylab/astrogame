@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Rendering.Universal.Internal;
 
 namespace Astro {
     [Flags]
@@ -12,5 +15,68 @@ namespace Astro {
         Magnesium = 0x040,
         Oxygen = 0x080,
         Titanium = 0x100,
+    }
+
+    public class Spectrograph {
+        // gradient background
+        // black lines at the wavelengths of each element
+        public static readonly int MIN_WAVELENGTH = 380;
+        public static readonly int MAX_WAVELENGTH = 750;
+
+        public static readonly Dictionary<SpectrographMaterialMask, int[]> Wavelengths = new Dictionary<SpectrographMaterialMask, int[]>() {
+            [SpectrographMaterialMask.Hydrogen] = new int[] { 656, 486, 434, 410 },
+            [SpectrographMaterialMask.Helium] = new int[] { 588 },
+            [SpectrographMaterialMask.Carbon] = new int[] { },
+            [SpectrographMaterialMask.Iron] = new int[] { 517, 496, 467, 438, 431, 382, 358, 302 },
+            [SpectrographMaterialMask.Calcium] = new int[] { 397, 393 },
+            [SpectrographMaterialMask.Sodium] = new int[] { 590, 589 },
+            [SpectrographMaterialMask.Magnesium] = new int[] { 517, 516 },
+            [SpectrographMaterialMask.Oxygen] = new int[] { 687, 628 },
+            [SpectrographMaterialMask.Titanium] = new int[] { }
+        };
+    }
+
+    public static class SpectrographUtils {
+        public static List<int> GetWavelengths(SpectrographMaterialMask mask) {
+            List<int> result = new List<int>();
+            // TODO: iterate through flags instead..?
+            if (mask.HasFlag(SpectrographMaterialMask.Hydrogen)) {
+                result.AddRange(Spectrograph.Wavelengths[SpectrographMaterialMask.Hydrogen]);
+            }
+            if (mask.HasFlag(SpectrographMaterialMask.Helium)) {
+                result.AddRange(Spectrograph.Wavelengths[SpectrographMaterialMask.Helium]);
+            }
+            if (mask.HasFlag(SpectrographMaterialMask.Carbon)) {
+                result.AddRange(Spectrograph.Wavelengths[SpectrographMaterialMask.Carbon]);
+            }
+            if (mask.HasFlag(SpectrographMaterialMask.Iron)) {
+                result.AddRange(Spectrograph.Wavelengths[SpectrographMaterialMask.Iron]);
+            }
+            if (mask.HasFlag(SpectrographMaterialMask.Calcium)) {
+                result.AddRange(Spectrograph.Wavelengths[SpectrographMaterialMask.Calcium]);
+            }
+            if (mask.HasFlag(SpectrographMaterialMask.Sodium)) {
+                result.AddRange(Spectrograph.Wavelengths[SpectrographMaterialMask.Sodium]);
+            }
+            if (mask.HasFlag(SpectrographMaterialMask.Magnesium)) {
+                result.AddRange(Spectrograph.Wavelengths[SpectrographMaterialMask.Magnesium]);
+            }
+            if (mask.HasFlag(SpectrographMaterialMask.Oxygen)) {
+                result.AddRange(Spectrograph.Wavelengths[SpectrographMaterialMask.Oxygen]);
+            }
+            if (mask.HasFlag(SpectrographMaterialMask.Titanium)) {
+                result.AddRange(Spectrograph.Wavelengths[SpectrographMaterialMask.Titanium]);
+            }
+            return result;
+        }
+
+        public static List<float> GetNormalizedWavelengths(SpectrographMaterialMask mask) {
+            List<float> result = new List<float>();
+            GetWavelengths(mask).ForEach(wavelength => {
+                result.Add(Mathf.InverseLerp(Spectrograph.MIN_WAVELENGTH, Spectrograph.MAX_WAVELENGTH, wavelength));
+            });
+            return result;
+        }
+       
     }
 }
