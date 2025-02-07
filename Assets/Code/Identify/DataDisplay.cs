@@ -11,6 +11,7 @@ using UnityEngine;
 namespace Astro {
     public sealed class DataDisplay : BatchedComponent {
         [AutoEnum] public DataFormattingFlags Formatting;
+        public string NullText;
 
         [Header("Components")]
         public TMP_Text DefaultOutput;
@@ -42,7 +43,11 @@ namespace Astro {
                         displayedDefault = TryFormatForDefaultOutput(packet, display.Formatting, psb);
                     }
                     else {
-                        psb.Builder.Append(EMPTY_OUTPUT);
+                        string nullTxt = display.NullText;
+                        if (string.IsNullOrEmpty(nullTxt)) {
+                            nullTxt = EMPTY_OUTPUT;
+                        }
+                        psb.Builder.Append(nullTxt);
                         displayedDefault = true;
                     }
                     display.DefaultOutput.SetText(psb);
@@ -62,7 +67,11 @@ namespace Astro {
 
         static public void ClearDisplay(DataDisplay display) {
             if (display.DefaultOutput) {
-                display.DefaultOutput.SetText(string.Empty);
+                string nullTxt = display.NullText;
+                if (string.IsNullOrEmpty(nullTxt)) {
+                    nullTxt = EMPTY_OUTPUT;
+                }
+                display.DefaultOutput.SetText(nullTxt);
             }
 
             display.OnDisplayCleared.Invoke();

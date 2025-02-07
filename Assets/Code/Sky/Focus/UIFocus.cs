@@ -1,5 +1,7 @@
+using BeauUtil.UI;
 using FieldDay;
 using FieldDay.Components;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,12 +11,12 @@ namespace Astro
 {
     public class UIFocus : BatchedComponent
     {
-        [HideInInspector] public Transform Target;
-        [HideInInspector] public CelestialAsset TargetData;
+        [NonSerialized] public Transform Target;
+        [NonSerialized] public CelestialAsset TargetData;
 
         public RectTransform Rect;
         public Image Represent2D;
-        public Button Button;
+        public PointerListener Button;
     }
 
     public static partial class FocusableUtility

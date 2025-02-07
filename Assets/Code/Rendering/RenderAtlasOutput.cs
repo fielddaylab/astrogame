@@ -4,11 +4,12 @@ using BeauUtil.Debugger;
 using FieldDay;
 using FieldDay.Components;
 using FieldDay.Rendering;
+using ScriptableBake;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
 namespace Astro {
-    public sealed class RenderAtlasOutput : BatchedComponent, IRegistrationCallbacks {
+    public sealed class RenderAtlasOutput : BatchedComponent, IRegistrationCallbacks, IBaked {
         [Header("Texture Destination")]
         [Required] public RenderAtlas Atlas;
         public SerializedHash32 RegionId;
@@ -27,6 +28,17 @@ namespace Astro {
         public void MarkDirty() {
             RenderAtlasUtility.MarkRegionDirty(Group, RenderHandle);
         }
+
+#if UNITY_EDITOR
+
+        int IBaked.Order { get { return -100; } }
+
+        bool IBaked.Bake(BakeFlags flags, BakeContext context) {
+            Contents.targetTexture = null;
+            return true;
+        }
+
+#endif // UNITY_EDITOR
 
         #region IRegistrationCallbacks
 

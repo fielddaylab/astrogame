@@ -1,3 +1,4 @@
+using System;
 using FieldDay;
 using FieldDay.SharedState;
 using UnityEngine;
@@ -5,7 +6,7 @@ using UnityEngine;
 namespace Astro {
     public class InputState : SharedStateComponent, IRegistrationCallbacks {
         public bool InputEnabled;
-        [HideInInspector] public int ClickableLayerMask;       
+        [NonSerialized] public int ClickableLayerMask;
 
         public void OnDeregister() {
         }
@@ -26,11 +27,11 @@ namespace Astro {
         }
 
         public static void SetClickableMaskDefault(InputState state) {
-            state.ClickableLayerMask = LayerMask.GetMask("LabInteract", "DocumentInteract", "ReferenceInteract");
+            state.ClickableLayerMask = LayerMasks.LabInteract_Mask | LayerMasks.DocumentInteract_Mask | LayerMasks.ReferenceInteract_Mask;
         }
 
         public static void SetClickableMaskTopLayer(InputState state) {
-            state.ClickableLayerMask = LayerMask.GetMask("TopLayer");
+            state.ClickableLayerMask = LayerMasks.TopLayer_Mask;
         }
 
     }

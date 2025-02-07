@@ -18,10 +18,12 @@ namespace Astro {
 
         public GraphicRaycaster screenCaster; // Reference to the GraphicRaycaster of the canvas displayed on the virtual screen
 
-        private PointerEventData copyEventData = new PointerEventData(EventSystem.current);
+        private PointerEventData copyEventData;
 
-        private void Start()
+        protected override void Start()
         {
+            base.Start();
+            copyEventData = new PointerEventData(EventSystem.current);
             eventCameraOverride = Find.State<ViewState>().Camera.Camera;
             screenTransform = Find.State<MonitorState>().ScreenTransform;
         }
@@ -55,7 +57,7 @@ namespace Astro {
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit))
             {
-                Debug.Log("[VirtualScreen] raycast hit");
+                //Debug.Log("[VirtualScreen] raycast hit");
 
                 if (hit.collider.transform == screenTransform)
                 {
@@ -68,21 +70,21 @@ namespace Astro {
 
                     screenCaster.Raycast(copyEventData, resultAppendList);
 
-                    if (Input.GetMouseButtonUp(0) && resultAppendList.Count == 0) {
+                    if (resultAppendList.Count == 0 && copyEventData.button == PointerEventData.InputButton.Left && Input.GetMouseButtonUp(0)) {
                         // Clicked on nothing
                         Game.Events.Dispatch(GameEvents.MonitorEmptySpaceClicked);
                     }
 
-                    Debug.Log("[VirtualScreen] redirected to " + copyEventData.position);
+                    //Debug.Log("[VirtualScreen] redirected to " + copyEventData.position);
                 }
                 else
                 {
-                    Debug.Log("[VirtualScreen] hit but not screen transform");
+                    //Debug.Log("[VirtualScreen] hit but not screen transform");
                 }
             }
             else
             {
-                Debug.Log("[VirtualScreen] default cast to " + copyEventData.position);
+                //Debug.Log("[VirtualScreen] default cast to " + copyEventData.position);
                 // base.Raycast(copyEventData, resultAppendList);
             }
         }

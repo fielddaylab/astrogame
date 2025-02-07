@@ -9,7 +9,7 @@ namespace Astro {
     /// Packet of data.
     /// </summary>
     public struct DataPacket : IEquatable<DataPacket> {
-        public bool IsValid;
+        public readonly bool IsValid;
         public readonly DataTypeMask Type;
         public readonly StringHash32 HistoricalPatternId;
         public readonly Datum Value;

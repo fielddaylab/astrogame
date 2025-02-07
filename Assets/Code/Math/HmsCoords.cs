@@ -65,15 +65,15 @@ namespace Astro {
         public void ToString(StringBuilder sb, HmsPrefix prefix) {
             if (prefix == HmsPrefix.Hms) {
                 sb.AppendNoAlloc(Hours).Append("h ")
-                    .AppendNoAlloc(Minutes, 1).Append("m ")
-                    .AppendNoAlloc(Seconds, 1).Append('s');
+                    .AppendNoAlloc(Minutes, 0, 2).Append("m ")
+                    .AppendNoAlloc(Seconds, 1, 2).Append('s');
             } else {
                 if (Hours >= 0) {
                     sb.Append('+');
                 }
                 sb.AppendNoAlloc(Hours).Append("\u00B0 ")
-                    .AppendNoAlloc(Minutes, 1).Append("' ")
-                    .AppendNoAlloc(Seconds, 1).Append('"');
+                    .AppendNoAlloc(Minutes, 0, 2).Append("' ")
+                    .AppendNoAlloc(Seconds, 1, 2).Append('"');
             }
         }
 

@@ -131,6 +131,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 35139148}
+  - component: {fileID: 35139149}
   m_Layer: 0
   m_Name: Instruments
   m_TagString: Untagged
@@ -157,6 +158,22 @@ Transform:
   - {fileID: 873225241}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 113.838, z: 0}
+--- !u!114 &35139149
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 35139147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ae620349e7bce24688d2ab26f9be5a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DestroyInactiveChildren: 0
+  Recursive: 0
+  DestroyGameObject: 1
+  IgnoreAnimators: 1
 --- !u!1 &280238734
 GameObject:
   m_ObjectHideFlags: 0
@@ -379,7 +396,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99eb8178091c1cf42804cb0b80d524fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Instrument: {fileID: 873225244}
 --- !u!114 &580731395
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -393,9 +409,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsDraggable: 0
-  InteractReceived: 0
-  InteractEnded: 0
-  IsDragging: 0
   MaintainExistingView: 0
   ConnectedViewNode: {fileID: 0}
 --- !u!65 &580731396
@@ -1108,6 +1121,7 @@ GameObject:
   - component: {fileID: 1588650858}
   - component: {fileID: 1588650857}
   - component: {fileID: 1588650856}
+  - component: {fileID: 1588650863}
   m_Layer: 0
   m_Name: Systems
   m_TagString: Untagged
@@ -1219,6 +1233,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_InitialCapacity: 64
+--- !u!114 &1588650863
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1588650854}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9d2fe0898961774595c14f546a65658, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1732666726
 GameObject:
   m_ObjectHideFlags: 0
@@ -1376,9 +1402,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsDraggable: 0
-  InteractReceived: 0
-  InteractEnded: 0
-  IsDragging: 0
   MaintainExistingView: 0
   ConnectedViewNode: {fileID: 0}
 --- !u!65 &1867574532
