@@ -14,6 +14,8 @@ namespace Astro
         [NonSerialized] public Transform Target;
         [NonSerialized] public CelestialAsset TargetData;
 
+        [NonSerialized] public Renderer TargetRenderer;
+
         public RectTransform Rect;
         public Image Represent2D;
         public PointerListener Button;
@@ -29,6 +31,7 @@ namespace Astro
                 focus.Represent2D.enabled = false;
             }
             focus.TargetData = asset;
+            focus.TargetRenderer = target.GetComponent<Renderer>();
 
             float scaleFactor = 1.5f * Mathf.Pow(0.63f, asset.ApparentMagnitude);
             focus.Rect.localScale = new Vector3(scaleFactor, scaleFactor, 1);
