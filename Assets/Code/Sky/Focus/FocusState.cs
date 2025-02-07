@@ -13,6 +13,7 @@ namespace Astro
     {
         [NonSerialized] public RingBuffer<UIFocus> ActiveFocii = new RingBuffer<UIFocus>(8);
         [NonSerialized] public UIFocus CurrentFocus = null;
+        [NonSerialized] public bool FocusUpdated = false;
         public Graphic FocusOutline;
 
         protected override void OnEnable()
@@ -43,6 +44,7 @@ namespace Astro
 
             // Set new focus
             state.CurrentFocus = focus;
+            state.FocusUpdated = true;
             var dataState = Find.State<DataPacketDistributionState>();
             var data = focus == null ? null : focus.TargetData;
             DataDistributionUtility.QueueConversion(dataState, data);
