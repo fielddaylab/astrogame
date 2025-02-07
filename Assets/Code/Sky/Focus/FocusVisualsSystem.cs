@@ -13,15 +13,20 @@ namespace Astro {
         {
             var spaceCam = Find.State<SpaceCameraState>();
 
-            // TODO: only update on frames where the camera has changed its look vector
-            foreach (UIFocus focus in m_State.ActiveFocii) {
-                // position 2D representation in screen space
-                Vector2 viewPoint = spaceCam.Camera.Camera.WorldToViewportPoint(focus.Target.position, Camera.MonoOrStereoscopicEye.Mono);
-                focus.Rect.anchorMin = focus.Rect.anchorMax = viewPoint;
+            if (!spaceCam.LookUpdatedThisFrame) { return; }
 
-                // TODO: disable offscreen focii (dot product above certain threshold)
-                // TODO: maybe stagger that? but that also interacts strangely with only updating
-                //      on dirty frames, so consider further
+            foreach (UIFocus focus in m_State.ActiveFocii) {
+                if (focus.TargetRenderer.isVisible) {
+                    focus.Represent2D.enabled = true;
+                    focus.Button.enabled = true;
+                    // position 2D representation in screen space
+                    Vector2 viewPoint = spaceCam.Camera.Camera.WorldToViewportPoint(focus.Target.position, Camera.MonoOrStereoscopicEye.Mono);
+                    focus.Rect.anchorMin = focus.Rect.anchorMax = viewPoint;
+                }
+                else {
+                    focus.Represent2D.enabled = false;
+                    focus.Button.enabled = false;
+                }
             }
 
             // position focus outline on currently selected Focusable, if any
