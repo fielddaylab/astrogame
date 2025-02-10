@@ -1,9 +1,20 @@
+
+
+using Astro;
+using FieldDay;
+using FieldDay.Components;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering.Universal.Internal;
-
 namespace Astro {
+
+    public class Spectrograph : BatchedComponent {
+        public MeshRenderer Background;
+        [NonSerialized] public SpectrographMaterialMask CurrentElements;
+        // TODO: use pools for lines?
+        public List<GameObject> Lines;
+    }
+
     [Flags]
     public enum SpectrographMaterialMask {
         Hydrogen = 0x001,
@@ -17,66 +28,43 @@ namespace Astro {
         Titanium = 0x100,
     }
 
-    public class Spectrograph {
-        // gradient background
-        // black lines at the wavelengths of each element
-        public static readonly int MIN_WAVELENGTH = 380;
-        public static readonly int MAX_WAVELENGTH = 750;
+    public static partial class SpectrographUtility {
 
-        public static readonly Dictionary<SpectrographMaterialMask, int[]> Wavelengths = new Dictionary<SpectrographMaterialMask, int[]>() {
-            [SpectrographMaterialMask.Hydrogen] = new int[] { 656, 486, 434, 410 },
-            [SpectrographMaterialMask.Helium] = new int[] { 588 },
-            [SpectrographMaterialMask.Carbon] = new int[] { },
-            [SpectrographMaterialMask.Iron] = new int[] { 517, 496, 467, 438, 431, 382, 358, 302 },
-            [SpectrographMaterialMask.Calcium] = new int[] { 397, 393 },
-            [SpectrographMaterialMask.Sodium] = new int[] { 590, 589 },
-            [SpectrographMaterialMask.Magnesium] = new int[] { 517, 516 },
-            [SpectrographMaterialMask.Oxygen] = new int[] { 687, 628 },
-            [SpectrographMaterialMask.Titanium] = new int[] { }
-        };
-    }
-
-    public static class SpectrographUtils {
-        public static List<int> GetWavelengths(SpectrographMaterialMask mask) {
-            List<int> result = new List<int>();
-            // TODO: iterate through flags instead..?
-            if (mask.HasFlag(SpectrographMaterialMask.Hydrogen)) {
-                result.AddRange(Spectrograph.Wavelengths[SpectrographMaterialMask.Hydrogen]);
-            }
-            if (mask.HasFlag(SpectrographMaterialMask.Helium)) {
-                result.AddRange(Spectrograph.Wavelengths[SpectrographMaterialMask.Helium]);
-            }
-            if (mask.HasFlag(SpectrographMaterialMask.Carbon)) {
-                result.AddRange(Spectrograph.Wavelengths[SpectrographMaterialMask.Carbon]);
-            }
-            if (mask.HasFlag(SpectrographMaterialMask.Iron)) {
-                result.AddRange(Spectrograph.Wavelengths[SpectrographMaterialMask.Iron]);
-            }
-            if (mask.HasFlag(SpectrographMaterialMask.Calcium)) {
-                result.AddRange(Spectrograph.Wavelengths[SpectrographMaterialMask.Calcium]);
-            }
-            if (mask.HasFlag(SpectrographMaterialMask.Sodium)) {
-                result.AddRange(Spectrograph.Wavelengths[SpectrographMaterialMask.Sodium]);
-            }
-            if (mask.HasFlag(SpectrographMaterialMask.Magnesium)) {
-                result.AddRange(Spectrograph.Wavelengths[SpectrographMaterialMask.Magnesium]);
-            }
-            if (mask.HasFlag(SpectrographMaterialMask.Oxygen)) {
-                result.AddRange(Spectrograph.Wavelengths[SpectrographMaterialMask.Oxygen]);
-            }
-            if (mask.HasFlag(SpectrographMaterialMask.Titanium)) {
-                result.AddRange(Spectrograph.Wavelengths[SpectrographMaterialMask.Titanium]);
-            }
-            return result;
+        public static void SetMaterials(Spectrograph graph, SpectrographMaterialMask elements) {
+            graph.CurrentElements = elements;
+            DisplaySpectrum(graph);
+        }
+        public static void ClearMaterials(Spectrograph graph) {
+            graph.CurrentElements = 0;
+            DisplaySpectrum(graph);
         }
 
-        public static List<float> GetNormalizedWavelengths(SpectrographMaterialMask mask) {
-            List<float> result = new List<float>();
-            GetWavelengths(mask).ForEach(wavelength => {
-                result.Add(Mathf.InverseLerp(Spectrograph.MIN_WAVELENGTH, Spectrograph.MAX_WAVELENGTH, wavelength));
-            });
-            return result;
+        public static void DisplaySpectrum(Spectrograph graph) {
+            SpectrometerState state = Find.State<SpectrometerState>();
+            List<float> linePos = GetNormalizedWavelengths(graph.CurrentElements, state);
+            UpdateBackground(graph, state);
+            EqualizeLineNums(graph, linePos.Count, state);
+            for (int i = 0; i < linePos.Count; i++) {
+                graph.Lines[i].SetActive(true);
+                graph.Lines[i].transform.position.Set(linePos[i] - 0.5f, 0f, -0.01f);
+            }
         }
-       
+
+        private static void EqualizeLineNums(Spectrograph graph, int numLines, SpectrometerState state) {
+            int lineNumDiff = graph.Lines.Count - numLines;
+            if (lineNumDiff > 0) {
+                for (int i = 0; i < lineNumDiff; i++) {
+                    graph.Lines.Add(GameObject.Instantiate(state.LinePrefab));
+                }
+            } else if (lineNumDiff < 0) {
+                for (int i = 0; i < -lineNumDiff; i++) {
+                    graph.Lines[graph.Lines.Count - i - 1].SetActive(false);
+                }
+            }
+        }
+
+        private static void UpdateBackground(Spectrograph graph, SpectrometerState state) {
+            graph.Background.material = graph.CurrentElements == 0 ? state.BlankBackground : state.SpectrumBackground;
+        }
     }
 }
