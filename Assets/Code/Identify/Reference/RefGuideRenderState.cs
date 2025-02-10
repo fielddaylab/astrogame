@@ -1,5 +1,6 @@
 
 
+using System;
 using FieldDay;
 using FieldDay.SharedState;
 using TMPro;
@@ -17,7 +18,7 @@ namespace Astro {
         public TMP_Text[] RightRows;
         public Image BackgroundImage;
 
-        [HideInInspector] public bool RenderNeedsRefresh;
+        [NonSerialized] public bool RenderNeedsRefresh;
     }
 
 

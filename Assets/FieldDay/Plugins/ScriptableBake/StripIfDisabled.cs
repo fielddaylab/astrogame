@@ -21,7 +21,7 @@ namespace ScriptableBake {
 
         bool IBaked.Bake(BakeFlags flags, BakeContext context) {
             if (isActiveAndEnabled) {
-                Baking.Destroy(this);
+                Baking.Destroy(this, true);
             } else {
                 Baking.Destroy(gameObject);
             }

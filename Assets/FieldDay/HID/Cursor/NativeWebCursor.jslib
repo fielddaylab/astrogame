@@ -20,9 +20,11 @@ var NativeWebCursorLib = {
             var canvas = allCanvases[i];
             if (canvas.id.includes("unity") || (canvas.parentElement && canvas.parentElement.id.includes("unity"))) {
                 NWCCache.canvasOverride = canvas;
-                break;
+                return true;
             }
         }
+
+		return false;
     },
 
     /**

@@ -1,5 +1,7 @@
+using BeauUtil.UI;
 using FieldDay;
 using FieldDay.Components;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,12 +11,14 @@ namespace Astro
 {
     public class UIFocus : BatchedComponent
     {
-        [HideInInspector] public Transform Target;
-        [HideInInspector] public CelestialAsset TargetData;
+        [NonSerialized] public Transform Target;
+        [NonSerialized] public CelestialAsset TargetData;
+
+        [NonSerialized] public Renderer TargetRenderer;
 
         public RectTransform Rect;
         public Image Represent2D;
-        public Button Button;
+        public PointerListener Button;
     }
 
     public static partial class FocusableUtility
@@ -27,6 +31,7 @@ namespace Astro
                 focus.Represent2D.enabled = false;
             }
             focus.TargetData = asset;
+            focus.TargetRenderer = target.GetComponent<Renderer>();
 
             float scaleFactor = 1.5f * Mathf.Pow(0.63f, asset.ApparentMagnitude);
             focus.Rect.localScale = new Vector3(scaleFactor, scaleFactor, 1);

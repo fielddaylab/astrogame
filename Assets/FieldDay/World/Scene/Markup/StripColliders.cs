@@ -33,7 +33,7 @@ namespace FieldDay.Scenes {
                 }
             }
 
-            Baking.Destroy(this);
+            Baking.Destroy(this, true);
             return true;
         }
 

@@ -4,18 +4,19 @@ using FieldDay;
 using FieldDay.Assets;
 using FieldDay.HID;
 using FieldDay.SharedState;
+using System;
 using System.Collections;
 using UnityEngine;
 
 namespace Astro {
     public sealed class DocumentBoardState : SharedStateComponent, IRegistrationCallbacks {
-        [HideInInspector] public bool EnableDocumentInteraction;
-        [HideInInspector] public DocumentInteractable SelectedDocument;
-        [HideInInspector] public Vector3 LastMousePos;
-        [HideInInspector] public bool InteractedThisFrame;
-        [HideInInspector] public Vector3 StoredDocPos;
-        [HideInInspector] public DocumentInteractable DocZoomed;
-        [HideInInspector] public Routine DocumentRoutine;
+        [NonSerialized] public bool EnableDocumentInteraction;
+        [NonSerialized] public DocumentInteractable SelectedDocument;
+        [NonSerialized] public Vector3 LastMousePos;
+        [NonSerialized] public bool InteractedThisFrame;
+        [NonSerialized] public Vector3 StoredDocPos;
+        [NonSerialized] public DocumentInteractable DocZoomed;
+        [NonSerialized] public Routine DocumentRoutine;
 
         public Transform DocumentParent;
 

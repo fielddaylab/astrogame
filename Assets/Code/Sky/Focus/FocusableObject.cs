@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using FieldDay.Components;
 using UnityEngine.UI;
+using System;
 
 namespace Astro {
     public class FocusableObject : BatchedComponent
     {
-        [HideInInspector] public bool BecameVisible;
-        [HideInInspector] public bool BecameInvisible;
+        [NonSerialized] public bool BecameVisible;
+        [NonSerialized] public bool BecameInvisible;
 
         #region Unity Callbacks
 

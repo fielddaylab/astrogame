@@ -56,24 +56,24 @@ namespace Astro {
 
         public string ToString(HmsPrefix prefix) {
             if (prefix == HmsPrefix.Hms) {
-                return string.Format("{0}h {1}m {2:F4}s", Hours.ToStringLookup(), Minutes.ToStringLookup(), Seconds);
+                return string.Format("{0}h {1}m {2:F1}s", Hours.ToStringLookup(), Minutes.ToStringLookup(), Seconds);
             }
 
-            return string.Format("{0}{1}\u00B0 {2}' {3:F4}\"", Hours >= 0 ? "+" : "", Hours.ToStringLookup(), Minutes.ToStringLookup(), Seconds);
+            return string.Format("{0}{1}\u00B0 {2}' {3:F1}\"", Hours >= 0 ? "+" : "", Hours.ToStringLookup(), Minutes.ToStringLookup(), Seconds);
         }
 
         public void ToString(StringBuilder sb, HmsPrefix prefix) {
             if (prefix == HmsPrefix.Hms) {
                 sb.AppendNoAlloc(Hours).Append("h ")
-                    .AppendNoAlloc(Minutes, 1).Append("m ")
-                    .AppendNoAlloc(Seconds, 1).Append('s');
+                    .AppendNoAlloc(Minutes, 0, 2).Append("m ")
+                    .AppendNoAlloc(Seconds, 1, 2).Append('s');
             } else {
                 if (Hours >= 0) {
                     sb.Append('+');
                 }
                 sb.AppendNoAlloc(Hours).Append("\u00B0 ")
-                    .AppendNoAlloc(Minutes, 1).Append("' ")
-                    .AppendNoAlloc(Seconds, 1).Append('"');
+                    .AppendNoAlloc(Minutes, 0, 2).Append("' ")
+                    .AppendNoAlloc(Seconds, 1, 2).Append('"');
             }
         }
 

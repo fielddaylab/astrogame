@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 43cf997479c7b1648bc4df1c83250333, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -96,7 +96,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000006, guid: 4698a610f7f23bb45a6a84676fe51015, type: 2}
+  m_LightingDataAsset: {fileID: 112000002, guid: 4698a610f7f23bb45a6a84676fe51015, type: 2}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -233,9 +233,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsDraggable: 0
-  InteractReceived: 0
-  InteractEnded: 0
-  IsDragging: 0
   MaintainExistingView: 0
   ConnectedViewNode: {fileID: 0}
 --- !u!65 &17129579
@@ -388,9 +385,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsDraggable: 0
-  InteractReceived: 0
-  InteractEnded: 0
-  IsDragging: 0
   MaintainExistingView: 1
   ConnectedViewNode: {fileID: 0}
 --- !u!114 &38740172
@@ -548,9 +542,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsDraggable: 0
-  InteractReceived: 0
-  InteractEnded: 0
-  IsDragging: 0
   MaintainExistingView: 0
   ConnectedViewNode: {fileID: 0}
 --- !u!65 &112243164
@@ -704,9 +695,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsDraggable: 0
-  InteractReceived: 0
-  InteractEnded: 0
-  IsDragging: 0
   MaintainExistingView: 0
   ConnectedViewNode: {fileID: 0}
 --- !u!65 &134381869
@@ -860,9 +848,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsDraggable: 0
-  InteractReceived: 0
-  InteractEnded: 0
-  IsDragging: 0
   MaintainExistingView: 0
   ConnectedViewNode: {fileID: 0}
 --- !u!65 &204147534
@@ -945,6 +930,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 248066390}
+  - component: {fileID: 248066391}
   m_Layer: 0
   m_Name: PuzzlePanelRoot
   m_TagString: Untagged
@@ -974,6 +960,22 @@ Transform:
   - {fileID: 11419036}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!114 &248066391
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 248066389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ae620349e7bce24688d2ab26f9be5a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DestroyInactiveChildren: 0
+  Recursive: 0
+  DestroyGameObject: 1
+  IgnoreAnimators: 1
 --- !u!1 &261692859
 GameObject:
   m_ObjectHideFlags: 0
@@ -1053,9 +1055,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsDraggable: 0
-  InteractReceived: 0
-  InteractEnded: 0
-  IsDragging: 0
   MaintainExistingView: 1
   ConnectedViewNode: {fileID: 0}
 --- !u!65 &261692864
@@ -1209,9 +1208,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsDraggable: 0
-  InteractReceived: 0
-  InteractEnded: 0
-  IsDragging: 0
   MaintainExistingView: 0
   ConnectedViewNode: {fileID: 0}
 --- !u!65 &315858423
@@ -1651,9 +1647,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsDraggable: 0
-  InteractReceived: 0
-  InteractEnded: 0
-  IsDragging: 0
   MaintainExistingView: 0
   ConnectedViewNode: {fileID: 0}
 --- !u!65 &799606383
@@ -1807,9 +1800,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsDraggable: 0
-  InteractReceived: 0
-  InteractEnded: 0
-  IsDragging: 0
   MaintainExistingView: 0
   ConnectedViewNode: {fileID: 0}
 --- !u!65 &810290056
@@ -1883,6 +1873,37 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 810290051}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1039761604
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1039761605}
+  m_Layer: 0
+  m_Name: PuzzPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1039761605
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1039761604}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.4642148, y: 12.053621, z: -1.79456}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1049859525
 GameObject:
   m_ObjectHideFlags: 0
@@ -1963,9 +1984,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsDraggable: 0
-  InteractReceived: 0
-  InteractEnded: 0
-  IsDragging: 0
   MaintainExistingView: 0
   ConnectedViewNode: {fileID: 0}
 --- !u!65 &1049859530
@@ -2966,9 +2984,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsDraggable: 0
-  InteractReceived: 0
-  InteractEnded: 0
-  IsDragging: 0
   MaintainExistingView: 0
   ConnectedViewNode: {fileID: 0}
 --- !u!65 &1489148325
@@ -3132,7 +3147,7 @@ MonoBehaviour:
     m_DefaultPoolRoot: {fileID: 0}
     m_DefaultSpawnRoot: {fileID: 0}
     m_ResetTransformOnAlloc: 1
-  PoolRoot: {fileID: 11419036}
+  PoolRoot: {fileID: 1039761605}
 --- !u!114 &1525648894
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3181,11 +3196,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb1f2f354c26eba4da7950ace1e6accc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SelectedRefClassification: {fileID: 0}
-  CurrentPage: {fileID: 0}
-  CurrentPageNum: 0
-  PageList: {fileID: 0}
-  SubmissionActive: 0
   RefGuideRoot: {fileID: 0}
   SelectionSprite: {fileID: 0}
   SubmitButton: {fileID: 0}
@@ -3535,9 +3545,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsDraggable: 0
-  InteractReceived: 0
-  InteractEnded: 0
-  IsDragging: 0
   MaintainExistingView: 0
   ConnectedViewNode: {fileID: 0}
 --- !u!65 &1693005081
@@ -3709,6 +3716,8 @@ GameObject:
   - component: {fileID: 1761047610}
   - component: {fileID: 1761047609}
   - component: {fileID: 1761047608}
+  - component: {fileID: 1761047615}
+  - component: {fileID: 1761047616}
   m_Layer: 0
   m_Name: Systems
   m_TagString: Untagged
@@ -3835,6 +3844,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_InitialCapacity: 64
+--- !u!114 &1761047615
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1761047605}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9b8080a2b0f4df48b01e12efe824f1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_InitialCapacity: 64
+--- !u!114 &1761047616
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1761047605}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9d2fe0898961774595c14f546a65658, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1967424764
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3996,9 +4030,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsDraggable: 0
-  InteractReceived: 0
-  InteractEnded: 0
-  IsDragging: 0
   MaintainExistingView: 0
   ConnectedViewNode: {fileID: 0}
 --- !u!65 &1974358937
@@ -4134,6 +4165,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2095107881}
+  - component: {fileID: 2095107882}
   m_Layer: 0
   m_Name: PuzzleReferenceLogic
   m_TagString: Untagged
@@ -4158,6 +4190,22 @@ Transform:
   - {fileID: 1525648891}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2095107882
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2095107880}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ae620349e7bce24688d2ab26f9be5a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DestroyInactiveChildren: 0
+  Recursive: 0
+  DestroyGameObject: 1
+  IgnoreAnimators: 1
 --- !u!1001 &2097776122
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4764,7 +4812,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!1 &2993064300796261402
 GameObject:
@@ -5446,3 +5494,4 @@ SceneRoots:
   m_Roots:
   - {fileID: 2095107881}
   - {fileID: 248066390}
+  - {fileID: 1039761605}

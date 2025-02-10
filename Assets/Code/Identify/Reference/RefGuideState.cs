@@ -9,11 +9,11 @@ using UnityEngine;
 namespace Astro {
     public class RefGuideState : SharedStateComponent, IRegistrationCallbacks {
         [Header("Data")]
-        [HideInInspector] public ReferenceClassification SelectedRefClassification;
-        [HideInInspector] public ReferencePageAsset CurrentPage;
-        [HideInInspector] public int CurrentPageNum;
-        [HideInInspector] public ReferencePageList PageList;
-        [HideInInspector] public bool SubmissionActive;
+        [NonSerialized] public ReferenceClassification SelectedRefClassification;
+        [NonSerialized] public ReferencePageAsset CurrentPage;
+        [NonSerialized] public int CurrentPageNum;
+        [NonSerialized] public ReferencePageList PageList;
+        [NonSerialized] public bool SubmissionActive;
 
         [Header("Game Objects")]
         public Transform RefGuideRoot;

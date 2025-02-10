@@ -18,7 +18,7 @@ namespace FieldDay.Scenes {
 
         bool IBaked.Bake(BakeFlags flags, BakeContext context) {
             TryRevert();
-            Baking.Destroy(this);
+            Baking.Destroy(this, true);
             return true;
         }
 

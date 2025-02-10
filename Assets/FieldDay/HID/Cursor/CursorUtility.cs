@@ -5,6 +5,7 @@
 using System.Runtime.InteropServices;
 using BeauUtil;
 using UnityEngine;
+using BeauUtil.Debugger;
 
 namespace FieldDay.HID {
     static public class CursorUtility {
@@ -51,7 +52,9 @@ namespace FieldDay.HID {
         /// </summary>
         static internal void PlatformInit() {
 #if USE_JSLIB
-            NativeWebCursor_AutoFindCanvas();
+            if (!NativeWebCursor_AutoFindCanvas()) {
+                Log.Error("[CursorUtillity] Unable to locate canvas");
+            }
             Cursor.visible = NativeWebCursor_IsVisible();
 #endif // USE_JSLIB
         }
@@ -59,7 +62,7 @@ namespace FieldDay.HID {
 #if USE_JSLIB
 
         [DllImport("__Internal")]
-        static private extern void NativeWebCursor_AutoFindCanvas();
+        static private extern bool NativeWebCursor_AutoFindCanvas();
 
         [DllImport("__Internal")]
         static private extern void NativeWebCursor_SetCanvasId(string canvasId);
