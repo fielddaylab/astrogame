@@ -26,12 +26,7 @@ namespace Astro
         {
             //instrument.UnlockText.SetText(instrument.PointsToUnlock.ToStringLookup());
 
-            if (instrument.PointsToUnlock < PointsUtility.GetPoints()) {
-                SetInstrumentUnlocked(instrument, false);
-                return;
-            } else {
-                SetInstrumentUnlocked(instrument, true);
-            }
+            SetInstrumentUnlocked(instrument, true);
         }
 
         [LeafMember("SetInstrumentUnlocked")]

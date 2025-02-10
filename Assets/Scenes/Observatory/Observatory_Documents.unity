@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 43cf997479c7b1648bc4df1c83250333, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -96,7 +96,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000002, guid: 46915dae230b991459d28b25b023ca60, type: 2}
+  m_LightingDataAsset: {fileID: 112000006, guid: 4698a610f7f23bb45a6a84676fe51015, type: 2}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -127,6 +127,27 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8710596512342464955, guid: f3a419d7aa4452e44bd05d33d4df79ee, type: 3}
   m_PrefabInstance: {fileID: 4817899677156289496}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &720782429 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4461923492493313455, guid: f3a419d7aa4452e44bd05d33d4df79ee, type: 3}
+  m_PrefabInstance: {fileID: 4817899677156289496}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &720782432
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 720782429}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ae620349e7bce24688d2ab26f9be5a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DestroyInactiveChildren: 0
+  Recursive: 0
+  DestroyGameObject: 0
+  IgnoreAnimators: 1
 --- !u!1 &1419699319
 GameObject:
   m_ObjectHideFlags: 0
@@ -137,6 +158,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1419699320}
   - component: {fileID: 1419699321}
+  - component: {fileID: 1419699322}
   m_Layer: 0
   m_Name: Systems
   m_TagString: Untagged
@@ -169,6 +191,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 90ad44b3ffa696741bd667cc545759aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1419699322
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1419699319}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9d2fe0898961774595c14f546a65658, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1605501499
@@ -215,12 +249,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af33af2c68d879d49a815abcba2cce4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  EnableDocumentInteraction: 0
-  SelectedDocument: {fileID: 0}
-  LastMousePos: {x: 0, y: 0, z: 0}
-  InteractedThisFrame: 0
-  StoredDocPos: {x: 0, y: 0, z: 0}
-  DocZoomed: {fileID: 0}
   DocumentParent: {fileID: 695487089}
   DocumentAssets: {fileID: 11400000, guid: e684cd9a9dde3a547af290a35f145d63, type: 2}
   FollowSpeed: 0.15
@@ -235,6 +263,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1619113320}
+  - component: {fileID: 1619113321}
   m_Layer: 0
   m_Name: DocumentsLogic
   m_TagString: Untagged
@@ -259,6 +288,22 @@ Transform:
   - {fileID: 1605501500}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1619113321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1619113319}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ae620349e7bce24688d2ab26f9be5a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DestroyInactiveChildren: 0
+  Recursive: 0
+  DestroyGameObject: 1
+  IgnoreAnimators: 1
 --- !u!1001 &4817899677156289496
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -331,6 +376,9 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4461923492493313455, guid: f3a419d7aa4452e44bd05d33d4df79ee, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 720782432}
     - targetCorrespondingSourceObject: {fileID: 5061099486439982194, guid: f3a419d7aa4452e44bd05d33d4df79ee, type: 3}
       insertIndex: -1
       addedObject: {fileID: 0}

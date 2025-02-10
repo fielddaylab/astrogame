@@ -353,6 +353,7 @@ GameObject:
   - component: {fileID: 9019308401515433716}
   - component: {fileID: 827926755558174731}
   - component: {fileID: 4625648957106703460}
+  - component: {fileID: 8804467964694034151}
   m_Layer: 0
   m_Name: SciencePointOutput
   m_TagString: Untagged
@@ -369,7 +370,7 @@ Transform:
   m_GameObject: {fileID: 5104736621827665501}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -3.07, y: 14.22, z: -3.44}
+  m_LocalPosition: {x: -3.102, y: 14.486, z: -2.413}
   m_LocalScale: {x: 0.22000001, y: 0.22000001, z: 0.22000001}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -415,7 +416,7 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!33 &4625648957106703460
 MeshFilter:
@@ -425,6 +426,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5104736621827665501}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &8804467964694034151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5104736621827665501}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da53921b37e75734fad5b6f2f4c4b661, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Layer: 0
+  m_Order: 1
 --- !u!1 &6920550492913815139
 GameObject:
   m_ObjectHideFlags: 0
@@ -678,10 +693,10 @@ MonoBehaviour:
   Result: {fileID: 0}
   PointsDisplay: {fileID: 8084491342955179796}
   PointsOutput: {fileID: 2469501399294864572}
-  UnlitPipMaterial: {fileID: 0}
-  LitPipMaterial: {fileID: 0}
-  SuccessMaterial: {fileID: 0}
-  FailureMaterial: {fileID: 0}
+  UnlitPipMaterial: {fileID: 2100000, guid: 175e59bb04fa5ba4680c1c551d5bdf3b, type: 2}
+  LitPipMaterial: {fileID: 2100000, guid: 5e13f1c50c370e546a31e40d6e69486f, type: 2}
+  SuccessMaterial: {fileID: 2100000, guid: 5e13f1c50c370e546a31e40d6e69486f, type: 2}
+  FailureMaterial: {fileID: 2100000, guid: 5e13f1c50c370e546a31e40d6e69486f, type: 2}
 --- !u!114 &6515612524379290697
 MonoBehaviour:
   m_ObjectHideFlags: 0
