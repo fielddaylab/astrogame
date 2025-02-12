@@ -11,6 +11,7 @@ namespace Astro {
     }
 
     public enum HistoricalPatternType {
+        None = 0,
         Constant,
         SineWave,
         TriangularWave,
