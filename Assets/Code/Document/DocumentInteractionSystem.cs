@@ -14,7 +14,6 @@ namespace Astro {
             if (!m_State.EnableDocumentInteraction) return;
 
             if (m_State.SelectedDocument != null && !m_State.DocumentRoutine.Exists()) {
-                // waits to complete current routine before moving - "jerky" movement
                 DocumentUtility.MoveSelectedToMouse(m_State);
             }
 
@@ -28,7 +27,7 @@ namespace Astro {
             state.LastMousePos = Input.mousePosition;
             if (Physics.Raycast(ray, out RaycastHit hit, 10f, LayerMask.GetMask("DocumentSurface"))) {
                 // lerp document from current position to new target position
-                LerpToTarget(state.SelectedDocument.transform, hit.point, state.FollowSpeed);
+                LerpToTarget(state.SelectedDocument.transform, hit.transform.InverseTransformPoint(hit.point), state.FollowSpeed);
                 //state.DocumentRoutine.Replace(MoveToPoint(state.SelectedDocument.transform, hit.point, state.FollowSpeed));
             } else {
                 DeselectDocument(state);
@@ -36,9 +35,9 @@ namespace Astro {
         }
 
         private static void LerpToTarget(Transform transform, Vector3 target, float percent) {
-            transform.SetPosition(Vector3.Lerp(transform.position, target, percent), Axis.XY);
-            if (Vector3.Distance(transform.position, target) < 0.1f) {
-                transform.SetPosition(target);
+            transform.SetPosition(Vector3.Lerp(transform.localPosition, target, percent), Axis.XY, Space.Self);
+            if (Vector3.Distance(transform.localPosition, target) < 0.1f) {
+                transform.SetPosition(target, Axis.XYZ, Space.Self);
             }
         }
     }
