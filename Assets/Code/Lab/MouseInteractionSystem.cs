@@ -31,8 +31,13 @@ namespace Astro {
                             return;
                         }
                     }
+
                     if (hit.collider.TryGetComponent(out LabInteractable interactable)) {
                         UseLabInteractable(interactable);
+                    }
+
+                    if (hit.collider.TryGetComponent(out ViewLink link)) {
+                        ViewNavUtility.MoveByLink(Find.State<ViewState>(), link);
                     }
 
                     Game.Input.ConsumeAllInputForFrame();
@@ -66,9 +71,6 @@ namespace Astro {
 
         private void UseLabInteractable(LabInteractable interactable) {
             interactable.InteractReceived = true;
-            if (!interactable.MaintainExistingView) {
-                ViewNavUtility.MoveToNode(Find.State<ViewState>(), interactable.ConnectedViewNode);
-            }
             m_StateA.CurrInteractable = interactable;
             m_StateA.StartMousePos = Input.mousePosition;
             m_StateA.CurrMousePos = Input.mousePosition;

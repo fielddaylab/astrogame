@@ -11,9 +11,6 @@ namespace Astro {
         [NonSerialized] public bool InteractReceived = false;
         [NonSerialized] public bool InteractEnded = false;
         [NonSerialized] public bool IsDragging = false;
-        [Space(10)]
-        public bool MaintainExistingView = false;
-        public ViewNode ConnectedViewNode;
         [NonSerialized] public CursorHint Cursor;
 
         private void Awake() {

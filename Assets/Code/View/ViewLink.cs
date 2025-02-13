@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using BeauRoutine;
 using BeauUtil;
 using FieldDay;
 using FieldDay.Components;
+using FieldDay.Scenes;
 using ScriptableBake;
 using UnityEngine;
 
@@ -10,14 +12,17 @@ namespace Astro {
     /// <summary>
     /// Link to a ViewNode.
     /// </summary>
-    public sealed class ViewLink : BatchedComponent, IRegistrationCallbacks, IBaked {
+    [PreloadOrder(100)]
+    public sealed class ViewLink : BatchedComponent, IRegistrationCallbacks, IBaked, IScenePreload {
         public ViewNode TargetNode;
+        public SerializedHash32 TargetNodeId;
 
         [Header("Transition")]
         public TweenSettings Transition = new TweenSettings(0.3f, Curve.Smooth);
         public Transform TransitionControlPoint;
 
         [Header("Grouping")]
+        public Collider Clickable;
         public ActiveGroup ObjectGroup;
         public SerializedHash32 GroupId;
 
@@ -42,12 +47,28 @@ namespace Astro {
             ViewNavUtility.RefreshLinkState(this, mgr);
         }
 
+        IEnumerator<WorkSlicer.Result?> IScenePreload.Preload() {
+            if (!TargetNode) {
+                TargetNode = ViewNavUtility.GetNodeById(TargetNodeId);
+            }
+            return null;
+        }
+
 #if UNITY_EDITOR
         int IBaked.Order { get { return 10000; } }
 
         bool IBaked.Bake(BakeFlags flags, BakeContext context) {
             ObjectGroup.SetActive(false);
+            if (Clickable) {
+                Clickable.enabled = false;
+            }
             return false;
+        }
+
+        private void Reset() {
+            if (!Clickable) {
+                Clickable = GetComponent<Collider>();
+            }
         }
 #endif // UNITY_EDITOR
     }
@@ -74,6 +95,9 @@ namespace Astro {
         static public void RefreshLinkState(ViewLink link, ViewState state) {
             bool shouldBeActive = LinkShouldBeActive(link, state);
             link.ObjectGroup.SetActive(shouldBeActive);
+            if (link.Clickable) {
+                link.Clickable.enabled = shouldBeActive;
+            }
             if (Ref.Replace(ref link.LastKnownActiveState, shouldBeActive)) {
                 if (shouldBeActive) {
                     state.ActiveLinks.PushBack(link);
