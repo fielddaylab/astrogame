@@ -913,6 +913,7 @@ GameObject:
   - component: {fileID: 963194232}
   - component: {fileID: 963194233}
   - component: {fileID: 963194234}
+  - component: {fileID: 963194235}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1093,6 +1094,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9afd8006dfb7e2541b382a608459fcba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &963194235
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963194225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90eb8994f6f0fe1459576688de5ffb40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DriftX: 0.05
+  DriftY: 0.05
+  PeriodX: 17
+  PeriodY: 19
+  OffsetX: 5
+  OffsetY: 29
 --- !u!1 &1084366957
 GameObject:
   m_ObjectHideFlags: 0
@@ -1829,14 +1848,6 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1602048980338692044, guid: 66ba60e80d8db5248b42b371e729c63d, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 87.449715
-      objectReference: {fileID: 0}
-    - target: {fileID: 1602048980338692044, guid: 66ba60e80d8db5248b42b371e729c63d, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -7.2751427
-      objectReference: {fileID: 0}
     - target: {fileID: 1610199889484999825, guid: 66ba60e80d8db5248b42b371e729c63d, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -1917,10 +1928,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2253339329467593522, guid: 66ba60e80d8db5248b42b371e729c63d, type: 3}
-      propertyPath: m_Color.a
-      value: 0.8235294
-      objectReference: {fileID: 0}
     - target: {fileID: 2923649399257340192, guid: 66ba60e80d8db5248b42b371e729c63d, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1945,17 +1952,13 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4536791061467115591, guid: 66ba60e80d8db5248b42b371e729c63d, type: 3}
-      propertyPath: m_IsActive
-      value: 1
+    - target: {fileID: 3436767965260353324, guid: 66ba60e80d8db5248b42b371e729c63d, type: 3}
+      propertyPath: m_AdditionalShaderChannelsFlag
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 7876104875864266604, guid: 66ba60e80d8db5248b42b371e729c63d, type: 3}
       propertyPath: m_Name
       value: SubtitleCanvas
-      objectReference: {fileID: 0}
-    - target: {fileID: 7876104875864266604, guid: 66ba60e80d8db5248b42b371e729c63d, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

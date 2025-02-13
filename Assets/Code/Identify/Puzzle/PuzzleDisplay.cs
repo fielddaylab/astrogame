@@ -52,7 +52,7 @@ namespace Astro
             for (int c = 0; c < display.NumCols; c++)
             {
                 var currHeader = display.Headers[c];
-                currHeader.transform.SetParent(display.HeaderAnchorPos);
+                currHeader.transform.SetParent(display.HeaderAnchorPos, false);
 
                 // scale
                 var currScale = currHeader.transform.lossyScale;
@@ -80,7 +80,7 @@ namespace Astro
                 cumulativePos.x = -display.BaseCellWidth;
                 for (int c = 0; c < display.NumCols; c++) {
                     var currCell = display.Cells[r * display.NumCols + c];
-                    currCell.transform.SetParent(display.CellAnchorPos);
+                    currCell.transform.SetParent(display.CellAnchorPos, false);
 
                     // scale
                     if (currCell.DataSlot.Displays.Length != 0)

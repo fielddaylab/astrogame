@@ -49,7 +49,7 @@ namespace Astro {
             }
 
             // drag
-            if (!isCurrentlyDragging && Game.Input.IsMouseDown(FieldDay.HID.MouseButton.Left)) {
+            if (Game.Input.IsMouseDown(FieldDay.HID.MouseButton.Left)) {
                 if (m_StateA.CurrInteractable && m_StateA.CurrInteractable.IsDraggable)
                 {
                     m_StateA.CurrMousePos = Input.mousePosition;
