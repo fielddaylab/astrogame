@@ -1,29 +1,33 @@
 using Astro;
-using JetBrains.Annotations;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using FieldDay;
+using BeauRoutine;
+using BeauUtil;
 using UnityEngine;
+using System.Collections;
+
+public enum buttons
+{
+    up,
+    down,
+    left,
+    right,
+    zoomIn,
+    zoomOut,
+    none
+}
 
 public class AnalogInteract : MonoBehaviour
 {
-    /*
-     * btnName options:
-     * up
-     * down
-     * left
-     * right
-     * zoomIn
-     * zoomOut
-     */
-    public string btnName;
-
-    public SpaceCameraControllerSystem cameraController;
+    public buttons btnName;
 
     public Material defaultMaterial;
     public Material pressedMaterial;
 
+    public Vector3 pushOffset;
+
     private MeshRenderer buttonRenderer;
+
+    private Vector3 startPos;
 
     /*
      * Couldn't figure out adding text to the buttons
@@ -38,6 +42,8 @@ public class AnalogInteract : MonoBehaviour
 
     private void Start()
     {
+        Find.State<SpaceCameraState>().buttonHeld = buttons.none;
+        startPos = transform.position;
 
         buttonRenderer = GetComponent<MeshRenderer>();
 
@@ -49,7 +55,7 @@ public class AnalogInteract : MonoBehaviour
 
         if (defaultMaterial != null)
         {
-            buttonRenderer.material = defaultMaterial;
+            buttonRenderer.sharedMaterial = defaultMaterial;
         }
         else
         {
@@ -61,13 +67,13 @@ public class AnalogInteract : MonoBehaviour
     {
         if (buttonRenderer != null && pressedMaterial != null)
         {
-            buttonRenderer.material = pressedMaterial;
+            buttonRenderer.sharedMaterial = pressedMaterial;
         }
 
-        transform.position += new Vector3 (0,-.02f,.01f);
+        Routine.Stop("pressUp");
+        Routine.Start(pressDown(transform, (startPos + pushOffset)));
 
-        cameraController.AnalogButtonHelper(btnName, true);
-        Debug.Log("Button Down: " + btnName);
+        Find.State<SpaceCameraState>().buttonHeld = btnName;
 
     }
 
@@ -75,12 +81,25 @@ public class AnalogInteract : MonoBehaviour
     {
         if (buttonRenderer != null && defaultMaterial != null)
         {
-            buttonRenderer.material = defaultMaterial;
+            buttonRenderer.sharedMaterial = defaultMaterial;
         }
 
-        transform.position += new Vector3(0,.02f,-.01f);
+        Routine.Stop("pressDown");
+        Routine.Start(pressDown(transform, startPos));
 
-        cameraController.AnalogButtonHelper(btnName, false);
-        Debug.Log("Button Up: " + btnName);
+        Find.State<SpaceCameraState>().buttonHeld = buttons.none;
     }
+
+    private static IEnumerator pressDown(Transform doc, Vector3 target)
+    {
+        yield return doc.MoveTo((target), 0.3f).Ease(Curve.CubeOut);
+        yield return null;
+    }
+
+    private static IEnumerator pressUp(Transform doc, Vector3 target)
+    {
+        yield return doc.MoveTo((target), 0.3f).Ease(Curve.CubeIn);
+        yield return null;
+    }
+
 }

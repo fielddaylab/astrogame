@@ -9,8 +9,6 @@ namespace Astro
 {
     public class SpaceCameraControllerSystem : SharedStateSystemBehaviour<SpaceCameraState>
     {
-        private string buttonHeld = "";
-
         public override void ProcessWork(float deltaTime)
         {
             base.ProcessWork(deltaTime);
@@ -235,42 +233,32 @@ namespace Astro
 
             return Mathf.Clamp(lfAngle, lfMin, lfMax);
         }
-        public void AnalogButtonHelper(string btnName, bool held)
-        {
-            if (held)
-            {
-                buttonHeld = btnName;
-            }
-            else
-            {
-                buttonHeld = "";
-            }
-        }
+        
         private void ProcessAnalogInput()
         {
             float newZoom;
-            switch (buttonHeld)
+            switch (m_State.buttonHeld)
             {
-                case "up":
+                case buttons.up:
                     AdjustVertLook(-m_State.SmoothLookIncrement / m_State.Camera.FOVPlane.Zoom);
                     break;
-                case "down":
+                case buttons.down:
                     AdjustVertLook(m_State.SmoothLookIncrement / m_State.Camera.FOVPlane.Zoom);
                     break;
-                case "left":
+                case buttons.left:
                     AdjustHorizLook(-m_State.SmoothLookIncrement / m_State.Camera.FOVPlane.Zoom);
                     break;
-                case "right":
+                case buttons.right:
                     AdjustHorizLook(m_State.SmoothLookIncrement / m_State.Camera.FOVPlane.Zoom);
                     break;
-                case "zoomIn":
+                case buttons.zoomIn:
                     newZoom = m_State.Camera.FOVPlane.Zoom;
 
                     newZoom = Mathf.Clamp(newZoom + 0.025f * m_State.ZoomSpeed, m_State.ZoomBounds.x, m_State.ZoomBounds.y);
 
                     m_State.Camera.FOVPlane.Zoom = newZoom;
                     break;
-                case "zoomOut":
+                case buttons.zoomOut:
                     newZoom = m_State.Camera.FOVPlane.Zoom;
 
                     newZoom = Mathf.Clamp(newZoom - 0.025f * m_State.ZoomSpeed, m_State.ZoomBounds.x, m_State.ZoomBounds.y);

@@ -45,6 +45,8 @@ namespace Astro
         [HideInInspector] public Vector3 PrevMousePos;
 
         public CastableEvent<SpaceCameraState> OnLookUpdated = new CastableEvent<SpaceCameraState>();
+
+        public buttons buttonHeld = buttons.none;
     }
 
     public static class SpaceCameraUtility
