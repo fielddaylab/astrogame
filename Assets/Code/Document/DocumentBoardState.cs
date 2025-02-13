@@ -125,15 +125,19 @@ namespace Astro {
                 DeselectDocument(state);
             }
             if (state.DocZoomed) {
+                SetInteractionLayer(state.DocZoomed, LayerMasks.DocumentInteract_Index);
                 state.DocumentRoutine.Replace(MoveDocToPos(doc.transform, state.StoredDocPos));
                 state.StoredDocPos = Vector3.zero;
                 state.DocZoomed = null;
+                InputUtility.SetClickableMaskDefault(Find.State<InputState>());
             } else {
                 state.StoredDocPos = doc.transform.position;
                 //state.StoredDocPos.z = state.DocumentParent.position.z;
                 Vector3 zoomOffset = doc.Renderer.ZoomOffsetOverride == default ? state.DocZoomOffset : doc.Renderer.ZoomOffsetOverride;
-                state.DocumentRoutine.Replace(MoveDocToCam(doc.transform, Camera.main.transform, zoomOffset));
+                state.DocumentRoutine.Replace(MoveDocToCam(doc.transform, Game.Rendering.PrimaryCamera.transform, zoomOffset));
                 state.DocZoomed = doc;
+                SetInteractionLayer(state.DocZoomed, LayerMasks.TopLayer_Index);
+                InputUtility.SetClickableMaskTopLayer(Find.State<InputState>());
             }
             state.InteractedThisFrame = true;
         }
@@ -164,6 +168,7 @@ namespace Astro {
         }
 
         private static IEnumerator MoveDocToCam(Transform doc, Transform cam, Vector3 offset) {
+            offset = cam.TransformVector(offset);
             yield return Routine.Combine(
                 doc.MoveTo(cam.position + offset, 0.5f).Ease(Curve.QuartInOut),
                 doc.RotateTo(cam, 0.3f));

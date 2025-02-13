@@ -16,8 +16,11 @@ namespace Astro {
         public override void ProcessWork(float deltaTime) {
             // on click, try cast ray for lab interactable
 
-            if (Game.Input.IsMousePressed(FieldDay.HID.MouseButton.Left)) {
-                var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            bool isCurrentlyDragging = m_StateA.CurrInteractable && m_StateA.CurrInteractable.IsDragging;
+            isCurrentlyDragging |= m_StateB.SelectedDocument;
+
+            if (!isCurrentlyDragging && Game.Input.IsMousePressed(FieldDay.HID.MouseButton.Left)) {
+                var ray = Game.Rendering.PrimaryCamera.ScreenPointToRay(Input.mousePosition);
 
                 if (Physics.Raycast(ray, out RaycastHit hit, 10f, m_StateC.ClickableLayerMask)) {
 
@@ -46,7 +49,7 @@ namespace Astro {
             }
 
             // drag
-            if (Game.Input.IsMouseDown(FieldDay.HID.MouseButton.Left)) {
+            if (!isCurrentlyDragging && Game.Input.IsMouseDown(FieldDay.HID.MouseButton.Left)) {
                 if (m_StateA.CurrInteractable && m_StateA.CurrInteractable.IsDraggable)
                 {
                     m_StateA.CurrMousePos = Input.mousePosition;
@@ -56,7 +59,7 @@ namespace Astro {
             }
 
             // mouse up
-            if (Game.Input.IsMouseUp(FieldDay.HID.MouseButton.Left))
+            if (isCurrentlyDragging && Game.Input.IsMouseUp(FieldDay.HID.MouseButton.Left))
             {
                 if (m_StateA.CurrInteractable)
                 {

@@ -12,5 +12,6 @@ namespace Astro
         [NonSerialized] public LabInteractable CurrInteractable;
         [NonSerialized] public Vector2 StartMousePos;
         [NonSerialized] public Vector2 CurrMousePos;
+        [NonSerialized] public int BlockInteractions;
     }
 }

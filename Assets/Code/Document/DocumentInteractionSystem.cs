@@ -1,6 +1,7 @@
 using BeauRoutine;
 using BeauUtil.Debugger;
 using FieldDay;
+using FieldDay.HID;
 using FieldDay.Systems;
 using System.Collections;
 using UnityEngine;
@@ -8,13 +9,18 @@ using UnityEngine;
 namespace Astro {
 
     [SysUpdate(GameLoopPhase.Update, 1)]
-    public class DocumentInteractionSystem : SharedStateSystemBehaviour<DocumentBoardState> {
+    public class DocumentInteractionSystem : SharedStateSystemBehaviour<DocumentBoardState, InputState> {
         public override void ProcessWork(float deltaTime) {
-            m_State.InteractedThisFrame = false;
-            if (!m_State.EnableDocumentInteraction) return;
+            m_StateA.InteractedThisFrame = false;
+            if (!m_StateA.EnableDocumentInteraction) return;
 
-            if (m_State.SelectedDocument != null && !m_State.DocumentRoutine.Exists()) {
-                DocumentUtility.MoveSelectedToMouse(m_State);
+            if (m_StateA.SelectedDocument != null) {
+                if (!m_StateA.DocumentRoutine.Exists()) {
+                    DocumentUtility.MoveSelectedToMouse(m_StateA);
+                }
+                if (m_StateB.InputEnabled && Game.Input.IsMousePressed(MouseButton.Left)) {
+                    DocumentUtility.DeselectDocument(m_StateA);
+                }
             }
 
         }
@@ -23,11 +29,11 @@ namespace Astro {
 
     public static partial class DocumentUtility {
         public static void MoveSelectedToMouse(DocumentBoardState state) {
-            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            var ray = Game.Rendering.PrimaryCamera.ScreenPointToRay(Input.mousePosition);
             state.LastMousePos = Input.mousePosition;
-            if (Physics.Raycast(ray, out RaycastHit hit, 10f, LayerMask.GetMask("DocumentSurface"))) {
+            if (Physics.Raycast(ray, out RaycastHit hit, 10f, LayerMasks.DocumentSurface_Mask)) {
                 // lerp document from current position to new target position
-                LerpToTarget(state.SelectedDocument.transform, hit.transform.InverseTransformPoint(hit.point), state.FollowSpeed);
+                LerpToTarget(state.SelectedDocument.transform, state.SelectedDocument.transform.parent.InverseTransformPoint(hit.point), state.FollowSpeed);
                 //state.DocumentRoutine.Replace(MoveToPoint(state.SelectedDocument.transform, hit.point, state.FollowSpeed));
             } else {
                 DeselectDocument(state);
