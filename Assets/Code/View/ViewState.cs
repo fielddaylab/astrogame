@@ -43,6 +43,9 @@ namespace Astro {
             while(state.ActiveLinks.TryPopBack(out ViewLink link)) {
                 link.LastKnownActiveState = false;
                 link.ObjectGroup.SetActive(false);
+                if (link.Clickable) {
+                    link.Clickable.enabled = false;
+                }
             }
             state.ActiveNodeLinkGroups.Clear();
         }

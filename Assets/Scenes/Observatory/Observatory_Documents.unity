@@ -249,11 +249,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af33af2c68d879d49a815abcba2cce4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  EnableDocumentInteraction: 1
   DocumentParent: {fileID: 695487089}
   DocumentAssets: {fileID: 11400000, guid: e684cd9a9dde3a547af290a35f145d63, type: 2}
   FollowSpeed: 0.15
   DocHoverOffset: {x: 0, y: 0, z: -0.3}
-  DocZoomOffset: {x: 0, y: 0.3, z: 2}
+  DocZoomOffset: {x: 1, y: 0.3, z: 0}
 --- !u!1 &1619113319
 GameObject:
   m_ObjectHideFlags: 0
@@ -371,6 +372,30 @@ PrefabInstance:
     - target: {fileID: 4461923492493313455, guid: f3a419d7aa4452e44bd05d33d4df79ee, type: 3}
       propertyPath: m_Name
       value: DocumentsBoard
+      objectReference: {fileID: 0}
+    - target: {fileID: 6376960866435814582, guid: f3a419d7aa4452e44bd05d33d4df79ee, type: 3}
+      propertyPath: TargetNode
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6376960866435814582, guid: f3a419d7aa4452e44bd05d33d4df79ee, type: 3}
+      propertyPath: TargetNodeId.m_Source
+      value: LeftView
+      objectReference: {fileID: 0}
+    - target: {fileID: 6376960866435814582, guid: f3a419d7aa4452e44bd05d33d4df79ee, type: 3}
+      propertyPath: TargetNodeId.m_HashValue
+      value: 2794889793
+      objectReference: {fileID: 0}
+    - target: {fileID: 8710596512342464955, guid: f3a419d7aa4452e44bd05d33d4df79ee, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8710596512342464955, guid: f3a419d7aa4452e44bd05d33d4df79ee, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8710596512342464955, guid: f3a419d7aa4452e44bd05d33d4df79ee, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.171
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
