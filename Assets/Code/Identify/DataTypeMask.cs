@@ -3,7 +3,7 @@ using FieldDay.Components;
 
 namespace Astro {
     [Flags]
-    public enum DataTypeMask : uint {
+    public enum DataTypeMask : ushort {
         Name = 0x001,
         Coordinates = 0x002,
         Color = 0x008,

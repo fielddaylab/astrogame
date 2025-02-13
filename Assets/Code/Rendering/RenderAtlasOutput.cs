@@ -3,45 +3,64 @@ using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay;
 using FieldDay.Components;
+using FieldDay.Rendering;
+using ScriptableBake;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
 namespace Astro {
-    public sealed class RenderAtlasOutput : BatchedComponent, IRegistrationCallbacks {
+    public sealed class RenderAtlasOutput : BatchedComponent, IRegistrationCallbacks, IBaked {
         [Header("Texture Destination")]
-        [Required] public RenderAtlasUpdateState Group;
+        [Required] public RenderAtlas Atlas;
         public SerializedHash32 RegionId;
 
         [Header("Local")]
         [Required] public Camera Contents;
         [Required] public Renderer TargetRenderer;
+        [Required] public MeshFilter TargetMeshFilter;
 
+        [NonSerialized] public RenderAtlasUpdateState Group;
         [NonSerialized] public int RenderHandle = -1;
         [NonSerialized] public RenderAtlas.TextureRegion RenderRegion;
+        [NonSerialized] public Mesh OriginalMesh;
+        [NonSerialized] public Mesh RemappedMesh;
 
         public void MarkDirty() {
             RenderAtlasUtility.MarkRegionDirty(Group, RenderHandle);
         }
 
+#if UNITY_EDITOR
+
+        int IBaked.Order { get { return -100; } }
+
+        bool IBaked.Bake(BakeFlags flags, BakeContext context) {
+            Contents.targetTexture = null;
+            return true;
+        }
+
+#endif // UNITY_EDITOR
+
         #region IRegistrationCallbacks
 
         void IRegistrationCallbacks.OnDeregister() {
-            // TODO: deregister
+            UnityHelper.SafeDestroy(ref RemappedMesh);
+            TargetMeshFilter.sharedMesh = OriginalMesh;
+            RenderAtlasUpdateState.ReleaseState(ref Group);
         }
 
         void IRegistrationCallbacks.OnRegister() {
+            Group = RenderAtlasUpdateState.RetrieveState(Atlas);
             RenderHandle = RenderAtlasUtility.RegisterRegion(Group, Contents, RegionId, out RenderRegion);
 
-            Vector4 st;
-            st.z = RenderRegion.UVRect.x;
-            st.w = RenderRegion.UVRect.y;
-            st.x = RenderRegion.UVRect.width;
-            st.y = RenderRegion.UVRect.height;
+            Rect st = RenderRegion.UVRect;
+            OriginalMesh = TargetMeshFilter.sharedMesh;
+            RemappedMesh = Instantiate(OriginalMesh);
+            MeshUVUtility.RemapUVs(RemappedMesh, 0, st);
+            RemappedMesh.UploadMeshData(true);
+            TargetMeshFilter.sharedMesh = RemappedMesh;
 
-            MaterialPropertyBlock b = new MaterialPropertyBlock();
-            b.SetTexture("_MainTex", RenderRegion.Texture);
-            b.SetVector("_MainTex_ST", st);
-            TargetRenderer.SetPropertyBlock(b);
+            Material mat = TargetRenderer.sharedMaterial;
+            mat.mainTexture = RenderRegion.Texture;
         }
 
         #endregion // IRegistrationCallbacks

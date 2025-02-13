@@ -24,14 +24,9 @@ namespace Astro
     {
         public static void RegisterInstrument(LabInstrument instrument)
         {
-            instrument.UnlockText.SetText(instrument.PointsToUnlock.ToStringLookup());
+            //instrument.UnlockText.SetText(instrument.PointsToUnlock.ToStringLookup());
 
-            if (instrument.PointsToUnlock > PointsUtility.GetPoints()) {
-                SetInstrumentUnlocked(instrument, false);
-                return;
-            } else {
-                SetInstrumentUnlocked(instrument, true);
-            }
+            SetInstrumentUnlocked(instrument, true);
         }
 
         [LeafMember("SetInstrumentUnlocked")]
@@ -41,8 +36,8 @@ namespace Astro
         }
 
         public static void SetInstrumentUnlocked(LabInstrument instrument, bool unlocked) {
-            instrument.Unlocked = unlocked;
-            instrument.LockPanel.SetActive(!unlocked);
+            //instrument.Unlocked = unlocked;
+            //instrument.LockPanel.SetActive(!unlocked);
             if (unlocked) {
                 AddToActiveInstruments(instrument);
             }

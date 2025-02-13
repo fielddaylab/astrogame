@@ -28,6 +28,11 @@ namespace FieldDay.Audio {
                         break;
                     }
 
+                    case AudioCommandType.SetTagWithHandle: {
+                        Cmd_SetTagForHandle(cmd.SetTag);
+                        break;
+                    }
+
                     case AudioCommandType.SetVoiceBoolParameter: {
                         Cmd_SetVoiceBoolParameter(cmd.BoolParam);
                         break;
@@ -149,6 +154,13 @@ namespace FieldDay.Audio {
         #endregion // Stop
 
         #region Params
+
+        private unsafe void Cmd_SetTagForHandle(OverwriteTagCommandData tagChange) {
+            VoiceData voice = FindVoiceForId(tagChange.Handle);
+            if (voice != null) {
+                voice.Tag = tagChange.Tag;
+            }
+        }
 
         private unsafe void Cmd_SetVoiceBoolParameter(BoolParamChangeCommandData paramChange) {
             VoiceData voice = FindVoiceForId(paramChange.Handle.Handle);

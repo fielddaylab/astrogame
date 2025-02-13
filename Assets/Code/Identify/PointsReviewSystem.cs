@@ -1,7 +1,10 @@
 using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay;
+using FieldDay.Debugging;
+using FieldDay.Rendering;
 using FieldDay.Systems;
+using System.Collections;
 using UnityEngine;
 
 namespace Astro {
@@ -37,36 +40,30 @@ namespace Astro {
         private void TryProgressPips(float timerProgress, ReviewModule module) {
             float numPips = module.CountdownSprites.Length;
             if (timerProgress * (numPips + 1) > (module.PipsRevealed + 1)) {
-                module.CountdownSprites[module.PipsRevealed].enabled = true;
+                module.CountdownSprites[module.PipsRevealed].SetSharedMaterialAtIndex(1, module.LitPipMaterial);
                 module.PipsRevealed++;
             } else return;
         }
 
         private void ResetReview(ReviewModule module) {
             module.PipsRevealed = 0;
-            foreach (SpriteRenderer pip in module.CountdownSprites) { 
-                pip.enabled = false;
+            foreach (MeshRenderer pip in module.CountdownSprites) {
+                pip.SetSharedMaterialAtIndex(1, module.UnlitPipMaterial);
             }
-            module.ResultSprite.enabled = false;
+            module.Result.SetSharedMaterialAtIndex(1, module.UnlitPipMaterial);
             m_State.SubmittedObject = m_State.SubmittedPuzzle = false;
             m_State.ReviewTimer.Paused = false;
         }
 
         private void ShowResultSprite(bool correct, PlayerPointsState state) {
-            if (correct) {
-                state.ReviewModule.ResultSprite.sprite = state.PipCorrect;
-            } else {
-                state.ReviewModule.ResultSprite.sprite = state.PipIncorrect;
-            }
-            state.ReviewModule.ResultSprite.enabled = true;
+            state.ReviewModule.Result.SetSharedMaterialAtIndex(1, correct ? state.ReviewModule.SuccessMaterial : state.ReviewModule.FailureMaterial);
         }
 
         private void CheckPuzzle() {
             PuzzleState puzzle = Find.State<PuzzleState>();
-            if (PuzzleUtility.CheckSolutionCorrect(puzzle)) {
+            if (PuzzleUtility.CheckSolutionCorrect(puzzle, out BitArray rowsCorrectness)) {
                 OnCorrectPuzzleSubmission.Invoke(puzzle.ActivePuzzle.DisplayName);
                 ShowResultSprite(true, m_State);
-
                 PointsUtility.AddPoints(1, m_State);
 
                 Log.Msg("[PointsReviewSystem] Puzzle CORRECT! :D");
@@ -75,7 +72,7 @@ namespace Astro {
                 ShowResultSprite(false, m_State);
                 Log.Msg("[SubmitPuzzleSystem] Puzzle INCORRECT! D:");
                 // TODO: show incorrect cells
-                PuzzleUtility.ClearCells(puzzle.Display);
+                PuzzleUtility.ClearRows(puzzle, rowsCorrectness);
             }
         }
 

@@ -7,15 +7,17 @@ using UnityEngine;
 namespace Astro
 {
     [SysUpdate(GameLoopPhase.FixedUpdate)]
-    public class TelescopeAimSystem : ComponentSystemBehaviour<TelescopeAnimator>
+    public class TelescopeAimSystem : SharedStateSystemBehaviour<TelescopeRig>
     {
-        public override void ProcessWorkForComponent(TelescopeAnimator animator, float deltaTime)
+        public override void ProcessWork(float deltaTime)
         {
-            if (animator.AutoSync) {
-                var rig = Find.State<SpaceCameraState>().Camera.RootTransform;
+            base.ProcessWork(deltaTime);
 
-                animator.AimPivot.localRotation = rig.rotation;
-                //animator.BasePivot.localEulerAngles = new Vector3(0, rig.localEulerAngles.y, 0);
+            if (m_State.AutoSync)
+            {
+                var spaceCam = Find.State<SpaceCameraState>().Camera.RootTransform;
+
+                TelescopeUtility.UpdateTelescopeRigRotation(m_State, spaceCam);
             }
         }
     }

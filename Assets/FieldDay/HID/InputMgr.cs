@@ -133,16 +133,14 @@ namespace FieldDay.HID {
         /// <summary>
         /// Returns if a mouse button was pressed this frame.
         /// </summary>
-        public bool IsMouseUp(MouseButton mouseButton)
-        {
+        public bool IsMouseUp(MouseButton mouseButton) {
             return !m_InputConsumed && Input.GetMouseButtonUp((int)mouseButton);
         }
 
         /// <summary>
         /// Returns if a mouse button was pressed this frame.
         /// </summary>
-        public bool IsMouseUp(int mouseButton)
-        {
+        public bool IsMouseUp(int mouseButton) {
             return !m_InputConsumed && Input.GetMouseButtonUp(mouseButton);
         }
 

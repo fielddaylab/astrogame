@@ -67,5 +67,13 @@ namespace Astro {
                 slot.OnDataModified.Invoke(default);
             }
         }
+
+        static public bool TryClearData(DataSlot slot) {
+            if (slot.Modifiable) {
+                ClearData(slot);
+                return true;
+            }
+            return false;
+        }
     }
 }

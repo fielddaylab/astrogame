@@ -1,7 +1,10 @@
 using BeauRoutine;
 using BeauUtil;
 using FieldDay.Components;
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -117,8 +120,19 @@ namespace Astro
 
         public static void ClearCells(PuzzleDisplay display) {
             foreach (PuzzleCell cell in display.Cells) {
-                if (cell.DataSlot.Modifiable) {
-                    DataUtility.ClearData(cell.DataSlot);
+                DataUtility.TryClearData(cell.DataSlot);
+            }
+        }
+
+        public static void ClearRows(PuzzleState state, BitArray rowsCorrectness) {
+            if (state.ActivePuzzle.Rows.Length != rowsCorrectness.Length) {
+                throw new ArgumentException("[PuzzleUtility] Row correctness length doesn't match number of rows!");
+            } 
+            for (int r = 0; r < rowsCorrectness.Length; r++) {
+                if (!rowsCorrectness[r]) { // if row incorrect:
+                    for (int c = 0; c < state.Display.NumCols; c++) { // go through each cell
+                        DataUtility.TryClearData(state.Display.Cells[r * state.Display.NumCols + c].DataSlot);
+                    }
                 }
             }
         }

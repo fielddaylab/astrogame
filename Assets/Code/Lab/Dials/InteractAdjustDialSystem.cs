@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using FieldDay;
 using FieldDay.Systems;
+using FieldDay.HID;
 
 namespace Astro
 {

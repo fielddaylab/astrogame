@@ -1,4 +1,5 @@
 using FieldDay.SharedState;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,7 +12,7 @@ namespace Astro
     /// </summary>
     public class CancelInputState : SharedStateComponent
     {
-        [HideInInspector] public bool ClickedThisFrame;
-        [HideInInspector] public bool SlotClicked;
+        [NonSerialized] public bool ClickedThisFrame;
+        [NonSerialized] public bool SlotClicked;
     }
 }

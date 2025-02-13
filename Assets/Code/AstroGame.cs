@@ -11,6 +11,7 @@ namespace Astro {
         static private void OnPreBoot() {
             Events = new EventDispatcher<EvtArgs>();
             SetEventDispatcher(Events);
+            Game.Rendering.EnableAspectClamping(4, 3);
         }
 
         [InvokeOnBoot]

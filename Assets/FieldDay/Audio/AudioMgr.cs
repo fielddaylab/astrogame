@@ -120,7 +120,9 @@ namespace FieldDay.Audio {
 
             if (config.DefaultEmitterProfile) {
                 m_DefaultEmitterConfig = config.DefaultEmitterProfile.Config;
-                Game.Assets.AddNamed(config.DefaultEmitterProfile.name, config.DefaultEmitterProfile);
+                if (!Game.Assets.HasNamed<AudioEmitterProfile>(config.DefaultEmitterProfile.AssetId)) {
+                    Game.Assets.AddNamed(config.DefaultEmitterProfile.AssetId, config.DefaultEmitterProfile);
+                }
             } else {
                 m_DefaultEmitterConfig = config.Is3D ? AudioEmitterConfig.Default3D : AudioEmitterConfig.Default2D;
             }

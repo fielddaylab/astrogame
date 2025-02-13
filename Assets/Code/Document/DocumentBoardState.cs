@@ -2,19 +2,21 @@ using BeauRoutine;
 using BeauUtil;
 using FieldDay;
 using FieldDay.Assets;
+using FieldDay.HID;
 using FieldDay.SharedState;
+using System;
 using System.Collections;
 using UnityEngine;
 
 namespace Astro {
     public sealed class DocumentBoardState : SharedStateComponent, IRegistrationCallbacks {
-        [HideInInspector] public bool EnableDocumentInteraction;
-        [HideInInspector] public DocumentInteractable SelectedDocument;
-        [HideInInspector] public Vector3 LastMousePos;
-        [HideInInspector] public bool InteractedThisFrame;
-        [HideInInspector] public Vector3 StoredDocPos;
-        [HideInInspector] public DocumentInteractable DocZoomed;
-        [HideInInspector] public Routine DocumentRoutine;
+        public bool EnableDocumentInteraction;
+        [NonSerialized] public DocumentInteractable SelectedDocument;
+        [NonSerialized] public Vector3 LastMousePos;
+        [NonSerialized] public bool InteractedThisFrame;
+        [NonSerialized] public Vector3 StoredDocPos;
+        [NonSerialized] public DocumentInteractable DocZoomed;
+        [NonSerialized] public Routine DocumentRoutine;
 
         public Transform DocumentParent;
 
@@ -73,7 +75,7 @@ namespace Astro {
             }
             switch (docPart.PartType) {
                 case DocPartFunction.Move: {
-                        StartMoveDoc(docPart.Document, state);
+                        StartMoveDoc(docPart.Document, docPart.Cursor, state);
                         break;
                     }
                 case DocPartFunction.Zoom: {
@@ -89,7 +91,7 @@ namespace Astro {
                     }
             }
         }
-        public static void StartMoveDoc(DocumentInteractable newDoc, DocumentBoardState state = null) {
+        public static void StartMoveDoc(DocumentInteractable newDoc, CursorHint partHint, DocumentBoardState state = null) {
             if (state == null) {
                 state = Find.State<DocumentBoardState>();
             }
@@ -98,16 +100,18 @@ namespace Astro {
             }
             if (newDoc != null && state.SelectedDocument != newDoc) {
                 state.SelectedDocument = newDoc;
-                state.DocumentRoutine.Replace(ShiftZ(state.SelectedDocument.transform, state.DocumentParent.localPosition + state.DocHoverOffset));
-            } else {            
-                state.DocumentRoutine.Replace(ShiftZ(state.SelectedDocument.transform, state.DocumentParent.localPosition));
+                state.DocumentRoutine.Replace(ToggleDocHover(state.SelectedDocument.transform, state.DocHoverOffset)); // 
+                CursorHint.TryLock(partHint);
+            } else {
+                CursorHint.Unlock();
+                state.DocumentRoutine.Replace(ToggleDocHover(state.SelectedDocument.transform, -state.DocHoverOffset));
                 state.SelectedDocument = null;
             }
             state.InteractedThisFrame = true;
         }
 
         public static void DeselectDocument(DocumentBoardState state) {
-            StartMoveDoc(null, state);
+            StartMoveDoc(null, null, state);
         }
 
         public static void ToggleZoomDoc(DocumentInteractable doc, DocumentBoardState state = null) {
@@ -126,7 +130,7 @@ namespace Astro {
                 state.DocZoomed = null;
             } else {
                 state.StoredDocPos = doc.transform.position;
-                state.StoredDocPos.z = state.DocumentParent.position.z;
+                //state.StoredDocPos.z = state.DocumentParent.position.z;
                 Vector3 zoomOffset = doc.Renderer.ZoomOffsetOverride == default ? state.DocZoomOffset : doc.Renderer.ZoomOffsetOverride;
                 state.DocumentRoutine.Replace(MoveDocToCam(doc.transform, Camera.main.transform, zoomOffset));
                 state.DocZoomed = doc;
@@ -151,35 +155,38 @@ namespace Astro {
             state.DocumentRoutine.Replace(DocRotateY(doc, lift, angle));
             state.InteractedThisFrame = true;
         }
-
         #endregion //Selection
 
         #region Routines
-        private static IEnumerator ShiftZ(Transform doc, Vector3 hoverRoot) {
-            yield return doc.MoveTo(hoverRoot, 0.2f, Axis.Z).Ease(Curve.CubeIn);
+        private static IEnumerator ToggleDocHover(Transform doc, Vector3 hoverOffset) {
+            yield return doc.MoveTo(doc.localPosition + hoverOffset, 0.2f, Axis.XYZ, Space.Self).Ease(Curve.CubeIn);
             yield return null;
         }
 
         private static IEnumerator MoveDocToCam(Transform doc, Transform cam, Vector3 offset) {
-            yield return doc.MoveTo(cam.position + offset, 0.5f).Ease(Curve.QuartInOut);
+            yield return Routine.Combine(
+                doc.MoveTo(cam.position + offset, 0.5f).Ease(Curve.QuartInOut),
+                doc.RotateTo(cam, 0.3f));
             yield return null;
         }
         
         private static IEnumerator MoveDocToPos(Transform doc, Vector3 pos) {
-            yield return doc.MoveTo(pos, 0.5f).Ease(Curve.QuartInOut);
+            yield return Routine.Combine(
+                doc.MoveTo(pos, 0.5f).Ease(Curve.QuartInOut),
+                doc.RotateTo(0f, 0.3f, Axis.XYZ, Space.Self));
             yield return null;
         }
 
         private static IEnumerator DocRotateY(DocumentInteractable doc, float lift, float angle) {
             yield return Routine.Combine(
-                doc.transform.MoveTo(doc.transform.position.z + lift, 0.2f, Axis.Z).Ease(Curve.CubeIn),
-                doc.Paper.MoveTo(doc.Paper.position.y - 0.1f, 0.2f, Axis.Y).Ease(Curve.CubeIn)
+                doc.transform.MoveTo(doc.transform.localPosition.z + lift, 0.2f, Axis.Z, Space.Self).Ease(Curve.CubeIn),
+                doc.Paper.MoveTo(doc.Paper.localPosition.y - 0.1f, 0.2f, Axis.Y, Space.Self).Ease(Curve.CubeIn)
             );
-            yield return doc.Paper.RotateTo(doc.Paper.rotation.y + angle, 0.3f, Axis.Y, Space.World, AngleMode.Absolute).Ease(Curve.SineInOut);
+            yield return doc.Paper.RotateTo(doc.Paper.localRotation.y + angle, 0.3f, Axis.Y, Space.Self, AngleMode.Absolute).Ease(Curve.SineInOut);
             
             yield return Routine.Combine(
-                doc.Paper.MoveTo(doc.Paper.position.y + 0.1f, 0.2f, Axis.Y).Ease(Curve.CubeIn),
-                doc.transform.MoveTo(doc.transform.position.z - lift, 0.2f, Axis.Z).Ease(Curve.CubeIn)
+                doc.Paper.MoveTo(doc.Paper.localPosition.y + 0.1f, 0.2f, Axis.Y, Space.Self).Ease(Curve.CubeIn),
+                doc.transform.MoveTo(doc.transform.localPosition.z - lift, 0.2f, Axis.Z, Space.Self).Ease(Curve.CubeIn)
             );
             yield return null;
         }

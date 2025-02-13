@@ -11,8 +11,8 @@ namespace Astro
 {
     public class FocusState : SharedStateComponent
     {
-        [HideInInspector] public RingBuffer<UIFocus> ActiveFocii = new RingBuffer<UIFocus>(8);
-        [HideInInspector] public UIFocus CurrentFocus = null;
+        [NonSerialized] public RingBuffer<UIFocus> ActiveFocii = new RingBuffer<UIFocus>(8);
+        [NonSerialized] public UIFocus CurrentFocus = null;
         public Graphic FocusOutline;
 
         protected override void OnEnable()
@@ -34,6 +34,8 @@ namespace Astro
             }
             else if (!(focus == null || state.CurrentFocus == null) && state.CurrentFocus.TargetData.DisplayName.Equals(focus.TargetData.DisplayName)) {
                 // already focused on this object
+                return;
+            } else if (PointsUtility.ReviewInProgress()) {
                 return;
             }
 

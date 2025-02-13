@@ -481,7 +481,7 @@ namespace ScriptableBake {
         /// <summary>
         /// Destroys an object.
         /// </summary>
-        static public void Destroy(UnityEngine.Object obj) {
+        static public void Destroy(UnityEngine.Object obj, bool forceImmediate = false) {
             if (obj is Transform) {
                 obj = ((Transform) obj).gameObject;
             }
@@ -493,7 +493,7 @@ namespace ScriptableBake {
                 sceneIsLoading = !((Component) obj).gameObject.scene.isLoaded;
             }
 
-            if (!Application.isPlaying || sceneIsLoading) {
+            if (forceImmediate || !Application.isPlaying || sceneIsLoading) {
                 if (obj is GameObject) {
                     GameObject prefabRoot = PrefabUtility.GetOutermostPrefabInstanceRoot(obj);
                     if (prefabRoot != null) {

@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 43cf997479c7b1648bc4df1c83250333, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -96,8 +96,8 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
-  m_LightingSettings: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000008, guid: 4698a610f7f23bb45a6a84676fe51015, type: 2}
+  m_LightingSettings: {fileID: 4890085278179872738, guid: 6f1803a0335cd4f4a9c123fe06a221ef, type: 2}
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -278,6 +278,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Boot
       objectReference: {fileID: 0}
+    - target: {fileID: 5025946979303998804, guid: ec06e5f8b4c234f489057732d2c945c4, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6477595793029721670, guid: ec06e5f8b4c234f489057732d2c945c4, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -335,64 +339,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 9193859588559889003, guid: ec06e5f8b4c234f489057732d2c945c4, type: 3}
+    - {fileID: 5290410587728248189, guid: ec06e5f8b4c234f489057732d2c945c4, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ec06e5f8b4c234f489057732d2c945c4, type: 3}
---- !u!1 &1459552844
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1459552846}
-  - component: {fileID: 1459552845}
-  m_Layer: 0
-  m_Name: Visuals
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1459552845
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1459552844}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 02aa2d88699f4ca4480a543ab9c0f9f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Scene:
-    m_ScenePath: Assets/Scenes/Observatory/Observatory_Visuals.unity
-    m_GUID: 51bd3a0940c6f4a4eaf01df8b0d3fa18
-  Flags: 0
-  Merge: 1
-  DestroyGameObject: 1
-  Transform: {fileID: 0}
-  Tag:
-    m_Source: 
-    m_HashValue: 0
---- !u!4 &1459552846
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1459552844}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1685206328
 GameObject:
   m_ObjectHideFlags: 0
@@ -403,8 +355,16 @@ GameObject:
   m_Component:
   - component: {fileID: 1685206330}
   - component: {fileID: 1685206329}
+  - component: {fileID: 1685206337}
+  - component: {fileID: 1685206336}
+  - component: {fileID: 1685206335}
+  - component: {fileID: 1685206334}
+  - component: {fileID: 1685206333}
+  - component: {fileID: 1685206332}
+  - component: {fileID: 1685206331}
+  - component: {fileID: 1685206338}
   m_Layer: 0
-  m_Name: Script
+  m_Name: Imports
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -423,8 +383,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Scene:
-    m_ScenePath: Assets/Scenes/Observatory/Observatory_Logic.unity
-    m_GUID: 3146b93e5704b914fa256bbdab3ddb13
+    m_ScenePath: Assets/Scenes/Observatory/Observatory_Background.unity
+    m_GUID: 95a8b35c99e9a3e45b06d4df4a4a80b9
   Flags: 0
   Merge: 1
   DestroyGameObject: 1
@@ -447,65 +407,185 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &2096623263
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2096623265}
-  - component: {fileID: 2096623264}
-  m_Layer: 0
-  m_Name: OffscreenSetup
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &2096623264
+--- !u!114 &1685206331
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2096623263}
+  m_GameObject: {fileID: 1685206328}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 02aa2d88699f4ca4480a543ab9c0f9f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Scene:
-    m_ScenePath: Assets/Scenes/OffscreenRenderSetup.unity
-    m_GUID: effd2d949d1231742897b50c83e48bf5
-  Flags: 4
-  Merge: 0
+    m_ScenePath: Assets/Scenes/Observatory/Observatory_PuzzleGridAndReferenceGuide.unity
+    m_GUID: 2a8d1c13f5244cf4fa58b8d8ee72a646
+  Flags: 0
+  Merge: 1
   DestroyGameObject: 1
   Transform: {fileID: 0}
   Tag:
     m_Source: 
     m_HashValue: 0
---- !u!4 &2096623265
-Transform:
+--- !u!114 &1685206332
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2096623263}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_GameObject: {fileID: 1685206328}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02aa2d88699f4ca4480a543ab9c0f9f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Scene:
+    m_ScenePath: Assets/Scenes/Observatory/Observatory_LogicAndScript.unity
+    m_GUID: 3146b93e5704b914fa256bbdab3ddb13
+  Flags: 0
+  Merge: 1
+  DestroyGameObject: 1
+  Transform: {fileID: 0}
+  Tag:
+    m_Source: 
+    m_HashValue: 0
+--- !u!114 &1685206333
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1685206328}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02aa2d88699f4ca4480a543ab9c0f9f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Scene:
+    m_ScenePath: Assets/Scenes/Observatory/Observatory_InterfaceSpaceDome.unity
+    m_GUID: e955b64fc12101742a2c8ec48c736a7c
+  Flags: 0
+  Merge: 1
+  DestroyGameObject: 1
+  Transform: {fileID: 0}
+  Tag:
+    m_Source: 
+    m_HashValue: 0
+--- !u!114 &1685206334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1685206328}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02aa2d88699f4ca4480a543ab9c0f9f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Scene:
+    m_ScenePath: Assets/Scenes/Observatory/Observatory_InterfaceReferenceGuide.unity
+    m_GUID: 53e0c366d13d83b46ba04995d9610c4f
+  Flags: 0
+  Merge: 1
+  DestroyGameObject: 1
+  Transform: {fileID: 0}
+  Tag:
+    m_Source: 
+    m_HashValue: 0
+--- !u!114 &1685206335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1685206328}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02aa2d88699f4ca4480a543ab9c0f9f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Scene:
+    m_ScenePath: Assets/Scenes/Observatory/Observatory_Instruments.unity
+    m_GUID: c540b5d9a39cbb247a4473dd78942a22
+  Flags: 0
+  Merge: 1
+  DestroyGameObject: 1
+  Transform: {fileID: 0}
+  Tag:
+    m_Source: 
+    m_HashValue: 0
+--- !u!114 &1685206336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1685206328}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02aa2d88699f4ca4480a543ab9c0f9f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Scene:
+    m_ScenePath: Assets/Scenes/Observatory/Observatory_Documents.unity
+    m_GUID: e9b58eb78e3993d4b8202d34429443d7
+  Flags: 0
+  Merge: 1
+  DestroyGameObject: 1
+  Transform: {fileID: 0}
+  Tag:
+    m_Source: 
+    m_HashValue: 0
+--- !u!114 &1685206337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1685206328}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02aa2d88699f4ca4480a543ab9c0f9f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Scene:
+    m_ScenePath: Assets/Scenes/Observatory/Observatory_CentralConsoleAndTelescope.unity
+    m_GUID: c283379a73992e14086e9b47d05fc6bb
+  Flags: 0
+  Merge: 1
+  DestroyGameObject: 1
+  Transform: {fileID: 0}
+  Tag:
+    m_Source: 
+    m_HashValue: 0
+--- !u!114 &1685206338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1685206328}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02aa2d88699f4ca4480a543ab9c0f9f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Scene:
+    m_ScenePath: Assets/Scenes/Observatory/Observatory_ConstellationFinder.unity
+    m_GUID: 3da800266f2ae3b4e8dbb0351542c24a
+  Flags: 0
+  Merge: 1
+  DestroyGameObject: 1
+  Transform: {fileID: 0}
+  Tag:
+    m_Source: 
+    m_HashValue: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 274612210}
   - {fileID: 1685206330}
-  - {fileID: 1459552846}
-  - {fileID: 2096623265}

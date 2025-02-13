@@ -9,8 +9,8 @@ namespace Astro
 {
     public class DataPacketDistributionState : SharedStateComponent
     {
-        [HideInInspector] public CelestialAsset ToConvert;
-        [HideInInspector] public bool ReadyToConvert;
+        [NonSerialized] public CelestialAsset ToConvert;
+        [NonSerialized] public bool ReadyToConvert;
         public RingBuffer<DataPacket> DistributeQueue = new RingBuffer<DataPacket>(8);
     }
 

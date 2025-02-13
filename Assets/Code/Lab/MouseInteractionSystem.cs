@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using FieldDay.Systems;
 using FieldDay;
+using FieldDay.HID;
 
 namespace Astro {
     /// <summary>
@@ -45,6 +46,7 @@ namespace Astro {
                 {
                     m_StateA.CurrMousePos = Input.mousePosition;
                     m_StateA.CurrInteractable.IsDragging = true;
+                    CursorHint.TryLock(m_StateA.CurrInteractable.Cursor);
                 }
             }
 
@@ -53,6 +55,7 @@ namespace Astro {
             {
                 if (m_StateA.CurrInteractable)
                 {
+                    CursorHint.Unlock(m_StateA.CurrInteractable.Cursor);
                     m_StateA.CurrInteractable.IsDragging = false;
                     m_StateA.CurrInteractable.InteractEnded = true;
                     m_StateA.CurrInteractable = null;

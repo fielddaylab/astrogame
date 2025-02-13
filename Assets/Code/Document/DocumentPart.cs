@@ -1,5 +1,6 @@
 using FieldDay;
 using FieldDay.Components;
+using FieldDay.HID;
 using System;
 using UnityEngine;
 
@@ -9,6 +10,7 @@ namespace Astro {
         public DocumentInteractable Document;
         [NonSerialized] public Collider Collider;
         public DocPartFunction PartType;
+        [NonSerialized] public CursorHint Cursor;
 
         public void OnDeregister() {
             
@@ -16,6 +18,7 @@ namespace Astro {
 
         public void OnRegister() {
             Collider = GetComponent<Collider>();
+            Cursor = GetComponent<CursorHint>();
         }
     }
 

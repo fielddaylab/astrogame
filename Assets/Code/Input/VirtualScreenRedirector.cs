@@ -2,26 +2,35 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using static UnityEngine.EventSystems.PointerEventData;
 using UnityEngine.UIElements;
 using FieldDay;
+using System;
 
 namespace Astro {
 
     public class VirtualScreenRedirector : GraphicRaycaster
     {
-        public Transform screenTransform; // the transform of the screen with the render texture
+        [NonSerialized] public Transform screenTransform; // the transform of the screen with the render texture
+
+        [NonSerialized] public Camera eventCameraOverride; // Reference to the camera that views the monitor
 
         public Camera screenCamera; // Reference to the camera responsible for rendering the virtual screen's rendertexture
 
         public GraphicRaycaster screenCaster; // Reference to the GraphicRaycaster of the canvas displayed on the virtual screen
 
-        private PointerEventData copyEventData = new PointerEventData(EventSystem.current);
+        private PointerEventData copyEventData;
+
+        protected override void Start()
+        {
+            base.Start();
+            copyEventData = new PointerEventData(EventSystem.current);
+            eventCameraOverride = Find.State<ViewState>().Camera.Camera;
+            screenTransform = Find.State<MonitorState>().ScreenTransform;
+        }
 
         // Called by Unity when a Raycaster should raycast because it extends BaseRaycaster.
         public override void Raycast(PointerEventData eventData, List<RaycastResult> resultAppendList)
         {
-            copyEventData = new PointerEventData(EventSystem.current);
             copyEventData.eligibleForClick = false;
 
             copyEventData.pointerId = eventData.pointerId;
@@ -44,11 +53,11 @@ namespace Astro {
             copyEventData.radius = eventData.radius;
             copyEventData.radiusVariance = eventData.radiusVariance;
 
-            Ray ray = eventCamera.ScreenPointToRay(copyEventData.position); // Mouse
+            Ray ray = eventCameraOverride.ScreenPointToRay(copyEventData.position); // Mouse
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit))
             {
-                // Debug.Log("[VirtualScreen] raycast hit");
+                //Debug.Log("[VirtualScreen] raycast hit");
 
                 if (hit.collider.transform == screenTransform)
                 {
@@ -61,12 +70,12 @@ namespace Astro {
 
                     screenCaster.Raycast(copyEventData, resultAppendList);
 
-                    if (Input.GetMouseButtonUp(0) && resultAppendList.Count == 0) {
+                    if (resultAppendList.Count == 0 && copyEventData.button == PointerEventData.InputButton.Left && Input.GetMouseButtonUp(0)) {
                         // Clicked on nothing
                         Game.Events.Dispatch(GameEvents.MonitorEmptySpaceClicked);
                     }
 
-                    // Debug.Log("[VirtualScreen] redirected to " + copyEventData.position);
+                    //Debug.Log("[VirtualScreen] redirected to " + copyEventData.position);
                 }
                 else
                 {
@@ -75,7 +84,7 @@ namespace Astro {
             }
             else
             {
-                // Debug.Log("[VirtualScreen] default cast to " + copyEventData.position);
+                //Debug.Log("[VirtualScreen] default cast to " + copyEventData.position);
                 // base.Raycast(copyEventData, resultAppendList);
             }
         }

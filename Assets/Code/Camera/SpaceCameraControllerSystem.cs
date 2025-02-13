@@ -110,7 +110,7 @@ namespace Astro
             angles.x = m_State.VertLook;
             m_State.Camera.RootTransform.localEulerAngles = angles;
 
-            m_State.OnLookUpdated.Invoke(m_State);
+            RecordLookUpdated();
         }
 
         private void AdjustHorizLook(float adjustment)
@@ -123,7 +123,7 @@ namespace Astro
             angles.y = m_State.HorizLook;
             m_State.Camera.RootTransform.localEulerAngles = angles;
 
-            m_State.OnLookUpdated.Invoke(m_State);
+            RecordLookUpdated();
         }
 
         private void ProcessKeyboardLookDiscrete()
@@ -156,22 +156,22 @@ namespace Astro
             if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W))
             {
                 // look up
-                AdjustVertLook(-m_State.SmoothLookIncrement / m_State.Camera.FOVPlane.Zoom);
+                AdjustVertLook(-m_State.SmoothLookIncrement / m_State.Camera.Camera.fieldOfView);
             }
             else if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S))
             {
                 // look down
-                AdjustVertLook(m_State.SmoothLookIncrement / m_State.Camera.FOVPlane.Zoom);
+                AdjustVertLook(m_State.SmoothLookIncrement / m_State.Camera.Camera.fieldOfView);
             }
             if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
             {
                 // look left
-                AdjustHorizLook(-m_State.SmoothLookIncrement / m_State.Camera.FOVPlane.Zoom);
+                AdjustHorizLook(-m_State.SmoothLookIncrement / m_State.Camera.Camera.fieldOfView);
             }
             else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
             {
                 // look right
-                AdjustHorizLook(m_State.SmoothLookIncrement / m_State.Camera.FOVPlane.Zoom);
+                AdjustHorizLook(m_State.SmoothLookIncrement / m_State.Camera.Camera.fieldOfView);
             }
         }
 
@@ -187,12 +187,13 @@ namespace Astro
             var yScrollDelta = Input.mouseScrollDelta.y;
             if (yScrollDelta != 0)
             {
-                float newZoom = m_State.Camera.FOVPlane.Zoom;
+                float newZoom = m_State.Camera.Camera.fieldOfView;
 
                 // inverse relationship: as player scrolls updwards, fov decreases
                 newZoom = Mathf.Clamp(newZoom + yScrollDelta * 0.1f * m_State.ZoomSpeed, m_State.ZoomBounds.x, m_State.ZoomBounds.y);
 
-                m_State.Camera.FOVPlane.Zoom = newZoom;
+                m_State.Camera.Camera.fieldOfView = newZoom;
+                RecordLookUpdated();
             }
         }
 
@@ -201,21 +202,31 @@ namespace Astro
             if (Input.GetKeyDown(KeyCode.I))
             {
                 // Zoom in
-                float newZoom = m_State.Camera.FOVPlane.Zoom;
+                float newZoom = m_State.Zoom;
 
                 newZoom = Mathf.Clamp(newZoom - m_State.ZoomIncrement, m_State.ZoomBounds.x, m_State.ZoomBounds.y);
 
-                m_State.Camera.FOVPlane.Zoom = newZoom;
+                m_State.Zoom = newZoom;
+                m_State.Camera.Camera.fieldOfView = m_State.Camera.OriginalFOV / newZoom;
+                RecordLookUpdated();
             }
             if (Input.GetKeyDown(KeyCode.K))
             {
                 // Zoom out
-                float newZoom = m_State.Camera.FOVPlane.Zoom;
+                float newZoom = m_State.Zoom;
 
                 newZoom = Mathf.Clamp(newZoom + m_State.ZoomIncrement, m_State.ZoomBounds.x, m_State.ZoomBounds.y);
 
-                m_State.Camera.FOVPlane.Zoom = newZoom;
+                m_State.Zoom = newZoom;
+                m_State.Camera.Camera.fieldOfView = m_State.Camera.OriginalFOV / newZoom;
+                RecordLookUpdated();
             }
+        }
+
+        private void RecordLookUpdated()
+        {
+            m_State.OnLookUpdated.Invoke(m_State);
+            m_State.LookUpdatedThisFrame = true;
         }
 
         #endregion // Input Processing
@@ -240,30 +251,30 @@ namespace Astro
             switch (m_State.buttonHeld)
             {
                 case buttons.up:
-                    AdjustVertLook(-m_State.SmoothLookIncrement / m_State.Camera.FOVPlane.Zoom);
+                    AdjustVertLook(-m_State.SmoothLookIncrement / m_State.Camera.Camera.fieldOfView);
                     break;
                 case buttons.down:
-                    AdjustVertLook(m_State.SmoothLookIncrement / m_State.Camera.FOVPlane.Zoom);
+                    AdjustVertLook(m_State.SmoothLookIncrement / m_State.Camera.Camera.fieldOfView);
                     break;
                 case buttons.left:
-                    AdjustHorizLook(-m_State.SmoothLookIncrement / m_State.Camera.FOVPlane.Zoom);
+                    AdjustHorizLook(-m_State.SmoothLookIncrement / m_State.Camera.Camera.fieldOfView);
                     break;
                 case buttons.right:
-                    AdjustHorizLook(m_State.SmoothLookIncrement / m_State.Camera.FOVPlane.Zoom);
+                    AdjustHorizLook(m_State.SmoothLookIncrement / m_State.Camera.Camera.fieldOfView);
                     break;
                 case buttons.zoomIn:
-                    newZoom = m_State.Camera.FOVPlane.Zoom;
+                    newZoom = m_State.Camera.Camera.fieldOfView;
 
                     newZoom = Mathf.Clamp(newZoom + 0.025f * m_State.ZoomSpeed, m_State.ZoomBounds.x, m_State.ZoomBounds.y);
 
-                    m_State.Camera.FOVPlane.Zoom = newZoom;
+                    m_State.Camera.Camera.fieldOfView = newZoom;
                     break;
                 case buttons.zoomOut:
-                    newZoom = m_State.Camera.FOVPlane.Zoom;
+                    newZoom = m_State.Camera.Camera.fieldOfView;
 
                     newZoom = Mathf.Clamp(newZoom - 0.025f * m_State.ZoomSpeed, m_State.ZoomBounds.x, m_State.ZoomBounds.y);
 
-                    m_State.Camera.FOVPlane.Zoom = newZoom;
+                    m_State.Camera.Camera.fieldOfView = newZoom;
                     break;
             }
 

@@ -1,6 +1,8 @@
 
 using BeauUtil;
+using BeauUtil.Debugger;
 using FieldDay;
+using FieldDay.Debugging;
 using FieldDay.SharedState;
 using System;
 using UnityEngine;
@@ -11,13 +13,10 @@ namespace Astro {
         public Timer ReviewTimer;
         public Timer ReviewCooldown;
 
-        public Sprite PipCorrect;
-        public Sprite PipIncorrect;
-
-        [HideInInspector] public int ActivePips;
-        [HideInInspector] public bool SubmittedPuzzle = false;
-        [HideInInspector] public bool SubmittedObject = false;
-        [HideInInspector] public int SciencePoints = 0;
+        [NonSerialized] public int ActivePips;
+        [NonSerialized] public bool SubmittedPuzzle = false;
+        [NonSerialized] public bool SubmittedObject = false;
+        [NonSerialized] public int SciencePoints = 0;
     }
 
     public static partial class PointsUtility {
@@ -51,7 +50,16 @@ namespace Astro {
             int newTotal = state.SciencePoints + delta;
             SetPoints(Math.Max(0, newTotal), state);
         }
- 
+
+        [DebugMenuFactory]
+        private static DMInfo PointsMenu() {
+            DMInfo info = new DMInfo("Points");
+            info.AddButton("Add Point", () => {
+                AddPoints(1);
+            });
+            return info;
+        }
+
         static public readonly CastableEvent<int> OnPointsUpdated = new CastableEvent<int>();
     }
 }

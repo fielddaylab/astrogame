@@ -42,7 +42,13 @@ namespace ScriptableBake {
                 flattenFlags |= FlattenFlags.SkipAnimators;
             }
             Baking.FlattenHierarchy(transform, flattenFlags);
-            Baking.Destroy(DestroyGameObject ? (UnityEngine.Object) gameObject : this);
+            bool destroyGO = DestroyGameObject;
+
+            if (destroyGO && !Baking.IsEmptyLeaf(transform, 1)) {
+                Debug.LogWarningFormat("[FlattenHierarchy] DestroyGameObject enabled on non-leaf GameObject '{0}' (children or additional components found) - not destroying", gameObject.name);
+                destroyGO = false;
+            }
+            Baking.Destroy(destroyGO ? (UnityEngine.Object) gameObject : this, true);
             return true;
         }
 

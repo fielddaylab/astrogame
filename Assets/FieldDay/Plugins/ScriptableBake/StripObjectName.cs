@@ -33,7 +33,7 @@ namespace ScriptableBake {
         bool IBaked.Bake(BakeFlags flags, BakeContext context) {
             bool always = Always;
             Transform cachedTransform = this.transform;
-            Baking.Destroy(this);
+            Baking.Destroy(this, true);
 
             if (!always) {
                 if ((flags & ExcludedFlags) != 0 || (flags & RequiredFlags) != RequiredFlags) {
