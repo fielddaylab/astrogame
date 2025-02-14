@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
 using FieldDay;
 using System;
+using BeauUtil.Debugger;
 
 namespace Astro {
 
@@ -23,6 +24,7 @@ namespace Astro {
         protected override void Start()
         {
             base.Start();
+
             copyEventData = new PointerEventData(EventSystem.current);
             eventCameraOverride = Find.State<ViewState>().Camera.Camera;
             screenTransform = Find.State<MonitorState>().ScreenTransform;
