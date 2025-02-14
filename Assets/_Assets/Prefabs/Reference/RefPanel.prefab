@@ -156,6 +156,7 @@ GameObject:
   - component: {fileID: 426841369505344703}
   - component: {fileID: 3329570053166687861}
   - component: {fileID: 8593666861912041337}
+  - component: {fileID: 3160035709677007593}
   m_Layer: 6
   m_Name: Submit Button
   m_TagString: Untagged
@@ -263,11 +264,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsDraggable: 0
-  InteractReceived: 0
-  InteractEnded: 0
-  IsDragging: 0
-  MaintainExistingView: 0
-  ConnectedViewNode: {fileID: 0}
 --- !u!114 &8593666861912041337
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -281,6 +277,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ButtonType: 1
+--- !u!114 &3160035709677007593
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4370199197931916605}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a59a59fc4e9a014c8fbb22f00e5eeff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AlwaysFireClickEvents: 0
+  CursorType:
+    m_HashValue: 0
+  Tooltip: 
 --- !u!1 &5256135569958746326
 GameObject:
   m_ObjectHideFlags: 0
@@ -478,7 +490,7 @@ Transform:
   m_GameObject: {fileID: 5341000868921214955}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.166, y: -2.047, z: -0.164}
+  m_LocalPosition: {x: -0.166, y: -2.047, z: -0.207}
   m_LocalScale: {x: 2.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -526,7 +538,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: aea27dc6ce88f5c4497743feb0d84326, type: 3}
-  m_Color: {r: 1, g: 0.41662744, b: 0, a: 0.65882355}
+  m_Color: {r: 1, g: 0.41662744, b: 0, a: 0.48235294}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -562,7 +574,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8906540805415555880, guid: d7ab01c440eaad3469f39b00bcce48e0, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0.05
       objectReference: {fileID: 0}
     - target: {fileID: 8906540805415555880, guid: d7ab01c440eaad3469f39b00bcce48e0, type: 3}
       propertyPath: m_LocalRotation.w
@@ -636,7 +648,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8906540805415555880, guid: d7ab01c440eaad3469f39b00bcce48e0, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0.05
       objectReference: {fileID: 0}
     - target: {fileID: 8906540805415555880, guid: d7ab01c440eaad3469f39b00bcce48e0, type: 3}
       propertyPath: m_LocalRotation.w
