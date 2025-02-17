@@ -124,15 +124,21 @@ namespace Astro
                 }
                 m_ConvertedPackets.PushBack(newPacket);
             }
+            if ((m_AvailableInstrumentTypes & DataTypeMask.Historical_ApparentMagnitude) != 0) {
+                DataPacket newPacket;
+                if (m_StateA.ToConvert != null) {
+                    newPacket = DataPacket.HistoricalApparentMagnitude(m_StateA.ToConvert.HistoricalBrightness);
+                } else {
+                    newPacket = DataPacket.HistoricalApparentMagnitude(null);
+                }
+                m_ConvertedPackets.PushBack(newPacket);
+            }
             /* TODO: historical data handling
             if ((m_AvailableInstrumentTypes & DataTypeMask.Historical_Coordinates) != 0) {
                 DataPacket newPacket = DataPacket.HistoricalCoordinates(m_StateA.ToConvert.Coords, );
                 m_ConvertedPackets.PushBack(newPacket);
             }
-            if ((m_AvailableInstrumentTypes & DataTypeMask.Historical_ApparentMagnitude) != 0) {
-                DataPacket newPacket = DataPacket.HistoricalApparentMagnitude(m_StateA.ToConvert.ApparentMagnitude, );
-                m_ConvertedPackets.PushBack(newPacket);
-            }
+
             if ((m_AvailableInstrumentTypes & DataTypeMask.Historical_Temperature) != 0) {
                 DataPacket newPacket = DataPacket.HistoricalTemperature(m_StateA.ToConvert.Temperature, );
                 m_ConvertedPackets.PushBack(newPacket);

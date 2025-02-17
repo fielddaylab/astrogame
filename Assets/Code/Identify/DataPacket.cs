@@ -78,10 +78,8 @@ namespace Astro {
             });
         }
 
-        static public DataPacket HistoricalApparentMagnitude(double magnitude, HistoricalPatternAsset pattern) {
-            return new DataPacket(DataTypeMask.Historical_ApparentMagnitude, AssetUtility.IdOf(pattern), new Datum() {
-                Magnitude = magnitude
-            });
+        static public DataPacket HistoricalApparentMagnitude(HistoricalPatternAsset pattern) {
+            return new DataPacket(DataTypeMask.Historical_ApparentMagnitude, AssetUtility.IdOf(pattern), new Datum());
         }
 
         static public DataPacket AbsoluteMagnitude(double magnitude) {

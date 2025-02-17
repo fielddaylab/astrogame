@@ -346,7 +346,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PatternMaterials:
   - Pattern: 0
+    Material: {fileID: 2100000, guid: 5228e7ffb28c3ea46bffa66d0aa262e9, type: 2}
+  - Pattern: 1
     Material: {fileID: 2100000, guid: ad42dc41d802f9b4faa647c828d43c37, type: 2}
+  - Pattern: 2
+    Material: {fileID: 2100000, guid: 15e8e47d00535544ab8dc9644e0f9170, type: 2}
 --- !u!1 &580731390
 GameObject:
   m_ObjectHideFlags: 0
@@ -440,8 +444,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsDraggable: 0
-  MaintainExistingView: 0
-  ConnectedViewNode: {fileID: 0}
 --- !u!65 &580731396
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1431,8 +1433,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsDraggable: 0
-  MaintainExistingView: 0
-  ConnectedViewNode: {fileID: 0}
 --- !u!65 &1867574532
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2178,7 +2178,7 @@ PrefabInstance:
     - target: {fileID: 1807892862274751739, guid: 36543bce9fc63304181344ce88794f53, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: ed770837d222f0443a4221f022392637, type: 2}
+      objectReference: {fileID: 2100000, guid: 2f75848563b72cb45877dc22eb77cec5, type: 2}
     - target: {fileID: 7414546681388126419, guid: 36543bce9fc63304181344ce88794f53, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.203

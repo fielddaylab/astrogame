@@ -28,6 +28,7 @@ namespace Astro {
         [Header("Magnitude")]
         public float ApparentMagnitude;
         public float AbsoluteMagnitude;
+        public HistoricalPatternAsset HistoricalBrightness;
 
         [Header("Materials")]
         public SpectrographMaterialMask Spectrograph;
@@ -74,8 +75,11 @@ namespace Astro {
                 case DataTypeMask.Distance: {
                         return DataPacket.Distance(asset.Distance);
                     }
+                case DataTypeMask.Historical_ApparentMagnitude: {
+                        return DataPacket.HistoricalApparentMagnitude(asset.HistoricalBrightness);
+                    }
+
                 case DataTypeMask.Historical_Coordinates:
-                case DataTypeMask.Historical_ApparentMagnitude: 
                 case DataTypeMask.Historical_Temperature: 
                 case DataTypeMask.Historical_Distance: 
                 case DataTypeMask.Historical_Color: {

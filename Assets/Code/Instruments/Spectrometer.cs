@@ -22,10 +22,10 @@ namespace Astro {
 
     public static partial class SpectrographUtility {
         public static void OnDisplayRequest(Spectrometer spec, DataPacket packet, DataFormattingFlags flags) {
-            SetMaterials(spec.Graphic, packet.Value.Materials);
+            SetElements(spec.Graphic, packet.Value.Materials);
         }
         public static void OnDisplayClear(Spectrometer spec) {
-            ClearMaterials(spec.Graphic);
+            ClearElements(spec.Graphic);
         }
     }
 }

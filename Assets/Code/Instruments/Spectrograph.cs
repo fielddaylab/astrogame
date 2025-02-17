@@ -30,11 +30,11 @@ namespace Astro {
 
     public static partial class SpectrographUtility {
 
-        public static void SetMaterials(Spectrograph graph, SpectrographMaterialMask elements) {
+        public static void SetElements(Spectrograph graph, SpectrographMaterialMask elements) {
             graph.CurrentElements = elements;
             DisplaySpectrum(graph);
         }
-        public static void ClearMaterials(Spectrograph graph) {
+        public static void ClearElements(Spectrograph graph) {
             graph.CurrentElements = 0;
             DisplaySpectrum(graph);
         }
@@ -46,15 +46,15 @@ namespace Astro {
             EqualizeLineNums(graph, linePos.Count, state);
             for (int i = 0; i < linePos.Count; i++) {
                 graph.Lines[i].SetActive(true);
-                graph.Lines[i].transform.position.Set(linePos[i] - 0.5f, 0f, -0.01f);
+                graph.Lines[i].transform.localPosition = new Vector3(linePos[i] - 0.5f, 0f, -0.01f);
             }
         }
 
         private static void EqualizeLineNums(Spectrograph graph, int numLines, SpectrometerState state) {
-            int lineNumDiff = graph.Lines.Count - numLines;
+            int lineNumDiff = numLines - graph.Lines.Count;
             if (lineNumDiff > 0) {
                 for (int i = 0; i < lineNumDiff; i++) {
-                    graph.Lines.Add(GameObject.Instantiate(state.LinePrefab));
+                    graph.Lines.Add(GameObject.Instantiate(state.LinePrefab, graph.transform));
                 }
             } else if (lineNumDiff < 0) {
                 for (int i = 0; i < -lineNumDiff; i++) {
@@ -64,7 +64,11 @@ namespace Astro {
         }
 
         private static void UpdateBackground(Spectrograph graph, SpectrometerState state) {
-            graph.Background.material = graph.CurrentElements == 0 ? state.BlankBackground : state.SpectrumBackground;
+            if (graph.CurrentElements == 0) {
+                graph.Background.material = state.BlankBackground;
+            } else {
+                graph.Background.material = state.SpectrumBackground;
+            }
         }
     }
 }

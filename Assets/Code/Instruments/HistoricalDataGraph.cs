@@ -1,12 +1,14 @@
+using BeauUtil;
 using FieldDay;
 using FieldDay.Components;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Astro {
     public class HistoricalDataGraph : BatchedComponent, IRegistrationCallbacks {
-        public HistoricalPatternType CurrentType;
-        public float Scale;
+        [NonSerialized] public HistoricalPatternType CurrentType;
+        [NonSerialized] public float Scale;
         public MeshRenderer DisplayTarget;
         public DataDisplay Display;
 
@@ -24,7 +26,7 @@ namespace Astro {
     public static class HistoricalDataUtility {
 
         public static void OnDisplayRequest(HistoricalDataGraph graph, DataPacket packet, DataFormattingFlags flags) {
-            SetPattern(graph, Find.NamedAsset<HistoricalPatternAsset>(packet.HistoricalPatternId));
+            SetPattern(graph, packet.HistoricalPatternId);
         }
         
         public static void OnDisplayClear(HistoricalDataGraph graph) {
@@ -37,9 +39,15 @@ namespace Astro {
             UpdatePatternMaterial(graph);
         }
 
-        public static void SetPattern(HistoricalDataGraph graph, HistoricalPatternAsset asset) {
-            graph.CurrentType = asset.Type;
-            graph.Scale = asset.WaveAmplitude;
+        public static void SetPattern(HistoricalDataGraph graph, StringHash32 assetId) {
+            if (assetId.Equals(StringHash32.Null)) {
+                graph.CurrentType = HistoricalPatternType.Constant;
+                graph.Scale = 1;
+            } else {
+                HistoricalPatternAsset asset = Find.NamedAsset<HistoricalPatternAsset>(assetId);
+                graph.CurrentType = asset.Type;
+                graph.Scale = asset.WaveAmplitude;
+            }
             UpdatePatternMaterial(graph);
         }
 
