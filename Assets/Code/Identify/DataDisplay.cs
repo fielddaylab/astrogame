@@ -93,7 +93,7 @@ namespace Astro {
 
                 case DataTypeMask.ApparentMagnitude:
                 case DataTypeMask.AbsoluteMagnitude: {
-                    sb.AppendNoAlloc(packet.Value.Magnitude, 1);
+                    sb.AppendNoAlloc(packet.Value.Magnitude, 2);
                     return true;
                 }
 
