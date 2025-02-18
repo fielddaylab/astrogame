@@ -98,7 +98,7 @@ namespace Astro {
                 }
 
                 case DataTypeMask.Temperature: {
-                    sb.AppendNoAlloc(packet.Value.Temperature, 0).Append("° K");
+                    sb.AppendNoAlloc(packet.Value.Temperature, 0).Append("K");
                     return true;
                 }
 

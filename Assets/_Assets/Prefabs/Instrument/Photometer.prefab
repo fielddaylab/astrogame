@@ -176,9 +176,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8853334957855964770}
+  - component: {fileID: 7404601679685020724}
   - component: {fileID: 4558107148524353329}
   - component: {fileID: 3671049769539962560}
-  - component: {fileID: 8530443091211892662}
+  - component: {fileID: 8066432914581860032}
   m_Layer: 6
   m_Name: Photometer Instrument
   m_TagString: Untagged
@@ -205,6 +206,20 @@ Transform:
   - {fileID: 5398322577740544766}
   m_Father: {fileID: 3706048232349201963}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7404601679685020724
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2244598294880535265}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 463aef872607530468e8a65d588eb701, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AutoPopulated:
+  - {fileID: 4558107148524353329}
 --- !u!114 &4558107148524353329
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -239,7 +254,7 @@ MonoBehaviour:
   m_ClassName:
     m_Source: PhotometerInstrument
     m_HashValue: 1609805977
---- !u!114 &8530443091211892662
+--- !u!114 &8066432914581860032
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -736,6 +751,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7952490881837112793}
   - component: {fileID: 7469720217021923449}
+  - component: {fileID: 1627693791092370547}
   m_Layer: 6
   m_Name: RenderOutput
   m_TagString: Untagged
@@ -779,6 +795,22 @@ MonoBehaviour:
   Contents: {fileID: 5586798969907019695}
   TargetRenderer: {fileID: 445174199655781287}
   TargetMeshFilter: {fileID: 5568281766299262034}
+--- !u!114 &1627693791092370547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7209097792748964538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ae620349e7bce24688d2ab26f9be5a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DestroyInactiveChildren: 0
+  Recursive: 0
+  DestroyGameObject: 0
+  IgnoreAnimators: 1
 --- !u!1 &7315299587415156953
 GameObject:
   m_ObjectHideFlags: 0
