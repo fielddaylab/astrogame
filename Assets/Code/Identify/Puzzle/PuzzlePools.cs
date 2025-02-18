@@ -19,7 +19,7 @@ namespace Astro
 
         [Header("Puzzle")]
         public PuzzleCellPool Cells;
-        public PuzzleCellPool ColorCells;
+        public PuzzleColorCellPool ColorCells;
         public PuzzleHeaderPool Headers;
 
         [Header("Shared")]

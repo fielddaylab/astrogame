@@ -42,9 +42,9 @@ namespace Astro
                 }
             }
         }
-        public static void LayoutCells(PuzzleDisplay display, List<DataTypeMask> types)
+        public static void LayoutCells(PuzzleDisplay display, PuzzleState state, List<DataTypeMask> types)
         {
-            var colDims = GenerateColDims(types);
+            var colData = LookupColData(state.Library, types);
 
             // position and scale headers
             var cumulativePos = new Vector3(-display.BaseCellWidth, 0, 0);
@@ -58,7 +58,7 @@ namespace Astro
                 var currScale = currHeader.transform.lossyScale;
                 var origTextScaleLocal = currHeader.Text.transform.localScale;
                 var origTextScaleLossy = currHeader.Text.transform.lossyScale;
-                currHeader.transform.SetScale(currScale * colDims[c], Axis.X);
+                currHeader.transform.SetScale(currScale * colData[c].Dims, Axis.X);
                 var scaleRatio = new Vector3(
                     origTextScaleLossy.x / currHeader.Text.transform.lossyScale.x,
                     origTextScaleLossy.y / currHeader.Text.transform.lossyScale.y,
@@ -68,9 +68,9 @@ namespace Astro
 
                 // pos
                 // uniform spacing regardless of previous element scaling
-                cumulativePos.x += (display.BaseCellWidth * colDims[c].x + display.ColSpacing) / 2.0f;
+                cumulativePos.x += (display.BaseCellWidth * colData[c].Dims.x + display.ColSpacing) / 2.0f;
                 currHeader.transform.localPosition = cumulativePos;
-                cumulativePos.x += (display.BaseCellWidth * colDims[c].x + display.ColSpacing) / 2.0f;
+                cumulativePos.x += (display.BaseCellWidth * colData[c].Dims.x + display.ColSpacing) / 2.0f;
             }
 
             // position and scale cells
@@ -81,38 +81,13 @@ namespace Astro
                 for (int c = 0; c < display.NumCols; c++) {
                     var currCell = display.Cells[r * display.NumCols + c];
                     currCell.transform.SetParent(display.CellAnchorPos, false);
-
-                    // scale
-                    if (currCell.DataSlot.Displays.Length != 0)
-                    {
-                        if (currCell.DataSlot.Displays[0].OutputTransform != null)
-                        {
-                            var currScale = currCell.transform.lossyScale;
-                            var origTextScaleLocal = currCell.DataSlot.Displays[0].OutputTransform.transform.localScale;
-                            var origTextScaleLossy = currCell.DataSlot.Displays[0].OutputTransform.transform.lossyScale;
-                            currCell.transform.SetScale(currScale * colDims[c], Axis.X);
-                            var scaleRatio = new Vector3(
-                                origTextScaleLossy.x / currCell.DataSlot.Displays[0].OutputTransform.transform.lossyScale.x,
-                                origTextScaleLossy.y / currCell.DataSlot.Displays[0].OutputTransform.transform.lossyScale.y,
-                                origTextScaleLossy.z / currCell.DataSlot.Displays[0].OutputTransform.transform.lossyScale.z
-                                );
-                            for (int i = 0; i < currCell.DataSlot.Displays.Length; i++)
-                            {
-                                currCell.DataSlot.Displays[i].OutputTransform.transform.SetScale(origTextScaleLocal.x * scaleRatio, Axis.X);
-                            }
-                        }
-                        else
-                        {
-                            var currScale = currCell.transform.lossyScale;
-                            currCell.transform.SetScale(currScale * colDims[c], Axis.X);
-                        }
-                    }
+                    currCell.MeshFilter.mesh = colData[c].Mesh;
 
                     //pos
                     // uniform spacing regardless of previous element scaling
-                    cumulativePos.x += (display.BaseCellWidth * colDims[c].x + display.ColSpacing) / 2.0f;
+                    cumulativePos.x += (display.BaseCellWidth * colData[c].Dims.x + display.ColSpacing) / 2.0f;
                     currCell.transform.localPosition = cumulativePos;
-                    cumulativePos.x += (display.BaseCellWidth * colDims[c].x + display.ColSpacing) / 2.0f;
+                    cumulativePos.x += (display.BaseCellWidth * colData[c].Dims.x + display.ColSpacing) / 2.0f;
                 }
                 cumulativePos.y += display.RowSpacing;
             }
@@ -137,60 +112,15 @@ namespace Astro
             }
         }
 
-        private static Vector2[] GenerateColDims(List<DataTypeMask> types)
+        private static PuzzleCellLibrary.AssembledCellData[] LookupColData(PuzzleCellLibrary library, List<DataTypeMask> types)
         {
-            Vector2[] newDims = new Vector2[types.Count];
+            PuzzleCellLibrary.AssembledCellData[] newDims = new PuzzleCellLibrary.AssembledCellData[types.Count];
             for (int i = 0; i < types.Count; i++) {
-                newDims[i] = GenerateColDimsForType(types[i]);
+                library.Lookup(types[i], out var assembledData);
+                newDims[i] = assembledData;
             }
 
             return newDims;
-        }
-
-        private static Vector2 GenerateColDimsForType(DataTypeMask type)
-        {
-            var defaultDims = new Vector2(1, 1);
-            if ((type & DataTypeMask.Name) != 0) {
-                return defaultDims;
-            }
-            if ((type & DataTypeMask.Coordinates) != 0) {
-                return defaultDims * 1.2f;
-            }
-            if ((type & DataTypeMask.Color) != 0) {
-                return defaultDims * 0.6f;
-            }
-            if ((type & DataTypeMask.ApparentMagnitude) != 0) {
-                return defaultDims;
-            }
-            if ((type & DataTypeMask.AbsoluteMagnitude) != 0) {
-                return defaultDims;
-            }
-            if ((type & DataTypeMask.MaterialSpectrum) != 0) {
-                return defaultDims;
-            }
-            if ((type & DataTypeMask.Temperature) != 0) {
-                return defaultDims;
-            }
-            if ((type & DataTypeMask.Distance) != 0) {
-                return defaultDims * 0.8f;
-            }
-            if ((type & DataTypeMask.Historical_Coordinates) != 0) {
-                return defaultDims;
-            }
-            if ((type & DataTypeMask.Historical_ApparentMagnitude) != 0) {
-                return defaultDims;
-            }
-            if ((type & DataTypeMask.Historical_Temperature) != 0) {
-                return defaultDims;
-            }
-            if ((type & DataTypeMask.Historical_Distance) != 0) {
-                return defaultDims;
-            }
-            if ((type & DataTypeMask.Historical_Color) != 0) {
-                return defaultDims;
-            }
-
-            return defaultDims;
         }
     }
 }

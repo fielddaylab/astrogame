@@ -24,6 +24,8 @@ namespace Astro {
         public bool[,] SelectedCells;
         public DataTypeMask RelevantColFilter;
 
+        public PuzzleCellLibrary Library;
+
         [Header("Consts")]
         public Material UnselectedCellMat;
         public Material SelectedCellMat;

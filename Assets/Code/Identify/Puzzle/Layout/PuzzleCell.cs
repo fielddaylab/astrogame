@@ -9,6 +9,7 @@ namespace Astro
     {
         public DataSlot DataSlot;
         public MeshRenderer Mesh;
+        public MeshFilter MeshFilter;
     }
 
     public static partial class PuzzleUtility
