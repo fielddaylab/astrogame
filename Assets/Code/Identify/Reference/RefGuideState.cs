@@ -13,7 +13,7 @@ namespace Astro {
         [NonSerialized] public ReferencePageAsset CurrentPage;
         [NonSerialized] public int CurrentPageNum;
         [NonSerialized] public ReferencePageList PageList;
-        [NonSerialized] public bool SubmissionActive;
+        [NonSerialized] public bool SubmissionActive = true;
 
         [Header("Game Objects")]
         public Transform RefGuideRoot;
