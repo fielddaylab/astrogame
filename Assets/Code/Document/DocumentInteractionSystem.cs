@@ -1,4 +1,5 @@
 using BeauRoutine;
+using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay;
 using FieldDay.HID;
@@ -33,17 +34,25 @@ namespace Astro {
             state.LastMousePos = Input.mousePosition;
             if (Physics.Raycast(ray, out RaycastHit hit, 10f, LayerMasks.DocumentSurface_Mask)) {
                 // lerp document from current position to new target position
-                LerpToTarget(state.SelectedDocument.transform, state.SelectedDocument.transform.parent.InverseTransformPoint(hit.point), state.FollowSpeed);
+                Vector3 clampedPoint = state.SelectedDocument.transform.parent.InverseTransformPoint(hit.point);
+                clampedPoint = ClampWithinBoard(state, clampedPoint, state.SelectedDocument.Renderer.Size);
+                LerpToTarget(state.SelectedDocument.transform, clampedPoint, state.FollowSpeed);
                 //state.DocumentRoutine.Replace(MoveToPoint(state.SelectedDocument.transform, hit.point, state.FollowSpeed));
             } else {
                 DeselectDocument(state);
             }
         }
 
+        public static Vector2 ClampWithinBoard(DocumentBoardState state, Vector3 localPosition, Rect documentSize) {
+            Vector2 offset = (Vector2) localPosition + documentSize.center;
+            Geom.Constrain(ref offset, documentSize.size, state.DraggableBounds);
+            return offset - documentSize.center;
+        }
+
         private static void LerpToTarget(Transform transform, Vector3 target, float percent) {
             transform.SetPosition(Vector3.Lerp(transform.localPosition, target, percent), Axis.XY, Space.Self);
-            if (Vector3.Distance(transform.localPosition, target) < 0.1f) {
-                transform.SetPosition(target, Axis.XYZ, Space.Self);
+            if (Vector2.Distance(transform.localPosition, target) < 0.1f) {
+                transform.SetPosition(target, Axis.XY, Space.Self);
             }
         }
     }

@@ -11,5 +11,6 @@ namespace Astro {
         public TMP_Text Body;
         public MeshRenderer Background;
         public Vector3 ZoomOffsetOverride;
+        public Rect Size;
     }
 }

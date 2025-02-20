@@ -1,3 +1,4 @@
+using System;
 using FieldDay.Components;
 using UnityEngine;
 
@@ -6,5 +7,7 @@ namespace Astro {
     public sealed class LabButton : BatchedComponent {
         public Transform Movable;
         public Vector3 LocalDisplacement;
+
+        [NonSerialized] public Vector3 OriginalDisplacement;
     }
 }

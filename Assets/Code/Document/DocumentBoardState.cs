@@ -19,6 +19,7 @@ namespace Astro {
         [NonSerialized] public Routine DocumentRoutine;
 
         public Transform DocumentParent;
+        public Rect DraggableBounds;
 
         public AssetPack DocumentAssets;
 
