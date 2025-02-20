@@ -95,10 +95,7 @@ GameObject:
   - component: {fileID: 7059978805060859893}
   - component: {fileID: 3861222262296280669}
   - component: {fileID: 3431215487387641239}
-  - component: {fileID: 6684277821267048234}
   - component: {fileID: 8249933874315370666}
-  - component: {fileID: 1027705954016477942}
-  - component: {fileID: 8478864861683258210}
   - component: {fileID: 4318892829675524799}
   m_Layer: 6
   m_Name: spectromMod_v1
@@ -175,27 +172,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &6684277821267048234
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1391463076238217271}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.18202591, y: 0.9666584, z: 2.9520335}
-  m_Center: {x: 0.799436, y: 0, z: -0.00000023841858}
 --- !u!114 &8249933874315370666
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -210,35 +186,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AutoPopulated:
   - {fileID: 1296281115437083586}
---- !u!114 &1027705954016477942
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1391463076238217271}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a59a59fc4e9a014c8fbb22f00e5eeff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_AlwaysFireClickEvents: 0
-  CursorType:
-    m_HashValue: 3639130888
-  Tooltip: 
---- !u!114 &8478864861683258210
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1391463076238217271}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38d587e5b249a5141b2b8e4cc3bb1223, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  IsDraggable: 0
 --- !u!114 &4318892829675524799
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -348,6 +295,8 @@ GameObject:
   - component: {fileID: 2031005688275402746}
   - component: {fileID: 3580527551487833069}
   - component: {fileID: 7478602970602002811}
+  - component: {fileID: 6918794047519705031}
+  - component: {fileID: 6027320938849945794}
   m_Layer: 6
   m_Name: LoadButton
   m_TagString: Untagged
@@ -364,7 +313,7 @@ Transform:
   m_GameObject: {fileID: 5792092814355354869}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -1, z: -0, w: 0.000000059604645}
-  m_LocalPosition: {x: 0.8470001, y: -0.096000016, z: 1.207}
+  m_LocalPosition: {x: 0.847, y: -0.096000016, z: 1.2164}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -418,6 +367,35 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DataSlot: {fileID: 1296281115437083586}
+--- !u!114 &6918794047519705031
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5792092814355354869}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a59a59fc4e9a014c8fbb22f00e5eeff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AlwaysFireClickEvents: 0
+  CursorType:
+    m_HashValue: 4083764610
+  Tooltip: 
+--- !u!114 &6027320938849945794
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5792092814355354869}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38d587e5b249a5141b2b8e4cc3bb1223, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsDraggable: 0
 --- !u!1 &7640469775057182925
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,8 +5,10 @@ using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay;
 using FieldDay.Components;
+using FieldDay.UI;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Astro {
     public sealed class DataDisplay : BatchedComponent {
@@ -77,6 +79,21 @@ namespace Astro {
             display.OnDisplayCleared.Invoke();
         }
 
+        static public void SetDisplayHidden(DataDisplay display, bool hide) {
+            if (display.DefaultOutput) {
+                if (hide) {
+                    display.DefaultOutput.gameObject.SetActive(false);
+                } else {
+                    display.DefaultOutput.gameObject.SetActive(true);
+                }
+            } else {
+                throw new NotImplementedException("Hiding non-text data display not yet implemented");
+            }
+            if (display.OutputRender) {
+                display.OutputRender.MarkDirty();
+            }
+        }
+
         static private bool TryFormatForDefaultOutput(DataPacket packet, DataFormattingFlags flags, StringBuilder sb) {
             switch (packet.Type) {
                 case DataTypeMask.Name: {
@@ -93,17 +110,17 @@ namespace Astro {
 
                 case DataTypeMask.ApparentMagnitude:
                 case DataTypeMask.AbsoluteMagnitude: {
-                    sb.AppendNoAlloc(packet.Value.Magnitude, 1);
+                    sb.AppendNoAlloc(packet.Value.Magnitude, 2);
                     return true;
                 }
 
                 case DataTypeMask.Temperature: {
-                    sb.AppendNoAlloc(packet.Value.Temperature, 0).Append("° K");
+                    sb.AppendNoAlloc(packet.Value.Temperature, 0).Append("K");
                     return true;
                 }
 
                 case DataTypeMask.Distance: {
-                    sb.AppendNoAlloc(packet.Value.Distance, 2).Append("pc");
+                    sb.AppendNoAlloc(packet.Value.Distance, 2).Append("lightyears");
                     return true;
                 }
 
