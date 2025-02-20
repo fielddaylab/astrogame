@@ -18,7 +18,7 @@ namespace Astro {
         public void OnRegister() {
             MagnitudeDisplay.OnDisplayRequested.Register((packet, flags) => PhotometerUtility.UpdateDial(this, packet));
             MagnitudeDisplay.OnDisplayCleared.Register(() => PhotometerUtility.UpdateDial(this));
-
+            PhotometerUtility.UpdateDial(this);
         }
     }
 
@@ -32,7 +32,7 @@ namespace Astro {
         }
 
         public static void UpdateDial(PhotometerDial dial) {
-            UpdateDial(dial, DataPacket.ApparentMagnitude(5));
+            UpdateDial(dial, DataPacket.ApparentMagnitude(MIN_MAG));
         }
 
         public static float MagToDegrees(float magnitude) {

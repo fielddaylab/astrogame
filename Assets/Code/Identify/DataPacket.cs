@@ -78,6 +78,12 @@ namespace Astro {
             });
         }
 
+        static public DataPacket MinAppMagnitude() {
+            return new DataPacket(DataTypeMask.ApparentMagnitude, new Datum() {
+                Magnitude = PhotometerUtility.MIN_MAG,
+            }, false);
+        }
+
         static public DataPacket HistoricalApparentMagnitude(HistoricalPatternAsset pattern) {
             return new DataPacket(DataTypeMask.Historical_ApparentMagnitude, AssetUtility.IdOf(pattern), new Datum());
         }
@@ -86,6 +92,11 @@ namespace Astro {
             return new DataPacket(DataTypeMask.AbsoluteMagnitude, new Datum() {
                 Magnitude = magnitude
             });
+        }
+        static public DataPacket MinAbsMagnitude() {
+            return new DataPacket(DataTypeMask.AbsoluteMagnitude, new Datum() {
+                Magnitude = PhotometerUtility.MIN_MAG,
+            }, false);
         }
 
         static public DataPacket Spectrograph(SpectrographMaterialMask materials) {
