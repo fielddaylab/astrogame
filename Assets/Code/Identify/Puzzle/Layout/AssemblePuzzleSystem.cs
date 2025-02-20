@@ -67,6 +67,7 @@ namespace Astro
                             // provided data is not modifiable
                             newCell.DataSlot.Modifiable = false;
                         }
+                        newCell.AtlasOutput.RegionId = "R" + r + "C" + c;
                         m_CellWorkList.PushBack(newCell);
                     }
                 }

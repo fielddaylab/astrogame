@@ -4,8 +4,6 @@ using FieldDay.Components;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using TMPro;
 using UnityEngine;
 
 namespace Astro
@@ -26,6 +24,9 @@ namespace Astro
 
     public static partial class PuzzleUtility
     {
+        static private Vector3 OFFSCREEN_POS = new Vector3(0, -200, 0);
+        static private float OFFSCREEN_SPACING = 40;
+
         public static void LoadCells(PuzzleDisplay display, RingBuffer<PuzzleCell> cells, PuzzleHeader[] headers, int numCols)
         {
             display.SubmitButton.gameObject.SetActive(false);
@@ -45,6 +46,8 @@ namespace Astro
         public static void LayoutCells(PuzzleDisplay display, PuzzleState state, List<DataTypeMask> types)
         {
             var colData = LookupColData(state.Library, types);
+
+            // TODO: Reconfigure OffscreenPuzzleCellAtlas
 
             // position and scale headers
             var cumulativePos = new Vector3(-display.BaseCellWidth, 0, 0);
@@ -82,11 +85,19 @@ namespace Astro
                     var currCell = display.Cells[r * display.NumCols + c];
                     currCell.transform.SetParent(display.CellAnchorPos, false);
                     currCell.MeshFilter.mesh = colData[c].Mesh;
+                    UnityEngine.Object.Destroy(currCell.Collider);
+                    currCell.Collider = currCell.Mesh.gameObject.AddComponent<BoxCollider>();
+
+                    // scale the render displays
+                    var displayScale = currCell.AtlasOutput.TargetRenderer.transform.localScale;
+                    displayScale *= colData[c].Dims;
+                    currCell.AtlasOutput.TargetRenderer.transform.localScale = displayScale;
 
                     //pos
                     // uniform spacing regardless of previous element scaling
                     cumulativePos.x += (display.BaseCellWidth * colData[c].Dims.x + display.ColSpacing) / 2.0f;
                     currCell.transform.localPosition = cumulativePos;
+                    currCell.ContentContainer.transform.localPosition = OFFSCREEN_POS + cumulativePos * OFFSCREEN_SPACING;
                     cumulativePos.x += (display.BaseCellWidth * colData[c].Dims.x + display.ColSpacing) / 2.0f;
                 }
                 cumulativePos.y += display.RowSpacing;
