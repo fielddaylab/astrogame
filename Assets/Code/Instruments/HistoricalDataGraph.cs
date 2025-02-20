@@ -1,5 +1,6 @@
 using BeauRoutine;
 using BeauUtil;
+using BeauUtil.Debugger;
 using FieldDay;
 using FieldDay.Components;
 using System;
@@ -12,15 +13,16 @@ namespace Astro {
         [NonSerialized] public HistoricalPatternType CurrentType;
         [NonSerialized] public float Scale;
         public MeshRenderer DisplayTarget;
-        public DataDisplay Display;
+        public DataDisplay GraphDisplay;
+        [NonSerialized] public bool PauseGraphUpdates;
 
         public void OnDeregister() {
         }
 
         public void OnRegister() {
-            Display.OnDisplayRequested.Register(
+            GraphDisplay.OnDisplayRequested.Register(
                 (packet, flags) => HistoricalDataUtility.OnDisplayRequest(this, packet, flags));
-            Display.OnDisplayCleared.Register(
+            GraphDisplay.OnDisplayCleared.Register(
                 () => HistoricalDataUtility.OnDisplayClear(this));
         }
     }
@@ -28,10 +30,12 @@ namespace Astro {
     public static class HistoricalDataUtility {
 
         public static void OnDisplayRequest(HistoricalDataGraph graph, DataPacket packet, DataFormattingFlags flags) {
+            if (graph.PauseGraphUpdates) return;
             SetPattern(graph, packet.HistoricalPatternId);
         }
         
         public static void OnDisplayClear(HistoricalDataGraph graph) {
+            if (graph.PauseGraphUpdates) return;
             ClearPattern(graph);
         }
 
@@ -51,6 +55,7 @@ namespace Astro {
                 graph.Scale = asset.WaveAmplitude;
             }
             UpdatePatternMaterial(graph, Find.State<HistoricalDataState>());
+            UpdateScale(graph);
         }
 
         public static void UpdatePatternMaterial(HistoricalDataGraph graph, HistoricalDataState state) {
@@ -58,11 +63,28 @@ namespace Astro {
         }
 
         public static Material GetPatternMaterial (HistoricalPatternType type, HistoricalDataState state) {
-            if (state.ShowingParallax) {
-                //parallax should always show sine
-                return state.PatternMaterials.Find(pm => (pm.Pattern == HistoricalPatternType.SineWave)).Material;
-            }
             return state.PatternMaterials.Find(pm => (pm.Pattern == type)).Material;
+        }
+
+        public static void SetParallaxScale(HistoricalDataGraph graph, DataPacket packet, HistoricalDataState hds) {
+            if (!packet.IsValid) {
+                ClearPattern(graph);
+                return;
+            }
+            if (packet.Value.Distance < 0.01) {
+                Log.Error("[HistoricalDataGraph] Attempted to parallax scale distance of 0!");
+                ClearPattern(graph);
+                return;
+            } else {
+                graph.Scale = 48f / (float)packet.Value.Distance;
+            }
+            graph.CurrentType = HistoricalPatternType.Parallax;
+            graph.DisplayTarget.material = hds.PatternMaterials.Find(pm => (pm.Pattern == graph.CurrentType)).Material;
+            UpdateScale(graph);
+        }
+
+        public static void UpdateScale(HistoricalDataGraph graph) {
+            graph.DisplayTarget.transform.SetScale(graph.Scale, Axis.Y);
         }
 
         public static void ToggleInstrumentMode() {
@@ -74,7 +96,8 @@ namespace Astro {
             hds.ShowingParallax = parallaxShowing;
             hds.KnobRoutine.Replace(SlideRoutine(hds));
             DataUtility.SetDisplayHidden(hds.DistanceDisplay, !parallaxShowing);
-            UpdatePatternMaterial(hds.InstrumentGraph, hds);
+            ClearPattern(hds.InstrumentGraph);
+            hds.InstrumentGraph.PauseGraphUpdates = parallaxShowing;
         }
 
         private static IEnumerator SlideRoutine(HistoricalDataState hds) {

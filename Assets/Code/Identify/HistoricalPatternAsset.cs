@@ -17,6 +17,7 @@ namespace Astro {
         Constant,
         SineWave,
         TriangularWave,
+        Parallax,
         Custom
     }
 }
