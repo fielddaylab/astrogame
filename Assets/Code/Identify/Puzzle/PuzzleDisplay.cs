@@ -15,6 +15,7 @@ namespace Astro
         public PuzzleHeader Clues;
         public int NumCols;
         public Transform CellAnchorPos;
+        public Transform RotateModulePos;
         public Transform HeaderAnchorPos;
         public float RowSpacing;
         public float ColSpacing;
@@ -77,8 +78,10 @@ namespace Astro
 
             PuzzlePoolUtility.ClearAllocations(pools);
 
-            // position and scale cells
             int numRows = display.Cells.Length / display.NumCols;
+
+            // position and scale cells
+            Transform[] rowLines = new Transform[numRows];
             cumulativePos = Vector3.zero;
             for (int r = 0; r < numRows; r++) {
                 cumulativePos.x = -display.BaseCellWidth;
@@ -109,6 +112,16 @@ namespace Astro
                     currCell.ContentContainer.transform.localPosition = OFFSCREEN_POS + cumulativePos * OFFSCREEN_SPACING;
                     cumulativePos.x += (display.BaseCellWidth * colData[c].Bundle.Dims.x + display.ColSpacing) / 2.0f;
                 }
+
+                // generate row lines
+                var newRowLine = pools.RowLines.Alloc(display.RotateModulePos.position);
+                newRowLine.transform.SetParent(display.RotateModulePos, false);
+                rowLines[r] = newRowLine;
+                var newPos = newRowLine.transform.localPosition;
+                newPos.x = 0.5f;
+                newPos.y = cumulativePos.y + 0.5f;
+                newPos.z = 0;
+                newRowLine.transform.localPosition = newPos;
                 cumulativePos.y += display.RowSpacing;
             }
         }

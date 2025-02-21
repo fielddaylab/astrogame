@@ -16,6 +16,7 @@ namespace Astro
         [Serializable] public class PuzzleCellPool : SerializablePool<PuzzleCell> { }
         [Serializable] public class PuzzleColorCellPool : SerializablePool<PuzzleCell> { }
         [Serializable] public class PuzzleHeaderPool : SerializablePool<PuzzleHeader> { }
+        [Serializable] public class RowLinePool : SerializablePool<Transform> { }
 
         #endregion // Types
 
@@ -23,6 +24,7 @@ namespace Astro
         public PuzzleCellPool Cells;
         public PuzzleColorCellPool ColorCells;
         public PuzzleHeaderPool Headers;
+        public RowLinePool RowLines;
 
         [Header("Shared")]
         public Transform PoolRoot;
@@ -40,6 +42,7 @@ namespace Astro
             Cells.TryInitialize(PoolRoot);
             ColorCells.TryInitialize(PoolRoot);
             Headers.TryInitialize(PoolRoot);
+            RowLines.TryInitialize(PoolRoot);
             Allocations = new Dictionary<PuzzleCellLibrary.BundleType, int>() {
                 { PuzzleCellLibrary.BundleType.XSmall, 0 },
                 { PuzzleCellLibrary.BundleType.Small, 0 },
