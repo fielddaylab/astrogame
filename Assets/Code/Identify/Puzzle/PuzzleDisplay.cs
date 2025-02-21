@@ -26,6 +26,7 @@ namespace Astro
     {
         static private Vector3 OFFSCREEN_POS = new Vector3(0, -200, 0);
         static private float OFFSCREEN_SPACING = 40;
+        static private Vector3 DEFAULT_RENDER_SCALE = new Vector3(0.51f, 0.23f, 1);
 
         public static void LoadCells(PuzzleDisplay display, RingBuffer<PuzzleCell> cells, PuzzleHeader[] headers, int numCols)
         {
@@ -94,9 +95,12 @@ namespace Astro
                     }
 
                     // scale the render displays
-                    var displayScale = currCell.AtlasOutput.TargetRenderer.transform.localScale;
-                    displayScale *= colData[c].Bundle.Dims;
+                    var displayScale = DEFAULT_RENDER_SCALE;
+                    displayScale *= colData[c].Bundle.RenderDims;
                     currCell.AtlasOutput.TargetRenderer.transform.localScale = displayScale;
+
+                    // scale the render cameras
+                    currCell.Camera.orthographicSize = colData[c].Bundle.CamSize;
 
                     //pos
                     // uniform spacing regardless of previous element scaling

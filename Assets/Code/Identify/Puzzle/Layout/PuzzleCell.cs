@@ -12,6 +12,7 @@ namespace Astro
         public MeshFilter MeshFilter;
         public BoxCollider Collider;
         public RenderAtlasOutput AtlasOutput;
+        public Camera Camera;
         public Transform ContentContainer;
     }
 

@@ -25,7 +25,9 @@ namespace Astro
             public BundleType Type;
             public Mesh Mesh;
             public Mesh OutlineMesh;
-            public Vector2 Dims;
+            public Vector2 Dims; // physical mesh dims
+            public Vector2 RenderDims; // scaling on renderer
+            public float CamSize;
         }
 
         [Serializable]
