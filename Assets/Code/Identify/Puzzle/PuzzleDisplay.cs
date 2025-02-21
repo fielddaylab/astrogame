@@ -43,11 +43,9 @@ namespace Astro
                 }
             }
         }
-        public static void LayoutCells(PuzzleDisplay display, PuzzleState state, List<DataTypeMask> types)
+        public static void LayoutCells(PuzzleDisplay display, PuzzleState state, PuzzlePools pools, List<DataTypeMask> types)
         {
             var colData = LookupColData(state.Library, types);
-
-            // TODO: Reconfigure OffscreenPuzzleCellAtlas
 
             // position and scale headers
             var cumulativePos = new Vector3(-display.BaseCellWidth, 0, 0);
@@ -61,7 +59,7 @@ namespace Astro
                 var currScale = currHeader.transform.lossyScale;
                 var origTextScaleLocal = currHeader.Text.transform.localScale;
                 var origTextScaleLossy = currHeader.Text.transform.lossyScale;
-                currHeader.transform.SetScale(currScale * colData[c].Dims, Axis.X);
+                currHeader.transform.SetScale(currScale * colData[c].Bundle.Dims, Axis.X);
                 var scaleRatio = new Vector3(
                     origTextScaleLossy.x / currHeader.Text.transform.lossyScale.x,
                     origTextScaleLossy.y / currHeader.Text.transform.lossyScale.y,
@@ -71,10 +69,12 @@ namespace Astro
 
                 // pos
                 // uniform spacing regardless of previous element scaling
-                cumulativePos.x += (display.BaseCellWidth * colData[c].Dims.x + display.ColSpacing) / 2.0f;
+                cumulativePos.x += (display.BaseCellWidth * colData[c].Bundle.Dims.x + display.ColSpacing) / 2.0f;
                 currHeader.transform.localPosition = cumulativePos;
-                cumulativePos.x += (display.BaseCellWidth * colData[c].Dims.x + display.ColSpacing) / 2.0f;
+                cumulativePos.x += (display.BaseCellWidth * colData[c].Bundle.Dims.x + display.ColSpacing) / 2.0f;
             }
+
+            PuzzlePoolUtility.ClearAllocations(pools);
 
             // position and scale cells
             int numRows = display.Cells.Length / display.NumCols;
@@ -84,21 +84,26 @@ namespace Astro
                 for (int c = 0; c < display.NumCols; c++) {
                     var currCell = display.Cells[r * display.NumCols + c];
                     currCell.transform.SetParent(display.CellAnchorPos, false);
-                    currCell.MeshFilter.mesh = colData[c].Mesh;
+                    currCell.MeshFilter.mesh = colData[c].Bundle.Mesh;
                     UnityEngine.Object.Destroy(currCell.Collider);
                     currCell.Collider = currCell.Mesh.gameObject.AddComponent<BoxCollider>();
 
+                    // assign the appropriate atlas output
+                    if (PuzzlePoolUtility.TryAllocateOnBundleType(pools, colData[c].Bundle.Type, out var id)) {
+                        currCell.AtlasOutput.RegionId = id;
+                    }
+
                     // scale the render displays
                     var displayScale = currCell.AtlasOutput.TargetRenderer.transform.localScale;
-                    displayScale *= colData[c].Dims;
+                    displayScale *= colData[c].Bundle.Dims;
                     currCell.AtlasOutput.TargetRenderer.transform.localScale = displayScale;
 
                     //pos
                     // uniform spacing regardless of previous element scaling
-                    cumulativePos.x += (display.BaseCellWidth * colData[c].Dims.x + display.ColSpacing) / 2.0f;
+                    cumulativePos.x += (display.BaseCellWidth * colData[c].Bundle.Dims.x + display.ColSpacing) / 2.0f;
                     currCell.transform.localPosition = cumulativePos;
                     currCell.ContentContainer.transform.localPosition = OFFSCREEN_POS + cumulativePos * OFFSCREEN_SPACING;
-                    cumulativePos.x += (display.BaseCellWidth * colData[c].Dims.x + display.ColSpacing) / 2.0f;
+                    cumulativePos.x += (display.BaseCellWidth * colData[c].Bundle.Dims.x + display.ColSpacing) / 2.0f;
                 }
                 cumulativePos.y += display.RowSpacing;
             }

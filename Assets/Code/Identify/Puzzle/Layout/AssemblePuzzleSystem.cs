@@ -67,13 +67,12 @@ namespace Astro
                             // provided data is not modifiable
                             newCell.DataSlot.Modifiable = false;
                         }
-                        newCell.AtlasOutput.RegionId = "R" + r + "C" + c;
                         m_CellWorkList.PushBack(newCell);
                     }
                 }
 
                 PuzzleUtility.LoadCells(display, m_CellWorkList, headers, numCols);
-                PuzzleUtility.LayoutCells(display, state, types);
+                PuzzleUtility.LayoutCells(display, state, pools, types);
             }
 
             state.SelectedCells = new bool[state.QueuedPuzzle.Rows.Length, numCols];
