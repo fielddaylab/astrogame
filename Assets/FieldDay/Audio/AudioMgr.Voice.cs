@@ -272,7 +272,6 @@ namespace FieldDay.Audio {
                             voice.State = VoiceState.Playing;
                             voice.PlayStartedTS = currentTime;
                             voice.Components.Source.Play();
-                            Log.Debug("[AudioMgr] Playing source '{0}'", voice.Components.name);
                         }
 
                         break;
@@ -525,7 +524,6 @@ namespace FieldDay.Audio {
             AudioVoiceComponents voiceComponents = go.AddComponent<AudioVoiceComponents>();
             voiceComponents.Sync();
 
-            go.SetActive(false);
             return voiceComponents;
         }
 

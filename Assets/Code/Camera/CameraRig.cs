@@ -14,6 +14,7 @@ namespace Astro {
         [Required(ComponentLookupDirection.Children)] public Camera Camera;
         public Transform RootTransform;
         public Transform EffectsTransform;
+        public Transform AttachmentsTransform;
 
         public Routine TransitionRoutine;
 

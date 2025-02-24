@@ -35,6 +35,7 @@ namespace FieldDay.HID {
         private uint m_ForceClickRecurseCounter;
         private RingBuffer<InputTimestamp> m_ClickTimestampBuffer = new RingBuffer<InputTimestamp>(2, RingBufferMode.Overwrite);
         private uint m_EventPauseCounter;
+        private uint m_DevicePauseCounter;
         private bool m_InputConsumed;
 
         #endregion // State
@@ -80,7 +81,7 @@ namespace FieldDay.HID {
         /// Returns if a double click has occured recently.
         /// </summary>
         public bool HasDoubleClicked(float buffer = DefaultDoubleClickBuffer) {
-            if (m_ClickTimestampBuffer.Count < 2 || m_InputConsumed) {
+            if (m_DevicePauseCounter != 0 || m_ClickTimestampBuffer.Count < 2 || m_InputConsumed) {
                 return false;
             }
 
@@ -106,42 +107,42 @@ namespace FieldDay.HID {
         /// Returns if a mouse button is down this frame.
         /// </summary>
         public bool IsMouseDown(MouseButton mouseButton) {
-            return !m_InputConsumed && Input.GetMouseButton((int) mouseButton);
+            return m_DevicePauseCounter == 0 && !m_InputConsumed && Input.GetMouseButton((int) mouseButton);
         }
 
         /// <summary>
         /// Returns if a mouse button is down this frame.
         /// </summary>
         public bool IsMouseDown(int mouseButton) {
-            return !m_InputConsumed && Input.GetMouseButton(mouseButton);
+            return m_DevicePauseCounter == 0 && !m_InputConsumed && Input.GetMouseButton(mouseButton);
         }
 
         /// <summary>
         /// Returns if a mouse button was pressed this frame.
         /// </summary>
         public bool IsMousePressed(MouseButton mouseButton) {
-            return !m_InputConsumed && Input.GetMouseButtonDown((int) mouseButton);
+            return m_DevicePauseCounter == 0 && !m_InputConsumed && Input.GetMouseButtonDown((int) mouseButton);
         }
 
         /// <summary>
         /// Returns if a mouse button was pressed this frame.
         /// </summary>
         public bool IsMousePressed(int mouseButton) {
-            return !m_InputConsumed && Input.GetMouseButtonDown(mouseButton);
+            return m_DevicePauseCounter == 0 && !m_InputConsumed && Input.GetMouseButtonDown(mouseButton);
         }
 
         /// <summary>
         /// Returns if a mouse button was pressed this frame.
         /// </summary>
         public bool IsMouseUp(MouseButton mouseButton) {
-            return !m_InputConsumed && Input.GetMouseButtonUp((int)mouseButton);
+            return m_DevicePauseCounter == 0 && !m_InputConsumed && Input.GetMouseButtonUp((int)mouseButton);
         }
 
         /// <summary>
         /// Returns if a mouse button was pressed this frame.
         /// </summary>
         public bool IsMouseUp(int mouseButton) {
-            return !m_InputConsumed && Input.GetMouseButtonUp(mouseButton);
+            return m_DevicePauseCounter == 0 && !m_InputConsumed && Input.GetMouseButtonUp(mouseButton);
         }
 
         #endregion // Clicks
@@ -152,14 +153,14 @@ namespace FieldDay.HID {
         /// Returns if a keyboard key is down this frame.
         /// </summary>
         public bool IsKeyDown(KeyCode keyCode) {
-            return !m_InputConsumed && keyCode > 0 && Input.GetKey(keyCode);
+            return m_DevicePauseCounter == 0 && !m_InputConsumed && keyCode > 0 && Input.GetKey(keyCode);
         }
 
         /// <summary>
         /// Returns if a keyboard key was pressed this frame.
         /// </summary>
         public bool IsKeyPressed(KeyCode keyCode) {
-            return !m_InputConsumed && keyCode > 0 && Input.GetKeyDown(keyCode);
+            return m_DevicePauseCounter == 0 && !m_InputConsumed && keyCode > 0 && Input.GetKeyDown(keyCode);
         }
 
         /// <summary>
@@ -167,7 +168,7 @@ namespace FieldDay.HID {
         /// were pressed this frame.
         /// </summary>
         public bool IsKeyComboPressed(ModifierKeyCode modifier, KeyCode keyCode) {
-            return !m_InputConsumed && keyCode > 0 && Input.GetKeyDown(keyCode) && (modifier == 0 || Input.GetKey((KeyCode) modifier));
+            return m_DevicePauseCounter == 0 && !m_InputConsumed && keyCode > 0 && Input.GetKeyDown(keyCode) && (modifier == 0 || Input.GetKey((KeyCode) modifier));
         }
 
         #endregion // Keys
@@ -295,6 +296,31 @@ namespace FieldDay.HID {
             if (m_EventPauseCounter > 0 && m_EventPauseCounter-- == 1) {
                 m_DefaultInputModule.ActivateModule();
                 NativeInput.SetEventSystemEnabled(true);
+            }
+        }
+
+        /// <summary>
+        /// Returns if all device input is paused.
+        /// </summary>
+        public bool AreDevicesPaused() {
+            return m_DevicePauseCounter > 0;
+        }
+
+        /// <summary>
+        /// Pauses all devices.
+        /// </summary>
+        public void PauseDevices() {
+            if (m_DevicePauseCounter++ == 0) {
+                // TODO: pause devices
+            }
+        }
+
+        /// <summary>
+        /// Resumes all devices.
+        /// </summary>
+        public void ResumeDevices() {
+            if (m_DevicePauseCounter > 0 && m_DevicePauseCounter-- == 1) {
+                // TODO: resume devices
             }
         }
 

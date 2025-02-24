@@ -9,7 +9,7 @@ using BeauUtil.Debugger;
 
 namespace Astro {
 
-    public class VirtualScreenRedirector : GraphicRaycaster
+    public class VirtualScreenRedirector : BaseRaycaster
     {
         [NonSerialized] public Transform screenTransform; // the transform of the screen with the render texture
 
@@ -20,6 +20,8 @@ namespace Astro {
         public GraphicRaycaster screenCaster; // Reference to the GraphicRaycaster of the canvas displayed on the virtual screen
 
         private PointerEventData copyEventData;
+
+        public override Camera eventCamera { get { return eventCameraOverride; } }
 
         protected override void Start()
         {
@@ -33,6 +35,10 @@ namespace Astro {
         // Called by Unity when a Raycaster should raycast because it extends BaseRaycaster.
         public override void Raycast(PointerEventData eventData, List<RaycastResult> resultAppendList)
         {
+            if ((Find.State<InputState>().ClickableLayerMask & LayerMasks.LabInteract_Mask) == 0) {
+                return;
+            }
+
             copyEventData.eligibleForClick = false;
 
             copyEventData.pointerId = eventData.pointerId;

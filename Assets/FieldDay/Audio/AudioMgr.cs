@@ -114,7 +114,6 @@ namespace FieldDay.Audio {
 #endif // UNITY_EDITOR
                 a.enabled = false;
                 a.PlayingHandle = default;
-                a.gameObject.SetActive(false);
             });
             m_VoiceComponentPool.Prewarm(MaxVoices);
 

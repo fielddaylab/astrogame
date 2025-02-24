@@ -126,22 +126,22 @@ namespace Astro
 
         private void ProcessKeyboardLookDiscrete()
         {
-            if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
+            if (Game.Input.IsKeyPressed(KeyCode.UpArrow) || Game.Input.IsKeyPressed(KeyCode.W))
             {
                 // look up
                 AdjustVertLook(-m_State.LookIncrement);
             }
-            if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S))
+            if (Game.Input.IsKeyPressed(KeyCode.DownArrow) || Game.Input.IsKeyPressed(KeyCode.S))
             {
                 // look down
                 AdjustVertLook(m_State.LookIncrement);
             }
-            if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
+            if (Game.Input.IsKeyPressed(KeyCode.LeftArrow) || Game.Input.IsKeyPressed(KeyCode.A))
             {
                 // look left
                 AdjustHorizLook(-m_State.LookIncrement);
             }
-            if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
+            if (Game.Input.IsKeyPressed(KeyCode.RightArrow) || Game.Input.IsKeyPressed(KeyCode.D))
             {
                 // look right
                 AdjustHorizLook(m_State.LookIncrement);
@@ -150,22 +150,22 @@ namespace Astro
 
         private void ProcessKeyboardLookSmooth()
         {
-            if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W))
+            if (Game.Input.IsKeyDown(KeyCode.UpArrow) || Game.Input.IsKeyDown(KeyCode.W))
             {
                 // look up
                 AdjustVertLook(-m_State.SmoothLookIncrement);
             }
-            else if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S))
+            else if (Game.Input.IsKeyDown(KeyCode.DownArrow) || Game.Input.IsKeyDown(KeyCode.S))
             {
                 // look down
                 AdjustVertLook(m_State.SmoothLookIncrement);
             }
-            if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
+            if (Game.Input.IsKeyDown(KeyCode.LeftArrow) || Game.Input.IsKeyDown(KeyCode.A))
             {
                 // look left
                 AdjustHorizLook(-m_State.SmoothLookIncrement);
             }
-            else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
+            else if (Game.Input.IsKeyDown(KeyCode.RightArrow) || Game.Input.IsKeyDown(KeyCode.D))
             {
                 // look right
                 AdjustHorizLook(m_State.SmoothLookIncrement);
@@ -185,7 +185,7 @@ namespace Astro
         private void ProcessMouseZoom()
         {
             var yScrollDelta = Input.mouseScrollDelta.y;
-            if (yScrollDelta != 0)
+            if (yScrollDelta != 0 && !Game.Input.AreDevicesPaused())
             {
                 float newZoom = m_State.Camera.Camera.fieldOfView;
 
@@ -199,7 +199,7 @@ namespace Astro
 
         private void ProcessKeyboardZoom()
         {
-            if (Input.GetKeyDown(KeyCode.I))
+            if (Game.Input.IsKeyPressed(KeyCode.I))
             {
                 // Zoom in
                 float newZoom = m_State.Zoom;
@@ -210,7 +210,7 @@ namespace Astro
                 m_State.Camera.Camera.fieldOfView = m_State.Camera.OriginalFOV / newZoom;
                 RecordLookUpdated();
             }
-            if (Input.GetKeyDown(KeyCode.K))
+            if (Game.Input.IsKeyPressed(KeyCode.K))
             {
                 // Zoom out
                 float newZoom = m_State.Zoom;

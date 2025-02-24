@@ -131,12 +131,14 @@ namespace Astro {
                 state.StoredDocPos = Vector3.zero;
                 state.DocZoomed = null;
                 InputUtility.SetClickableMaskDefault(Find.State<InputState>());
+                doc.transform.SetParent(state.DocumentParent, true);
             } else {
                 state.StoredDocPos = doc.transform.position;
                 //state.StoredDocPos.z = state.DocumentParent.position.z;
                 Vector3 zoomOffset = doc.Renderer.ZoomOffsetOverride == default ? state.DocZoomOffset : doc.Renderer.ZoomOffsetOverride;
                 state.DocumentRoutine.Replace(MoveDocToCam(doc.transform, Game.Rendering.PrimaryCamera.transform, zoomOffset));
                 state.DocZoomed = doc;
+                doc.transform.SetParent(Game.Rendering.PrimaryCamera.transform, true);
                 SetInteractionLayer(state.DocZoomed, LayerMasks.TopLayer_Index);
                 InputUtility.SetClickableMaskTopLayer(Find.State<InputState>());
             }

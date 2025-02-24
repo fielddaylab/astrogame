@@ -361,7 +361,6 @@ namespace FieldDay.Audio {
             }
 
             AudioEmitterConfig.ApplyConfiguration(src, emitterConfig, m_HasSpatializationPlugin);
-            voiceComponents.gameObject.SetActive(true);
             voiceComponents.enabled = true;
             voiceComponents.Source.enabled = true;
 

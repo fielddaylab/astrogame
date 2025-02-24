@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace FieldDay.Audio {
     [AddComponentMenu("")]
-    internal class AudioVoiceComponents : MonoBehaviour {
+    internal sealed class AudioVoiceComponents : MonoBehaviour {
         [NonSerialized] public AudioSource Source;
 
 #if SUPPORTS_AUDIOEFFECTS

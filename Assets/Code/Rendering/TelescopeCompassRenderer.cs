@@ -148,7 +148,7 @@ namespace Astro {
             }
 
             for (int i = 1; i < res; i++) {
-                ArcMeshData.AddIndices(centerIdx, edges[i - 1], edges[i]);
+                ArcMeshData.AddIndices(centerIdx, edges[i], edges[i - 1]);
             }
         }
 
