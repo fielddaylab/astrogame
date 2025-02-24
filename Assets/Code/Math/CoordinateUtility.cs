@@ -79,6 +79,10 @@ namespace Astro
             return new Vector3((float)correctedX, (float)correctedY, (float)correctedZ);
         }
 
+        public static double RAToDegrees(HmsCoords RA) {
+            return RAToDegrees(RA.Hours, RA.Minutes, RA.Seconds);
+        }
+
         /// <summary>
         /// Converts Right Ascension hours, minutes, and seconds into degrees
         /// </summary>
@@ -113,10 +117,13 @@ namespace Astro
             var declDegrees = RadianToDegree(dRad);
             var coords = new EqCoords();
             coords.RightAscension = DegreesToRA(raDegrees);
-            coords.Declination = DecimalDegreesToDegrees(declDegrees);
+            coords.Declination = DecimalDegreesToDeclination(declDegrees);
             return coords;
         }
 
+        public static double DeclinationToDecimalDegrees(HmsCoords dec) {
+            return DeclinationToDecimalDegrees(dec.Hours, dec.Minutes, dec.Seconds);
+        }
 
         /// <summary>
         /// Converts declination hours, minutes, and seconds into degrees
@@ -148,7 +155,7 @@ namespace Astro
             return degrees;
         }
 
-        public static HmsCoords DecimalDegreesToDegrees(float decimalDegrees)
+        public static HmsCoords DecimalDegreesToDeclination(float decimalDegrees)
         {
             short hrs, minutes = 0;
             float seconds = 0;
