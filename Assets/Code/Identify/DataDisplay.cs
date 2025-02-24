@@ -57,7 +57,7 @@ namespace Astro {
             }
 
             if (!displayedDefault && display.OnDisplayRequested.IsEmpty) {
-                Log.Error("[DataUtility] Data display accepted type '{0}' but was unable to display data");
+                Log.Error("[DataUtility] Data display accepted type '{0}' but was unable to display data", packet.Type);
             } else {
                 display.OnDisplayRequested.Invoke(packet, display.Formatting);
             }

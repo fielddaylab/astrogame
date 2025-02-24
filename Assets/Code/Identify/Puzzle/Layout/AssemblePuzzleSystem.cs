@@ -72,7 +72,7 @@ namespace Astro
                 }
 
                 PuzzleUtility.LoadCells(display, m_CellWorkList, headers, numCols);
-                PuzzleUtility.LayoutCells(display, state, types);
+                PuzzleUtility.LayoutCells(display, state, pools, types);
             }
 
             state.SelectedCells = new bool[state.QueuedPuzzle.Rows.Length, numCols];

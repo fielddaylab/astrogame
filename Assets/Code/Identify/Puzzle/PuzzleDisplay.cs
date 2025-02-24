@@ -4,8 +4,6 @@ using FieldDay.Components;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using TMPro;
 using UnityEngine;
 
 namespace Astro
@@ -17,6 +15,7 @@ namespace Astro
         public PuzzleHeader Clues;
         public int NumCols;
         public Transform CellAnchorPos;
+        public Transform RotateModulePos;
         public Transform HeaderAnchorPos;
         public float RowSpacing;
         public float ColSpacing;
@@ -26,6 +25,10 @@ namespace Astro
 
     public static partial class PuzzleUtility
     {
+        static private Vector3 OFFSCREEN_POS = new Vector3(0, -200, 0);
+        static private float OFFSCREEN_SPACING = 40;
+        static private Vector3 DEFAULT_RENDER_SCALE = new Vector3(0.51f, 0.23f, 1);
+
         public static void LoadCells(PuzzleDisplay display, RingBuffer<PuzzleCell> cells, PuzzleHeader[] headers, int numCols)
         {
             display.SubmitButton.gameObject.SetActive(false);
@@ -42,7 +45,7 @@ namespace Astro
                 }
             }
         }
-        public static void LayoutCells(PuzzleDisplay display, PuzzleState state, List<DataTypeMask> types)
+        public static void LayoutCells(PuzzleDisplay display, PuzzleState state, PuzzlePools pools, List<DataTypeMask> types)
         {
             var colData = LookupColData(state.Library, types);
 
@@ -58,7 +61,7 @@ namespace Astro
                 var currScale = currHeader.transform.lossyScale;
                 var origTextScaleLocal = currHeader.Text.transform.localScale;
                 var origTextScaleLossy = currHeader.Text.transform.lossyScale;
-                currHeader.transform.SetScale(currScale * colData[c].Dims, Axis.X);
+                currHeader.transform.SetScale(currScale * colData[c].Bundle.Dims, Axis.X);
                 var scaleRatio = new Vector3(
                     origTextScaleLossy.x / currHeader.Text.transform.lossyScale.x,
                     origTextScaleLossy.y / currHeader.Text.transform.lossyScale.y,
@@ -68,27 +71,57 @@ namespace Astro
 
                 // pos
                 // uniform spacing regardless of previous element scaling
-                cumulativePos.x += (display.BaseCellWidth * colData[c].Dims.x + display.ColSpacing) / 2.0f;
+                cumulativePos.x += (display.BaseCellWidth * colData[c].Bundle.Dims.x + display.ColSpacing) / 2.0f;
                 currHeader.transform.localPosition = cumulativePos;
-                cumulativePos.x += (display.BaseCellWidth * colData[c].Dims.x + display.ColSpacing) / 2.0f;
+                cumulativePos.x += (display.BaseCellWidth * colData[c].Bundle.Dims.x + display.ColSpacing) / 2.0f;
             }
 
-            // position and scale cells
+            PuzzlePoolUtility.ClearAllocations(pools);
+
             int numRows = display.Cells.Length / display.NumCols;
+
+            // position and scale cells
+            Transform[] rowLines = new Transform[numRows];
             cumulativePos = Vector3.zero;
             for (int r = 0; r < numRows; r++) {
                 cumulativePos.x = -display.BaseCellWidth;
                 for (int c = 0; c < display.NumCols; c++) {
                     var currCell = display.Cells[r * display.NumCols + c];
                     currCell.transform.SetParent(display.CellAnchorPos, false);
-                    currCell.MeshFilter.mesh = colData[c].Mesh;
+                    currCell.MeshFilter.mesh = colData[c].Bundle.Mesh;
+                    UnityEngine.Object.Destroy(currCell.Collider);
+                    currCell.Collider = currCell.Mesh.gameObject.AddComponent<BoxCollider>();
+
+                    // assign the appropriate atlas output
+                    if (PuzzlePoolUtility.TryAllocateOnBundleType(pools, colData[c].Bundle.Type, out var id)) {
+                        currCell.AtlasOutput.RegionId = id;
+                    }
+
+                    // scale the render displays
+                    var displayScale = DEFAULT_RENDER_SCALE;
+                    displayScale *= colData[c].Bundle.RenderDims;
+                    currCell.AtlasOutput.TargetRenderer.transform.localScale = displayScale;
+
+                    // scale the render cameras
+                    currCell.Camera.orthographicSize = colData[c].Bundle.CamSize;
 
                     //pos
                     // uniform spacing regardless of previous element scaling
-                    cumulativePos.x += (display.BaseCellWidth * colData[c].Dims.x + display.ColSpacing) / 2.0f;
+                    cumulativePos.x += (display.BaseCellWidth * colData[c].Bundle.Dims.x + display.ColSpacing) / 2.0f;
                     currCell.transform.localPosition = cumulativePos;
-                    cumulativePos.x += (display.BaseCellWidth * colData[c].Dims.x + display.ColSpacing) / 2.0f;
+                    currCell.ContentContainer.transform.localPosition = OFFSCREEN_POS + cumulativePos * OFFSCREEN_SPACING;
+                    cumulativePos.x += (display.BaseCellWidth * colData[c].Bundle.Dims.x + display.ColSpacing) / 2.0f;
                 }
+
+                // generate row lines
+                var newRowLine = pools.RowLines.Alloc(display.RotateModulePos.position);
+                newRowLine.transform.SetParent(display.RotateModulePos, false);
+                rowLines[r] = newRowLine;
+                var newPos = newRowLine.transform.localPosition;
+                newPos.x = 0.5f;
+                newPos.y = cumulativePos.y + 0.5f;
+                newPos.z = 0;
+                newRowLine.transform.localPosition = newPos;
                 cumulativePos.y += display.RowSpacing;
             }
         }
