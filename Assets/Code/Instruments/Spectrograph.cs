@@ -46,7 +46,7 @@ namespace Astro {
             EqualizeLineNums(graph, linePos.Count, state);
             for (int i = 0; i < linePos.Count; i++) {
                 graph.Lines[i].SetActive(true);
-                graph.Lines[i].transform.localPosition = new Vector3(linePos[i] - 0.5f, 0f, -0.01f);
+                graph.Lines[i].transform.localPosition = new Vector3(2*linePos[i] - 1f, 0f, -0.01f);
             }
         }
 

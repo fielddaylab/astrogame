@@ -922,6 +922,26 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1166643882}
   m_Mesh: {fileID: -6605453813437606748, guid: 4f4fab27b310bc547abe9011aa35ea2c, type: 3}
+--- !u!1 &1226774852 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5667829936932221613, guid: 36543bce9fc63304181344ce88794f53, type: 3}
+  m_PrefabInstance: {fileID: 3698648620295698420}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1226774854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1226774852}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 414a0c3447b2a774c9d9f7de60c53172, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Background: {fileID: 1489319808}
+  Lines:
+  - {fileID: 3698648620295698421}
 --- !u!1 &1396180402
 GameObject:
   m_ObjectHideFlags: 0
@@ -1128,6 +1148,11 @@ Transform:
   - {fileID: 2076441345}
   m_Father: {fileID: 35139148}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!23 &1489319808 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 1807892862274751739, guid: 36543bce9fc63304181344ce88794f53, type: 3}
+  m_PrefabInstance: {fileID: 3698648620295698420}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1588650854
 GameObject:
   m_ObjectHideFlags: 0
@@ -2303,7 +2328,7 @@ PrefabInstance:
     - target: {fileID: 1807892862274751739, guid: 36543bce9fc63304181344ce88794f53, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 2f75848563b72cb45877dc22eb77cec5, type: 2}
+      objectReference: {fileID: 2100000, guid: ed770837d222f0443a4221f022392637, type: 2}
     - target: {fileID: 7414546681388126419, guid: 36543bce9fc63304181344ce88794f53, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.203
@@ -2348,10 +2373,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spectrometer
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6168825957458150139, guid: 36543bce9fc63304181344ce88794f53, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5667829936932221613, guid: 36543bce9fc63304181344ce88794f53, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1226774854}
   m_SourcePrefab: {fileID: 100100000, guid: 36543bce9fc63304181344ce88794f53, type: 3}
 --- !u!1 &3698648620295698421 stripped
 GameObject:
