@@ -6,14 +6,20 @@ using BeauUtil;
 public static class GameEvents {
     public static readonly StringHash32 DocumentSelected = "input:document-selected";
     public static readonly StringHash32 MonitorEmptySpaceClicked = "input:monitor-empty-space-clicked";
-    public static readonly StringHash32 OpenModeStart = "start-open-mode";
-    public static readonly StringHash32 PuzzleModeStart = "start-puzzle-mode";
+    public static readonly StringHash32 StartOpenMode = "start-open-mode";
+    public static readonly StringHash32 StopOpenMode = "stop-open-mode";
+    public static readonly StringHash32 StartPuzzleMode = "start-puzzle-mode";
+    public static readonly StringHash32 StopPuzzleMode = "stop-puzzle-mode";
+    public static readonly StringHash32 StartPuzzleNavigation = "start-constellation-mode";
+    public static readonly StringHash32 PuzzleNavigationComplete = "puzzle-navigation-complete";
+    public static readonly StringHash32 StopPuzzleNavigation = "stop-constellation-mode";
 }
 
 public static class ScriptEvents {
     public static readonly StringHash32 OpenModeStart = "OpenModeStart";
     public static readonly StringHash32 PuzzleModeStart = "PuzzleModeStart";
     public static readonly StringHash32 PointsUpdated = "PointsUpdated";
+    public static readonly StringHash32 PuzzleNavigationComplete = "PuzzleNavigationComplete";
     public static readonly StringHash32 CorrectPuzzleSubmission = "CorrectPuzzleSubmission";
 }
 

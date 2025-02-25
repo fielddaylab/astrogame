@@ -28,12 +28,12 @@ namespace Astro {
 
         [LeafMember("StartPuzzleMode")]
         static private void LeafStartPuzzleMode() {
-            Game.Events.Dispatch(GameEvents.PuzzleModeStart);
+            Game.Events.Dispatch(GameEvents.StartPuzzleMode);
         }
 
         [LeafMember("StartOpenMode")]
         static private void LeafStartOpenMode(){
-            Game.Events.Dispatch(GameEvents.OpenModeStart);
+            Game.Events.Dispatch(GameEvents.StartOpenMode);
         }
         
     }

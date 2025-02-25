@@ -28,10 +28,10 @@ namespace Astro {
 
         public void OnRegister()
         {
-            Game.Events.Register(GameEvents.OpenModeStart, () => {
+            Game.Events.Register(GameEvents.StartOpenMode, () => {
                 SubmissionActive = true;
             });
-            Game.Events.Register(GameEvents.PuzzleModeStart, () => {
+            Game.Events.Register(GameEvents.StartPuzzleMode, () => {
                 SubmissionActive = false;
                 ReferenceUtility.SelectRegion(null);
             });
