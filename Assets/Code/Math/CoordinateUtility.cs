@@ -82,6 +82,14 @@ namespace Astro
         /// <summary>
         /// Converts Right Ascension hours, minutes, and seconds into degrees
         /// </summary>
+        /// <returns></returns>
+        public static double RAToDegrees(HmsCoords ra) {
+            return RAToDegrees(ra.Hours, ra.Minutes, ra.Seconds);
+        }
+
+        /// <summary>
+        /// Converts Right Ascension hours, minutes, and seconds into degrees
+        /// </summary>
         /// <param name="hours"></param>
         /// <param name="minutes"></param>
         /// <param name="seconds"></param>
@@ -117,6 +125,13 @@ namespace Astro
             return coords;
         }
 
+        /// <summary>
+        /// Converts declination hours, minutes, and seconds into degrees
+        /// </summary>
+        /// <returns></returns>
+        public static double DeclinationToDecimalDegrees(HmsCoords declination) {
+            return DeclinationToDecimalDegrees(declination.Hours, declination.Minutes, declination.Seconds);
+        }
 
         /// <summary>
         /// Converts declination hours, minutes, and seconds into degrees

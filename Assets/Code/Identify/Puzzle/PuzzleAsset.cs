@@ -23,6 +23,10 @@ namespace Astro {
         public DataTypeMask RequiredProperties;
         public Row[] Rows;  
 
+        [Header("Puzzle Position")]
+        public EqCoords PuzzleCoordinates;
+        public float PuzzleCameraZoom;
+
         #endregion // Inspector
     }
 
