@@ -8,8 +8,10 @@ namespace Astro
     public class PuzzleCell : BatchedComponent
     {
         public DataSlot DataSlot;
-        public MeshRenderer Mesh;
-        public MeshFilter MeshFilter;
+        public MeshRenderer MainMesh;
+        public MeshFilter MainMeshFilter;
+        public MeshRenderer OutlineMesh;
+        public MeshFilter OutlineMeshFilter;
         public BoxCollider Collider;
         public RenderAtlasOutput AtlasOutput;
         public Camera Camera;
@@ -20,9 +22,9 @@ namespace Astro
     {
         public static void UpdateCellVisuals(PuzzleState state, PuzzleCell cell, bool selected)
         {
-            var mats = cell.Mesh.sharedMaterials;
+            var mats = cell.OutlineMesh.sharedMaterials;
             mats[0] = selected ? state.SelectedCellMat : state.UnselectedCellMat;
-            cell.Mesh.sharedMaterials = mats;
+            cell.OutlineMesh.sharedMaterials = mats;
         }
     }
 }

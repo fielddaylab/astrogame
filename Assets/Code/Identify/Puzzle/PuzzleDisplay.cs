@@ -88,9 +88,11 @@ namespace Astro
                 for (int c = 0; c < display.NumCols; c++) {
                     var currCell = display.Cells[r * display.NumCols + c];
                     currCell.transform.SetParent(display.CellAnchorPos, false);
-                    currCell.MeshFilter.mesh = colData[c].Bundle.Mesh;
+                    currCell.MainMeshFilter.mesh = colData[c].Bundle.Mesh;
+                    currCell.OutlineMeshFilter.mesh = colData[c].Bundle.OutlineMesh;
+                    currCell.OutlineMeshFilter.transform.localPosition = currCell.OutlineMeshFilter.transform.localPosition + colData[c].Bundle.OutlineOffset;
                     UnityEngine.Object.Destroy(currCell.Collider);
-                    currCell.Collider = currCell.Mesh.gameObject.AddComponent<BoxCollider>();
+                    currCell.Collider = currCell.MainMesh.gameObject.AddComponent<BoxCollider>();
 
                     // assign the appropriate atlas output
                     if (PuzzlePoolUtility.TryAllocateOnBundleType(pools, colData[c].Bundle.Type, out var id)) {
