@@ -12,6 +12,7 @@ namespace Astro {
         public DataDisplay DistanceDisplay;
         public Transform ModeKnob;
         public List<PatternMaterialPair> PatternMaterials;
+        public Photometer ConnectedPhotometer;
         [NonSerialized] public bool ShowingParallax;
         [NonSerialized] public Routine KnobRoutine;
 
