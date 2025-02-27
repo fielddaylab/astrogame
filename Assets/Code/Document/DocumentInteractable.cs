@@ -12,6 +12,8 @@ namespace Astro {
         [HideInInspector] public DocumentRenderer Renderer;
         [HideInInspector] public DocumentPart[] Parts;
 
+        [NonSerialized] public StringHash32 AssetName;
+
         [NonSerialized] public bool Flipped;
         public Transform Paper;
 

@@ -21,6 +21,8 @@ public static class ScriptEvents {
     public static readonly StringHash32 PointsUpdated = "PointsUpdated";
     public static readonly StringHash32 PuzzleNavigationComplete = "PuzzleNavigationComplete";
     public static readonly StringHash32 CorrectPuzzleSubmission = "CorrectPuzzleSubmission";
+    public static readonly StringHash32 DocumentInspectStart = "DocumentInspectStart";
+    public static readonly StringHash32 DocumentInspectEnd = "DocumentInspectEnd";
 }
 
 public static class DataTypeLabels
