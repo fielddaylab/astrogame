@@ -97,6 +97,7 @@ namespace Astro {
             hds.KnobRoutine.Replace(SlideRoutine(hds));
             DataUtility.SetDisplayHidden(hds.DistanceDisplay, !parallaxShowing);
             ClearPattern(hds.InstrumentGraph);
+            PhotometerUtility.TogglePhotometerMode(parallaxShowing, hds.ConnectedPhotometer);
             hds.InstrumentGraph.PauseGraphUpdates = parallaxShowing;
         }
 
