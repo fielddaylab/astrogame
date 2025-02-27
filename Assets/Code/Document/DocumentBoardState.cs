@@ -82,7 +82,7 @@ namespace Astro {
             spawned.Interactable.AssetName = id;
             // Init pinned position
             spawned.transform.SetParent(state.DocumentParent, false);
-            spawned.transform.localPosition = asset.DefaultPinnedPos;
+            spawned.transform.localPosition = FindAvailablePos(state, spawned);
             state.OverrideStoredDocPos = spawned.transform.position;
             state.OverrideStoredDoc = true;
             // Spawn below player view
@@ -92,6 +92,27 @@ namespace Astro {
             ToggleZoomDoc(spawned.Interactable, state);
             SetDocumentInteractionEnabled(true);
             spawned.Video.Play();
+        }
+
+        public static Vector3 FindAvailablePos(DocumentBoardState state, DocumentRenderer doc) {
+
+            Vector2 finalPos = Vector3.zero;
+            int maxTries = 10;
+            for (int i = 0; i < maxTries; i++) {
+                // random point on board
+                float xExtents = state.DraggableBounds.width / 2;
+                float yExtents = state.DraggableBounds.height / 2;
+                var offset = state.DocumentParent.transform.position;
+                Vector3 pos = offset + new Vector3(UnityEngine.Random.Range(-xExtents, xExtents), UnityEngine.Random.Range(-yExtents, yExtents), 0);
+
+                Vector3 docExtents = new Vector3(doc.Size.width / 2, doc.Size.height / 2, 1);
+                if (!Physics.CheckBox(pos, docExtents, state.DocumentParent.transform.rotation, LayerMasks.DocumentSurface_Mask)) {
+                    finalPos = pos - offset;
+                    break;
+                }
+            }
+
+            return finalPos;
         }
 
         #region Enable/Disable
