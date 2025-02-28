@@ -6,11 +6,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Astro {
-    public class NavProjectionSystem : SharedStateSystemBehaviour<NavProjectionState> {
+    public class NavProjectionSystem : SharedStateSystemBehaviour<NavProjectionState, PuzzleNavigationState> {
         public override bool HasWork() {
             bool hasWork = base.HasWork();
-            if (m_State) {
-                hasWork = hasWork && !m_State.Initialized;
+            if (m_StateA) {
+                hasWork = hasWork && (!m_StateA.Initialized && m_StateB.NavigationModeActive);
             }
             else { 
                 return false; 
@@ -50,16 +50,18 @@ namespace Astro {
             float stashedFOV = spaceCamera.fieldOfView;
             WorldPositionUtility.TryLook(dome.transform, spaceCam.Camera.RootTransform, target);
             spaceCamera.fieldOfView = spaceCam.Camera.OriginalFOV / puzzleState.ActivePuzzle.PuzzleCameraZoom;
-            // Matrix4x4 P = spaceCamera.projectionMatrix;
-            // Matrix4x4 V = spaceCamera.transform.worldToLocalMatrix;
-            // Matrix4x4 VP = P * V;
+
+            // Remove any old projections
+            foreach(GameObject child in m_StateA.OutlineGroup) {
+                Destroy(child);
+            }
 
             for (int i = 0; i < puzzleState.ActivePuzzle.Rows.Length; i++) {
                 CelestialAsset currAsset = Find.NamedAsset<CelestialAsset>(puzzleState.ActivePuzzle.Rows[i].Object); 
                 Vector3 assetPostion = CelestialPositionerUtility.GetObjectPosition(center, currAsset.Coords.RightAscension, currAsset.Coords.Declination);
 
                 // Use UIFocus pool
-                var navFocus = focusPools.Focii.Alloc(m_State.NavigationCanvas.transform);
+                var navFocus = focusPools.Focii.Alloc(m_StateA.OutlineGroup);
                 navFocus.name = currAsset.DisplayName + " (Navigation Outline)";
                 InitNavRepresntation(navFocus, currAsset, DetermineSprite(currAsset.Category));
                 
@@ -72,16 +74,16 @@ namespace Astro {
             // Okay now put the camera back
             WorldPositionUtility.TryLook(dome.transform, spaceCam.Camera.RootTransform, stashedPos);
             spaceCamera.fieldOfView = stashedFOV;
-            m_State.Initialized = true;
+            m_StateA.Initialized = true;
         }
 
         private Sprite DetermineSprite(CelestialObjectCategory category) {
             switch(category)
             {
                 case CelestialObjectCategory.Star:
-                    return m_State.StarOutlineSprite;
+                    return m_StateA.StarOutlineSprite;
                 case CelestialObjectCategory.Planet:
-                    return m_State.PlanetOutlineSprite;
+                    return m_StateA.PlanetOutlineSprite;
                 case CelestialObjectCategory.Satellite:
                     return null;
                 case CelestialObjectCategory.Constellation:
@@ -100,6 +102,8 @@ namespace Astro {
             if (represent2D == null) {
                 focus.Represent2D.enabled = false;
             }
+            float scaleFactor = 2.5f * Mathf.Pow(0.63f, asset.ApparentMagnitude);
+            focus.Rect.localScale = new Vector3(scaleFactor, scaleFactor, 1);
             focus.TargetData = asset;
         }
     }

@@ -12,6 +12,7 @@ namespace Astro {
         public Sprite PlanetOutlineSprite;
         
         public Canvas NavigationCanvas;
+        public RectTransform OutlineGroup;
 
         public void OnRegister() {
             Game.Events.Register(GameEvents.StartPuzzleNavigation, () => {

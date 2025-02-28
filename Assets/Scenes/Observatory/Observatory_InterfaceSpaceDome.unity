@@ -127,6 +127,11 @@ Canvas:
   m_CorrespondingSourceObject: {fileID: 8445529713678149699, guid: 6f9a5902b3dedf54080fa5f61ccb37d9, type: 3}
   m_PrefabInstance: {fileID: 1036594227}
   m_PrefabAsset: {fileID: 0}
+--- !u!224 &33880924 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 8230222867319555661, guid: 6f9a5902b3dedf54080fa5f61ccb37d9, type: 3}
+  m_PrefabInstance: {fileID: 1036594227}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1036594227
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -183,6 +188,10 @@ PrefabInstance:
       propertyPath: PoolRoot
       value: 
       objectReference: {fileID: 1644688952}
+    - target: {fileID: 3100987653812984504, guid: 6f9a5902b3dedf54080fa5f61ccb37d9, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4147787589945361151, guid: 6f9a5902b3dedf54080fa5f61ccb37d9, type: 3}
       propertyPath: Position.x
       value: -10000
@@ -510,6 +519,7 @@ MonoBehaviour:
   StarOutlineSprite: {fileID: 21300000, guid: 8068344a795a4e0409c4c33ea74c920a, type: 3}
   PlanetOutlineSprite: {fileID: 21300000, guid: 8068344a795a4e0409c4c33ea74c920a, type: 3}
   NavigationCanvas: {fileID: 132126}
+  OutlineGroup: {fileID: 33880924}
 --- !u!114 &2122259026
 MonoBehaviour:
   m_ObjectHideFlags: 0
