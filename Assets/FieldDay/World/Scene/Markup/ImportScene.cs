@@ -160,5 +160,10 @@ namespace FieldDay.Scenes {
         /// This scene will be reloaded, even if it is already loaded
         /// </summary>
         ForceReload = 0x08,
+
+        /// <summary>
+        /// Merge lightmaps into the main scene.
+        /// </summary>
+        MergeLightmaps = 0x10,
     }
 }

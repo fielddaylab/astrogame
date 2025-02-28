@@ -49,19 +49,33 @@ namespace FieldDay.Rendering {
             }
 
             public void Write(LightingImportFlags mask) {
-                RenderSettings.fog = fog;
-                RenderSettings.fogStartDistance = fogStartDistance;
-                RenderSettings.fogEndDistance = fogEndDistance;
-                RenderSettings.fogMode = fogMode;
-                RenderSettings.fogColor = fogColor;
-                RenderSettings.fogDensity = fogDensity;
-                RenderSettings.ambientMode = ambientMode;
-                RenderSettings.ambientIntensity = ambientIntensity;
-                RenderSettings.ambientLight = ambientLight;
-                //RenderSettings.skybox = skybox;
-                LightmapSettings.lightmaps = lightmaps;
-                LightmapSettings.lightmapsMode = lightmapsMode;
-                //LightmapSettings.lightProbes = lightProbes;
+                if ((mask & LightingImportFlags.Fog) != 0) {
+                    RenderSettings.fog = fog;
+                    RenderSettings.fogStartDistance = fogStartDistance;
+                    RenderSettings.fogEndDistance = fogEndDistance;
+                    RenderSettings.fogMode = fogMode;
+                    RenderSettings.fogColor = fogColor;
+                    RenderSettings.fogDensity = fogDensity;
+                }
+
+                if ((mask & LightingImportFlags.Ambient) != 0) {
+                    RenderSettings.ambientMode = ambientMode;
+                    RenderSettings.ambientIntensity = ambientIntensity;
+                    RenderSettings.ambientLight = ambientLight;
+                }
+
+                if ((mask & LightingImportFlags.Skybox) != 0) {
+                    RenderSettings.skybox = skybox;
+                }
+
+                if ((mask & LightingImportFlags.LightMaps) != 0) {
+                    LightmapSettings.lightmaps = lightmaps;
+                    LightmapSettings.lightmapsMode = lightmapsMode;
+                }
+
+                if ((mask & LightingImportFlags.LightProbes) != 0) {
+                    LightmapSettings.lightProbes = lightProbes;
+                }
             }
         }
 
@@ -127,6 +141,7 @@ namespace FieldDay.Rendering {
         LightProbes = 0x08,
         Skybox = 0x10,
 
+        Simple = Fog | Ambient | Skybox,
         All = Fog | Ambient | LightMaps | LightProbes | Skybox
     }
 }
