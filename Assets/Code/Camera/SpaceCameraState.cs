@@ -41,7 +41,8 @@ namespace Astro
 
         [NonSerialized] public float VertLook; // accumulated rotation vertically
         [NonSerialized] public float HorizLook; // accumulated rotation horizontally
-        [NonSerialized] public float Zoom = 1;
+        //TODO: [NonSerialized] 
+        public float Zoom = 1;
 
         [NonSerialized] public bool MouseDragLookActive;
         [NonSerialized] public Vector3 PrevMousePos;

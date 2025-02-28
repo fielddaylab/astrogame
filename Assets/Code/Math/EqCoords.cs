@@ -11,6 +11,11 @@ namespace Astro {
         public HmsCoords RightAscension;
         public HmsCoords Declination;
 
+        public EqCoords(HmsCoords ra, HmsCoords dec) {
+            RightAscension = ra;
+            Declination = dec;
+        }
+
         public bool Equals(EqCoords other) {
             return RightAscension.Equals(other.RightAscension)
                 && Declination.Equals(other.Declination);

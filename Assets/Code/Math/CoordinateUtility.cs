@@ -121,7 +121,7 @@ namespace Astro
             var declDegrees = RadianToDegree(dRad);
             var coords = new EqCoords();
             coords.RightAscension = DegreesToRA(raDegrees);
-            coords.Declination = DecimalDegreesToDegrees(declDegrees);
+            coords.Declination = DecimalDegreesToDeclination(declDegrees);
             return coords;
         }
 
@@ -155,7 +155,7 @@ namespace Astro
         /// <param name="minutes"></param>
         /// <param name="seconds"></param>
         /// <returns></returns>
-        public static float DegreesToDecimalDegrees(short hours, short minutes, float seconds)
+        public static float DeclinationToDecimalDegrees(short hours, short minutes, float seconds)
         {
             // Convert hours, minutes, and seconds to degrees
             float totalHours = hours + (minutes / 60.0f) + (seconds / 3600.0f);
@@ -163,7 +163,7 @@ namespace Astro
             return degrees;
         }
 
-        public static HmsCoords DecimalDegreesToDegrees(float decimalDegrees)
+        public static HmsCoords DecimalDegreesToDeclination(float decimalDegrees)
         {
             short hrs, minutes = 0;
             float seconds = 0;

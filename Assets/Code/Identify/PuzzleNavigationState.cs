@@ -57,7 +57,9 @@ public static class PuzzleNavigationUtility {
         Vector3 targetFoward = Geom.Forward(targetQuat);
 
         Quaternion spaceCameraQuat = spaceCameraState.Camera.RootTransform.rotation;
+
         Vector3 spaceCamForward = Geom.Forward(spaceCameraQuat);
+        Debug.Log("[PuzzleNavUtil] Camera RA:" + CoordinateUtility.DegreesToRA(360 - spaceCameraQuat.eulerAngles.y) + " D:" + CoordinateUtility.DecimalDegreesToDeclination(360 - spaceCameraQuat.eulerAngles.x));
 
         Debug.Log("[PuzzleNavUtil] Target:" + targetFoward +  ", Camera:" + spaceCamForward + " Distance:" + Vector3.Dot(targetFoward, spaceCamForward));
         float newDist = Vector3.Dot(targetFoward, spaceCamForward);
