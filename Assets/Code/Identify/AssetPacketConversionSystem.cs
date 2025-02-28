@@ -90,7 +90,7 @@ namespace Astro
                     newPacket = DataPacket.AbsoluteMagnitude(m_StateA.ToConvert.AbsoluteMagnitude);
                 }
                 else {
-                    newPacket = DataPacket.MinAppMagnitude();
+                    newPacket = DataPacket.MinAbsMagnitude();
                 }
                 m_ConvertedPackets.PushBack(newPacket);
             }

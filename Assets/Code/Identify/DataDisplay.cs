@@ -39,6 +39,7 @@ namespace Astro {
         /// </summary>
         static public void PopulateDisplay(DataDisplay display, DataPacket packet) {
             bool displayedDefault = false;
+            if (display == null) return;
             if (display.DefaultOutput) {
                 using(PooledStringBuilder psb = PooledStringBuilder.Create()) {
                     if (packet.IsValid) {

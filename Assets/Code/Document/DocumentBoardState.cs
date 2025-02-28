@@ -3,7 +3,9 @@ using BeauUtil;
 using FieldDay;
 using FieldDay.Assets;
 using FieldDay.HID;
+using FieldDay.Scripting;
 using FieldDay.SharedState;
+using Leaf.Runtime;
 using System;
 using System.Collections;
 using UnityEngine;
@@ -15,6 +17,8 @@ namespace Astro {
         [NonSerialized] public Vector3 LastMousePos;
         [NonSerialized] public bool InteractedThisFrame;
         [NonSerialized] public Vector3 StoredDocPos;
+        [NonSerialized] public bool OverrideStoredDoc;
+        [NonSerialized] public Vector3 OverrideStoredDocPos;
         [NonSerialized] public DocumentInteractable DocZoomed;
         [NonSerialized] public Routine DocumentRoutine;
 
@@ -37,19 +41,78 @@ namespace Astro {
 
     public static partial class DocumentUtility {
 
-        public static void SpawnDocument(DocumentAsset asset, DocumentBoardState state = null) {
+        public static DocumentRenderer SpawnDocument(DocumentAsset asset, DocumentBoardState state = null) {
             if (state == null) {
                 state = Find.State<DocumentBoardState>();
             }
             DocumentRenderer spawned = GameObject.Instantiate(asset.Prefab, state.DocumentParent);
             spawned.Title.SetText(asset.TitleText);
             spawned.Body.SetText(asset.BodyText);
-            spawned.transform.localPosition = Vector3.zero;
+            if (spawned.Video) { spawned.Video.url = asset.VideoURL; }
+            spawned.transform.localPosition = asset.DefaultPinnedPos;
             spawned.ZoomOffsetOverride = asset.ZoomOffsetOverride;
+            spawned.Interactable.Renderer = spawned;
+            spawned.Interactable.Parts = spawned.Interactable.GetComponentsInChildren<DocumentPart>(true);
+
+            return spawned;
         }
 
         public static void SpawnDocument(StringHash32 id) {
             SpawnDocument(Find.NamedAsset<DocumentAsset>(id));
+        }
+
+        [LeafMember("SpawnPostcard")]
+        private static void LeafSpawnPostcard(StringHash32 id)
+        {
+            var state = Find.State<DocumentBoardState>();
+
+            if (state.DocumentRoutine.Exists()) {
+                // wait for previous document routine to complete
+                state.DocumentRoutine.OnComplete(() => { SpawnPostcard(state, id); });
+            }
+            else {
+                SpawnPostcard(state, id);
+            }
+        }
+
+        public static void SpawnPostcard(DocumentBoardState state, StringHash32 id)
+        {
+            var asset = Find.NamedAsset<DocumentAsset>(id);
+            var spawned = SpawnDocument(asset, state);
+            spawned.Interactable.AssetName = id;
+            // Init pinned position
+            spawned.transform.SetParent(state.DocumentParent, false);
+            spawned.transform.localPosition = FindAvailablePos(state, spawned);
+            state.OverrideStoredDocPos = spawned.transform.position;
+            state.OverrideStoredDoc = true;
+            // Spawn below player view
+            spawned.transform.SetParent(Game.Rendering.PrimaryCamera.transform, true);
+            spawned.transform.localPosition = Vector3.zero;
+            // Move to zoomed view
+            ToggleZoomDoc(spawned.Interactable, state);
+            SetDocumentInteractionEnabled(true);
+            spawned.Video.Play();
+        }
+
+        public static Vector3 FindAvailablePos(DocumentBoardState state, DocumentRenderer doc) {
+
+            Vector2 finalPos = Vector3.zero;
+            int maxTries = 10;
+            for (int i = 0; i < maxTries; i++) {
+                // random point on board
+                float xExtents = state.DraggableBounds.width / 2;
+                float yExtents = state.DraggableBounds.height / 2;
+                var offset = state.DocumentParent.transform.position;
+                Vector3 pos = offset + new Vector3(UnityEngine.Random.Range(-xExtents, xExtents), UnityEngine.Random.Range(-yExtents, yExtents), 0);
+
+                Vector3 docExtents = new Vector3(doc.Size.width / 2, doc.Size.height / 2, 1);
+                if (!Physics.CheckBox(pos, docExtents, state.DocumentParent.transform.rotation, LayerMasks.DocumentSurface_Mask)) {
+                    finalPos = pos - offset;
+                    break;
+                }
+            }
+
+            return finalPos;
         }
 
         #region Enable/Disable
@@ -132,17 +195,45 @@ namespace Astro {
                 state.DocZoomed = null;
                 InputUtility.SetClickableMaskDefault(Find.State<InputState>());
                 doc.transform.SetParent(state.DocumentParent, true);
+                using (var table = TempVarTable.Alloc()) {
+                    table.Set("documentId", doc.AssetName);
+                    ScriptUtility.Trigger(ScriptEvents.DocumentInspectEnd, table);
+                }
             } else {
-                state.StoredDocPos = doc.transform.position;
+                if (state.OverrideStoredDoc) {
+                    state.StoredDocPos = state.OverrideStoredDocPos;
+                    state.OverrideStoredDoc = false;
+                }
+                else {
+                    state.StoredDocPos = doc.transform.position;
+                }
                 //state.StoredDocPos.z = state.DocumentParent.position.z;
                 Vector3 zoomOffset = doc.Renderer.ZoomOffsetOverride == default ? state.DocZoomOffset : doc.Renderer.ZoomOffsetOverride;
-                state.DocumentRoutine.Replace(MoveDocToCam(doc.transform, Game.Rendering.PrimaryCamera.transform, zoomOffset));
+                state.DocumentRoutine.Replace(MoveDocToCam(doc.transform, Game.Rendering.PrimaryCamera.transform, zoomOffset))
+                    .OnComplete(() => 
+                    {
+                        using (var table = TempVarTable.Alloc()) {
+                            table.Set("documentId", doc.AssetName);
+                            ScriptUtility.Trigger(ScriptEvents.DocumentInspectStart, table);
+                        }
+                    });
                 state.DocZoomed = doc;
                 doc.transform.SetParent(Game.Rendering.PrimaryCamera.transform, true);
                 SetInteractionLayer(state.DocZoomed, LayerMasks.TopLayer_Index);
                 InputUtility.SetClickableMaskTopLayer(Find.State<InputState>());
             }
             state.InteractedThisFrame = true;
+        }
+
+        public static void OverrideStoredDocPos(DocumentInteractable doc, Vector3 newPos, DocumentBoardState state = null) {
+            if (doc == null) {
+                return;
+            }
+            if (state == null) {
+                state = Find.State<DocumentBoardState>();
+            }
+
+            state.StoredDocPos = newPos;
         }
 
         public static void CancelZoom(DocumentBoardState state) {

@@ -22,12 +22,12 @@ namespace Astro {
         }
     }
 
-    public static class PhotometerUtility {
+    public static partial class PhotometerUtility {
         public static readonly float MIN_MAG = 5;
         public static readonly float MAX_MAG = -2;
         public static void UpdateDial(PhotometerDial dial, DataPacket packet) {
-            if ((packet.Type & DataTypeMask.ApparentMagnitude) != 0) {
-                dial.NeedleRoutine.Replace(MoveNeedle(dial, MagToDegrees((float) packet.Value.Magnitude)));
+            if ((packet.Type & DataTypeMask.ApparentMagnitude) != 0 || (packet.Type & DataTypeMask.AbsoluteMagnitude) != 0) {
+                dial.NeedleRoutine.Replace(MoveNeedle(dial, MagToDegrees((float)packet.Value.Magnitude)));
             }
         }
 

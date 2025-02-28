@@ -1,5 +1,6 @@
 using FieldDay.Assets;
 using UnityEngine;
+using UnityEngine.Video;
 
 namespace Astro {
     [CreateAssetMenu(menuName = "AstroGame/Document Asset")]
@@ -10,6 +11,8 @@ namespace Astro {
         [SerializeField] public string TitleText;
         [TextArea] 
         [SerializeField] public string BodyText;
+        public string VideoURL;
+        public Vector3 DefaultPinnedPos;
         public Vector3 ZoomOffsetOverride;
     }
 
