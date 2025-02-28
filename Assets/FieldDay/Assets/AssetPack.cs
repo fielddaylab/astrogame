@@ -1,9 +1,6 @@
 using System;
 using UnityEngine;
 using BeauUtil.Debugger;
-using FieldDay.Asset;
-
-
 
 #if UNITY_EDITOR
 using ScriptableBake;
