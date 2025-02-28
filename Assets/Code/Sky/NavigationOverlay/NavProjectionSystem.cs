@@ -20,7 +20,6 @@ namespace Astro {
         }
 
         public override void ProcessWork(float deltaTime) {
-            var layout = Find.GlobalAsset<SkyLayoutAsset>();
             var dome = Find.State<SkyDome>();
             var focusPools = Find.State<FocusPools>();
             var outlineState = Find.State<OutlineState>();
