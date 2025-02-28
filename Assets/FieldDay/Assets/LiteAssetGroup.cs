@@ -2,7 +2,7 @@ using BeauUtil;
 using FieldDay.Assets;
 using UnityEngine;
 
-namespace FieldDay.Asset {
+namespace FieldDay.Assets {
     /// <summary>
     /// Group of lightweight assets.
     /// </summary>
