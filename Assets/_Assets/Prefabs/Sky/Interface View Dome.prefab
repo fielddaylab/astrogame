@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2212884636568915061
 RectTransform:
   m_ObjectHideFlags: 0
@@ -816,15 +816,13 @@ GameObject:
   - component: {fileID: 7964474398638774834}
   - component: {fileID: 8445529713678149699}
   - component: {fileID: 7954145433571329493}
-  - component: {fileID: 5931629510065980261}
-  - component: {fileID: 5063974901463843175}
   m_Layer: 0
   m_Name: Navigation Overlay Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7964474398638774834
 RectTransform:
   m_ObjectHideFlags: 0
@@ -892,35 +890,6 @@ MonoBehaviour:
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
   m_PresetInfoIsWorld: 0
---- !u!114 &5931629510065980261
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3100987653812984504}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87f012751e1c7f44e9f22e1335077728, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  FocusOutline: {fileID: 3534020554462608880}
---- !u!114 &5063974901463843175
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3100987653812984504}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 90f77194feb777c45ab6eb1d0965e7c8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CelestialObjPrefab: {fileID: 8141813431883896341, guid: 8d46f6ec2431bbd4a80caaffc0435f36, type: 3}
-  StarOutlineSprite: {fileID: 21300000, guid: 8068344a795a4e0409c4c33ea74c920a, type: 3}
-  PlanetOutlineSprite: {fileID: 21300000, guid: 8068344a795a4e0409c4c33ea74c920a, type: 3}
-  NavigationCanvas: {fileID: 8445529713678149699}
 --- !u!1 &5868435351173400126
 GameObject:
   m_ObjectHideFlags: 0

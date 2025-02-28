@@ -122,6 +122,11 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!223 &132126 stripped
+Canvas:
+  m_CorrespondingSourceObject: {fileID: 8445529713678149699, guid: 6f9a5902b3dedf54080fa5f61ccb37d9, type: 3}
+  m_PrefabInstance: {fileID: 1036594227}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1036594227
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -228,6 +233,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 9069007415973883134, guid: 6f9a5902b3dedf54080fa5f61ccb37d9, type: 3}
+    - {fileID: 5063974901463843175, guid: 6f9a5902b3dedf54080fa5f61ccb37d9, type: 3}
+    - {fileID: 5931629510065980261, guid: 6f9a5902b3dedf54080fa5f61ccb37d9, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -409,8 +416,20 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1165780781}
+  - {fileID: 2122259024}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1639743787 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3534020554462608880, guid: 6f9a5902b3dedf54080fa5f61ccb37d9, type: 3}
+  m_PrefabInstance: {fileID: 1036594227}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1644688951
 GameObject:
   m_ObjectHideFlags: 0
@@ -442,6 +461,68 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2122259023
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2122259024}
+  - component: {fileID: 2122259025}
+  - component: {fileID: 2122259026}
+  m_Layer: 0
+  m_Name: State (InterfaceSpaceDome)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2122259024
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2122259023}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1313090279}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2122259025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2122259023}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90f77194feb777c45ab6eb1d0965e7c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CelestialObjPrefab: {fileID: 8141813431883896341, guid: 8d46f6ec2431bbd4a80caaffc0435f36, type: 3}
+  StarOutlineSprite: {fileID: 21300000, guid: 8068344a795a4e0409c4c33ea74c920a, type: 3}
+  PlanetOutlineSprite: {fileID: 21300000, guid: 8068344a795a4e0409c4c33ea74c920a, type: 3}
+  NavigationCanvas: {fileID: 132126}
+--- !u!114 &2122259026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2122259023}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87f012751e1c7f44e9f22e1335077728, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FocusOutline: {fileID: 1639743787}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -13,6 +13,7 @@ namespace Astro {
         public override bool HasWork() {
             return base.HasWork() && (m_State.SubmittedObject || m_State.SubmittedPuzzle);
         }
+
         public override void ProcessWork(float deltaTime) {
             if (m_State.ReviewTimer.Advance(deltaTime)) {
                 CheckObjectOrPuzzle();
@@ -24,8 +25,7 @@ namespace Astro {
             } 
             if (m_State.ReviewCooldown.Advance(deltaTime)) {
                 ResetReview(m_State.ReviewModule);
-            }
-            
+            } 
         }
 
         private void CheckObjectOrPuzzle() {
