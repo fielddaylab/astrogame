@@ -1,9 +1,9 @@
 using BeauUtil;
 using FieldDay;
 using FieldDay.Systems;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using static Astro.PuzzleAsset;
 
 namespace Astro {
     public class NavProjectionSystem : SharedStateSystemBehaviour<NavProjectionState, PuzzleNavigationState> {
@@ -69,6 +69,25 @@ namespace Astro {
 
                 Vector2 viewPoint = spaceCamera.WorldToViewportPoint(assetPostion);
                 navFocus.Rect.anchorMin = navFocus.Rect.anchorMax = viewPoint;
+            }
+
+            // Create connection for constellations
+            for(int i = 0; i < puzzleState.ActivePuzzle.Edges.Length; i++) {
+                Edge e = puzzleState.ActivePuzzle.Edges[i];
+                CelestialAsset ca1 = Find.NamedAsset<CelestialAsset>(e.Object1);
+                CelestialAsset ca2 = Find.NamedAsset<CelestialAsset>(e.Object2);
+
+                UIFocus focusA = outlineState.ActiveOutlines.Find(x => x.TargetData == ca1);
+                UIFocus focusB = outlineState.ActiveOutlines.Find(x => x.TargetData == ca2);
+
+                var connection = Instantiate(new GameObject(ca1.DisplayName + "_to_" + ca2.DisplayName, typeof(RectTransform)), m_StateA.OutlineGroup);
+                connection.AddComponent<Image>();
+                RectTransform connectionRect = connection.GetComponent<RectTransform>();
+                connectionRect.sizeDelta = new Vector2(5, 900 * Vector2.Distance(focusA.Rect.anchorMin, focusB.Rect.anchorMin));
+
+                connectionRect.anchorMin = connectionRect.anchorMax = (focusA.Rect.anchorMax + focusB.Rect.anchorMax) / 2; 
+                float angle = Vector2.Angle(Vector2.up, focusA.Rect.anchorMin - focusB.Rect.anchorMin);
+                connectionRect.localEulerAngles = new Vector3(0, 0, angle);
             }
 
             // Okay now put the camera back

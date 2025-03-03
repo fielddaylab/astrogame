@@ -13,6 +13,17 @@ namespace Astro {
             [AssetName(typeof(CelestialAsset))] public StringHash32 Object;
             public DataTypeMask ProvidedProperties;
         }
+
+        [Serializable]
+        public struct Edge {
+            [AssetName(typeof(CelestialAsset))] public StringHash32 Object1;
+            [AssetName(typeof(CelestialAsset))] public StringHash32 Object2;
+
+            public static implicit operator UnityEditor.Experimental.GraphView.Edge(Edge v)
+            {
+                throw new NotImplementedException();
+            }
+        }
         
         #region Inspector
 
@@ -22,6 +33,9 @@ namespace Astro {
         [Header("Data")]
         public DataTypeMask RequiredProperties;
         public Row[] Rows;  
+
+        [Header("Constellation")]
+        public Edge[] Edges;
 
         [Header("Puzzle Position")]
         public EqCoords PuzzleCoordinates;
