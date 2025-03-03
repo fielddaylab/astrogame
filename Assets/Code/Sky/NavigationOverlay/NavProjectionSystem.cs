@@ -10,7 +10,7 @@ namespace Astro {
         public override bool HasWork() {
             bool hasWork = base.HasWork();
             if (m_StateA) {
-                hasWork = hasWork && (!m_StateA.Initialized && m_StateB.NavigationModeActive);
+                hasWork = hasWork && !m_StateA.Initialized && m_StateB.NavigationModeActive;
             }
             else { 
                 return false; 
@@ -52,8 +52,8 @@ namespace Astro {
             spaceCamera.fieldOfView = spaceCam.Camera.OriginalFOV / puzzleState.ActivePuzzle.PuzzleCameraZoom;
 
             // Remove any old projections
-            foreach(GameObject child in m_StateA.OutlineGroup) {
-                Destroy(child);
+            for(int i = 0; i < m_StateA.OutlineGroup.childCount; i++) {
+                Destroy( m_StateA.OutlineGroup.GetChild(i).gameObject );
             }
 
             for (int i = 0; i < puzzleState.ActivePuzzle.Rows.Length; i++) {
@@ -83,7 +83,7 @@ namespace Astro {
                 var connection = Instantiate(new GameObject(ca1.DisplayName + "_to_" + ca2.DisplayName, typeof(RectTransform)), m_StateA.OutlineGroup);
                 connection.AddComponent<Image>();
                 RectTransform connectionRect = connection.GetComponent<RectTransform>();
-                connectionRect.sizeDelta = new Vector2(5, 900 * Vector2.Distance(focusA.Rect.anchorMin, focusB.Rect.anchorMin));
+                connectionRect.sizeDelta = new Vector2(5, 500 * Vector2.Distance(focusA.Rect.anchorMin, focusB.Rect.anchorMin));
 
                 connectionRect.anchorMin = connectionRect.anchorMax = (focusA.Rect.anchorMax + focusB.Rect.anchorMax) / 2; 
                 float angle = Vector2.Angle(Vector2.up, focusA.Rect.anchorMin - focusB.Rect.anchorMin);
@@ -121,8 +121,8 @@ namespace Astro {
             if (represent2D == null) {
                 focus.Represent2D.enabled = false;
             }
-            float scaleFactor = 2.5f * Mathf.Pow(0.63f, asset.ApparentMagnitude);
-            focus.Rect.localScale = new Vector3(scaleFactor, scaleFactor, 1);
+            // float scaleFactor = 1.5f * Mathf.Pow(0.63f, asset.ApparentMagnitude);
+            // focus.Rect.localScale = new Vector3(scaleFactor, scaleFactor, 1);
             focus.TargetData = asset;
         }
     }

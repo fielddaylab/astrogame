@@ -174,6 +174,7 @@ namespace Astro
 
         private void ProcessZoom()
         {
+            if (!m_State.ZoomInputEnabled) return;
             if (m_State.EnableMouseControls)
             {
                 ProcessMouseZoom();

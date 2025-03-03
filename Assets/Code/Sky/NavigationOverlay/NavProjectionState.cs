@@ -1,5 +1,6 @@
 using Astro;
 using FieldDay;
+using FieldDay.Processes;
 using FieldDay.SharedState;
 using System;
 using UnityEngine;
@@ -15,6 +16,16 @@ namespace Astro {
         public RectTransform OutlineGroup;
 
         public void OnRegister() {
+            Game.Scenes.QueueOnLoad(() => {
+                SpaceCameraState spaceCamState = Find.State<SpaceCameraState>();
+                NavProjectionState navProjState = Find.State<NavProjectionState>();
+
+                navProjState.NavigationCanvas.worldCamera = spaceCamState.Camera.Camera; 
+                navProjState.NavigationCanvas.planeDistance = 700; 
+
+                navProjState.NavigationCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+            });
+
             Game.Events.Register(GameEvents.StartPuzzleNavigation, () => {
                 NavigationCanvas.gameObject.SetActive(true);
                 Initialized = false;
@@ -24,6 +35,6 @@ namespace Astro {
             });
         }
 
-        public void OnDeregister() {} 
+        public void OnDeregister() {}
     }
 }
