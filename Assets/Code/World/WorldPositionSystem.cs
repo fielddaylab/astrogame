@@ -29,12 +29,12 @@ namespace Astro
     {
         public static void PositionAtLatLongHms(Transform toPosition, Transform relativeTo, Transform plane, HmsCoords lat, HmsCoords longitude)
         {
-            float latDegrees = (float)CoordinateUtility.DegreesToDecimalDegrees(
+            float latDegrees = (float)CoordinateUtility.DeclinationToDecimalDegrees(
                lat.Hours,
                lat.Minutes,
                lat.Seconds);
 
-            float longDegrees = (float)CoordinateUtility.DegreesToDecimalDegrees(
+            float longDegrees = (float)CoordinateUtility.DeclinationToDecimalDegrees(
                 longitude.Hours,
                 longitude.Minutes,
                 longitude.Seconds);

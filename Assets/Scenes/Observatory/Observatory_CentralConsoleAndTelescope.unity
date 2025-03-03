@@ -697,7 +697,6 @@ GameObject:
   - component: {fileID: 1366028329}
   - component: {fileID: 1366028327}
   - component: {fileID: 1366028326}
-  - component: {fileID: 1366028330}
   m_Layer: 0
   m_Name: ReviewLogic
   m_TagString: Untagged
@@ -763,18 +762,6 @@ MonoBehaviour:
   ReviewCooldown:
     Period: 2
     Behavior: 1
---- !u!114 &1366028330
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1366028324}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb86d01cc583881449c68d474672c7a3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1439467076 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -6497945888520551844, guid: 68c73aba31fb06141b9d95c545b6a72f, type: 3}
@@ -873,6 +860,10 @@ PrefabInstance:
     - target: {fileID: 3578335344753082924, guid: 547cd4c9214860c4088ccc9080fc0f9f, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8217897254273910605, guid: 547cd4c9214860c4088ccc9080fc0f9f, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:

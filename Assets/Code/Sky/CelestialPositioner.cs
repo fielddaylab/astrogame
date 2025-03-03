@@ -13,6 +13,23 @@ namespace Astro {
         /// Position an object given right ascension and declination in hours, minutes, and seconds
         /// </summary>
         /// <param name="centerPos"></param>
+        /// <param name="ra"></param>
+        /// <param name="decl"></param>
+        public static Vector3 GetObjectPosition(Vector3 centerPos, HmsCoords ra, HmsCoords decl)
+        {
+            float skyboxDist = Find.State<SkyDome>().Radius;
+
+            float raDegrees = (float)CoordinateUtility.RAToDegrees((int)ra.Hours, (int)ra.Minutes, ra.Seconds);
+            float declDegrees = (float)CoordinateUtility.DeclinationToDecimalDegrees((int)decl.Hours, (int)decl.Minutes, decl.Seconds);
+            var posOffset = CoordinateUtility.RAscDeclDegreesToCartesianCoordinates(raDegrees, declDegrees);
+
+            return centerPos + posOffset * skyboxDist;
+        }
+
+        /// <summary>
+        /// Position an object given right ascension and declination in hours, minutes, and seconds
+        /// </summary>
+        /// <param name="centerPos"></param>
         /// <param name="toPosition"></param>
         /// <param name="ra"></param>
         /// <param name="decl"></param>
