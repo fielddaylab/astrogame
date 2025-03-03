@@ -21,7 +21,7 @@ namespace Astro
 
         private static void SpawnQuestionDocument(StringHash32 id)
         {
-            SpawnDocument(Find.NamedAsset<DocumentAsset>(id));
+            SpawnDocument(Find.NamedAsset<DocumentAsset>(id), id);
 
             // TODO: additional question config here
         }

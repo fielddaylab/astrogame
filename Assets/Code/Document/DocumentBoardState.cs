@@ -43,7 +43,7 @@ namespace Astro {
 
         #region Spawning
 
-        public static DocumentRenderer SpawnDocument(DocumentAsset asset, DocumentBoardState state = null) {
+        public static DocumentRenderer SpawnDocument(DocumentAsset asset, StringHash32 id, DocumentBoardState state = null) {
             if (state == null) {
                 state = Find.State<DocumentBoardState>();
             }
@@ -55,19 +55,19 @@ namespace Astro {
             spawned.ZoomOffsetOverride = asset.ZoomOffsetOverride;
             spawned.Interactable.Renderer = spawned;
             spawned.Interactable.Parts = spawned.Interactable.GetComponentsInChildren<DocumentPart>(true);
+            spawned.Interactable.AssetName = id;
 
             return spawned;
         }
 
         public static void SpawnDocument(StringHash32 id) {
-            SpawnDocument(Find.NamedAsset<DocumentAsset>(id));
+            SpawnDocument(Find.NamedAsset<DocumentAsset>(id), id);
         }
 
         public static void SpawnPostcard(DocumentBoardState state, StringHash32 id)
         {
             var asset = Find.NamedAsset<DocumentAsset>(id);
-            var spawned = SpawnDocument(asset, state);
-            spawned.Interactable.AssetName = id;
+            var spawned = SpawnDocument(asset, id, state);
             // Init pinned position
             spawned.transform.SetParent(state.DocumentParent, false);
             spawned.transform.localPosition = FindAvailablePos(state, spawned);
