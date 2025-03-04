@@ -18,11 +18,6 @@ namespace Astro {
         public struct Edge {
             [AssetName(typeof(CelestialAsset))] public StringHash32 Object1;
             [AssetName(typeof(CelestialAsset))] public StringHash32 Object2;
-
-            public static implicit operator UnityEditor.Experimental.GraphView.Edge(Edge v)
-            {
-                throw new NotImplementedException();
-            }
         }
         
         #region Inspector
