@@ -174,6 +174,7 @@ namespace Astro
 
         private void ProcessZoom()
         {
+            if (!m_State.ZoomInputEnabled) return;
             if (m_State.EnableMouseControls)
             {
                 ProcessMouseZoom();
@@ -199,9 +200,8 @@ namespace Astro
 
         private void ProcessKeyboardZoom()
         {
-            if (Game.Input.IsKeyPressed(KeyCode.I))
-            {
-                // Zoom in
+            if (Game.Input.IsKeyPressed(KeyCode.I)) {
+                // Zoom out
                 float newZoom = m_State.Zoom;
 
                 newZoom = Mathf.Clamp(newZoom - m_State.ZoomIncrement, m_State.ZoomBounds.x, m_State.ZoomBounds.y);
@@ -210,9 +210,8 @@ namespace Astro
                 m_State.Camera.Camera.fieldOfView = m_State.Camera.OriginalFOV / newZoom;
                 RecordLookUpdated();
             }
-            if (Game.Input.IsKeyPressed(KeyCode.K))
-            {
-                // Zoom out
+            if (Game.Input.IsKeyPressed(KeyCode.K)) {
+                // Zoom in
                 float newZoom = m_State.Zoom;
 
                 newZoom = Mathf.Clamp(newZoom + m_State.ZoomIncrement, m_State.ZoomBounds.x, m_State.ZoomBounds.y);

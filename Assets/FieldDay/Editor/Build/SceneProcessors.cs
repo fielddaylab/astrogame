@@ -209,13 +209,12 @@ namespace FieldDay.Editor {
     /// Merges in any scenes that should be merged into the main scene.
     /// </summary>
     public class ImportMergeScenesSceneProcessor : IProcessSceneWithReport {
-        static private readonly FieldInfo PersistIdField = typeof(Persist).GetField("m_UniqueID", BindingFlags.NonPublic | BindingFlags.Instance);
-
         private HashSet<string> visitedScenes;
         private List<ImportScene> importBuffer;
         private RingBuffer<ImportScene> importQueue;
         private RingBuffer<DelayedImportArgs> delayedImports;
         private HashSet<string> persists;
+        private LightmapCombiner lightmapCombiner;
 
         public int callbackOrder { get { return -10; } }
 
@@ -300,6 +299,14 @@ namespace FieldDay.Editor {
                 HandlePersists(subsceneRef);
             }
 
+            if ((settings.Flags & SceneImportFlags.MergeLightmaps) != 0) {
+                if (lightmapCombiner == null) {
+                    lightmapCombiner = new LightmapCombiner();
+                    lightmapCombiner.GatherFromScene(scene);
+                }
+                lightmapCombiner.GatherFromScene(subsceneRef);
+            }
+
             foreach (var root in subsceneRef.GetRootGameObjects()) {
                 root.GetComponentsInChildren(true, importBuffer);
                 foreach (var subImport in importBuffer) {
@@ -311,7 +318,7 @@ namespace FieldDay.Editor {
             }
 
             if ((settings.Flags & SceneImportFlags.ImportLightingSettings) != 0) {
-                LightUtility.CopySettingsToScene(subsceneRef, scene, LightingImportFlags.All);
+                LightUtility.CopySettingsToScene(subsceneRef, scene, LightingImportFlags.Simple);
             }
 
             if (EditorApplication.isPlaying) {
@@ -332,7 +339,7 @@ namespace FieldDay.Editor {
                     continue;
                 }
 
-                string id = (string) PersistIdField.GetValue(persist);
+                string id = persist.UniqueId;
                 if (string.IsNullOrEmpty(id)) {
                     continue;
                 }
@@ -376,6 +383,8 @@ namespace FieldDay.Editor {
 
             if (delayedImports.Count > 0) {
                 PlayModeDelayedSceneProcessor.QueueFront(DelayedFlushQueues, scene, report, null);
+            } else {
+                lightmapCombiner?.ApplyChanges();
             }
         }
 

@@ -41,7 +41,9 @@ namespace Astro {
 
     public static partial class DocumentUtility {
 
-        public static DocumentRenderer SpawnDocument(DocumentAsset asset, DocumentBoardState state = null) {
+        #region Spawning
+
+        public static DocumentRenderer SpawnDocument(DocumentAsset asset, StringHash32 id, DocumentBoardState state = null) {
             if (state == null) {
                 state = Find.State<DocumentBoardState>();
             }
@@ -53,33 +55,19 @@ namespace Astro {
             spawned.ZoomOffsetOverride = asset.ZoomOffsetOverride;
             spawned.Interactable.Renderer = spawned;
             spawned.Interactable.Parts = spawned.Interactable.GetComponentsInChildren<DocumentPart>(true);
+            spawned.Interactable.AssetName = id;
 
             return spawned;
         }
 
         public static void SpawnDocument(StringHash32 id) {
-            SpawnDocument(Find.NamedAsset<DocumentAsset>(id));
-        }
-
-        [LeafMember("SpawnPostcard")]
-        private static void LeafSpawnPostcard(StringHash32 id)
-        {
-            var state = Find.State<DocumentBoardState>();
-
-            if (state.DocumentRoutine.Exists()) {
-                // wait for previous document routine to complete
-                state.DocumentRoutine.OnComplete(() => { SpawnPostcard(state, id); });
-            }
-            else {
-                SpawnPostcard(state, id);
-            }
+            SpawnDocument(Find.NamedAsset<DocumentAsset>(id), id);
         }
 
         public static void SpawnPostcard(DocumentBoardState state, StringHash32 id)
         {
             var asset = Find.NamedAsset<DocumentAsset>(id);
-            var spawned = SpawnDocument(asset, state);
-            spawned.Interactable.AssetName = id;
+            var spawned = SpawnDocument(asset, id, state);
             // Init pinned position
             spawned.transform.SetParent(state.DocumentParent, false);
             spawned.transform.localPosition = FindAvailablePos(state, spawned);
@@ -114,6 +102,28 @@ namespace Astro {
 
             return finalPos;
         }
+
+        #endregion // Spawning
+
+        #region Leaf
+
+        [LeafMember("SpawnPostcard")]
+        private static void LeafSpawnPostcard(StringHash32 id)
+        {
+            var state = Find.State<DocumentBoardState>();
+
+            if (state.DocumentRoutine.Exists())
+            {
+                // wait for previous document routine to complete
+                state.DocumentRoutine.OnComplete(() => { SpawnPostcard(state, id); });
+            }
+            else
+            {
+                SpawnPostcard(state, id);
+            }
+        }
+
+        #endregion // Leaf
 
         #region Enable/Disable
         public static void SetDocumentInteractionEnabled(bool enable, DocumentBoardState state = null) {
@@ -253,7 +263,8 @@ namespace Astro {
             state.DocumentRoutine.Replace(DocRotateY(doc, lift, angle));
             state.InteractedThisFrame = true;
         }
-        #endregion //Selection
+
+        #endregion // Interaction
 
         #region Routines
         private static IEnumerator ToggleDocHover(Transform doc, Vector3 hoverOffset) {
