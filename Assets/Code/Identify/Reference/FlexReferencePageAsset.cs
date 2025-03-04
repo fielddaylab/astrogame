@@ -1,5 +1,6 @@
 using FieldDay.Assets;
 using System;
+using BeauUtil;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -31,14 +32,10 @@ namespace Astro {
     [Serializable]
     public struct TableData {
         public string[] Headers;
-        private bool[] ColumnHasImage;
-        public RefGuideRow[] Rows;
-    }
-
-    [Serializable]
-    public struct RefGuideRow {
+        public bool[] ColumnHasImage;
         public RefGuideCell[] Cells;
     }
+
 
     [Serializable]
     public struct RefGuideCell {
