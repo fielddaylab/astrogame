@@ -26,12 +26,11 @@ namespace Astro {
         public RefGuideRegion[] RightRegions;
         public RefGuideRegion ForwardRegion;
 
-        public void OnRegister()
-        {
+        public void OnRegister() {
             Game.Events.Register(GameEvents.StartOpenMode, () => {
                 SubmissionActive = true;
             });
-            Game.Events.Register(GameEvents.StartPuzzleMode, () => {
+            Game.Events.Register(GameEvents.StopOpenMode, () => {
                 SubmissionActive = false;
                 ReferenceUtility.SelectRegion(null);
             });

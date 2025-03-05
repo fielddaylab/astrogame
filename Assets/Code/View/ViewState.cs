@@ -6,6 +6,7 @@ using BeauUtil;
 using FieldDay;
 using FieldDay.Components;
 using FieldDay.SharedState;
+using Leaf.Runtime;
 using UnityEngine;
 
 namespace Astro {
@@ -76,6 +77,14 @@ namespace Astro {
             }
             DocumentUtility.CancelZoom(Find.State<DocumentBoardState>());
             state.ActiveTransitionRoutine.Replace(TransitionRoutine(state, node, null));
+        }
+
+        [LeafMember("MoveToCameraView")]
+        static public void LeafMoveToNode(String targetId){
+            ViewState state = Find.State<ViewState>();
+            var targetNode = GetNodeById(targetId);
+
+            MoveToNode(state, targetNode);
         }
 
         /// <summary>
