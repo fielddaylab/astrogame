@@ -1,7 +1,5 @@
-using FieldDay.UI;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Astro {
     [CustomEditor(typeof (FlexPagePopulator)), CanEditMultipleObjects]
