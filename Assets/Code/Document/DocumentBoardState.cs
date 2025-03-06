@@ -25,6 +25,8 @@ namespace Astro {
         public Transform DocumentParent;
         public Rect DraggableBounds;
 
+        public bool DraggablePlacedThisFrame = false;
+
         public AssetPack DocumentAssets;
 
         [Header("Interact Settings")]
@@ -58,6 +60,19 @@ namespace Astro {
             spawned.Interactable.AssetName = id;
 
             return spawned;
+        }
+
+        [LeafMember("SpawnDocument")]
+        public static void LeafSpawnDocument(StringHash32 id) {
+            SpawnDocument(Find.NamedAsset<DocumentAsset>(id), id);
+        }
+
+        [LeafMember("SpawnDocumentToCamera")]
+        public static void LeafSpawnDocumentToCamera(StringHash32 id) {
+            DocumentBoardState state = Find.State<DocumentBoardState>();
+
+            DocumentRenderer document = SpawnDocument(Find.NamedAsset<DocumentAsset>(id), id, state);
+            ToggleZoomDoc(document.Interactable, state);
         }
 
         public static void SpawnDocument(StringHash32 id) {
@@ -103,10 +118,38 @@ namespace Astro {
             return finalPos;
         }
 
+        public static bool OverlapBoxAtPos(DocumentBoardState state, DocumentRenderer doc, out DocumentRenderer hit)
+        {
+            hit = null;
+
+            var offset = state.DocumentParent.transform.position;
+            var localPos = doc.transform.localPosition;
+            localPos.z = 0;
+            Vector3 pos = offset + localPos;
+
+            Vector3 docExtents = new Vector3(doc.Size.width / 2, doc.Size.height / 2, 1);
+            var hits = Physics.OverlapBox(pos, docExtents, state.DocumentParent.transform.rotation, LayerMasks.DocumentInteract_Mask);
+            for (int i = 0; i < hits.Length; i++)
+            {
+                var currPart = hits[i].GetComponent<DocumentPart>();
+                var currRenderer = currPart ? currPart.Document.Renderer : null;
+                if (currRenderer && !currRenderer.Interactable.AssetName.Equals(doc.Interactable.AssetName)) {
+                    hit = currRenderer;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         #endregion // Spawning
 
         #region Leaf
 
+    /// <summary>
+    /// Postcard here means an animated document of a constellation found in the SteamingAssets/Postcards folder
+    /// </summary>
+    /// <param name="id"></param>
         [LeafMember("SpawnPostcard")]
         private static void LeafSpawnPostcard(StringHash32 id)
         {
@@ -175,10 +218,13 @@ namespace Astro {
             if (newDoc != null && state.SelectedDocument != newDoc) {
                 state.SelectedDocument = newDoc;
                 state.DocumentRoutine.Replace(ToggleDocHover(state.SelectedDocument.transform, state.DocHoverOffset)); // 
+                state.SelectedDocument.IsDragging = true;
                 CursorHint.TryLock(partHint);
             } else {
                 CursorHint.Unlock();
                 state.DocumentRoutine.Replace(ToggleDocHover(state.SelectedDocument.transform, -state.DocHoverOffset));
+                state.SelectedDocument.IsDragging = false;
+                state.DraggablePlacedThisFrame = true;
                 state.SelectedDocument = null;
             }
             state.InteractedThisFrame = true;

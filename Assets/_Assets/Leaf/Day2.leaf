@@ -1,0 +1,21 @@
+#basePath	Day2
+
+:: ArrivalAtTheShed
+@trigger    Never //SceneReady
+@boostScore 100
+@who    Radio
+
+{@Astrid} Time to solve a story puzzle!
+$call StartDocumentPuzzle("TestDocumentPuzzle")
+$call SpawnPostcard("TestPostcard")
+$call SpawnDocument("TestDocument")
+
+
+:: DocumentResponse
+@trigger    DocumentPuzzlePromptStart
+@who    Radio
+$if local:documentId == "TestPostcard"
+    {@Astrid} This is it!
+$else
+    {@Astrid} I don't think that's right...
+$endif
