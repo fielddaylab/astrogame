@@ -15,6 +15,7 @@ namespace Astro {
         [NonSerialized] public StringHash32 AssetName;
 
         [NonSerialized] public bool Flipped;
+        [NonSerialized] public bool IsDragging;
         public Transform Paper;
 
         public void OnDeregister() {

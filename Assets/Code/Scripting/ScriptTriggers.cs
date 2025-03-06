@@ -33,7 +33,8 @@ namespace Astro {
 
         [LeafMember("SetInputState")]
         static private void LeafSetInputState(bool enabled) {
-            InputUtility.SetInputEnabled(enabled);
+            var state = Find.State<InputState>();
+            InputUtility.SetInputEnabled(state, enabled);
         }
 
         [LeafMember("StartPuzzleMode")]

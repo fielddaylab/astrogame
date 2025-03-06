@@ -109,7 +109,8 @@ namespace Astro {
         static private IEnumerator TransitionRoutine(ViewState state, ViewNode nextNode, ViewLink byLink) {
             Transform controlPoint = null;
             TweenSettings tween = state.DefaultTransition;
-            InputUtility.SetInputEnabled(false);
+            var inputState = Find.State<InputState>();
+            InputUtility.SetInputEnabled(inputState, false);
             if (byLink) {
                 controlPoint = byLink.TransitionControlPoint;
                 if (byLink.Transition.Time > 0) {
@@ -141,7 +142,7 @@ namespace Astro {
             }
             ActivateNode(nextNode, true);
             UpdateActiveLinks(state);
-            InputUtility.SetInputEnabled(true);
+            InputUtility.SetInputEnabled(inputState, true);
         }
 
         static private void InstantTransition(ViewState state, ViewNode nextNode) {

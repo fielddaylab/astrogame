@@ -19,7 +19,8 @@ namespace Astro {
     }
 
     public static class InputUtility {
-        public static void SetInputEnabled(bool enabled) {
+        public static void SetInputEnabled(InputState state, bool enabled) {
+            state.InputEnabled = enabled;
             SpaceCameraUtility.SetCameraInputEnabled(enabled);
             if (enabled) {
                 Game.Input.ResumeRaycasts();

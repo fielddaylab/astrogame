@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[SysUpdate(GameLoopPhase.Update, 100)] // After DocumentInteractionSystem
+[SysUpdate(GameLoopPhase.Update, 200)] // After DocumentPromptSystem
 public class DocumentPuzzleInteractionSystem : SharedStateSystemBehaviour<DocumentBoardState, DocumentPuzzleState, ViewState>
 {
     public override void ProcessWork(float deltaTime)
