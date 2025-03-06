@@ -8,9 +8,9 @@ namespace Astro {
         public SubmitButtonType ButtonType;
     }
 
-    [Serializable]
+    [Serializable, Flags]
     public enum SubmitButtonType {
-        SubmitPuzzle,
-        SubmitIdentification
+        SubmitPuzzle = 1,
+        SubmitIdentification = 2
     }
 }

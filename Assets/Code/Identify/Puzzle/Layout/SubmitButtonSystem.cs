@@ -11,20 +11,12 @@ namespace Astro {
     public class SubmitButtonSystem : ComponentSystemBehaviour<SubmitButton, LabInteractable> {
         public override void ProcessWorkForComponent(SubmitButton primary, LabInteractable secondary, float deltaTime) {          
             if (!secondary.InteractReceived) { return; }
-            switch (primary.ButtonType) {
-                case SubmitButtonType.SubmitPuzzle: {
-                        TrySubmitPuzzle(primary);
-                        break;
-                    }
-                case SubmitButtonType.SubmitIdentification: {
-                        TrySubmitIdentification(primary);
-                        break;
-                    }
-                default: {
-                        break;
-                    }
+            if ((primary.ButtonType & SubmitButtonType.SubmitPuzzle) != 0) {
+                TrySubmitPuzzle(primary);
             }
-
+            if ((primary.ButtonType & SubmitButtonType.SubmitIdentification) != 0) {
+                TrySubmitIdentification(primary);
+            }
         }
 
         private bool TrySubmitPuzzle(SubmitButton btn) {
