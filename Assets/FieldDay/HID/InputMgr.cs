@@ -1,3 +1,7 @@
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#define DEVELOPMENT
+#endif // UNITY_EDITOR || DEVELOPMENT_BUILD
+
 using System;
 using System.Diagnostics;
 using BeauUtil;
@@ -38,7 +42,11 @@ namespace FieldDay.HID {
         private uint m_DevicePauseCounter;
         private bool m_InputConsumed;
 
-        #endregion // State
+#if DEVELOPMENT
+        private bool m_DebugEventPauseOverride;
+#endif // DEVELOPMENT
+
+#endregion // State
 
         internal InputMgr() { }
 
@@ -283,6 +291,11 @@ namespace FieldDay.HID {
         /// </summary>
         public void PauseRaycasts() {
             if (m_EventPauseCounter++ == 0) {
+#if DEVELOPMENT
+                if (m_DebugEventPauseOverride) {
+                    return;
+                }
+#endif // DEVELOPMENT
                 m_EventSystem.SetSelectedGameObject(null);
                 m_DefaultInputModule.DeactivateModule();
                 NativeInput.SetEventSystemEnabled(false);
@@ -298,6 +311,25 @@ namespace FieldDay.HID {
                 NativeInput.SetEventSystemEnabled(true);
             }
         }
+
+#if DEVELOPMENT
+        internal void SetDebugPauseOverride(bool debugPaused) {
+            if (m_DebugEventPauseOverride != debugPaused) {
+                m_DebugEventPauseOverride = debugPaused;
+
+                if (debugPaused) {
+                    m_DefaultInputModule.ActivateModule();
+                    NativeInput.SetEventSystemEnabled(true);
+                } else {
+                    if (m_EventPauseCounter > 0) {
+                        m_EventSystem.SetSelectedGameObject(null);
+                        m_DefaultInputModule.DeactivateModule();
+                        NativeInput.SetEventSystemEnabled(false);
+                    }
+                }
+            }
+        }
+#endif // DEVELOPMENT
 
         /// <summary>
         /// Returns if all device input is paused.

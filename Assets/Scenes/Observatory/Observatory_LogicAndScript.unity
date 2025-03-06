@@ -96,7 +96,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000018, guid: 4698a610f7f23bb45a6a84676fe51015, type: 2}
+  m_LightingDataAsset: {fileID: 112000016, guid: 4698a610f7f23bb45a6a84676fe51015, type: 2}
   m_LightingSettings: {fileID: 4890085278179872738, guid: 6f1803a0335cd4f4a9c123fe06a221ef, type: 2}
 --- !u!196 &4
 NavMeshSettings:
@@ -287,7 +287,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7defec079c93e249804788a8ca50151, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  InputEnabled: 0
+  InputEnabled: 1
   Raycaster: {fileID: 963194232}
 --- !u!114 &238910212
 MonoBehaviour:
@@ -464,6 +464,7 @@ MonoBehaviour:
   m_Packs:
   - {fileID: 11400000, guid: cce0d58bc5866da4b80af0e2305ed5ec, type: 2}
   - {fileID: 11400000, guid: 9451436337e5e5946b91a98629ea6b0e, type: 2}
+  - {fileID: 11400000, guid: f66bbe6500c0f7345a8c7fb8d0ab72fe, type: 2}
 --- !u!4 &602424801
 Transform:
   m_ObjectHideFlags: 0
@@ -1666,6 +1667,7 @@ GameObject:
   - component: {fileID: 1812546564}
   - component: {fileID: 1812546563}
   - component: {fileID: 1812546586}
+  - component: {fileID: 1812546587}
   m_Layer: 0
   m_Name: World Systems
   m_TagString: Untagged
@@ -1761,6 +1763,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9d2fe0898961774595c14f546a65658, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1812546587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1812546561}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e177d13e3ce2eb245a43a0313f6c04a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_InitialCapacity: 64
 --- !u!1 &1931264332
 GameObject:
   m_ObjectHideFlags: 0

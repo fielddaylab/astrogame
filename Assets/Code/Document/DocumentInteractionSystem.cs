@@ -21,6 +21,7 @@ namespace Astro {
                 }
                 if (m_StateB.InputEnabled && Game.Input.IsMousePressed(MouseButton.Left)) {
                     DocumentUtility.DeselectDocument(m_StateA);
+                    Game.Input.ConsumeAllInputForFrame();
                 }
             }
 
@@ -51,7 +52,7 @@ namespace Astro {
 
         private static void LerpToTarget(Transform transform, Vector3 target, float percent) {
             transform.SetPosition(Vector3.Lerp(transform.localPosition, target, percent), Axis.XY, Space.Self);
-            if (Vector2.Distance(transform.localPosition, target) < 0.1f) {
+            if (Vector2.Distance(transform.localPosition, target) < 0.03f) {
                 transform.SetPosition(target, Axis.XY, Space.Self);
             }
         }

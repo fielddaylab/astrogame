@@ -168,10 +168,12 @@ namespace FieldDay.Debugging {
                 m_TimeDisplay.UpdateState(true);
                 OnTimeScaleUpdated.Invoke(0);
                 EventSystem.current?.SetSelectedGameObject(null);
+                Game.Input.SetDebugPauseOverride(true);
             } else {
                 Time.timeScale = m_TimeScale;
                 m_TimeDisplay.UpdateState(false);
                 OnTimeScaleUpdated.Invoke(m_TimeScale);
+                Game.Input.SetDebugPauseOverride(false);
             }
         }
 
@@ -193,15 +195,26 @@ namespace FieldDay.Debugging {
                     SetMenuVisible(false);
                 } else {
                     m_DebugMenus.UpdateElements();
-
-                    if (DebugInput.IsPressed(DebugInputButtons.Cancel)) {
-                        m_DebugMenus.TryPopMenu();
-                    } else if (DebugInput.IsPressed(DebugInputButtons.DPadLeft)) {
-                        m_DebugMenus.TryPreviousPage();
-                    } else if (DebugInput.IsPressed(DebugInputButtons.DPadRight)) {
-                        m_DebugMenus.TryNextPage();
-                    }
+                    m_DebugMenus.SubmitCommand(GetMenuCommand());
                 }
+            }
+        }
+
+        static private DMMenuUI.NavigationCommand GetMenuCommand() {
+            if (DebugInput.IsPressed(DebugInputButtons.Cancel)) {
+                return DMMenuUI.NavigationCommand.Back;
+            } else if (DebugInput.IsPressed(DebugInputButtons.DPadLeft)) {
+                return DMMenuUI.NavigationCommand.PrevPage;
+            } else if (DebugInput.IsPressed(DebugInputButtons.DPadRight)) {
+                return DMMenuUI.NavigationCommand.NextPage;
+            } else if (DebugInput.IsPressed(DebugInputButtons.DPadUp)) {
+                return DMMenuUI.NavigationCommand.MoveArrowUp;
+            } else if (DebugInput.IsPressed(DebugInputButtons.DPadDown)) {
+                return DMMenuUI.NavigationCommand.MoveArrowDown;
+            } else if (DebugInput.IsPressed(DebugInputButtons.Select)) {
+                return DMMenuUI.NavigationCommand.SelectArrow;
+            } else {
+                return DMMenuUI.NavigationCommand.None;
             }
         }
 
