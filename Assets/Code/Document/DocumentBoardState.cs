@@ -63,11 +63,17 @@ namespace Astro {
         }
 
         [LeafMember("SpawnDocument")]
-        public static void LeafSpawnDocument(StringHash32 id)
-        {
+        public static void LeafSpawnDocument(StringHash32 id) {
             SpawnDocument(Find.NamedAsset<DocumentAsset>(id), id);
         }
 
+        [LeafMember("SpawnDocumentToCamera")]
+        public static void LeafSpawnDocumentToCamera(StringHash32 id) {
+            DocumentBoardState state = Find.State<DocumentBoardState>();
+
+            DocumentRenderer document = SpawnDocument(Find.NamedAsset<DocumentAsset>(id), id, state);
+            ToggleZoomDoc(document.Interactable, state);
+        }
 
         public static void SpawnDocument(StringHash32 id) {
             SpawnDocument(Find.NamedAsset<DocumentAsset>(id), id);
@@ -140,6 +146,10 @@ namespace Astro {
 
         #region Leaf
 
+    /// <summary>
+    /// Postcard here means an animated document of a constellation found in the SteamingAssets/Postcards folder
+    /// </summary>
+    /// <param name="id"></param>
         [LeafMember("SpawnPostcard")]
         private static void LeafSpawnPostcard(StringHash32 id)
         {
