@@ -71,16 +71,16 @@ namespace Astro {
         public static void LeafSpawnDocumentToCamera(StringHash32 id) {
             DocumentBoardState state = Find.State<DocumentBoardState>();
 
-            DocumentRenderer document = SpawnDocument(Find.NamedAsset<DocumentAsset>(id), id, state);
-            ToggleZoomDoc(document.Interactable, state);
+            if (state.DocumentRoutine.Exists()) {
+                // wait for previous document routine to complete
+                state.DocumentRoutine.OnComplete(() => { SpawnDocumentToCamera(state, id); });
+            }
+            else {
+                SpawnDocumentToCamera(state, id);
+            }
         }
 
-        public static void SpawnDocument(StringHash32 id) {
-            SpawnDocument(Find.NamedAsset<DocumentAsset>(id), id);
-        }
-
-        public static void SpawnPostcard(DocumentBoardState state, StringHash32 id)
-        {
+        public static void SpawnDocumentToCamera(DocumentBoardState state, StringHash32 id) {
             var asset = Find.NamedAsset<DocumentAsset>(id);
             var spawned = SpawnDocument(asset, id, state);
             // Init pinned position
@@ -95,6 +95,10 @@ namespace Astro {
             ToggleZoomDoc(spawned.Interactable, state);
             SetDocumentInteractionEnabled(true);
             if (spawned.Video) { spawned.Video.Play(); }
+        }
+
+        public static void SpawnDocument(StringHash32 id) {
+            SpawnDocument(Find.NamedAsset<DocumentAsset>(id), id);
         }
 
         public static Vector3 FindAvailablePos(DocumentBoardState state, DocumentRenderer doc) {
@@ -143,28 +147,6 @@ namespace Astro {
         }
 
         #endregion // Spawning
-
-        #region Leaf
-
-    /// <summary>
-    /// Postcard here means an animated document of a constellation found in the SteamingAssets/Postcards folder
-    /// </summary>
-    /// <param name="id"></param>
-        [LeafMember("SpawnPostcard")]
-        private static void LeafSpawnPostcard(StringHash32 id)
-        {
-            var state = Find.State<DocumentBoardState>();
-
-            if (state.DocumentRoutine.Exists()) {
-                // wait for previous document routine to complete
-                state.DocumentRoutine.OnComplete(() => { SpawnPostcard(state, id); });
-            }
-            else {
-                SpawnPostcard(state, id);
-            }
-        }
-
-        #endregion // Leaf
 
         #region Enable/Disable
         public static void SetDocumentInteractionEnabled(bool enable, DocumentBoardState state = null) {
