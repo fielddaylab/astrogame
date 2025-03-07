@@ -34,7 +34,9 @@ namespace Astro {
         int IBaked.Order { get { return -100; } }
 
         bool IBaked.Bake(BakeFlags flags, BakeContext context) {
-            Contents.targetTexture = null;
+            if((flags & BakeFlags.IsBuild) != 0) {
+                Contents.targetTexture = null;
+            } 
             return true;
         }
 

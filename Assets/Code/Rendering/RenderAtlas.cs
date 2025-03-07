@@ -53,6 +53,7 @@ namespace Astro {
         #endregion // Inspector
 
         [NonSerialized] private RenderTexture m_Texture;
+        public CastableEvent<RenderAtlas> OnTextureCreated = new CastableEvent<RenderAtlas>();
 
         public int RegionCount {
             get { return m_PackedRegions.Length; }
@@ -103,6 +104,8 @@ namespace Astro {
             m_Texture.depth = 0;
             m_Texture.filterMode = m_FilterMode;
             m_Texture.name = name + "_RT";
+
+            OnTextureCreated.Invoke(this);
         }
 
         void IRegistrationCallbacks.OnDeregister() {

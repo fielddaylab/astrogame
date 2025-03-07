@@ -36,7 +36,7 @@ namespace Astro {
 
         // TODO make this actually process more than one day
         [LeafMember("LoadNextDay")]
-        static private void LeafLoadNextDay() {
+        static public void LoadNextDay() {
             PlayerProgressState state = Find.State<PlayerProgressState>();
             StoryAsset story = Find.GlobalAsset<StoryAsset>();
 

@@ -1,12 +1,24 @@
 using System;
 using BeauRoutine;
+using BeauUtil.Debugger;
 using FieldDay;
+using FieldDay.Debugging;
 using FieldDay.Scripting;
 using FieldDay.SharedState;
 
 namespace Astro {
     public sealed class AstroGame : Game {
         static public new EventDispatcher<EvtArgs> Events { get; private set; }
+
+        [DebugMenuFactory]
+        private static DMInfo LoadLevel() {
+            DMInfo info = new DMInfo("Progress");
+            info.AddButton("NextLevel", () => {
+                ScriptUtility.KillAllThreads();
+                ScriptTriggers.LoadNextDay();
+            });
+            return info;
+        }
 
         [InvokePreBoot]
         static private void OnPreBoot() {
@@ -22,11 +34,6 @@ namespace Astro {
         [InvokeOnBoot]
         static private void OnBoot() {
             Scenes.OnMainSceneReady.Register(() => {
-                DayConfigAsset config = DayConfigUtil.GetConfigForState();
-                PuzzleState puzzleState = Find.State<PuzzleState>();
-                
-                puzzleState.QueuedPuzzle = config.DayPuzzle;
-
                 ScriptUtility.Trigger("SceneReady");
             });
         }

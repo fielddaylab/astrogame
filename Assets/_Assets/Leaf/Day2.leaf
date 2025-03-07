@@ -31,6 +31,7 @@ $call SpawnDocumentToCamera("Day2ElijahPostcard")
 $call StartDocumentPuzzle("Day2DocumentPuzzle")
 
 :: IncorrectDocumentResponse
+@trigger    DocumentPuzzlePromptStart
 @when documentId != "Day2ElijahPostcard"
 
 {@Astrid} I don't think that's right...
