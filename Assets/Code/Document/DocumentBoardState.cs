@@ -94,7 +94,7 @@ namespace Astro {
             // Move to zoomed view
             ToggleZoomDoc(spawned.Interactable, state);
             SetDocumentInteractionEnabled(true);
-            if (spawned.Video) { spawned.Video.Play(); }
+            if (spawned.Video.clip != null) { spawned.Video.Play(); }
         }
 
         public static void SpawnDocument(StringHash32 id) {
@@ -256,7 +256,7 @@ namespace Astro {
                             table.Set("documentId", doc.AssetName);
                             ScriptUtility.Trigger(ScriptEvents.DocumentInspectStart, table);
                         }
-                        if (doc.Renderer.Video) {
+                        if (doc.Renderer.Video.clip) {
                             doc.Renderer.Video.Play();
                         }
                     });
