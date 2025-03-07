@@ -25,22 +25,19 @@ public sealed class PuzzleNavigationState : SharedStateComponent, IRegistrationC
 }
 
 public static class PuzzleNavigationUtility {
-    [InvokeOnBoot]
-    static public void Init() {
-        SpaceCameraState state = Find.State<SpaceCameraState>();
-
-        state.OnLookUpdated.Register(UpdateCameraDistanceFromPuzzle);
-    }
-
     public static void OnPuzzleNavStart() {
-        PuzzleNavigationState puzzleNavState = Find.State<PuzzleNavigationState>();
+        SpaceCameraState state = Find.State<SpaceCameraState>();
+        state.OnLookUpdated.Register(UpdateCameraDistanceFromPuzzle);
 
+        PuzzleNavigationState puzzleNavState = Find.State<PuzzleNavigationState>();
         puzzleNavState.NavigationModeActive = true;
     } 
 
     public static void OnPuzzleNavStopped() {
-        PuzzleNavigationState puzzleNavState = Find.State<PuzzleNavigationState>();
-        
+        SpaceCameraState state = Find.State<SpaceCameraState>();
+        state.OnLookUpdated.Deregister(UpdateCameraDistanceFromPuzzle);
+
+        PuzzleNavigationState puzzleNavState = Find.State<PuzzleNavigationState>(); 
         puzzleNavState.NavigationModeActive = false;
         ResetReview();
     } 

@@ -20,7 +20,7 @@ $call SetInputState(true)
 
 $call Wait(2)
 $call SpawnDocumentToCamera("Day2ElijahPostcard")
-{@Astrid} A postcard from Elijah.
+{@Astrid} And one from Elijah.
 
 :: SpawnPuzzleDocs2
 @trigger    DocumentInspectEnd
@@ -30,32 +30,35 @@ $call SpawnDocumentToCamera("Day2ElijahPostcard")
 {@Astrid} Where is Elijah? Is he okay?
 $call StartDocumentPuzzle("Day2DocumentPuzzle")
 
-:: DocumentResponse
+:: IncorrectDocumentResponse
+@when documentId != "Day2ElijahPostcard"
+
+{@Astrid} I don't think that's right...
+
+:: CorrectDocumentResponse
 @trigger    DocumentPuzzlePromptStart
+@when documentId == "Day2ElijahPostcard"
+@once
 
-$if local:documentId == "Day2ElijahPostcard"
-    {@Astrid} This is it!
-    $call Wait(2)
+{@Astrid} This is it!
+$call Wait(2)
 
-    $call SetInputState(false)
-    $call MoveToCameraView("Right")
-    {@Radio} Star HQ to Station Seven.
-    IceCube is reading a high-energy neutrino emission from the area of the Hydra Constellation. 
-    Identification of nearby celestial objects is requested. 
-    Uploading area of interest... (*beeeep screeech boop beep boop beeeep*)
-    $call MoveToCameraView("Desk")
-    $call Wait(2)
-    $call SetInputState(true)
-    $call StartOpenMode()
-$else
-    {@Astrid} I don't think that's right...
-$endif
+$call SetInputState(false)
+$call MoveToCameraView("Right")
+{@Radio} Star HQ to Station Seven.
+IceCube is reading a high-energy neutrino emission from the area of the Hydra Constellation. 
+Identification of nearby celestial objects is requested. 
+Uploading area of interest... (*beeeep screeech boop beep boop beeeep*)
+$call MoveToCameraView("Desk")
+$call Wait(2)
+$call SetInputState(true)
+$call StartOpenMode()
 
 
 :: PointsUpdated
 @trigger    PointsUpdated
 //TODO
-@when   sciencePoints > 2
+@when   sciencePoints > 0
 @once
 
 $call StopOpenMode()
