@@ -27,8 +27,9 @@ namespace Astro {
                 return;
             }
 
-            ViewState state = Find.State<ViewState>();
-            state.NamedNodes.Remove(Id);
+            //TODO Deregister earlier
+            // ViewState state = Find.State<ViewState>();
+            // state.NamedNodes.Remove(Id);
         }
 
         void IRegistrationCallbacks.OnRegister() {

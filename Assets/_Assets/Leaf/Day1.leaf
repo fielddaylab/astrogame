@@ -1,26 +1,137 @@
 #basePath	Day1
 
-:: Welcome
+:: ArrivalAtTheShed
 @trigger    SceneReady
 @who    Radio
+
+$call SetInputState(false)
+$call StopPuzzleMode()
+$call StopOpenMode()
+{@Astrid} Whoa. This place has really changed.
+Elijah, where are you?
+
+$call Wait(2)
+
+$call MoveToCameraView("Right")
+// TODO Fix camera view re-enabling input
+{@Radio} Star HQ to Station Seven. Elijah, do you copy?
+Please log in and provide status update. 
+
+$call Wait(2)
+
+{@Astrid} Hi—um, this is Astrid, Elijah’s ... friend. Elijah’s not here.
+$call Wait(1)
+{@Astrid} Hello?
+$call Wait(1)
+{@Astrid} Ugh. They can’t hear me.
+$call Wait(2)
+
+{@Radio} Station Seven, please log in and report.
+
+$call Wait(1)
+
+{@Astrid} I can’t, I don’t know how ...
+
+$call Wait(2)
+
+{@Dad} Astrid, is that you?
+$call Wait(1)
+
+{@Astrid} Dad! I can’t believe it's you.
+Are you still at the South Pole? Are you okay?
+$call Wait(2)
+
+{@Dad} This is a one-way radio, so you won’t be able to talk to us. But I have a feeling that’s you. Happy birthday, kiddo. 
+I heard from your aunt Martha that you managed to track down Elijah’s address.
+I’m sorry, Astrid ... I wish I could’ve warned you in time. 
+Elijah’s not there. He probably won’t be back for a while.
+
+$call Wait(2)
+
+{@Astrid} What? 
+$call Wait(1)
+Why not? 
+$call Wait(1)
+Where is he? 
+$call Wait(2)
+Ugh, forgot ... you can’t hear me. 
+$call Wait(2)
+
+{@Dad} There’s not much time, so I’ll give you the short version.
+My team here at IceCube has started an underground group called the STAR Coalition. We’re trying to rebuild our knowledge of the night sky. 
+$call Wait(1)
+It’s not easy ... so much was lost during the Collapse.
+$call Wait(1)
+But then Elijah reached out to us. He’s onto something big. It’s called Project Hercules. 
+$call Wait(2)
+
+{@Astrid} Project Hercules? 
+$call Wait(1)
+
+{@Dad} I’ll explain more later. For now, we need your help. 
+Elijah has been working on a series of puzzles. I was hoping you could pick up where he left off.
+$call Wait(2)
+
+{@Astrid} Me? 
+$call Wait(1)
+Dad, I just got here. 
+$call Wait(1)
+I don’t know how any of this stuff works!
+$call Wait(1)
+
+{@Dad} See if you can find Elijah’s reference guide. It should have all the data you need.
+
+{@Dad} Time’s up. I gotta go.
+I’ll explain more later.
+Love you, Little Bear. Good luck.
+$call MoveToCameraView("Desk")
 $call StartOpenMode()
-{@Radio} This is a public service broadcast coming to you live from Celestial Station!
-{@Radio} Identify those stars you crazy kids!
+$call SetInputState(true)
 
 :: PointsUpdated
 @trigger    PointsUpdated
-@when   sciencePoints > 2
+//TODO
+@when   sciencePoints > 0
 @once
 
-$call StartPuzzleMode()
-{@Radio} Nice work identifying those starts! Your next mission will require your astral color instrument. 
+$call StopOpenMode()
+$call ClearMonitorSelection()
+{@Radio} Star HQ to Station Seven.
+The STAR Coalition has requests your assistance identifying starts in the Perseus constellation.
+Please align your telescope to the Perseus region. 
+$call StartPuzzleNavigation()
+
+:: PuzzleNavigationComplete
+@trigger    PuzzleNavigationComplete
+@once
+
+$call Wait(1)
+$call StopPuzzleNavigation()
+{@Radio} This task will require your astral color instrument. 
 {@Radio} Unlocking now. Stand By...
 $call SetInstrumentUnlocked(ColorInstrument, true)
+$call StartPuzzleMode()
 
 :: PerseusPuzzleComplete
 @trigger    CorrectPuzzleSubmission
 @when   puzzleName == "Perseus"
 @once
 
-{@Radio} You have correctly identifyied these stars. Kudos!
-$call StartOpenMode()
+$call ClearMonitorSelection()
+$call StopPuzzleMode()
+$call SetInputState(false)
+{@Astrid} Time to turn in for the night.
+Oh, what's this?
+$call MoveToCameraView("Left")
+$call Wait(1)
+$call SpawnDocumentToCamera("Day1Martha")
+$call SetInputState(true)
+
+:: EndDay
+@trigger    DocumentInspectEnd
+@when   documentId == "Day1Martha"
+@once
+
+$call SetInputState(false)
+$call Wait(1)
+$call LoadNextDay()

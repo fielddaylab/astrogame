@@ -19,7 +19,7 @@ namespace Astro {
             bool isCurrentlyDragging = m_StateA.CurrInteractable && m_StateA.CurrInteractable.IsDragging;
             isCurrentlyDragging |= m_StateB.SelectedDocument;
 
-            if (!isCurrentlyDragging && Game.Input.IsMousePressed(FieldDay.HID.MouseButton.Left)) {
+            if (m_StateC.InputEnabled && !isCurrentlyDragging && Game.Input.IsMousePressed(FieldDay.HID.MouseButton.Left) && !Game.Input.AreRaycastsPaused()) {
                 var ray = Game.Rendering.PrimaryCamera.ScreenPointToRay(Input.mousePosition);
 
                 if (Physics.Raycast(ray, out RaycastHit hit, 10f, m_StateC.ClickableLayerMask)) {

@@ -1,5 +1,6 @@
 using BeauUtil;
 using FieldDay;
+using FieldDay.Scripting;
 using FieldDay.SharedState;
 using Leaf.Runtime;
 using System;
@@ -13,6 +14,7 @@ namespace Astro
     {
         [NonSerialized] public bool PuzzleActive = false;
         [NonSerialized] public DocumentPuzzleAsset CurrPuzzle = null;
+        [NonSerialized] public DocumentRenderer CurrHoverDoc = null;
     }
 
     public static partial class DocumentUtility
@@ -22,8 +24,6 @@ namespace Astro
         private static void SpawnQuestionDocument(StringHash32 id)
         {
             SpawnDocument(Find.NamedAsset<DocumentAsset>(id), id);
-
-            // TODO: additional question config here
         }
 
         #endregion // Spawning
@@ -68,5 +68,24 @@ namespace Astro
         }
 
         #endregion // Sequence
+
+        public static void UpdatePuzzleHoverAsset(DocumentPuzzleState state, DocumentRenderer doc)
+        {
+            if (doc == null) {
+                if (state.CurrHoverDoc != null) {
+                    Debug.Log("[PuzzleState] Hover ended");
+                    state.CurrHoverDoc = doc;
+                }
+            }
+            else if (state.CurrHoverDoc != null && state.CurrHoverDoc.Interactable.AssetName.Equals(doc.Interactable.AssetName)) {
+                // no change in hover asset
+                return;
+            }
+            else {
+                // change in hover asset
+                Debug.Log("[PuzzleState] Hover changed");
+                state.CurrHoverDoc = doc;
+            }
+        }
     }
 }

@@ -25,6 +25,8 @@ namespace Astro {
         public Transform DocumentParent;
         public Rect DraggableBounds;
 
+        public bool DraggablePlacedThisFrame = false;
+
         public AssetPack DocumentAssets;
 
         [Header("Interact Settings")]
@@ -50,7 +52,7 @@ namespace Astro {
             DocumentRenderer spawned = GameObject.Instantiate(asset.Prefab, state.DocumentParent);
             spawned.Title.SetText(asset.TitleText);
             spawned.Body.SetText(asset.BodyText);
-            if (spawned.Video) { spawned.Video.url = asset.VideoURL; }
+            if (spawned.Video) { spawned.Video.url = Application.streamingAssetsPath + "/Postcards/" + asset.VideoName; }
             spawned.transform.localPosition = asset.DefaultPinnedPos;
             spawned.ZoomOffsetOverride = asset.ZoomOffsetOverride;
             spawned.Interactable.Renderer = spawned;
@@ -60,12 +62,25 @@ namespace Astro {
             return spawned;
         }
 
-        public static void SpawnDocument(StringHash32 id) {
+        [LeafMember("SpawnDocument")]
+        public static void LeafSpawnDocument(StringHash32 id) {
             SpawnDocument(Find.NamedAsset<DocumentAsset>(id), id);
         }
 
-        public static void SpawnPostcard(DocumentBoardState state, StringHash32 id)
-        {
+        [LeafMember("SpawnDocumentToCamera")]
+        public static void LeafSpawnDocumentToCamera(StringHash32 id) {
+            DocumentBoardState state = Find.State<DocumentBoardState>();
+
+            if (state.DocumentRoutine.Exists()) {
+                // wait for previous document routine to complete
+                state.DocumentRoutine.OnComplete(() => { SpawnDocumentToCamera(state, id); });
+            }
+            else {
+                SpawnDocumentToCamera(state, id);
+            }
+        }
+
+        public static void SpawnDocumentToCamera(DocumentBoardState state, StringHash32 id) {
             var asset = Find.NamedAsset<DocumentAsset>(id);
             var spawned = SpawnDocument(asset, id, state);
             // Init pinned position
@@ -79,7 +94,11 @@ namespace Astro {
             // Move to zoomed view
             ToggleZoomDoc(spawned.Interactable, state);
             SetDocumentInteractionEnabled(true);
-            spawned.Video.Play();
+            if (spawned.Video) { spawned.Video.Play(); }
+        }
+
+        public static void SpawnDocument(StringHash32 id) {
+            SpawnDocument(Find.NamedAsset<DocumentAsset>(id), id);
         }
 
         public static Vector3 FindAvailablePos(DocumentBoardState state, DocumentRenderer doc) {
@@ -88,13 +107,13 @@ namespace Astro {
             int maxTries = 10;
             for (int i = 0; i < maxTries; i++) {
                 // random point on board
-                float xExtents = state.DraggableBounds.width / 2;
-                float yExtents = state.DraggableBounds.height / 2;
+                float xExtents = state.DraggableBounds.x / 2;
+                float yExtents = state.DraggableBounds.y / 2;
                 var offset = state.DocumentParent.transform.position;
                 Vector3 pos = offset + new Vector3(UnityEngine.Random.Range(-xExtents, xExtents), UnityEngine.Random.Range(-yExtents, yExtents), 0);
 
                 Vector3 docExtents = new Vector3(doc.Size.width / 2, doc.Size.height / 2, 1);
-                if (!Physics.CheckBox(pos, docExtents, state.DocumentParent.transform.rotation, LayerMasks.DocumentSurface_Mask)) {
+                if (!Physics.CheckBox(pos, docExtents, state.DocumentParent.transform.rotation, LayerMasks.DocumentInteract_Mask)) {
                     finalPos = pos - offset;
                     break;
                 }
@@ -103,27 +122,31 @@ namespace Astro {
             return finalPos;
         }
 
-        #endregion // Spawning
-
-        #region Leaf
-
-        [LeafMember("SpawnPostcard")]
-        private static void LeafSpawnPostcard(StringHash32 id)
+        public static bool OverlapBoxAtPos(DocumentBoardState state, DocumentRenderer doc, out DocumentRenderer hit)
         {
-            var state = Find.State<DocumentBoardState>();
+            hit = null;
 
-            if (state.DocumentRoutine.Exists())
+            var offset = state.DocumentParent.transform.position;
+            var localPos = doc.transform.localPosition;
+            localPos.z = 0;
+            Vector3 pos = offset + localPos;
+
+            Vector3 docExtents = new Vector3(doc.Size.width / 2, doc.Size.height / 2, 1);
+            var hits = Physics.OverlapBox(pos, docExtents, state.DocumentParent.transform.rotation, LayerMasks.DocumentInteract_Mask);
+            for (int i = 0; i < hits.Length; i++)
             {
-                // wait for previous document routine to complete
-                state.DocumentRoutine.OnComplete(() => { SpawnPostcard(state, id); });
+                var currPart = hits[i].GetComponent<DocumentPart>();
+                var currRenderer = currPart ? currPart.Document.Renderer : null;
+                if (currRenderer && !currRenderer.Interactable.AssetName.Equals(doc.Interactable.AssetName)) {
+                    hit = currRenderer;
+                    return true;
+                }
             }
-            else
-            {
-                SpawnPostcard(state, id);
-            }
+
+            return false;
         }
 
-        #endregion // Leaf
+        #endregion // Spawning
 
         #region Enable/Disable
         public static void SetDocumentInteractionEnabled(bool enable, DocumentBoardState state = null) {
@@ -175,10 +198,13 @@ namespace Astro {
             if (newDoc != null && state.SelectedDocument != newDoc) {
                 state.SelectedDocument = newDoc;
                 state.DocumentRoutine.Replace(ToggleDocHover(state.SelectedDocument.transform, state.DocHoverOffset)); // 
+                state.SelectedDocument.IsDragging = true;
                 CursorHint.TryLock(partHint);
             } else {
                 CursorHint.Unlock();
                 state.DocumentRoutine.Replace(ToggleDocHover(state.SelectedDocument.transform, -state.DocHoverOffset));
+                state.SelectedDocument.IsDragging = false;
+                state.DraggablePlacedThisFrame = true;
                 state.SelectedDocument = null;
             }
             state.InteractedThisFrame = true;
@@ -201,6 +227,9 @@ namespace Astro {
             if (state.DocZoomed) {
                 SetInteractionLayer(state.DocZoomed, LayerMasks.DocumentInteract_Index);
                 state.DocumentRoutine.Replace(MoveDocToPos(doc.transform, state.StoredDocPos));
+                if (doc.Renderer.Video) {
+                    doc.Renderer.Video.Stop();
+                }
                 state.StoredDocPos = Vector3.zero;
                 state.DocZoomed = null;
                 InputUtility.SetClickableMaskDefault(Find.State<InputState>());
@@ -219,12 +248,16 @@ namespace Astro {
                 }
                 //state.StoredDocPos.z = state.DocumentParent.position.z;
                 Vector3 zoomOffset = doc.Renderer.ZoomOffsetOverride == default ? state.DocZoomOffset : doc.Renderer.ZoomOffsetOverride;
-                state.DocumentRoutine.Replace(MoveDocToCam(doc.transform, Game.Rendering.PrimaryCamera.transform, zoomOffset))
+                var viewState = Find.State<ViewState>();
+                state.DocumentRoutine.Replace(MoveDocToCam(viewState, doc.transform, Game.Rendering.PrimaryCamera.transform, zoomOffset))
                     .OnComplete(() => 
                     {
                         using (var table = TempVarTable.Alloc()) {
                             table.Set("documentId", doc.AssetName);
                             ScriptUtility.Trigger(ScriptEvents.DocumentInspectStart, table);
+                        }
+                        if (doc.Renderer.Video) {
+                            doc.Renderer.Video.Play();
                         }
                     });
                 state.DocZoomed = doc;
@@ -272,10 +305,14 @@ namespace Astro {
             yield return null;
         }
 
-        private static IEnumerator MoveDocToCam(Transform doc, Transform cam, Vector3 offset) {
-            offset = cam.TransformVector(offset);
+        private static IEnumerator MoveDocToCam(ViewState viewState, Transform doc, Transform cam, Vector3 offset) {
+            // don't move doc until camera has finished moving
+            while (viewState.ActiveTransitionRoutine.Exists()) {
+                yield return null;
+            }
+            var newOffset = cam.TransformVector(offset);
             yield return Routine.Combine(
-                doc.MoveTo(cam.position + offset, 0.5f).Ease(Curve.QuartInOut),
+                doc.MoveTo(cam.position + newOffset, 0.5f).Ease(Curve.QuartInOut),
                 doc.RotateTo(cam, 0.3f));
             yield return null;
         }

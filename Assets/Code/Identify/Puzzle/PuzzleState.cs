@@ -30,20 +30,23 @@ namespace Astro {
         public Material UnselectedCellMat;
         public Material SelectedCellMat;
 
-        public void OnRegister()
-        {
-            Game.Events.Register(GameEvents.StartOpenMode, PuzzleUtility.DeactivatePuzzlePanel);
-            Game.Events.Register(GameEvents.StartPuzzleMode,PuzzleUtility.ActivatePuzzlePanel);
+        public void OnRegister() {
+            Game.Events.Register(GameEvents.StartPuzzleMode, PuzzleUtility.ActivatePuzzlePanel);
+            Game.Events.Register(GameEvents.StopPuzzleMode, PuzzleUtility.DeactivatePuzzlePanel);
+
+            Game.Scenes.QueueOnEnable(() => {
+                DayConfigAsset config = DayConfigUtil.GetConfigForState();
+                QueuedPuzzle = config.DayPuzzle;
+            });
         }
 
         public void OnDeregister() {
-            Game.Events?.Deregister(GameEvents.StartOpenMode, PuzzleUtility.DeactivatePuzzlePanel);
-            Game.Events?.Deregister(GameEvents.StartPuzzleMode, PuzzleUtility.ActivatePuzzlePanel);
+            Game.Events?.Deregister(GameEvents.StartPuzzleMode, PuzzleUtility.DeactivatePuzzlePanel);
+            Game.Events?.Deregister(GameEvents.StopPuzzleMode, PuzzleUtility.ActivatePuzzlePanel);
         }
     }
 
-    public static partial class PuzzleUtility
-    {
+    public static partial class PuzzleUtility {
         public static bool TrySetSelectedRow(PuzzleState state, int index)
         {
             if (state.ActivePuzzle == null) { return false; }

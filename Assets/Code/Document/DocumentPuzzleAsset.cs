@@ -9,5 +9,6 @@ namespace Astro
     public sealed class DocumentPuzzleAsset : NamedAsset
     {
         public DocumentAsset QuestionAsset;
+        public DocumentAsset CorrectAnswer;
     }
 }
