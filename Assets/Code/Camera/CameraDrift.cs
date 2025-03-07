@@ -9,7 +9,7 @@ namespace Astro {
         public float OffsetX;
         public float OffsetY;
 
-        private void LateUpdate() {
+        private void Update() {
             transform.localPosition = new Vector3(
                 Mathf.Cos(OffsetX + (Time.time * Mathf.PI * 2 / PeriodX)) * DriftX,
                 Mathf.Sin(OffsetY + (Time.time * Mathf.PI * 2 / PeriodY)) * DriftY,

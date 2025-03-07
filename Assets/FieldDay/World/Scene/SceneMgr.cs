@@ -51,6 +51,7 @@ namespace FieldDay.Scenes {
 
         private struct ImportLightingArgs {
             public SceneDataExt Data;
+            public SceneImportFlags Flags;
             public CounterHandle Counter;
         }
 
@@ -938,9 +939,10 @@ namespace FieldDay.Scenes {
             }
 
             if (!data.IsVisited(SceneDataExt.VisitFlags.LightCopied)) {
-                if ((args.Flags & SceneImportFlags.ImportLightingSettings) != 0) {
+                if ((args.Flags & (SceneImportFlags.ImportLightingSettings | SceneImportFlags.MergeLightmaps)) != 0) {
                     m_LightingCopyQueue.PushBack(new ImportLightingArgs() {
                         Counter = args.Counter,
+                        Flags = args.Flags,
                         Data = data
                     });
                     args.Counter.Increment();

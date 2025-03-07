@@ -96,7 +96,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000010, guid: 4698a610f7f23bb45a6a84676fe51015, type: 2}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -134,13 +134,15 @@ GameObject:
   - component: {fileID: 325515783}
   - component: {fileID: 325515782}
   - component: {fileID: 325515781}
+  - component: {fileID: 325515785}
+  - component: {fileID: 325515784}
   m_Layer: 0
   m_Name: PlayableDirector_Intro_P2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &325515780
 Transform:
   m_ObjectHideFlags: 0
@@ -290,6 +292,47 @@ PlayableDirector:
     m_References:
     - 8aeb179c0664e4a4dabf329bff48729d: {fileID: 0}
     - bba9c8810e193de47891cb6ecf1054f3: {fileID: 0}
+--- !u!114 &325515784
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 325515779}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7b6c281647a1ef49b339e3a985363c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Director: {fileID: 325515783}
+  Camera: {fileID: 981749358}
+  AssetGroup:
+    GameObjects: []
+    Behaviours: []
+  EndNode:
+    m_Source: 
+    m_HashValue: 0
+  EndNodeTransitionOverride:
+    Time: 0
+    Curve: 0
+--- !u!114 &325515785
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 325515779}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 808d7706b9890e74cb5c1f86dc9f8b53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Id:
+    m_Source: 
+    m_HashValue: 0
+  m_ClassName:
+    m_Source: Cutscene
+    m_HashValue: 507131521
 --- !u!1 &415795012
 GameObject:
   m_ObjectHideFlags: 0
@@ -302,13 +345,15 @@ GameObject:
   - component: {fileID: 415795016}
   - component: {fileID: 415795015}
   - component: {fileID: 415795014}
+  - component: {fileID: 415795018}
+  - component: {fileID: 415795017}
   m_Layer: 0
   m_Name: PlayableDirector_MapPan
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &415795013
 Transform:
   m_ObjectHideFlags: 0
@@ -458,6 +503,47 @@ PlayableDirector:
     m_References:
     - 8aeb179c0664e4a4dabf329bff48729d: {fileID: 0}
     - bba9c8810e193de47891cb6ecf1054f3: {fileID: 0}
+--- !u!114 &415795017
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 415795012}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7b6c281647a1ef49b339e3a985363c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Director: {fileID: 415795016}
+  Camera: {fileID: 981749358}
+  AssetGroup:
+    GameObjects: []
+    Behaviours: []
+  EndNode:
+    m_Source: 
+    m_HashValue: 0
+  EndNodeTransitionOverride:
+    Time: 0
+    Curve: 0
+--- !u!114 &415795018
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 415795012}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 808d7706b9890e74cb5c1f86dc9f8b53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Id:
+    m_Source: 
+    m_HashValue: 0
+  m_ClassName:
+    m_Source: Cutscene
+    m_HashValue: 507131521
 --- !u!1 &424430826
 GameObject:
   m_ObjectHideFlags: 0
@@ -5744,13 +5830,15 @@ GameObject:
   - component: {fileID: 888268526}
   - component: {fileID: 888268528}
   - component: {fileID: 888268527}
+  - component: {fileID: 888268530}
+  - component: {fileID: 888268529}
   m_Layer: 0
   m_Name: PlayableDirector_DomePan
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &888268526
 Transform:
   m_ObjectHideFlags: 0
@@ -5815,6 +5903,47 @@ PlayableDirector:
     value: {fileID: 981749357}
   m_ExposedReferences:
     m_References: []
+--- !u!114 &888268529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 888268525}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7b6c281647a1ef49b339e3a985363c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Director: {fileID: 888268528}
+  Camera: {fileID: 981749358}
+  AssetGroup:
+    GameObjects: []
+    Behaviours: []
+  EndNode:
+    m_Source: Desk
+    m_HashValue: 4058162136
+  EndNodeTransitionOverride:
+    Time: 0
+    Curve: 0
+--- !u!114 &888268530
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 888268525}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 808d7706b9890e74cb5c1f86dc9f8b53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Id:
+    m_Source: 
+    m_HashValue: 0
+  m_ClassName:
+    m_Source: Cutscene
+    m_HashValue: 507131521
 --- !u!1 &912099072
 GameObject:
   m_ObjectHideFlags: 0
@@ -5827,13 +5956,15 @@ GameObject:
   - component: {fileID: 912099076}
   - component: {fileID: 912099075}
   - component: {fileID: 912099074}
+  - component: {fileID: 912099078}
+  - component: {fileID: 912099077}
   m_Layer: 0
   m_Name: PlayableDirector_Outro
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &912099073
 Transform:
   m_ObjectHideFlags: 0
@@ -5999,6 +6130,47 @@ PlayableDirector:
     m_References:
     - 8aeb179c0664e4a4dabf329bff48729d: {fileID: 0}
     - bba9c8810e193de47891cb6ecf1054f3: {fileID: 0}
+--- !u!114 &912099077
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 912099072}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7b6c281647a1ef49b339e3a985363c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Director: {fileID: 912099076}
+  Camera: {fileID: 981749358}
+  AssetGroup:
+    GameObjects: []
+    Behaviours: []
+  EndNode:
+    m_Source: 
+    m_HashValue: 0
+  EndNodeTransitionOverride:
+    Time: 0
+    Curve: 0
+--- !u!114 &912099078
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 912099072}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 808d7706b9890e74cb5c1f86dc9f8b53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Id:
+    m_Source: 
+    m_HashValue: 0
+  m_ClassName:
+    m_Source: Cutscene
+    m_HashValue: 507131521
 --- !u!1 &943202444
 GameObject:
   m_ObjectHideFlags: 0
@@ -6114,15 +6286,15 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 981749356}
-  - component: {fileID: 981749358}
   - component: {fileID: 981749357}
+  - component: {fileID: 981749358}
   m_Layer: 0
   m_Name: CameraRig_Timeline
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &981749356
 Transform:
   m_ObjectHideFlags: 0
@@ -6169,13 +6341,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 981749355}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9d57e9b34fdd84c4a945d4380fa564f1, type: 3}
+  m_Script: {fileID: 11500000, guid: 8c633d2cbe65b084fa32f2851f2cfc51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Camera: {fileID: 1647654883}
-  RootTransform: {fileID: 981749356}
-  EffectsTransform: {fileID: 1647654877}
-  AttachmentsTransform: {fileID: 0}
+  Tracker: {fileID: 981749356}
 --- !u!1 &1075300169
 GameObject:
   m_ObjectHideFlags: 0
@@ -6627,15 +6796,12 @@ GameObject:
   m_Component:
   - component: {fileID: 1647654877}
   - component: {fileID: 1647654883}
-  - component: {fileID: 1647654882}
   - component: {fileID: 1647654881}
   - component: {fileID: 1647654880}
-  - component: {fileID: 1647654879}
-  - component: {fileID: 1647654878}
   - component: {fileID: 1647654884}
   m_Layer: 0
   m_Name: Main Camera
-  m_TagString: MainCamera
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6656,34 +6822,6 @@ Transform:
   - {fileID: 1293316762}
   m_Father: {fileID: 981749356}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1647654878
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1647654876}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fd05536b8d341f44e9cc8da352f0286d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1647654879
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1647654876}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c49b4cc203aa6414fae5c798d1d0e7d6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_EventMask:
-    serializedVersion: 2
-    m_Bits: 704
-  m_MaxRayIntersections: 4
 --- !u!45 &1647654880
 Skybox:
   m_ObjectHideFlags: 0
@@ -6737,14 +6875,6 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
---- !u!81 &1647654882
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1647654876}
-  m_Enabled: 1
 --- !u!20 &1647654883
 Camera:
   m_ObjectHideFlags: 0

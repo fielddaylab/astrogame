@@ -76,7 +76,18 @@ namespace Astro {
                 return;
             }
             DocumentUtility.CancelZoom(Find.State<DocumentBoardState>());
-            state.ActiveTransitionRoutine.Replace(TransitionRoutine(state, node, null));
+            state.ActiveTransitionRoutine.Replace(state, TransitionRoutine(state, node, null, default));
+        }
+
+        /// <summary>
+        /// Moves the view to a new node.
+        /// </summary>
+        static public void MoveToNode(ViewState state, ViewNode node, TweenSettings transitionOverride) {
+            if (node == null || state.ActiveNode == node) {
+                return;
+            }
+            DocumentUtility.CancelZoom(Find.State<DocumentBoardState>());
+            state.ActiveTransitionRoutine.Replace(state, TransitionRoutine(state, node, null, transitionOverride));
         }
 
         [LeafMember("MoveToCameraView")]
@@ -103,12 +114,12 @@ namespace Astro {
         /// Moves the view over a link.
         /// </summary>
         static public void MoveByLink(ViewState state, ViewLink link) {
-            state.ActiveTransitionRoutine.Replace(TransitionRoutine(state, link.TargetNode, link));
+            state.ActiveTransitionRoutine.Replace(state, TransitionRoutine(state, link.TargetNode, link, default));
         }
 
-        static private IEnumerator TransitionRoutine(ViewState state, ViewNode nextNode, ViewLink byLink) {
+        static private IEnumerator TransitionRoutine(ViewState state, ViewNode nextNode, ViewLink byLink, TweenSettings transitionOverride) {
             Transform controlPoint = null;
-            TweenSettings tween = state.DefaultTransition;
+            TweenSettings tween = transitionOverride.Time > 0 ? transitionOverride : state.DefaultTransition;
             var inputState = Find.State<InputState>();
             InputUtility.SetInputEnabled(inputState, false);
             if (byLink) {
