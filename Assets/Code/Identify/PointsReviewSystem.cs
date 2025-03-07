@@ -31,7 +31,8 @@ namespace Astro {
         private void CheckObjectOrPuzzle() {
             if (m_State.SubmittedObject) {
                 CheckObjectIdentification();
-            } else if (m_State.SubmittedPuzzle) {
+            } 
+            if (m_State.SubmittedPuzzle) {
                 // if puzzle checking is expensive, could this be amortized over the timer duration?
                 CheckPuzzle();
             }
@@ -66,8 +67,10 @@ namespace Astro {
                 ShowResultSprite(true, m_State);
                 PointsUtility.AddPoints(1, m_State);
 
+                puzzle.ActivePuzzle = null;
+
                 Log.Msg("[PointsReviewSystem] Puzzle CORRECT! :D");
-                DocumentUtility.SpawnDocument("CorrectDocument");
+                // DocumentUtility.SpawnDocument("CorrectDocument");
             } else {
                 ShowResultSprite(false, m_State);
                 Log.Msg("[SubmitPuzzleSystem] Puzzle INCORRECT! D:");

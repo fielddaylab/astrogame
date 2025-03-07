@@ -96,7 +96,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000014, guid: 4698a610f7f23bb45a6a84676fe51015, type: 2}
+  m_LightingDataAsset: {fileID: 112000012, guid: 4698a610f7f23bb45a6a84676fe51015, type: 2}
   m_LightingSettings: {fileID: 4890085278179872738, guid: 6f1803a0335cd4f4a9c123fe06a221ef, type: 2}
 --- !u!196 &4
 NavMeshSettings:
@@ -255,6 +255,7 @@ GameObject:
   - component: {fileID: 1366028329}
   - component: {fileID: 1366028327}
   - component: {fileID: 1366028326}
+  - component: {fileID: 1366028330}
   m_Layer: 0
   m_Name: ReviewLogic
   m_TagString: Untagged
@@ -320,6 +321,19 @@ MonoBehaviour:
   ReviewCooldown:
     Period: 2
     Behavior: 1
+--- !u!114 &1366028330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1366028324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f3d00f5ce6afe447ac88fb9fbdbb8a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_InitialCapacity: 2
 --- !u!23 &1628318536 stripped
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 6721776592258744711, guid: 547cd4c9214860c4088ccc9080fc0f9f, type: 3}
@@ -361,6 +375,10 @@ PrefabInstance:
     - target: {fileID: 47733670785368451, guid: 547cd4c9214860c4088ccc9080fc0f9f, type: 3}
       propertyPath: CountdownSprites.Array.data[2]
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 304970036787626465, guid: 547cd4c9214860c4088ccc9080fc0f9f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 3.115
       objectReference: {fileID: 0}
     - target: {fileID: 2504653073650945066, guid: 547cd4c9214860c4088ccc9080fc0f9f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -414,6 +432,14 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4325230666720056093, guid: 547cd4c9214860c4088ccc9080fc0f9f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 3.115
+      objectReference: {fileID: 0}
+    - target: {fileID: 7419981202798246533, guid: 547cd4c9214860c4088ccc9080fc0f9f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 3.115
+      objectReference: {fileID: 0}
     - target: {fileID: 8217897254273910605, guid: 547cd4c9214860c4088ccc9080fc0f9f, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -422,6 +448,7 @@ PrefabInstance:
     m_RemovedGameObjects:
     - {fileID: 8074119664305452072, guid: 547cd4c9214860c4088ccc9080fc0f9f, type: 3}
     - {fileID: 2804359877757293011, guid: 547cd4c9214860c4088ccc9080fc0f9f, type: 3}
+    - {fileID: 2852731389758035816, guid: 547cd4c9214860c4088ccc9080fc0f9f, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 547cd4c9214860c4088ccc9080fc0f9f, type: 3}

@@ -194,6 +194,5 @@ namespace Astro {
             }
             guide.RefGuideRoot.gameObject.SetActive(!guide.RefGuideRoot.gameObject.activeSelf);
         }
-
     }
 }

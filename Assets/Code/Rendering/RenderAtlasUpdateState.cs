@@ -21,16 +21,24 @@ namespace Astro {
             DirtyRegions.Clear();
         }
 
+        private void OnRenderTextureCreated() {
+            for(int i = 0; i < RegionCount; i++) {
+                Regions[i].Camera.targetTexture = Atlas.Texture;
+            }
+        }
+
         #region IRegistrationCallbacks
 
         void IRegistrationCallbacks.OnDeregister() {
             Game.Assets?.RemoveNamed(Atlas.AssetId, Atlas);
             s_Cache.Remove(Atlas.AssetId);
+            Atlas.OnTextureCreated.Deregister(OnRenderTextureCreated);
         }
 
         void IRegistrationCallbacks.OnRegister() {
             Game.Assets.AddNamed(Atlas.AssetId, Atlas);
             s_Cache.Add(Atlas.AssetId, this);
+            Atlas.OnTextureCreated.Register(OnRenderTextureCreated);
         }
 
         #endregion // IRegistrationCallbacks

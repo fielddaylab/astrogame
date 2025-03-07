@@ -33,6 +33,11 @@ namespace Astro {
         public void OnRegister() {
             Game.Events.Register(GameEvents.StartPuzzleMode, PuzzleUtility.ActivatePuzzlePanel);
             Game.Events.Register(GameEvents.StopPuzzleMode, PuzzleUtility.DeactivatePuzzlePanel);
+
+            Game.Scenes.QueueOnEnable(() => {
+                DayConfigAsset config = DayConfigUtil.GetConfigForState();
+                QueuedPuzzle = config.DayPuzzle;
+            });
         }
 
         public void OnDeregister() {
@@ -41,8 +46,7 @@ namespace Astro {
         }
     }
 
-    public static partial class PuzzleUtility
-    {
+    public static partial class PuzzleUtility {
         public static bool TrySetSelectedRow(PuzzleState state, int index)
         {
             if (state.ActivePuzzle == null) { return false; }

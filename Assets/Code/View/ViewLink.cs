@@ -33,12 +33,13 @@ namespace Astro {
                 return;
             }
 
-            var mgr = Find.State<ViewState>();
-            mgr.AllLinks.FastRemove(this);
-            if (LastKnownActiveState) {
-                LastKnownActiveState = false;
-                mgr.ActiveLinks.FastRemove(this);
-            }
+            //TODO Deregister earlier
+            // var mgr = Find.State<ViewState>();
+            // mgr.AllLinks.FastRemove(this);
+            // if (LastKnownActiveState) {
+            //     LastKnownActiveState = false;
+            //     mgr.ActiveLinks.FastRemove(this);
+            // }
         }
 
         void IRegistrationCallbacks.OnRegister() {
