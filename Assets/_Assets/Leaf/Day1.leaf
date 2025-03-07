@@ -4,10 +4,12 @@
 @trigger    SceneReady
 @who    Radio
 
-$call SetInputState(false)
+$call SetInputState(true)
 $call StopPuzzleMode()
 $call StopOpenMode()
 {@Astrid} Whoa. This place has really changed.
+$call StartDocumentPuzzle("Day2DocumentPuzzle")
+$call SpawnDocumentToCamera("Day2DadPostcard")
 Elijah, where are you?
 
 $call Wait(2)

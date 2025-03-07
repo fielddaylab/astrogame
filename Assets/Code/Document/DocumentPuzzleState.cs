@@ -49,8 +49,6 @@ namespace Astro
             var targetNode = ViewNavUtility.GetNodeById("Left");
             ViewNavUtility.MoveToNode(viewState, targetNode);
 
-            // TODO: lock focus
-
             // Set current puzzle
             puzzleState.CurrPuzzle = puzzleAsset;
             if (puzzleAsset) {
