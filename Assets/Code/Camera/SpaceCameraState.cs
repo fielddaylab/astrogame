@@ -1,6 +1,7 @@
 using BeauUtil;
 using FieldDay;
 using FieldDay.SharedState;
+using Leaf.Runtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -62,6 +63,7 @@ namespace Astro
         public void OnDeregister() {}
     }
 
+
     public static class SpaceCameraUtility
     {
         public static void OnStartPuzzleNav() {
@@ -86,8 +88,37 @@ namespace Astro
             camRoot.localEulerAngles = angles;
         }
 
+        [LeafMember("TelescopeLook")]
+        public static void LeafAdjustLook(float deltaHoriz, float deltaVert) {
+            SpaceCameraState cam = Find.State<SpaceCameraState>();
+            cam.HorizLook += deltaHoriz;
+            ClampAngle(cam.HorizLook, cam.LookXClamp.x, cam.LookXClamp.y);
+            cam.VertLook += deltaVert ;
+            ClampAngle(cam.VertLook, cam.LookYClamp.x, cam.LookYClamp.y);
+
+            var angles = cam.Camera.RootTransform.localEulerAngles;
+            angles.x = cam.VertLook;
+            angles.y = cam.HorizLook;
+            cam.Camera.RootTransform.localEulerAngles = angles;
+            cam.OnLookUpdated.Invoke(cam);
+            cam.LookUpdatedThisFrame = true;
+            TelescopeUtility.UpdateTelescopeRigRotation(Find.State<TelescopeRig>(), cam.Camera.RootTransform);
+
+        }
+
         public static void SetCameraInputEnabled(bool enabled) {
             Find.State<SpaceCameraState>().InputEnabled = enabled;
+        }
+
+        public static float ClampAngle(float lfAngle, float lfMin, float lfMax) {
+            if (lfAngle < -360f) {
+                lfAngle += 360f;
+            }
+            if (lfAngle > 360f) {
+                lfAngle -= 360f;
+            }
+
+            return Mathf.Clamp(lfAngle, lfMin, lfMax);
         }
     }
 }

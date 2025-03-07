@@ -46,6 +46,11 @@ namespace Astro {
             Director.gameObject.SetActive(false);
             AssetGroup.SetActive(false);
             Camera.gameObject.SetActive(false);
+            using (var table = TempVarTable.Alloc()) {
+                table.Set("cutsceneId", this.Actor.Id);
+                ScriptUtility.Trigger(ScriptEvents.CutsceneEnd, table);
+            }
+            
             if (!EndNode.IsEmpty) {
                 ViewNavUtility.MoveToNode(Find.State<ViewState>(), ViewNavUtility.GetNodeById(EndNode), EndNodeTransitionOverride);
             }

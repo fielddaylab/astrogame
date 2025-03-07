@@ -1,12 +1,21 @@
 #basePath	Day1
 
-:: ArrivalAtTheShed
-@trigger    SceneReady
-@who    Radio
 
+:: OpeningCutscene
+@trigger SceneReady
+@who    IntroCutscene
 $call SetInputState(false)
 $call StopPuzzleMode()
 $call StopOpenMode()
+$call IntroCutscene->BeginCutscene()
+$call Wait(2)
+$call TelescopeLook(155, -30)
+
+:: ArrivalAtTheShed
+@trigger    CutsceneEnd
+@when cutsceneId == "IntroCutscene"
+@who    Radio
+
 {@Astrid} Whoa. This place has really changed.
 Elijah, where are you?
 

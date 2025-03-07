@@ -102,7 +102,7 @@ namespace Astro
         {
             m_State.VertLook += adjustment;
 
-            m_State.VertLook = ClampAngle(m_State.VertLook, m_State.LookYClamp.x, m_State.LookYClamp.y);
+            m_State.VertLook = SpaceCameraUtility.ClampAngle(m_State.VertLook, m_State.LookYClamp.x, m_State.LookYClamp.y);
 
             var angles = m_State.Camera.RootTransform.localEulerAngles;
             angles.x = m_State.VertLook;
@@ -115,7 +115,7 @@ namespace Astro
         {
             m_State.HorizLook += adjustment;
 
-            m_State.HorizLook = ClampAngle(m_State.HorizLook, m_State.LookXClamp.x, m_State.LookXClamp.y);
+            m_State.HorizLook = SpaceCameraUtility.ClampAngle(m_State.HorizLook, m_State.LookXClamp.x, m_State.LookXClamp.y);
 
             var angles = m_State.Camera.RootTransform.localEulerAngles;
             angles.y = m_State.HorizLook;
@@ -230,18 +230,5 @@ namespace Astro
 
         #endregion // Input Processing
 
-        private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
-        {
-            if (lfAngle < -360f)
-            {
-                lfAngle += 360f;
-            }
-            if (lfAngle > 360f)
-            {
-                lfAngle -= 360f;
-            }
-
-            return Mathf.Clamp(lfAngle, lfMin, lfMax);
-        }
     }
 }
