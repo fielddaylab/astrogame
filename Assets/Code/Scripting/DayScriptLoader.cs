@@ -20,7 +20,7 @@ namespace Astro {
         }
         
         public IEnumerator<WorkSlicer.Result?> Preload() {
-            DayConfigAsset config = GetConfigForState();
+            DayConfigAsset config = DayConfigUtil.GetConfigForState();
 
             m_LoadHandles = new UniqueId16[config.Scripts.Length];
             for (int i = 0; i < config.Scripts.Length; i++) {
@@ -28,14 +28,6 @@ namespace Astro {
             }
 
             return null;
-        }
-
-        private DayConfigAsset GetConfigForState() {
-            PlayerProgressState state = Find.State<PlayerProgressState>();
-            StoryAsset story = Find.GlobalAsset<StoryAsset>();
-
-            StringHash32 configId = story.Days[state.DayIndex];
-            return Find.NamedAsset<DayConfigAsset>(configId);
         }
 
     }

@@ -41,8 +41,7 @@ namespace Astro {
         }
     }
 
-    public static partial class PuzzleUtility
-    {
+    public static partial class PuzzleUtility {
         public static bool TrySetSelectedRow(PuzzleState state, int index)
         {
             if (state.ActivePuzzle == null) { return false; }

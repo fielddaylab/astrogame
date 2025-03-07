@@ -9,20 +9,48 @@ $call MoveToCameraView("Left")
 {@Astrid} Looks like I got some mail.
 $call StopPuzzleMode()
 $call StopOpenMode()
+$call SpawnDocumentToCamera("Day2DadPostcard")
+{@Astrid} A postcard from Dad.
+$call SetInputState(true)
+
+:: SpawnPuzzleDocs1
+@trigger    DocumentInspectEnd
+@when   documentId == "Day2DadPostcard"
+@once
+
+$call Wait(2)
+$call SpawnDocumentToCamera("Day2ElijahPostcard")
+{@Astrid} A postcard from Elijah.
+
+:: SpawnPuzzleDocs2
+@trigger    DocumentInspectEnd
+@when   documentId == "Day2ElijahPostcard"
+@once
+
+{@Astrid} Where is Elijah? Is he okay?
 $call StartDocumentPuzzle("Day2DocumentPuzzle")
-$call SpawnDocument("Day2DadPostcard")
-$call SpawnDocument("Day2ElijahPostcard")
 
 :: DocumentResponse
 @trigger    DocumentPuzzlePromptStart
-@who    Radio
 
 $if local:documentId == "Day2ElijahPostcard"
     {@Astrid} This is it!
+    $call Wait(2)
+
+    $call SetInputState(false)
+    $call MoveToCameraView("Right")
+    {@Radio} Star HQ to Station Seven.
+    IceCube is reading a high-energy neutrino emission from the area of the Hydra Constellation. 
+    Identification of nearby celestial objects is requested. 
+    Uploading area of interest... (*beeeep screeech boop beep boop beeeep*)
+    $call MoveToCameraView("Desk")
+    $call Wait(2)
+    $call SetInputState(true)
+    $call StartOpenMode()
 $else
     {@Astrid} I don't think that's right...
 $endif
-$call StartOpenMode()
+
 
 :: PointsUpdated
 @trigger    PointsUpdated
@@ -100,7 +128,5 @@ $call ClearMonitorSelection()
 $call StopPuzzleMode()
 $call SetInputState(false)
 {@Astrid} Time to turn in for the night.
-Oh, what's this?
 $call MoveToCameraView("Desk")
 $call Wait(1)
-$call SpawnDocumentToCamera("Day1Martha")

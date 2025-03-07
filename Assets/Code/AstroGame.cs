@@ -22,6 +22,11 @@ namespace Astro {
         [InvokeOnBoot]
         static private void OnBoot() {
             Scenes.OnMainSceneReady.Register(() => {
+                DayConfigAsset config = DayConfigUtil.GetConfigForState();
+                PuzzleState puzzleState = Find.State<PuzzleState>();
+                
+                puzzleState.QueuedPuzzle = config.DayPuzzle;
+
                 ScriptUtility.Trigger("SceneReady");
             });
         }

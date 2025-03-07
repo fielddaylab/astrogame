@@ -67,8 +67,10 @@ namespace Astro {
                 ShowResultSprite(true, m_State);
                 PointsUtility.AddPoints(1, m_State);
 
+                puzzle.ActivePuzzle = null;
+
                 Log.Msg("[PointsReviewSystem] Puzzle CORRECT! :D");
-                DocumentUtility.SpawnDocument("CorrectDocument");
+                // DocumentUtility.SpawnDocument("CorrectDocument");
             } else {
                 ShowResultSprite(false, m_State);
                 Log.Msg("[SubmitPuzzleSystem] Puzzle INCORRECT! D:");

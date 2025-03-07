@@ -98,7 +98,7 @@ $call StopOpenMode()
 $call ClearMonitorSelection()
 {@Radio} Star HQ to Station Seven.
 The STAR Coalition has requests your assistance identifying starts in the Perseus constellation.
-{@Radio} Please align your telescope to the Perseus region. 
+Please align your telescope to the Perseus region. 
 $call StartPuzzleNavigation()
 
 :: PuzzleNavigationComplete
@@ -132,4 +132,6 @@ $call SetInputState(true)
 @when   documentId == "Day1Martha"
 @once
 
+$call SetInputState(false)
+$call Wait(1)
 $call LoadNextDay()
