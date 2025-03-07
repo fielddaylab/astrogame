@@ -2,6 +2,7 @@ using System;
 using BeauRoutine;
 using FieldDay;
 using FieldDay.Scripting;
+using FieldDay.SharedState;
 
 namespace Astro {
     public sealed class AstroGame : Game {
@@ -11,7 +12,11 @@ namespace Astro {
         static private void OnPreBoot() {
             Events = new EventDispatcher<EvtArgs>();
             SetEventDispatcher(Events);
-            Game.Rendering.EnableAspectClamping(4, 3);
+            
+            PlayerProgressState progress = new PlayerProgressState();
+            SharedState.Register(progress);
+
+            Rendering.EnableAspectClamping(4, 3);
         }
 
         [InvokeOnBoot]
@@ -20,5 +25,9 @@ namespace Astro {
                 ScriptUtility.Trigger("SceneReady");
             });
         }
+    }
+    
+    public sealed class PlayerProgressState : ISharedState {
+        public int DayIndex = 0;
     }
 }

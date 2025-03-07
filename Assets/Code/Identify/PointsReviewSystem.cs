@@ -31,7 +31,8 @@ namespace Astro {
         private void CheckObjectOrPuzzle() {
             if (m_State.SubmittedObject) {
                 CheckObjectIdentification();
-            } else if (m_State.SubmittedPuzzle) {
+            } 
+            if (m_State.SubmittedPuzzle) {
                 // if puzzle checking is expensive, could this be amortized over the timer duration?
                 CheckPuzzle();
             }

@@ -1,5 +1,8 @@
+using System.Collections;
 using BeauUtil;
+using BeauUtil.Debugger;
 using FieldDay;
+using FieldDay.Assets;
 using FieldDay.Scripting;
 using Leaf.Runtime;
 
@@ -29,6 +32,19 @@ namespace Astro {
 
         static private void OnPuzzleNavComplete() {
             ScriptUtility.Trigger(ScriptEvents.PuzzleNavigationComplete);
+        }
+
+        // TODO make this actually process more than one day
+        [LeafMember("LoadNextDay")]
+        static private void LeafLoadNextDay() {
+            PlayerProgressState state = Find.State<PlayerProgressState>();
+            StoryAsset story = Find.GlobalAsset<StoryAsset>();
+
+            state.DayIndex += 1;
+            DayConfigAsset day = Find.NamedAsset<DayConfigAsset>(story.Days[state.DayIndex]);
+            Log.Msg("[ScriptTriggers] Loading day '{0}'", day.name);
+
+            Game.Scenes.LoadMainScene(day.Scene, true);
         }
 
         [LeafMember("SetInputState")]
