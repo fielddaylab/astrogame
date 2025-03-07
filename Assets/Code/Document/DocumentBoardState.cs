@@ -26,6 +26,7 @@ namespace Astro {
         public Rect DraggableBounds;
 
         public bool DraggablePlacedThisFrame = false;
+        public DocumentInteractable DraggablePlaced = null;
 
         public AssetPack DocumentAssets;
 
@@ -205,6 +206,7 @@ namespace Astro {
                 state.DocumentRoutine.Replace(ToggleDocHover(state.SelectedDocument.transform, -state.DocHoverOffset));
                 state.SelectedDocument.IsDragging = false;
                 state.DraggablePlacedThisFrame = true;
+                state.DraggablePlaced = state.SelectedDocument;
                 state.SelectedDocument = null;
             }
             state.InteractedThisFrame = true;
@@ -300,6 +302,15 @@ namespace Astro {
         #endregion // Interaction
 
         #region Routines
+        public static IEnumerator MoveAboveRelativeToDoc(DocumentInteractable doc, DocumentRenderer relativeTo)
+        {
+            // align to bottom-left with out-sticking margin
+            var margin = 0.2f;
+            var localOffset = new Vector3(-relativeTo.Size.width / 2 + doc.Renderer.Size.width / 2 - margin, -relativeTo.Size.height + doc.Renderer.Size.height / 2, -0.01f);
+            var globalOffset = relativeTo.transform.TransformVector(localOffset);
+            yield return doc.transform.MoveTo(relativeTo.transform.position + globalOffset, 0.2f).Ease(Curve.CubeIn);
+        }
+
         private static IEnumerator ToggleDocHover(Transform doc, Vector3 hoverOffset) {
             yield return doc.MoveTo(doc.localPosition + hoverOffset, 0.2f, Axis.XYZ, Space.Self).Ease(Curve.CubeIn);
             yield return null;

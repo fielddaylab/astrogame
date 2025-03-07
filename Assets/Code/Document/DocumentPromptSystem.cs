@@ -31,13 +31,16 @@ namespace Astro
                 DocumentUtility.UpdatePuzzleHoverAsset(puzzleState, hit);
             }
 
-            if (boardState.DraggablePlacedThisFrame && puzzleState.CurrHoverDoc != null) {
+            if (boardState.DraggablePlacedThisFrame && puzzleState.CurrHoverDoc != null && boardState.DraggablePlaced.GetComponent<DocumentPrompter>()) {
                 // hovering ended; placement script trigger
                 using (var table = TempVarTable.Alloc())
                 {
                     table.Set("documentId", puzzleState.CurrHoverDoc.Interactable.AssetName);
                     ScriptUtility.Trigger(ScriptEvents.DocumentPuzzlePromptStart, table);
                 }
+
+                // move question to specific position relative to document
+                boardState.DocumentRoutine.Replace(DocumentUtility.MoveAboveRelativeToDoc(boardState.DraggablePlaced, puzzleState.CurrHoverDoc));
             }
 
         }
