@@ -52,7 +52,8 @@ namespace Astro {
             }
             DocumentRenderer spawned = GameObject.Instantiate(asset.Prefab, state.DocumentParent);
             spawned.Title.SetText(asset.TitleText);
-            spawned.Body.SetText(asset.BodyText);
+            spawned.FrontBodyText.SetText(asset.FrontBodyText);
+            if(spawned.BackBodyText) { spawned.BackBodyText.SetText(asset.BackBodyText); }
             if (spawned.Video) { spawned.Video.url = Application.streamingAssetsPath + "/Postcards/" + asset.VideoName; }
             spawned.transform.localPosition = asset.DefaultPinnedPos;
             spawned.ZoomOffsetOverride = asset.ZoomOffsetOverride;

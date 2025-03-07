@@ -18,7 +18,7 @@ $call SetInputState(true)
 @when   documentId == "Day2DadPostcard"
 @once
 
-$call Wait(2)
+$call Wait(1)
 $call SpawnDocumentToCamera("Day2ElijahPostcard")
 {@Astrid} And one from Elijah.
 
@@ -58,8 +58,7 @@ $call StartOpenMode()
 
 :: PointsUpdated
 @trigger    PointsUpdated
-//TODO
-@when   sciencePoints > 0
+@when   sciencePoints > 2
 @once
 
 $call StopOpenMode()

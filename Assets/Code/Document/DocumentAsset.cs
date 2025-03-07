@@ -10,7 +10,9 @@ namespace Astro {
         public DocumentRenderer Prefab;
         [SerializeField] public string TitleText;
         [TextArea] 
-        [SerializeField] public string BodyText;
+        [SerializeField] public string FrontBodyText;
+        [TextArea] 
+        [SerializeField] public string BackBodyText;
         public string VideoName;
         public Vector3 DefaultPinnedPos;
         public Vector3 ZoomOffsetOverride;

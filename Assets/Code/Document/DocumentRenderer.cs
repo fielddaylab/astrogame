@@ -9,7 +9,8 @@ using UnityEngine.Video;
 namespace Astro {
     public sealed class DocumentRenderer : BatchedComponent {
         public TMP_Text Title;
-        public TMP_Text Body;
+        public TMP_Text FrontBodyText;
+        public TMP_Text BackBodyText;
         public MeshRenderer Background;
         public VideoPlayer Video;
         public Vector3 ZoomOffsetOverride;
