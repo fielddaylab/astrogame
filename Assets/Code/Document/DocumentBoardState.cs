@@ -52,7 +52,7 @@ namespace Astro {
             DocumentRenderer spawned = GameObject.Instantiate(asset.Prefab, state.DocumentParent);
             spawned.Title.SetText(asset.TitleText);
             spawned.Body.SetText(asset.BodyText);
-            if (spawned.Video) { spawned.Video.url = asset.VideoURL; }
+            if (spawned.Video) { spawned.Video.url = Application.streamingAssetsPath + "/Postcards/" + asset.VideoName; }
             spawned.transform.localPosition = asset.DefaultPinnedPos;
             spawned.ZoomOffsetOverride = asset.ZoomOffsetOverride;
             spawned.Interactable.Renderer = spawned;
@@ -94,7 +94,7 @@ namespace Astro {
             // Move to zoomed view
             ToggleZoomDoc(spawned.Interactable, state);
             SetDocumentInteractionEnabled(true);
-            spawned.Video.Play();
+            if (spawned.Video) { spawned.Video.Play(); }
         }
 
         public static Vector3 FindAvailablePos(DocumentBoardState state, DocumentRenderer doc) {
@@ -103,13 +103,13 @@ namespace Astro {
             int maxTries = 10;
             for (int i = 0; i < maxTries; i++) {
                 // random point on board
-                float xExtents = state.DraggableBounds.width / 2;
-                float yExtents = state.DraggableBounds.height / 2;
+                float xExtents = state.DraggableBounds.x / 2;
+                float yExtents = state.DraggableBounds.y / 2;
                 var offset = state.DocumentParent.transform.position;
                 Vector3 pos = offset + new Vector3(UnityEngine.Random.Range(-xExtents, xExtents), UnityEngine.Random.Range(-yExtents, yExtents), 0);
 
                 Vector3 docExtents = new Vector3(doc.Size.width / 2, doc.Size.height / 2, 1);
-                if (!Physics.CheckBox(pos, docExtents, state.DocumentParent.transform.rotation, LayerMasks.DocumentSurface_Mask)) {
+                if (!Physics.CheckBox(pos, docExtents, state.DocumentParent.transform.rotation, LayerMasks.DocumentInteract_Mask)) {
                     finalPos = pos - offset;
                     break;
                 }
@@ -155,13 +155,11 @@ namespace Astro {
         {
             var state = Find.State<DocumentBoardState>();
 
-            if (state.DocumentRoutine.Exists())
-            {
+            if (state.DocumentRoutine.Exists()) {
                 // wait for previous document routine to complete
                 state.DocumentRoutine.OnComplete(() => { SpawnPostcard(state, id); });
             }
-            else
-            {
+            else {
                 SpawnPostcard(state, id);
             }
         }
@@ -247,6 +245,9 @@ namespace Astro {
             if (state.DocZoomed) {
                 SetInteractionLayer(state.DocZoomed, LayerMasks.DocumentInteract_Index);
                 state.DocumentRoutine.Replace(MoveDocToPos(doc.transform, state.StoredDocPos));
+                if (doc.Renderer.Video) {
+                    doc.Renderer.Video.Stop();
+                }
                 state.StoredDocPos = Vector3.zero;
                 state.DocZoomed = null;
                 InputUtility.SetClickableMaskDefault(Find.State<InputState>());
@@ -265,12 +266,16 @@ namespace Astro {
                 }
                 //state.StoredDocPos.z = state.DocumentParent.position.z;
                 Vector3 zoomOffset = doc.Renderer.ZoomOffsetOverride == default ? state.DocZoomOffset : doc.Renderer.ZoomOffsetOverride;
-                state.DocumentRoutine.Replace(MoveDocToCam(doc.transform, Game.Rendering.PrimaryCamera.transform, zoomOffset))
+                var viewState = Find.State<ViewState>();
+                state.DocumentRoutine.Replace(MoveDocToCam(viewState, doc.transform, Game.Rendering.PrimaryCamera.transform, zoomOffset))
                     .OnComplete(() => 
                     {
                         using (var table = TempVarTable.Alloc()) {
                             table.Set("documentId", doc.AssetName);
                             ScriptUtility.Trigger(ScriptEvents.DocumentInspectStart, table);
+                        }
+                        if (doc.Renderer.Video) {
+                            doc.Renderer.Video.Play();
                         }
                     });
                 state.DocZoomed = doc;
@@ -318,10 +323,14 @@ namespace Astro {
             yield return null;
         }
 
-        private static IEnumerator MoveDocToCam(Transform doc, Transform cam, Vector3 offset) {
-            offset = cam.TransformVector(offset);
+        private static IEnumerator MoveDocToCam(ViewState viewState, Transform doc, Transform cam, Vector3 offset) {
+            // don't move doc until camera has finished moving
+            while (viewState.ActiveTransitionRoutine.Exists()) {
+                yield return null;
+            }
+            var newOffset = cam.TransformVector(offset);
             yield return Routine.Combine(
-                doc.MoveTo(cam.position + offset, 0.5f).Ease(Curve.QuartInOut),
+                doc.MoveTo(cam.position + newOffset, 0.5f).Ease(Curve.QuartInOut),
                 doc.RotateTo(cam, 0.3f));
             yield return null;
         }

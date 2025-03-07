@@ -12,7 +12,9 @@ namespace Astro {
         public override void ProcessWorkForComponent(SubmitButton primary, LabInteractable secondary, float deltaTime) {          
             if (!secondary.InteractReceived) { return; }
             if ((primary.ButtonType & SubmitButtonType.SubmitPuzzle) != 0) {
-                TrySubmitPuzzle(primary);
+                if (Find.State<PuzzleState>().ActivePuzzle != null) {
+                    TrySubmitPuzzle(primary);
+                }
             }
             if ((primary.ButtonType & SubmitButtonType.SubmitIdentification) != 0) {
                 TrySubmitIdentification(primary);
@@ -41,6 +43,10 @@ namespace Astro {
     }
 
     public static partial class PuzzleUtility {
+
+        public static void SetButtonMode(SubmitButton button, SubmitButtonType type) {
+            button.ButtonType = type;
+        }
         public static bool CheckSolutionCorrect(PuzzleState state, out BitArray rowsCorrect) {
             // convert combined flags to array of single flags
             DataTypeMask[] types = Array.FindAll((DataTypeMask[])Enum.GetValues(typeof(DataTypeMask)), t => state.ActivePuzzle.RequiredProperties.HasFlag(t));
