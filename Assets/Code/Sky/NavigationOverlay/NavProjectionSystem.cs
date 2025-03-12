@@ -83,10 +83,16 @@ namespace Astro {
                 var connection = Instantiate(new GameObject(ca1.DisplayName + "_to_" + ca2.DisplayName, typeof(RectTransform)), m_StateA.OutlineGroup);
                 connection.AddComponent<Image>();
                 RectTransform connectionRect = connection.GetComponent<RectTransform>();
-                connectionRect.sizeDelta = new Vector2(5, 500 * Vector2.Distance(focusA.Rect.anchorMin, focusB.Rect.anchorMin));
+
+                Vector2 canvasSize = m_StateA.NavigationCanvas.GetComponent<RectTransform>().sizeDelta;
+                float focusARadius = focusA.Rect.sizeDelta.x / 2;
+                float focusBRadius = focusB.Rect.sizeDelta.x / 2;
+                connectionRect.sizeDelta = new Vector2(5, Vector2.Distance(focusA.Rect.anchorMin * canvasSize, focusB.Rect.anchorMin * canvasSize) - focusARadius - focusBRadius);
+                connectionRect.sizeDelta = new Vector2(5, Vector2.Distance(focusA.Rect.anchorMin * canvasSize, focusB.Rect.anchorMin * canvasSize) - 75);
 
                 connectionRect.anchorMin = connectionRect.anchorMax = (focusA.Rect.anchorMax + focusB.Rect.anchorMax) / 2; 
-                float angle = Vector2.Angle(Vector2.up, focusA.Rect.anchorMin - focusB.Rect.anchorMin);
+                Vector2 vector = (focusA.Rect.anchorMax * canvasSize) - (focusB.Rect.anchorMin * canvasSize);
+                float angle = Vector2.Angle(Vector2.up, vector);
                 connectionRect.localEulerAngles = new Vector3(0, 0, angle);
             }
 
