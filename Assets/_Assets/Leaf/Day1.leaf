@@ -1,22 +1,13 @@
 #basePath	Day1
 
 
-:: OpeningCutscene
-@trigger SceneReady
-@who    IntroCutscene
-$call SetInputState(false)
-$call StopPuzzleMode()
-$call StopOpenMode()
-$call IntroCutscene->BeginCutscene()
-$call Wait(2)
-$call TelescopeLook(155, -30)
-
 :: ArrivalAtTheShed
-@trigger    CutsceneEnd
-@when cutsceneId == "IntroCutscene"
+@trigger    SceneReady
 @who    Radio
 
+$call SpawnDocumentToCamera("Day2DadPostcard")
 {@Astrid} Whoa. This place has really changed.
+$call StartPuzzleMode()
 Elijah, where are you?
 
 $call Wait(2)
@@ -136,11 +127,3 @@ $call Wait(1)
 $call SpawnDocumentToCamera("Day1Martha")
 $call SetInputState(true)
 
-:: EndDay
-@trigger    DocumentInspectEnd
-@when   documentId == "Day1Martha"
-@once
-
-$call SetInputState(false)
-$call Wait(1)
-$call LoadNextDay()
