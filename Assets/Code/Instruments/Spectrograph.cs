@@ -26,6 +26,15 @@ namespace Astro {
         Magnesium = 0x040,
         Oxygen = 0x080,
         Titanium = 0x100,
+
+        OType = Hydrogen | Helium,
+        BType = Hydrogen | Helium | Carbon,
+        AType = Hydrogen | Helium | Carbon | Iron | Calcium,
+        FType = Hydrogen | Helium | Carbon | Iron | Calcium | Sodium | Magnesium,
+        GType = Hydrogen | Helium | Carbon | Iron | Calcium | Sodium | Magnesium,
+        KType = Helium | Carbon | Iron | Calcium | Sodium | Magnesium | Oxygen ,
+        MType = Helium | Carbon | Iron | Calcium | Sodium | Magnesium | Oxygen | Titanium
+
     }
 
     public static partial class SpectrographUtility {

@@ -54,7 +54,16 @@ namespace Astro {
             spawned.Title.SetText(asset.TitleText);
             spawned.FrontBodyText.SetText(asset.FrontBodyText);
             if(spawned.BackBodyText) { spawned.BackBodyText.SetText(asset.BackBodyText); }
-            if (spawned.Video) { spawned.Video.url = Application.streamingAssetsPath + "/Postcards/" + asset.VideoName; }
+            if (spawned.Video) {
+                spawned.Video.gameObject.SetActive(true);
+
+                spawned.Video.url = Application.streamingAssetsPath + "/Postcards/" + asset.VideoName;
+                spawned.Video.Play();
+
+                if (spawned.Video.url.Length == 0) {
+                    spawned.Video.gameObject.SetActive(false);
+                }
+            }
             spawned.transform.localPosition = asset.DefaultPinnedPos;
             spawned.ZoomOffsetOverride = asset.ZoomOffsetOverride;
             spawned.Interactable.Renderer = spawned;
