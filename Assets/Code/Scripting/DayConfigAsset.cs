@@ -11,6 +11,7 @@ namespace Astro {
         public LeafAsset[] Scripts;
 
         public PuzzleAsset DayPuzzle;
+        public NeutrinoConfigAsset NeutrinoEvent;
     }
 
     static public class DayConfigUtil {

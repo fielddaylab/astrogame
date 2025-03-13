@@ -5,7 +5,7 @@
 @boostScore 100
 @who    Astrid
 
-$call MoveToCameraView("Left")
+$call MoveToView("Left")
 {@Astrid} Looks like I got some mail.
 $call StopPuzzleMode()
 $call StopOpenMode()
@@ -45,12 +45,12 @@ $call StartDocumentPuzzle("Day2DocumentPuzzle")
 $call Wait(2)
 
 $call SetInputState(false)
-$call MoveToCameraView("Right")
+$call MoveToView("Right")
 {@Radio} Star HQ to Station Seven.
 IceCube is reading a high-energy neutrino emission from the area of the Hydra Constellation. 
 Identification of nearby celestial objects is requested. 
 Uploading area of interest... (*beeeep screeech boop beep boop beeeep*)
-$call MoveToCameraView("Desk")
+$call MoveToView("Desk")
 $call Wait(2)
 $call SetInputState(true)
 $call StartOpenMode()
@@ -131,5 +131,5 @@ $call ClearMonitorSelection()
 $call StopPuzzleMode()
 $call SetInputState(false)
 {@Astrid} Time to turn in for the night.
-$call MoveToCameraView("Desk")
+$call MoveToView("Desk")
 $call Wait(1)
