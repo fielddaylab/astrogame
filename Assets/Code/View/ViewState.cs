@@ -91,7 +91,7 @@ namespace Astro {
         }
 
         [LeafMember("MoveToCameraView")]
-        static public void LeafMoveToNode(String targetId){
+        static public void LeafMoveToNode(StringHash32 targetId){
             ViewState state = Find.State<ViewState>();
             var targetNode = GetNodeById(targetId);
 
