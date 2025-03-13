@@ -80,7 +80,7 @@ namespace Astro {
         }
 
         private void CheckObjectIdentification() {
-            if (ReferenceUtility.CurrentRefMatchesFocus()) {
+            if (ReferenceUtility.CurrentRefMatchesFocus() && ReferenceUtility.CurrentRefInNeutrinoEvent()) {
                 ShowResultSprite(true, m_State);
                 PointsUtility.AddPoints(1, m_State);
             } else {

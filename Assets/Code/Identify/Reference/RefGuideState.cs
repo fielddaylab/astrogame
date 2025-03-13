@@ -4,6 +4,7 @@ using BeauUtil;
 using FieldDay;
 using FieldDay.SharedState;
 using System;
+using System.Linq;
 using UnityEngine;
 
 namespace Astro {
@@ -185,6 +186,16 @@ namespace Astro {
             }
             return RefClassMatchesAsset(refClass, focus.TargetData);
 
+        }
+
+        public static bool CurrentRefInNeutrinoEvent()
+        {
+            PlayerProgressState state = Find.State<PlayerProgressState>();
+            StoryAsset story = Find.GlobalAsset<StoryAsset>();
+            DayConfigAsset day = Find.NamedAsset<DayConfigAsset>(story.Days[state.DayIndex]);
+
+            UIFocus focus = Find.State<FocusState>().CurrentFocus;
+            return day.NeutrinoEvent.RelevantObjectIds.Contains(focus.TargetData.AssetId);
         }
 
         public static void ToggleReferenceActive() {
