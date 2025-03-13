@@ -7,6 +7,7 @@
 $call SetInputState(false)
 $call StopPuzzleMode()
 $call StopOpenMode()
+$call PlayMusic("Music.Gently-Falling", 1)
 $call IntroCutscene->BeginCutscene()
 $call Wait(2)
 $call TelescopeLook(155, -30)
@@ -16,6 +17,7 @@ $call TelescopeLook(155, -30)
 @when cutsceneId == "IntroCutscene"
 @who    Radio
 
+$call PlayMusic("Music.Gently-Falling-Piano", 1)
 {@Astrid} Whoa. This place has really changed.
 Elijah, where are you?
 
@@ -96,6 +98,7 @@ Love you, Little Bear. Good luck.
 $call MoveToCameraView("Desk")
 $call StartOpenMode()
 $call SetInputState(true)
+$call StopMusic(2)
 
 :: PointsUpdated
 @trigger    PointsUpdated
