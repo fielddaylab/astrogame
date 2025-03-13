@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using Unity.IL2CPP.CompilerServices;
 using UnityEngine;
 
 using ComponentIndex = BeauUtil.TypeIndex<FieldDay.Components.IComponentData>;
@@ -377,6 +378,8 @@ namespace FieldDay.Systems {
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [Il2CppSetOption(Option.NullChecks, false)]
+        [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
         static private void ProcessUpdates(RingBuffer<UpdateRecord> systems, bool needsSort, float deltaTime, int categoryMask, bool isLoading) {
             if (needsSort) {
                 systems.Sort((a, b) => a.UpdateOrder - b.UpdateOrder);

@@ -260,11 +260,34 @@ namespace FieldDay.Scenes {
         /// </summary>
         public bool IsLoading(string scenePath) {
             SceneDataExt data = SceneDataExt.GetByPath(scenePath);
-            if (data && !data.IsVisited(SceneDataExt.VisitFlags.Loaded)) {
-                return true;
+            if (data) {
+                return !data.IsVisited(SceneDataExt.VisitFlags.Loaded);
             }
 
             for(int i = 0; i < m_LoadProcessQueue.Count; i++) {
+                if (m_LoadProcessQueue[i].Path == scenePath) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Returns if the given scene is loading.
+        /// </summary>
+        public bool IsLoading(Scene scene) {
+            if (!scene.IsValid()) {
+                return false;
+            }
+
+            SceneDataExt data = SceneDataExt.Get(scene);
+            if (data) {
+                return !data.IsVisited(SceneDataExt.VisitFlags.Loaded);
+            }
+
+            string scenePath = scene.path;
+            for (int i = 0; i < m_LoadProcessQueue.Count; i++) {
                 if (m_LoadProcessQueue[i].Path == scenePath) {
                     return true;
                 }
@@ -285,6 +308,14 @@ namespace FieldDay.Scenes {
         /// </summary>
         public bool IsLoaded(string scenePath) {
             SceneDataExt data = SceneDataExt.GetByPath(scenePath);
+            return data && data.IsVisited(SceneDataExt.VisitFlags.Loaded);
+        }
+
+        /// <summary>
+        /// Returns if the given scene is loaded.
+        /// </summary>
+        public bool IsLoaded(Scene scene) {
+            SceneDataExt data = SceneDataExt.Get(scene);
             return data && data.IsVisited(SceneDataExt.VisitFlags.Loaded);
         }
 
