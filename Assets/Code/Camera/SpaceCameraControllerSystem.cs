@@ -57,13 +57,13 @@ namespace Astro
             {
                 // look left
                 var adjustedSpeed = (cursorPos.x < m_State.LookRapidThreshold) ? m_State.LookRapidSpeed : m_State.LookSpeed;
-                AdjustHorizLook(-adjustedSpeed * Time.deltaTime);
+                AdjustHorizLook(-adjustedSpeed * Frame.DeltaTime);
             }
             else if (cursorPos.x > 1 - m_State.LookThreshold)
             {
                 // look right
                 var adjustedSpeed = (cursorPos.x > 1 - m_State.LookRapidThreshold) ? m_State.LookRapidSpeed : m_State.LookSpeed;
-                AdjustHorizLook(adjustedSpeed * Time.deltaTime);
+                AdjustHorizLook(adjustedSpeed * Frame.DeltaTime);
             }
 
             // Look Y
@@ -71,13 +71,13 @@ namespace Astro
             {
                 // look down
                 var adjustedSpeed = (cursorPos.y < m_State.LookRapidThreshold) ? m_State.LookRapidSpeed : m_State.LookSpeed;
-                AdjustVertLook(adjustedSpeed * Time.deltaTime);
+                AdjustVertLook(adjustedSpeed * Frame.DeltaTime);
             }
             else if (cursorPos.y > 1 - m_State.LookThreshold)
             {
                 // look up
                 var adjustedSpeed = (cursorPos.y > 1 - m_State.LookRapidThreshold) ? m_State.LookRapidSpeed : m_State.LookSpeed;
-                AdjustVertLook(-adjustedSpeed * Time.deltaTime);
+                AdjustVertLook(-adjustedSpeed * Frame.DeltaTime);
             }
         }
 
@@ -129,22 +129,22 @@ namespace Astro
             if (Game.Input.IsKeyPressed(KeyCode.UpArrow) || Game.Input.IsKeyPressed(KeyCode.W))
             {
                 // look up
-                AdjustVertLook(-m_State.LookIncrement);
+                AdjustVertLook(-m_State.LookIncrement * Frame.DeltaRatio);
             }
             if (Game.Input.IsKeyPressed(KeyCode.DownArrow) || Game.Input.IsKeyPressed(KeyCode.S))
             {
                 // look down
-                AdjustVertLook(m_State.LookIncrement);
+                AdjustVertLook(m_State.LookIncrement * Frame.DeltaRatio);
             }
             if (Game.Input.IsKeyPressed(KeyCode.LeftArrow) || Game.Input.IsKeyPressed(KeyCode.A))
             {
                 // look left
-                AdjustHorizLook(-m_State.LookIncrement);
+                AdjustHorizLook(-m_State.LookIncrement * Frame.DeltaRatio);
             }
             if (Game.Input.IsKeyPressed(KeyCode.RightArrow) || Game.Input.IsKeyPressed(KeyCode.D))
             {
                 // look right
-                AdjustHorizLook(m_State.LookIncrement);
+                AdjustHorizLook(m_State.LookIncrement * Frame.DeltaRatio);
             }
         }
 
@@ -153,22 +153,22 @@ namespace Astro
             if (Game.Input.IsKeyDown(KeyCode.UpArrow) || Game.Input.IsKeyDown(KeyCode.W))
             {
                 // look up
-                AdjustVertLook(-m_State.SmoothLookIncrement);
+                AdjustVertLook(-m_State.SmoothLookIncrement * Frame.DeltaRatio);
             }
             else if (Game.Input.IsKeyDown(KeyCode.DownArrow) || Game.Input.IsKeyDown(KeyCode.S))
             {
                 // look down
-                AdjustVertLook(m_State.SmoothLookIncrement);
+                AdjustVertLook(m_State.SmoothLookIncrement * Frame.DeltaRatio);
             }
             if (Game.Input.IsKeyDown(KeyCode.LeftArrow) || Game.Input.IsKeyDown(KeyCode.A))
             {
                 // look left
-                AdjustHorizLook(-m_State.SmoothLookIncrement);
+                AdjustHorizLook(-m_State.SmoothLookIncrement * Frame.DeltaRatio);
             }
             else if (Game.Input.IsKeyDown(KeyCode.RightArrow) || Game.Input.IsKeyDown(KeyCode.D))
             {
                 // look right
-                AdjustHorizLook(m_State.SmoothLookIncrement);
+                AdjustHorizLook(m_State.SmoothLookIncrement * Frame.DeltaRatio);
             }
         }
 

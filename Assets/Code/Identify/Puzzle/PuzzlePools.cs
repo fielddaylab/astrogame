@@ -67,7 +67,7 @@ namespace Astro
             pools.Allocations[PuzzleCellLibrary.BundleType.Large] = 0;
         }
 
-        public static bool TryAllocateOnBundleType(PuzzlePools pools, PuzzleCellLibrary.BundleType type, out SerializedHash32 id)
+        public static bool TryAllocateOnBundleType(PuzzlePools pools, PuzzleCellLibrary.BundleType type, out StringHash32 id)
         {
             int compareNum = pools.NumXSmall;
             switch (type)

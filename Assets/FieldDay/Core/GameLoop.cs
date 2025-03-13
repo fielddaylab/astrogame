@@ -536,6 +536,8 @@ namespace FieldDay {
         private void FixedUpdate() {
             Frame.UnscaledDeltaTime = Time.deltaTime;
             Frame.DeltaTime = Frame.UnscaledDeltaTime * s_TimeScale;
+            Frame.UnscaledDeltaRatio = 1;
+            Frame.DeltaRatio = s_TimeScale;
 
             HandlePreUpdate();
             SetCurrentPhase(GameLoopPhase.FixedUpdate);
@@ -563,6 +565,8 @@ namespace FieldDay {
         private void Update() {
             Frame.UnscaledDeltaTime = Time.deltaTime;
             Frame.DeltaTime = Frame.UnscaledDeltaTime * s_TimeScale;
+            Frame.UnscaledDeltaRatio = Frame.UnscaledDeltaTime * m_TargetFramerate;
+            Frame.DeltaRatio = Frame.DeltaTime * m_TargetFramerate;
 
             // just in case we didn't have a FixedUpdate this frame
             HandlePreUpdate();

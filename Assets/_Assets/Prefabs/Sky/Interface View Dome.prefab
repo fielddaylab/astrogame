@@ -85,9 +85,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8298948467384198897}
   - component: {fileID: 8058402043837510232}
-  - component: {fileID: 2160746468281461910}
   - component: {fileID: 4396754113412102360}
-  - component: {fileID: 5743402655069655860}
   - component: {fileID: 8009921800981003509}
   m_Layer: 0
   m_Name: Space Camera
@@ -162,14 +160,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &2160746468281461910
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 681493455928838951}
-  m_Enabled: 0
 --- !u!114 &4396754113412102360
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -214,21 +204,6 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
---- !u!114 &5743402655069655860
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 681493455928838951}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b0b4e521e7bf9740a7577a137de4e48, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Target: {fileID: 0}
-  m_Height: 1
-  m_Zoom: 1.5
 --- !u!45 &8009921800981003509
 Skybox:
   m_ObjectHideFlags: 0
@@ -787,6 +762,7 @@ GameObject:
   - component: {fileID: 5626648311741990602}
   - component: {fileID: 2850884022425851541}
   - component: {fileID: 5683364476615851672}
+  - component: {fileID: 759135897095971606}
   m_Layer: 0
   m_Name: Interface Overlay Canvas
   m_TagString: Untagged
@@ -926,6 +902,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   screenCamera: {fileID: 8058402043837510232}
   screenCaster: {fileID: 1174176076569955566}
+--- !u!114 &759135897095971606
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5994674092266934822}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d008a29e9c858744bd30f60bb60f124, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OpenModeStarted: 0
+  OpenModeEnded: 0
 --- !u!1 &6966260566834880961
 GameObject:
   m_ObjectHideFlags: 0
@@ -976,12 +966,12 @@ MeshRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6966260566834880961}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
   m_MotionVectors: 1
-  m_LightProbeUsage: 1
+  m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
@@ -1042,6 +1032,7 @@ GameObject:
   m_Component:
   - component: {fileID: 444685903779652031}
   - component: {fileID: 4550373944300774382}
+  - component: {fileID: 957984673449401792}
   m_Layer: 0
   m_Name: Offscreen Interface Render Rig (Space Camera)
   m_TagString: Untagged
@@ -1082,3 +1073,16 @@ MonoBehaviour:
   RootTransform: {fileID: 8298948467384198897}
   EffectsTransform: {fileID: 8298948467384198897}
   AttachmentsTransform: {fileID: 0}
+--- !u!114 &957984673449401792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8164922381700019465}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d9fc62a20dc6ff49be79af48fdde74e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Order: 0

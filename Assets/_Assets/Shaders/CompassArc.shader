@@ -40,7 +40,7 @@ Shader "Astro/Compass Arc"
 			#include "UnityCG.cginc"
 
 			struct VertIn {
-				float3 vertex   : POSITION;
+				float4 vertex   : POSITION;
 				fixed4 color    : COLOR;
 			};
 

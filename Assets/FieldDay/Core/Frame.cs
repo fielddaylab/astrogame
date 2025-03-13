@@ -100,6 +100,16 @@ namespace FieldDay {
         /// </summary>
         static public float UnscaledDeltaTime;
 
+        /// <summary>
+        /// Ratio between delta time and desired frame time.
+        /// </summary>
+        static public float DeltaRatio;
+
+        /// <summary>
+        /// Ratio between unscaled delta time and desired frame time.
+        /// </summary>
+        static public float UnscaledDeltaRatio;
+
         #endregion // Delta Time
 
         #region Allocator

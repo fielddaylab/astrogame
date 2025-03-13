@@ -13,6 +13,7 @@ using EasyBugReporter;
 using FieldDay.Data;
 using FieldDay.HID;
 using FieldDay.HID.XR;
+using FieldDay.Perf;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Scripting;
@@ -375,6 +376,12 @@ namespace FieldDay.Debugging {
             m_MinimalGroup.alpha = visible ? 1 : 0;
             m_MinimalGroup.blocksRaycasts = visible;
             m_Canvas.enabled = visible;
+
+            if (visible) {
+                FramerateDisplay.Hide();
+            } else {
+                FramerateDisplay.Show();
+            }
 
             if (!visible) {
                 SetMenuVisible(false);

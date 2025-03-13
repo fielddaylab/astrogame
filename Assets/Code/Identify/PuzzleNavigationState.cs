@@ -31,6 +31,8 @@ public static class PuzzleNavigationUtility {
 
         PuzzleNavigationState puzzleNavState = Find.State<PuzzleNavigationState>();
         puzzleNavState.NavigationModeActive = true;
+
+        ViewNavUtility.LeafMoveToNode("Monitor");
     } 
 
     public static void OnPuzzleNavStopped() {
@@ -40,6 +42,8 @@ public static class PuzzleNavigationUtility {
         PuzzleNavigationState puzzleNavState = Find.State<PuzzleNavigationState>(); 
         puzzleNavState.NavigationModeActive = false;
         ResetReview();
+
+        ViewNavUtility.LeafMoveToNode("Right");
     } 
 
     [DebugMenuFactory]
