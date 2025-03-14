@@ -16,6 +16,7 @@ namespace Astro {
         
         public Transform Movable;
         public Vector3 LocalDisplacement;
+        public bool IsToggle;
 
         [Header("Sounds")]
         [AudioEventRef] public StringHash32 ClickSfx;
