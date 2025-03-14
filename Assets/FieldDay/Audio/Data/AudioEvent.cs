@@ -20,6 +20,7 @@ namespace FieldDay.Audio {
         [Space]
         public bool Loop;
         public bool RandomizeStartTime;
+        public bool RandomizePanSign;
 
         [Header("Other Parameters")]
         [AudioBusId] public StringHash32 Bus;

@@ -272,6 +272,7 @@ namespace FieldDay.Audio {
                             voice.State = VoiceState.Playing;
                             voice.PlayStartedTS = currentTime;
                             voice.Components.Source.Play();
+                            UpdatePlayingInstanceCount(voice.Handle, voice.BusIndex, true);
                         }
 
                         break;
@@ -281,6 +282,7 @@ namespace FieldDay.Audio {
                         if (voice.LastKnownProperties.Pause) {
                             voice.State = VoiceState.Paused;
                             voice.Components.Source.Pause();
+                            UpdatePlayingInstanceCount(voice.Handle, voice.BusIndex, false);
                             break;
                         }
 
@@ -294,6 +296,7 @@ namespace FieldDay.Audio {
                             } else if (Frame.Age(voice.FrameEnded) >= 3) {
                                 voice.Components.Source.Stop();
                                 voice.State = VoiceState.Stopped;
+                                UpdatePlayingInstanceCount(voice.Handle, voice.BusIndex, false);
                             }
                         }
 
@@ -306,6 +309,7 @@ namespace FieldDay.Audio {
                             ForcePositionSync(voice);
                             voice.State = VoiceState.Playing;
                             voice.Components.Source.UnPause();
+                            UpdatePlayingInstanceCount(voice.Handle, voice.BusIndex, true);
                         }
                         break;
                     }
@@ -355,9 +359,10 @@ namespace FieldDay.Audio {
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static private void RequestImmediateStop(VoiceData voice) {
+        private void RequestImmediateStop(VoiceData voice) {
             voice.Components.Source.Stop();
             voice.State = VoiceState.Stopped;
+            UpdatePlayingInstanceCount(voice.Handle, voice.BusIndex, false);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -455,6 +460,7 @@ namespace FieldDay.Audio {
         private unsafe void KillVoice(VoiceData voice) {
             if (voice.Components && voice.Components.Source) {
                 voice.Components.Source.Stop();
+                UpdatePlayingInstanceCount(voice.Handle, voice.BusIndex, false);
             }
             voice.Components.PlayingHandle = default;
 

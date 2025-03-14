@@ -133,8 +133,7 @@ $call StopPuzzleMode()
 $call SetInputState(false)
 {@Astrid} Time to turn in for the night.
 Oh, what's this?
-$call MoveToView("Left")
-$call Wait(1)
+$call WaitForMovedToView("Left")
 $call SpawnDocumentToCamera("Day1Martha")
 $call SetInputState(true)
 

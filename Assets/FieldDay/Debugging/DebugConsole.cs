@@ -10,6 +10,7 @@ using BeauUtil;
 using BeauUtil.Debugger;
 using BeauUtil.UI;
 using EasyBugReporter;
+using FieldDay.Audio;
 using FieldDay.Data;
 using FieldDay.HID;
 using FieldDay.HID.XR;
@@ -150,6 +151,10 @@ namespace FieldDay.Debugging {
             }
 
             m_TimeDisplay.UpdateTimescale(m_TimeScale);
+
+            AudioPropertyBlock debugAudioProps = Game.Audio.GetDebugProperties(AudioBus.Master);
+            debugAudioProps.Pitch = m_TimeScale;
+            Game.Audio.SetDebugProperties(AudioBus.Master, debugAudioProps);
         }
 
         private void SetPaused(bool paused) {
@@ -163,6 +168,10 @@ namespace FieldDay.Debugging {
             GameLoop.SetDebugPause(paused);
             m_InputBlocker.enabled = paused;
             AudioListener.pause = paused;
+
+            AudioPropertyBlock debugAudioProps = Game.Audio.GetDebugProperties(AudioBus.Master);
+            debugAudioProps.Pause = paused;
+            Game.Audio.SetDebugProperties(AudioBus.Master, debugAudioProps);
 
             if (paused) {
                 Time.timeScale = 0;

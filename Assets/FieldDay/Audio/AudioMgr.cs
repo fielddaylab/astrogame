@@ -37,6 +37,8 @@ namespace FieldDay.Audio {
         private Pipe<PlayCommandData> m_PlayCommandPipe = new Pipe<PlayCommandData>(64, true);
         private UniqueIdAllocator16 m_VoiceIdAllocator = new UniqueIdAllocator16(MaxVoices + MaxBuses);
 
+        private BitSet128 m_VoicePlayingBitmap;
+
         private Unsafe.ArenaHandle m_Arena;
         private UnsafeResourcePool<AudioPropertyBlock> m_TargetablePropertyBlocks;
 
@@ -323,5 +325,46 @@ namespace FieldDay.Audio {
         }
 
         #endregion // Preload
+
+        #region Debug
+
+        /// <summary>
+        /// Gets the debug properties for a given bus.
+        /// </summary>
+        public AudioPropertyBlock GetDebugProperties(StringHash32 busId) {
+#if DEVELOPMENT
+            int busIdx = FindBusIndexForId(busId);
+            if (busIdx >= 0) {
+                return m_DebugBusProperties[busIdx];
+            }
+#endif // DEVELOPMENT
+            return default;
+        }
+
+        /// <summary>
+        /// Sets debug properties for a given bus.
+        /// </summary>
+        public void SetDebugProperties(StringHash32 busId, AudioPropertyBlock propertyBlock) {
+#if DEVELOPMENT
+            int busIdx = FindBusIndexForId(busId);
+            if (busIdx >= 0) {
+                m_DebugBusProperties[busIdx] = propertyBlock;
+            }
+#endif // DEVELOPMENT
+        }
+
+        /// <summary>
+        /// Resets debug properties for a given bus.
+        /// </summary>
+        public void ResetDebugProperties(StringHash32 busId) {
+#if DEVELOPMENT
+            int busIdx = FindBusIndexForId(busId);
+            if (busIdx >= 0) {
+                m_DebugBusProperties[busIdx] = AudioPropertyBlock.Default;
+            }
+#endif // DEVELOPMENT
+        }
+
+        #endregion // Debug
     }
 }

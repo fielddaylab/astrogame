@@ -25,6 +25,7 @@ namespace FieldDay.Audio {
             public int ParentIndex;
             public float ConfigVolume;
 
+            public int InstanceCount;
             public AudioPropertyBlock LastKnownProperties;
 
             public UniqueId16 Handle;
@@ -48,6 +49,8 @@ namespace FieldDay.Audio {
 
             if (!parentId.IsEmpty) {
                 m_BusData[idx].ParentIndex = FindBusIndexForId(parentId);
+            } else {
+                m_BusData[idx].ParentIndex = idx == 0 ? -1 : 0;
             }
 
             Log.Msg("[AudioMgr] Created bus '{0}'", id.ToDebugString());
@@ -133,6 +136,20 @@ namespace FieldDay.Audio {
 #endif // DEVELOPMENT
                 block.Volume *= bus.ConfigVolume;
                 bus.LastKnownProperties = block;
+            }
+        }
+
+        private void UpdatePlayingInstanceCount(UniqueId16 id, int busIndex, bool isPlaying) {
+            Assert.True(m_VoiceIdAllocator.IsValid(id));
+            if (isPlaying != m_VoicePlayingBitmap.IsSet(id.Index)) {
+                m_VoicePlayingBitmap.Set(id.Index, isPlaying);
+
+                int increment = isPlaying ? 1 : -1;
+                while(busIndex >= 0) {
+                    ref BusData bus = ref m_BusData[busIndex];
+                    bus.InstanceCount += increment;
+                    busIndex = bus.ParentIndex;
+                }
             }
         }
     }
