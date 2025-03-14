@@ -134,8 +134,8 @@ public static class PuzzleNavigationUtility {
 
         CanvasGroup boarder = navProjectionState.BoarderGroup;
         CanvasGroup outline = navProjectionState.OutlineGroup.GetComponent<CanvasGroup>();
+        yield return spaceCameraState.Camera.RootTransform.RotateQuaternionTo(targetQuat, 0.5f).Ease(Curve.Smooth);
         yield return Routine.Combine(
-            spaceCameraState.Camera.RootTransform.RotateQuaternionTo(targetQuat, 0.4f).Ease(Curve.Smooth),
             Tween.Value(1f, 0.5f, (f) => { outline.alpha = f; }, Mathf.Lerp, 0.4f),
             Tween.Value(boarder.alpha, 0f, (f) => { boarder.alpha = f; }, Mathf.Lerp, 0.4f),
             Tween.Color(Color.white, navProjectionState.NavigationCompleteColor, (c) => { UpdateEdgeGroupColor(navProjectionState.OutlineGroup, c); }, 0.4f, ColorUpdate.FullColor)
