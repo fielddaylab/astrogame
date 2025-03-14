@@ -12,12 +12,18 @@ namespace Astro {
     public class NavigationReadoutSystem : SharedStateSystemBehaviour<PlayerPointsState, PuzzleNavigationState> {
 
         public override bool HasWork() {
-            return base.HasWork() && (m_StateB.NavigationModeActive && m_StateB.ReadoutDirty == true);
+            return base.HasWork() && m_StateB.NavigationModeActive;
         }
 
         public override void ProcessWork(float deltaTime) {
-           float newDist = m_StateB.CameraDistanceFromPuzzle; 
-           ReviewModule module = m_StateA.ReviewModule;
+            if (m_StateB.ReadoutDirty) {
+                ProcessConstellationNav();
+            }
+        }
+
+        public void ProcessConstellationNav() {
+            float newDist = m_StateB.CameraDistanceFromPuzzle; 
+            ReviewModule module = m_StateA.ReviewModule;
 
             if (newDist < 0) {
                 module.Result.SetSharedMaterialAtIndex(1, module.UnlitPipMaterial);
@@ -36,9 +42,7 @@ namespace Astro {
                 if (!m_StateB.ConstellationSnapRoutine.Exists()){
                     m_StateB.ConstellationSnapRoutine = Routine.Start( PuzzleNavigationUtility.SnapConstellationAlignment() );
                 }
-                // Game.Events.Dispatch(GameEvents.PuzzleNavigationComplete);
             }
-
             m_StateB.ReadoutDirty = true;
         }
 

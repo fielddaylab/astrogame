@@ -102,7 +102,7 @@ namespace Astro
             angles.x = m_State.VertLook;
             m_State.Camera.RootTransform.localEulerAngles = angles;
 
-            RecordLookUpdated();
+            m_State.OnLookUpdated.Invoke(m_State);
         }
 
         private void AdjustHorizLook(float adjustment)
@@ -115,7 +115,7 @@ namespace Astro
             angles.y = m_State.HorizLook;
             m_State.Camera.RootTransform.localEulerAngles = angles;
 
-            RecordLookUpdated();
+            m_State.OnLookUpdated.Invoke(m_State);
         }
 
         private void ProcessKeyboardLookDiscrete()
@@ -186,7 +186,8 @@ namespace Astro
                 newZoom = Mathf.Clamp(newZoom - yScrollDelta * m_State.ZoomSpeed, m_State.ZoomBounds.x, m_State.ZoomBounds.y);
 
                 m_State.Camera.Camera.fieldOfView = newZoom;
-                RecordLookUpdated();
+                
+                m_State.OnLookUpdated.Invoke(m_State);
             }
         }
 
@@ -200,7 +201,7 @@ namespace Astro
 
                 m_State.Zoom = newZoom;
                 m_State.Camera.Camera.fieldOfView = m_State.Camera.OriginalFOV / newZoom;
-                RecordLookUpdated();
+                m_State.OnLookUpdated.Invoke(m_State);
             }
             if (Game.Input.IsKeyPressed(KeyCode.K)) {
                 // Zoom in
@@ -210,14 +211,8 @@ namespace Astro
 
                 m_State.Zoom = newZoom;
                 m_State.Camera.Camera.fieldOfView = m_State.Camera.OriginalFOV / newZoom;
-                RecordLookUpdated();
+                m_State.OnLookUpdated.Invoke(m_State);
             }
-        }
-
-        private void RecordLookUpdated()
-        {
-            m_State.OnLookUpdated.Invoke(m_State);
-            m_State.LookUpdatedThisFrame = true;
         }
 
         #endregion // Input Processing

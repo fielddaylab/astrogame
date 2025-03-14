@@ -105,8 +105,6 @@ public static class PuzzleNavigationUtility {
         Quaternion spaceCameraQuat = spaceCameraState.Camera.RootTransform.rotation;
 
         Vector3 spaceCamForward = Geom.Forward(spaceCameraQuat);
-        // Note: This is sometimes helpful for aligning puzzles
-        Debug.Log("[PuzzleNavUtil] Camera RA:" + CoordinateUtility.DegreesToRA(360 - spaceCameraQuat.eulerAngles.y) + " D:" + CoordinateUtility.DecimalDegreesToDeclination(360 - spaceCameraQuat.eulerAngles.x));
 
         // Debug.Log("[PuzzleNavUtil] Target:" + targetFoward +  ", Camera:" + spaceCamForward + " Distance:" + Vector3.Dot(targetFoward, spaceCamForward));
         float newDist = Vector3.Dot(targetFoward, spaceCamForward);
@@ -136,7 +134,7 @@ public static class PuzzleNavigationUtility {
         CanvasGroup outline = navProjectionState.OutlineGroup.GetComponent<CanvasGroup>();
         yield return spaceCameraState.Camera.RootTransform.RotateQuaternionTo(targetQuat, 0.5f).Ease(Curve.Smooth);
         yield return Routine.Combine(
-            Tween.Value(1f, 0.5f, (f) => { outline.alpha = f; }, Mathf.Lerp, 0.4f),
+            Tween.Value(1f, 0.4f, (f) => { outline.alpha = f; }, Mathf.Lerp, 0.4f),
             Tween.Value(boarder.alpha, 0f, (f) => { boarder.alpha = f; }, Mathf.Lerp, 0.4f),
             Tween.Color(Color.white, navProjectionState.NavigationCompleteColor, (c) => { UpdateEdgeGroupColor(navProjectionState.OutlineGroup, c); }, 0.4f, ColorUpdate.FullColor)
         ); 

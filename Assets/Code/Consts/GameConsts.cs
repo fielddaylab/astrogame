@@ -10,6 +10,8 @@ public static class GameEvents {
     public static readonly StringHash32 StopOpenMode = "stop-open-mode";
     public static readonly StringHash32 StartPuzzleMode = "start-puzzle-mode";
     public static readonly StringHash32 StopPuzzleMode = "stop-puzzle-mode";
+    public static readonly StringHash32 StartNeutrinoNavigation = "start-navigation-mode";
+    public static readonly StringHash32 StopNeutrinoNavigation = "stop-navigation-mode";
     public static readonly StringHash32 StartPuzzleNavigation = "start-constellation-mode";
     public static readonly StringHash32 PuzzleNavigationComplete = "puzzle-navigation-complete";
     public static readonly StringHash32 StopPuzzleNavigation = "stop-constellation-mode";
