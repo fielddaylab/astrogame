@@ -129,6 +129,7 @@ namespace Astro {
             }
             // float scaleFactor = 1.5f * Mathf.Pow(0.63f, asset.ApparentMagnitude);
             // focus.Rect.localScale = new Vector3(scaleFactor, scaleFactor, 1);
+            focus.Represent2D.enabled = false;
             focus.TargetData = asset;
         }
     }

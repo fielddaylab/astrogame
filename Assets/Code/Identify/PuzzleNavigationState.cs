@@ -3,23 +3,28 @@ using FieldDay;
 using FieldDay.SharedState;
 using UnityEngine;
 using BeauUtil;
+using BeauRoutine;
 using System;
 using FieldDay.Debugging;
 using BeauUtil.Debugger;
-using System.Reflection;
 using FieldDay.Rendering;
+using System.Collections;
+using UnityEngine.UI;
 
 public sealed class PuzzleNavigationState : SharedStateComponent, IRegistrationCallbacks {
     [NonSerialized] public bool NavigationModeActive = false;
     [NonSerialized] public float CameraDistanceFromPuzzle = -1;
     [NonSerialized] public bool ReadoutDirty = false;
+    [NonSerialized] public Routine ConstellationSnapRoutine;
 
     public void OnRegister() {
         Game.Events.Register(GameEvents.StartPuzzleNavigation, PuzzleNavigationUtility.OnPuzzleNavStart);
+        Game.Events.Register(GameEvents.PuzzleNavigationComplete, PuzzleNavigationUtility.OnPuzzleNavComplete);
         Game.Events.Register(GameEvents.StopPuzzleNavigation, PuzzleNavigationUtility.OnPuzzleNavStopped);
     }
 
     public void OnDeregister() {
+        Game.Events.Deregister(GameEvents.StopPuzzleNavigation, PuzzleNavigationUtility.OnPuzzleNavStart);
         Game.Events.Deregister(GameEvents.StopPuzzleNavigation, PuzzleNavigationUtility.OnPuzzleNavStopped);
     } 
 }
@@ -34,6 +39,12 @@ public static class PuzzleNavigationUtility {
 
         ViewNavUtility.LeafMoveToNode("Monitor");
     } 
+
+    public static void OnPuzzleNavComplete() {
+        PuzzleNavigationState puzzleNavState = Find.State<PuzzleNavigationState>(); 
+        Game.Events.Dispatch(GameEvents.StopPuzzleNavigation);
+        puzzleNavState.ConstellationSnapRoutine = Routine.Null;
+    }
 
     public static void OnPuzzleNavStopped() {
         SpaceCameraState state = Find.State<SpaceCameraState>();
@@ -94,12 +105,54 @@ public static class PuzzleNavigationUtility {
         Quaternion spaceCameraQuat = spaceCameraState.Camera.RootTransform.rotation;
 
         Vector3 spaceCamForward = Geom.Forward(spaceCameraQuat);
-        // Debug.Log("[PuzzleNavUtil] Camera RA:" + CoordinateUtility.DegreesToRA(360 - spaceCameraQuat.eulerAngles.y) + " D:" + CoordinateUtility.DecimalDegreesToDeclination(360 - spaceCameraQuat.eulerAngles.x));
+        // Note: This is sometimes helpful for aligning puzzles
+        Debug.Log("[PuzzleNavUtil] Camera RA:" + CoordinateUtility.DegreesToRA(360 - spaceCameraQuat.eulerAngles.y) + " D:" + CoordinateUtility.DecimalDegreesToDeclination(360 - spaceCameraQuat.eulerAngles.x));
 
         // Debug.Log("[PuzzleNavUtil] Target:" + targetFoward +  ", Camera:" + spaceCamForward + " Distance:" + Vector3.Dot(targetFoward, spaceCamForward));
         float newDist = Vector3.Dot(targetFoward, spaceCamForward);
 
         puzzleNavState.CameraDistanceFromPuzzle = newDist;
         puzzleNavState.ReadoutDirty = true;
+    }
+
+    public static IEnumerator SnapConstellationAlignment() {
+        InputState inputState = Find.State<InputState>();
+        SpaceCameraState spaceCameraState = Find.State<SpaceCameraState>();
+        NavProjectionState navProjectionState = Find.State<NavProjectionState>();
+
+        bool inputCache = inputState.InputEnabled;
+        InputUtility.SetInputEnabled(inputState, false);
+
+        PuzzleState puzzleState = Find.State<PuzzleState>();
+
+        EqCoords target = puzzleState.ActivePuzzle.PuzzleCoordinates;
+        Quaternion targetQuat = Quaternion.Euler(
+            360 - (float)CoordinateUtility.DeclinationToDecimalDegrees( target.Declination ),
+            360 - (float)CoordinateUtility.RAToDegrees( target.RightAscension ),
+            0
+        );
+
+        CanvasGroup boarder = navProjectionState.BoarderGroup;
+        CanvasGroup outline = navProjectionState.OutlineGroup.GetComponent<CanvasGroup>();
+        yield return Routine.Combine(
+            spaceCameraState.Camera.RootTransform.RotateQuaternionTo(targetQuat, 0.4f).Ease(Curve.Smooth),
+            Tween.Value(1f, 0.5f, (f) => { outline.alpha = f; }, Mathf.Lerp, 0.4f),
+            Tween.Value(boarder.alpha, 0f, (f) => { boarder.alpha = f; }, Mathf.Lerp, 0.4f),
+            Tween.Color(Color.white, navProjectionState.NavigationCompleteColor, (c) => { UpdateEdgeGroupColor(navProjectionState.OutlineGroup, c); }, 0.4f, ColorUpdate.FullColor)
+        ); 
+
+        boarder.gameObject.SetActive(false);
+        boarder.alpha = 1.0f;
+
+        InputUtility.SetInputEnabled(inputState, inputCache);
+        Game.Events.Dispatch(GameEvents.PuzzleNavigationComplete);
+    }
+
+    // Helper for updating the edge color of constellations in camera snap routine
+    private static void UpdateEdgeGroupColor(RectTransform OutlineGroup, Color color) {
+        Image[] edgeImages = OutlineGroup.GetComponentsInChildren<Image>();
+        for(int i = 0; i < edgeImages.Length; i++) {
+            edgeImages[i].color = color;
+        }
     }
 }

@@ -11,9 +11,12 @@ namespace Astro {
         public GameObject CelestialObjPrefab;
         public Sprite StarOutlineSprite;
         public Sprite PlanetOutlineSprite;
+
+        public Color NavigationCompleteColor;
         
         public Canvas NavigationCanvas;
         public RectTransform OutlineGroup;
+        public CanvasGroup BoarderGroup;
 
         public void OnRegister() {
             Game.Scenes.QueueOnLoad(() => {
@@ -30,7 +33,8 @@ namespace Astro {
                 NavigationCanvas.gameObject.SetActive(true);
                 Initialized = false;
             });
-            Game.Events.Register(GameEvents.StopPuzzleNavigation, () => {
+
+            Game.Events.Register(GameEvents.StopPuzzleMode, () => {
                 NavigationCanvas.gameObject.SetActive(false);
             });
         }

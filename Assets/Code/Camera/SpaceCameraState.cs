@@ -50,7 +50,8 @@ namespace Astro
 
         [NonSerialized] public ulong StateHash;
 
-        [NonSerialized] public bool ZoomInputEnabled = true;
+        [NonSerialized] public bool ZoomInputLocked = false;
+        [NonSerialized] public bool CameraRotationInputLocked = false;
         [NonSerialized] public bool LookUpdatedThisFrame = false;
 
         public CastableEvent<SpaceCameraState> OnLookUpdated = new CastableEvent<SpaceCameraState>();
@@ -58,6 +59,7 @@ namespace Astro
         public void OnRegister() {
             Game.Events.Register(GameEvents.StartPuzzleNavigation, SpaceCameraUtility.OnStartPuzzleNav);
             Game.Events.Register(GameEvents.StopPuzzleNavigation, SpaceCameraUtility.OnStopPuzzleNav);
+            Game.Events.Register(GameEvents.StopPuzzleMode, SpaceCameraUtility.OnStopPuzzleMode);
         }
 
         public void OnDeregister() {}
@@ -68,20 +70,26 @@ namespace Astro
     {
         public static void OnStartPuzzleNav() {
             SpaceCameraState spaceCameraState = Find.State<SpaceCameraState>();
-            spaceCameraState.ZoomInputEnabled = false;
+            spaceCameraState.ZoomInputLocked = true;
 
             PuzzleState puzzleState = Find.State<PuzzleState>();
             
             spaceCameraState.Camera.Camera.fieldOfView = spaceCameraState.Camera.OriginalFOV / puzzleState.ActivePuzzle.PuzzleCameraZoom;
+            spaceCameraState.OnLookUpdated.Invoke(spaceCameraState);
         }
 
         public static void OnStopPuzzleNav() {
             SpaceCameraState spaceCameraState = Find.State<SpaceCameraState>();
-            spaceCameraState.ZoomInputEnabled = true;
+            spaceCameraState.CameraRotationInputLocked = true;
+            SetCameraInputEnabled(false);
         }
 
-        public static void TryLook(Vector3 lookPos, Transform camRoot, Transform orientRoot)
-        {
+        public static void OnStopPuzzleMode() {
+            SpaceCameraState spaceCameraState = Find.State<SpaceCameraState>();
+            spaceCameraState.ZoomInputLocked = false;
+        }
+
+        public static void TryLook(Vector3 lookPos, Transform camRoot, Transform orientRoot) {
             camRoot.LookAt(lookPos, orientRoot.up);
             var angles = camRoot.localEulerAngles;
             angles.x = 0;

@@ -18,17 +18,14 @@ namespace Astro
 
         #region Input Processing
 
-        private void ProcessInputs()
-        {
+        private void ProcessInputs() {
             if (!m_State.InputEnabled) return;
 
-            ProcessLook();
-
-            ProcessZoom();
+            if (!m_State.CameraRotationInputLocked) ProcessLook();
+            if (!m_State.ZoomInputLocked) ProcessZoom();
         }
 
-        private void ProcessLook()
-        {
+        private void ProcessLook() {
             if (m_State.EnableMouseAutoControls)
             {
                 ProcessMouseAutoLook();
@@ -38,12 +35,9 @@ namespace Astro
                 ProcessMouseDragLook();
             }
 
-            if (m_State.EnableSmoothKeyboardControls)
-            {
+            if (m_State.EnableSmoothKeyboardControls) {
                 ProcessKeyboardLookSmooth();
-            }
-            else
-            {
+            } else {
                 ProcessKeyboardLookDiscrete();
             }
         }
@@ -172,9 +166,7 @@ namespace Astro
             }
         }
 
-        private void ProcessZoom()
-        {
-            if (!m_State.ZoomInputEnabled) return;
+        private void ProcessZoom() {
             if (m_State.EnableMouseControls)
             {
                 ProcessMouseZoom();

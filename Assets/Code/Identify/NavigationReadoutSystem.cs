@@ -1,3 +1,4 @@
+using BeauRoutine;
 using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay;
@@ -32,10 +33,14 @@ namespace Astro {
                 ReviewModuleUtility.SetPipReadout(module, 3);
             } else if (newDist > 0.9999) {
                 ReviewModuleUtility.ShowResultSprite(true, module);
-                Game.Events.Dispatch(GameEvents.PuzzleNavigationComplete);
+                if (!m_StateB.ConstellationSnapRoutine.Exists()){
+                    m_StateB.ConstellationSnapRoutine = Routine.Start( PuzzleNavigationUtility.SnapConstellationAlignment() );
+                }
+                // Game.Events.Dispatch(GameEvents.PuzzleNavigationComplete);
             }
 
             m_StateB.ReadoutDirty = true;
         }
+
     }
 }
