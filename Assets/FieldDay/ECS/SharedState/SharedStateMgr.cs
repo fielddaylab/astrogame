@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using BeauUtil;
 using BeauUtil.Debugger;
-
+using Unity.IL2CPP.CompilerServices;
 using StateIndex = BeauUtil.TypeIndex<FieldDay.SharedState.ISharedState>;
 
 namespace FieldDay.SharedState {
@@ -83,6 +83,8 @@ namespace FieldDay.SharedState {
         /// This will assert if none is found.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
+        [Il2CppSetOption(Option.NullChecks, false)]
         public ISharedState Get(Type type) {
             int index = StateIndex.Get(type);
             ISharedState state = m_StateMap[index];
@@ -99,6 +101,8 @@ namespace FieldDay.SharedState {
         /// This will assert if none is found.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
+        [Il2CppSetOption(Option.NullChecks, false)]
         public T Get<T>() where T : class, ISharedState {
             int index = StateIndex.Get<T>();
             ISharedState state = m_StateMap[index];
@@ -113,6 +117,9 @@ namespace FieldDay.SharedState {
         /// <summary>
         /// Fast unchecked retrieve.
         /// </summary>
+        [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
+        [Il2CppSetOption(Option.NullChecks, false)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal T FastGet<T>() where T : class, ISharedState {
             return (T) m_StateMap[StateIndex.Get<T>()];
         }

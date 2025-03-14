@@ -414,6 +414,7 @@ GameObject:
   - component: {fileID: 8899061780277381331}
   - component: {fileID: 7810197793230534581}
   - component: {fileID: 5604649430858485993}
+  - component: {fileID: 7964703312525810510}
   m_Layer: 0
   m_Name: Interface View Dome
   m_TagString: Untagged
@@ -524,6 +525,18 @@ MonoBehaviour:
       Hours: 9
       Minutes: 0
       Seconds: 0
+--- !u!114 &7964703312525810510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1847470837429980404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d008a29e9c858744bd30f60bb60f124, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1918226578584948163
 GameObject:
   m_ObjectHideFlags: 0
@@ -762,7 +775,6 @@ GameObject:
   - component: {fileID: 5626648311741990602}
   - component: {fileID: 2850884022425851541}
   - component: {fileID: 5683364476615851672}
-  - component: {fileID: 759135897095971606}
   m_Layer: 0
   m_Name: Interface Overlay Canvas
   m_TagString: Untagged
@@ -887,6 +899,15 @@ MonoBehaviour:
     m_DefaultPoolRoot: {fileID: 0}
     m_DefaultSpawnRoot: {fileID: 0}
     m_ResetTransformOnAlloc: 1
+  NeutrinoHighlights:
+    m_Prefab: {fileID: 9195463547570562382, guid: f9b197915b797534386cf495d857b0f7, type: 3}
+    m_Name: 
+    m_InitialCapacity: 32
+    m_PrewarmOnInitialize: 1
+    m_InitialPrewarm: 16
+    m_DefaultPoolRoot: {fileID: 0}
+    m_DefaultSpawnRoot: {fileID: 0}
+    m_ResetTransformOnAlloc: 1
   PoolRoot: {fileID: 0}
 --- !u!114 &5683364476615851672
 MonoBehaviour:
@@ -902,20 +923,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   screenCamera: {fileID: 8058402043837510232}
   screenCaster: {fileID: 1174176076569955566}
---- !u!114 &759135897095971606
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5994674092266934822}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d008a29e9c858744bd30f60bb60f124, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  OpenModeStarted: 0
-  OpenModeEnded: 0
 --- !u!1 &6966260566834880961
 GameObject:
   m_ObjectHideFlags: 0

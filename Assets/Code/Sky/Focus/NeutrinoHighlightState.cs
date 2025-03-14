@@ -5,6 +5,7 @@ using FieldDay;
 using FieldDay.SharedState;
 using Astro;
 using System;
+using BeauUtil;
 
 public class NeutrinoHighlightState : SharedStateComponent, IRegistrationCallbacks
 {
@@ -12,6 +13,7 @@ public class NeutrinoHighlightState : SharedStateComponent, IRegistrationCallbac
     [NonSerialized] public bool OpenModeEnded;
 
     // TODO: pools
+    [NonSerialized] public RingBuffer<RectTransform> ActiveHighlights = new RingBuffer<RectTransform>(8, RingBufferMode.Expand);
 
     #region Registration
 
