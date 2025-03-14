@@ -19,7 +19,7 @@ namespace Astro
         public RectTransform Rect;
         public Image Represent2D;
         public PointerListener Button;
-        public Image NeutrinoHighlight;
+        [NonSerialized] public Image NeutrinoHighlight;
     }
 
     public static partial class FocusableUtility
