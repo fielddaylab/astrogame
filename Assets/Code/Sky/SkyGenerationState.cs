@@ -9,6 +9,7 @@ namespace Astro
     public class SkyGenerationState : SharedStateComponent
     {
         [NonSerialized] public bool Initialized = false;
+
         public GameObject CelestialObjPrefab;
         public Sprite DefaultStarSprite;
         public Sprite DefaultPlanetSprite;

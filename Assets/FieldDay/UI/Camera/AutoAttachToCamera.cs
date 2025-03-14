@@ -14,7 +14,7 @@ namespace FieldDay.UI {
     public class AutoAttachToCamera : MonoBehaviour {
         private void OnEnable() {
 #if UNITY_EDITOR
-            if (PrefabStageUtility.GetPrefabStage(gameObject) != null)
+            if (PrefabStageUtility.GetPrefabStage(gameObject) != null || UnityEditor.BuildPipeline.isBuildingPlayer)
                 return;
 #endif // UNITY_EDITOR
 
@@ -27,7 +27,7 @@ namespace FieldDay.UI {
 
         private void OnDisable() {
 #if UNITY_EDITOR
-            if (PrefabStageUtility.GetPrefabStage(gameObject) != null)
+            if (PrefabStageUtility.GetPrefabStage(gameObject) != null || UnityEditor.BuildPipeline.isBuildingPlayer)
                 return;
 #endif // UNITY_EDITOR
 

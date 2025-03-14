@@ -38,8 +38,4 @@ namespace Astro {
             });
         }
     }
-    
-    public sealed class PlayerProgressState : ISharedState {
-        public int DayIndex = 0;
-    }
 }

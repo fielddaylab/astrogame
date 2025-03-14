@@ -35,12 +35,11 @@ namespace Astro
             {
                 var newCelestialObj = Instantiate(m_State.CelestialObjPrefab).transform;
                 CelestialAsset currAsset = layout.AllCelestialObjs[i];
-                CelestialAsset.TryInitializeClassificationsCompleted(currAsset);
                 // Use UIFocus pool
                 var newFocus = focusPools.Focii.Alloc(spaceCamera.Canvas.transform);
                 // TODO: assign relevant 2D representation
                 FocusableUtility.InitFocusable(focusState, newFocus, newCelestialObj, currAsset, DetermineSprite(currAsset.Category));
-                focusState.ActiveFocii.PushBack(newFocus);
+                focusState.AllFocii.PushBack(newFocus);
 
                 CelestialPositionerUtility.PositionObject(center, newCelestialObj, currAsset.Coords.RightAscension, currAsset.Coords.Declination);
                 newCelestialObj.name = currAsset.DisplayName;

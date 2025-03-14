@@ -1,3 +1,4 @@
+using BeauRoutine;
 using BeauUtil;
 using FieldDay;
 using FieldDay.SharedState;
@@ -60,6 +61,10 @@ namespace Astro
             Game.Events.Register(GameEvents.StartPuzzleNavigation, SpaceCameraUtility.OnStartPuzzleNav);
             Game.Events.Register(GameEvents.StopPuzzleNavigation, SpaceCameraUtility.OnStopPuzzleNav);
             Game.Events.Register(GameEvents.StopPuzzleMode, SpaceCameraUtility.OnStopPuzzleMode);
+
+            Game.Scenes.QueueOnEnable(() => {
+                transform.SetPosition(Find.State<SkyDome>().Position, Axis.XZ, Space.Self);
+            });
         }
 
         public void OnDeregister() {}

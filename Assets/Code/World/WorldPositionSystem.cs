@@ -9,18 +9,6 @@ using UnityEngine.UIElements;
 
 namespace Astro
 {
-    public class WorldPositionSystem : SharedStateSystemBehaviour<WorldPositionState, SpaceCameraState>
-    {
-        public override void ProcessWork(float deltaTime)
-        {
-            if (m_StateA.Initialized) { return; }
-
-            WorldPositionUtility.TryLook(m_StateB.HorizonPlane, m_StateB.Camera.RootTransform, m_StateA.StartingLookCoords);
-
-            m_StateA.Initialized = true;
-        }
-    }
-
     /// <summary>
     /// Utility class for positioning objects a given latitude and longitude location on earth.
     /// This affects the stars visible in the night sky by virtue of positioning.

@@ -291,9 +291,11 @@ namespace FieldDay.Audio {
                         if (voice.Components.Source.isPlaying) {
                             voice.FrameEnded = Frame.InvalidIndex;
                         } else {
-                            if (voice.FrameEnded == Frame.InvalidIndex) {
+                            if (voice.Components.Source.loop) {
+                                voice.State = VoiceState.PlayRequested;
+                            } else if (voice.FrameEnded == Frame.InvalidIndex) {
                                 voice.FrameEnded = Frame.Index;
-                            } else if (Frame.Age(voice.FrameEnded) >= 3) {
+                            } else if (Frame.Age(voice.FrameEnded) >= 8) {
                                 voice.Components.Source.Stop();
                                 voice.State = VoiceState.Stopped;
                                 UpdatePlayingInstanceCount(voice.Handle, voice.BusIndex, false);

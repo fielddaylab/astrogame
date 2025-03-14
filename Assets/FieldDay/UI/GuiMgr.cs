@@ -6,6 +6,7 @@ using BeauUtil.Debugger;
 using FieldDay.HID;
 using FieldDay.Pipes;
 using FieldDay.Rendering;
+using Unity.IL2CPP.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 using PanelIndex = BeauUtil.TypeIndex<FieldDay.UI.IGuiPanel>;
@@ -229,8 +230,10 @@ namespace FieldDay.UI {
         /// <summary>
         /// Fast unchecked retrieve.
         /// </summary>
+        [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
+        [Il2CppSetOption(Option.NullChecks, false)]
         internal T FastGetShared<T>() where T : class, ISharedGuiPanel {
-            return (T) m_SharedPanelMap[PanelIndex.Get<T>()];
+            return Unsafe.FastCast<T>(m_SharedPanelMap[PanelIndex.Get<T>()]);
         }
 
         /// <summary>
@@ -314,6 +317,7 @@ namespace FieldDay.UI {
 
         #region Commands
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal void QueueCommand(GuiCommandData cmd) {
             m_Commands.Write(cmd);
         }

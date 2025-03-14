@@ -36,6 +36,9 @@ static public class LayerMasks {
     // Layer 15: TopLayer
     public const int TopLayer_Index = 15;
     public const int TopLayer_Mask = 32768;
+    // Layer 16: SpaceDome
+    public const int SpaceDome_Index = 16;
+    public const int SpaceDome_Mask = 65536;
 }
 static public class SortingLayers {
     

@@ -4,12 +4,22 @@ using UnityEngine;
 using FieldDay.Systems;
 using FieldDay.SharedState;
 using System;
+using FieldDay.Scenes;
+using BeauUtil;
+using FieldDay;
 
 namespace Astro
 {
-    public class WorldPositionState : SharedStateComponent 
+    public class WorldPositionState : SharedStateComponent, IScenePreload
     {
-        [NonSerialized] public bool Initialized = false;
         public EqCoords StartingLookCoords;
+
+        IEnumerator<WorkSlicer.Result?> IScenePreload.Preload() {
+            Game.Scenes.QueueOnEnable(() => {
+                var camState = Find.State<SpaceCameraState>();
+                WorldPositionUtility.TryLook(camState.HorizonPlane, camState.Camera.RootTransform, StartingLookCoords);
+            });
+            return null;
+        }
     }
 }

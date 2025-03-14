@@ -7,6 +7,7 @@ using UnityEngine;
 
 namespace Astro
 {
+    [SysUpdate(GameLoopPhase.Update)]
     public class SpaceCameraControllerSystem : SharedStateSystemBehaviour<SpaceCameraState>
     {
         public override void ProcessWork(float deltaTime)
