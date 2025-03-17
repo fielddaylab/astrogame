@@ -65,7 +65,12 @@ namespace Astro {
                 }
             }
             spawned.transform.localPosition = asset.DefaultPinnedPos;
-            spawned.ZoomOffsetOverride = asset.ZoomOffsetOverride;
+            if (spawned.ZoomOffsetOverride == default) {
+                spawned.ZoomOffsetOverride = asset.ZoomOffsetOverride;
+            }
+            else if (asset.ZoomOffsetOverride != default) {
+                spawned.ZoomOffsetOverride = asset.ZoomOffsetOverride;
+            }
             spawned.Interactable.Renderer = spawned;
             spawned.Interactable.Parts = spawned.Interactable.GetComponentsInChildren<DocumentPart>(true);
             spawned.Interactable.AssetName = id;
