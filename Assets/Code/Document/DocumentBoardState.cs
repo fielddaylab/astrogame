@@ -58,10 +58,13 @@ namespace Astro {
                 spawned.Video.gameObject.SetActive(true);
 
                 spawned.Video.url = Application.streamingAssetsPath + "/Postcards/" + asset.VideoName;
-                spawned.Video.Play();
 
-                if (spawned.Video.url.Length == 0) {
-                    spawned.Video.gameObject.SetActive(false);
+                if (asset.VideoName.Length == 0) {
+                    spawned.FrontAnimation.gameObject.SetActive(false);
+                }
+                else {
+                    spawned.FrontAnimation.gameObject.SetActive(true);
+                    spawned.Video.Play();
                 }
             }
             spawned.transform.localPosition = asset.DefaultPinnedPos;

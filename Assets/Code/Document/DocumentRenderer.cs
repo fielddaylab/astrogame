@@ -13,6 +13,7 @@ namespace Astro {
         public TMP_Text BackBodyText;
         public MeshRenderer Background;
         public VideoPlayer Video;
+        public Transform FrontAnimation;
         public Vector3 ZoomOffsetOverride;
         public Rect Size;
         public DocumentInteractable Interactable;
