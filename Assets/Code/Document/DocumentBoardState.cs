@@ -67,6 +67,19 @@ namespace Astro {
                     spawned.Video.Play();
                 }
             }
+            if (spawned.FrontStaticImg) {
+                spawned.FrontStaticImg.gameObject.SetActive(true);
+
+                spawned.FrontStaticImg.Path = Application.streamingAssetsPath + "/Postcards/" + asset.StaticImgName;
+
+                if (asset.StaticImgName.Length == 0) {
+                    spawned.FrontStaticImg.gameObject.SetActive(false);
+                    spawned.FrontStaticImg.Preload();
+                }
+                else {
+                    spawned.FrontStaticImg.gameObject.SetActive(true);
+                }
+            }
             spawned.transform.localPosition = asset.DefaultPinnedPos;
             if (spawned.ZoomOffsetOverride == default) {
                 spawned.ZoomOffsetOverride = asset.ZoomOffsetOverride;

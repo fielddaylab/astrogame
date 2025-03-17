@@ -1,5 +1,6 @@
 using System;
 using BeauUtil;
+using EasyAssetStreaming;
 using FieldDay.Assets;
 using FieldDay.Components;
 using TMPro;
@@ -14,6 +15,7 @@ namespace Astro {
         public MeshRenderer Background;
         public VideoPlayer Video;
         public Transform FrontAnimation;
+        public StreamingQuadTexture FrontStaticImg;
         public Vector3 ZoomOffsetOverride;
         public Rect Size;
         public DocumentInteractable Interactable;
