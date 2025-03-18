@@ -318,19 +318,23 @@ namespace Astro {
                     if (doc.Renderer.FrontStaticImg?.Path?.Length > 0)
                     {
                         doc.Renderer.FrontStaticImg.gameObject.SetActive(false);
+                        doc.Renderer.FrontStaticImg.Unload();
                         doc.Renderer.LowResImgFront.gameObject.SetActive(true);
+                        doc.Renderer.LowResImgFront.Preload();
                     }
                     // if front text, hide body text and display default text scribbles
                     if (doc.Renderer.FrontBodyText.text.Length > 0)
                     {
                         doc.Renderer.FrontBodyText.gameObject.SetActive(false);
                         doc.Renderer.LowResImgFront.gameObject.SetActive(true);
+                        doc.Renderer.LowResImgFront.Preload();
                     }
                     // if back text, hide body text and display default text scribbles
                     if (doc.Renderer.BackBodyText.text.Length > 0)
                     {
                         doc.Renderer.BackBodyText.gameObject.SetActive(false);
                         doc.Renderer.LowResImgBack.gameObject.SetActive(true);
+                        doc.Renderer.LowResImgFront.Preload();
                     }
                 });
             // stop video
@@ -376,17 +380,21 @@ namespace Astro {
             // if image, replace with high-res version
             if (doc.Renderer.FrontStaticImg?.Path?.Length > 0) {
                 doc.Renderer.FrontStaticImg.gameObject.SetActive(true);
+                doc.Renderer.FrontStaticImg.Preload();
                 doc.Renderer.LowResImgFront.gameObject.SetActive(false);
+                doc.Renderer.LowResImgFront.Unload();
             }
             // if front text, hide default text scribbles and enable body text
             if (doc.Renderer.FrontBodyText.text.Length > 0) {
                 doc.Renderer.FrontBodyText.gameObject.SetActive(true);
                 doc.Renderer.LowResImgFront.gameObject.SetActive(false);
+                doc.Renderer.LowResImgFront.Unload();
             }
             // if back text, hide body text and display default text scribbles
             if (doc.Renderer.BackBodyText.text.Length > 0) {
                 doc.Renderer.BackBodyText.gameObject.SetActive(true);
                 doc.Renderer.LowResImgBack.gameObject.SetActive(false);
+                doc.Renderer.LowResImgBack.Unload();
             }
 
             state.DocumentRoutine.Replace(MoveDocToCam(viewState, doc.transform, Game.Rendering.PrimaryCamera.transform, zoomOffset))
