@@ -334,7 +334,7 @@ namespace Astro {
                     {
                         doc.Renderer.BackBodyText.gameObject.SetActive(false);
                         doc.Renderer.LowResImgBack.gameObject.SetActive(true);
-                        doc.Renderer.LowResImgFront.Preload();
+                        doc.Renderer.LowResImgBack.Preload();
                     }
                 });
             // stop video
