@@ -58,14 +58,35 @@ namespace Astro {
                 spawned.Video.gameObject.SetActive(true);
 
                 spawned.Video.url = Application.streamingAssetsPath + "/Postcards/" + asset.VideoName;
-                spawned.Video.Play();
 
-                if (spawned.Video.url.Length == 0) {
-                    spawned.Video.gameObject.SetActive(false);
+                if (asset.VideoName.Length == 0) {
+                    spawned.FrontAnimation.gameObject.SetActive(false);
+                }
+                else {
+                    spawned.FrontAnimation.gameObject.SetActive(true);
+                    spawned.Video.Play();
+                }
+            }
+            if (spawned.FrontStaticImg) {
+                spawned.FrontStaticImg.gameObject.SetActive(true);
+
+                spawned.FrontStaticImg.Path = Application.streamingAssetsPath + "/Postcards/" + asset.StaticImgName;
+
+                if (asset.StaticImgName.Length == 0) {
+                    spawned.FrontStaticImg.gameObject.SetActive(false);
+                    spawned.FrontStaticImg.Preload();
+                }
+                else {
+                    spawned.FrontStaticImg.gameObject.SetActive(true);
                 }
             }
             spawned.transform.localPosition = asset.DefaultPinnedPos;
-            spawned.ZoomOffsetOverride = asset.ZoomOffsetOverride;
+            if (spawned.ZoomOffsetOverride == default) {
+                spawned.ZoomOffsetOverride = asset.ZoomOffsetOverride;
+            }
+            else if (asset.ZoomOffsetOverride != default) {
+                spawned.ZoomOffsetOverride = asset.ZoomOffsetOverride;
+            }
             spawned.Interactable.Renderer = spawned;
             spawned.Interactable.Parts = spawned.Interactable.GetComponentsInChildren<DocumentPart>(true);
             spawned.Interactable.AssetName = id;

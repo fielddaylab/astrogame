@@ -67,6 +67,40 @@ $call Wait(2)
 Ugh, forgot ... you can’t hear me. 
 $call Wait(2)
 
+$call WaitForMovedToView("Desk")
+$call StartNeutrinoNavigation()
+$call SetInputState(true)
+$call StopMusic(2)
+
+:: NeutrinoNavigationComplete
+@trigger    NeutrinoNavigationComplete
+@once
+
+{@Radio} Neutrino Origin Detected
+$call StopNeutrinoNavigation()
+$call StartOpenMode()
+
+:: PointsUpdated
+@trigger    PointsUpdated
+//TODO
+@when   sciencePoints > 2
+@once
+
+$call StopOpenMode()
+$call ClearMonitorSelection()
+{@Radio} Star HQ to Station Seven.
+The STAR Coalition has requests your assistance identifying starts in the Perseus constellation.
+Please align your telescope to the Perseus region. 
+$call StartPuzzleNavigation()
+
+:: PuzzleNavigationComplete
+@trigger    PuzzleNavigationComplete
+@once
+
+$call StopPuzzleNavigation()
+{@Radio} This task will require your astral color instrument. 
+{@Radio} Unlocking now. Stand By...
+
 {@Dad} There’s not much time, so I’ll give you the short version.
 My team here at IceCube has started an underground group called the STAR Coalition. We’re trying to rebuild our knowledge of the night sky. 
 $call Wait(1)
@@ -94,31 +128,6 @@ $call Wait(1)
 {@Dad} Time’s up. I gotta go.
 I’ll explain more later.
 Love you, Little Bear. Good luck.
-$call WaitForMovedToView("Desk")
-$call StartOpenMode()
-$call SetInputState(true)
-$call StopMusic(2)
-
-:: PointsUpdated
-@trigger    PointsUpdated
-//TODO
-@when   sciencePoints > 2
-@once
-
-$call StopOpenMode()
-$call ClearMonitorSelection()
-{@Radio} Star HQ to Station Seven.
-The STAR Coalition has requests your assistance identifying starts in the Perseus constellation.
-Please align your telescope to the Perseus region. 
-$call StartPuzzleNavigation()
-
-:: PuzzleNavigationComplete
-@trigger    PuzzleNavigationComplete
-@once
-
-$call StopPuzzleNavigation()
-{@Radio} This task will require your astral color instrument. 
-{@Radio} Unlocking now. Stand By...
 $call SetInstrumentUnlocked(ColorInstrument, true)
 $call StartPuzzleMode()
 

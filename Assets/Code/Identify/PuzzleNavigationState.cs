@@ -52,6 +52,7 @@ public static class PuzzleNavigationUtility {
 
         PuzzleNavigationState puzzleNavState = Find.State<PuzzleNavigationState>(); 
         puzzleNavState.NavigationModeActive = false;
+        puzzleNavState.ReadoutDirty = false;
         ResetReview();
 
         ViewNavUtility.LeafMoveToNode("Right");

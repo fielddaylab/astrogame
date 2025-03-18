@@ -20,6 +20,7 @@ public sealed class NeutrinoNavigationState : SharedStateComponent, IRegistratio
         Game.Events.Register(GameEvents.StartNeutrinoNavigation, NavigationCanvasUtil.SetupNeutrinoNavUI);
         Game.Events.Register(GameEvents.StartNeutrinoNavigation, NeutrinoNavigationUtility.OnNeutrinoNavStart);
         Game.Events.Register(GameEvents.StopNeutrinoNavigation, NavigationCanvasUtil.DisableNeutrinoNavUI);
+        Game.Events.Register(GameEvents.StopNeutrinoNavigation, NeutrinoNavigationUtility.OnNeutrinoNavStopped);
     }
 
     public void OnDeregister() {
@@ -37,6 +38,14 @@ public static class NeutrinoNavigationUtility {
         navState.NavigationModeActive = true;
 
         ViewNavUtility.LeafMoveToNode("Monitor");
+    }
+
+    public static void OnNeutrinoNavStopped() {
+        NeutrinoNavigationState navState = Find.State<NeutrinoNavigationState>();
+        navState.NavigationModeActive = false;
+        navState.ReadoutDirty = false;
+
+        ViewNavUtility.LeafMoveToNode("Desk");
     }
 
     public static void UpdateCameraDistanceFromPuzzle(SpaceCameraState spaceCameraState) {

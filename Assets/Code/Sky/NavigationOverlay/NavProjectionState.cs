@@ -60,14 +60,15 @@ namespace Astro {
 
             state.OutlineGroup.gameObject.SetActive(false);
             state.NavigationCanvas.gameObject.SetActive(true);
-            state.NavigationArrow.gameObject.SetActive(true);
+            // state.NavigationArrow.gameObject.SetActive(true);
             state.BoarderGroup.gameObject.SetActive(true);
         }
 
         public static void DisableNeutrinoNavUI() {
             NavProjectionState state = Find.State<NavProjectionState>();
 
-            state.NavigationArrow.gameObject.SetActive(true);
+            state.BoarderGroup.gameObject.SetActive(false);
+            // state.NavigationArrow.gameObject.SetActive(true);
             state.NavigationCanvas.gameObject.SetActive(true);
         }
 
