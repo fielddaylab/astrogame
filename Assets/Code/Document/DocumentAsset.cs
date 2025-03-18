@@ -15,6 +15,7 @@ namespace Astro {
         [SerializeField] public string BackBodyText;
         public string VideoName;
         public string StaticImgName;
+        public string FileType;
         public Vector3 DefaultPinnedPos;
         public Vector3 ZoomOffsetOverride;
     }

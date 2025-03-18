@@ -16,8 +16,13 @@ namespace Astro {
         public VideoPlayer Video;
         public Transform FrontAnimation;
         public StreamingQuadTexture FrontStaticImg;
+        public StreamingQuadTexture LowResImgFront;
+        public StreamingQuadTexture LowResImgBack;
         public Vector3 ZoomOffsetOverride;
         public Rect Size;
         public DocumentInteractable Interactable;
+
+        [NonSerialized] public string BaseVisualAssetName;
+        [NonSerialized] public string BaseVisualAssetFileType;
     }
 }
