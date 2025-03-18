@@ -63,6 +63,7 @@ namespace Astro {
                 // Use UIFocus pool
                 var navFocus = focusPools.Focii.Alloc(m_StateA.OutlineGroup);
                 navFocus.name = currAsset.DisplayName + " (Navigation Outline)";
+                // TODO we can remove sprite representations on the nav ui if we dont have outlines
                 InitNavRepresntation(navFocus, currAsset, DetermineSprite(currAsset.Category));
                 
                 outlineState.ActiveOutlines.PushBack(navFocus);
@@ -108,7 +109,7 @@ namespace Astro {
                 case CelestialObjectCategory.Star:
                     return m_StateA.StarOutlineSprite;
                 case CelestialObjectCategory.Planet:
-                    return m_StateA.PlanetOutlineSprite;
+                    return null;
                 case CelestialObjectCategory.Satellite:
                     return null;
                 case CelestialObjectCategory.Constellation:

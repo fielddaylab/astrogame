@@ -14,6 +14,7 @@ namespace Astro {
             PointsReviewSystem.OnCorrectPuzzleSubmission.Register(OnCorrectPuzzleSubmit);
 
             Game.Events.Register(GameEvents.PuzzleNavigationComplete, OnPuzzleNavComplete);
+            Game.Events.Register(GameEvents.NeutrinoNavigationComplete, OnNeutrinoNavComplete);
         }
 
         static private void OnScore() {
@@ -32,6 +33,10 @@ namespace Astro {
 
         static private void OnPuzzleNavComplete() {
             ScriptUtility.Trigger(ScriptEvents.PuzzleNavigationComplete);
+        }
+
+        static private void OnNeutrinoNavComplete() {
+            ScriptUtility.Trigger(ScriptEvents.NeutrinoNavigationComplete);
         }
 
         // TODO make this actually process more than one day
@@ -71,6 +76,16 @@ namespace Astro {
         [LeafMember("StopOpenMode")]
         static private void LeafStopOpenMode(){
             Game.Events.Dispatch(GameEvents.StopOpenMode);
+        }
+
+        [LeafMember("StartNeutrinoNavigation")]
+        static private void LeafStartNeutrinoNavigation() {
+            Game.Events.Dispatch(GameEvents.StartNeutrinoNavigation);
+        }
+        
+        [LeafMember("StopNeutrinoNavigation")]
+        static private void LeafStopNeutrinoNavigation() {
+            Game.Events.Dispatch(GameEvents.StopNeutrinoNavigation);
         }
 
         [LeafMember("StartPuzzleNavigation")]

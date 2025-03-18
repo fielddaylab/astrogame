@@ -1,0 +1,73 @@
+using Astro;
+using FieldDay;
+using FieldDay.SharedState;
+using UnityEngine;
+using BeauUtil;
+using BeauRoutine;
+using System;
+using FieldDay.Debugging;
+using BeauUtil.Debugger;
+using FieldDay.Rendering;
+using System.Collections;
+using UnityEngine.UI;
+
+public sealed class NeutrinoNavigationState : SharedStateComponent, IRegistrationCallbacks {
+    [NonSerialized] public bool NavigationModeActive = false;
+    [NonSerialized] public float CameraDistanceFromOrigin = -1;
+    [NonSerialized] public bool ReadoutDirty = false;
+
+    public void OnRegister() {
+        Game.Events.Register(GameEvents.StartNeutrinoNavigation, NavigationCanvasUtil.SetupNeutrinoNavUI);
+        Game.Events.Register(GameEvents.StartNeutrinoNavigation, NeutrinoNavigationUtility.OnNeutrinoNavStart);
+        Game.Events.Register(GameEvents.StopNeutrinoNavigation, NavigationCanvasUtil.DisableNeutrinoNavUI);
+        Game.Events.Register(GameEvents.StopNeutrinoNavigation, NeutrinoNavigationUtility.OnNeutrinoNavStopped);
+    }
+
+    public void OnDeregister() {
+        Game.Events.Deregister(GameEvents.StartNeutrinoNavigation, NavigationCanvasUtil.SetupNeutrinoNavUI);
+        Game.Events.Deregister(GameEvents.StopNeutrinoNavigation, NavigationCanvasUtil.DisableNeutrinoNavUI);
+    } 
+}
+
+public static class NeutrinoNavigationUtility {
+    public static void OnNeutrinoNavStart() {
+        SpaceCameraState state = Find.State<SpaceCameraState>();
+        state.OnLookUpdated.Register(UpdateCameraDistanceFromPuzzle);
+
+        NeutrinoNavigationState navState = Find.State<NeutrinoNavigationState>();
+        navState.NavigationModeActive = true;
+
+        ViewNavUtility.LeafMoveToNode("Monitor");
+    }
+
+    public static void OnNeutrinoNavStopped() {
+        NeutrinoNavigationState navState = Find.State<NeutrinoNavigationState>();
+        navState.NavigationModeActive = false;
+        navState.ReadoutDirty = false;
+
+        ViewNavUtility.LeafMoveToNode("Desk");
+    }
+
+    public static void UpdateCameraDistanceFromPuzzle(SpaceCameraState spaceCameraState) {
+        NeutrinoNavigationState navState = Find.State<NeutrinoNavigationState>();
+        DayConfigAsset config = DayConfigUtil.GetConfigForState();
+
+        if (!config) return;
+
+        EqCoords target = config.NeutrinoEvent.NeutrinoCoordinates;
+        Quaternion targetQuat = Quaternion.Euler(
+            360 - (float)CoordinateUtility.DeclinationToDecimalDegrees( target.Declination ),
+            360 - (float)CoordinateUtility.RAToDegrees( target.RightAscension ),
+            0
+        );
+        Vector3 targetFoward = Geom.Forward(targetQuat);
+
+        Quaternion spaceCameraQuat = spaceCameraState.Camera.RootTransform.rotation;
+
+        Vector3 spaceCamForward = Geom.Forward(spaceCameraQuat);
+        float newDist = Vector3.Dot(targetFoward, spaceCamForward);
+
+        navState.CameraDistanceFromOrigin = newDist;
+        navState.ReadoutDirty = true;
+    }
+}
