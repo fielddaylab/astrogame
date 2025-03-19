@@ -5,11 +5,13 @@
 @boostScore 100
 @who    Astrid
 
-$call MoveToView("Left")
-{@Astrid} Looks like I got some mail.
 $call StopPuzzleMode()
 $call StopOpenMode()
-$call SpawnDocumentToCamera("Day2DadPostcard")
+$call MoveToView("Left")
+I don’t get it. We need to warn people? About what?
+Ugh. Elijah, I love you, but I could really use less poetry and more information. 
+// TODO: Implement postcards for this day.
+// $call SpawnDocumentToCamera("Day2DadPostcard")
 {@Astrid} A postcard from Dad.
 $call SetInputState(true)
 
