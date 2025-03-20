@@ -31,7 +31,7 @@ namespace Astro {
 
         public AssetPack DocumentAssets;
 
-        [NonSerialized] public List<DocumentRenderer> SpawnedDocuments;
+        [NonSerialized] public List<DocumentRenderer> SpawnedDocuments = new List<DocumentRenderer>();
 
         [Header("Interact Settings")]
         [Range(0f, 1f)] public float FollowSpeed;
@@ -71,7 +71,7 @@ namespace Astro {
                 spawned.LowResImgFront.Path = Application.streamingAssetsPath + POSTCARD_DIR + DEFAULT_LOW_RES_TEXT;
                 spawned.LowResImgFront.Preload();
             }
-            if (spawned.BackBodyText.text.Length > 0) {
+            if (spawned.BackBodyText?.text.Length > 0) {
                 spawned.LowResImgBack.Path = Application.streamingAssetsPath + POSTCARD_DIR + DEFAULT_LOW_RES_TEXT;
                 spawned.LowResImgBack.Preload();
             }
@@ -132,7 +132,7 @@ namespace Astro {
 
 
             if (addToArchive) {
-                // TODO: add asset to ArchiveState (usually if not being spawned from an Archive)
+                // add asset to ArchiveState (usually if not being spawned from an Archive)
                 var archiveState = Find.State<ArchiveState>();
 
                 ArchiveUtility.AddAssetToArchive(archiveState, id, spawned.transform.localPosition);
@@ -344,7 +344,7 @@ namespace Astro {
                         doc.Renderer.LowResImgFront.Preload();
                     }
                     // if back text, hide body text and display default text scribbles
-                    if (doc.Renderer.BackBodyText.text.Length > 0)
+                    if (doc.Renderer.BackBodyText?.text.Length > 0)
                     {
                         doc.Renderer.BackBodyText.gameObject.SetActive(false);
                         doc.Renderer.LowResImgBack.gameObject.SetActive(true);

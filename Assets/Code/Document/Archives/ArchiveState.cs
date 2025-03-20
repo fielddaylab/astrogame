@@ -9,13 +9,13 @@ using UnityEngine;
 
 namespace Astro
 {
-    public class ArchiveState : SharedStateComponent, IRegistrationCallbacks
+    public class ArchiveState : SharedStateComponent, IRegistrationCallbacks, ISharedState
     {
         public GameObject ArchivePrefab;
         public Transform ArchiveParent;
 
-        [NonSerialized] public List<ArchiveLayout> DayLayouts;
-        [NonSerialized] public int CurrArchiveIndex = 0;
+        // [NonSerialized] public List<ArchiveLayout> DayLayouts = new List<ArchiveLayout>();
+        [NonSerialized] public int CurrArchiveIndex = -1;
 
         public void OnDeregister()
         {
@@ -33,15 +33,15 @@ namespace Astro
         public static void AddAssetToArchive(ArchiveState archiveState, StringHash32 assetId, Vector3 assetPos)
         {
             PlayerProgressState playerState = Find.State<PlayerProgressState>();
-            var currList = archiveState.DayLayouts[playerState.DayIndex];
+            var currList = playerState.DayLayouts[archiveState.CurrArchiveIndex];
             currList.AssetPositions.Add(assetId, assetPos);
-            archiveState.DayLayouts[playerState.DayIndex] = currList;
+            playerState.DayLayouts[playerState.DayIndex] = currList;
         }
 
         public static void SetAssetPosInArchive(ArchiveState archiveState, StringHash32 assetId, Vector3 assetPos)
         {
             PlayerProgressState playerState = Find.State<PlayerProgressState>();
-            var currList = archiveState.DayLayouts[playerState.DayIndex];
+            var currList = playerState.DayLayouts[archiveState.CurrArchiveIndex];
             currList.AssetPositions[assetId] = assetPos;
         }
 
@@ -63,7 +63,8 @@ namespace Astro
 
             // TODO: Expand transition routine
 
-            var currLayout = archiveState.DayLayouts[dayIndex];
+            PlayerProgressState playerState = Find.State<PlayerProgressState>();
+            var currLayout = playerState.DayLayouts[dayIndex];
 
             foreach (KeyValuePair<StringHash32, Vector3> pair in currLayout.AssetPositions) {
                 // spawn the asset at the position
@@ -86,6 +87,7 @@ namespace Astro
             foreach (var doc in boardState.SpawnedDocuments) {
                 GameObject.Destroy(doc.gameObject);
             }
+            boardState.SpawnedDocuments.Clear();
 
             archiveState.CurrArchiveIndex = -1;
         }
@@ -95,7 +97,7 @@ namespace Astro
             var newStack = GameObject.Instantiate(archiveState.ArchivePrefab, archiveState.ArchiveParent).GetComponent<ArchiveInteractable>();
             newStack.ArchiveIndex = archiveIndex;
 
-            newStack.transform.localPosition += Vector3.right * (archiveIndex + 0.6f);
+            newStack.transform.localPosition += Vector3.right * (archiveIndex - 1) * 1.25f;
 
             // TODO: assign day number visual
         }

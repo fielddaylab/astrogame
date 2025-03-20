@@ -8,6 +8,6 @@ namespace Astro
 {
     public class ArchiveLayout
     {
-        [NonSerialized] public Dictionary<StringHash32, Vector3> AssetPositions;
+        [NonSerialized] public Dictionary<StringHash32, Vector3> AssetPositions = new Dictionary<StringHash32, Vector3>();
     }
 }

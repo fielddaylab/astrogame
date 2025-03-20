@@ -17,7 +17,7 @@ namespace Astro
 
             foreach (var component in m_Components)
             {
-                if (!component.Primary.InteractReceived) { return; }
+                if (!component.Primary.InteractReceived) { continue; }
 
                 // load the relevant archive history
                 ArchiveUtility.LoadArchive(archiveState, boardState, component.Secondary.ArchiveIndex);

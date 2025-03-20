@@ -45,11 +45,11 @@ namespace Astro {
             PlayerProgressState state = Find.State<PlayerProgressState>();
             StoryAsset story = Find.GlobalAsset<StoryAsset>();
 
+            Game.Events.Dispatch(GameEvents.BeforeNextDayLoad);
+
             state.DayIndex += 1;
             DayConfigAsset day = Find.NamedAsset<DayConfigAsset>(story.Days[state.DayIndex]);
             Log.Msg("[ScriptTriggers] Loading day '{0}'", day.name);
-
-            Game.Events.Dispatch(GameEvents.BeforeNextDayLoad);
 
             Game.Scenes.LoadMainScene(day.Scene, true);
         }
