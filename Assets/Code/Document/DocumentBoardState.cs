@@ -8,6 +8,7 @@ using FieldDay.SharedState;
 using Leaf.Runtime;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Astro {
@@ -30,6 +31,8 @@ namespace Astro {
 
         public AssetPack DocumentAssets;
 
+        [NonSerialized] public List<DocumentRenderer> SpawnedDocuments;
+
         [Header("Interact Settings")]
         [Range(0f, 1f)] public float FollowSpeed;
         public Vector3 DocHoverOffset;
@@ -51,12 +54,14 @@ namespace Astro {
 
         #region Spawning
 
-        public static DocumentRenderer SpawnDocument(DocumentAsset asset, StringHash32 id, DocumentBoardState state = null) {
+        public static DocumentRenderer SpawnDocument(DocumentAsset asset, StringHash32 id, DocumentBoardState state = null, bool addToArchive = true) {
             if (state == null) {
                 state = Find.State<DocumentBoardState>();
             }
             DocumentRenderer spawned = GameObject.Instantiate(asset.Prefab, state.DocumentParent);
-            
+
+            state.SpawnedDocuments.Add(spawned);
+
             // Init text
             spawned.Title.SetText(asset.TitleText);
             if (spawned.FrontBodyText) { spawned.FrontBodyText.SetText(asset.FrontBodyText); }
@@ -125,6 +130,14 @@ namespace Astro {
             spawned.Interactable.Parts = spawned.Interactable.GetComponentsInChildren<DocumentPart>(true);
             spawned.Interactable.AssetName = id;
 
+
+            if (addToArchive) {
+                // TODO: add asset to ArchiveState (usually if not being spawned from an Archive)
+                var archiveState = Find.State<ArchiveState>();
+
+                ArchiveUtility.AddAssetToArchive(archiveState, id, spawned.transform.localPosition);
+            }
+
             return spawned;
         }
 
@@ -136,17 +149,18 @@ namespace Astro {
         [LeafMember("SpawnDocumentToCamera")]
         public static void LeafSpawnDocumentToCamera(StringHash32 id) {
             DocumentBoardState state = Find.State<DocumentBoardState>();
+            ArchiveState archiveState = Find.State<ArchiveState>();
 
             if (state.DocumentRoutine.Exists()) {
                 // wait for previous document routine to complete
-                state.DocumentRoutine.OnComplete(() => { SpawnDocumentToCamera(state, id); });
+                state.DocumentRoutine.OnComplete(() => { SpawnDocumentToCamera(state, archiveState, id); });
             }
             else {
-                SpawnDocumentToCamera(state, id);
+                SpawnDocumentToCamera(state, archiveState, id);
             }
         }
 
-        public static void SpawnDocumentToCamera(DocumentBoardState state, StringHash32 id) {
+        public static void SpawnDocumentToCamera(DocumentBoardState state, ArchiveState archiveState, StringHash32 id) {
             var asset = Find.NamedAsset<DocumentAsset>(id);
             var spawned = SpawnDocument(asset, id, state);
             // Init pinned position

@@ -49,6 +49,8 @@ namespace Astro {
             DayConfigAsset day = Find.NamedAsset<DayConfigAsset>(story.Days[state.DayIndex]);
             Log.Msg("[ScriptTriggers] Loading day '{0}'", day.name);
 
+            Game.Events.Dispatch(GameEvents.BeforeNextDayLoad);
+
             Game.Scenes.LoadMainScene(day.Scene, true);
         }
 
