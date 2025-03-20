@@ -1,0 +1,111 @@
+#basePath Day0
+
+::OpeningPrelude
+@trigger    SceneReady
+@boostScore 100
+@who    Astrid
+{@astrid} Come on, Elijah, where are you? It’s already starting!
+ 
+$call Wait(1)
+(*phone buzzing sfx*)
+ 
+{@Elijah} Astrid, I’m so sorry I’m late! There was something going on at the lab, some weird anomaly—
+
+{@Astrid} Ooh, that sounds mysterious.
+Did they discover a new comet or something?
+ 
+{@Elijah} I don’t know. Told them I had a party to get to.
+ 
+{@Astrid} Good. The Perseids aren’t gonna wait forever.
+ 
+{@Elijah} Wow . . . it’s incredible.
+ 
+{@Astrid} Yeah. It never gets old.
+ 
+{@Elijah} Just think . . . next year on your birthday we’ll be astronomy majors in college, watching the meteor shower together. I hear UW has some great stargazing spots.
+ 
+{@Astrid} My aunt doesn’t think we’ll be together next year.
+
+{@Elijah}What?
+$call Wait(1)
+Why not? 
+$call Wait(1)
+ 
+{@Astrid} She says it won’t last. Things change. 
+ 
+{@Elijah} Of course things change. So what? We can still be together.
+Trust me, Astrid. It’s written in the stars. 
+$call Wait(2)
+Did you read my birthday card?
+
+
+{@Elijah} “Set me as a seal upon your heart, as a seal upon your arm.”
+$call Wait(1)
+Sorry . . . too cheesy?
+
+{@Astrid} Maybe a little. But I liked it. 
+Who’s the drawing supposed to be?
+ 
+{@Elijah} It’s you! I drew you as Perseus.
+ 
+{@Astrid} Like . . . the constellation?
+ 
+{@Elijah} Exactly. It’s based on a Greek myth.
+This meteor shower is called the Perseids because Perseus is its radiant.
+You know . . . the point in the sky where the meteor shower looks like it’s starting. 
+ 
+{@Astrid} Wow . . . I’ve watched the Perseids every year since I was six, and I never knew that.
+I guess Dad and I were more focused on finding Ursa Major and Ursa Minor. I used to call them Papa Bear and Little Bear. 
+Is Perseus visible from here?
+ 
+{@Elijah} Sure. It’s easy to find. 
+Just look for the place where the meteors seem to be coming from.
+If you move your phone across the sky, it’ll tell you if you’re getting warmer or colder.
+ 
+ 
+{@Astrid} Found it!
+We’re so lucky to have the sky all mapped out.
+It would take forever to figure all this out from scratch.
+ 
+{@Elijah} I don’t know. Sounds sort of fun to me.
+ 
+{@Astrid} Hey, I never said it wouldn’t be fun. 
+Now you have to explain. How am I like Perseus?
+Didn’t he get cast out to sea by his dad, and then end up becoming some big hero?
+ 
+{@Elijah} Exactly!
+He went on a quest, fell in love with the princess Andromeda, and saved her from a sea monster.
+ 
+{@Astrid} Stillll not seeing how that’s like me.
+ 
+{@Elijah} Come on. Isn’t it obvious?
+Your dad’s off doing research at the South Pole, so you’ve been cast out to that little town with your aunt. You’re about to start your senior year at a brand new school. And you’re still completely fearless.
+ 
+{@Astrid} My aunt was right. You’re such a hopeless romantic.
+ 
+{@Elijah} Romantic? Sure. But hopeless? Never.
+ 
+{@Astrid} So if I’m Perseus, does that make you Andromeda?
+ 
+{@Elijah} I don’t know. I think I’m more of a—
+ 
+ 
+{@Astrid} Elijah? Hello?
+$call Wait(2) 
+Whoa. Elijah, are you seeing this?
+
+{@Elijah} Astrid—you’re breaking up—
+ 
+{@Astrid} Is that the Northern Lights?
+Whoa. It’s so bright!
+ 
+{@Elijah} (*bzzzzzzz krrrrrrr*) —Something’s not right—
+(*static noises*) —Readings off the charts— (*brrrrrr kzzzzzz*)
+ 
+{@Astrid} Elijah, can you hear me?
+$call Wait(2) 
+Hello?
+$call Wait(3) 
+Elijah?
+
+$call LoadNextDay()
