@@ -62,10 +62,10 @@ namespace Astro {
             } else if (newDist > 0.5 && newDist < 0.8) {
                 module.Result.SetSharedMaterialAtIndex(1, module.UnlitPipMaterial);
                 ReviewModuleUtility.SetPipReadout(module, 2);
-            } else if (newDist > 0.8 && newDist < 0.95) {
+            } else if (newDist > 0.8 && newDist < 0.98) {
                 module.Result.SetSharedMaterialAtIndex(1, module.UnlitPipMaterial);
                 ReviewModuleUtility.SetPipReadout(module, 3);
-            } else if (newDist > 0.95) {
+            } else if (newDist > 0.98) {
                 ReviewModuleUtility.ShowResultSprite(true, module);
                 Game.Events.Dispatch(GameEvents.NeutrinoNavigationComplete);
                 ReviewModuleUtility.ResetReview(module);
