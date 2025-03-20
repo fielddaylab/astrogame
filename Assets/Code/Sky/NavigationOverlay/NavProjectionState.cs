@@ -65,12 +65,21 @@ namespace Astro {
             state.BoarderGroup.gameObject.SetActive(true);
         }
 
+        public static void DisableActiveNeutrinoNavUI() {
+            NavProjectionState state = Find.State<NavProjectionState>();
+
+            state.BoarderGroup.gameObject.SetActive(false);
+            state.NavigationCanvas.gameObject.SetActive(true);
+        }
+
         public static void DisableNeutrinoNavUI() {
             NavProjectionState state = Find.State<NavProjectionState>();
 
             state.BoarderGroup.gameObject.SetActive(false);
-            // state.NavigationArrow.gameObject.SetActive(true);
-            state.NavigationCanvas.gameObject.SetActive(true);
+            state.OutlineGroup.gameObject.SetActive(false);
+            state.BoarderGroup.gameObject.SetActive(false);
+            state.NavigationArrow.gameObject.SetActive(false);
+            state.NavigationCanvas.gameObject.SetActive(false);
         }
 
         public static void UpdatedNeutrinoNavigationArrow(SpaceCameraState spaceCameraState) {
@@ -84,33 +93,49 @@ namespace Astro {
             EqCoords target = config.NeutrinoEvent.NeutrinoCoordinates;
 
             Vector3 targetPos = CelestialPositionerUtility.GetObjectPosition(dome.Position, target.RightAscension, target.Declination);
-            Quaternion spaceCameraQuat = spaceCameraState.Camera.RootTransform.rotation;
-            Vector3 cameraCenterPos = CelestialPositionerUtility.GetObjectPosition(
-                dome.Position, 
-                CoordinateUtility.DegreesToRA(360 - spaceCameraQuat.eulerAngles.y), 
-                CoordinateUtility.DecimalDegreesToDeclination(360 - spaceCameraQuat.eulerAngles.x) 
-                );
-            Vector3 targetVector = targetPos - spaceCameraState.Camera.RootTransform.position;
-            Debug.DrawLine(dome.Position, targetPos, Color.cyan, 100f);
-            Debug.DrawLine(dome.Position, cameraCenterPos, Color.blue, 100f);
-            Debug.DrawLine(cameraCenterPos, targetPos, Color.green, 100f);
-            Vector3 direction = targetVector - cameraCenterPos;
 
             Transform navCanvas = navProjectionState.NavigationCanvas.transform;
-            Vector3 canvasProjection = Vector3.ProjectOnPlane(direction, navCanvas.forward); 
-            // Set Navigation Arrow Position
-
-            float angle = Vector2.Angle(navCanvas.up, canvasProjection);
             RectTransform navArrow = navProjectionState.NavigationArrow;
-            navArrow.localEulerAngles = new Vector3(0f, 0f, -angle);
             
-            // Vector2 viewPoint = spaceCameraState.Camera.Camera.WorldToViewportPoint(targetPos);
-            // Debug.Log("[NavProjectionState] raw viewPoint:" + viewPoint);
-            // viewPoint.x = Mathf.Clamp(viewPoint.x, 0, 1);
-            // viewPoint.y = Mathf.Clamp(viewPoint.y, 0, 1);
+            Vector3 viewPoint = spaceCameraState.Camera.Camera.WorldToViewportPoint(targetPos);
 
-            // Debug.Log("[NavProjectionState] clamped viewPoint:" + viewPoint);
-            // navArrow.anchorMin = navArrow.anchorMax = viewPoint;
+            bool isTargetVisible = viewPoint.z > 0;
+            Vector2 direction = new Vector2(viewPoint.x - 0.5f, viewPoint.y - 0.5f);
+
+            if (!isTargetVisible) direction = - direction;
+
+            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            
+            // Set the arrow's rotation
+            navArrow.localEulerAngles = new Vector3(0, 0, angle - 90); // -90 because the arrow points up by default
+
+            if (!IsTargetOnScreen(viewPoint)) {
+                direction.Normalize();
+                navArrow.gameObject.SetActive(true);
+                 
+                // Position the arrow within the screen bounds
+                Vector2 canvasSize = navCanvas.GetComponent<RectTransform>().sizeDelta / 2;
+
+                // Calculate the offset from center
+                Vector2 offset = direction * canvasSize;
+
+                offset.x = Mathf.Clamp(offset.x, -canvasSize.x + navArrow.rect.width, canvasSize.x - navArrow.rect.width);
+                offset.y = Mathf.Clamp(offset.y, -canvasSize.y + navArrow.rect.height, canvasSize.y - navArrow.rect.height);
+                
+                // Set the arrow's position
+                navArrow.anchoredPosition = offset;
+            } else {
+                // Reset the arrow's position to center when target is on screen
+                navArrow.gameObject.SetActive(false);
+            }
+        }
+
+        private static bool IsTargetOnScreen(Vector3 viewportPosition) {
+            return viewportPosition.x > 0 
+            && viewportPosition.x < 1 
+            && viewportPosition.y > 0 
+            && viewportPosition.y < 1 
+            && viewportPosition.z > 0;
         }
     }
 }
