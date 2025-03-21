@@ -33,15 +33,15 @@ namespace Astro
         public static void AddAssetToArchive(ArchiveState archiveState, StringHash32 assetId, Vector3 assetPos)
         {
             PlayerProgressState playerState = Find.State<PlayerProgressState>();
-            var currList = playerState.DayLayouts[archiveState.CurrArchiveIndex];
+            var currList = playerState.DayLayouts[archiveState.CurrArchiveIndex - 1];
             currList.AssetPositions.Add(assetId, assetPos);
-            playerState.DayLayouts[playerState.DayIndex] = currList;
+            playerState.DayLayouts[playerState.DayIndex - 1] = currList;
         }
 
         public static void SetAssetPosInArchive(ArchiveState archiveState, StringHash32 assetId, Vector3 assetPos)
         {
             PlayerProgressState playerState = Find.State<PlayerProgressState>();
-            var currList = playerState.DayLayouts[archiveState.CurrArchiveIndex];
+            var currList = playerState.DayLayouts[archiveState.CurrArchiveIndex - 1];
             currList.AssetPositions[assetId] = assetPos;
         }
 
@@ -64,7 +64,7 @@ namespace Astro
             // TODO: Expand transition routine
 
             PlayerProgressState playerState = Find.State<PlayerProgressState>();
-            var currLayout = playerState.DayLayouts[dayIndex];
+            var currLayout = playerState.DayLayouts[dayIndex - 1];
 
             foreach (KeyValuePair<StringHash32, Vector3> pair in currLayout.AssetPositions) {
                 // spawn the asset at the position
