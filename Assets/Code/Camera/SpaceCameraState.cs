@@ -13,6 +13,7 @@ namespace Astro
     {
         // TODO: assign Camera a better way
         public CameraRig Camera;
+        public Skybox Skybox;
         public Transform HorizonPlane;
         public bool EnableMouseControls;
         public bool EnableMouseAutoControls;

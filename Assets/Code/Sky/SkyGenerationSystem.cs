@@ -46,6 +46,7 @@ namespace Astro
             }
 
             m_State.IsDirty = false;
+            spaceCamera.LookUpdatedThisFrame = true;
         }
 
         private Sprite DetermineSprite(CelestialObjectCategory category)

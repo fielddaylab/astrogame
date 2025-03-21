@@ -23,12 +23,14 @@ namespace Astro {
         [AudioEventRef] public StringHash32 ToggleSfx;
         [AudioEventRef] public StringHash32 UntoggleSfx;
 
+        [NonSerialized] public LabInteractable CachedInteractable;
         [NonSerialized] public Vector3 OriginalDisplacement;
         [NonSerialized] public State CurrentState = State.Up;
         [NonSerialized] public Routine TransitionRoutine;
 
         private void Awake() {
             OriginalDisplacement = Movable.localPosition;
+            this.CacheComponent(ref CachedInteractable);
         }
     }
 }
