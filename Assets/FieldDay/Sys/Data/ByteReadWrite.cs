@@ -11,12 +11,29 @@ namespace FieldDay.Data {
         public int Written;
         public int Capacity;
 
+        public unsafe ByteWriter(byte* head, int capacity) {
+            Head = head;
+            Written = 0;
+            Capacity = capacity;
+        }
+
         /// <summary>
         /// Writes the given data to the buffer.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public unsafe void Write<T>(in T val) where T : unmanaged {
             Unsafe.Write(val, ref Head, ref Written, Capacity);
+        }
+
+        /// <summary>
+        /// Overwrites data at the given marker.
+        /// </summary>
+        public unsafe void Overwrite<T>(T val, uint marker) where T : unmanaged {
+            if (marker + sizeof(T) > Capacity) {
+                throw new InsufficientMemoryException();
+            }
+
+            Unsafe.FastCopy(&val, sizeof(T), Head - Written + marker);
         }
 
         /// <summary>
@@ -63,10 +80,26 @@ namespace FieldDay.Data {
         }
 
         /// <summary>
+        /// Returns the current write marker.
+        /// </summary>
+        public uint GetMarker() {
+            return (uint) Written;
+        }
+
+        /// <summary>
         /// Returns the written data as a byte span.
         /// </summary>
         public unsafe UnsafeSpan<byte> GetData() {
             return new UnsafeSpan<byte>(Head - Written, Written);
+        }
+
+        /// <summary>
+        /// Returns a copy of the written data.
+        /// </summary>
+        public unsafe byte[] GetDataCopy() {
+            byte[] bytes = new byte[Written];
+            Unsafe.CopyArray(Head - Written, Written, bytes);
+            return bytes;
         }
     }
 
@@ -76,6 +109,16 @@ namespace FieldDay.Data {
     public struct ByteReader {
         public unsafe byte* Head;
         public int Remaining;
+
+        public unsafe ByteReader(byte* head, int size) {
+            Head = head;
+            Remaining = size;
+        }
+
+        public unsafe ByteReader(UnsafeSpan<byte> span) {
+            Head = span.Ptr;
+            Remaining = span.Length;
+        }
 
         /// <summary>
         /// Reads data from the buffer.

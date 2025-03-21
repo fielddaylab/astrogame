@@ -5,6 +5,7 @@ using FieldDay;
 using FieldDay.Components;
 using TMPro;
 using BeauUtil;
+using FieldDay.Rendering;
 
 namespace Astro
 {
@@ -12,6 +13,7 @@ namespace Astro
     {
         public DataDisplay Display;
         public ColorPanel Panel;
+        public bool UnlitMaterial;
 
         public void OnDeregister()
         {
@@ -32,23 +34,27 @@ namespace Astro
     {
         public static void OnRequest(ColorDataDisplayTarget display, DataPacket packet, DataFormattingFlags flags)
         {
-            SetPanelMaterials(display.Panel.PanelMesh, packet.Value.AssetId);
+            SetPanelMaterials(display.Panel.PanelMesh, packet.Value.AssetId, display.UnlitMaterial);
         }
 
         public static void OnClear(ColorDataDisplayTarget display)
         {
-            SetPanelMaterials(display.Panel.PanelMesh, null);
+            SetPanelMaterials(display.Panel.PanelMesh, null, false);
         }
 
-        public static void SetPanelMaterials(MeshRenderer mesh, StringHash32 colorId)
+        public static void SetPanelMaterials(MeshRenderer mesh, StringHash32 colorId, bool unlit)
         {
             if (mesh == null) { return; }
 
-            Material newMat = colorId.IsEmpty ? newMat = Find.State<ColorTextureState>().PanelBlank : Find.NamedAsset<ReferenceColor>(colorId).Texture;
+            Material newMat;
+            if (colorId.IsEmpty) {
+                newMat = Find.State<ColorTextureState>().PanelBlank;
+            } else {
+                var asset = Find.NamedAsset<ReferenceColor>(colorId);
+                newMat = unlit ? asset.UnlitTexture : asset.Texture;
+            };
 
-            var mats = mesh.sharedMaterials;
-            mats[0] = newMat;
-            mesh.sharedMaterials = mats;
+            mesh.SetSharedMaterialAtIndex(0, newMat);
         }
     }
 }
