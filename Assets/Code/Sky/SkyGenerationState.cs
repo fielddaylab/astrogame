@@ -11,7 +11,7 @@ namespace Astro
     {
         public Sprite DefaultStarSprite;
         public Sprite DefaultPlanetSprite;
-
+        public Sprite DefaultGalaxySprite;
         [NonSerialized] public CelestialObjectVisMask VisMask = CelestialObjectVisMask.Visible;
         [NonSerialized] public bool IsDirty = true;
     }

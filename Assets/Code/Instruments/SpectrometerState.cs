@@ -24,7 +24,7 @@ namespace Astro {
             [SpectrographMaterialMask.Sodium] = new int[] { 590, 589 },
             [SpectrographMaterialMask.Magnesium] = new int[] { 517, 516 },
             [SpectrographMaterialMask.Oxygen] = new int[] { 687, 628 },
-            [SpectrographMaterialMask.Titanium] = new int[] { }
+            [SpectrographMaterialMask.Titanium] = new int[] { 336 }
         };
     }
 

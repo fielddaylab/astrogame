@@ -35,7 +35,7 @@ namespace Astro
             focus.TargetData = asset;
             focus.TargetRenderer = target.GetComponent<Renderer>();
 
-            float scaleFactor = 1.5f * Mathf.Pow(0.63f, asset.ApparentMagnitude);
+            float scaleFactor = Mathf.Pow(0.75f, asset.ApparentMagnitude);
             focus.Rect.localScale = new Vector3(scaleFactor, scaleFactor, 1);
 
             focus.Button.onClick.RemoveAllListeners();

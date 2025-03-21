@@ -8,7 +8,7 @@ namespace Astro {
     public sealed class HistoricalPatternAsset : NamedAsset {
         public HistoricalPatternType Type;
         public float WaveAmplitude;
-
+        public string PeriodLabel;
         // TODO: Custom data
     }
 
@@ -18,6 +18,11 @@ namespace Astro {
         SineWave,
         TriangularWave,
         Parallax,
+        Cepheid,
+        SawWave,
+        Eclipsing,
+        Semiregular,
+        Irregular,
         Custom
     }
 }

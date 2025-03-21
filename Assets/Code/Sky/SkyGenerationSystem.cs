@@ -62,7 +62,7 @@ namespace Astro
                 case CelestialObjectCategory.Constellation:
                     return null;
                 case CelestialObjectCategory.Galaxy:
-                    return null;
+                    return m_State.DefaultGalaxySprite;
                 case CelestialObjectCategory.Comet:
                     return null;
                 default:
