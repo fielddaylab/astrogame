@@ -52,13 +52,6 @@ namespace FieldDay.Layout {
 
 #if UNITY_EDITOR
 
-        [ContextMenu("Test Compression")]
-        private void TestCompress() {
-            CompressedPackageBuilder builder = new CompressedPackageBuilder();
-            byte[] data = Compress(builder, CompressedTransformBounds.Default, CompressedRectTransformBounds.Default);
-            File.WriteAllBytes("Compressed_" + name, data);
-        }
-
         internal unsafe byte[] Compress(CompressedPackageBuilder bank, in CompressedTransformBounds transformBounds, in CompressedRectTransformBounds rectBounds) {
             Undo.IncrementCurrentGroup();
 
@@ -87,7 +80,9 @@ namespace FieldDay.Layout {
                 header.CustomFieldCount = (byte) count;
             }
 
-            header.ObjectCount = (byte) WriteHierarchy(transform, 0, ref tempWriter, bank, transformBounds, rectBounds);
+            int objCount = 0;
+            WriteHierarchy(transform, -1, ref tempWriter, bank, transformBounds, rectBounds, ref objCount);
+            header.ObjectCount = (byte)objCount;
 
             tempWriter.Overwrite(header, headerMarker);
 
@@ -95,22 +90,21 @@ namespace FieldDay.Layout {
             return tempWriter.GetDataCopy();
         }
 
-        private unsafe int WriteHierarchy(Transform obj, int depth, ref ByteWriter writer, CompressedPackageBuilder bank, in CompressedTransformBounds transformBounds, in CompressedRectTransformBounds rectBounds) {
+        private unsafe void WriteHierarchy(Transform obj, int parentIdx, ref ByteWriter writer, CompressedPackageBuilder bank, in CompressedTransformBounds transformBounds, in CompressedRectTransformBounds rectBounds, ref int objCount) {
             if (IgnoreInactive && !obj.gameObject.activeInHierarchy) {
-                return 0;
+                return;
             }
 
-            int objCount = 0;
             CompressedComponentTypes componentsOfInterest = ComponentsOfInterest(obj);
             int childCount = obj.childCount;
 
             if (childCount > 0 || (componentsOfInterest & ~CompressedComponentTypes.AnyTransform) != 0) {
-                objCount++;
+                int objId = objCount++;
 
                 ObjectHeader objHeader;
                 objHeader.ComponentTypes = (uint) componentsOfInterest;
-                objHeader.ParentIndex = (byte) (depth == 0 ? 0 : depth - 1);
-                objHeader.Flags = (byte) (depth == 0 ? CompressedPrefabObjectFlags.IsRoot : 0);
+                objHeader.ParentIndex = (byte) (parentIdx == -1 ? 0 : parentIdx);
+                objHeader.Flags = (byte) (parentIdx == -1 ? CompressedPrefabObjectFlags.IsRoot : 0);
                 objHeader.NameIdx = bank.AddString(PreserveNames ? obj.gameObject.name : "$");
 
                 writer.Write(objHeader);
@@ -155,13 +149,11 @@ namespace FieldDay.Layout {
                 //    CompressedLocText.Compress(locText, out CompressedLocText data);
                 //    writer.Write(data);
                 //}
-            }
 
-            for(int i = 0; i < childCount; i++) {
-                objCount += WriteHierarchy(obj.GetChild(i), depth + 1, ref writer, bank, transformBounds, rectBounds);
+                for (int i = 0; i < childCount; i++) {
+                    WriteHierarchy(obj.GetChild(i), objId, ref writer, bank, transformBounds, rectBounds, ref objCount);
+                }
             }
-
-            return objCount;
         }
 
         static private CompressedComponentTypes ComponentsOfInterest(Transform transform) {
@@ -181,6 +173,10 @@ namespace FieldDay.Layout {
                 types |= CompressedComponentTypes.StreamingUGUITexture;
             } else if (HasBehavior<TMP_Text>(transform)) {
                 types |= CompressedComponentTypes.TextMeshPro;
+            }
+
+            if (HasRenderer<SpriteRenderer>(transform)) {
+                types |= CompressedComponentTypes.SpriteRenderer;
             }
 
             //if (HasBehavior<LocText>(transform)) {
@@ -239,6 +235,7 @@ namespace FieldDay.Layout {
         StreamingUGUITexture = 0x10,
         TextMeshPro = 0x20,
         LocText = 0x40,
+        SpriteRenderer = 0x80,
 
         [Hidden] AnyTransform = Transform | RectTransform
     }

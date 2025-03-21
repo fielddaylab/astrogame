@@ -83,6 +83,7 @@ namespace FieldDay.Layout {
         }
 
         static private string GetResourcePath(UnityEngine.Object obj) {
+#if UNITY_EDITOR
             string assetPath = UnityEditor.AssetDatabase.GetAssetPath(obj);
             if (string.IsNullOrEmpty(assetPath)) {
                 return null;
@@ -94,6 +95,7 @@ namespace FieldDay.Layout {
                 assetPath = Path.ChangeExtension(assetPath, null);
                 return assetPath;
             }
+#endif // UNITY_EDITOR
 
             return null;
         }
@@ -108,8 +110,8 @@ namespace FieldDay.Layout {
         public const ushort MaxIndex = (1 << 14) - 2;
         public const ushort LoadAssetIndexFlag = (1 << 15) - 1;
 
-        [Multiline] public string[] StringTable;
-        public UnityEngine.Object[] AssetTable;
+        [Multiline] public string[] StringTable = Array.Empty<string>();
+        public UnityEngine.Object[] AssetTable = Array.Empty<UnityEngine.Object>();
 
         public CompressedPackageBank() { }
 

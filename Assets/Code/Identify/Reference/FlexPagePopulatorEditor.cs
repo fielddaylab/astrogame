@@ -2,6 +2,8 @@ using UnityEditor;
 using UnityEngine;
 
 namespace Astro {
+#if UNITY_EDITOR
+
     [CustomEditor(typeof (FlexPagePopulator)), CanEditMultipleObjects]
     public class FlexPagePopulatorEditor : Editor {
 
@@ -17,6 +19,8 @@ namespace Astro {
         }
 
     }
+
+#endif // UNITY_EDITOR
 
     public class FlexPageUtility {
         public static void PressTestButton (FlexPagePopulator target) {

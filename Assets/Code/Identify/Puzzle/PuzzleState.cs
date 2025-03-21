@@ -95,6 +95,7 @@ namespace Astro {
 
             display.CellAnchorPos.gameObject.SetActive(true);
             display.HeaderAnchorPos.gameObject.SetActive(true);
+            display.ClueGroup.gameObject.SetActive(true);
         }
 
     }
