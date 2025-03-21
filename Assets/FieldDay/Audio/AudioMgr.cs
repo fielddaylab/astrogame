@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using BeauPools;
 using BeauUtil;
 using BeauUtil.Debugger;
+using FieldDay.Debugging;
 using FieldDay.Pipes;
 using UnityEngine;
 
@@ -364,6 +365,24 @@ namespace FieldDay.Audio {
             }
 #endif // DEVELOPMENT
         }
+
+        private enum DebuggingFlags {
+            TraceExecution
+        }
+
+#if DEVELOPMENT
+
+        [EngineMenuFactory]
+        static private DMInfo CreateAudioDebugMenu() {
+            DMInfo info = new DMInfo("Audio", 16);
+            //DebugFlags.Menu.AddSingleFrameFlagButton(info, "Trace Execution for Frame", DebuggingFlags.TraceExecution);
+            //DebugFlags.Menu.AddFlagToggle(info, "Render Debug Info", DebuggingFlags.VisualizeEntireScreen);
+            //info.AddDivider();
+
+            return info;
+        }
+
+#endif // DEVELOPMENT
 
         #endregion // Debug
     }

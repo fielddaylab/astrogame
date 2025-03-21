@@ -127,27 +127,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8710596512342464955, guid: f3a419d7aa4452e44bd05d33d4df79ee, type: 3}
   m_PrefabInstance: {fileID: 4817899677156289496}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &720782429 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4461923492493313455, guid: f3a419d7aa4452e44bd05d33d4df79ee, type: 3}
-  m_PrefabInstance: {fileID: 4817899677156289496}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &720782432
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 720782429}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6ae620349e7bce24688d2ab26f9be5a5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  DestroyInactiveChildren: 0
-  Recursive: 0
-  DestroyGameObject: 0
-  IgnoreAnimators: 1
 --- !u!1 &1419699319
 GameObject:
   m_ObjectHideFlags: 0
@@ -471,10 +450,6 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2570923468108654046, guid: f3a419d7aa4452e44bd05d33d4df79ee, type: 3}
-      propertyPath: m_ScaleInLightmap
-      value: 0.8
-      objectReference: {fileID: 0}
     - target: {fileID: 3584596269143523161, guid: f3a419d7aa4452e44bd05d33d4df79ee, type: 3}
       propertyPath: m_LocalScale.x
       value: 1
@@ -526,10 +501,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4461923492493313455, guid: f3a419d7aa4452e44bd05d33d4df79ee, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 720782432}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f3a419d7aa4452e44bd05d33d4df79ee, type: 3}
 --- !u!4 &4817899677156289497 stripped
 Transform:

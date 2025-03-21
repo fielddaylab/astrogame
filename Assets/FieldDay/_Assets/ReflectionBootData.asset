@@ -142,8 +142,12 @@ MonoBehaviour:
     LookupInherit: 0
     Assemblies:
     - AssemblyName: FieldDay.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-      TypeCount: 4
+      TypeCount: 6
     Types:
+    - TypeName: FieldDay.Scenes.SceneMgr
+      Self: 0
+      MemberCount: 1
+      OverloadCount: 0
     - TypeName: FieldDay.Memory.MemoryMgr
       Self: 0
       MemberCount: 1
@@ -160,7 +164,13 @@ MonoBehaviour:
       Self: 0
       MemberCount: 1
       OverloadCount: 0
+    - TypeName: FieldDay.Audio.AudioMgr
+      Self: 0
+      MemberCount: 1
+      OverloadCount: 0
     Members:
+    - MemberName: CreateDebugMenu
+      Type: 8
     - MemberName: CreateDebugMenu
       Type: 8
     - MemberName: CreateRenderDebugMenu
@@ -168,6 +178,8 @@ MonoBehaviour:
     - MemberName: CreateDebugMenu
       Type: 8
     - MemberName: CreateDrawingEngineMenu
+      Type: 8
+    - MemberName: CreateAudioDebugMenu
       Type: 8
     OverloadedMethods: []
     TypeReferences: []

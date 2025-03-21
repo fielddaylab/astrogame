@@ -13,6 +13,7 @@ namespace Astro
     {
         // TODO: assign Camera a better way
         public CameraRig Camera;
+        public Skybox Skybox;
         public Transform HorizonPlane;
         public bool EnableMouseControls;
         public bool EnableMouseAutoControls;
@@ -60,13 +61,13 @@ namespace Astro
             Game.Events.Register(GameEvents.StartPuzzleNavigation, SpaceCameraUtility.OnStartPuzzleNav);
             Game.Events.Register(GameEvents.StopPuzzleNavigation, SpaceCameraUtility.OnStopPuzzleNav);
             Game.Events.Register(GameEvents.StopPuzzleMode, SpaceCameraUtility.OnStopPuzzleMode);
-            
+
             OnLookUpdated.Register(() => { 
                 LookUpdatedThisFrame = true; 
 
-                // Note: This is sometimes helpful for aligning puzzles
-                Quaternion spaceCameraQuat = Camera.RootTransform.rotation;
-                Debug.Log("[SpaceCameraState] Camera RA:" + CoordinateUtility.DegreesToRA(360 - spaceCameraQuat.eulerAngles.y) + " D:" + CoordinateUtility.DecimalDegreesToDeclination(360 - spaceCameraQuat.eulerAngles.x));
+                //// Note: This is sometimes helpful for aligning puzzles
+                //Quaternion spaceCameraQuat = Camera.RootTransform.rotation;
+                //Debug.Log("[SpaceCameraState] Camera RA:" + CoordinateUtility.DegreesToRA(360 - spaceCameraQuat.eulerAngles.y) + " D:" + CoordinateUtility.DecimalDegreesToDeclination(360 - spaceCameraQuat.eulerAngles.x));
             });
         }
 

@@ -14,7 +14,7 @@ namespace Astro {
         {
             if (m_StateA.OpenModeStarted)
             {
-                if (!m_StateD.Initialized) { return; }
+                if (m_StateD.IsDirty) { return; }
 
                 m_StateA.OpenModeStarted = false;
 
@@ -38,7 +38,7 @@ namespace Astro {
             }
             if (m_StateA.OpenModeEnded)
             {
-                if (!m_StateD.Initialized) { return; }
+                if (m_StateD.IsDirty) { return; }
 
                 m_StateA.OpenModeEnded = false;
 

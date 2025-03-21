@@ -55,9 +55,4 @@ namespace Astro {
             });
         }
     }
-    
-    public sealed class PlayerProgressState : ISharedState {
-        public int DayIndex = 0;
-        [NonSerialized] public List<ArchiveLayout> DayLayouts = new List<ArchiveLayout>();
-    }
 }

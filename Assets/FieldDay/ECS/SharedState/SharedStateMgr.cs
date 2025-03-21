@@ -111,7 +111,7 @@ namespace FieldDay.SharedState {
                 Assert.Fail("No shared state object found for type '{0}'", typeof(T).FullName);
             }
 #endif // DEVELOPMENT
-            return (T) state;
+            return Unsafe.FastCast<T>(state);
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace FieldDay.SharedState {
         [Il2CppSetOption(Option.NullChecks, false)]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal T FastGet<T>() where T : class, ISharedState {
-            return (T) m_StateMap[StateIndex.Get<T>()];
+            return Unsafe.FastCast<T>(m_StateMap[StateIndex.Get<T>()]);
         }
 
         /// <summary>

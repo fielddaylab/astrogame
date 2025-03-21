@@ -51,35 +51,70 @@ namespace Astro {
         #region ToString
 
         public override string ToString() {
-            return ToString(HmsPrefix.Hms);
+            return string.Format("{0}h {1}m {2:F1}s", Hours.ToStringLookup(), Minutes.ToStringLookup(), Seconds);
         }
 
-        public string ToString(HmsPrefix prefix) {
-            if (prefix == HmsPrefix.Hms) {
-                return string.Format("{0}h {1}m {2:F1}s", Hours.ToStringLookup(), Minutes.ToStringLookup(), Seconds);
-            }
-
-            return string.Format("{0}{1}\u00B0 {2}' {3:F1}\"", Hours >= 0 ? "+" : "", Hours.ToStringLookup(), Minutes.ToStringLookup(), Seconds);
-        }
-
-        public void ToString(StringBuilder sb, HmsPrefix prefix) {
-            if (prefix == HmsPrefix.Hms) {
-                sb.AppendNoAlloc(Hours).Append("h ")
-                    .AppendNoAlloc(Minutes, 0, 2).Append("m ")
-                    .AppendNoAlloc(Seconds, 1, 2).Append('s');
-            } else {
-                if (Hours >= 0) {
-                    sb.Append('+');
-                }
-                sb.AppendNoAlloc(Hours).Append("\u00B0 ")
-                    .AppendNoAlloc(Minutes, 0, 2).Append("' ")
-                    .AppendNoAlloc(Seconds, 1, 2).Append('"');
-            }
+        public void ToString(StringBuilder sb) {
+            sb.AppendNoAlloc(Hours).Append("h ")
+                .AppendNoAlloc(Minutes, 0, 2).Append("m ")
+                .AppendNoAlloc(Seconds, 1, 2).Append('s');
         }
 
         #endregion // ToString
 
         #region Operators
+
+        static public HmsCoords operator+(HmsCoords a, HmsCoords b) {
+            int h = a.Hours + b.Hours;
+            int m = a.Minutes + b.Minutes;
+            float s = a.Seconds + b.Seconds;
+
+            if (s < 0) {
+                s += 60;
+                m--;
+            } else if (s >= 60) {
+                s -= 60;
+                m++;
+            }
+
+            if (m < 0) {
+                m += 60;
+                h--;
+            } else if (m >= 60) {
+                m -= 60;
+                h++;
+            }
+
+            return new HmsCoords(h, m, s);
+        }
+
+        static public HmsCoords operator -(HmsCoords a, HmsCoords b) {
+            int h = a.Hours - b.Hours;
+            int m = a.Minutes - b.Minutes;
+            float s = a.Seconds - b.Seconds;
+
+            if (s < 0) {
+                s += 60;
+                m--;
+            } else if (s >= 60) {
+                s -= 60;
+                m++;
+            }
+
+            if (m < 0) {
+                m += 60;
+                h--;
+            } else if (m >= 60) {
+                m -= 60;
+                h++;
+            }
+
+            return new HmsCoords(h, m, s);
+        }
+
+        static public HmsCoords operator-(HmsCoords a) {
+            return new HmsCoords(-a.Hours, -a.Minutes, -a.Seconds);
+        }
 
         static public bool operator==(HmsCoords a, HmsCoords b) {
             return a.Equals(b);
@@ -90,10 +125,5 @@ namespace Astro {
         }
 
         #endregion // Operators
-    }
-
-    public enum HmsPrefix : byte {
-        Hms,
-        Quotes
     }
 }

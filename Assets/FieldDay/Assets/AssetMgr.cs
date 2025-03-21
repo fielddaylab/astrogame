@@ -284,7 +284,7 @@ namespace FieldDay.Assets {
                 Assert.Fail("No global asset found for type '{0}'", typeof(T).FullName);
             }
 #endif // DEVELOPMENT
-            return (T) asset;
+            return Unsafe.FastCast<T>(asset);
         }
 
         /// <summary>

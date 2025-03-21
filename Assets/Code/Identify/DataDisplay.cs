@@ -131,13 +131,13 @@ namespace Astro {
                     bool decl = flags == 0 || (flags & DataFormattingFlags.Declination) != 0;
                     bool hasSeparator = rightAsc & decl;
                     if (rightAsc) {
-                        coords.RightAscension.ToString(sb, HmsPrefix.Hms);
+                        coords.RightAscension.ToString(sb);
                     }
                     if (hasSeparator) {
                         sb.Append(",\n");
                     }
                     if (decl) {
-                        coords.Declination.ToString(sb, HmsPrefix.Quotes);
+                        coords.Declination.ToString(sb);
                     }
 
                     return true;

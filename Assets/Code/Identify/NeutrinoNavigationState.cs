@@ -72,12 +72,7 @@ public static class NeutrinoNavigationUtility {
         if (!config) return;
 
         EqCoords target = config.NeutrinoEvent.NeutrinoCoordinates;
-        Quaternion targetQuat = Quaternion.Euler(
-            360 - (float)CoordinateUtility.DeclinationToDecimalDegrees( target.Declination ),
-            360 - (float)CoordinateUtility.RAToDegrees( target.RightAscension ),
-            0
-        );
-        Vector3 targetFoward = Geom.Forward(targetQuat);
+        Vector3 targetFoward = WorldPositionUtility.GetLookVector(target);
 
         Quaternion spaceCameraQuat = spaceCameraState.Camera.RootTransform.rotation;
 

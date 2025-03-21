@@ -154,6 +154,7 @@ namespace FieldDay.Debugging {
 
             AudioPropertyBlock debugAudioProps = Game.Audio.GetDebugProperties(AudioBus.Master);
             debugAudioProps.Pitch = m_TimeScale;
+            debugAudioProps.Volume = Math.Min(1, Mathf.Sqrt(1f / m_TimeScale));
             Game.Audio.SetDebugProperties(AudioBus.Master, debugAudioProps);
         }
 

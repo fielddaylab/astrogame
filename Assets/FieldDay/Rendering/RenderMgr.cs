@@ -612,7 +612,8 @@ namespace FieldDay.Rendering {
         [EngineMenuFactory]
         static private DMInfo CreateRenderDebugMenu() {
             DMInfo info = new DMInfo("Rendering", 16);
-            DebugFlags.Menu.AddSingleFrameFlagButton(info, "Trace Execution for Frame", DebuggingFlags.TraceExecution);
+            DebugFlags.Menu.AddFlagToggle(info, "Trace Execution", DebuggingFlags.TraceExecution);
+            DebugFlags.Menu.AddSingleFrameFlagButton(info, "Trace Execution (Frame)", DebuggingFlags.TraceExecution);
             DebugFlags.Menu.AddFlagToggle(info, "Render Debug Info", DebuggingFlags.VisualizeEntireScreen);
             info.AddDivider();
 
