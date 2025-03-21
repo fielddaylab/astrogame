@@ -105,5 +105,7 @@ namespace FieldDay.Data {
         static private float Quantize(float value, float quantize) {
             return quantize * Mathf.Round(value / quantize);
         }
+
+        static public readonly CompressionRange ZeroToOne = new CompressionRange(0, 1);
     }
 }

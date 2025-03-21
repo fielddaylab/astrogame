@@ -214,18 +214,42 @@ namespace ScriptableBake {
 
         #region Prefabs
 
-        // static public IEnumerator PrefabsAsync(string[] directories, BakeFlags flags = 0) {
-        //     string[] guids;
-        //     if (directories != null && directories.Length > 0) {
-        //         guids = AssetDatabase.FindAssets("t:Prefab", directories);
-        //     } else {
-        //         guids = AssetDatabase.FindAssets("t:Prefab");
-        //     }
-        // }
-
         #endregion // Prefabs
 
         #region Hierarchy
+
+        /// <summary>
+        /// Bakes all components in a given hierarchy.
+        /// </summary>
+        static public void BakeHierarchy(GameObject root, BakeFlags flags = 0) {
+            IEnumerator iter = BakeHierarchyAsync(root, flags);
+            using (iter as IDisposable) {
+                while (iter.MoveNext())
+                    ;
+            }
+        }
+
+        /// <summary>
+        /// Bakes all components in a given hierarchy asynchronously.
+        /// Use this in a coroutine.
+        /// </summary>
+        static public IEnumerator BakeHierarchyAsync(GameObject root, BakeFlags flags = 0) {
+            bool bIgnoreDisabled = (flags & BakeFlags.IgnoreDisabledObjects) != 0;
+
+            List<IBaked> rootBaked = new List<IBaked>(16);
+            root.GetComponentsInChildren<IBaked>(!bIgnoreDisabled, rootBaked);
+
+            BakeContext context = new BakeContext();
+            context.Scene = SceneManager.GetActiveScene();
+            context.MainCamera = FindMainCamera();
+            context.HasFog = RenderSettings.fog;
+            if (context.HasFog) {
+                context.FogStartDistance = RenderSettings.fogStartDistance;
+                context.FogEndDistance = RenderSettings.fogEndDistance;
+            }
+            context.m_Flags = flags;
+            return Process(rootBaked, "Hierarchy", flags, context, null);
+        }
 
         // Brought over from BeauUtil
 

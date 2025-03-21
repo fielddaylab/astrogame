@@ -5,8 +5,9 @@ using BeauUtil;
 using UnityEngine;
 
 namespace FieldDay.Layout {
-#if UNITY_EDITOR
-
+    /// <summary>
+    /// Builder for an indexed resource bank.
+    /// </summary>
     public struct IndexedBankBuilder<T> {
         public readonly Dictionary<T, ushort> Lookup;
         public readonly List<T> Table;
@@ -44,7 +45,10 @@ namespace FieldDay.Layout {
         }
     }
 
-    public sealed class CompressedPackageBankBuilder {
+    /// <summary>
+    /// Builder for a set of resource banks.
+    /// </summary>
+    public sealed class CompressedPackageBuilder {
         public IndexedBankBuilder<string> Strings = new IndexedBankBuilder<string>(512);
         public IndexedBankBuilder<UnityEngine.Object> Assets = new IndexedBankBuilder<UnityEngine.Object>(512);
 
@@ -95,8 +99,6 @@ namespace FieldDay.Layout {
         }
     }
 
-#endif // UNITY_EDITOR
-
     /// <summary>
     /// CompressedPackage string and asset reference bank.
     /// </summary>
@@ -113,7 +115,7 @@ namespace FieldDay.Layout {
 
 #if UNITY_EDITOR
 
-        public CompressedPackageBank(CompressedPackageBankBuilder builder) {
+        public CompressedPackageBank(CompressedPackageBuilder builder) {
             StringTable = builder.Strings.Table.ToArray();
             AssetTable = builder.Assets.Table.ToArray();
         }
@@ -130,16 +132,16 @@ namespace FieldDay.Layout {
         /// <summary>
         /// Reads an asset from the given index.
         /// </summary>
-        public T ReadAsset<T>(ushort index, Dictionary<ushort, UnityEngine.Object> cache) where T : UnityEngine.Object {
+        public T ReadAsset<T>(ushort index, CompressedPackageAssetCache cache) where T : UnityEngine.Object {
             UnityEngine.Object asset;
             if (index == NullIndex) {
                 asset = null;
             } else if ((index & LoadAssetIndexFlag) != 0) {
                 ushort unmaskedPath = (ushort) (index & ~LoadAssetIndexFlag);
                 if (cache != null) { 
-                    if (!cache.TryGetValue(index, out asset)) {
+                    if (!cache.Assets.TryGetValue(index, out asset)) {
                         asset = Resources.Load<T>(ReadString(unmaskedPath));
-                        cache.Add(index, asset);
+                        cache.Assets.Add(index, asset);
                     }
                 } else {
                     asset = Resources.Load<T>(ReadString(unmaskedPath));
@@ -149,5 +151,9 @@ namespace FieldDay.Layout {
             }
             return (T) asset;
         }
+    }
+
+    public sealed class CompressedPackageAssetCache {
+        public readonly Dictionary<ushort, UnityEngine.Object> Assets = new Dictionary<ushort, UnityEngine.Object>();
     }
 }
