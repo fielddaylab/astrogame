@@ -1,3 +1,4 @@
+using BeauUtil;
 using FieldDay.SharedState;
 using System;
 using System.Collections;
@@ -8,10 +9,10 @@ namespace Astro
 {
     public class SkyGenerationState : SharedStateComponent
     {
-        [NonSerialized] public bool Initialized = false;
-
-        public GameObject CelestialObjPrefab;
         public Sprite DefaultStarSprite;
         public Sprite DefaultPlanetSprite;
+
+        [NonSerialized] public CelestialObjectVisMask VisMask = CelestialObjectVisMask.Visible;
+        [NonSerialized] public bool IsDirty = true;
     }
 }

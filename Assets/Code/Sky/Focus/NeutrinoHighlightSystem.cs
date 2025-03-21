@@ -4,7 +4,6 @@ using UnityEngine;
 using FieldDay.Systems;
 using FieldDay;
 using BeauUtil;
-using UnityEngine.SocialPlatforms.Impl;
 using System.Linq;
 
 namespace Astro {
@@ -15,7 +14,7 @@ namespace Astro {
         {
             if (m_StateA.OpenModeStarted)
             {
-                if (!m_StateD.Initialized) { return; }
+                if (m_StateD.IsDirty) { return; }
 
                 m_StateA.OpenModeStarted = false;
 
@@ -31,7 +30,7 @@ namespace Astro {
                     // check if focus is relevant to neutrino
                     if (day.NeutrinoEvent.RelevantObjectIds.Contains(focus.TargetData.AssetId))
                     {
-                        var newHighlight = m_StateC.NeutrinoHighlights.Alloc(focus.Rect);
+                        var newHighlight = m_StateC.NeutrinoHighlights.Alloc(focus.HighlightRect);
                         m_StateA.ActiveHighlights.PushBack(newHighlight);
                     }
                 }
@@ -39,7 +38,7 @@ namespace Astro {
             }
             if (m_StateA.OpenModeEnded)
             {
-                if (!m_StateD.Initialized) { return; }
+                if (m_StateD.IsDirty) { return; }
 
                 m_StateA.OpenModeEnded = false;
 

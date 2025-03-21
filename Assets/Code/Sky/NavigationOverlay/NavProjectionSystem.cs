@@ -30,8 +30,6 @@ namespace Astro {
             if (!puzzleState.ActivePuzzle) return;
 
             EqCoords target = puzzleState.ActivePuzzle.PuzzleCoordinates;
-            EqCoords adjustedTarget = CelestialPositionerUtility.AdjustCoordinates(target);
-
             Vector3 spaceCameraOriginalRot = spaceCam.Camera.RootTransform.localEulerAngles;
             
             // populate sky with celestial objects
@@ -56,6 +54,7 @@ namespace Astro {
                 // Use UIFocus pool
                 var navFocus = focusPools.Focii.Alloc(m_StateA.OutlineGroup);
                 navFocus.name = currAsset.DisplayName + " (Navigation Outline)";
+                // TODO we can remove sprite representations on the nav ui if we dont have outlines
                 InitNavRepresntation(navFocus, currAsset, DetermineSprite(currAsset.Category));
                 
                 outlineState.ActiveOutlines.PushBack(navFocus);
@@ -73,7 +72,8 @@ namespace Astro {
                 UIFocus focusA = outlineState.ActiveOutlines.Find(x => x.TargetData == ca1);
                 UIFocus focusB = outlineState.ActiveOutlines.Find(x => x.TargetData == ca2);
 
-                var connection = Instantiate(new GameObject(ca1.DisplayName + "_to_" + ca2.DisplayName, typeof(RectTransform)), m_StateA.OutlineGroup);
+                var connection = new GameObject(ca1.DisplayName + "_to_" + ca2.DisplayName, typeof(RectTransform));
+                connection.transform.SetParent(m_StateA.OutlineGroup, false);
                 connection.AddComponent<Image>();
                 RectTransform connectionRect = connection.GetComponent<RectTransform>();
 
@@ -101,7 +101,7 @@ namespace Astro {
                 case CelestialObjectCategory.Star:
                     return m_StateA.StarOutlineSprite;
                 case CelestialObjectCategory.Planet:
-                    return m_StateA.PlanetOutlineSprite;
+                    return null;
                 case CelestialObjectCategory.Satellite:
                     return null;
                 case CelestialObjectCategory.Constellation:

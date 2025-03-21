@@ -49,5 +49,13 @@ namespace Astro {
         public static void ShowResultSprite(bool correct, ReviewModule module) {
             module.Result.SetSharedMaterialAtIndex(1, correct ? module.SuccessMaterial : module.FailureMaterial);
         }
+
+        public static void ResetReview(ReviewModule module) {
+            module.PipsRevealed = 0;
+            foreach (MeshRenderer pip in module.CountdownSprites) {
+                pip.SetSharedMaterialAtIndex(1, module.UnlitPipMaterial);
+            }
+            module.Result.SetSharedMaterialAtIndex(1, module.UnlitPipMaterial);
+        }
     }
 }

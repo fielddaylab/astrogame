@@ -124,12 +124,19 @@ $call StartPuzzleMode()
 
 :: HerculesPuzzleComplete
 @trigger    CorrectPuzzleSubmission
-@when   puzzleName == "Perseus"
+@when   puzzleName == "Hercules"
 @once
 
 $call ClearMonitorSelection()
 $call StopPuzzleMode()
 $call SetInputState(false)
 {@Astrid} Time to turn in for the night.
-$call MoveToView("Desk")
-$call Wait(1)
+Oh, what's this?
+$call EndDay2->BeginCutscene()
+
+:: EndDay
+@trigger    CutsceneEnd
+@when cutsceneId == "EndDay2"
+@who    Radio
+
+$call LoadNextDay()

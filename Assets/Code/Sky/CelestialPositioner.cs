@@ -9,13 +9,6 @@ namespace Astro {
 
     public static class CelestialPositionerUtility
     {
-        static public EqCoords AdjustCoordinates(EqCoords eq) {
-            SkyDome dome = Find.State<SkyDome>();
-            eq.RightAscension += dome.Rotation.RightAscension;
-            eq.Declination += dome.Rotation.Declination;
-            return eq;
-        }
-
         /// <summary>
         /// Position an object given right ascension and declination in hours, minutes, and seconds
         /// </summary>
@@ -26,9 +19,6 @@ namespace Astro {
         {
             SkyDome dome = Find.State<SkyDome>();
             float skyboxDist = dome.Radius;
-
-            ra += dome.Rotation.RightAscension;
-            decl += dome.Rotation.Declination;
 
             float raDegrees = (float)CoordinateUtility.HmsToDD(ra);
             float declDegrees = (float)CoordinateUtility.DmsToDD(decl);
@@ -44,13 +34,9 @@ namespace Astro {
         /// <param name="toPosition"></param>
         /// <param name="ra"></param>
         /// <param name="decl"></param>
-        public static void PositionObject(Vector3 centerPos, Transform toPosition, HmsCoords ra, DmsCoords decl)
-        {
+        public static void PositionObject(Vector3 centerPos, Transform toPosition, HmsCoords ra, DmsCoords decl) {
             SkyDome dome = Find.State<SkyDome>();
             float skyboxDist = dome.Radius;
-
-            ra += dome.Rotation.RightAscension;
-            decl += dome.Rotation.Declination;
 
             float raDegrees = (float)CoordinateUtility.HmsToDD(ra);
             float declDegrees = (float)CoordinateUtility.DmsToDD(decl);

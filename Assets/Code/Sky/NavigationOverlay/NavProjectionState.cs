@@ -1,6 +1,5 @@
-using Astro;
+using BeauUtil;
 using FieldDay;
-using FieldDay.Processes;
 using FieldDay.SharedState;
 using System;
 using UnityEngine;
@@ -8,13 +7,12 @@ using UnityEngine;
 namespace Astro {
     public class NavProjectionState : SharedStateComponent, IRegistrationCallbacks {
         [NonSerialized] public bool Initialized = false;
-        public GameObject CelestialObjPrefab;
         public Sprite StarOutlineSprite;
-        public Sprite PlanetOutlineSprite;
 
         public Color NavigationCompleteColor;
         
         public Canvas NavigationCanvas;
+        public RectTransform NavigationArrow;
         public RectTransform OutlineGroup;
         public CanvasGroup BoarderGroup;
 
@@ -29,16 +27,115 @@ namespace Astro {
                 navProjState.NavigationCanvas.renderMode = RenderMode.ScreenSpaceCamera;
             });
 
-            Game.Events.Register(GameEvents.StartPuzzleNavigation, () => {
-                NavigationCanvas.gameObject.SetActive(true);
-                Initialized = false;
-            });
-
-            Game.Events.Register(GameEvents.StopPuzzleMode, () => {
-                NavigationCanvas.gameObject.SetActive(false);
-            });
+            Game.Events.Register(GameEvents.StartPuzzleNavigation, NavigationCanvasUtil.SetupConstellationNavUI);
+            Game.Events.Register(GameEvents.StopPuzzleMode, NavigationCanvasUtil.DisableConstellationNavUI);
         }
 
-        public void OnDeregister() {}
+        public void OnDeregister() {
+            Game.Events.Deregister(GameEvents.StartPuzzleNavigation, NavigationCanvasUtil.SetupConstellationNavUI);
+            Game.Events.Deregister(GameEvents.StopPuzzleMode, NavigationCanvasUtil.DisableConstellationNavUI);
+        }
+    }
+
+    static public partial class NavigationCanvasUtil {
+        public static void SetupConstellationNavUI() {
+            NavProjectionState state = Find.State<NavProjectionState>();
+
+            state.NavigationArrow.gameObject.SetActive(false);
+            state.NavigationCanvas.gameObject.SetActive(true);
+            state.OutlineGroup.gameObject.SetActive(true);
+            state.BoarderGroup.gameObject.SetActive(true);
+            state.Initialized = false;
+        }
+
+        public static void DisableConstellationNavUI() {
+            NavProjectionState state = Find.State<NavProjectionState>();
+
+            state.BoarderGroup.gameObject.SetActive(false);
+            state.OutlineGroup.gameObject.SetActive(false);
+            state.NavigationCanvas.gameObject.SetActive(false);
+        }
+
+        public static void SetupNeutrinoNavUI() {
+            NavProjectionState state = Find.State<NavProjectionState>();
+
+            state.OutlineGroup.gameObject.SetActive(false);
+            state.NavigationCanvas.gameObject.SetActive(true);
+            state.NavigationArrow.gameObject.SetActive(true);
+            state.BoarderGroup.gameObject.SetActive(true);
+        }
+
+        public static void DisableActiveNeutrinoNavUI() {
+            NavProjectionState state = Find.State<NavProjectionState>();
+
+            state.BoarderGroup.gameObject.SetActive(false);
+            state.NavigationCanvas.gameObject.SetActive(true);
+        }
+
+        public static void DisableNeutrinoNavUI() {
+            NavProjectionState state = Find.State<NavProjectionState>();
+
+            state.BoarderGroup.gameObject.SetActive(false);
+            state.OutlineGroup.gameObject.SetActive(false);
+            state.BoarderGroup.gameObject.SetActive(false);
+            state.NavigationArrow.gameObject.SetActive(false);
+            state.NavigationCanvas.gameObject.SetActive(false);
+        }
+
+        public static void UpdatedNeutrinoNavigationArrow(SpaceCameraState spaceCameraState) {
+            NavProjectionState navProjectionState = Find.State<NavProjectionState>();
+            DayConfigAsset config = DayConfigUtil.GetConfigForState();
+            if (!config) return;
+
+
+            SkyDome dome = Find.State<SkyDome>();
+
+            EqCoords target = config.NeutrinoEvent.NeutrinoCoordinates;
+
+            Vector3 targetPos = CelestialPositionerUtility.GetObjectPosition(dome.Position, target.RightAscension, target.Declination);
+
+            Transform navCanvas = navProjectionState.NavigationCanvas.transform;
+            RectTransform navArrow = navProjectionState.NavigationArrow;
+            
+            Vector3 viewPoint = spaceCameraState.Camera.Camera.WorldToViewportPoint(targetPos);
+
+            bool isTargetVisible = viewPoint.z > 0;
+            Vector2 direction = new Vector2(viewPoint.x - 0.5f, viewPoint.y - 0.5f);
+
+            if (!isTargetVisible) direction = - direction;
+
+            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            
+            // Set the arrow's rotation
+            navArrow.localEulerAngles = new Vector3(0, 0, angle - 90); // -90 because the arrow points up by default
+
+            if (!IsTargetOnScreen(viewPoint)) {
+                direction.Normalize();
+                navArrow.gameObject.SetActive(true);
+                 
+                // Position the arrow within the screen bounds
+                Vector2 canvasSize = navCanvas.GetComponent<RectTransform>().sizeDelta / 2;
+
+                // Calculate the offset from center
+                Vector2 offset = direction * canvasSize;
+
+                offset.x = Mathf.Clamp(offset.x, -canvasSize.x + navArrow.rect.width, canvasSize.x - navArrow.rect.width);
+                offset.y = Mathf.Clamp(offset.y, -canvasSize.y + navArrow.rect.height, canvasSize.y - navArrow.rect.height);
+                
+                // Set the arrow's position
+                navArrow.anchoredPosition = offset;
+            } else {
+                // Reset the arrow's position to center when target is on screen
+                navArrow.gameObject.SetActive(false);
+            }
+        }
+
+        private static bool IsTargetOnScreen(Vector3 viewportPosition) {
+            return viewportPosition.x > 0 
+            && viewportPosition.x < 1 
+            && viewportPosition.y > 0 
+            && viewportPosition.y < 1 
+            && viewportPosition.z > 0;
+        }
     }
 }

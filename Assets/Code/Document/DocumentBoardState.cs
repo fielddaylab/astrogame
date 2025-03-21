@@ -8,6 +8,7 @@ using FieldDay.SharedState;
 using Leaf.Runtime;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Astro {
@@ -30,6 +31,8 @@ namespace Astro {
 
         public AssetPack DocumentAssets;
 
+        [NonSerialized] public List<DocumentRenderer> SpawnedDocuments = new List<DocumentRenderer>();
+
         [Header("Interact Settings")]
         [Range(0f, 1f)] public float FollowSpeed;
         public Vector3 DocHoverOffset;
@@ -44,31 +47,96 @@ namespace Astro {
 
     public static partial class DocumentUtility {
 
+        private const string POSTCARD_DIR = "/Postcards/";
+        private const string LOW_RES_ID = "LOW_RES_";
+        private const string DEFAULT_LOW_RES_FILE_TYPE = ".png";
+        private const string DEFAULT_LOW_RES_TEXT = "Scribbles.png";
+
         #region Spawning
 
-        public static DocumentRenderer SpawnDocument(DocumentAsset asset, StringHash32 id, DocumentBoardState state = null) {
+        public static DocumentRenderer SpawnDocument(DocumentAsset asset, StringHash32 id, DocumentBoardState state = null, bool addToArchive = true) {
             if (state == null) {
                 state = Find.State<DocumentBoardState>();
             }
             DocumentRenderer spawned = GameObject.Instantiate(asset.Prefab, state.DocumentParent);
+
+            state.SpawnedDocuments.Add(spawned);
+
+            // Init text
             spawned.Title.SetText(asset.TitleText);
-            spawned.FrontBodyText.SetText(asset.FrontBodyText);
+            if (spawned.FrontBodyText) { spawned.FrontBodyText.SetText(asset.FrontBodyText); }
             if(spawned.BackBodyText) { spawned.BackBodyText.SetText(asset.BackBodyText); }
+
+            if (spawned.FrontBodyText.text.Length > 0) {
+                spawned.LowResImgFront.Path = Application.streamingAssetsPath + POSTCARD_DIR + DEFAULT_LOW_RES_TEXT;
+                spawned.LowResImgFront.Preload();
+            }
+            if (spawned.BackBodyText?.text.Length > 0) {
+                spawned.LowResImgBack.Path = Application.streamingAssetsPath + POSTCARD_DIR + DEFAULT_LOW_RES_TEXT;
+                spawned.LowResImgBack.Preload();
+            }
+
+            // Init video
             if (spawned.Video) {
                 spawned.Video.gameObject.SetActive(true);
 
-                spawned.Video.url = Application.streamingAssetsPath + "/Postcards/" + asset.VideoName;
-                spawned.Video.Play();
+                spawned.Video.url = default;
 
-                if (spawned.Video.url.Length == 0) {
-                    spawned.Video.gameObject.SetActive(false);
+                if (asset.VideoName.Length == 0) {
+                    spawned.FrontAnimation.gameObject.SetActive(false);
+                }
+                else {
+                    spawned.BaseVisualAssetName = asset.VideoName;
+                    spawned.BaseVisualAssetFileType = "." + asset.FileType;
+                    spawned.Video.url = Application.streamingAssetsPath + POSTCARD_DIR + spawned.BaseVisualAssetName + spawned.BaseVisualAssetFileType;
+                    spawned.FrontAnimation.gameObject.SetActive(true);
+                    spawned.Video.Play();
+
+                    spawned.LowResImgFront.Path = Application.streamingAssetsPath + POSTCARD_DIR + LOW_RES_ID + spawned.BaseVisualAssetName + DEFAULT_LOW_RES_FILE_TYPE;
+                    spawned.LowResImgFront.Preload();
                 }
             }
+
+            // Init image
+            if (spawned.FrontStaticImg)
+            {
+                spawned.FrontStaticImg.gameObject.SetActive(true);
+
+                spawned.FrontStaticImg.Path = default;
+
+                if (asset.StaticImgName.Length == 0) {
+                    spawned.FrontStaticImg.gameObject.SetActive(false);
+                }
+                else {
+                    spawned.BaseVisualAssetName = asset.StaticImgName;
+                    spawned.BaseVisualAssetFileType = "." + asset.FileType;
+                    spawned.FrontStaticImg.Path = Application.streamingAssetsPath + POSTCARD_DIR + spawned.BaseVisualAssetName + spawned.BaseVisualAssetFileType;
+                    spawned.FrontStaticImg.Preload();
+                    spawned.FrontStaticImg.gameObject.SetActive(true);
+
+                    spawned.LowResImgFront.Path = Application.streamingAssetsPath + POSTCARD_DIR + LOW_RES_ID + spawned.BaseVisualAssetName + spawned.BaseVisualAssetFileType;
+                    spawned.LowResImgFront.Preload();
+                }
+            }
+
             spawned.transform.localPosition = asset.DefaultPinnedPos;
-            spawned.ZoomOffsetOverride = asset.ZoomOffsetOverride;
+            if (spawned.ZoomOffsetOverride == default) {
+                spawned.ZoomOffsetOverride = asset.ZoomOffsetOverride;
+            }
+            else if (asset.ZoomOffsetOverride != default) {
+                spawned.ZoomOffsetOverride = asset.ZoomOffsetOverride;
+            }
             spawned.Interactable.Renderer = spawned;
             spawned.Interactable.Parts = spawned.Interactable.GetComponentsInChildren<DocumentPart>(true);
             spawned.Interactable.AssetName = id;
+
+
+            if (addToArchive) {
+                // add asset to ArchiveState (usually if not being spawned from an Archive)
+                var archiveState = Find.State<ArchiveState>();
+
+                ArchiveUtility.AddAssetToArchive(archiveState, id, spawned.transform.localPosition);
+            }
 
             return spawned;
         }
@@ -81,17 +149,18 @@ namespace Astro {
         [LeafMember("SpawnDocumentToCamera")]
         public static void LeafSpawnDocumentToCamera(StringHash32 id) {
             DocumentBoardState state = Find.State<DocumentBoardState>();
+            ArchiveState archiveState = Find.State<ArchiveState>();
 
             if (state.DocumentRoutine.Exists()) {
                 // wait for previous document routine to complete
-                state.DocumentRoutine.OnComplete(() => { SpawnDocumentToCamera(state, id); });
+                state.DocumentRoutine.OnComplete(() => { SpawnDocumentToCamera(state, archiveState, id); });
             }
             else {
-                SpawnDocumentToCamera(state, id);
+                SpawnDocumentToCamera(state, archiveState, id);
             }
         }
 
-        public static void SpawnDocumentToCamera(DocumentBoardState state, StringHash32 id) {
+        public static void SpawnDocumentToCamera(DocumentBoardState state, ArchiveState archiveState, StringHash32 id) {
             var asset = Find.NamedAsset<DocumentAsset>(id);
             var spawned = SpawnDocument(asset, id, state);
             // Init pinned position
@@ -237,47 +306,128 @@ namespace Astro {
                 DeselectDocument(state);
             }
             if (state.DocZoomed) {
-                SetInteractionLayer(state.DocZoomed, LayerMasks.DocumentInteract_Index);
-                state.DocumentRoutine.Replace(MoveDocToPos(doc.transform, state.StoredDocPos));
-                if (doc.Renderer.Video) {
-                    doc.Renderer.Video.Stop();
-                }
-                state.StoredDocPos = Vector3.zero;
-                state.DocZoomed = null;
-                InputUtility.SetClickableMaskDefault(Find.State<InputState>());
-                doc.transform.SetParent(state.DocumentParent, true);
-                using (var table = TempVarTable.Alloc()) {
-                    table.Set("documentId", doc.AssetName);
-                    ScriptUtility.Trigger(ScriptEvents.DocumentInspectEnd, table);
-                }
+                // Return doc to board
+                ReturnDocToBoard(doc, state);
             } else {
-                if (state.OverrideStoredDoc) {
-                    state.StoredDocPos = state.OverrideStoredDocPos;
-                    state.OverrideStoredDoc = false;
-                }
-                else {
-                    state.StoredDocPos = doc.transform.position;
-                }
-                //state.StoredDocPos.z = state.DocumentParent.position.z;
-                Vector3 zoomOffset = doc.Renderer.ZoomOffsetOverride == default ? state.DocZoomOffset : doc.Renderer.ZoomOffsetOverride;
-                var viewState = Find.State<ViewState>();
-                state.DocumentRoutine.Replace(MoveDocToCam(viewState, doc.transform, Game.Rendering.PrimaryCamera.transform, zoomOffset))
-                    .OnComplete(() => 
-                    {
-                        using (var table = TempVarTable.Alloc()) {
-                            table.Set("documentId", doc.AssetName);
-                            ScriptUtility.Trigger(ScriptEvents.DocumentInspectStart, table);
-                        }
-                        if (doc.Renderer.Video.clip) {
-                            doc.Renderer.Video.Play();
-                        }
-                    });
-                state.DocZoomed = doc;
-                doc.transform.SetParent(Game.Rendering.PrimaryCamera.transform, true);
-                SetInteractionLayer(state.DocZoomed, LayerMasks.TopLayer_Index);
-                InputUtility.SetClickableMaskTopLayer(Find.State<InputState>());
+                // Bring doc to camera
+                BringDocToCam(doc, state);
             }
             state.InteractedThisFrame = true;
+        }
+
+        private static void ReturnDocToBoard(DocumentInteractable doc, DocumentBoardState state)
+        {
+            SetInteractionLayer(state.DocZoomed, LayerMasks.DocumentInteract_Index);
+            state.DocumentRoutine.Replace(MoveDocToPos(doc.transform, state.StoredDocPos))
+                .OnComplete(() =>
+                {
+                    // Replace with low-res assets
+                    // if video, replace with low-res version
+                    if (doc.Renderer.Video?.url?.Length > 0)
+                    {
+                        doc.Renderer.FrontAnimation.gameObject.SetActive(false);
+                        doc.Renderer.LowResImgFront.gameObject.SetActive(true);
+                    }
+                    // if image, replace with low-res version
+                    if (doc.Renderer.FrontStaticImg?.Path?.Length > 0)
+                    {
+                        doc.Renderer.FrontStaticImg.gameObject.SetActive(false);
+                        doc.Renderer.FrontStaticImg.Unload();
+                        doc.Renderer.LowResImgFront.gameObject.SetActive(true);
+                        doc.Renderer.LowResImgFront.Preload();
+                    }
+                    // if front text, hide body text and display default text scribbles
+                    if (doc.Renderer.FrontBodyText.text.Length > 0)
+                    {
+                        doc.Renderer.FrontBodyText.gameObject.SetActive(false);
+                        doc.Renderer.LowResImgFront.gameObject.SetActive(true);
+                        doc.Renderer.LowResImgFront.Preload();
+                    }
+                    // if back text, hide body text and display default text scribbles
+                    if (doc.Renderer.BackBodyText?.text.Length > 0)
+                    {
+                        doc.Renderer.BackBodyText.gameObject.SetActive(false);
+                        doc.Renderer.LowResImgBack.gameObject.SetActive(true);
+                        doc.Renderer.LowResImgBack.Preload();
+                    }
+                });
+            // stop video
+            if (doc.Renderer.Video.isPlaying) {
+                doc.Renderer.Video.Pause();
+                doc.Renderer.Video.frame = (long)doc.Renderer.Video.frameCount - 1;
+            }
+
+
+            state.StoredDocPos = Vector3.zero;
+            state.DocZoomed = null;
+            InputUtility.SetClickableMaskDefault(Find.State<InputState>());
+            doc.transform.SetParent(state.DocumentParent, true);
+            using (var table = TempVarTable.Alloc()) {
+                table.Set("documentId", doc.AssetName);
+                ScriptUtility.Trigger(ScriptEvents.DocumentInspectEnd, table);
+            }
+        }
+
+        private static void BringDocToCam(DocumentInteractable doc, DocumentBoardState state)
+        {
+            if (state.OverrideStoredDoc) {
+                state.StoredDocPos = state.OverrideStoredDocPos;
+                state.OverrideStoredDoc = false;
+            }
+            else {
+                state.StoredDocPos = doc.transform.position;
+            }
+            Vector3 zoomOffset = doc.Renderer.ZoomOffsetOverride == default ? state.DocZoomOffset : doc.Renderer.ZoomOffsetOverride;
+            var viewState = Find.State<ViewState>();
+
+            if (doc.Renderer.Video?.url.Length != 0) {
+                doc.Renderer.Video.frame = 0;
+            }
+
+            // Replace with high-res assets
+
+            // if video, replace with high-res version
+            if (doc.Renderer.Video?.url?.Length > 0) {
+                doc.Renderer.FrontAnimation.gameObject.SetActive(true);
+                doc.Renderer.LowResImgFront.gameObject.SetActive(false);
+            }
+            // if image, replace with high-res version
+            if (doc.Renderer.FrontStaticImg?.Path?.Length > 0) {
+                doc.Renderer.FrontStaticImg.gameObject.SetActive(true);
+                doc.Renderer.FrontStaticImg.Preload();
+                doc.Renderer.LowResImgFront.gameObject.SetActive(false);
+                doc.Renderer.LowResImgFront.Unload();
+            }
+            // if front text, hide default text scribbles and enable body text
+            if (doc.Renderer.FrontBodyText.text.Length > 0) {
+                doc.Renderer.FrontBodyText.gameObject.SetActive(true);
+                doc.Renderer.LowResImgFront.gameObject.SetActive(false);
+                doc.Renderer.LowResImgFront.Unload();
+            }
+            // if back text, hide body text and display default text scribbles
+            if (doc.Renderer.BackBodyText.text.Length > 0) {
+                doc.Renderer.BackBodyText.gameObject.SetActive(true);
+                doc.Renderer.LowResImgBack.gameObject.SetActive(false);
+                doc.Renderer.LowResImgBack.Unload();
+            }
+
+            state.DocumentRoutine.Replace(MoveDocToCam(viewState, doc.transform, Game.Rendering.PrimaryCamera.transform, zoomOffset))
+                .OnComplete(() =>
+                {
+                    using (var table = TempVarTable.Alloc()) {
+                        table.Set("documentId", doc.AssetName);
+                        ScriptUtility.Trigger(ScriptEvents.DocumentInspectStart, table);
+                    }
+
+                    // play video
+                    if (doc.Renderer.Video.url.Length != 0) {
+                        doc.Renderer.Video.Play();
+                    }
+                });
+            state.DocZoomed = doc;
+            doc.transform.SetParent(Game.Rendering.PrimaryCamera.transform, true);
+            SetInteractionLayer(state.DocZoomed, LayerMasks.TopLayer_Index);
+            InputUtility.SetClickableMaskTopLayer(Find.State<InputState>());
         }
 
         public static void OverrideStoredDocPos(DocumentInteractable doc, Vector3 newPos, DocumentBoardState state = null) {

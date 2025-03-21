@@ -25,20 +25,18 @@ namespace Astro
 
                 LatLongCoords globe = GlobePosition;
                 globe.Longitude -= CoordinateUtility.HmsToDms(dayConfig.SkyRotationOffset);
+
+                Quaternion camRot = CoordinateUtility.LatLongRotation(globe.Latitude, globe.Longitude);
+                camState.HorizonPlane.rotation = camRot;
+                domeState.HorizonRoot.rotation = camRot;
+
+                LatLongCoords counterRot = globe;
+                counterRot.Latitude = -counterRot.Latitude;
+                counterRot.Longitude = -counterRot.Longitude;
                 
-                globe.Latitude = -globe.Latitude;
-                globe.Longitude = -globe.Longitude;
-
-                domeState.Rotation = new EqCoords() {
-                    RightAscension = CoordinateUtility.DmsToHms(globe.Longitude),
-                    Declination = globe.Longitude
-                };
-
-                Quaternion skyRot = CoordinateUtility.LatLongRotation(globe.Latitude, globe.Longitude);
+                Quaternion skyRot = CoordinateUtility.LatLongRotation(counterRot.Latitude, counterRot.Longitude);
                 Matrix4x4 skyRotMat = Matrix4x4.Rotate(skyRot);
-
                 Shader.SetGlobalMatrix("_SkyboxRotation", skyRotMat);
-                domeState.StarRoot.localRotation = skyRot;
 
                 WorldPositionUtility.TryLook(camState, StartingLookCoords);
             });

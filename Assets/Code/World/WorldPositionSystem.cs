@@ -10,8 +10,6 @@ namespace Astro {
     {
         public static void TryLook(SpaceCameraState camState, EqCoords coords)
         {
-            coords = CelestialPositionerUtility.AdjustCoordinates(coords);
-
             float raDegrees = (float)CoordinateUtility.HmsToDD(coords.RightAscension);
             float declDegrees = (float)CoordinateUtility.DmsToDD(coords.Declination);
             var posOffset = CoordinateUtility.RAscDeclDegreesToCartesianCoordinates(raDegrees, declDegrees);
@@ -19,12 +17,32 @@ namespace Astro {
             Quaternion look = Quaternion.LookRotation(posOffset, camState.HorizonPlane.up);
             Vector3 angles = look.eulerAngles;
             angles.z = 0;
-            camState.Camera.RootTransform.localEulerAngles = angles;
+            camState.Camera.RootTransform.eulerAngles = angles;
 
             camState.HorizLook = angles.y;
             camState.VertLook = angles.x;
 
             camState.OnLookUpdated.Invoke(camState);
+        }
+
+        public static Vector3 GetLookVector(EqCoords coords) {
+            float raDegrees = (float)CoordinateUtility.HmsToDD(coords.RightAscension);
+            float declDegrees = (float)CoordinateUtility.DmsToDD(coords.Declination);
+            var posOffset = CoordinateUtility.RAscDeclDegreesToCartesianCoordinates(raDegrees, declDegrees);
+
+            return posOffset.normalized;
+        }
+
+        public static Quaternion GetLookRotation(SpaceCameraState camState, EqCoords coords) {
+            float raDegrees = (float)CoordinateUtility.HmsToDD(coords.RightAscension);
+            float declDegrees = (float)CoordinateUtility.DmsToDD(coords.Declination);
+            var posOffset = CoordinateUtility.RAscDeclDegreesToCartesianCoordinates(raDegrees, declDegrees);
+
+            Quaternion look = Quaternion.LookRotation(posOffset, camState.HorizonPlane.up);
+            Vector3 angles = look.eulerAngles;
+            angles.z = 0;
+
+            return Quaternion.Euler(angles);
         }
 
         public static void ForceAbsRotation(SpaceCameraState camState, Vector3 angles) {

@@ -1,3 +1,4 @@
+using BeauPools;
 using FieldDay;
 using FieldDay.Systems;
 using System.Collections;
@@ -12,7 +13,7 @@ namespace Astro
         {
             bool hasWork = base.HasWork();
             if (m_State) {
-                hasWork = hasWork && !m_State.Initialized;
+                hasWork = hasWork && m_State.IsDirty;
             }
             else { 
                 return false; 
@@ -29,23 +30,22 @@ namespace Astro
             var focusState = Find.State<FocusState>();
             var spaceCamera = Find.State<SpaceCameraState>();
 
-            // populate sky with celestial objects
-            var center = dome.Position;
-            for (int i = 0; i < layout.AllCelestialObjs.Length; i++)
-            {
-                var newCelestialObj = Instantiate(m_State.CelestialObjPrefab).transform;
-                CelestialAsset currAsset = layout.AllCelestialObjs[i];
-                // Use UIFocus pool
+            focusPools.Focii.Free(focusState.ActiveFocii);
+
+            CelestialObjectVisMask visMask = m_State.VisMask;
+
+            foreach(var obj in dome.AllObjects) {
+                if ((obj.Resource.Visibility & visMask) == 0) {
+                    continue;
+                }
+
                 var newFocus = focusPools.Focii.Alloc(spaceCamera.Canvas.transform);
                 // TODO: assign relevant 2D representation
-                FocusableUtility.InitFocusable(focusState, newFocus, newCelestialObj, currAsset, DetermineSprite(currAsset.Category));
-                focusState.AllFocii.PushBack(newFocus);
-
-                CelestialPositionerUtility.PositionObject(center, newCelestialObj, currAsset.Coords.RightAscension, currAsset.Coords.Declination);
-                newCelestialObj.name = currAsset.DisplayName;
+                FocusableUtility.InitFocusable(focusState, newFocus, obj.transform, obj.Resource, DetermineSprite(obj.Resource.Category));
+                focusState.ActiveFocii.PushBack(newFocus);
             }
 
-            m_State.Initialized = true;
+            m_State.IsDirty = false;
         }
 
         private Sprite DetermineSprite(CelestialObjectCategory category)

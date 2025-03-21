@@ -52,6 +52,7 @@ public static class PuzzleNavigationUtility {
 
         PuzzleNavigationState puzzleNavState = Find.State<PuzzleNavigationState>(); 
         puzzleNavState.NavigationModeActive = false;
+        puzzleNavState.ReadoutDirty = false;
         ResetReview();
 
         ViewNavUtility.LeafMoveToNode("Right");
@@ -95,18 +96,11 @@ public static class PuzzleNavigationUtility {
         if (!puzzleState.ActivePuzzle || !puzzleNavState.NavigationModeActive) return;
 
         EqCoords target = puzzleState.ActivePuzzle.PuzzleCoordinates;
-        Quaternion targetQuat = Quaternion.Euler(
-            360 - (float)CoordinateUtility.DmsToDD( target.Declination ),
-            360 - (float)CoordinateUtility.HmsToDD( target.RightAscension ),
-            0
-        );
-        Vector3 targetFoward = Geom.Forward(targetQuat);
+        Vector3 targetFoward = WorldPositionUtility.GetLookVector(target);
 
         Quaternion spaceCameraQuat = spaceCameraState.Camera.RootTransform.rotation;
 
         Vector3 spaceCamForward = Geom.Forward(spaceCameraQuat);
-        // Note: This is sometimes helpful for aligning puzzles
-        Debug.Log("[PuzzleNavUtil] Camera RA:" + CoordinateUtility.DDToHms(360 - spaceCameraQuat.eulerAngles.y) + " D:" + CoordinateUtility.DDToDms(360 - spaceCameraQuat.eulerAngles.x));
 
         // Debug.Log("[PuzzleNavUtil] Target:" + targetFoward +  ", Camera:" + spaceCamForward + " Distance:" + Vector3.Dot(targetFoward, spaceCamForward));
         float newDist = Vector3.Dot(targetFoward, spaceCamForward);
@@ -126,17 +120,13 @@ public static class PuzzleNavigationUtility {
         PuzzleState puzzleState = Find.State<PuzzleState>();
 
         EqCoords target = puzzleState.ActivePuzzle.PuzzleCoordinates;
-        Quaternion targetQuat = Quaternion.Euler(
-            360 - (float)CoordinateUtility.DmsToDD( target.Declination ),
-            360 - (float)CoordinateUtility.HmsToDD( target.RightAscension ),
-            0
-        );
+        Quaternion targetQuat = WorldPositionUtility.GetLookRotation(spaceCameraState, target);
 
         CanvasGroup boarder = navProjectionState.BoarderGroup;
         CanvasGroup outline = navProjectionState.OutlineGroup.GetComponent<CanvasGroup>();
+        yield return spaceCameraState.Camera.RootTransform.RotateQuaternionTo(targetQuat, 0.5f).Ease(Curve.Smooth).OnUpdate((_) => spaceCameraState.LookUpdatedThisFrame = true);
         yield return Routine.Combine(
-            spaceCameraState.Camera.RootTransform.RotateQuaternionTo(targetQuat, 0.4f).Ease(Curve.Smooth),
-            Tween.Value(1f, 0.5f, (f) => { outline.alpha = f; }, Mathf.Lerp, 0.4f),
+            Tween.Value(1f, 0.4f, (f) => { outline.alpha = f; }, Mathf.Lerp, 0.4f),
             Tween.Value(boarder.alpha, 0f, (f) => { boarder.alpha = f; }, Mathf.Lerp, 0.4f),
             Tween.Color(Color.white, navProjectionState.NavigationCompleteColor, (c) => { UpdateEdgeGroupColor(navProjectionState.OutlineGroup, c); }, 0.4f, ColorUpdate.FullColor)
         ); 

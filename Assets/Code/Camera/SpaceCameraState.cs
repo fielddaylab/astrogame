@@ -1,4 +1,3 @@
-using BeauRoutine;
 using BeauUtil;
 using FieldDay;
 using FieldDay.SharedState;
@@ -62,8 +61,12 @@ namespace Astro
             Game.Events.Register(GameEvents.StopPuzzleNavigation, SpaceCameraUtility.OnStopPuzzleNav);
             Game.Events.Register(GameEvents.StopPuzzleMode, SpaceCameraUtility.OnStopPuzzleMode);
 
-            Game.Scenes.QueueOnEnable(() => {
-                transform.SetPosition(Find.State<SkyDome>().Position, Axis.XZ, Space.Self);
+            OnLookUpdated.Register(() => { 
+                LookUpdatedThisFrame = true; 
+
+                //// Note: This is sometimes helpful for aligning puzzles
+                //Quaternion spaceCameraQuat = Camera.RootTransform.rotation;
+                //Debug.Log("[SpaceCameraState] Camera RA:" + CoordinateUtility.DegreesToRA(360 - spaceCameraQuat.eulerAngles.y) + " D:" + CoordinateUtility.DecimalDegreesToDeclination(360 - spaceCameraQuat.eulerAngles.x));
             });
         }
 
@@ -71,8 +74,7 @@ namespace Astro
     }
 
 
-    public static class SpaceCameraUtility
-    {
+    public static class SpaceCameraUtility {
         public static void OnStartPuzzleNav() {
             SpaceCameraState spaceCameraState = Find.State<SpaceCameraState>();
             spaceCameraState.ZoomInputLocked = true;
@@ -94,6 +96,13 @@ namespace Astro
             spaceCameraState.ZoomInputLocked = false;
         }
 
+        public static void TryLook(Vector3 lookPos, Transform camRoot, Transform orientRoot) {
+            camRoot.LookAt(lookPos, orientRoot.up);
+            var angles = camRoot.localEulerAngles;
+            angles.x = 0;
+            camRoot.localEulerAngles = angles;
+        }
+
         [LeafMember("TelescopeLook")]
         public static void LeafAdjustLook(float deltaHoriz, float deltaVert) {
             SpaceCameraState cam = Find.State<SpaceCameraState>();
@@ -105,7 +114,6 @@ namespace Astro
             var angles = cam.Camera.RootTransform.localEulerAngles;
             angles.x = cam.VertLook;
             angles.y = cam.HorizLook;
-            angles.z = 0;
             cam.Camera.RootTransform.localEulerAngles = angles;
             cam.OnLookUpdated.Invoke(cam);
             cam.LookUpdatedThisFrame = true;

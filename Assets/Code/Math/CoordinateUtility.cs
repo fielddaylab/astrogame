@@ -134,13 +134,13 @@ namespace Astro
         /// Converts right ascension and declination into cartesian coordinates on a unit
         /// sphere (r = 1)
         /// </summary>
-        public static Vector3 LatLongRadiansToCartesianCoordinates(float raRad, float decRad) {
+        public static Vector3 LatLongRadiansToCartesianCoordinates(float latRad, float longRad) {
             // Note: Skybox map is rotated -90 degrees in the z from expected calculations
 
             // Expected
-            float x = (float) (Math.Cos(raRad) * Math.Cos(decRad));
-            float y = (float) (Math.Sin(raRad) * Math.Cos(decRad));
-            float z = (float) Math.Sin(decRad);
+            float x = (float) (Math.Cos(latRad) * Math.Cos(longRad));
+            float y = (float) (Math.Cos(latRad) * Math.Sin(longRad));
+            float z = (float) Math.Sin(latRad);
 
 
             // Corrected

@@ -8,6 +8,10 @@ using UnityEngine;
 namespace Astro {
     [CreateAssetMenu(menuName = "AstroGame/Neutrino Config")] 
     public sealed class NeutrinoConfigAsset : NamedAsset, IRegistrationCallbacks {
+        [Header("Neutrino Origin")]
+        public EqCoords NeutrinoCoordinates;
+
+        [Header("Open ID Objects")]
         public CelestialAsset[] RelevantObjects;
         [NonSerialized] public StringHash32[] RelevantObjectIds;
 

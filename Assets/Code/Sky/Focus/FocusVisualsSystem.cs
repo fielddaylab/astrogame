@@ -21,10 +21,12 @@ namespace Astro {
                         // position 2D representation in screen space
                         Vector2 viewPoint = spaceCam.Camera.Camera.WorldToViewportPoint(focus.Target.position, Camera.MonoOrStereoscopicEye.Mono);
                         focus.Rect.anchorMin = focus.Rect.anchorMax = viewPoint;
+                        focus.HighlightRect.gameObject.SetActive(true);
                     }
                     else {
                         focus.Represent2D.enabled = false;
                         focus.Button.enabled = false;
+                        focus.HighlightRect.gameObject.SetActive(false);
                     }
                 }
 

@@ -122,6 +122,39 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &1064473385
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1064473386}
+  m_Layer: 0
+  m_Name: Horizon
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1064473386
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1064473385}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 606550172410952488}
+  - {fileID: 804670595628711059}
+  m_Father: {fileID: 974755938234216832}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1077162438
 GameObject:
   m_ObjectHideFlags: 0
@@ -300,7 +333,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1077162439}
-  m_Father: {fileID: 974755938234216832}
+  m_Father: {fileID: 1064473386}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &804670595628711059
 Transform:
@@ -315,7 +348,7 @@ Transform:
   m_LocalScale: {x: 127.460846, y: 1.0621736, z: 127.460846}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 974755938234216832}
+  m_Father: {fileID: 1064473386}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &974755938234216832
 Transform:
@@ -330,8 +363,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 606550172410952488}
-  - {fileID: 804670595628711059}
+  - {fileID: 1064473386}
   - {fileID: 1501692074}
   - {fileID: 4116329895519133601}
   - {fileID: 3568733133298134264}
@@ -510,6 +542,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   StarRoot: {fileID: 1501692074}
+  HorizonRoot: {fileID: 1064473386}
   Position: {x: -2000, y: 0, z: -2000}
   Radius: 1000
 --- !u!114 &4147787590570782413
