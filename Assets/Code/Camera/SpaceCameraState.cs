@@ -94,13 +94,6 @@ namespace Astro
             spaceCameraState.ZoomInputLocked = false;
         }
 
-        public static void TryLook(Vector3 lookPos, Transform camRoot, Transform orientRoot) {
-            camRoot.LookAt(lookPos, orientRoot.up);
-            var angles = camRoot.localEulerAngles;
-            angles.x = 0;
-            camRoot.localEulerAngles = angles;
-        }
-
         [LeafMember("TelescopeLook")]
         public static void LeafAdjustLook(float deltaHoriz, float deltaVert) {
             SpaceCameraState cam = Find.State<SpaceCameraState>();
@@ -112,6 +105,7 @@ namespace Astro
             var angles = cam.Camera.RootTransform.localEulerAngles;
             angles.x = cam.VertLook;
             angles.y = cam.HorizLook;
+            angles.z = 0;
             cam.Camera.RootTransform.localEulerAngles = angles;
             cam.OnLookUpdated.Invoke(cam);
             cam.LookUpdatedThisFrame = true;

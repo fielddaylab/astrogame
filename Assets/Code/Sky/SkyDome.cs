@@ -8,10 +8,13 @@ using UnityEngine;
 
 namespace Astro {
     public sealed class SkyDome : SharedStateComponent {
-        public Vector3 Position;
+        public Transform StarRoot;
+
+        [HideInInspector] public Vector3 Position;
         public float Radius = 1000;
 
         [NonSerialized] public CelestialObject[] AllObjects;
+        [NonSerialized] public EqCoords Rotation;
 
         private void Awake() {
             Position = transform.position;

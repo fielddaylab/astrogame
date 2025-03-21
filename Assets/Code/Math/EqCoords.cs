@@ -9,9 +9,9 @@ namespace Astro {
     [Serializable]
     public struct EqCoords : IEquatable<EqCoords> {
         public HmsCoords RightAscension;
-        public HmsCoords Declination;
+        public DmsCoords Declination;
 
-        public EqCoords(HmsCoords ra, HmsCoords dec) {
+        public EqCoords(HmsCoords ra, DmsCoords dec) {
             RightAscension = ra;
             Declination = dec;
         }

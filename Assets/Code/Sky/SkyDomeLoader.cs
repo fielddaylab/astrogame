@@ -11,6 +11,7 @@ using UnityEngine.SceneManagement;
 
 namespace Astro
 {
+    [PreloadOrder(-200)]
     public class SkyDomeLoader : MonoBehaviour, IScenePreload
     {
         public CelestialObject CelestialObjPrefab;
@@ -27,7 +28,7 @@ namespace Astro
             for(int i = 0; i < layout.AllCelestialObjs.Length; i++) {
                 CelestialAsset resource = layout.AllCelestialObjs[i];
 
-                CelestialObject obj = Instantiate(CelestialObjPrefab, transform);
+                CelestialObject obj = Instantiate(CelestialObjPrefab, dome.StarRoot);
                 CelestialPositionerUtility.PositionObject(center, obj.transform, resource.Coords.RightAscension, resource.Coords.Declination);
                 obj.Resource = resource;
                 obj.name = resource.DisplayName;

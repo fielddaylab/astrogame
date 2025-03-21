@@ -4,7 +4,6 @@ Shader "Skybox/Astro Custom" {
 Properties {
     _Tint ("Tint Color", Color) = (.5, .5, .5, .5)
     [Gamma] _Exposure ("Exposure", Range(0, 8)) = 1.0
-    _Rotation ("Rotation", Range(0, 360)) = 0
     [MaterialToggle] UseAlphaChannel ("Use Alpha Channel", Float) = 0
     [NoScaleOffset] _FrontTex ("Front [+Z]   (HDR)", 2D) = "grey" {}
     [NoScaleOffset] _BackTex ("Back [-Z]   (HDR)", 2D) = "grey" {}
@@ -22,17 +21,13 @@ SubShader {
     #include "UnityCG.cginc"
     #pragma multi_compile_local _ USEALPHACHANNEL_ON
 
-    half4 _Tint;
+    half4 _Tint; 
     half _Exposure;
-    float _Rotation;
+    float4x4 _SkyboxRotation;
 
-    float3 RotateAroundYInDegrees (float3 vertex, float degrees)
+    float3 RotateSkybox(float3 vertex)
     {
-        float alpha = degrees * UNITY_PI / 180.0;
-        float sina, cosa;
-        sincos(alpha, sina, cosa);
-        float2x2 m = float2x2(cosa, -sina, sina, cosa);
-        return float3(mul(m, vertex.xz), vertex.y).xzy;
+        return mul(_SkyboxRotation, float4(vertex, 1.0)).xyz;
     }
 
     struct appdata_t {
@@ -50,7 +45,7 @@ SubShader {
         v2f o;
         UNITY_SETUP_INSTANCE_ID(v);
         UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
-        float3 rotated = RotateAroundYInDegrees(v.vertex, _Rotation);
+        float3 rotated = RotateSkybox(v.vertex);
         o.vertex = UnityObjectToClipPos(rotated);
         o.texcoord = v.texcoord;
         return o;

@@ -101,6 +101,7 @@ namespace Astro
 
             var angles = m_State.Camera.RootTransform.localEulerAngles;
             angles.x = m_State.VertLook;
+            angles.z = 0;
             m_State.Camera.RootTransform.localEulerAngles = angles;
 
             RecordLookUpdated();
@@ -114,6 +115,7 @@ namespace Astro
 
             var angles = m_State.Camera.RootTransform.localEulerAngles;
             angles.y = m_State.HorizLook;
+            angles.z = 0;
             m_State.Camera.RootTransform.localEulerAngles = angles;
 
             RecordLookUpdated();

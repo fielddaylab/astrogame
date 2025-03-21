@@ -30,25 +30,18 @@ namespace Astro {
             if (!puzzleState.ActivePuzzle) return;
 
             EqCoords target = puzzleState.ActivePuzzle.PuzzleCoordinates;
-            Quaternion targetQuat = Quaternion.Euler(
-                360 - (float)CoordinateUtility.DeclinationToDecimalDegrees(target.Declination),
-                360 - (float)CoordinateUtility.RAToDegrees(target.RightAscension),
-                0
-            );
-            Vector3 targetFoward = Geom.Forward(targetQuat);
+            EqCoords adjustedTarget = CelestialPositionerUtility.AdjustCoordinates(target);
 
-            Quaternion spaceCameraQuat = spaceCam.Camera.RootTransform.rotation;
-            // Vector3 spaceCamForward = Geom.Forward(spaceCameraQuat);
-
+            Vector3 spaceCameraOriginalRot = spaceCam.Camera.RootTransform.localEulerAngles;
+            
             // populate sky with celestial objects
             var center = dome.Position;
 
             Camera spaceCamera = spaceCam.Camera.Camera;
 
             // Hack: just point our camera at our target position to draw our navigation overlay
-            EqCoords stashedPos = new EqCoords(CoordinateUtility.DegreesToRA(360 - spaceCameraQuat.eulerAngles.y), CoordinateUtility.DecimalDegreesToDeclination(360 - spaceCameraQuat.eulerAngles.x));
             float stashedFOV = spaceCamera.fieldOfView;
-            WorldPositionUtility.TryLook(dome.transform, spaceCam.Camera.RootTransform, target);
+            WorldPositionUtility.TryLook(spaceCam, target);
             spaceCamera.fieldOfView = spaceCam.Camera.OriginalFOV / puzzleState.ActivePuzzle.PuzzleCameraZoom;
 
             // Remove any old projections
@@ -97,7 +90,7 @@ namespace Astro {
             }
 
             // Okay now put the camera back
-            WorldPositionUtility.TryLook(dome.transform, spaceCam.Camera.RootTransform, stashedPos);
+            WorldPositionUtility.ForceAbsRotation(spaceCam, spaceCameraOriginalRot);
             spaceCamera.fieldOfView = stashedFOV;
             m_StateA.Initialized = true;
         }

@@ -96,8 +96,8 @@ public static class PuzzleNavigationUtility {
 
         EqCoords target = puzzleState.ActivePuzzle.PuzzleCoordinates;
         Quaternion targetQuat = Quaternion.Euler(
-            360 - (float)CoordinateUtility.DeclinationToDecimalDegrees( target.Declination ),
-            360 - (float)CoordinateUtility.RAToDegrees( target.RightAscension ),
+            360 - (float)CoordinateUtility.DmsToDD( target.Declination ),
+            360 - (float)CoordinateUtility.HmsToDD( target.RightAscension ),
             0
         );
         Vector3 targetFoward = Geom.Forward(targetQuat);
@@ -106,7 +106,7 @@ public static class PuzzleNavigationUtility {
 
         Vector3 spaceCamForward = Geom.Forward(spaceCameraQuat);
         // Note: This is sometimes helpful for aligning puzzles
-        Debug.Log("[PuzzleNavUtil] Camera RA:" + CoordinateUtility.DegreesToRA(360 - spaceCameraQuat.eulerAngles.y) + " D:" + CoordinateUtility.DecimalDegreesToDeclination(360 - spaceCameraQuat.eulerAngles.x));
+        Debug.Log("[PuzzleNavUtil] Camera RA:" + CoordinateUtility.DDToHms(360 - spaceCameraQuat.eulerAngles.y) + " D:" + CoordinateUtility.DDToDms(360 - spaceCameraQuat.eulerAngles.x));
 
         // Debug.Log("[PuzzleNavUtil] Target:" + targetFoward +  ", Camera:" + spaceCamForward + " Distance:" + Vector3.Dot(targetFoward, spaceCamForward));
         float newDist = Vector3.Dot(targetFoward, spaceCamForward);
@@ -127,8 +127,8 @@ public static class PuzzleNavigationUtility {
 
         EqCoords target = puzzleState.ActivePuzzle.PuzzleCoordinates;
         Quaternion targetQuat = Quaternion.Euler(
-            360 - (float)CoordinateUtility.DeclinationToDecimalDegrees( target.Declination ),
-            360 - (float)CoordinateUtility.RAToDegrees( target.RightAscension ),
+            360 - (float)CoordinateUtility.DmsToDD( target.Declination ),
+            360 - (float)CoordinateUtility.HmsToDD( target.RightAscension ),
             0
         );
 

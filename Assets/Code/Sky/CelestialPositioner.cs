@@ -9,18 +9,29 @@ namespace Astro {
 
     public static class CelestialPositionerUtility
     {
+        static public EqCoords AdjustCoordinates(EqCoords eq) {
+            SkyDome dome = Find.State<SkyDome>();
+            eq.RightAscension += dome.Rotation.RightAscension;
+            eq.Declination += dome.Rotation.Declination;
+            return eq;
+        }
+
         /// <summary>
         /// Position an object given right ascension and declination in hours, minutes, and seconds
         /// </summary>
         /// <param name="centerPos"></param>
         /// <param name="ra"></param>
         /// <param name="decl"></param>
-        public static Vector3 GetObjectPosition(Vector3 centerPos, HmsCoords ra, HmsCoords decl)
+        public static Vector3 GetObjectPosition(Vector3 centerPos, HmsCoords ra, DmsCoords decl)
         {
-            float skyboxDist = Find.State<SkyDome>().Radius;
+            SkyDome dome = Find.State<SkyDome>();
+            float skyboxDist = dome.Radius;
 
-            float raDegrees = (float)CoordinateUtility.RAToDegrees((int)ra.Hours, (int)ra.Minutes, ra.Seconds);
-            float declDegrees = (float)CoordinateUtility.DeclinationToDecimalDegrees((int)decl.Hours, (int)decl.Minutes, decl.Seconds);
+            ra += dome.Rotation.RightAscension;
+            decl += dome.Rotation.Declination;
+
+            float raDegrees = (float)CoordinateUtility.HmsToDD(ra);
+            float declDegrees = (float)CoordinateUtility.DmsToDD(decl);
             var posOffset = CoordinateUtility.RAscDeclDegreesToCartesianCoordinates(raDegrees, declDegrees);
 
             return centerPos + posOffset * skyboxDist;
@@ -33,28 +44,17 @@ namespace Astro {
         /// <param name="toPosition"></param>
         /// <param name="ra"></param>
         /// <param name="decl"></param>
-        public static void PositionObject(Vector3 centerPos, Transform toPosition, HmsCoords ra, HmsCoords decl)
+        public static void PositionObject(Vector3 centerPos, Transform toPosition, HmsCoords ra, DmsCoords decl)
         {
-            float skyboxDist = Find.State<SkyDome>().Radius;
+            SkyDome dome = Find.State<SkyDome>();
+            float skyboxDist = dome.Radius;
 
-            float raDegrees = (float)CoordinateUtility.RAToDegrees((int)ra.Hours, (int)ra.Minutes, ra.Seconds);
-            float declDegrees = (float)CoordinateUtility.DeclinationToDecimalDegrees((int)decl.Hours, (int)decl.Minutes, decl.Seconds);
+            ra += dome.Rotation.RightAscension;
+            decl += dome.Rotation.Declination;
+
+            float raDegrees = (float)CoordinateUtility.HmsToDD(ra);
+            float declDegrees = (float)CoordinateUtility.DmsToDD(decl);
             var posOffset = CoordinateUtility.RAscDeclDegreesToCartesianCoordinates(raDegrees, declDegrees);
-            toPosition.position = centerPos + posOffset * skyboxDist;
-        }
-
-        /// <summary>
-        /// Position an object given right ascension and declination in radians
-        /// </summary>
-        /// <param name="centerPos"></param>
-        /// <param name="toPosition"></param>
-        /// <param name="ra"></param>
-        /// <param name="decl"></param>
-        public static void PositionObject(Vector3 centerPos, Transform toPosition, float raRad, float declRad)
-        {
-            float skyboxDist = Find.State<SkyDome>().Radius;
-
-            var posOffset = CoordinateUtility.RAscDeclRadiansToCartesianCoordinates(raRad, declRad);
             toPosition.position = centerPos + posOffset * skyboxDist;
         }
     }
