@@ -11,7 +11,7 @@ namespace Astro
 {
     public class FocusState : SharedStateComponent
     {
-        [NonSerialized] public RingBuffer<UIFocus> ActiveFocii = new RingBuffer<UIFocus>(8);
+        [NonSerialized] public RingBuffer<UIFocus> ActiveFocii = new RingBuffer<UIFocus>(8, RingBufferMode.Expand);
         [NonSerialized] public UIFocus CurrentFocus = null;
         [NonSerialized] public bool FocusUpdated = false;
         public Graphic FocusOutline;
@@ -19,7 +19,6 @@ namespace Astro
         protected override void OnEnable()
         {
             base.OnEnable();
-            ActiveFocii.BufferMode = RingBufferMode.Expand;
             Game.Events.Register(GameEvents.MonitorEmptySpaceClicked, FocusableUtility.ClickEmptySpace);
         }
     }

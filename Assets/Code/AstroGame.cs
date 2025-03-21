@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using BeauRoutine;
 using BeauUtil.Debugger;
 using FieldDay;
@@ -37,9 +38,5 @@ namespace Astro {
                 ScriptUtility.Trigger("SceneReady");
             });
         }
-    }
-    
-    public sealed class PlayerProgressState : ISharedState {
-        public int DayIndex = 0;
     }
 }

@@ -37,6 +37,11 @@ namespace Astro {
     }
 
     static public partial class ViewNavUtility {
+        static public bool NoActiveTransitionRoutine(){
+            ViewState state = Find.State<ViewState>();
+            return !state.ActiveTransitionRoutine.Exists();
+        }
+
         /// <summary>
         /// Deactivates all currently active links.
         /// </summary>
@@ -90,12 +95,21 @@ namespace Astro {
             state.ActiveTransitionRoutine.Replace(state, TransitionRoutine(state, node, null, transitionOverride));
         }
 
-        [LeafMember("MoveToCameraView")]
-        static public void LeafMoveToNode(String targetId){
+        [LeafMember("MoveToView")]
+        static public void LeafMoveToNode(string targetId){
             ViewState state = Find.State<ViewState>();
             var targetNode = GetNodeById(targetId);
 
             MoveToNode(state, targetNode);
+        }
+
+        [LeafMember("WaitForMovedToView")]
+        static public IEnumerator LeafWaitUntilMovedToNode(string targetId){
+            ViewState state = Find.State<ViewState>();
+            var targetNode = GetNodeById(targetId);
+
+            MoveToNode(state, targetNode);
+            yield return Routine.WaitCondition(NoActiveTransitionRoutine);
         }
 
         /// <summary>
@@ -121,6 +135,7 @@ namespace Astro {
             Transform controlPoint = null;
             TweenSettings tween = transitionOverride.Time > 0 ? transitionOverride : state.DefaultTransition;
             var inputState = Find.State<InputState>();
+            bool cachedState = inputState.InputEnabled;
             InputUtility.SetInputEnabled(inputState, false);
             if (byLink) {
                 controlPoint = byLink.TransitionControlPoint;
@@ -153,7 +168,7 @@ namespace Astro {
             }
             ActivateNode(nextNode, true);
             UpdateActiveLinks(state);
-            InputUtility.SetInputEnabled(inputState, true);
+            InputUtility.SetInputEnabled(inputState, cachedState);
         }
 
         static private void InstantTransition(ViewState state, ViewNode nextNode) {

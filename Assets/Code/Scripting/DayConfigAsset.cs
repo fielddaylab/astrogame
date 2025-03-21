@@ -9,8 +9,10 @@ namespace Astro {
     public sealed class DayConfigAsset : NamedAsset {
         public SceneReference Scene;
         public LeafAsset[] Scripts;
+        public HmsCoords SkyRotationOffset;
 
         public PuzzleAsset DayPuzzle;
+        public NeutrinoConfigAsset NeutrinoEvent;
     }
 
     static public class DayConfigUtil {

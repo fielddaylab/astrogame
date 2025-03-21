@@ -14,6 +14,7 @@ namespace Astro
             base.ProcessWork(deltaTime);
 
             m_State.DraggablePlacedThisFrame = false;
+            m_State.DraggablePlaced = null;
         }
     }
 

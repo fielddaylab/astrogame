@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Astro
 {
-    [SysUpdate(GameLoopPhase.FixedUpdate)]
+    [SysUpdate(GameLoopPhase.Update, 10)]
     public class TelescopeAimSystem : SharedStateSystemBehaviour<TelescopeRig>
     {
         public override void ProcessWork(float deltaTime)

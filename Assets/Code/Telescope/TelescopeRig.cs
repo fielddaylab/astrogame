@@ -3,6 +3,7 @@ using BeauRoutine;
 using FieldDay;
 using FieldDay.Debugging;
 using FieldDay.SharedState;
+using Leaf.Runtime;
 using UnityEngine;
 
 namespace Astro {
@@ -23,8 +24,8 @@ namespace Astro {
     static public partial class TelescopeUtility {
         static public void UpdateTelescopeRigRotation(TelescopeRig rig, Transform spaceCam)
         {
-            rig.LastAppliedRotation.x = spaceCam.localEulerAngles.x;
-            rig.LastAppliedRotation.y = spaceCam.localEulerAngles.y;
+            rig.LastAppliedRotation.x = spaceCam.localEulerAngles.y;
+            rig.LastAppliedRotation.y = spaceCam.localEulerAngles.x;
 
             // up/down (NOTE: space cam up/down is oriented along x, whereas the telescope up/down is oriented along z)
             float xRot = spaceCam.localEulerAngles.x;

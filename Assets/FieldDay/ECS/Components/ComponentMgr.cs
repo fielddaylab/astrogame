@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay.Systems;
-
+using Unity.IL2CPP.CompilerServices;
 using ComponentIndex = BeauUtil.TypeIndex<FieldDay.Components.IComponentData>;
 
 namespace FieldDay.Components
@@ -125,6 +125,7 @@ namespace FieldDay.Components
         /// Unlocks the component manager, allowing further modifications
         /// and processing all queued modifications.
         /// </summary>
+        [Il2CppSetOption(Option.NullChecks, false)]
         public void Unlock()
         {
             Assert.True(m_ModificationLock > 0, "Unbalanced Lock/Unlock calls");

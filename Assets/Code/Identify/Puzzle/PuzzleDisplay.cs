@@ -17,6 +17,7 @@ namespace Astro
         public Transform CellAnchorPos;
         public Transform RotateModulePos;
         public Transform HeaderAnchorPos;
+        public Transform ClueGroup;
         public float RowSpacing;
         public float ColSpacing;
         public float BaseCellWidth;

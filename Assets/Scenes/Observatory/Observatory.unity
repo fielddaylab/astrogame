@@ -392,6 +392,7 @@ GameObject:
   - component: {fileID: 1685206331}
   - component: {fileID: 1685206338}
   - component: {fileID: 1685206339}
+  - component: {fileID: 1685206340}
   m_Layer: 0
   m_Name: Imports
   m_TagString: Untagged
@@ -603,7 +604,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Scene:
-    m_ScenePath: Assets/Scenes/Observatory/Observatory_ConstellationFinder.unity
+    m_ScenePath: Assets/Scenes/Observatory/Observatory_NavigationOverlay.unity
     m_GUID: 3da800266f2ae3b4e8dbb0351542c24a
   Flags: 16
   Merge: 1
@@ -629,6 +630,28 @@ MonoBehaviour:
     m_GUID: c806ec38236c3f442b5100e5ca84c7c2
   Flags: 16
   Merge: 1
+  DestroyGameObject: 1
+  Transform: {fileID: 0}
+  Tag:
+    m_Source: 
+    m_HashValue: 0
+--- !u!114 &1685206340
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1685206328}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02aa2d88699f4ca4480a543ab9c0f9f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Scene:
+    m_ScenePath: Assets/Scenes/Observatory/Observatory_SpaceDomeData_PERSISTENT.unity
+    m_GUID: c4e22c5a361ab2f4b80803c30f4496f5
+  Flags: 4
+  Merge: 0
   DestroyGameObject: 1
   Transform: {fileID: 0}
   Tag:

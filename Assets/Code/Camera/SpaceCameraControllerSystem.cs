@@ -7,6 +7,7 @@ using UnityEngine;
 
 namespace Astro
 {
+    [SysUpdate(GameLoopPhase.Update)]
     public class SpaceCameraControllerSystem : SharedStateSystemBehaviour<SpaceCameraState>
     {
         public override void ProcessWork(float deltaTime)
@@ -18,17 +19,14 @@ namespace Astro
 
         #region Input Processing
 
-        private void ProcessInputs()
-        {
+        private void ProcessInputs() {
             if (!m_State.InputEnabled) return;
 
-            ProcessLook();
-
-            ProcessZoom();
+            if (!m_State.CameraRotationInputLocked) ProcessLook();
+            if (!m_State.ZoomInputLocked) ProcessZoom();
         }
 
-        private void ProcessLook()
-        {
+        private void ProcessLook() {
             if (m_State.EnableMouseAutoControls)
             {
                 ProcessMouseAutoLook();
@@ -38,12 +36,9 @@ namespace Astro
                 ProcessMouseDragLook();
             }
 
-            if (m_State.EnableSmoothKeyboardControls)
-            {
+            if (m_State.EnableSmoothKeyboardControls) {
                 ProcessKeyboardLookSmooth();
-            }
-            else
-            {
+            } else {
                 ProcessKeyboardLookDiscrete();
             }
         }
@@ -57,13 +52,13 @@ namespace Astro
             {
                 // look left
                 var adjustedSpeed = (cursorPos.x < m_State.LookRapidThreshold) ? m_State.LookRapidSpeed : m_State.LookSpeed;
-                AdjustHorizLook(-adjustedSpeed * Time.deltaTime);
+                AdjustHorizLook(-adjustedSpeed * Frame.DeltaTime);
             }
             else if (cursorPos.x > 1 - m_State.LookThreshold)
             {
                 // look right
                 var adjustedSpeed = (cursorPos.x > 1 - m_State.LookRapidThreshold) ? m_State.LookRapidSpeed : m_State.LookSpeed;
-                AdjustHorizLook(adjustedSpeed * Time.deltaTime);
+                AdjustHorizLook(adjustedSpeed * Frame.DeltaTime);
             }
 
             // Look Y
@@ -71,13 +66,13 @@ namespace Astro
             {
                 // look down
                 var adjustedSpeed = (cursorPos.y < m_State.LookRapidThreshold) ? m_State.LookRapidSpeed : m_State.LookSpeed;
-                AdjustVertLook(adjustedSpeed * Time.deltaTime);
+                AdjustVertLook(adjustedSpeed * Frame.DeltaTime);
             }
             else if (cursorPos.y > 1 - m_State.LookThreshold)
             {
                 // look up
                 var adjustedSpeed = (cursorPos.y > 1 - m_State.LookRapidThreshold) ? m_State.LookRapidSpeed : m_State.LookSpeed;
-                AdjustVertLook(-adjustedSpeed * Time.deltaTime);
+                AdjustVertLook(-adjustedSpeed * Frame.DeltaTime);
             }
         }
 
@@ -102,26 +97,28 @@ namespace Astro
         {
             m_State.VertLook += adjustment;
 
-            m_State.VertLook = ClampAngle(m_State.VertLook, m_State.LookYClamp.x, m_State.LookYClamp.y);
+            m_State.VertLook = SpaceCameraUtility.ClampAngle(m_State.VertLook, m_State.LookYClamp.x, m_State.LookYClamp.y);
 
             var angles = m_State.Camera.RootTransform.localEulerAngles;
             angles.x = m_State.VertLook;
+            angles.z = 0;
             m_State.Camera.RootTransform.localEulerAngles = angles;
 
-            RecordLookUpdated();
+            m_State.OnLookUpdated.Invoke(m_State);
         }
 
         private void AdjustHorizLook(float adjustment)
         {
             m_State.HorizLook += adjustment;
 
-            m_State.HorizLook = ClampAngle(m_State.HorizLook, m_State.LookXClamp.x, m_State.LookXClamp.y);
+            m_State.HorizLook = SpaceCameraUtility.ClampAngle(m_State.HorizLook, m_State.LookXClamp.x, m_State.LookXClamp.y);
 
             var angles = m_State.Camera.RootTransform.localEulerAngles;
             angles.y = m_State.HorizLook;
+            angles.z = 0;
             m_State.Camera.RootTransform.localEulerAngles = angles;
 
-            RecordLookUpdated();
+            m_State.OnLookUpdated.Invoke(m_State);
         }
 
         private void ProcessKeyboardLookDiscrete()
@@ -129,22 +126,22 @@ namespace Astro
             if (Game.Input.IsKeyPressed(KeyCode.UpArrow) || Game.Input.IsKeyPressed(KeyCode.W))
             {
                 // look up
-                AdjustVertLook(-m_State.LookIncrement);
+                AdjustVertLook(-m_State.LookIncrement * Frame.DeltaRatio);
             }
             if (Game.Input.IsKeyPressed(KeyCode.DownArrow) || Game.Input.IsKeyPressed(KeyCode.S))
             {
                 // look down
-                AdjustVertLook(m_State.LookIncrement);
+                AdjustVertLook(m_State.LookIncrement * Frame.DeltaRatio);
             }
             if (Game.Input.IsKeyPressed(KeyCode.LeftArrow) || Game.Input.IsKeyPressed(KeyCode.A))
             {
                 // look left
-                AdjustHorizLook(-m_State.LookIncrement);
+                AdjustHorizLook(-m_State.LookIncrement * Frame.DeltaRatio);
             }
             if (Game.Input.IsKeyPressed(KeyCode.RightArrow) || Game.Input.IsKeyPressed(KeyCode.D))
             {
                 // look right
-                AdjustHorizLook(m_State.LookIncrement);
+                AdjustHorizLook(m_State.LookIncrement * Frame.DeltaRatio);
             }
         }
 
@@ -153,28 +150,26 @@ namespace Astro
             if (Game.Input.IsKeyDown(KeyCode.UpArrow) || Game.Input.IsKeyDown(KeyCode.W))
             {
                 // look up
-                AdjustVertLook(-m_State.SmoothLookIncrement);
+                AdjustVertLook(-m_State.SmoothLookIncrement * Frame.DeltaRatio);
             }
             else if (Game.Input.IsKeyDown(KeyCode.DownArrow) || Game.Input.IsKeyDown(KeyCode.S))
             {
                 // look down
-                AdjustVertLook(m_State.SmoothLookIncrement);
+                AdjustVertLook(m_State.SmoothLookIncrement * Frame.DeltaRatio);
             }
             if (Game.Input.IsKeyDown(KeyCode.LeftArrow) || Game.Input.IsKeyDown(KeyCode.A))
             {
                 // look left
-                AdjustHorizLook(-m_State.SmoothLookIncrement);
+                AdjustHorizLook(-m_State.SmoothLookIncrement * Frame.DeltaRatio);
             }
             else if (Game.Input.IsKeyDown(KeyCode.RightArrow) || Game.Input.IsKeyDown(KeyCode.D))
             {
                 // look right
-                AdjustHorizLook(m_State.SmoothLookIncrement);
+                AdjustHorizLook(m_State.SmoothLookIncrement * Frame.DeltaRatio);
             }
         }
 
-        private void ProcessZoom()
-        {
-            if (!m_State.ZoomInputEnabled) return;
+        private void ProcessZoom() {
             if (m_State.EnableMouseControls)
             {
                 ProcessMouseZoom();
@@ -194,7 +189,8 @@ namespace Astro
                 newZoom = Mathf.Clamp(newZoom - yScrollDelta * m_State.ZoomSpeed, m_State.ZoomBounds.x, m_State.ZoomBounds.y);
 
                 m_State.Camera.Camera.fieldOfView = newZoom;
-                RecordLookUpdated();
+                
+                m_State.OnLookUpdated.Invoke(m_State);
             }
         }
 
@@ -208,7 +204,7 @@ namespace Astro
 
                 m_State.Zoom = newZoom;
                 m_State.Camera.Camera.fieldOfView = m_State.Camera.OriginalFOV / newZoom;
-                RecordLookUpdated();
+                m_State.OnLookUpdated.Invoke(m_State);
             }
             if (Game.Input.IsKeyPressed(KeyCode.K)) {
                 // Zoom in
@@ -218,30 +214,11 @@ namespace Astro
 
                 m_State.Zoom = newZoom;
                 m_State.Camera.Camera.fieldOfView = m_State.Camera.OriginalFOV / newZoom;
-                RecordLookUpdated();
+                m_State.OnLookUpdated.Invoke(m_State);
             }
-        }
-
-        private void RecordLookUpdated()
-        {
-            m_State.OnLookUpdated.Invoke(m_State);
-            m_State.LookUpdatedThisFrame = true;
         }
 
         #endregion // Input Processing
 
-        private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
-        {
-            if (lfAngle < -360f)
-            {
-                lfAngle += 360f;
-            }
-            if (lfAngle > 360f)
-            {
-                lfAngle -= 360f;
-            }
-
-            return Mathf.Clamp(lfAngle, lfMin, lfMax);
-        }
     }
 }

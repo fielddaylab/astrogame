@@ -10,9 +10,11 @@ using BeauUtil;
 using BeauUtil.Debugger;
 using BeauUtil.UI;
 using EasyBugReporter;
+using FieldDay.Audio;
 using FieldDay.Data;
 using FieldDay.HID;
 using FieldDay.HID.XR;
+using FieldDay.Perf;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Scripting;
@@ -149,6 +151,11 @@ namespace FieldDay.Debugging {
             }
 
             m_TimeDisplay.UpdateTimescale(m_TimeScale);
+
+            AudioPropertyBlock debugAudioProps = Game.Audio.GetDebugProperties(AudioBus.Master);
+            debugAudioProps.Pitch = m_TimeScale;
+            debugAudioProps.Volume = Math.Min(1, Mathf.Sqrt(1f / m_TimeScale));
+            Game.Audio.SetDebugProperties(AudioBus.Master, debugAudioProps);
         }
 
         private void SetPaused(bool paused) {
@@ -162,6 +169,10 @@ namespace FieldDay.Debugging {
             GameLoop.SetDebugPause(paused);
             m_InputBlocker.enabled = paused;
             AudioListener.pause = paused;
+
+            AudioPropertyBlock debugAudioProps = Game.Audio.GetDebugProperties(AudioBus.Master);
+            debugAudioProps.Pause = paused;
+            Game.Audio.SetDebugProperties(AudioBus.Master, debugAudioProps);
 
             if (paused) {
                 Time.timeScale = 0;
@@ -375,6 +386,12 @@ namespace FieldDay.Debugging {
             m_MinimalGroup.alpha = visible ? 1 : 0;
             m_MinimalGroup.blocksRaycasts = visible;
             m_Canvas.enabled = visible;
+
+            if (visible) {
+                FramerateDisplay.Hide();
+            } else {
+                FramerateDisplay.Show();
+            }
 
             if (!visible) {
                 SetMenuVisible(false);

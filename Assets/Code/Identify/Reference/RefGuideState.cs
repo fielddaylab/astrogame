@@ -4,6 +4,7 @@ using BeauUtil;
 using FieldDay;
 using FieldDay.SharedState;
 using System;
+using System.Linq;
 using UnityEngine;
 
 namespace Astro {
@@ -163,14 +164,16 @@ namespace Astro {
             return asset.ReferenceId.Equals(refEntry.AssetId);
         }
 
-        public static bool RefClassMatchesAsset(ReferenceClassification refClass, CelestialAsset asset) {
+        public static bool RefClassMatchesAsset(ReferenceClassification refClass, CelestialAsset asset, PlayerProgressState progress) {
+            progress.Classifications.TryGetValue(asset.AssetId, out BitSet32 completed);
             for (int i = 0; i < asset.ClassIds.Length; i++) {
-                if (asset.ClassificationsCompleted[i]) {
+                if (completed[i]) {
                     // Already completed!
                     return false;
                 }
                 if (asset.ClassIds[i].Equals(refClass.name)) {
-                    asset.ClassificationsCompleted[i] = true;
+                    completed[i] = true;
+                    progress.Classifications[asset.AssetId] = completed;
                     return true;
                 }
             }
@@ -179,12 +182,23 @@ namespace Astro {
 
         public static bool CurrentRefMatchesFocus() {
             ReferenceClassification refClass = Find.State<RefGuideState>().SelectedRefClassification;
+            PlayerProgressState progress = Find.State<PlayerProgressState>();
             UIFocus focus = Find.State<FocusState>().CurrentFocus;
             if (refClass == null || focus == null) {
                 return false;
             }
-            return RefClassMatchesAsset(refClass, focus.TargetData);
+            return RefClassMatchesAsset(refClass, focus.TargetData, progress);
 
+        }
+
+        public static bool CurrentRefInNeutrinoEvent()
+        {
+            PlayerProgressState state = Find.State<PlayerProgressState>();
+            StoryAsset story = Find.GlobalAsset<StoryAsset>();
+            DayConfigAsset day = Find.NamedAsset<DayConfigAsset>(story.Days[state.DayIndex]);
+
+            UIFocus focus = Find.State<FocusState>().CurrentFocus;
+            return day.NeutrinoEvent.RelevantObjectIds.Contains(focus.TargetData.AssetId);
         }
 
         public static void ToggleReferenceActive() {

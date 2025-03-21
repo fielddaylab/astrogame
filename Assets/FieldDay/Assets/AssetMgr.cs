@@ -256,6 +256,8 @@ namespace FieldDay.Assets {
         /// This will assert if none is found.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
+        [Il2CppSetOption(Option.NullChecks, false)]
         public IGlobalAsset GetGlobal(Type type) {
             int index = GlobalAssetIndex.Get(type);
             IGlobalAsset asset = m_GlobalAssetTable[index];
@@ -272,6 +274,8 @@ namespace FieldDay.Assets {
         /// This will assert if none is found.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
+        [Il2CppSetOption(Option.NullChecks, false)]
         public T GetGlobal<T>() where T : class, IGlobalAsset {
             int index = GlobalAssetIndex.Get<T>();
             IGlobalAsset asset = m_GlobalAssetTable[index];
@@ -280,7 +284,7 @@ namespace FieldDay.Assets {
                 Assert.Fail("No global asset found for type '{0}'", typeof(T).FullName);
             }
 #endif // DEVELOPMENT
-            return (T) asset;
+            return Unsafe.FastCast<T>(asset);
         }
 
         /// <summary>

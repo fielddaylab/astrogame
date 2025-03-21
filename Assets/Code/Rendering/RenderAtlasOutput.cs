@@ -46,7 +46,9 @@ namespace Astro {
 
         void IRegistrationCallbacks.OnDeregister() {
             UnityHelper.SafeDestroy(ref RemappedMesh);
-            TargetMeshFilter.sharedMesh = OriginalMesh;
+            if (TargetMeshFilter) {
+                TargetMeshFilter.sharedMesh = OriginalMesh;
+            }
             RenderAtlasUpdateState.ReleaseState(ref Group);
         }
 

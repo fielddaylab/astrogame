@@ -17,8 +17,10 @@ namespace Astro
         [NonSerialized] public Renderer TargetRenderer;
 
         public RectTransform Rect;
+        public RectTransform HighlightRect;
         public Image Represent2D;
         public PointerListener Button;
+        [NonSerialized] public Image NeutrinoHighlight;
     }
 
     public static partial class FocusableUtility

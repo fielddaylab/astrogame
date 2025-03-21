@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using BeauUtil;
 using FieldDay;
 using FieldDay.Scenes;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace Astro {
     public sealed class TelescopeCompassRenderer : MonoBehaviour, IScenePreload {
@@ -25,8 +27,8 @@ namespace Astro {
 
         #endregion // Inspector
 
-        [NonSerialized] public MeshData16<VertexP3C1> ArcMeshData;
-        [NonSerialized] public MeshData16<VertexP3C1> ArcEdgeData;
+        [NonSerialized] public MeshData16<VertexFormat> ArcMeshData;
+        [NonSerialized] public MeshData16<VertexFormat> ArcEdgeData;
 
         public void GenerateArcs(float raDegrees, float decDegrees) {
             Vector3 top = new Vector3(0, Radius, 0);
@@ -56,7 +58,7 @@ namespace Astro {
 
         private unsafe Vector3 GenerateRA(float raDegrees, Vector3 baseline, int res) {
             ushort centerIdx = (ushort) ArcMeshData.VertexCount;
-            VertexP3C1 vert;
+            VertexFormat vert;
             vert.Color = RAColor;
 
             vert.Position = default;
@@ -106,7 +108,7 @@ namespace Astro {
 
         private unsafe void GenerateDec(float decDegrees, Vector3 baseline, int res) {
             ushort centerIdx = (ushort) ArcMeshData.VertexCount;
-            VertexP3C1 vert;
+            VertexFormat vert;
             vert.Color = DeclinationColor;
 
             vert.Position = default;
@@ -157,8 +159,9 @@ namespace Astro {
         }
 
         IEnumerator<WorkSlicer.Result?> IScenePreload.Preload() {
-            ArcMeshData = new MeshData16<VertexP3C1>(256, MeshTopology.Triangles, false);
-            ArcEdgeData = new MeshData16<VertexP3C1>(4, MeshTopology.Lines, false);
+            ArcMeshData = new MeshData16<VertexFormat>(256, MeshTopology.Triangles, false);
+            ArcEdgeData = new MeshData16<VertexFormat>(4, MeshTopology.Lines, false);
+            yield return null;
             yield return null;
 
             GenerateArcs(0, 0);
@@ -166,6 +169,12 @@ namespace Astro {
             SpaceCameraState cm = Find.State<SpaceCameraState>();
             cm.OnLookUpdated.Register(UpdateArcs);
             UpdateArcs(cm);
+        }
+
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        public struct VertexFormat {
+            [VertexAttr(VertexAttribute.Position)] public Vector4 Position;
+            [VertexAttr(VertexAttribute.Color)] public Color32 Color;
         }
     }
 }

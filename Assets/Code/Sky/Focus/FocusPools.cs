@@ -11,11 +11,13 @@ namespace Astro
         #region Types
 
         [Serializable] public class FocusPool : SerializablePool<UIFocus> { }
+        [Serializable] public class NeutrinoHighlightPool : SerializablePool<RectTransform> { }
 
         #endregion // Types
 
         [Header("Focus")]
         public FocusPool Focii;
+        public NeutrinoHighlightPool NeutrinoHighlights;
 
         [Header("Shared")]
         public Transform PoolRoot;
@@ -23,6 +25,7 @@ namespace Astro
         void IRegistrationCallbacks.OnRegister()
         {
             Focii.TryInitialize(PoolRoot);
+            NeutrinoHighlights.TryInitialize(PoolRoot);
         }
 
         void IRegistrationCallbacks.OnDeregister()

@@ -44,7 +44,8 @@ namespace Astro
                         psb.Builder.Append(state.QueuedPuzzle.ClueText[i]);
                         psb.Builder.Append("\n");
                     }
-                    display.Clues.Text.SetTextAndActive(psb.Builder.Flush());
+                    display.Clues.Text.SetTextAndActive(psb.Builder);
+                    display.ClueGroup.gameObject.SetActive(true);
                 }
 
                 // generate and organize puzzle cells

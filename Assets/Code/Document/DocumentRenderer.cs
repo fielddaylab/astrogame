@@ -1,5 +1,6 @@
 using System;
 using BeauUtil;
+using EasyAssetStreaming;
 using FieldDay.Assets;
 using FieldDay.Components;
 using TMPro;
@@ -9,11 +10,19 @@ using UnityEngine.Video;
 namespace Astro {
     public sealed class DocumentRenderer : BatchedComponent {
         public TMP_Text Title;
-        public TMP_Text Body;
+        public TMP_Text FrontBodyText;
+        public TMP_Text BackBodyText;
         public MeshRenderer Background;
         public VideoPlayer Video;
+        public Transform FrontAnimation;
+        public StreamingQuadTexture FrontStaticImg;
+        public StreamingQuadTexture LowResImgFront;
+        public StreamingQuadTexture LowResImgBack;
         public Vector3 ZoomOffsetOverride;
         public Rect Size;
         public DocumentInteractable Interactable;
+
+        [NonSerialized] public string BaseVisualAssetName;
+        [NonSerialized] public string BaseVisualAssetFileType;
     }
 }

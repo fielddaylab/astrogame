@@ -5,7 +5,7 @@
 @boostScore 100
 @who    Astrid
 
-$call MoveToCameraView("Left")
+$call MoveToView("Left")
 {@Astrid} Looks like I got some mail.
 $call StopPuzzleMode()
 $call StopOpenMode()
@@ -18,7 +18,7 @@ $call SetInputState(true)
 @when   documentId == "Day2DadPostcard"
 @once
 
-$call Wait(2)
+$call Wait(1)
 $call SpawnDocumentToCamera("Day2ElijahPostcard")
 {@Astrid} And one from Elijah.
 
@@ -45,12 +45,12 @@ $call StartDocumentPuzzle("Day2DocumentPuzzle")
 $call Wait(2)
 
 $call SetInputState(false)
-$call MoveToCameraView("Right")
+$call MoveToView("Right")
 {@Radio} Star HQ to Station Seven.
 IceCube is reading a high-energy neutrino emission from the area of the Hydra Constellation. 
 Identification of nearby celestial objects is requested. 
 Uploading area of interest... (*beeeep screeech boop beep boop beeeep*)
-$call MoveToCameraView("Desk")
+$call MoveToView("Desk")
 $call Wait(2)
 $call SetInputState(true)
 $call StartOpenMode()
@@ -58,8 +58,7 @@ $call StartOpenMode()
 
 :: PointsUpdated
 @trigger    PointsUpdated
-//TODO
-@when   sciencePoints > 0
+@when   sciencePoints > 2
 @once
 
 $call StopOpenMode()
@@ -125,12 +124,19 @@ $call StartPuzzleMode()
 
 :: HerculesPuzzleComplete
 @trigger    CorrectPuzzleSubmission
-@when   puzzleName == "Perseus"
+@when   puzzleName == "Hercules"
 @once
 
 $call ClearMonitorSelection()
 $call StopPuzzleMode()
 $call SetInputState(false)
 {@Astrid} Time to turn in for the night.
-$call MoveToCameraView("Desk")
-$call Wait(1)
+Oh, what's this?
+$call EndDay2->BeginCutscene()
+
+:: EndDay
+@trigger    CutsceneEnd
+@when cutsceneId == "EndDay2"
+@who    Radio
+
+$call LoadNextDay()

@@ -10,20 +10,27 @@ public static class GameEvents {
     public static readonly StringHash32 StopOpenMode = "stop-open-mode";
     public static readonly StringHash32 StartPuzzleMode = "start-puzzle-mode";
     public static readonly StringHash32 StopPuzzleMode = "stop-puzzle-mode";
+    public static readonly StringHash32 StartNeutrinoNavigation = "start-navigation-mode";
+    public static readonly StringHash32 NeutrinoNavigationComplete = "neutrino-navigation-complete";
+    public static readonly StringHash32 StopNeutrinoNavigation = "stop-navigation-mode";
     public static readonly StringHash32 StartPuzzleNavigation = "start-constellation-mode";
     public static readonly StringHash32 PuzzleNavigationComplete = "puzzle-navigation-complete";
     public static readonly StringHash32 StopPuzzleNavigation = "stop-constellation-mode";
+    public static readonly StringHash32 BeforeNextDayLoad = "before-next-day-load";
 }
 
 public static class ScriptEvents {
     public static readonly StringHash32 OpenModeStart = "OpenModeStart";
     public static readonly StringHash32 PuzzleModeStart = "PuzzleModeStart";
     public static readonly StringHash32 PointsUpdated = "PointsUpdated";
+    public static readonly StringHash32 NeutrinoNavigationComplete = "NeutrinoNavigationComplete";
     public static readonly StringHash32 PuzzleNavigationComplete = "PuzzleNavigationComplete";
     public static readonly StringHash32 CorrectPuzzleSubmission = "CorrectPuzzleSubmission";
     public static readonly StringHash32 DocumentInspectStart = "DocumentInspectStart";
     public static readonly StringHash32 DocumentInspectEnd = "DocumentInspectEnd";
     public static readonly StringHash32 DocumentPuzzlePromptStart = "DocumentPuzzlePromptStart";
+    public static readonly StringHash32 CutsceneBegin = "CutsceneBegin";
+    public static readonly StringHash32 CutsceneEnd = "CutsceneEnd";
 }
 
 public static class DataTypeLabels

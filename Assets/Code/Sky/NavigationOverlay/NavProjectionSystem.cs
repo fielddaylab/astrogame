@@ -30,25 +30,16 @@ namespace Astro {
             if (!puzzleState.ActivePuzzle) return;
 
             EqCoords target = puzzleState.ActivePuzzle.PuzzleCoordinates;
-            Quaternion targetQuat = Quaternion.Euler(
-                360 - (float)CoordinateUtility.DeclinationToDecimalDegrees(target.Declination),
-                360 - (float)CoordinateUtility.RAToDegrees(target.RightAscension),
-                0
-            );
-            Vector3 targetFoward = Geom.Forward(targetQuat);
-
-            Quaternion spaceCameraQuat = spaceCam.Camera.RootTransform.rotation;
-            // Vector3 spaceCamForward = Geom.Forward(spaceCameraQuat);
-
+            Vector3 spaceCameraOriginalRot = spaceCam.Camera.RootTransform.localEulerAngles;
+            
             // populate sky with celestial objects
             var center = dome.Position;
 
             Camera spaceCamera = spaceCam.Camera.Camera;
 
             // Hack: just point our camera at our target position to draw our navigation overlay
-            EqCoords stashedPos = new EqCoords(CoordinateUtility.DegreesToRA(360 - spaceCameraQuat.eulerAngles.y), CoordinateUtility.DecimalDegreesToDeclination(360 - spaceCameraQuat.eulerAngles.x));
             float stashedFOV = spaceCamera.fieldOfView;
-            WorldPositionUtility.TryLook(dome.transform, spaceCam.Camera.RootTransform, target);
+            WorldPositionUtility.TryLook(spaceCam, target);
             spaceCamera.fieldOfView = spaceCam.Camera.OriginalFOV / puzzleState.ActivePuzzle.PuzzleCameraZoom;
 
             // Remove any old projections
@@ -63,6 +54,7 @@ namespace Astro {
                 // Use UIFocus pool
                 var navFocus = focusPools.Focii.Alloc(m_StateA.OutlineGroup);
                 navFocus.name = currAsset.DisplayName + " (Navigation Outline)";
+                // TODO we can remove sprite representations on the nav ui if we dont have outlines
                 InitNavRepresntation(navFocus, currAsset, DetermineSprite(currAsset.Category));
                 
                 outlineState.ActiveOutlines.PushBack(navFocus);
@@ -80,18 +72,25 @@ namespace Astro {
                 UIFocus focusA = outlineState.ActiveOutlines.Find(x => x.TargetData == ca1);
                 UIFocus focusB = outlineState.ActiveOutlines.Find(x => x.TargetData == ca2);
 
-                var connection = Instantiate(new GameObject(ca1.DisplayName + "_to_" + ca2.DisplayName, typeof(RectTransform)), m_StateA.OutlineGroup);
+                var connection = new GameObject(ca1.DisplayName + "_to_" + ca2.DisplayName, typeof(RectTransform));
+                connection.transform.SetParent(m_StateA.OutlineGroup, false);
                 connection.AddComponent<Image>();
                 RectTransform connectionRect = connection.GetComponent<RectTransform>();
-                connectionRect.sizeDelta = new Vector2(5, 500 * Vector2.Distance(focusA.Rect.anchorMin, focusB.Rect.anchorMin));
+
+                Vector2 canvasSize = m_StateA.NavigationCanvas.GetComponent<RectTransform>().sizeDelta;
+                float focusARadius = focusA.Rect.sizeDelta.x / 2;
+                float focusBRadius = focusB.Rect.sizeDelta.x / 2;
+                connectionRect.sizeDelta = new Vector2(5, Vector2.Distance(focusA.Rect.anchorMin * canvasSize, focusB.Rect.anchorMin * canvasSize) - focusARadius - focusBRadius);
+                connectionRect.sizeDelta = new Vector2(5, Vector2.Distance(focusA.Rect.anchorMin * canvasSize, focusB.Rect.anchorMin * canvasSize) - 75);
 
                 connectionRect.anchorMin = connectionRect.anchorMax = (focusA.Rect.anchorMax + focusB.Rect.anchorMax) / 2; 
-                float angle = Vector2.Angle(Vector2.up, focusA.Rect.anchorMin - focusB.Rect.anchorMin);
+                Vector2 vector = (focusA.Rect.anchorMax * canvasSize) - (focusB.Rect.anchorMin * canvasSize);
+                float angle = Vector2.Angle(Vector2.up, vector);
                 connectionRect.localEulerAngles = new Vector3(0, 0, angle);
             }
 
             // Okay now put the camera back
-            WorldPositionUtility.TryLook(dome.transform, spaceCam.Camera.RootTransform, stashedPos);
+            WorldPositionUtility.ForceAbsRotation(spaceCam, spaceCameraOriginalRot);
             spaceCamera.fieldOfView = stashedFOV;
             m_StateA.Initialized = true;
         }
@@ -102,7 +101,7 @@ namespace Astro {
                 case CelestialObjectCategory.Star:
                     return m_StateA.StarOutlineSprite;
                 case CelestialObjectCategory.Planet:
-                    return m_StateA.PlanetOutlineSprite;
+                    return null;
                 case CelestialObjectCategory.Satellite:
                     return null;
                 case CelestialObjectCategory.Constellation:
@@ -123,6 +122,7 @@ namespace Astro {
             }
             // float scaleFactor = 1.5f * Mathf.Pow(0.63f, asset.ApparentMagnitude);
             // focus.Rect.localScale = new Vector3(scaleFactor, scaleFactor, 1);
+            focus.Represent2D.enabled = false;
             focus.TargetData = asset;
         }
     }

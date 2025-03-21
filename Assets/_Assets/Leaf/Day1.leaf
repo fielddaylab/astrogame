@@ -1,21 +1,31 @@
 #basePath	Day1
 
-:: ArrivalAtTheShed
-@trigger    SceneReady
-@who    Radio
 
+:: OpeningCutscene
+@trigger SceneReady
+@who    IntroCutscene
 $call SetInputState(false)
 $call StopPuzzleMode()
 $call StopOpenMode()
+$call PlayMusic("Music.Gently-Falling", 1)
+$call IntroCutscene->BeginCutscene()
+$call Wait(2)
+$call TelescopeLook(155, -30)
+
+:: ArrivalAtTheShed
+@trigger    CutsceneEnd
+@when cutsceneId == "IntroCutscene"
+@who    Radio
+
+$call PlayMusic("Music.Gently-Falling-Piano", 1)
 {@Astrid} Whoa. This place has really changed.
 Elijah, where are you?
 
 $call Wait(2)
 
-$call MoveToCameraView("Right")
-// TODO Fix camera view re-enabling input
 {@Radio} Star HQ to Station Seven. Elijah, do you copy?
-Please log in and provide status update. 
+$call MoveToView("Right")
+{@Radio} Please log in and provide status update. 
 
 $call Wait(2)
 
@@ -57,6 +67,50 @@ $call Wait(2)
 Ugh, forgot ... you can’t hear me. 
 $call Wait(2)
 
+{@Dad} Hold on. 
+$call Wait(1)
+We just recieved a neutrino emission from the Ursa Major region. 
+What better way to spend your birthday than to help us with a little astronomy?
+
+$call Wait(2)
+{@Astrid} ...sure dad. 
+$call Wait(1)
+
+Uploading area of interest... (*neutrino upload noises*)
+
+$call WaitForMovedToView("Desk")
+$call StartNeutrinoNavigation()
+$call SetInputState(true)
+$call StopMusic(2)
+
+:: NeutrinoNavigationComplete
+@trigger    NeutrinoNavigationComplete
+@once
+
+{@Radio} Neutrino Origin Detected
+$call StopNeutrinoNavigation()
+$call StartOpenMode()
+
+:: PointsUpdated
+@trigger    PointsUpdated
+@when   sciencePoints > 2
+@once
+
+$call StopOpenMode()
+$call ClearMonitorSelection()
+{@Radio} Star HQ to Station Seven.
+The STAR Coalition has requests your assistance identifying starts in the Perseus constellation.
+Please align your telescope to the Perseus region. 
+$call StartPuzzleNavigation()
+
+:: PuzzleNavigationComplete
+@trigger    PuzzleNavigationComplete
+@once
+
+$call StopPuzzleNavigation()
+{@Radio} This task will require your astral color instrument. 
+{@Radio} Unlocking now. Stand By...
+
 {@Dad} There’s not much time, so I’ll give you the short version.
 My team here at IceCube has started an underground group called the STAR Coalition. We’re trying to rebuild our knowledge of the night sky. 
 $call Wait(1)
@@ -84,31 +138,6 @@ $call Wait(1)
 {@Dad} Time’s up. I gotta go.
 I’ll explain more later.
 Love you, Little Bear. Good luck.
-$call MoveToCameraView("Desk")
-$call StartOpenMode()
-$call SetInputState(true)
-
-:: PointsUpdated
-@trigger    PointsUpdated
-//TODO
-@when   sciencePoints > 0
-@once
-
-$call StopOpenMode()
-$call ClearMonitorSelection()
-{@Radio} Star HQ to Station Seven.
-The STAR Coalition has requests your assistance identifying starts in the Perseus constellation.
-Please align your telescope to the Perseus region. 
-$call StartPuzzleNavigation()
-
-:: PuzzleNavigationComplete
-@trigger    PuzzleNavigationComplete
-@once
-
-$call Wait(1)
-$call StopPuzzleNavigation()
-{@Radio} This task will require your astral color instrument. 
-{@Radio} Unlocking now. Stand By...
 $call SetInstrumentUnlocked(ColorInstrument, true)
 $call StartPuzzleMode()
 
@@ -122,8 +151,7 @@ $call StopPuzzleMode()
 $call SetInputState(false)
 {@Astrid} Time to turn in for the night.
 Oh, what's this?
-$call MoveToCameraView("Left")
-$call Wait(1)
+$call WaitForMovedToView("Left")
 $call SpawnDocumentToCamera("Day1Martha")
 $call SetInputState(true)
 

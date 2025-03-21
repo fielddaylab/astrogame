@@ -197,7 +197,7 @@ namespace Astro
             hrs = int.Parse(vals[0].Trim());
             mins = int.Parse(vals[1].Trim());
             secs = float.Parse(vals[2].Trim());
-            currAsset.Coords.Declination = new HmsCoords(hrs, mins, secs);
+            currAsset.Coords.Declination = new DmsCoords(hrs, mins, secs);
         }
 
         private static void ReadCategory(ref CelestialAsset currAsset, string workingData)

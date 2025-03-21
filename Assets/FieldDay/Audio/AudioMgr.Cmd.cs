@@ -288,6 +288,12 @@ namespace FieldDay.Audio {
 
                 evtProperties.Volume = evt.Volume.Generate();
                 evtProperties.Pitch = evt.Pitch.Generate();
+                evtProperties.Pan = evt.Pan.Generate();
+
+                if (evt.RandomizePanSign && RNG.Instance.NextBool()) {
+                    evtProperties.Pan = -evtProperties.Pan;
+                }
+
                 delay = evt.Delay.Generate();
 
                 if (evt.Loop) {

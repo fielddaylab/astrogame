@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using BeauPools;
 using BeauUtil;
 using BeauUtil.Debugger;
+using FieldDay.Debugging;
 using FieldDay.Pipes;
 using UnityEngine;
 
@@ -36,6 +37,8 @@ namespace FieldDay.Audio {
         private Pipe<AudioCommand> m_CommandPipe = new Pipe<AudioCommand>(128, true);
         private Pipe<PlayCommandData> m_PlayCommandPipe = new Pipe<PlayCommandData>(64, true);
         private UniqueIdAllocator16 m_VoiceIdAllocator = new UniqueIdAllocator16(MaxVoices + MaxBuses);
+
+        private BitSet128 m_VoicePlayingBitmap;
 
         private Unsafe.ArenaHandle m_Arena;
         private UnsafeResourcePool<AudioPropertyBlock> m_TargetablePropertyBlocks;
@@ -323,5 +326,64 @@ namespace FieldDay.Audio {
         }
 
         #endregion // Preload
+
+        #region Debug
+
+        /// <summary>
+        /// Gets the debug properties for a given bus.
+        /// </summary>
+        public AudioPropertyBlock GetDebugProperties(StringHash32 busId) {
+#if DEVELOPMENT
+            int busIdx = FindBusIndexForId(busId);
+            if (busIdx >= 0) {
+                return m_DebugBusProperties[busIdx];
+            }
+#endif // DEVELOPMENT
+            return default;
+        }
+
+        /// <summary>
+        /// Sets debug properties for a given bus.
+        /// </summary>
+        public void SetDebugProperties(StringHash32 busId, AudioPropertyBlock propertyBlock) {
+#if DEVELOPMENT
+            int busIdx = FindBusIndexForId(busId);
+            if (busIdx >= 0) {
+                m_DebugBusProperties[busIdx] = propertyBlock;
+            }
+#endif // DEVELOPMENT
+        }
+
+        /// <summary>
+        /// Resets debug properties for a given bus.
+        /// </summary>
+        public void ResetDebugProperties(StringHash32 busId) {
+#if DEVELOPMENT
+            int busIdx = FindBusIndexForId(busId);
+            if (busIdx >= 0) {
+                m_DebugBusProperties[busIdx] = AudioPropertyBlock.Default;
+            }
+#endif // DEVELOPMENT
+        }
+
+        private enum DebuggingFlags {
+            TraceExecution
+        }
+
+#if DEVELOPMENT
+
+        [EngineMenuFactory]
+        static private DMInfo CreateAudioDebugMenu() {
+            DMInfo info = new DMInfo("Audio", 16);
+            //DebugFlags.Menu.AddSingleFrameFlagButton(info, "Trace Execution for Frame", DebuggingFlags.TraceExecution);
+            //DebugFlags.Menu.AddFlagToggle(info, "Render Debug Info", DebuggingFlags.VisualizeEntireScreen);
+            //info.AddDivider();
+
+            return info;
+        }
+
+#endif // DEVELOPMENT
+
+        #endregion // Debug
     }
 }
