@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using BeauRoutine;
+using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay;
 using FieldDay.Debugging;
@@ -13,12 +14,27 @@ namespace Astro {
 
         [DebugMenuFactory]
         private static DMInfo LoadLevel() {
+            StoryAsset story = Find.GlobalAsset<StoryAsset>();
+
             DMInfo info = new DMInfo("Progress");
             info.AddButton("NextLevel", () => {
                 ScriptUtility.KillAllThreads();
                 ScriptTriggers.LoadNextDay();
             });
+
+            info.AddDivider();
+
+            foreach(var dayId in story.Days){
+                RegisterDayLoadButton(info, dayId);
+            }
             return info;
+        }
+
+        static private void RegisterDayLoadButton(DMInfo menu, StringHash32 dayId) {
+            menu.AddButton("Load " + Find.NamedAsset<DayConfigAsset>(dayId).name, () => {
+                ScriptUtility.KillAllThreads();
+                ScriptTriggers.LoadDay(dayId);
+            });
         }
 
         [InvokePreBoot]

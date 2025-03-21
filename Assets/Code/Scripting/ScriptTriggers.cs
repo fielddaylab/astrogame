@@ -54,6 +54,25 @@ namespace Astro {
             Game.Scenes.LoadMainScene(day.Scene, true);
         }
 
+        static public void LoadDay(StringHash32 dayId) {
+            PlayerProgressState state = Find.State<PlayerProgressState>();
+            StoryAsset story = Find.GlobalAsset<StoryAsset>();
+            for (int i = 0; i < story.Days.Length; i++) {
+                if (story.Days[i] == dayId){
+                    state.DayIndex = i;
+                    break;
+                }
+            }
+
+            var day = Find.NamedAsset<DayConfigAsset>(dayId);
+
+            Game.Events.Dispatch(GameEvents.BeforeNextDayLoad);
+
+            Log.Msg("[ScriptTriggers] Loading day '{0}'", day.name);
+
+            Game.Scenes.LoadMainScene(day.Scene, true);
+        }
+
         [LeafMember("SetInputState")]
         static private void LeafSetInputState(bool enabled) {
             var state = Find.State<InputState>();

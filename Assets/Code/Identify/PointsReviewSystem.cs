@@ -79,6 +79,17 @@ namespace Astro {
             }
         }
 
+        [DebugMenuFactory]
+        private static DMInfo SubmitCorrectPuzzleSolution() {
+            DMInfo info = new DMInfo("Puzzle");
+            info.AddButton("Bypass Puzzle", () => {
+                var puzzle = Find.State<PuzzleState>();
+                OnCorrectPuzzleSubmission.Invoke(puzzle.ActivePuzzle.DisplayName);
+                puzzle.ActivePuzzle = null;
+            });
+            return info;
+        }
+
         private void CheckObjectIdentification() {
             if (ReferenceUtility.CurrentRefMatchesFocus() && ReferenceUtility.CurrentRefInNeutrinoEvent()) {
                 ShowResultSprite(true, m_State);

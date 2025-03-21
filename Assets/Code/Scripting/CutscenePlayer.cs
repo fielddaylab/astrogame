@@ -48,13 +48,14 @@ namespace Astro {
         }
 
         private void OnCutsceneEnd() {
-            if (!Director || !Camera || Game.IsShuttingDown) {
+            if (!Director || !Camera || Game.IsShuttingDown || !this.Actor) {
                 return;
             }
 
             Director.gameObject.SetActive(false);
             AssetGroup.SetActive(false);
             Camera.gameObject.SetActive(false);
+
             using (var table = TempVarTable.Alloc()) {
                 table.Set("cutsceneId", this.Actor.Id);
                 ScriptUtility.Trigger(ScriptEvents.CutsceneEnd, table);
