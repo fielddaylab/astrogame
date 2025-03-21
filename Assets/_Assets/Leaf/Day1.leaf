@@ -67,6 +67,17 @@ $call Wait(2)
 Ugh, forgot ... you can’t hear me. 
 $call Wait(2)
 
+{@Dad} Hold on. 
+$call Wait(1)
+We just recieved a neutrino emission from the Ursa Major region. 
+What better way to spend your birthday than to help us with a little astronomy?
+
+$call Wait(2)
+{@Astrid} ...sure dad. 
+$call Wait(1)
+
+Uploading area of interest... (*neutrino upload noises*)
+
 $call WaitForMovedToView("Desk")
 $call StartNeutrinoNavigation()
 $call SetInputState(true)
@@ -82,7 +93,6 @@ $call StartOpenMode()
 
 :: PointsUpdated
 @trigger    PointsUpdated
-//TODO
 @when   sciencePoints > 2
 @once
 
