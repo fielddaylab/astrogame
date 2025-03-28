@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: 43cf997479c7b1648bc4df1c83250333, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 5227652ed0ad493488f1d7137c10a591, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -96,7 +96,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000010, guid: d1b1f49e96e28754e81ff04174607f74, type: 2}
+  m_LightingDataAsset: {fileID: 112000012, guid: d1b1f49e96e28754e81ff04174607f74, type: 2}
   m_LightingSettings: {fileID: 4890085278179872738, guid: 6f1803a0335cd4f4a9c123fe06a221ef, type: 2}
 --- !u!196 &4
 NavMeshSettings:
@@ -234,7 +234,7 @@ MeshRenderer:
   m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
+  m_ScaleInLightmap: 0.5
   m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
@@ -452,7 +452,7 @@ MeshRenderer:
   m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
+  m_ScaleInLightmap: 0.8
   m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
@@ -775,9 +775,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 35139148}
     m_Modifications:
+    - target: {fileID: 3314709113050653276, guid: 27b9c0ce00828c845bfacafef4a6f297, type: 3}
+      propertyPath: m_ScaleInLightmap
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 3761208601314932492, guid: 27b9c0ce00828c845bfacafef4a6f297, type: 3}
       propertyPath: ConnectedViewNode
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4269403508703375938, guid: 27b9c0ce00828c845bfacafef4a6f297, type: 3}
+      propertyPath: m_ScaleInLightmap
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 5977188236420505457, guid: 27b9c0ce00828c845bfacafef4a6f297, type: 3}
       propertyPath: m_Name
@@ -823,6 +831,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7159974001652271454, guid: 27b9c0ce00828c845bfacafef4a6f297, type: 3}
+      propertyPath: m_ScaleInLightmap
+      value: 0.8
+      objectReference: {fileID: 0}
     - target: {fileID: 8248423571887653154, guid: 27b9c0ce00828c845bfacafef4a6f297, type: 3}
       propertyPath: ConnectedViewNode
       value: 
@@ -846,6 +858,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 35139148}
     m_Modifications:
+    - target: {fileID: 1306584433238736544, guid: dcf18d6bb0f310c459387a437daf246b, type: 3}
+      propertyPath: m_ScaleInLightmap
+      value: 0.8
+      objectReference: {fileID: 0}
     - target: {fileID: 2584415291808156884, guid: dcf18d6bb0f310c459387a437daf246b, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -853,6 +869,10 @@ PrefabInstance:
     - target: {fileID: 3671802896527718167, guid: dcf18d6bb0f310c459387a437daf246b, type: 3}
       propertyPath: m_Name
       value: CoordinateInstrument
+      objectReference: {fileID: 0}
+    - target: {fileID: 3864435900112878003, guid: dcf18d6bb0f310c459387a437daf246b, type: 3}
+      propertyPath: m_ScaleInLightmap
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 7770932712874590444, guid: dcf18d6bb0f310c459387a437daf246b, type: 3}
       propertyPath: m_Mesh
@@ -897,6 +917,10 @@ PrefabInstance:
     - target: {fileID: 8526697878842235145, guid: dcf18d6bb0f310c459387a437daf246b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8846631204204837000, guid: dcf18d6bb0f310c459387a437daf246b, type: 3}
+      propertyPath: m_ScaleInLightmap
+      value: 0.8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -949,6 +973,10 @@ PrefabInstance:
     - target: {fileID: 2631276525270493877, guid: bea00d3125bba324aa6647a0d6889248, type: 3}
       propertyPath: m_Name
       value: HistoricalData
+      objectReference: {fileID: 0}
+    - target: {fileID: 3267294452714272930, guid: bea00d3125bba324aa6647a0d6889248, type: 3}
+      propertyPath: m_ScaleInLightmap
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 3312941529116180524, guid: bea00d3125bba324aa6647a0d6889248, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -1026,6 +1054,10 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
+    - target: {fileID: 7707204549295714644, guid: bea00d3125bba324aa6647a0d6889248, type: 3}
+      propertyPath: m_ScaleInLightmap
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 8194522535923966521, guid: bea00d3125bba324aa6647a0d6889248, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 0
@@ -1101,6 +1133,10 @@ PrefabInstance:
     - target: {fileID: 1594254822178239427, guid: 0f590db886bdca74fa1859c5c45ecfdb, type: 3}
       propertyPath: m_Name
       value: Color Instrument
+      objectReference: {fileID: 0}
+    - target: {fileID: 1721582870547005678, guid: 0f590db886bdca74fa1859c5c45ecfdb, type: 3}
+      propertyPath: m_ScaleInLightmap
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 2437429970030286083, guid: 0f590db886bdca74fa1859c5c45ecfdb, type: 3}
       propertyPath: m_fontSize
@@ -1202,6 +1238,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: ed770837d222f0443a4221f022392637, type: 2}
+    - target: {fileID: 3431215487387641239, guid: 36543bce9fc63304181344ce88794f53, type: 3}
+      propertyPath: m_ScaleInLightmap
+      value: 0.8
+      objectReference: {fileID: 0}
     - target: {fileID: 7414546681388126419, guid: 36543bce9fc63304181344ce88794f53, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.203
@@ -1376,6 +1416,10 @@ PrefabInstance:
     - target: {fileID: 4276281889513085114, guid: 66760fe6bfe143e459f1add34e385d95, type: 3}
       propertyPath: m_DynamicOccludee
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4276281889513085114, guid: 66760fe6bfe143e459f1add34e385d95, type: 3}
+      propertyPath: m_ScaleInLightmap
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 5149268842122580148, guid: 66760fe6bfe143e459f1add34e385d95, type: 3}
       propertyPath: m_StaticEditorFlags

@@ -2,6 +2,7 @@
 
 using BeauUtil;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -80,7 +81,9 @@ namespace FieldDay.Editor {
                 }
 
                 render.Component.lightmapIndex = render.VirtualLightmapIndex;
-                render.Component.lightmapScaleOffset = render.LightmapScaleOffset;
+                if (!render.Component.isPartOfStaticBatch) {
+                    render.Component.lightmapScaleOffset = render.LightmapScaleOffset;
+                }
             }
         }
     }

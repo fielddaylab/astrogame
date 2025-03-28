@@ -314,10 +314,11 @@ namespace FieldDay.Assets {
         /// <summary>
         /// Looks up the named asset with the given id.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [Il2CppSetOption(Option.NullChecks, false)]
         public T GetNamed<T>(StringHash32 id) where T : class, INamedAsset {
             NamedAssetCollection typedCollection = GetNamedCollection<T>(true);
-            return (T) typedCollection.Lookup(id);
+            return Unsafe.FastCast<T>(typedCollection.Lookup<T>(id));
         }
 
         /// <summary>
@@ -327,7 +328,7 @@ namespace FieldDay.Assets {
         public bool TryGetNamed<T>(StringHash32 id, out T asset) where T : class, INamedAsset {
             NamedAssetCollection typedCollection = GetNamedCollection<T>(true);
             bool found = typedCollection.TryLookup(id, out INamedAsset interfaceAsset);
-            asset = (T) interfaceAsset;
+            asset = Unsafe.FastCast<T>(interfaceAsset);
             return found;
         }
 
@@ -546,7 +547,7 @@ namespace FieldDay.Assets {
         }
 
         public T Current {
-            get { return (T) m_Source.Current; }
+            get { return Unsafe.FastCast<T>(m_Source.Current); }
         }
 
         public NamedAssetIterator<T> GetEnumerator() {
