@@ -30,6 +30,8 @@ namespace Astro
                 camState.HorizonPlane.rotation = camRot;
                 domeState.HorizonRoot.rotation = camRot;
 
+                SkyDomeUtility.FilterByHorizon(domeState);
+
                 LatLongCoords counterRot = globe;
                 counterRot.Latitude = -counterRot.Latitude;
                 counterRot.Longitude = -counterRot.Longitude;

@@ -34,7 +34,7 @@ namespace Astro
 
             CelestialObjectVisMask visMask = m_State.VisMask;
 
-            foreach(var obj in dome.AllObjects) {
+            foreach(var obj in dome.AboveHorizon) {
                 if ((obj.Resource.Visibility & visMask) == 0) {
                     continue;
                 }
