@@ -9,5 +9,6 @@ namespace Astro
     public class ArchiveInteractable : BatchedComponent
     {
         [NonSerialized] public int ArchiveIndex;
+        [NonSerialized] public Mesh Mesh;
     }
 }
