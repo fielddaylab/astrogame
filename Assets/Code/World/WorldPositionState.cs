@@ -40,7 +40,7 @@ namespace Astro
                 Matrix4x4 skyRotMat = Matrix4x4.Rotate(skyRot);
                 Shader.SetGlobalMatrix("_SkyboxRotation", skyRotMat);
 
-                WorldPositionUtility.TryLook(camState, StartingLookCoords);
+                WorldPositionUtility.LookAt(camState, StartingLookCoords);
             });
             return null;
         }
