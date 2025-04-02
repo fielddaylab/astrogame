@@ -13,11 +13,12 @@ namespace Astro {
             float raDegrees = (float)CoordinateUtility.HmsToDD(coords.RightAscension);
             float declDegrees = (float)CoordinateUtility.DmsToDD(coords.Declination);
             var posOffset = CoordinateUtility.RAscDeclDegreesToCartesianCoordinates(raDegrees, declDegrees);
+            posOffset = camState.Camera.RootTransform.parent.InverseTransformDirection(posOffset);
 
-            Quaternion look = Quaternion.LookRotation(posOffset, camState.HorizonPlane.up);
+            Quaternion look = Quaternion.LookRotation(posOffset, Vector3.up);
             Vector3 angles = look.eulerAngles;
             angles.z = 0;
-            camState.Camera.RootTransform.eulerAngles = angles;
+            camState.Camera.RootTransform.localEulerAngles = angles;
 
             camState.HorizLook = angles.y;
             camState.VertLook = angles.x;
@@ -33,19 +34,20 @@ namespace Astro {
             return posOffset.normalized;
         }
 
-        public static Quaternion GetLookRotation(SpaceCameraState camState, EqCoords coords) {
+        public static Quaternion GetLocalLookRotation(SpaceCameraState camState, EqCoords coords) {
             float raDegrees = (float)CoordinateUtility.HmsToDD(coords.RightAscension);
             float declDegrees = (float)CoordinateUtility.DmsToDD(coords.Declination);
             var posOffset = CoordinateUtility.RAscDeclDegreesToCartesianCoordinates(raDegrees, declDegrees);
+            posOffset = camState.Camera.RootTransform.parent.InverseTransformDirection(posOffset);
 
-            Quaternion look = Quaternion.LookRotation(posOffset, camState.HorizonPlane.up);
+            Quaternion look = Quaternion.LookRotation(posOffset, Vector3.up);
             Vector3 angles = look.eulerAngles;
             angles.z = 0;
 
             return Quaternion.Euler(angles);
         }
 
-        public static void ForceAbsRotation(SpaceCameraState camState, Vector3 angles) {
+        public static void ForceLocalRotation(SpaceCameraState camState, Vector3 angles) {
 
             angles.z = 0;
             camState.Camera.RootTransform.localEulerAngles = angles;
