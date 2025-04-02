@@ -47,8 +47,6 @@ namespace Astro
         public override void ProcessWorkForComponent(DocumentInteractable primary, DocumentPrompter secondary, float deltaTime)
         {
             base.ProcessWorkForComponent(primary, secondary, deltaTime);
-
-
         }
     }
 }
