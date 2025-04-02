@@ -9,6 +9,7 @@ using System.Collections;
 using UnityEngine;
 
 namespace Astro {
+    [SysUpdate(GameLoopPhase.Update, 0, AstroGame.MonitorControlsUpdateMask)]
     public class NavigationReadoutSystem : SharedStateSystemBehaviour<PlayerPointsState, PuzzleNavigationState, NeutrinoNavigationState> {
 
         public override bool HasWork() {

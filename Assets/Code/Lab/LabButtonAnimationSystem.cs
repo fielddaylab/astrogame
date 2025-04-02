@@ -8,7 +8,7 @@ using BeauRoutine;
 
 namespace Astro
 {
-    [SysUpdate(GameLoopPhase.Update, 550)] // After Interactable Select System
+    [SysUpdate(GameLoopPhase.Update, 550, AstroGame.InteractUpdateMask)] // After Interactable Select System
     public class LabButtonAnimationSystem : ComponentSystemBehaviour<LabInteractable, LabButton>
     {
         public override void ProcessWorkForComponent(LabInteractable primary, LabButton secondary, float deltaTime)

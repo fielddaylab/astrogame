@@ -6,7 +6,7 @@ using FieldDay;
 
 namespace Astro
 {
-    [SysUpdate(GameLoopPhase.LateUpdate)]
+    [SysUpdate(GameLoopPhase.LateUpdate, 0, AstroGame.MonitorControlsUpdateMask)]
     public class SpaceCameraRefreshSystem : SharedStateSystemBehaviour<SpaceCameraState>
     {
         public override void ProcessWork(float deltaTime)

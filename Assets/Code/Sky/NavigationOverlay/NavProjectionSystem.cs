@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using static Astro.PuzzleAsset;
 
 namespace Astro {
+    [SysUpdate(GameLoopPhase.Update, 0, AstroGame.MonitorControlsUpdateMask)]
     public class NavProjectionSystem : SharedStateSystemBehaviour<NavProjectionState, PuzzleNavigationState> {
         public override bool HasWork() {
             bool hasWork = base.HasWork();

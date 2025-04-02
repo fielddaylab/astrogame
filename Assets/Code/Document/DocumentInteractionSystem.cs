@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace Astro {
 
-    [SysUpdate(GameLoopPhase.Update, 1)]
+    [SysUpdate(GameLoopPhase.Update, 1, AstroGame.DocumentUpdateMask)]
     public class DocumentInteractionSystem : SharedStateSystemBehaviour<DocumentBoardState, InputState> {
         public override void ProcessWork(float deltaTime) {
             m_StateA.InteractedThisFrame = false;

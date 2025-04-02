@@ -8,6 +8,7 @@ using System.Collections;
 using UnityEngine;
 
 namespace Astro {
+    [SysUpdate(GameLoopPhase.Update, 0, AstroGame.SubmissionUpdateMask)]
     public class PointsReviewSystem : SharedStateSystemBehaviour<PlayerPointsState> {
 
         public override bool HasWork() {

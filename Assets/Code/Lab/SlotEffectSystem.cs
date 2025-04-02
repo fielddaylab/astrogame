@@ -6,7 +6,7 @@ using FieldDay.Systems;
 
 namespace Astro
 {
-    [SysUpdate(GameLoopPhase.Update, 2000)] // After InteractSelectSlotSystem
+    [SysUpdate(GameLoopPhase.Update, 2000, AstroGame.SubmissionUpdateMask)] // After InteractSelectSlotSystem
     public class SlotEffectSystem : ComponentSystemBehaviour<DataSlot, RelevantSlotHighlight>
     {
         public override void ProcessWorkForComponent(DataSlot component, RelevantSlotHighlight highlight, float deltaTime)
