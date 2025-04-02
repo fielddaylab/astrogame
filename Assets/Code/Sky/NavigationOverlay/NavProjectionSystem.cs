@@ -39,7 +39,7 @@ namespace Astro {
 
             // Hack: just point our camera at our target position to draw our navigation overlay
             float stashedFOV = spaceCamera.fieldOfView;
-            WorldPositionUtility.TryLook(spaceCam, target);
+            WorldPositionUtility.LookAt(spaceCam, target);
             spaceCamera.fieldOfView = spaceCam.Camera.OriginalFOV / puzzleState.ActivePuzzle.PuzzleCameraZoom;
 
             // Remove any old projections
