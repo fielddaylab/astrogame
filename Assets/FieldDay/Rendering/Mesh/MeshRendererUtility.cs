@@ -9,20 +9,20 @@ namespace FieldDay.Rendering {
         /// <summary>
         /// Sets the shared material at the given index.
         /// </summary>
-        static public void SetSharedMaterialAtIndex(this MeshRenderer meshRenderer, int materialIndex, Material newMaterial) {
-            meshRenderer.GetSharedMaterials(s_MaterialWorkList);
+        static public void SetSharedMaterialAtIndex(this Renderer renderer, int materialIndex, Material newMaterial) {
+            renderer.GetSharedMaterials(s_MaterialWorkList);
             s_MaterialWorkList[materialIndex] = newMaterial;
-            meshRenderer.SetSharedMaterials(s_MaterialWorkList);
+            renderer.SetSharedMaterials(s_MaterialWorkList);
             s_MaterialWorkList.Clear();
         }
 
         /// <summary>
         /// Sets the material at the given index.
         /// </summary>
-        static public void SetMaterialAtIndex(this MeshRenderer meshRenderer, int materialIndex, Material newMaterial) {
-            meshRenderer.GetMaterials(s_MaterialWorkList);
+        static public void SetMaterialAtIndex(this Renderer renderer, int materialIndex, Material newMaterial) {
+            renderer.GetMaterials(s_MaterialWorkList);
             s_MaterialWorkList[materialIndex] = newMaterial;
-            meshRenderer.SetMaterials(s_MaterialWorkList);
+            renderer.SetMaterials(s_MaterialWorkList);
             s_MaterialWorkList.Clear();
         }
     }
