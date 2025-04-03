@@ -4,6 +4,7 @@
 :: OpeningCutscene
 @trigger SceneReady
 @who    IntroCutscene
+
 $call SetInputState(false)
 $call StopPuzzleMode()
 $call StopOpenMode()
@@ -44,10 +45,11 @@ $call Wait(1)
 
 $call Wait(2)
 
-{@Dad} Astrid, is that you?
+{@Dad} I told you, he's not there... Astrid?
 $call Wait(1)
+Is that you?
 
-{@Astrid} Dad! I can’t believe it's you.
+{@Astrid} (*gasp*) Dad! I can’t believe it's you.
 Are you still at the South Pole? Are you okay?
 $call Wait(2)
 
@@ -67,27 +69,69 @@ $call Wait(2)
 Ugh, forgot ... you can’t hear me. 
 $call Wait(2)
 
-{@Dad} Hold on. 
+{@Dad} There’s not much time, so I’ll give you the short version.
+My team here at IceCube has started an underground group called the STAR Coalition. We’re trying to rebuild our knowledge of the night sky. 
 $call Wait(1)
-We just recieved a neutrino emission from the Ursa Major region. 
-What better way to spend your birthday than to help us with a little astronomy?
-
-$call Wait(2)
-{@Astrid} ...sure dad. 
+It’s not easy ... so much was lost during the Collapse.
 $call Wait(1)
+But then Elijah reached out to us. He’s onto something big...
 
-Uploading area of interest... (*neutrino upload noises*)
+{@Astrid} Onto what?
 
-$call WaitForMovedToView("Desk")
-$call StartNeutrinoNavigation()
+{@Dad} I'm so glad you're there though. We could really use your help.
+
+{@Astrid} As if I know how any of this stuff works...
+
+{@Dad} I know you aren't familiar with most of that equipment, but I'll walk you through the basics.
+Don't worry about clerance for the more advanced equipment, that will come in time... if you're up for it. 
+First things first, we you need to submit some data the old fashioned way.
+Sending you the data now...
+
+$call WaitForMovedToView("Monitor")
+(*neutrino upload noises*)
+
+{@Dad} OK, looks like you received the coordinates. 
+{@Dad} See if you can move your telescope.
+
 $call SetInputState(true)
 $call StopMusic(2)
+$call HintModals->SlideInFromRight("TelescopeControls", 0.4)
+$set temp:introMoveTheTelescope = false
+$goto .MoveTelescopeReminder
+
+:: MoveTelescopeReminder
+$call Wait(10)
+$if !temp:introMoveTheTelescope
+    {@Dad} Still there?
+     See if you can move your telescope.
+    $goto .MoveTelescopeReminder
+$endif
+// //TODO Shake UI hint
+
+:: MoveYourTelescope
+@trigger    OnTelescopeMoved
+@when   !temp:introMoveTheTelescope
+@interrupt
+@once
+
+$set temp:introMoveTheTelescope = true
+$call HintModals->Hide("TelescopeControls", 0.2)
+Nice job! Your equipment seems to be working.
+
+$call Wait(2)
+
+See those three lights above your monitor? Feel up for a game of hot an cold?
+$call StartNeutrinoNavigation()
+$call HintModals->SlideInFromLeft("NeutrinoNav", 0.4)
 
 :: NeutrinoNavigationComplete
 @trigger    NeutrinoNavigationComplete
 @once
 
-{@Radio} Neutrino Origin Detected
+{@Dad} Nice Job! 
+Early this morning, Ice Cube detected a high energy neutrino coming from one of several possible stars in this location.
+You’ll see each of them highlighted on your display. 
+Identifying these stars will be a great way for you get your feet wet and upgrade your system.
 $call StopNeutrinoNavigation()
 $call StartOpenMode()
 
@@ -98,9 +142,27 @@ $call StartOpenMode()
 
 $call StopOpenMode()
 $call ClearMonitorSelection()
-{@Radio} Star HQ to Station Seven.
-The STAR Coalition has requests your assistance identifying starts in the Perseus constellation.
-Please align your telescope to the Perseus region. 
+{@Dad}
+Looks like you’ve identified enough stars to earn a higher clearance level. 
+You’ll need to tune to the right frequency on your radio to unlock your equipment. Tune to 375mHz.
+
+{@Radio} Congratulations on being awarded clearance level 2. 
+You are now cleared to use the color meter. 
+Please reference your CERES Operator Manual for further information about your equipment. 
+
+Thanking you for being an important part of the CERES Distributed Network of Citizen Observatories. 
+Together, we will map the stars for a better tomorrow.
+
+{@Astrid} Huh...
+
+{@Radio} Tuning you to the Ice Cube CERES headquarters for further instruction...
+
+{@Dad} Awesome, your rig is upgraded! 
+This time I need you to find the constellation Perseus.
+
+{@Astrid} Perseus, huh?
+
+{@Dad} Up for some more hot and cold?
 $call StartPuzzleNavigation()
 
 :: PuzzleNavigationComplete
@@ -110,34 +172,6 @@ $call StartPuzzleNavigation()
 $call StopPuzzleNavigation()
 {@Radio} This task will require your astral color instrument. 
 {@Radio} Unlocking now. Stand By...
-
-{@Dad} There’s not much time, so I’ll give you the short version.
-My team here at IceCube has started an underground group called the STAR Coalition. We’re trying to rebuild our knowledge of the night sky. 
-$call Wait(1)
-It’s not easy ... so much was lost during the Collapse.
-$call Wait(1)
-But then Elijah reached out to us. He’s onto something big. It’s called Project Hercules. 
-$call Wait(2)
-
-{@Astrid} Project Hercules? 
-$call Wait(1)
-
-{@Dad} I’ll explain more later. For now, we need your help. 
-Elijah has been working on a series of puzzles. I was hoping you could pick up where he left off.
-$call Wait(2)
-
-{@Astrid} Me? 
-$call Wait(1)
-Dad, I just got here. 
-$call Wait(1)
-I don’t know how any of this stuff works!
-$call Wait(1)
-
-{@Dad} See if you can find Elijah’s reference guide. It should have all the data you need.
-
-{@Dad} Time’s up. I gotta go.
-I’ll explain more later.
-Love you, Little Bear. Good luck.
 $call SetInstrumentUnlocked(ColorInstrument, true)
 $call StartPuzzleMode()
 

@@ -31,6 +31,7 @@ public static class ScriptEvents {
     public static readonly StringHash32 DocumentPuzzlePromptStart = "DocumentPuzzlePromptStart";
     public static readonly StringHash32 CutsceneBegin = "CutsceneBegin";
     public static readonly StringHash32 CutsceneEnd = "CutsceneEnd";
+    public static readonly StringHash32 OnTelescopeMoved = "OnTelescopeMoved";
 }
 
 public static class DataTypeLabels
