@@ -44,6 +44,41 @@ namespace FieldDay.Debugging {
 
         #endregion // Scene Launch
 
+        #region TimeScale Adjustments
+
+#if DEVELOPMENT
+        static private uint s_TimeScaleLock;
+#endif // DEVELOPMENT
+
+        /// <summary>
+        /// Returns if time controls are allowed.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static internal bool AllowTimeControl() {
+#if DEVELOPMENT
+            return s_TimeScaleLock == 0;
+#else
+            return false;
+#endif // DEVELOPMENT
+        }
+
+        [Conditional("DEVELOPMENT"), Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
+        static public void BlockTimeControl() {
+#if DEVELOPMENT
+            s_TimeScaleLock++;
+#endif // DEVELOPMENT
+        }
+
+        [Conditional("DEVELOPMENT"), Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
+        static public void UnblockTimeControl() {
+#if DEVELOPMENT
+            Assert.True(s_TimeScaleLock > 0);
+            s_TimeScaleLock--;
+#endif // DEVELOPMENT
+        }
+
+        #endregion // TimeScale Adjustments
+
         #region Flags
 
 #if DEVELOPMENT
@@ -268,7 +303,7 @@ namespace FieldDay.Debugging {
         /// <summary>
         /// Processes single-frame queues.
         /// </summary>
-        [Conditional("DEVELOPMENT")]
+        [Conditional("DEVELOPMENT"), Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
         [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
         [Il2CppSetOption(Option.NullChecks, false)]
         static internal void HandleFrameRollover() {
@@ -321,7 +356,7 @@ namespace FieldDay.Debugging {
             /// <summary>
             /// Adds a toggle to set/unset a flag.
             /// </summary>
-            [Conditional("DEVELOPMENT")]
+            [Conditional("DEVELOPMENT"), Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
             static public void AddFlagToggle(DMInfo menu, string name, int index, DMPredicate predicate = null, int indent = 0) {
 #if DEVELOPMENT
                 menu.AddToggle(name, () => IsFlagSet(index), (b) => SetFlag(index, b), predicate, indent);
@@ -331,7 +366,7 @@ namespace FieldDay.Debugging {
             /// <summary>
             /// Adds a toggle to set/unset a flag.
             /// </summary>
-            [Conditional("DEVELOPMENT")]
+            [Conditional("DEVELOPMENT"), Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
             static public void AddFlagToggle<T>(DMInfo menu, string name, T index, DMPredicate predicate = null, int indent = 0) where T : unmanaged, Enum {
 #if DEVELOPMENT
                 menu.AddToggle(name, () => IsFlagSet(index), (b) => SetFlag(index, b), predicate, indent);
@@ -341,7 +376,7 @@ namespace FieldDay.Debugging {
             /// <summary>
             /// Adds a toggle to set/unset a flag.
             /// </summary>
-            [Conditional("DEVELOPMENT")]
+            [Conditional("DEVELOPMENT"), Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
             static public void AddFlagToggle<T>(DMInfo menu, T index, DMPredicate predicate = null, int indent = 0) where T : unmanaged, Enum {
 #if DEVELOPMENT
                 menu.AddToggle(ReflectionCache.InspectorName(index.ToString()), () => IsFlagSet(index), (b) => SetFlag(index, b), predicate, indent);
@@ -351,7 +386,7 @@ namespace FieldDay.Debugging {
             /// <summary>
             /// Adds a toggle to queue a flag for a single frame.
             /// </summary>
-            [Conditional("DEVELOPMENT")]
+            [Conditional("DEVELOPMENT"), Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
             static public void AddSingleFrameFlagButton(DMInfo menu, string name, int index, DMPredicate predicate = null, int indent = 0) {
 #if DEVELOPMENT
                 menu.AddButton(name, () => QueueFlagSingleFrame(index), predicate, indent);
@@ -361,7 +396,7 @@ namespace FieldDay.Debugging {
             /// <summary>
             /// Adds a toggle to queue a flag for a single frame.
             /// </summary>
-            [Conditional("DEVELOPMENT")]
+            [Conditional("DEVELOPMENT"), Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
             static public void AddSingleFrameFlagButton<T>(DMInfo menu, string name, T index, DMPredicate predicate = null, int indent = 0) where T : unmanaged, Enum {
 #if DEVELOPMENT
                 menu.AddButton(name, () => QueueFlagSingleFrame(index), predicate, indent);
@@ -371,7 +406,7 @@ namespace FieldDay.Debugging {
             /// <summary>
             /// Adds a toggle to queue a flag for a single frame.
             /// </summary>
-            [Conditional("DEVELOPMENT")]
+            [Conditional("DEVELOPMENT"), Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
             static public void AddSingleFrameFlagButton<T>(DMInfo menu, T index, DMPredicate predicate = null, int indent = 0) where T : unmanaged, Enum {
 #if DEVELOPMENT
                 menu.AddButton(ReflectionCache.InspectorName(index.ToString()), () => QueueFlagSingleFrame(index), predicate, indent);

@@ -14,6 +14,7 @@ using FieldDay.SharedState;
 using FieldDay.Vox;
 using Leaf;
 using Leaf.Runtime;
+using Unity.IL2CPP.CompilerServices;
 using UnityEngine;
 
 namespace FieldDay.Scripting {
@@ -60,7 +61,12 @@ namespace FieldDay.Scripting {
         // temporary script table
         internal VariantTable SceneLocalTable;
 
+        // skipping
+        internal Routine SkipCutsceneRoutine;
+        internal bool IsSkippingCutscene;
+
         private Routine m_BootRoutine;
+
         #endregion // State
 
         #region Callbacks
@@ -522,6 +528,7 @@ namespace FieldDay.Scripting {
         /// Handle for the currently playing cutscene.
         /// </summary>
         static public LeafThreadHandle CurrentCutscene {
+            [Il2CppSetOption(Option.NullChecks, false)]
             get { return Runtime.Cutscene; }
         }
 
@@ -529,6 +536,7 @@ namespace FieldDay.Scripting {
         /// Handle for the currently playing cutscene.
         /// </summary>
         static public RingBuffer<LeafThreadHandle>.Enumerator CurrentThreads {
+            [Il2CppSetOption(Option.NullChecks, false)]
             get { return Runtime.ActiveThreads.GetEnumerator(); }
         }
 
@@ -568,5 +576,18 @@ namespace FieldDay.Scripting {
         }
 
         #endregion // Active Threads
+
+        #region Cutscenes
+
+        /// <summary>
+        /// Returns if a cutscene is currently being skipped.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [Il2CppSetOption(Option.NullChecks, false)]
+        static public bool IsSkippingCutscene() {
+            return Runtime.IsSkippingCutscene;
+        }
+
+        #endregion // Cutscenes
     }
 }
