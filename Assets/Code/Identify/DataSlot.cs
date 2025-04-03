@@ -4,6 +4,7 @@ using FieldDay.Components;
 
 namespace Astro {
     public sealed class DataSlot : BatchedComponent {
+        public DataSlot SiblingSlot; // Reference to a paired data slot
         public DataTypeMask Type;
         [Required] public DataDisplay[] Displays;
         public bool IsSource;

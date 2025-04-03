@@ -19,7 +19,8 @@ namespace Astro
 
             bool sourceNotNull = transferState.SelectedSource != null;
             bool targetIsNull = transferState.SelectedTarget == null;
-            bool typesMatch = sourceNotNull && ((component.Type & transferState.SelectedSource.Type) != 0);
+            bool hasSibling = sourceNotNull && transferState.SelectedSource.SiblingSlot != null;
+            bool typesMatch = sourceNotNull && ((component.Type & transferState.SelectedSource.Type) != 0 || (hasSibling && (component.Type & transferState.SelectedSource.SiblingSlot.Type) != 0));
             bool slotIsModifiable = component.Modifiable;
 
             bool isHighlightedAvailable = sourceNotNull && targetIsNull && typesMatch && slotIsModifiable;
