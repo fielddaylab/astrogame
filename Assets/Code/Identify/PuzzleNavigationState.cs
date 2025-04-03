@@ -120,11 +120,11 @@ public static class PuzzleNavigationUtility {
         PuzzleState puzzleState = Find.State<PuzzleState>();
 
         EqCoords target = puzzleState.ActivePuzzle.PuzzleCoordinates;
-        Quaternion targetQuat = WorldPositionUtility.GetLookRotation(spaceCameraState, target);
+        Quaternion targetQuat = WorldPositionUtility.GetLocalLookRotation(spaceCameraState, target);
 
         CanvasGroup boarder = navProjectionState.BoarderGroup;
         CanvasGroup outline = navProjectionState.OutlineGroup.GetComponent<CanvasGroup>();
-        yield return spaceCameraState.Camera.RootTransform.RotateQuaternionTo(targetQuat, 0.5f).Ease(Curve.Smooth).OnUpdate((_) => spaceCameraState.LookUpdatedThisFrame = true);
+        yield return spaceCameraState.Camera.RootTransform.RotateQuaternionTo(targetQuat, 0.5f, Space.Self).Ease(Curve.Smooth).OnUpdate((_) => spaceCameraState.LookUpdatedThisFrame = true);
         // TODO: Figure out how to make the FocusVisuals update throughout the rotation tween
         spaceCameraState.OnLookUpdated.Invoke(spaceCameraState);
         yield return Routine.Combine(

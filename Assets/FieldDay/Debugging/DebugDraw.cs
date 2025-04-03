@@ -13,6 +13,8 @@ using System.Diagnostics;
 using BeauUtil.Debugger;
 using System.Runtime.InteropServices;
 using UnityEngine.Rendering;
+using BeauPools;
+using System.Text;
 
 #if UNITY_EDITOR
 using UnityEditor;

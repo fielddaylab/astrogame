@@ -5,6 +5,7 @@ using BeauUtil;
 using BeauUtil.Debugger;
 using BeauUtil.Tags;
 using BeauUtil.Variants;
+using FieldDay.Debugging;
 using FieldDay.Vox;
 using Leaf;
 using Leaf.Runtime;
@@ -144,6 +145,41 @@ namespace FieldDay.Scripting {
             if (m_RuntimeState.Cutscene == handle) {
                 m_RuntimeState.Cutscene = default;
             }
+        }
+
+        internal void BeginSkippingCutscene(LeafThreadHandle handle) {
+            if (m_RuntimeState.Cutscene == handle && !m_RuntimeState.SkipCutsceneRoutine) {
+                
+                DebugFlags.BlockTimeControl();
+                Game.Input.PauseDevices();
+                Game.Input.PauseRaycasts();
+                
+                handle.GetThread().Pause();
+
+                m_RuntimeState.IsSkippingCutscene = true;
+                m_RuntimeState.SkipCutsceneRoutine.Replace(GameLoop.Host, SkipRoutine(handle));
+            }
+        }
+
+        internal void StopSkippingCutscene(LeafThreadHandle handle) {
+            if (m_RuntimeState.Cutscene == handle) {
+                m_RuntimeState.SkipCutsceneRoutine.Stop();
+                m_RuntimeState.IsSkippingCutscene = false;
+
+                // fade back in
+                handle.GetThread().Resume();
+                
+                DebugFlags.UnblockTimeControl();
+                Game.Input.ResumeDevices();
+                Game.Input.ResumeRaycasts();
+            }
+        }
+
+        static internal IEnumerator SkipRoutine(LeafThreadHandle handle) {
+            // fade out
+            handle.GetThread<ScriptThread>().StartSkipping();
+            yield return 0.1f;
+            handle.GetThread().Resume();
         }
 
         #endregion // Node Flow

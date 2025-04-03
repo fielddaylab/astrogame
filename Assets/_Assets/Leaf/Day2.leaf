@@ -50,11 +50,18 @@ $call MoveToView("Right")
 IceCube is reading a high-energy neutrino emission from the area of the Hydra Constellation. 
 Identification of nearby celestial objects is requested. 
 Uploading area of interest... (*beeeep screeech boop beep boop beeeep*)
-$call MoveToView("Desk")
-$call Wait(2)
-$call SetInputState(true)
-$call StartOpenMode()
 
+$call WaitForMovedToView("Desk")
+$call StartNeutrinoNavigation()
+$call SetInputState(true)
+
+:: NeutrinoNavigationComplete
+@trigger    NeutrinoNavigationComplete
+@once
+
+{@Radio} Neutrino Origin Detected
+$call StopNeutrinoNavigation()
+$call StartOpenMode()
 
 :: PointsUpdated
 @trigger    PointsUpdated
@@ -116,7 +123,6 @@ $call StartPuzzleNavigation()
 @trigger    PuzzleNavigationComplete
 @once
 
-$call Wait(1)
 $call StopPuzzleNavigation()
 {@Radio} This is where an instrument unlock would happen.
 {@Radio} Unlocking now. Stand By...

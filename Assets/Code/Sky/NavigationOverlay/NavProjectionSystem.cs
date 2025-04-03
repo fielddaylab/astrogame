@@ -25,7 +25,7 @@ namespace Astro {
             var outlineState = Find.State<OutlineState>();
 
             var puzzleState = Find.State<PuzzleState>();
-            var spaceCam = Find.State<SpaceCameraState>();
+            var spaceCam = Find.State<SpaceCameraState>(); 
 
             if (!puzzleState.ActivePuzzle) return;
 
@@ -39,7 +39,7 @@ namespace Astro {
 
             // Hack: just point our camera at our target position to draw our navigation overlay
             float stashedFOV = spaceCamera.fieldOfView;
-            WorldPositionUtility.TryLook(spaceCam, target);
+            WorldPositionUtility.LookAt(spaceCam, target);
             spaceCamera.fieldOfView = spaceCam.Camera.OriginalFOV / puzzleState.ActivePuzzle.PuzzleCameraZoom;
 
             // Remove any old projections
@@ -90,8 +90,7 @@ namespace Astro {
             }
 
             // Okay now put the camera back
-            WorldPositionUtility.ForceAbsRotation(spaceCam, spaceCameraOriginalRot);
-            spaceCamera.fieldOfView = stashedFOV;
+            WorldPositionUtility.ForceLocalRotation(spaceCam, spaceCameraOriginalRot);
             m_StateA.Initialized = true;
         }
 

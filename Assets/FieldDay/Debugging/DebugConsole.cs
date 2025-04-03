@@ -130,6 +130,10 @@ namespace FieldDay.Debugging {
         #region Time Scale
 
         private void CheckTimeInput() {
+            if (!DebugFlags.AllowTimeControl()) {
+                return;
+            }
+
             if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) {
                 if (Input.GetKeyDown(KeyCode.Minus)) {
                     UpdateTimescale(m_TimeScale / 2);

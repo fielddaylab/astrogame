@@ -2,10 +2,11 @@
 
 using BeauUtil;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace FieldDay.Rendering {
+namespace FieldDay.Editor {
     public sealed class LightmapCombiner {
         private struct RendererInfo {
             public Renderer Component;
@@ -14,6 +15,7 @@ namespace FieldDay.Rendering {
         }
 
         // TODO: support for realtime lightmaps?
+        // TODO: combine smaller maps together into atlas?
 
         private readonly RingBuffer<RendererInfo> m_Renderers = new RingBuffer<RendererInfo>(512, RingBufferMode.Expand);
         private readonly RingBuffer<LightmapData> m_Lightmaps = new RingBuffer<LightmapData>(32, RingBufferMode.Expand);
@@ -79,7 +81,9 @@ namespace FieldDay.Rendering {
                 }
 
                 render.Component.lightmapIndex = render.VirtualLightmapIndex;
-                render.Component.lightmapScaleOffset = render.LightmapScaleOffset;
+                if (!render.Component.isPartOfStaticBatch) {
+                    render.Component.lightmapScaleOffset = render.LightmapScaleOffset;
+                }
             }
         }
     }

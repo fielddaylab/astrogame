@@ -12,6 +12,8 @@ namespace Astro
     public class ArchiveState : SharedStateComponent, IRegistrationCallbacks, ISharedState
     {
         public GameObject ArchivePrefab;
+        public Mesh[] StackMeshes;
+        public Transform[] StackPoses;
         public Transform ArchiveParent;
 
         // [NonSerialized] public List<ArchiveLayout> DayLayouts = new List<ArchiveLayout>();
@@ -96,10 +98,14 @@ namespace Astro
         {
             var newStack = GameObject.Instantiate(archiveState.ArchivePrefab, archiveState.ArchiveParent).GetComponent<ArchiveInteractable>();
             newStack.ArchiveIndex = archiveIndex;
+            if (archiveState.StackMeshes.Length > archiveIndex - 1) {
+                newStack.Mesh = archiveState.StackMeshes[archiveIndex - 1];
+            }
 
-            newStack.transform.localPosition += Vector3.right * (archiveIndex - 1) * 1.25f;
-
-            // TODO: assign day number visual
+            if (archiveState.StackPoses.Length > archiveIndex - 1) {
+                newStack.transform.position = archiveState.StackPoses[archiveIndex - 1].position;
+                newStack.transform.rotation = archiveState.StackPoses[archiveIndex - 1].rotation;
+            }
         }
     }
 

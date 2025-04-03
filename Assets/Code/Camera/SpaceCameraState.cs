@@ -119,7 +119,6 @@ namespace Astro
             cam.OnLookUpdated.Invoke(cam);
             cam.LookUpdatedThisFrame = true;
             TelescopeUtility.UpdateTelescopeRigRotation(Find.State<TelescopeRig>(), cam.Camera.RootTransform);
-
         }
 
         public static void SetCameraInputEnabled(bool enabled) {

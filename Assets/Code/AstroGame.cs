@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using BeauRoutine;
 using BeauUtil;
 using BeauUtil.Debugger;
@@ -7,6 +8,8 @@ using FieldDay;
 using FieldDay.Debugging;
 using FieldDay.Scripting;
 using FieldDay.SharedState;
+
+[assembly: InternalsVisibleTo("Assembly-CSharp-Editor")]
 
 namespace Astro {
     public sealed class AstroGame : Game {

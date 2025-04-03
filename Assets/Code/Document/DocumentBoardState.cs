@@ -71,13 +71,15 @@ namespace Astro {
                 spawned.LowResImgFront.Path = Application.streamingAssetsPath + POSTCARD_DIR + DEFAULT_LOW_RES_TEXT;
                 spawned.LowResImgFront.Preload();
             }
-            if (spawned.BackBodyText?.text.Length > 0) {
-                spawned.LowResImgBack.Path = Application.streamingAssetsPath + POSTCARD_DIR + DEFAULT_LOW_RES_TEXT;
-                spawned.LowResImgBack.Preload();
+            if(spawned.BackBodyText != null) {
+                if (spawned.BackBodyText?.text.Length > 0) {
+                    spawned.LowResImgBack.Path = Application.streamingAssetsPath + POSTCARD_DIR + DEFAULT_LOW_RES_TEXT;
+                    spawned.LowResImgBack.Preload();
+                }
             }
 
             // Init video
-            if (spawned.Video) {
+            if (spawned.Video != null) {
                 spawned.Video.gameObject.SetActive(true);
 
                 spawned.Video.url = default;
@@ -98,8 +100,7 @@ namespace Astro {
             }
 
             // Init image
-            if (spawned.FrontStaticImg)
-            {
+            if (spawned.FrontStaticImg != null) {
                 spawned.FrontStaticImg.gameObject.SetActive(true);
 
                 spawned.FrontStaticImg.Path = default;
@@ -321,9 +322,15 @@ namespace Astro {
             state.DocumentRoutine.Replace(MoveDocToPos(doc.transform, state.StoredDocPos))
                 .OnComplete(() =>
                 {
+                    // HACK
+                    if(doc.Renderer.Video == null 
+                    || doc.Renderer.FrontAnimation == null 
+                    || doc.Renderer.BackBodyText == null
+                    || doc.Renderer.FrontStaticImg) { return; }
+
                     // Replace with low-res assets
                     // if video, replace with low-res version
-                    if (doc.Renderer.Video?.url?.Length > 0)
+                    if (doc.Renderer.Video.url.Length > 0)
                     {
                         doc.Renderer.FrontAnimation.gameObject.SetActive(false);
                         doc.Renderer.LowResImgFront.gameObject.SetActive(true);

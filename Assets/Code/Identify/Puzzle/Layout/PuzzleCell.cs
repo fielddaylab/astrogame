@@ -1,4 +1,5 @@
 using FieldDay.Components;
+using FieldDay.Rendering;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,9 +23,7 @@ namespace Astro
     {
         public static void UpdateCellVisuals(PuzzleState state, PuzzleCell cell, bool selected)
         {
-            var mats = cell.OutlineMesh.sharedMaterials;
-            mats[0] = selected ? state.SelectedCellMat : state.UnselectedCellMat;
-            cell.OutlineMesh.sharedMaterials = mats;
+            cell.OutlineMesh.SetSharedMaterialAtIndex(0, selected ? state.SelectedCellMat : state.UnselectedCellMat);
         }
     }
 }

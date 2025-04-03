@@ -16,7 +16,7 @@ namespace Astro {
         #region Types
 
         [Serializable]
-        private struct RegionData {
+        internal struct RegionData {
             public SerializedHash32 Id;
             public ushort Width;
             public ushort Height;
@@ -64,6 +64,13 @@ namespace Astro {
         }
 
         #region Regions
+
+#if UNITY_EDITOR
+        internal void OverwriteRegions(RegionData[] regions) {
+            m_TargetRegions = regions;
+            EditorUtility.SetDirty(this);
+        }
+#endif // UNITY_EDITOR
 
         public bool TryGetRegion(StringHash32 id, out PackedRegion region) {
             int idx = Array.IndexOf(m_PackedRegionNames, id);

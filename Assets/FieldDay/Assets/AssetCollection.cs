@@ -43,6 +43,23 @@ namespace FieldDay.Assets {
         }
 
         /// <summary>
+        /// Looks up the asset with the given id.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [Il2CppSetOption(Option.NullChecks, false)]
+        public T Lookup<U>(StringHash32 id) {
+#if DEVELOPMENT
+            if (!m_Lookup.TryGetValue(id, out T asset)) {
+                Assert.Fail("No asset of type {0} with name '{1}' located", typeof(U).FullName, id.ToDebugString());
+            }
+            return asset;
+#else
+            m_Lookup.TryGetValue(id, out T asset);
+            return asset;
+#endif // DEVELOPMENT
+        }
+
+        /// <summary>
         /// Attempts to look up the asset with the given id.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

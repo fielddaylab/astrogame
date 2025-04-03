@@ -224,7 +224,7 @@ namespace FieldDay.UI {
                 Assert.Fail("No shared panel object found for type '{0}'", typeof(T).FullName);
             }
 #endif // DEVELOPMENT
-            return (T) panel;
+            return Unsafe.FastCast<T>(panel);
         }
 
         /// <summary>

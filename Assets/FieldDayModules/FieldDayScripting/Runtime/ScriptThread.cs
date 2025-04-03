@@ -6,6 +6,7 @@ using Leaf.Runtime;
 using FieldDay.Vox;
 using BeauUtil.Debugger;
 using FieldDay.Audio;
+using BeauRoutine;
 
 namespace FieldDay.Scripting {
     /// <summary>
@@ -21,6 +22,7 @@ namespace FieldDay.Scripting {
         private ScriptThreadFlags m_Flags;
 
         private int m_CutsceneDepth;
+
         private VoxRequestHandle m_Voiceover;
         private float m_VoiceoverReleaseTime;
 
@@ -67,6 +69,10 @@ namespace FieldDay.Scripting {
 
         #region Cutscene
 
+        public bool IsCutscene() {
+            return m_CutsceneDepth > 0 || (m_Flags & ScriptThreadFlags.Cutscene) != 0;
+        }
+
         internal void PushCutscene() {
             if (m_CutsceneDepth++ == 0) {
                 m_CustomPlugin.SetCutscene(GetHandle());
@@ -84,32 +90,58 @@ namespace FieldDay.Scripting {
 
         #region Skipping
 
+        /// <summary>
+        /// Returns if the thread is skipping.
+        /// </summary>
         public bool IsSkipping() {
             return (m_Flags & ScriptThreadFlags.Skipping) != 0;
         }
 
-        internal void StopSkipping() {
-            // TODO: Implement
+        internal void StartSkipping() {
+            m_Flags |= ScriptThreadFlags.SkipSingle;
+            m_Routine.SetTimeScale(1000);
         }
 
+        internal void StopSkipping() {
+            if ((m_Flags & ScriptThreadFlags.Skipping) != 0) {
+                m_Flags &= ~(ScriptThreadFlags.Skipping | ScriptThreadFlags.SkipSingle);
+                m_Routine.SetTimeScale(1);
+
+                m_CustomPlugin.StopSkippingCutscene(GetHandle());
+            }
+        }
+
+        #endregion // Skipping
+
+        #region Line Skip
+
+        /// <summary>
+        /// Returns if the current line should be skipped.
+        /// </summary>
         public bool PopSkipSingle() {
             if ((m_Flags & ScriptThreadFlags.SkipSingle) != 0) {
                 m_Flags &= ~ScriptThreadFlags.SkipSingle;
                 return true;
             }
 
-            return false;
+            return (m_Flags & ScriptThreadFlags.Skipping) != 0;
         }
 
+        /// <summary>
+        /// Skips the next line.
+        /// </summary>
         public void SkipSingle() {
             m_Flags |= ScriptThreadFlags.SkipSingle;
             SkipCurrentVox();
         }
 
-        #endregion // Skipping
+        #endregion // Line Skip
 
         #region Voiceover
 
+        /// <summary>
+        /// Skips the current voiceover line.
+        /// </summary>
         public void SkipCurrentVox() {
             if (m_Voiceover.IsValid) {
                 VoxUtility.Stop(m_Voiceover);
@@ -118,6 +150,10 @@ namespace FieldDay.Scripting {
             }
         }
 
+        /// <summary>
+        /// Cancels the existing voiceover line
+        /// and replaces it with the given line.
+        /// </summary>
         internal void AssignVox(VoxRequestHandle voxHandle) {
             if (m_Voiceover != voxHandle) {
                 VoxUtility.Stop(m_Voiceover);
@@ -126,12 +162,18 @@ namespace FieldDay.Scripting {
             }
         }
 
+        /// <summary>
+        /// Sets when voiceover will be released.
+        /// </summary>
         internal void SetVoxReleaseTime(float releaseTime) {
             if (m_Voiceover.IsValid) {
                 m_VoiceoverReleaseTime = releaseTime;
             }
         }
 
+        /// <summary>
+        /// Returns when voiceover will be released.
+        /// </summary>
         internal float GetVoxReleaseTime() {
             if (m_VoiceoverReleaseTime >= 0) {
                 return m_VoiceoverReleaseTime;
@@ -140,6 +182,10 @@ namespace FieldDay.Scripting {
             }
         }
 
+        /// <summary>
+        /// Releases reference to the current voiceover line
+        /// without stopping it.
+        /// </summary>
         internal void ReleaseVox() {
             if (m_Voiceover.IsValid) {
                 m_Voiceover = default;
@@ -153,7 +199,9 @@ namespace FieldDay.Scripting {
             m_CustomPlugin.StopTracking(this);
             VoxUtility.Stop(ref m_Voiceover);
             m_VoiceoverReleaseTime = 0;
-            
+
+            StopSkipping();
+
             base.Reset();
 
             while(m_CutsceneDepth > 0) {

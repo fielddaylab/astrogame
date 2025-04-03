@@ -1,3 +1,5 @@
+using BeauUtil;
+using BeauUtil.Debugger;
 using FieldDay;
 using UnityEngine;
 
@@ -8,19 +10,30 @@ namespace Astro {
     /// </summary>
     public static class WorldPositionUtility
     {
-        public static void TryLook(SpaceCameraState camState, EqCoords coords)
+        public static void LookAt(SpaceCameraState camState, EqCoords coords)
         {
             float raDegrees = (float)CoordinateUtility.HmsToDD(coords.RightAscension);
             float declDegrees = (float)CoordinateUtility.DmsToDD(coords.Declination);
             var posOffset = CoordinateUtility.RAscDeclDegreesToCartesianCoordinates(raDegrees, declDegrees);
+            posOffset = camState.Camera.RootTransform.parent.InverseTransformDirection(posOffset);
 
-            Quaternion look = Quaternion.LookRotation(posOffset, camState.HorizonPlane.up);
+            Quaternion look = Quaternion.LookRotation(posOffset, Vector3.up);
             Vector3 angles = look.eulerAngles;
-            angles.z = 0;
-            camState.Camera.RootTransform.eulerAngles = angles;
+            angles.x = MathUtils.Wrap(angles.x, -180, 180);
+            angles.y = MathUtils.Wrap(angles.y, -180, 180);
 
-            camState.HorizLook = angles.y;
-            camState.VertLook = angles.x;
+            Vector3 clampedAngles = angles;
+            clampedAngles.z = 0;
+            clampedAngles.y = SpaceCameraUtility.ClampAngle(clampedAngles.y, camState.LookXClamp.x, camState.LookXClamp.y);
+            clampedAngles.x = SpaceCameraUtility.ClampAngle(clampedAngles.x, camState.LookYClamp.x, camState.LookYClamp.y);
+            if (clampedAngles.x != angles.x || clampedAngles.y != angles.y) {
+                Log.Warn("[WorldPositionUtility] LookAt resulted in look rotation outside normal clamping bounds: {0},{1}", clampedAngles.y, clampedAngles.x);
+            }
+
+            camState.Camera.RootTransform.localEulerAngles = clampedAngles;
+
+            camState.HorizLook = clampedAngles.y;
+            camState.VertLook = clampedAngles.x;
 
             camState.OnLookUpdated.Invoke(camState);
         }
@@ -33,19 +46,20 @@ namespace Astro {
             return posOffset.normalized;
         }
 
-        public static Quaternion GetLookRotation(SpaceCameraState camState, EqCoords coords) {
+        public static Quaternion GetLocalLookRotation(SpaceCameraState camState, EqCoords coords) {
             float raDegrees = (float)CoordinateUtility.HmsToDD(coords.RightAscension);
             float declDegrees = (float)CoordinateUtility.DmsToDD(coords.Declination);
             var posOffset = CoordinateUtility.RAscDeclDegreesToCartesianCoordinates(raDegrees, declDegrees);
+            posOffset = camState.Camera.RootTransform.parent.InverseTransformDirection(posOffset);
 
-            Quaternion look = Quaternion.LookRotation(posOffset, camState.HorizonPlane.up);
+            Quaternion look = Quaternion.LookRotation(posOffset, Vector3.up);
             Vector3 angles = look.eulerAngles;
             angles.z = 0;
 
             return Quaternion.Euler(angles);
         }
 
-        public static void ForceAbsRotation(SpaceCameraState camState, Vector3 angles) {
+        public static void ForceLocalRotation(SpaceCameraState camState, Vector3 angles) {
 
             angles.z = 0;
             camState.Camera.RootTransform.localEulerAngles = angles;
