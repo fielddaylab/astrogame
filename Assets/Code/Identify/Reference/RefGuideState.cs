@@ -2,7 +2,9 @@
 
 using BeauUtil;
 using FieldDay;
+using FieldDay.Scripting;
 using FieldDay.SharedState;
+using Leaf.Runtime;
 using System;
 using System.Linq;
 using UnityEngine;
@@ -164,6 +166,22 @@ namespace Astro {
             return asset.ReferenceId.Equals(refEntry.AssetId);
         }
 
+        public static bool AssetSubmissionCompleted() {
+            ReferenceClassification refClass = Find.State<RefGuideState>().SelectedRefClassification;
+            PlayerProgressState progress = Find.State<PlayerProgressState>();
+            UIFocus focus = Find.State<FocusState>().CurrentFocus;
+            if (refClass == null || focus == null) {
+                return false;
+            }
+            progress.Classifications.TryGetValue(focus.TargetData.AssetId, out BitSet32 completed);
+            for (int i = 0; i < focus.TargetData.ClassIds.Length; i++) {
+                if (completed[i]) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public static bool RefClassMatchesAsset(ReferenceClassification refClass, CelestialAsset asset, PlayerProgressState progress) {
             progress.Classifications.TryGetValue(asset.AssetId, out BitSet32 completed);
             for (int i = 0; i < asset.ClassIds.Length; i++) {
@@ -188,8 +206,9 @@ namespace Astro {
                 return false;
             }
             return RefClassMatchesAsset(refClass, focus.TargetData, progress);
-
         }
+
+        
 
         public static bool CurrentRefInNeutrinoEvent()
         {
@@ -207,6 +226,23 @@ namespace Astro {
                 InitializeRefGuide(guide);
             }
             guide.RefGuideRoot.gameObject.SetActive(!guide.RefGuideRoot.gameObject.activeSelf);
+
+            // Scripting
+            if (guide.RefGuideRoot.gameObject.activeSelf) {
+                ScriptUtility.Trigger(ScriptEvents.OnRefGuideOpened);
+            } else {
+                ScriptUtility.Trigger(ScriptEvents.OnRefGuideClosed);
+            }
+        }   
+
+        [LeafMember("SetRefGuideActive")]
+        private static void SetRefGuideActive(bool active) {
+            RefGuideState guide = Find.State<RefGuideState>();
+            if (guide.PageList == null) {
+                InitializeRefGuide(guide);
+            }
+
+            guide.RefGuideRoot.gameObject.SetActive(active);
         }
     }
 }

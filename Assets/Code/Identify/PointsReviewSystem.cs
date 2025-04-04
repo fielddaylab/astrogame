@@ -3,6 +3,7 @@ using BeauUtil.Debugger;
 using FieldDay;
 using FieldDay.Debugging;
 using FieldDay.Rendering;
+using FieldDay.Scripting;
 using FieldDay.Systems;
 using System.Collections;
 using UnityEngine;
@@ -57,7 +58,17 @@ namespace Astro {
         }
 
         private void ShowResultSprite(bool correct, PlayerPointsState state) {
-            state.ReviewModule.Result.SetSharedMaterialAtIndex(1, correct ? state.ReviewModule.SuccessMaterial : state.ReviewModule.FailureMaterial);
+            ReviewModule module = state.ReviewModule;
+
+            if (correct) {
+                module.Result.SetSharedMaterialAtIndex(1, module.SuccessMaterial);
+            } else {
+                if (ReferenceUtility.AssetSubmissionCompleted()){
+                    module.Result.SetSharedMaterialAtIndex(1, module.LitPipMaterial);
+                } else {
+                    module.Result.SetSharedMaterialAtIndex(1, module.FailureMaterial);
+                }
+            }
         }
 
         private void CheckPuzzle() {
@@ -97,6 +108,13 @@ namespace Astro {
             } else {
                 ShowResultSprite(false, m_State);
 
+                if(!ReferenceUtility.CurrentRefMatchesFocus() && ReferenceUtility.AssetSubmissionCompleted()){
+                    ScriptUtility.Trigger(ScriptEvents.OnDuplicateOpenIdSubmission);
+                } else if (!ReferenceUtility.CurrentRefMatchesFocus()){
+                    ScriptUtility.Trigger(ScriptEvents.OnIncorrectOpenIdSubmission);
+                } else if (!ReferenceUtility.CurrentRefInNeutrinoEvent()) {
+                    ScriptUtility.Trigger(ScriptEvents.OnInvalidOpenIdSubmission);
+                }
             }
         }
 

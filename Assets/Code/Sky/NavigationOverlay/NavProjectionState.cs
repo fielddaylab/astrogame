@@ -1,5 +1,6 @@
 using BeauUtil;
 using FieldDay;
+using FieldDay.Scripting;
 using FieldDay.SharedState;
 using System;
 using UnityEngine;
@@ -87,7 +88,6 @@ namespace Astro {
             DayConfigAsset config = DayConfigUtil.GetConfigForState();
             if (!config) return;
 
-
             SkyDome dome = Find.State<SkyDome>();
 
             EqCoords target = config.NeutrinoEvent.NeutrinoCoordinates;
@@ -112,6 +112,8 @@ namespace Astro {
             if (!IsTargetOnScreen(viewPoint)) {
                 direction.Normalize();
                 navArrow.gameObject.SetActive(true);
+                
+                if (!Find.State<NeutrinoNavigationState>().NavigationModeActive) ScriptUtility.Trigger(ScriptEvents.OnLeaveNeutrinoRegion);
                  
                 // Position the arrow within the screen bounds
                 Vector2 canvasSize = navCanvas.GetComponent<RectTransform>().sizeDelta / 2;
@@ -125,7 +127,6 @@ namespace Astro {
                 // Set the arrow's position
                 navArrow.anchoredPosition = offset;
             } else {
-                // Reset the arrow's position to center when target is on screen
                 navArrow.gameObject.SetActive(false);
             }
         }
