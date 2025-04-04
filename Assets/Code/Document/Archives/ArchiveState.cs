@@ -16,7 +16,7 @@ namespace Astro
         public Transform[] StackPoses;
         public Transform ArchiveParent;
 
-        // [NonSerialized] public List<ArchiveLayout> DayLayouts = new List<ArchiveLayout>();
+        [NonSerialized] public int DayOffset = 0; // number of days without stacks (e.g. prelude)
         [NonSerialized] public int CurrArchiveIndex = -1;
 
         public void OnDeregister()
@@ -35,15 +35,15 @@ namespace Astro
         public static void AddAssetToArchive(ArchiveState archiveState, StringHash32 assetId, Vector3 assetPos)
         {
             PlayerProgressState playerState = Find.State<PlayerProgressState>();
-            var currList = playerState.DayLayouts[archiveState.CurrArchiveIndex - 1];
+            var currList = playerState.DayLayouts[archiveState.CurrArchiveIndex - archiveState.DayOffset];
             currList.AssetPositions.Add(assetId, assetPos);
-            playerState.DayLayouts[playerState.DayIndex - 1] = currList;
+            playerState.DayLayouts[playerState.DayIndex - archiveState.DayOffset] = currList;
         }
 
         public static void SetAssetPosInArchive(ArchiveState archiveState, StringHash32 assetId, Vector3 assetPos)
         {
             PlayerProgressState playerState = Find.State<PlayerProgressState>();
-            var currList = playerState.DayLayouts[archiveState.CurrArchiveIndex - 1];
+            var currList = playerState.DayLayouts[archiveState.CurrArchiveIndex - archiveState.DayOffset];
             currList.AssetPositions[assetId] = assetPos;
         }
 
@@ -66,7 +66,7 @@ namespace Astro
             // TODO: Expand transition routine
 
             PlayerProgressState playerState = Find.State<PlayerProgressState>();
-            var currLayout = playerState.DayLayouts[dayIndex - 1];
+            var currLayout = playerState.DayLayouts[dayIndex - archiveState.DayOffset];
 
             foreach (KeyValuePair<StringHash32, Vector3> pair in currLayout.AssetPositions) {
                 // spawn the asset at the position
@@ -98,13 +98,13 @@ namespace Astro
         {
             var newStack = GameObject.Instantiate(archiveState.ArchivePrefab, archiveState.ArchiveParent).GetComponent<ArchiveInteractable>();
             newStack.ArchiveIndex = archiveIndex;
-            if (archiveState.StackMeshes.Length > archiveIndex - 1) {
-                newStack.Mesh = archiveState.StackMeshes[archiveIndex - 1];
+            if (archiveState.StackMeshes.Length > archiveIndex - archiveState.DayOffset) {
+                newStack.Mesh = archiveState.StackMeshes[archiveIndex - archiveState.DayOffset];
             }
 
-            if (archiveState.StackPoses.Length > archiveIndex - 1) {
-                newStack.transform.position = archiveState.StackPoses[archiveIndex - 1].position;
-                newStack.transform.rotation = archiveState.StackPoses[archiveIndex - 1].rotation;
+            if (archiveState.StackPoses.Length > archiveIndex - archiveState.DayOffset) {
+                newStack.transform.position = archiveState.StackPoses[archiveIndex - archiveState.DayOffset].position;
+                newStack.transform.rotation = archiveState.StackPoses[archiveIndex - archiveState.DayOffset].rotation;
             }
         }
     }
