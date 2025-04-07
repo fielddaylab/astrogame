@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using FieldDay;
 using FieldDay.Systems;
+using BeauRoutine;
 
 namespace Astro
 {
@@ -17,24 +18,41 @@ namespace Astro
             var cancelInputState = Find.State<CancelInputState>();
             cancelInputState.SlotClicked = true;
 
-            // If nothing selected, and component can be a source, set source
-            if (transferState.SelectedSource == null && transferState.SelectedTarget == null && secondary.DataSlot.IsSource) {
-                DataUtility.AssignSelectedSource(transferState, secondary.DataSlot);
+            // If nothing selected, 
+            if (transferState.SelectedSource == null && transferState.SelectedTarget == null) {
+                // and component can be a source, 
+                if (secondary.DataSlot.IsSource) {
+                    DataUtility.AssignSelectedSource(transferState, secondary.DataSlot);
+                } else {
+                    DataUtility.AssignSelectedTarget(transferState, secondary.DataSlot);
+                }
             }
-            // If some source is selected...
+            // Some source is selected (but no target)
             else if (transferState.SelectedSource != null)
             {
-                // If source is correct type OR sibling exists and is correct type
-                if ((transferState.SelectedSource.Type & secondary.DataSlot.Type) != 0 || (transferState.SelectedSource.SiblingSlot != null && (transferState.SelectedSource.SiblingSlot.Type & secondary.DataSlot.Type) != 0)
+                // If source type matches this OR  source sibling exists and its type matches this 
+                if (((transferState.SelectedSource.Type & secondary.DataSlot.Type) != 0 || (transferState.SelectedSource.SiblingSlot != null && (transferState.SelectedSource.SiblingSlot.Type & secondary.DataSlot.Type) != 0))
                     // AND source or sibling is not itself the target
                     && (!transferState.SelectedSource.Equals(secondary.DataSlot) || !transferState.SelectedSource.SiblingSlot.Equals(secondary.DataSlot))
                     // AND target is modifiable
                     && secondary.DataSlot.Modifiable) {
                     DataUtility.AssignSelectedTarget(transferState, secondary.DataSlot);
                 }
-                // Else target is not valid. If a valid source, set as current source
+                // Else selected is not a valid target. If it is a valid source, set as current source
                 else if (secondary.DataSlot.IsSource) {
                     DataUtility.AssignSelectedSource(transferState, secondary.DataSlot);
+                }
+            }
+            // Some target is selected (but no source)
+            else if (transferState.SelectedTarget != null) {
+                // if the target type matches this OR this sibling exists and its type matches target
+                if (((transferState.SelectedTarget.Type & secondary.DataSlot.Type) != 0 || (secondary.DataSlot.SiblingSlot != null && (transferState.SelectedTarget.Type & secondary.DataSlot.SiblingSlot.Type) != 0))
+                    // AND SelectedTarget is not itself the clicked source
+                    && (!transferState.SelectedTarget.Equals(secondary.DataSlot))) {
+                    DataUtility.AssignSelectedSource(transferState, secondary.DataSlot, true);
+
+                } else if (!secondary.DataSlot.IsSource) {
+                    DataUtility.AssignSelectedTarget(transferState, secondary.DataSlot);
                 }
             }
         }
