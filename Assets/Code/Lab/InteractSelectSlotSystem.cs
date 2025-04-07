@@ -31,11 +31,14 @@ namespace Astro
             else if (transferState.SelectedSource != null)
             {
                 // If source type matches this OR  source sibling exists and its type matches this 
-                if (((transferState.SelectedSource.Type & secondary.DataSlot.Type) != 0 || (transferState.SelectedSource.SiblingSlot != null && (transferState.SelectedSource.SiblingSlot.Type & secondary.DataSlot.Type) != 0))
+                if (((transferState.SelectedSource.Type & secondary.DataSlot.Type) != 0 
+                        || (transferState.SelectedSource.SiblingSlot != null 
+                            && (transferState.SelectedSource.SiblingSlot.Type & secondary.DataSlot.Type) != 0))
                     // AND source or sibling is not itself the target
-                    && (!transferState.SelectedSource.Equals(secondary.DataSlot) || !transferState.SelectedSource.SiblingSlot.Equals(secondary.DataSlot))
+                    && (!transferState.SelectedSource.Equals(secondary.DataSlot) || (transferState.SelectedSource.SiblingSlot != null && !transferState.SelectedSource.SiblingSlot.Equals(secondary.DataSlot)))
                     // AND target is modifiable
-                    && secondary.DataSlot.Modifiable) {
+                    && secondary.DataSlot.Modifiable
+                    && !secondary.DataSlot.IsSource) {
                     DataUtility.AssignSelectedTarget(transferState, secondary.DataSlot);
                 }
                 // Else selected is not a valid target. If it is a valid source, set as current source
@@ -48,7 +51,8 @@ namespace Astro
                 // if the target type matches this OR this sibling exists and its type matches target
                 if (((transferState.SelectedTarget.Type & secondary.DataSlot.Type) != 0 || (secondary.DataSlot.SiblingSlot != null && (transferState.SelectedTarget.Type & secondary.DataSlot.SiblingSlot.Type) != 0))
                     // AND SelectedTarget is not itself the clicked source
-                    && (!transferState.SelectedTarget.Equals(secondary.DataSlot))) {
+                    && (!transferState.SelectedTarget.Equals(secondary.DataSlot))
+                    && secondary.DataSlot.IsSource) {
                     DataUtility.AssignSelectedSource(transferState, secondary.DataSlot, true);
 
                 } else if (!secondary.DataSlot.IsSource) {
