@@ -18,8 +18,6 @@ $call TelescopeLook(155, -30)
 @who    Radio
 
 $call PlayMusic("Music.Gently-Falling-Piano", 1)
-{@Astrid} Whoa. This place has really changed.
-Elijah, where are you?
 
 $call Wait(2)
 
@@ -29,7 +27,7 @@ $call MoveToView("Right")
 
 $call Wait(2)
 
-{@Astrid} Hi—um, this is Astrid, Elijah’s ... friend. Elijah’s not here.
+{@Astrid} Hi—um, this is Astrid, Elijah’s ... friend. Elijah doesn't seem to be here.
 $call Wait(1)
 {@Astrid} Hello?
 $call Wait(1)
@@ -44,36 +42,13 @@ $call Wait(1)
 
 $call Wait(2)
 
-{@Dad} Astrid, is that you?
-$call Wait(1)
-
-{@Astrid} Dad! I can’t believe it's you.
-Are you still at the South Pole? Are you okay?
-$call Wait(2)
-
-{@Dad} This is a one-way radio, so you won’t be able to talk to us. But I have a feeling that’s you. Happy birthday, kiddo. 
-I heard from your aunt Martha that you managed to track down Elijah’s address.
-I’m sorry, Astrid ... I wish I could’ve warned you in time. 
-Elijah’s not there. He probably won’t be back for a while.
-
-$call Wait(2)
-
-{@Astrid} What? 
-$call Wait(1)
-Why not? 
-$call Wait(1)
-Where is he? 
-$call Wait(2)
-Ugh, forgot ... you can’t hear me. 
-$call Wait(2)
 
 {@Dad} Hold on. 
 $call Wait(1)
-We just recieved a neutrino emission from the Ursa Major region. 
-What better way to spend your birthday than to help us with a little astronomy?
+We just recieved a neutrino emission from the Ursa Major region. Station Seven, please confirm that you are able to help. 
 
 $call Wait(2)
-{@Astrid} ...sure dad. 
+{@Astrid} ... I might as well help while I wait to see if Elijah shows up. 
 $call Wait(1)
 
 Uploading area of interest... (*neutrino upload noises*)
@@ -111,33 +86,17 @@ $call StopPuzzleNavigation()
 {@Radio} This task will require your astral color instrument. 
 {@Radio} Unlocking now. Stand By...
 
-{@Dad} There’s not much time, so I’ll give you the short version.
-My team here at IceCube has started an underground group called the STAR Coalition. We’re trying to rebuild our knowledge of the night sky. 
-$call Wait(1)
-It’s not easy ... so much was lost during the Collapse.
-$call Wait(1)
-But then Elijah reached out to us. He’s onto something big. It’s called Project Hercules. 
+
+{@Dad} Have you made any progress on Project Hercules? Those puzzles are really important. Please don't lose focus. 
 $call Wait(2)
 
 {@Astrid} Project Hercules? 
 $call Wait(1)
 
-{@Dad} I’ll explain more later. For now, we need your help. 
-Elijah has been working on a series of puzzles. I was hoping you could pick up where he left off.
-$call Wait(2)
 
-{@Astrid} Me? 
-$call Wait(1)
-Dad, I just got here. 
-$call Wait(1)
-I don’t know how any of this stuff works!
-$call Wait(1)
+{@Dad} Keep following the reference guide.
 
-{@Dad} See if you can find Elijah’s reference guide. It should have all the data you need.
-
-{@Dad} Time’s up. I gotta go.
-I’ll explain more later.
-Love you, Little Bear. Good luck.
+{@Dad} Time’s up. I'll log on again at the next click. Keep up the good work. 
 $call SetInstrumentUnlocked(ColorInstrument, true)
 $call StartPuzzleMode()
 
