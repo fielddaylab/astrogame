@@ -5,7 +5,7 @@
 @boostScore 100
 @who    Astrid
 
-$call MoveToView("Left")
+$call MoveToView("DocumentPuzzle")
 {@Astrid} Looks like I got some mail.
 $call StopPuzzleMode()
 $call StopOpenMode()
@@ -42,7 +42,9 @@ $call StartDocumentPuzzle("Day2DocumentPuzzle")
 @once
 
 {@Astrid} This is it!
-$call Wait(2)
+$call Wait(1)
+$call MoveToView("Desk")
+$call Wait(1)
 
 $call SetInputState(false)
 $call MoveToView("Right")
