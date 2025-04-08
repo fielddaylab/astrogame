@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using BeauPools;
 using BeauRoutine;
 using BeauUtil;
 using BeauUtil.Debugger;
@@ -8,6 +9,7 @@ using FieldDay;
 using FieldDay.Debugging;
 using FieldDay.Scripting;
 using FieldDay.SharedState;
+using FieldDay.UI.Animation;
 
 [assembly: InternalsVisibleTo("Assembly-CSharp-Editor")]
 

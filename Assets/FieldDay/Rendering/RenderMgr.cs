@@ -127,6 +127,11 @@ namespace FieldDay.Rendering {
 
 #endif // DEVELOPMENT
 
+        public struct CameraChangeData {
+            public Camera Previous;
+            public Camera New;
+        }
+
         private bool m_LastKnownFullscreen;
         private Resolution m_LastKnownResolution;
 
@@ -159,6 +164,7 @@ namespace FieldDay.Rendering {
 
         public readonly CastableEvent<bool> OnFullscreenChanged = new CastableEvent<bool>(2);
         public readonly CastableEvent<Resolution> OnResolutionChanged = new CastableEvent<Resolution>(2);
+        public readonly CastableEvent<CameraChangeData> OnPrimaryCameraChanged = new CastableEvent<CameraChangeData>(2);
 
         #endregion // Callbacks
 
@@ -232,9 +238,17 @@ namespace FieldDay.Rendering {
             if (m_PrimaryCamera != null) {
                 Log.Warn("[RenderMgr] Primary world camera already set to '{0}' - make sure to deregister it first", m_PrimaryCamera);
             }
+            Camera old = m_PrimaryCamera;
             m_PrimaryCamera = camera;
             m_ShouldCheckFallback = true;
             Log.Msg("[RenderMgr] Assigned primary world camera as '{0}'", camera);
+
+            OnPrimaryCameraChanged.Invoke(new CameraChangeData() {
+                Previous = old,
+                New = camera
+            });
+
+            OnGuiCameraChanged(Game.Gui.PrimaryCamera);
         }
 
         public void RemovePrimaryCamera(Camera camera) {
@@ -242,9 +256,15 @@ namespace FieldDay.Rendering {
                 return;
             }
 
+            Camera old = m_PrimaryCamera;
             m_PrimaryCamera = null;
             m_ShouldCheckFallback = true;
             Log.Msg("[RenderMgr] Removed primary world camera");
+            
+            OnPrimaryCameraChanged.Invoke(new CameraChangeData() {
+                Previous = old,
+                New = null
+            });
         }
 
         #endregion // World Camera
@@ -346,18 +366,28 @@ namespace FieldDay.Rendering {
         #region Handlers
 
         private void OnGuiCameraChanged(Camera uiCam) {
-            if (!m_FallbackCamera) {
-                return;
-            }
 #if USING_URP
-            var data = m_FallbackCamera.GetUniversalAdditionalCameraData();
-            if (data) {
-                if (uiCam != null) {
-                    if (!data.cameraStack.Contains(uiCam)) {
-                        data.cameraStack.Add(uiCam);
+            if (m_FallbackCamera) {
+                var data = m_FallbackCamera.GetUniversalAdditionalCameraData();
+                if (data) {
+                    if (uiCam != null) {
+                        if (!data.cameraStack.Contains(uiCam)) {
+                            data.cameraStack.Add(uiCam);
+                        }
+                    } else {
+                        data.cameraStack.Clear();
                     }
-                } else {
-                    data.cameraStack.Clear();
+                }
+            }
+
+            if (m_PrimaryCamera && uiCam && uiCam.GetUniversalAdditionalCameraData().renderType == CameraRenderType.Overlay) {
+                var data = m_PrimaryCamera.GetUniversalAdditionalCameraData();
+                if (data) {
+                    if (uiCam != null) {
+                        if (!data.cameraStack.Contains(uiCam)) {
+                            data.cameraStack.Add(uiCam);
+                        }
+                    }
                 }
             }
 #endif // USING_URP

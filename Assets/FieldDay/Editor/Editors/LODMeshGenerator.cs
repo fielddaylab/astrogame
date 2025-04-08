@@ -112,8 +112,8 @@ namespace FieldDay.Editor {
         }
 
         private void OnDestroy() {
-            DestroyResource(ref m_LOD1);
-            DestroyResource(ref m_LOD2);
+            EditorHelpers.DestroyResource(ref m_LOD1);
+            EditorHelpers.DestroyResource(ref m_LOD2);
         }
 
         #endregion // Unity Events
@@ -136,8 +136,8 @@ namespace FieldDay.Editor {
                     EditorGUI.BeginChangeCheck();
                     EditorGUILayout.PropertyField(m_SourceProperty, TempContent("Source Mesh"));
                     if (EditorGUI.EndChangeCheck()) {
-                        DestroyResource(ref m_LOD1);
-                        DestroyResource(ref m_LOD2);
+                        EditorHelpers.DestroyResource(ref m_LOD1);
+                        EditorHelpers.DestroyResource(ref m_LOD2);
                     }
                     EditorGUILayout.PropertyField(m_Quality1Property, TempContent("LOD 1 Quality"));
                     EditorGUILayout.PropertyField(m_Quality2Property, TempContent("LOD 2 Quality"));
@@ -234,7 +234,7 @@ namespace FieldDay.Editor {
         #region Operations
 
         static private void GenerateMesh(SimplificationOptions simplificationOptions, Mesh source, float quality, MeshDataClearFlags clearFlags, ref Mesh lod) {
-            DestroyResource(ref lod);
+            EditorHelpers.DestroyResource(ref lod);
 
             if (quality > 0) {
                 MeshSimplifier simplifier = new MeshSimplifier(source);
@@ -268,25 +268,14 @@ namespace FieldDay.Editor {
         }
 
         static private bool SaveResourceAs(Mesh mesh, string name) {
-            string lastDirectory = EditorPrefs.GetString(LastSaveLocationString, "Assets/");
-            string path = EditorUtility.SaveFilePanelInProject("Save LOD Mesh", name, "mesh", "Save this mesh", lastDirectory);
-            if (!string.IsNullOrEmpty(path)) {
-                Mesh clone = Instantiate(mesh);
-                clone.name = Path.GetFileNameWithoutExtension(path);
-                AssetDatabase.CreateAsset(clone, path);
-                lastDirectory = Path.GetDirectoryName(path);
-                EditorPrefs.SetString(LastSaveLocationString, lastDirectory);
-                return true;
-            }
+            EditorHelpers.ResourceSaveForm SaveForm = new EditorHelpers.ResourceSaveForm() {
+                LastSaveLocationKey = LastSaveLocationString,
+                FileExtension = "mesh",
+                Header = "Save LOD Mesh",
+                Message = "Save this mesh"
+            };
 
-            return false;
-        }
-
-        static private void DestroyResource<T>(ref T obj) where T : UnityEngine.Object {
-            if (obj != null) {
-                DestroyImmediate(obj);
-                obj = null;
-            }
+            return EditorHelpers.SaveResourceAs(mesh, name, SaveForm);
         }
 
         #endregion // Operations

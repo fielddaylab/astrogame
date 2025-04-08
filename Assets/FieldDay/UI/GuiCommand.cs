@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using BeauPools;
 using BeauUtil;
 using UnityEngine;
 using UnityEngine.UI;
@@ -31,7 +32,10 @@ namespace FieldDay.UI {
         ExecuteAction_StringHash32,
         ExecuteAction_Object,
         RebuildLayout_RectTransform,
-        RebuildLayoutManually_LayoutGroup
+        RebuildLayoutManually_LayoutGroup,
+        TryFreePrefab_GO,
+        TryFreePrefab_Component,
+        PoolFree_Object
     }
 
     /// <summary>
@@ -161,6 +165,28 @@ namespace FieldDay.UI {
             Game.Gui.QueueCommand(new GuiCommandData() {
                 Type = GuiCommandType.RebuildLayoutManually_LayoutGroup,
                 Target = group
+            });
+        }
+
+        static public void TryFreePrefab(GameObject prefab) {
+            Game.Gui.QueueCommand(new GuiCommandData() {
+                Type = GuiCommandType.TryFreePrefab_GO,
+                Target = prefab
+            });
+        }
+
+        static public void TryFreePrefab(Component prefab) {
+            Game.Gui.QueueCommand(new GuiCommandData() {
+                Type = GuiCommandType.TryFreePrefab_Component,
+                Target = prefab
+            });
+        }
+
+        static public void FreeToPool<T>(IPool<T> pool, T element) where T : class {
+            Game.Gui.QueueCommand(new GuiCommandData() {
+                Type = GuiCommandType.PoolFree_Object,
+                Target = pool,
+                ArgObject = element
             });
         }
     }

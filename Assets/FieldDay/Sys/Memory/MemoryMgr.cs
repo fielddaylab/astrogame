@@ -33,11 +33,17 @@ namespace FieldDay.Memory {
         private IPool<Material> m_MaterialPool;
         private Shader m_DefaultShader;
 
+        private Transform m_PersistentPoolRoot;
+
         private Unsafe.ArenaHandle m_BudgetCategoryAllocator;
 
 #if MEMORY_LEAK_DETECTION
         private RingBuffer<Unsafe.ArenaHandle> m_ArenaTracker;
 #endif // MEMORY_LEAK_DETECTION
+
+        public Transform PersistentPrefabPoolRoot {
+            get { return m_PersistentPoolRoot; }
+        }
 
         #region Mesh
 
@@ -158,6 +164,11 @@ namespace FieldDay.Memory {
 #if MEMORY_LEAK_DETECTION
             m_ArenaTracker = new RingBuffer<Unsafe.ArenaHandle>(64, RingBufferMode.Expand);
 #endif // MEMORY_LEAK_DETECTION
+
+            GameObject prefabPoolGO = new GameObject("Prefab Pools");
+            GameObject.DontDestroyOnLoad(prefabPoolGO);
+            prefabPoolGO.SetActive(false);
+            m_PersistentPoolRoot = prefabPoolGO.transform;
         }
 
         internal void Shutdown() {

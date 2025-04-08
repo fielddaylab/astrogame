@@ -59,7 +59,7 @@ namespace Astro {
             Rect st = RenderRegion.UVRect;
             OriginalMesh = TargetMeshFilter.sharedMesh;
             RemappedMesh = Instantiate(OriginalMesh);
-            MeshUVUtility.RemapUVs(RemappedMesh, 0, st);
+            MeshModUtility.RemapUVs(RemappedMesh, 0, st);
             RemappedMesh.UploadMeshData(true);
             TargetMeshFilter.sharedMesh = RemappedMesh;
 

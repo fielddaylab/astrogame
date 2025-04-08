@@ -84,6 +84,9 @@ namespace FieldDay {
         };
 
         [SerializeField]
+        private GuiMgr.Config m_GuiConfig = new GuiMgr.Config();
+
+        [SerializeField]
         private AssetPack[] m_GlobalAssetPacks = Array.Empty<AssetPack>();
 
         #endregion // Inspector
@@ -273,7 +276,7 @@ namespace FieldDay {
                 Game.Input = new InputMgr();
 
                 Log.Msg("[GameLoop] Creating gui manager...");
-                Game.Gui = new GuiMgr(Game.Input);
+                Game.Gui = new GuiMgr(m_GuiConfig, Game.Input);
 
                 Log.Msg("[GameLoop] Creating animation manager...");
                 Game.Animation = new AnimationMgr();
@@ -314,6 +317,9 @@ namespace FieldDay {
 #if !UNITY_EDITOR
                 CrashHandler.Enabled = true;
 #endif // UNITY_EDITOR
+
+                Game.Gui.FlushCommands();
+                Async.InvokeAsync(Game.Gui.FlushCommands);
             }
         }
 
@@ -361,6 +367,8 @@ namespace FieldDay {
                 }
 
                 s_WasLoadingSceneAtFrameStart = Game.Scenes.IsMainLoading();
+
+                Game.Gui.FlushCommands();
             }
         }
 
@@ -897,6 +905,13 @@ namespace FieldDay {
                 s_TimeProfiling.MarkStart(phase);
                 //Log.Msg("[GameLoop] Entering phase '{0}' on frame {1}", phase, Frame.Index);
             }
+        }
+
+        /// <summary>
+        /// Is the GameLoop finished booting.
+        /// </summary>
+        static public bool IsBooted() {
+            return s_Initialized && s_CurrentPhase >= GameLoopPhase.Booted;
         }
 
         /// <summary>

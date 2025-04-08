@@ -10,6 +10,9 @@ namespace ScriptableBake {
 
         public const int Order = -1000000;
 
+        [Tooltip("If true, will flatten in editor")]
+        public bool Always = false;
+
         [Tooltip("Whether or not to destroy any inactive children of this GameObject")]
         public bool DestroyInactiveChildren = false;
 
@@ -31,6 +34,11 @@ namespace ScriptableBake {
         }
 
         bool IBaked.Bake(BakeFlags flags, BakeContext context) {
+            if (!Always && (flags & BakeFlags.IsBuild) == 0) {
+                Baking.Destroy(this, true);
+                return true;
+            }
+
             FlattenFlags flattenFlags = 0;
             if (DestroyInactiveChildren) {
                 flattenFlags |= FlattenFlags.DestroyInactive;
