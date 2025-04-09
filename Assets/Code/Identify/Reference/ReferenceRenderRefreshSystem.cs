@@ -1,8 +1,9 @@
+using FieldDay;
 using FieldDay.Systems;
 
 namespace Astro {
+    [SysUpdate(GameLoopPhase.Update, 0, AstroGame.SubmissionUpdateMask)]
     public class ReferenceRenderRefreshSystem : SharedStateSystemBehaviour<RefGuideRenderState> {
-
         public override void ProcessWork(float deltaTime) {
             if (m_State.RenderNeedsRefresh) {
                 m_State.RefRenderCam.enabled = true;

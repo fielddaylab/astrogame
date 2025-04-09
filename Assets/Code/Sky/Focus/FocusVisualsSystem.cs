@@ -6,7 +6,7 @@ using FieldDay;
 using BeauUtil;
 
 namespace Astro {
-    [SysUpdate(GameLoopPhaseMask.LateUpdate)]
+    [SysUpdate(GameLoopPhase.LateUpdate, 0, AstroGame.MonitorControlsUpdateMask)]
     public class FocusVisualsSystem : SharedStateSystemBehaviour<FocusState>
     {
         public override void ProcessWork(float deltaTime)

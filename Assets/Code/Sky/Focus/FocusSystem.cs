@@ -5,7 +5,7 @@ using FieldDay.Systems;
 using FieldDay;
 
 namespace Astro {
-    [SysUpdate(GameLoopPhaseMask.Update)]
+    [SysUpdate(GameLoopPhase.Update, 0, AstroGame.MonitorControlsUpdateMask)]
     public class FocusSystem : ComponentSystemBehaviour<CelestialObject, FocusableObject>
     {
         public override void ProcessWorkForComponent(CelestialObject primary, FocusableObject secondary, float deltaTime)

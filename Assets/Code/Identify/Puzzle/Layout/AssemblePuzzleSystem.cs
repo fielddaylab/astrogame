@@ -11,6 +11,7 @@ using FieldDay.UI;
 
 namespace Astro
 {
+    [SysUpdate(GameLoopPhase.Update, 0, AstroGame.SubmissionUpdateMask)]
     public class AssemblePuzzleSystem : ComponentSystemBehaviour<PuzzleDisplay>
     {
         private readonly RingBuffer<PuzzleCell> m_CellWorkList = new RingBuffer<PuzzleCell>(12, RingBufferMode.Expand);
