@@ -14,6 +14,10 @@ public class MonitorUI : ScriptActorComponent {
     [Header("Radio Download Indicator")]
     public CanvasGroup ElementGroup;
     public RectTransform ProgressBar;
+    [Tooltip("Represents the width & height of the progress bar when loading starts")]
+    public Vector2 StartingSize;
+    [Tooltip("Represents the width & height of the progress bar when loading is complete")]
+    public Vector2 EndingSize;
 
     [LeafMember("ShowCeresLogo")]
     private IEnumerator LeafShowCeresLogo() {
@@ -29,15 +33,13 @@ public class MonitorUI : ScriptActorComponent {
 
     [LeafMember("PlayRadioDownload")]
     private IEnumerator LeafPlayRadioDownload(float duration) {
-        float progressBarHeight = ProgressBar.sizeDelta.y;
-
-        ProgressBar.sizeDelta = new Vector2(12, 28);
+        ProgressBar.sizeDelta = StartingSize;
 
         // Fade In
         yield return Tween.Value(0f, 1f, (f) => { ElementGroup.alpha = f; }, Mathf.Lerp, 0.5f);
 
         // Download Bar
-        yield return ProgressBar.SizeDeltaTo(new Vector2(446, progressBarHeight), duration);
+        yield return ProgressBar.SizeDeltaTo(EndingSize, duration);
 
         yield return new WaitForSeconds(0.2f);
 
