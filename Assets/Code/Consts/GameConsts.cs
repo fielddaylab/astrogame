@@ -31,6 +31,20 @@ public static class ScriptEvents {
     public static readonly StringHash32 DocumentPuzzlePromptStart = "DocumentPuzzlePromptStart";
     public static readonly StringHash32 CutsceneBegin = "CutsceneBegin";
     public static readonly StringHash32 CutsceneEnd = "CutsceneEnd";
+    public static readonly StringHash32 OnTelescopeMoved = "OnTelescopeMoved";
+    public static readonly StringHash32 OnStarSelected = "OnStarSelected";
+    public static readonly StringHash32 OnNeutrinoStarSelected = "OnNeutrinoStarSelected";
+    public static readonly StringHash32 OnRefGuideOpened = "OnRefGuideOpened";
+    public static readonly StringHash32 OnRefGuideClosed = "OnRefGuideClosed";
+    public static readonly StringHash32 OnValidOpenIdSubmission = "OnValidOpenIdSubmission";
+    public static readonly StringHash32 OnInvalidOpenIdSubmission = "OnInvalidOpenIdSubmission";
+    public static readonly StringHash32 OnDuplicateOpenIdSubmission = "OnDuplicateOpenIdSubmission";
+    public static readonly StringHash32 OnIncorrectOpenIdSubmission = "OnIncorrectOpenIdSubmission";
+    public static readonly StringHash32 OnNeutrinoNavWarmer = "OnNeutrinoNavWarmer";
+    public static readonly StringHash32 OnNeutrinoNavColder = "OnNeutrinoNavColder";
+    public static readonly StringHash32 OnLeaveNeutrinoRegion = "OnLeaveNeutrinoRegion";
+    public static readonly StringHash32 OnConstellationNavWarmer = "OnConstellationNavWarmer";
+    public static readonly StringHash32 OnConstellationNavColder = "OnConstellationNavColder";
 }
 
 public static class DataTypeLabels

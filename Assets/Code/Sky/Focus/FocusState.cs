@@ -1,5 +1,6 @@
 using BeauUtil;
 using FieldDay;
+using FieldDay.Scripting;
 using FieldDay.SharedState;
 using System;
 using System.Collections;
@@ -24,10 +25,8 @@ namespace Astro
         }
     }
 
-    public static partial class FocusableUtility
-    {
-        public static void SetCurrentFocus(FocusState state, UIFocus focus)
-        {
+    public static partial class FocusableUtility {
+        public static void SetCurrentFocus(FocusState state, UIFocus focus) {
             if (focus == null && state.CurrentFocus == null)
             {
                 // already focused on nothing
@@ -50,6 +49,15 @@ namespace Astro
             DataDistributionUtility.QueueConversion(dataState, data);
 
             ReferenceUtility.TryEnableIDSubmit(focus != null);
+
+            // Scripting
+            if(state.CurrentFocus == null) return;
+
+            if (ReferenceUtility.CurrentRefInNeutrinoEvent()) {
+                ScriptUtility.Trigger(ScriptEvents.OnNeutrinoStarSelected);
+            } else { 
+                ScriptUtility.Trigger(ScriptEvents.OnStarSelected);
+            }
         }
 
         public static void ClickEmptySpace()

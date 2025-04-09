@@ -6,7 +6,9 @@ using BeauRoutine.Splines;
 using BeauUtil;
 using FieldDay;
 using FieldDay.Scenes;
+using FieldDay.Scripting;
 using FieldDay.SharedState;
+using Leaf.Runtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -42,7 +44,7 @@ namespace Astro.Reference {
             });
             Game.Events.Register(GameEvents.StopOpenMode, () => {
                 SubmissionActive = false;
-                ReferenceUtility.SelectRegion(null);
+                //ReferenceUtility.SelectRegion(null);
             });
         }
 
@@ -108,8 +110,30 @@ namespace Astro.Reference {
 
             if (guide.CurrentState == RefGuideInteractionState.Closed) {
                 guide.TransitionRoutine.Replace(guide, TransitionToOpen(guide, rig)).TryManuallyUpdate(0);
+                ScriptUtility.Trigger(ScriptEvents.OnRefGuideOpened);
             } else {
                 guide.TransitionRoutine.Replace(guide, TransitionToClose(guide, rig)).TryManuallyUpdate(0);
+                ScriptUtility.Trigger(ScriptEvents.OnRefGuideClosed);
+            }
+        }
+
+        public static void SetReferenceActive(bool active) {
+            RefGuideState guide = Find.State<RefGuideState>();
+            RefGuideRig rig = Find.State<RefGuideRig>();
+            if (guide.CurrentState == RefGuideInteractionState.Transitioning) {
+                return;
+            }
+
+            if (active) {
+                if (guide.CurrentState == RefGuideInteractionState.Closed) {
+                    guide.TransitionRoutine.Replace(guide, TransitionToOpen(guide, rig)).TryManuallyUpdate(0);
+                    ScriptUtility.Trigger(ScriptEvents.OnRefGuideOpened);
+                }
+            } else {
+                if (guide.CurrentState == RefGuideInteractionState.Open) {
+                    guide.TransitionRoutine.Replace(guide, TransitionToClose(guide, rig)).TryManuallyUpdate(0);
+                    ScriptUtility.Trigger(ScriptEvents.OnRefGuideClosed);
+                }
             }
         }
 
@@ -334,5 +358,25 @@ namespace Astro.Reference {
 
         //}
 
+        public static bool AssetSubmissionCompleted() {
+            ReferenceClassification refClass = Find.State<RefGuideState>().SelectedRefClassification;
+            PlayerProgressState progress = Find.State<PlayerProgressState>();
+            UIFocus focus = Find.State<FocusState>().CurrentFocus;
+            if (refClass == null || focus == null) {
+                return false;
+            }
+            progress.Classifications.TryGetValue(focus.TargetData.AssetId, out BitSet32 completed);
+            for (int i = 0; i < focus.TargetData.ClassIds.Length; i++) {
+                if (completed[i]) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        [LeafMember("SetRefGuideActive")]
+        private static void LeafSetRefGuideActive(bool active) {
+            SetReferenceActive(active);
+        }
     }
 }

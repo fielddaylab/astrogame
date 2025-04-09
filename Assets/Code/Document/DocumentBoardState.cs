@@ -175,7 +175,10 @@ namespace Astro {
             // Move to zoomed view
             ToggleZoomDoc(spawned.Interactable, state);
             SetDocumentInteractionEnabled(true);
-            if (spawned.Video.clip != null) { spawned.Video.Play(); }
+
+            if(spawned.Video != null){
+                if (spawned.Video.clip != null) { spawned.Video.Play(); }
+            }
         }
 
         public static void SpawnDocument(StringHash32 id) {
@@ -375,47 +378,56 @@ namespace Astro {
             }
         }
 
-        private static void BringDocToCam(DocumentInteractable doc, DocumentBoardState state)
-        {
+        private static void BringDocToCam(DocumentInteractable doc, DocumentBoardState state) {
             if (state.OverrideStoredDoc) {
                 state.StoredDocPos = state.OverrideStoredDocPos;
                 state.OverrideStoredDoc = false;
-            }
-            else {
+            } else {
                 state.StoredDocPos = doc.transform.position;
             }
             Vector3 zoomOffset = doc.Renderer.ZoomOffsetOverride == default ? state.DocZoomOffset : doc.Renderer.ZoomOffsetOverride;
             var viewState = Find.State<ViewState>();
 
-            if (doc.Renderer.Video?.url.Length != 0) {
-                doc.Renderer.Video.frame = 0;
+            if (doc.Renderer.Video != null){
+                if (doc.Renderer.Video?.url.Length != 0) {
+                    doc.Renderer.Video.frame = 0;
+                }
             }
 
             // Replace with high-res assets
 
             // if video, replace with high-res version
-            if (doc.Renderer.Video?.url?.Length > 0) {
-                doc.Renderer.FrontAnimation.gameObject.SetActive(true);
-                doc.Renderer.LowResImgFront.gameObject.SetActive(false);
+            if (doc.Renderer.Video != null){
+                if (doc.Renderer.Video?.url?.Length > 0) {
+                    doc.Renderer.FrontAnimation.gameObject.SetActive(true);
+                    doc.Renderer.LowResImgFront.gameObject.SetActive(false);
+                }
             }
+
             // if image, replace with high-res version
-            if (doc.Renderer.FrontStaticImg?.Path?.Length > 0) {
-                doc.Renderer.FrontStaticImg.gameObject.SetActive(true);
-                doc.Renderer.FrontStaticImg.Preload();
-                doc.Renderer.LowResImgFront.gameObject.SetActive(false);
-                doc.Renderer.LowResImgFront.Unload();
+            if (doc.Renderer.FrontStaticImg != null){
+                if (doc.Renderer.FrontStaticImg?.Path?.Length > 0) {
+                    doc.Renderer.FrontStaticImg.gameObject.SetActive(true);
+                    doc.Renderer.FrontStaticImg.Preload();
+                    doc.Renderer.LowResImgFront.gameObject.SetActive(false);
+                    doc.Renderer.LowResImgFront.Unload();
+                }
             }
+
             // if front text, hide default text scribbles and enable body text
             if (doc.Renderer.FrontBodyText.text.Length > 0) {
                 doc.Renderer.FrontBodyText.gameObject.SetActive(true);
                 doc.Renderer.LowResImgFront.gameObject.SetActive(false);
                 doc.Renderer.LowResImgFront.Unload();
             }
+
             // if back text, hide body text and display default text scribbles
-            if (doc.Renderer.BackBodyText.text.Length > 0) {
-                doc.Renderer.BackBodyText.gameObject.SetActive(true);
-                doc.Renderer.LowResImgBack.gameObject.SetActive(false);
-                doc.Renderer.LowResImgBack.Unload();
+            if (doc.Renderer.BackBodyText != null){
+                if (doc.Renderer.BackBodyText.text.Length > 0) {
+                    doc.Renderer.BackBodyText.gameObject.SetActive(true);
+                    doc.Renderer.LowResImgBack.gameObject.SetActive(false);
+                    doc.Renderer.LowResImgBack.Unload();
+                }
             }
 
             state.DocumentRoutine.Replace(MoveDocToCam(viewState, doc.transform, Game.Rendering.PrimaryCamera.transform, zoomOffset))
@@ -427,8 +439,10 @@ namespace Astro {
                     }
 
                     // play video
-                    if (doc.Renderer.Video.url.Length != 0) {
-                        doc.Renderer.Video.Play();
+                    if (doc.Renderer.Video) {
+                        if (doc.Renderer.Video.url.Length != 0) {
+                            doc.Renderer.Video.Play();
+                        }
                     }
                 });
             state.DocZoomed = doc;
