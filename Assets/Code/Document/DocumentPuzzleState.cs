@@ -52,11 +52,13 @@ namespace Astro
             }
 
             puzzleState.PuzzleActive = true;
+            GameLoop.ResumeUpdates(AstroGame.DocumentUpdateMask);
         }
 
         public static void EndDocumentPuzzle(DocumentPuzzleState state)
         {
             state.PuzzleActive = false;
+            GameLoop.SuspendUpdates(AstroGame.DocumentUpdateMask);
         }
 
         #endregion // Sequence
