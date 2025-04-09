@@ -25,9 +25,7 @@ namespace Astro
             if (m_State.ClickedThisFrame && !m_State.SlotClicked) {
                 // clicked on nothing in particular
                 // cancel data slot transfer states
-                var transferState = Find.State<DataTransferState>();
-                DataUtility.AssignSelectedSource(transferState, null);
-                DataUtility.AssignSelectedTarget(transferState, null);
+                DataUtility.ClearSelections(Find.State<DataTransferState>());
             }
         }
     }

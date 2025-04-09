@@ -19,6 +19,7 @@ namespace Astro
                 if (DataUtility.TryTransferData(dataState.SelectedSource, dataState.SelectedTarget)) {
                     Debug.Log("[InteractTransferSystem] Transfer success");
                     PuzzleUtility.CheckEnableSubmit(Find.State<PuzzleState>());
+                    DataUtility.ClearSelections(dataState);
                     return;
                 }
             }

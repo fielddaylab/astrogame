@@ -49,5 +49,11 @@ namespace Astro {
             state.SelectedTarget = target;
             state.SourceUpdated = true;
         }
+
+        static public void ClearSelections(DataTransferState state) {
+            state.SelectedTarget = null;
+            state.SelectedSource = null;
+            state.SourceUpdated = true;
+        }
     }
 }

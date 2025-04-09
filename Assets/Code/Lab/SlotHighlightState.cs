@@ -11,5 +11,6 @@ namespace Astro
         public Material UnselectedCellMat;
         public Material AvailableCellMat;
         public Material SelectedCellMat;
+        public Material SelectedInstrumentMat;
     }
 }
