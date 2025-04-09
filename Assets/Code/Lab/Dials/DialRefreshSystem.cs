@@ -6,7 +6,7 @@ using FieldDay;
 
 namespace Astro
 {
-    [SysUpdate(GameLoopPhase.LateUpdate)] // After trigger processing systems
+    [SysUpdate(GameLoopPhase.LateUpdate, 0, AstroGame.InstrumentUpdateMask)] // After trigger processing systems
     public class DialRefreshSystem : ComponentSystemBehaviour<InteractAdjustDial>
     {
         public override void ProcessWorkForComponent(InteractAdjustDial component, float deltaTime)

@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace Astro
 {
+    [SysUpdate(GameLoopPhase.Update, 0, AstroGame.DocumentUpdateMask)]
     public class ArchiveInteractSystem : ComponentSystemBehaviour<LabInteractable, ArchiveInteractable>
     {
         public override void ProcessWork(float deltaTime)

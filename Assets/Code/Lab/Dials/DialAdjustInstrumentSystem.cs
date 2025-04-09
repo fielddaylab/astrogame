@@ -6,7 +6,7 @@ using FieldDay.Systems;
 using Astro;
 using BeauUtil;
 
-[SysUpdate(GameLoopPhase.Update, 50)] // After InteractAdjustDialSystem
+[SysUpdate(GameLoopPhase.Update, 50, AstroGame.InstrumentUpdateMask)] // After InteractAdjustDialSystem
 public class DialAdjustInstrumentSystem : ComponentSystemBehaviour<DialAdjustableInstrument>
 {
     public override void ProcessWorkForComponent(DialAdjustableInstrument primary, float deltaTime)

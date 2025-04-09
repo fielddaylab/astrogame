@@ -7,7 +7,7 @@ using FieldDay.HID;
 
 namespace Astro
 {
-    [SysUpdate(GameLoopPhase.Update, 10)] // After MouseInteractionSystem
+    [SysUpdate(GameLoopPhase.Update, 10, AstroGame.InstrumentUpdateMask)] // After MouseInteractionSystem
     public class InteractAdjustDialSystem : ComponentSystemBehaviour<LabInteractable, InteractAdjustDial>
     {
         public override void ProcessWorkForComponent(LabInteractable primary, InteractAdjustDial secondary, float deltaTime)
