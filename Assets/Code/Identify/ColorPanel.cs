@@ -11,5 +11,6 @@ namespace Astro
         public MeshRenderer PanelMesh;
         public MeshRenderer IndicatorMesh;
         [ColorId] public StringHash32 ColorId;
+        public bool PopulateOnRegister = false;
     }
 }

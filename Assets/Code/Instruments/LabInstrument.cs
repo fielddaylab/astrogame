@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using BeauUtil;
 using FieldDay;
 using FieldDay.Components;
 using TMPro;
@@ -10,6 +11,7 @@ namespace Astro {
         public DataSlot[] AutoPopulated;
         
         [NonSerialized] public bool Unlocked;
+        public CastableEvent<LabInstrument> OnUnlock = new CastableEvent<LabInstrument>();
 
         public void OnDeregister() { }
 

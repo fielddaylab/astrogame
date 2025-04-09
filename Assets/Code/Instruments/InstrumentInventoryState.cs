@@ -26,7 +26,7 @@ namespace Astro
         {
             //instrument.UnlockText.SetText(instrument.PointsToUnlock.ToStringLookup());
 
-            SetInstrumentUnlocked(instrument, true);
+            // SetInstrumentUnlocked(instrument, true);
         }
 
         [LeafMember("SetInstrumentUnlocked")]
@@ -40,6 +40,7 @@ namespace Astro
             //instrument.LockPanel.SetActive(!unlocked);
             if (unlocked) {
                 AddToActiveInstruments(instrument);
+                instrument.OnUnlock?.Invoke(instrument);
             }
         }
 

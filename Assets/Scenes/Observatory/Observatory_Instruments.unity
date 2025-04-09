@@ -1079,7 +1079,7 @@ PrefabInstance:
       value: -0.488
       objectReference: {fileID: 0}
     m_RemovedComponents:
-    - {fileID: 9020506920081297867, guid: bea00d3125bba324aa6647a0d6889248, type: 3}
+    - {fileID: 0}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -1242,6 +1242,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1436495150}
     m_Modifications:
+    - target: {fileID: 277003219791928350, guid: 36543bce9fc63304181344ce88794f53, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1224426851897032984, guid: 36543bce9fc63304181344ce88794f53, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -1270,6 +1274,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[1]
       value: 
       objectReference: {fileID: 2100000, guid: 175e59bb04fa5ba4680c1c551d5bdf3b, type: 2}
+    - target: {fileID: 4018932458442182460, guid: 36543bce9fc63304181344ce88794f53, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7414546681388126419, guid: 36543bce9fc63304181344ce88794f53, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.203
@@ -1318,13 +1326,39 @@ PrefabInstance:
     - {fileID: 6168825957458150139, guid: 36543bce9fc63304181344ce88794f53, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1391463076238217271, guid: 36543bce9fc63304181344ce88794f53, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3698648620295698423}
   m_SourcePrefab: {fileID: 100100000, guid: 36543bce9fc63304181344ce88794f53, type: 3}
 --- !u!1 &3698648620295698421 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1224426851897032984, guid: 36543bce9fc63304181344ce88794f53, type: 3}
   m_PrefabInstance: {fileID: 3698648620295698420}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &3698648620295698422 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1391463076238217271, guid: 36543bce9fc63304181344ce88794f53, type: 3}
+  m_PrefabInstance: {fileID: 3698648620295698420}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3698648620295698423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3698648620295698422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 808d7706b9890e74cb5c1f86dc9f8b53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Id:
+    m_Source: SpectrometerInstrument
+    m_HashValue: 484499543
+  m_ClassName:
+    m_Source: SpectrometerInstrument
+    m_HashValue: 484499543
 --- !u!1001 &8396095340711131181
 PrefabInstance:
   m_ObjectHideFlags: 0

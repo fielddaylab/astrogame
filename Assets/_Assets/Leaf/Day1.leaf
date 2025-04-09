@@ -6,6 +6,9 @@
 @who    IntroCutscene
 
 $call InitUpdateMasks()
+$call SetInstrumentUnlocked(CoordinateInstrument, true)
+$call SetInstrumentUnlocked(PhotometerInstrument, true)
+$call SetInstrumentUnlocked(SpectrometerInstrument, true)
 $call SetInputState(false)
 $call StopPuzzleMode()
 $call StopOpenMode()
@@ -24,7 +27,7 @@ $call PlayMusic("Music.Gently-Falling-Piano", 1)
 
 {@Radio} Star HQ to Station Seven. Elijah, do you copy?
 $call MoveToView("Right")
-{@Radio} Please log in and provide status update. 
+{@Radio} Please log in and provide status update.
 
 $call Wait(2)
 
@@ -256,6 +259,7 @@ $call HintModals->Hide("RadioControls", 0.2)
 $call MonitorUI->PlayRadioDownload(2)
 $call Wait(1)
 $call MonitorUI->ShowCeresLogo()
+$call SetInstrumentUnlocked(ColorInstrument, true)
 {@Radio} Congratulations on being awarded clearance level 2. 
 You are now cleared to use the color meter. 
 Please reference your CERES Operator Manual for further information about your equipment. 
@@ -326,8 +330,6 @@ On your screen is all known information about the stars in Persius.
 I need you to input data from your gear into the identification grid that just appeared.
 There should be more information in your manual.
 $call SetInputState(true)
-
-$call SetInstrumentUnlocked(ColorInstrument, true)
 
 :: PerseusPuzzleComplete
 @trigger    CorrectPuzzleSubmission
