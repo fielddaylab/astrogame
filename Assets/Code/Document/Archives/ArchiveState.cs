@@ -16,7 +16,7 @@ namespace Astro
         public Transform[] StackPoses;
         public Transform ArchiveParent;
 
-        [NonSerialized] public int DayOffset = 0; // number of days without stacks (e.g. prelude)
+        [NonSerialized] public int DayOffset = 1; // number of days without stacks (e.g. prelude)
         [NonSerialized] public int CurrArchiveIndex = -1;
 
         public void OnDeregister()

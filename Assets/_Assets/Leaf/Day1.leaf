@@ -184,7 +184,7 @@ $call HintModals->Hide("SelectStar", 0.2)
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 650)
 {@Dad} Great! 
 Now see if you can find Elijah’s operator manual. It should have all the info you need.
-$call Wait(0.3)
+$call Wait(1)
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 
 :: OnRefGuideOpened
@@ -198,10 +198,11 @@ $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $set temp:waitingForManualOpen = false
 $call SetInputState(false)
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 650)
+$call MoveToView("Right")
 {@Dad} Do you see your photometer in the equipment stack? That should tell you what the apparent magnitude of the star is. 
 All you need to do is find that number in your reference guide and submit the data.
 $call SetInputState(true)
-$call Wait(0.3)
+$call Wait(1)
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 
 :: PlayerLeavesNeutrinoTask
@@ -222,7 +223,7 @@ $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 650)
 {@Dad} Hmm, looks like that wasn’t accurate. 
 Remember to look at your photometer, and then line it up with the closest range in your manual.
-$call Wait(0.3)
+$call Wait(1)
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 
 :: DupliacteSubmission
@@ -254,6 +255,7 @@ $call SetInputState(true)
 @once
 
 $call SetInputState(false)
+$call SetRefGuideActive(false)
 $call StopOpenMode()
 $call ClearMonitorSelection()
 {@Dad} Looks like you’ve identified enough stars to earn a higher clearance level. 
@@ -261,7 +263,7 @@ You’ll need to tune to the right frequency on your radio to unlock your equipm
 
 $call HintModals->SlideInFromRight("RadioControls", 0.4)
 
-$call Wait (1)
+$call Wait(1)
 
 $call HintModals->Hide("RadioControls", 0.2)
 
@@ -290,7 +292,6 @@ This time I need you to find the constellation Perseus.
 
 {@Astrid} Perseus, huh?
 
-{@Dad} Up for some more hot and cold?
 $call StartPuzzleNavigation()
 $call SetInputState(true)
 
@@ -328,6 +329,7 @@ $call SetInputState(true)
 @cutscene
 @once
 
+$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 650)
 $call StopPuzzleNavigation()
 $call SetInputState(false)
 $call SetRefGuideActive(false)
@@ -335,13 +337,31 @@ $call StartPuzzleMode()
 {@Astrid} Whoooaa...
 
 $call Wait(1)
-$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 650)
-{@Dad} Alright kiddo, this was the.. important thing I was telling you about earlier. 
+{@Dad} Alright kiddo, this was the... important thing I was telling you about earlier. 
 On your screen is all known information about the stars in Persius. 
-I need you to input data from your gear into the identification grid that just appeared.
-There should be more information in your manual.
+You just need to logic your way through it and input data from your equipment into the grid. 
+I’ll help you get started. 
+Select the star that matches the only location listen on your grid. 
+You’ll see locations in your celestial compass.
+$call HintModals->SlideInFromRight("FirstPuzzleStar", 0.4)
 $call SetInputState(true)
-$call Wait(0.3)
+$call Wait(1)
+$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
+$set temp:waitingForSelectAtik = true
+
+:: FirstPuzzleStarSelected
+@trigger   OnStarSelected
+@when   starName = "Atik", temp:waitingForSelectAtik
+@cutscene
+@once
+
+$set temp:waitingForSelectAtik = false
+$call HintModals->Hide("FirstPuzzleStar", 0.2)
+$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 650)
+Great, now we can fill in data for Atik! 
+Select the Apparent Magnintude space in the puzzle grid.
+Once you've made your selection you can load in data from your photometer. 
+$call Wait(1)
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 
 :: PerseusPuzzleComplete
@@ -352,17 +372,10 @@ $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $call ClearMonitorSelection()
 $call StopPuzzleMode()
 $call SetInputState(false)
-{@Astrid} Time to turn in for the night.
-Oh, what's this?
-$call WaitForMovedToView("Left")
-$call SpawnDocumentToCamera("Day1Martha")
-$call SetInputState(true)
+{@Dad}  Excellent!
+Gosh it’s late where you’re at.. Get some rest kiddo. 
+We’ll try to figure out 2 way communication tomorrow...
 
-:: EndDay
-@trigger    DocumentInspectEnd
-@when   documentId == "Day1Martha"
-@once
-
-$call SetInputState(false)
+{@Astrid} (*yawns*) That's about the only thing you've said that's made any sense...
 $call Wait(1)
 $call LoadNextDay()

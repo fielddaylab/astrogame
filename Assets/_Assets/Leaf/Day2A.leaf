@@ -27,6 +27,15 @@ $call SpawnDocumentToCamera("Day2ElijahPostcard")
 @when   documentId == "Day2ElijahPostcard"
 @once
 
+$call Wait(1)
+$call SpawnDocumentToCamera("Day2Martha")
+{@Astrid} And another one from Aunt Martha.
+
+:: DocumentPuzzleStart
+@trigger    DocumentInspectEnd
+@when   documentId == "Day2Martha"
+@once
+
 {@Astrid} Where is Elijah? Is he okay?
 $call StartDocumentPuzzle("Day2DocumentPuzzle")
 
@@ -41,12 +50,12 @@ $call StartDocumentPuzzle("Day2DocumentPuzzle")
 @when documentId == "Day2ElijahPostcard"
 @once
 
+$call SetInputState(false)
 {@Astrid} This is it!
 $call Wait(1)
 $call MoveToView("Desk")
 $call Wait(1)
 
-$call SetInputState(false)
 $call MoveToView("Right")
 {@Radio} Star HQ to Station Seven.
 IceCube is reading a high-energy neutrino emission from the area of the Hydra Constellation. 
