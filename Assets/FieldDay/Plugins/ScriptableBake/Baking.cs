@@ -1083,6 +1083,7 @@ namespace ScriptableBake {
 
         internal BakeFlags m_Flags;
         private Dictionary<string, object> m_ValueCache;
+        private ulong m_ComponentTypeFlags;
         internal List<IBaked> m_AdditionalBakeQueue; 
 
         /// <summary>
