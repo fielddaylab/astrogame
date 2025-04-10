@@ -6,7 +6,7 @@ using FieldDay;
 using BeauUtil;
 
 namespace Astro {
-    [SysUpdate(GameLoopPhase.LateUpdate, 0, AstroGame.MonitorControlsUpdateMask)]
+    [SysUpdate(GameLoopPhase.LateUpdate, 0)]
     public class FocusVisualsSystem : SharedStateSystemBehaviour<FocusState>
     {
         public override void ProcessWork(float deltaTime)
@@ -31,26 +31,18 @@ namespace Astro {
                 }
 
                 if (m_State.CurrentFocus) {
-                    AlignFocusOutlineToTarget(spaceCam);
-                }
-            }
-
-            // position focus outline on currently selected Focusable, if any
-            if (m_State.FocusUpdated) {
-                m_State.FocusUpdated = false;
-                if (m_State.CurrentFocus) {
-                    m_State.FocusOutline.enabled = true;
-                    AlignFocusOutlineToTarget(spaceCam);
-                }
-                else if (m_State.FocusOutline.enabled) {
-                    m_State.FocusOutline.enabled = false;
+                    FocusVisualsUtility.AlignFocusOutlineToTarget(spaceCam, m_State);
                 }
             }
         }
+    }
 
-        private void AlignFocusOutlineToTarget(SpaceCameraState spaceCam) {
-            Vector2 viewPoint = spaceCam.Camera.Camera.WorldToViewportPoint(m_State.CurrentFocus.Target.position, Camera.MonoOrStereoscopicEye.Mono);
-            m_State.FocusOutline.rectTransform.anchorMin = m_State.FocusOutline.rectTransform.anchorMax = viewPoint;
+    public static class FocusVisualsUtility
+    {
+        public static void AlignFocusOutlineToTarget(SpaceCameraState spaceCam, FocusState state)
+        {
+            Vector2 viewPoint = spaceCam.Camera.Camera.WorldToViewportPoint(state.CurrentFocus.Target.position, Camera.MonoOrStereoscopicEye.Mono);
+            state.FocusOutline.rectTransform.anchorMin = state.FocusOutline.rectTransform.anchorMax = viewPoint;
         }
     }
 }

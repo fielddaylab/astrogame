@@ -22,7 +22,9 @@ namespace Astro
             var highlightState = Find.State<SlotHighlightState>();
 
             if (component.IsSource) { // Instrument Load Button (source) highlights
-                TryHighlightInstrumentButton(transferState, highlightState, highlight, component);
+                if (component.IsActive) {
+                    TryHighlightInstrumentButton(transferState, highlightState, highlight, component);
+                }
             } else { // Puzzle Cell (target) highlights
                 TryHighlightPuzzleCell(transferState, highlightState, highlight, component);
             }
