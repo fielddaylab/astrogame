@@ -9,5 +9,6 @@ namespace Astro {
 
         public Dictionary<StringHash32, BitSet32> Classifications = MapUtils.Create<StringHash32, BitSet32>(64);
         [NonSerialized] public List<ArchiveLayout> DayLayouts = new List<ArchiveLayout>();
+        [NonSerialized] public List<StringHash32> UnlockedInstruments = new List<StringHash32>();
     }
 }
