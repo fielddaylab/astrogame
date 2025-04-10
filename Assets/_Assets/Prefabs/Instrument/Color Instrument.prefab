@@ -18,6 +18,8 @@ GameObject:
   - component: {fileID: 6648558114267294752}
   - component: {fileID: 4917676076770392529}
   - component: {fileID: 5249715261198134064}
+  - component: {fileID: 235637667976877260}
+  - component: {fileID: 6188558229182586883}
   m_Layer: 6
   m_Name: Color Instrument
   m_TagString: Untagged
@@ -100,6 +102,7 @@ MonoBehaviour:
   Displays:
   - {fileID: 2589876399984160971}
   IsSource: 1
+  IsActive: 0
 --- !u!114 &6533512667492188472
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -149,6 +152,7 @@ MonoBehaviour:
   m_Renderers:
   - {fileID: 73160229903966761}
   m_MatIndex: 0
+  SwapSpeed: 1
   m_InitMat: {fileID: 2100000, guid: 2f75848563b72cb45877dc22eb77cec5, type: 2}
   m_SwapTo: {fileID: 2100000, guid: 1173e83d69392a045b7bc5960c8eaafe, type: 2}
 --- !u!114 &6648558114267294752
@@ -168,6 +172,7 @@ MonoBehaviour:
   - {fileID: 1721582870547005678}
   - {fileID: 6697909524445204055}
   m_MatIndex: 0
+  SwapSpeed: 1
   m_InitMat: {fileID: 2100000, guid: 2f75848563b72cb45877dc22eb77cec5, type: 2}
   m_SwapTo: {fileID: 2100000, guid: cbb982c3e0035df48983610d16cec627, type: 2}
 --- !u!114 &4917676076770392529
@@ -206,6 +211,42 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Mesh: {fileID: 6697909524445204055}
+--- !u!114 &235637667976877260
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1594254822178239427}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f387505cb3b14e647a777d08826df94b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Target: {fileID: 6533512667492188472}
+  m_Slots:
+  - {fileID: 7501215276715630893}
+  - {fileID: 756794138420391342}
+  m_InitVal: 0
+  m_SetTo: 1
+--- !u!114 &6188558229182586883
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1594254822178239427}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb698c5096be21e4ca2e23688e5f744c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Target: {fileID: 6533512667492188472}
+  m_Components:
+  - {fileID: 904281830680425223}
+  - {fileID: 5130961772983030875}
+  m_InitVal: 0
+  m_SetTo: 1
 --- !u!1 &1728720626148072859
 GameObject:
   m_ObjectHideFlags: 0
@@ -443,6 +484,7 @@ MonoBehaviour:
   Displays:
   - {fileID: 8195870144492996739}
   IsSource: 1
+  IsActive: 0
 --- !u!114 &5087989628589088583
 MonoBehaviour:
   m_ObjectHideFlags: 0

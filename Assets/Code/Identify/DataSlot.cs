@@ -8,6 +8,7 @@ namespace Astro {
         public DataTypeMask Type;
         [Required] public DataDisplay[] Displays;
         public bool IsSource;
+        public bool IsActive = true;
 
         [NonSerialized] public bool HasData;
         [NonSerialized] public bool Modifiable = true;
