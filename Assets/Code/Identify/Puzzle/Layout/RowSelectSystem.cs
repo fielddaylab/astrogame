@@ -6,7 +6,7 @@ using FieldDay;
 
 namespace Astro
 {
-    [SysUpdate(GameLoopPhase.Update, 500)] // After LabInteractTriggerSystem
+    [SysUpdate(GameLoopPhase.Update, 500, AstroGame.SubmissionUpdateMask)] // After LabInteractTriggerSystem
     public class RowSelectSystem : ComponentSystemBehaviour<InteractRowSelector, LabInteractable>
     {
         public override void ProcessWorkForComponent(InteractRowSelector primary, LabInteractable secondary, float deltaTime)

@@ -140,10 +140,18 @@ namespace Astro.Reference {
         static private IEnumerator TransitionToOpen(RefGuideState state, RefGuideRig rig) {
             state.CurrentState = RefGuideInteractionState.Transitioning;
             SetGuideInteraction(rig, RefGuideInteractionState.Transitioning);
-            yield return rig.RootTransform.MoveAlong(rig.ClosedSpline, 0.15f).Ease(Curve.Smooth);
-            rig.RootTransform.rotation = rig.OpenPosition.rotation;
+
+            rig.IntermediatePosition.GetPositionAndRotation(out var p, out var r);
+            rig.RootTransform.SetPositionAndRotation(p, r);
             SetGuideOpenVisibility(rig, true);
-            yield return rig.RootTransform.MoveAlong(rig.OpenSpline, 0.15f).Ease(Curve.Smooth).From();
+
+            yield return Routine.Inline(rig.RootTransform.MoveTo(rig.RootTransform.localPosition.y + 0.1f, 0.3f, Axis.Y, Space.Self).Ease(Curve.BackOut).From());
+
+            yield return 0.15f;
+            yield return Tween.ZeroToOne(SetRefGuideCoverAngle, 0.45f).Ease(Curve.Smooth);
+            rig.CoverRenderer.enabled = false;
+
+            yield return rig.RootTransform.MoveTo(rig.OpenPosition.position, 0.12f).Ease(Curve.Smooth);
             SetGuideInteraction(rig, RefGuideInteractionState.Open);
             state.CurrentState = RefGuideInteractionState.Open;
         }
@@ -151,13 +159,30 @@ namespace Astro.Reference {
         static private IEnumerator TransitionToClose(RefGuideState state, RefGuideRig rig) {
             state.CurrentState = RefGuideInteractionState.Transitioning;
             SetGuideInteraction(rig, RefGuideInteractionState.Transitioning);
-            yield return rig.RootTransform.MoveAlong(rig.OpenSpline, 0.15f).Ease(Curve.Smooth);
-            rig.RootTransform.rotation = rig.ClosedPosition.rotation;
+            yield return rig.RootTransform.MoveTo(rig.IntermediatePosition.position, 0.12f).Ease(Curve.BackOut);
+
+            rig.CoverRenderer.enabled = true;
+            yield return Tween.OneToZero(SetRefGuideCoverAngle, 0.25f).Ease(Curve.Smooth);
+            yield return 0.27f;
+
+            rig.ClosedPosition.GetPositionAndRotation(out var p, out var r);
+            rig.RootTransform.SetPositionAndRotation(p, r);
             SetGuideOpenVisibility(rig, false);
-            yield return rig.RootTransform.MoveAlong(rig.ClosedSpline, 0.15f).Ease(Curve.Smooth).From();
+
+            yield return Routine.Inline(rig.RootTransform.MoveTo(rig.RootTransform.localPosition.y + 0.05f, 0.12f, Axis.Y, Space.Self).Ease(Curve.CubeOut).From().ForceOnCancel(false));
             SetGuideInteraction(rig, RefGuideInteractionState.Closed);
             state.CurrentState = RefGuideInteractionState.Closed;
         }
+
+        static private readonly Action<float> SetRefGuideCoverAngle = (f) => {
+            RefGuideRig rig = Find.State<RefGuideRig>();
+            rig.CoverAnchor.SetRotation(f * 360, Axis.Y, Space.Self);
+
+            float coverOffsetAngleRad = Mathf.Deg2Rad * Mathf.Lerp(rig.CoverClosedAngle, rig.CoverOpenAngle, f);
+            rig.CoverOffset.SetPosition(new Vector3(Mathf.Cos(coverOffsetAngleRad) * rig.CoverRingRadius, 0, Mathf.Sin(coverOffsetAngleRad) * rig.CoverRingRadius), Axis.XZ, Space.Self);
+
+            rig.CoverRenderer.enabled = f < 1;
+        };
 
         #endregion // Transitions
 

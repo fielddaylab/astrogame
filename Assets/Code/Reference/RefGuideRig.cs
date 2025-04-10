@@ -21,7 +21,9 @@ namespace Astro.Reference {
         public RefGuideContents Contents;
 
         [Header("Closed State")]
-        public MeshRenderer ClosedRenderer;
+        public MeshRenderer CoverRenderer;
+        public Transform CoverAnchor;
+        public Transform CoverOffset;
         public Collider ClosedToggle;
 
         [Header("Pages")]
@@ -30,9 +32,16 @@ namespace Astro.Reference {
 
         [Header("Positions")]
         public Transform ClosedPosition;
-        public MultiSpline ClosedSpline;
         public Transform OpenPosition;
-        public MultiSpline OpenSpline;
+        public Transform IntermediatePosition;
+
+        [Header("Animation Params")]
+        public float CoverClosedAngle;
+        public float CoverOpenAngle;
+        public float CoverRingRadius;
+
+        [Header("Lighting")]
+        public Light OpenLight;
 
         IEnumerator<WorkSlicer.Result?> IScenePreload.Preload() {
             ReferenceUtility.SetGuideOpenVisibility(this, false);
@@ -49,9 +58,6 @@ namespace Astro.Reference {
 
     static public partial class ReferenceUtility {
         static public void SetGuideOpenVisibility(RefGuideRig rig, bool isOpen) {
-            rig.OpenRenderer.enabled = isOpen;
-            rig.ClosedRenderer.enabled = !isOpen;
-
             foreach(var tab in rig.TopTabs.Bookmarks) {
                 tab.Contents.SetActive(isOpen);
             }
@@ -60,6 +66,7 @@ namespace Astro.Reference {
             }
 
             rig.OpenRenderers.SetActive(isOpen);
+            rig.OpenLight.enabled = isOpen;
         }
 
         static public void SetGuideInteraction(RefGuideRig rig, RefGuideInteractionState state) {

@@ -7,7 +7,7 @@ using FieldDay.Scripting;
 
 namespace Astro
 {
-    [SysUpdate(GameLoopPhase.Update, 100)] // After MouseInteractionSystem
+    [SysUpdate(GameLoopPhase.Update, 100, AstroGame.DocumentUpdateMask)] // After MouseInteractionSystem
     public class DocumentPromptSystem : ComponentSystemBehaviour<DocumentInteractable, DocumentPrompter>
     {
         public override void ProcessWork(float deltaTime)
@@ -47,8 +47,6 @@ namespace Astro
         public override void ProcessWorkForComponent(DocumentInteractable primary, DocumentPrompter secondary, float deltaTime)
         {
             base.ProcessWorkForComponent(primary, secondary, deltaTime);
-
-
         }
     }
 }

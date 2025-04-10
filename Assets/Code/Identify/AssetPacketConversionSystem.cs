@@ -1,5 +1,6 @@
 using Astro;
 using BeauUtil;
+using FieldDay;
 using FieldDay.Systems;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using UnityEngine;
 
 namespace Astro
 {
+    [SysUpdate(GameLoopPhase.Update, 0, AstroGame.InstrumentUpdateMask)]
     public class AssetPacketConversionSystem : SharedStateSystemBehaviour<DataPacketDistributionState, InstrumentInventoryState>
     {
         private readonly RingBuffer<DataPacket> m_ConvertedPackets = new RingBuffer<DataPacket>(8);

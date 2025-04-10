@@ -6,7 +6,7 @@ using FieldDay.Systems;
 
 namespace Astro
 {
-    [SysUpdate(GameLoopPhase.LateUpdate)]
+    [SysUpdate(GameLoopPhase.LateUpdate, 0, AstroGame.DocumentUpdateMask)]
     public class DocumentInteractRefreshSystem : SharedStateSystemBehaviour<DocumentBoardState>
     {
         public override void ProcessWork(float deltaTime)
