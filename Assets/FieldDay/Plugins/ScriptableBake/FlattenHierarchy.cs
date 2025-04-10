@@ -13,6 +13,8 @@ namespace ScriptableBake {
         [Tooltip("If true, will flatten in editor")]
         public bool Always = false;
 
+        [Space]
+
         [Tooltip("Whether or not to destroy any inactive children of this GameObject")]
         public bool DestroyInactiveChildren = false;
 

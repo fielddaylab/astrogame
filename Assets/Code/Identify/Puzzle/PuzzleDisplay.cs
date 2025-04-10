@@ -22,6 +22,7 @@ namespace Astro
         public float ColSpacing;
         public float BaseCellWidth;
         public LabInteractable SubmitButton;
+        //public Collider BackgroundCollider;
     }
 
     public static partial class PuzzleUtility

@@ -21,7 +21,6 @@ namespace Astro.Reference {
         #region Inspector
 
         [Header("Game Objects")]
-        public SpriteRenderer SelectionSprite;
         public SubmitButton SubmitButton;
 
         #endregion // Inspector
@@ -70,6 +69,11 @@ namespace Astro.Reference {
         #region Controls
 
         static public void HandleControl(RefGuideControl control) {
+            // Disallow new selections if we already have an object in review
+            if (Find.State<PlayerPointsState>().SubmittedObject) {
+                return;
+            }
+
             switch (control.ControlType) {
                 case RefGuideControlType.PrevPage: {
                     LoadPreviousPage(Find.State<RefGuideState>());
@@ -86,7 +90,7 @@ namespace Astro.Reference {
                 }
 
                 case RefGuideControlType.Classification: {
-                    // TODO: classification
+                    SelectControl(control);
                     break;
                 }
 
@@ -217,7 +221,7 @@ namespace Astro.Reference {
 
             RefGuideRig rig = Find.State<RefGuideRig>();
             PopulateContents(rig.Contents, newPage);
-            //PopulateReferenceColliders(newPage, rgs);
+            PopulateReferenceColliders(newPage, rig);
         }
 
         public static void LoadNextPage(RefGuideState rgs) {
@@ -234,62 +238,63 @@ namespace Astro.Reference {
 
         #endregion // Page Loading
 
-        private static void PopulateReferenceColliders(ReferencePageAsset page, RefGuideState rgs = null) {
-            if (rgs == null) {
-                rgs = Find.State<RefGuideState>();
-            }
-            
+        private static void PopulateReferenceColliders(ReferencePageAsset page, RefGuideRig rig) {
             if (page == null) {
-                ClearReferenceColliders(rgs);
+                ClearReferenceColliders(rig);
                 return;
             }
 
-            //for (int i = 0; i < rgs.LeftRegions.Length; i++) {
-            //    if (i < page.EntriesLeft.Length) {
-            //        rgs.LeftRegions[i].ConnectedEntry = page.EntriesLeft[i];
-            //    }
-            //    if (i < page.EntriesRight.Length) {
-            //        rgs.RightRegions[i].ConnectedEntry = page.EntriesRight[i];
-            //    }
-            //}
+            foreach(var ctrlPage in rig.ControlPages) {
+                if (ctrlPage.PageId == page.AssetId) {
+                    for(int i = 0; i < ctrlPage.Regions.Length; i++) {
+                        ctrlPage.Colliders[i].enabled = true;
+                        ctrlPage.Regions[i].Classification = page.Classifications[i];
+                    }
+                } else {
+                    foreach(var ctrl in ctrlPage.Colliders) {
+                        ctrl.enabled = false;
+                    }
+                }
+            }
         }
 
-        private static void ClearReferenceColliders(RefGuideState rgs) {
-            //for (int i = 0; i < rgs.LeftRegions.Length; i++) {
-            //    rgs.LeftRegions[i].ConnectedEntry = null;
-            //    rgs.RightRegions[i].ConnectedEntry = null;
-            //}
+        private static void ClearReferenceColliders(RefGuideRig rig) {
+            foreach(var page in rig.ControlPages) {
+                foreach(var c in page.Colliders) {
+                    c.enabled = false;
+                }
+            }
+
+            rig.SelectionGraphic.gameObject.SetActive(false);
         }
 
-        //public static void SelectRegion(RefGuideRegion region) {
-        //    // Disallow new selections if we already have an object in review
-        //    if (Find.State<PlayerPointsState>().SubmittedObject) {
-        //        return;
-        //    }
+        public static void SelectControl(RefGuideControl region) {
+            // Disallow new selections if we already have an object in review
+            if (Find.State<PlayerPointsState>().SubmittedObject) {
+                return;
+            }
 
-        //    RefGuideState rgs = Find.State<RefGuideState>();
-        //    if (region == null) {
-        //        rgs.SelectedRefClassification = null;
-        //        rgs.SelectionSprite.enabled = false;
-        //        return;
-        //    }
+            RefGuideState rgs = Find.State<RefGuideState>();
+            RefGuideRig rig = Find.State<RefGuideRig>();
 
-        //    rgs.SelectedRefClassification = region.ConnectedEntry;
+            if (region == null) {
+                rgs.SelectedRefClassification = null;
+                rig.SelectionGraphic.gameObject.SetActive(false);
+                return;
+            }
 
-        //    if (region.PageChange == RefGuidePageChange.Previous) {
-        //        LoadPreviousPage(rgs);
-        //        rgs.SelectionSprite.enabled = false;
-        //    } else if (region.PageChange == RefGuidePageChange.Next) {
-        //        LoadNextPage(rgs);
-        //        rgs.SelectionSprite.enabled = false;
-        //    } else {
-        //        rgs.SelectionSprite.enabled = true;
-        //        rgs.SelectionSprite.transform.SetParent(region.transform, true);
-        //        rgs.SelectionSprite.transform.localPosition = Vector3.zero;
-        //    }
+            rgs.SelectedRefClassification = region.Classification;
 
-        //    TryEnableIDSubmit(Find.State<FocusState>().CurrentFocus != null);
-        //}
+            Collider c = region.GetComponent<Collider>();
+            Bounds b = PhysicsUtils.GetLocalBounds(c);
+            Vector2 off = region.transform.localPosition;
+
+            rig.SelectionGraphic.SetPosition(b.center + (Vector3) off, Axis.XY, Space.Self);
+            rig.SelectionGraphic.SetScale(b.size, Axis.XY);
+            rig.SelectionGraphic.gameObject.SetActive(true);
+
+            TryEnableIDSubmit(Find.State<FocusState>().CurrentFocus != null);
+        }
 
         public static void TryEnableIDSubmit(bool focusActive) {
             RefGuideState rgs = Find.State<RefGuideState>();
@@ -343,45 +348,6 @@ namespace Astro.Reference {
             UIFocus focus = Find.State<FocusState>().CurrentFocus;
             return day.NeutrinoEvent.RelevantObjectIds.Contains(focus.TargetData.AssetId);
         }
-
-        //public static void PopulateFlexibleReferenceCanvas(FlexReferencePageAsset asset, RefGuideRenderState rgrs) {
-        //    if (asset.Layout == PageLayout.None) {
-        //        return;
-        //    }
-
-        //    FlexPage page = rgrs.Page;
-        //    switch (asset.Layout) {
-        //        case PageLayout.ImageOnly: {
-        //            page.Table.gameObject.SetActive(false);
-        //            page.BackgroundImage.gameObject.SetActive(true);
-        //            page.BackgroundImage.sprite = asset.Background;
-        //            page.Body.SetTextAndActive("");
-        //            page.Title.SetTextAndActive("");
-        //            break;
-        //        }
-        //        case PageLayout.TitleBody: {
-        //            page.Table.gameObject.SetActive(false);
-        //            page.BackgroundImage.gameObject.SetActive(false);
-        //            page.Title.SetTextAndActive(asset.TextData.TitleText);
-        //            page.Body.SetTextAndActive(asset.TextData.BodyText);
-        //            break;
-        //        }
-        //        case PageLayout.Table: {
-        //            page.Table.gameObject.SetActive(true);
-        //            page.BackgroundImage.gameObject.SetActive(false);
-        //            page.Title.SetTextAndActive("");
-        //            page.Body.SetTextAndActive("");
-        //            PopulateFlexTable(asset.TableData, page);
-        //            break;
-        //        }
-        //    }
-
-
-        //}
-
-        //public static void PopulateFlexTable(TableData data, FlexPage page) {
-
-        //}
 
         public static bool AssetSubmissionCompleted() {
             ReferenceClassification refClass = Find.State<RefGuideState>().SelectedRefClassification;

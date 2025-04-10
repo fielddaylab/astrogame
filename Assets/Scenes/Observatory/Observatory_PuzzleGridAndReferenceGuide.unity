@@ -282,10 +282,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 38740169}
-  - component: {fileID: 38740173}
   - component: {fileID: 38740172}
-  - component: {fileID: 38740171}
-  - component: {fileID: 38740170}
   m_Layer: 6
   m_Name: Puzzle Panel
   m_TagString: Untagged
@@ -322,35 +319,6 @@ Transform:
   - {fileID: 2025866402}
   m_Father: {fileID: 248066390}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &38740170
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 38740168}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a59a59fc4e9a014c8fbb22f00e5eeff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_AlwaysFireClickEvents: 0
-  CursorType:
-    m_HashValue: 0
-  Tooltip: 
---- !u!114 &38740171
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 38740168}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38d587e5b249a5141b2b8e4cc3bb1223, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  IsDraggable: 0
 --- !u!114 &38740172
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -375,27 +343,7 @@ MonoBehaviour:
   ColSpacing: 0.1
   BaseCellWidth: 0.7
   SubmitButton: {fileID: 416664021}
---- !u!65 &38740173
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 38740168}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 3.9, y: 2.2, z: 1.8539385}
-  m_Center: {x: 0.059999943, y: 0.100000024, z: 0.9374985}
+  BackgroundCollider: {fileID: 0}
 --- !u!1 &86435212
 GameObject:
   m_ObjectHideFlags: 0
@@ -764,7 +712,6 @@ Transform:
   - {fileID: 416362307}
   - {fileID: 1410995755}
   - {fileID: 86435213}
-  - {fileID: 2145372448}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!114 &248066391
@@ -3126,7 +3073,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb1f2f354c26eba4da7950ace1e6accc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SelectionSprite: {fileID: 2145372450}
+  SelectionSprite: {fileID: 0}
   SubmitButton: {fileID: 416664019}
 --- !u!1001 &1622292170
 PrefabInstance:
@@ -4083,86 +4030,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3669937ce28029442a16f5bf31929073, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1001 &2145372447
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 248066390}
-    m_Modifications:
-    - target: {fileID: 2588610641262768602, guid: a086b195f5ee6a843a6eff739c6f1e8b, type: 3}
-      propertyPath: m_Name
-      value: RefPanel
-      objectReference: {fileID: 0}
-    - target: {fileID: 2588610641262768602, guid: a086b195f5ee6a843a6eff739c6f1e8b, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3329570053166687861, guid: a086b195f5ee6a843a6eff739c6f1e8b, type: 3}
-      propertyPath: ConnectedViewNode
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 4370199197931916605, guid: a086b195f5ee6a843a6eff739c6f1e8b, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8645033485090447740, guid: a086b195f5ee6a843a6eff739c6f1e8b, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8645033485090447740, guid: a086b195f5ee6a843a6eff739c6f1e8b, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.017
-      objectReference: {fileID: 0}
-    - target: {fileID: 8645033485090447740, guid: a086b195f5ee6a843a6eff739c6f1e8b, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -0.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 8645033485090447740, guid: a086b195f5ee6a843a6eff739c6f1e8b, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8645033485090447740, guid: a086b195f5ee6a843a6eff739c6f1e8b, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8645033485090447740, guid: a086b195f5ee6a843a6eff739c6f1e8b, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8645033485090447740, guid: a086b195f5ee6a843a6eff739c6f1e8b, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8645033485090447740, guid: a086b195f5ee6a843a6eff739c6f1e8b, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8645033485090447740, guid: a086b195f5ee6a843a6eff739c6f1e8b, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8645033485090447740, guid: a086b195f5ee6a843a6eff739c6f1e8b, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 8735567995787185043, guid: a086b195f5ee6a843a6eff739c6f1e8b, type: 3}
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: a086b195f5ee6a843a6eff739c6f1e8b, type: 3}
---- !u!4 &2145372448 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8645033485090447740, guid: a086b195f5ee6a843a6eff739c6f1e8b, type: 3}
-  m_PrefabInstance: {fileID: 2145372447}
-  m_PrefabAsset: {fileID: 0}
---- !u!212 &2145372450 stripped
-SpriteRenderer:
-  m_CorrespondingSourceObject: {fileID: 663874996687533400, guid: a086b195f5ee6a843a6eff739c6f1e8b, type: 3}
-  m_PrefabInstance: {fileID: 2145372447}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &533875701465942995
 Transform:
   m_ObjectHideFlags: 0

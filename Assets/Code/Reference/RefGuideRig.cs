@@ -43,6 +43,10 @@ namespace Astro.Reference {
         [Header("Lighting")]
         public Light OpenLight;
 
+        [Header("Selection")]
+        public RefGuideControlPage[] ControlPages;
+        public Transform SelectionGraphic;
+
         IEnumerator<WorkSlicer.Result?> IScenePreload.Preload() {
             ReferenceUtility.SetGuideOpenVisibility(this, false);
             ReferenceUtility.SetGuideInteraction(this, RefGuideInteractionState.Closed);
@@ -67,6 +71,10 @@ namespace Astro.Reference {
 
             rig.OpenRenderers.SetActive(isOpen);
             rig.OpenLight.enabled = isOpen;
+
+            if (!isOpen) {
+                rig.SelectionGraphic.gameObject.SetActive(false);
+            }
         }
 
         static public void SetGuideInteraction(RefGuideRig rig, RefGuideInteractionState state) {
@@ -82,6 +90,14 @@ namespace Astro.Reference {
 
             foreach(var control in rig.OpenControls) {
                 control.enabled = state == RefGuideInteractionState.Open;
+            }
+
+            if (state != RefGuideInteractionState.Open) {
+                foreach(var page in rig.ControlPages) {
+                    foreach(var c in page.Colliders) {
+                        c.enabled = false;
+                    }
+                }
             }
 
             rig.OpenInteractables.SetActive(state == RefGuideInteractionState.Open);
