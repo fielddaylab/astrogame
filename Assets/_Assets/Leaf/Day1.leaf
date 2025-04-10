@@ -145,9 +145,10 @@ $call Wait(3)
 @cutscene
 @once
 
+$call SetInputState(false)
+$call AlignCamToNeutrino()
 $call HintModals->Hide("NeutrinoNav", 0.2)
 {@Dad} Nice Job! 
-$call SetInputState(false)
 $call StartOpenMode()
 {@Dad} Early this morning, Ice Cube detected a high energy neutrino coming from one of several possible stars in this location.
 You’ll see each of them highlighted on your display. 

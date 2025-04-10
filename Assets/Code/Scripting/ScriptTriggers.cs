@@ -148,6 +148,17 @@ namespace Astro {
             GameLoop.SuspendUpdates(AstroGame.MonitorControlsUpdateMask);
         }
 
+        [LeafMember("AlignCamToNeutrino")]
+        static private void LeafAlignCamToNeutrino()
+        {
+            DayConfigAsset config = DayConfigUtil.GetConfigForState();
+            if (!config) return;
+            EqCoords target = config.NeutrinoEvent.NeutrinoCoordinates;
+
+            var navState = Find.State<PuzzleNavigationState>();
+            navState.ConstellationSnapRoutine.Replace(PuzzleNavigationUtility.SnapConstellationAlignment(target));
+        }
+
         [LeafMember("StartPuzzleNavigation")]
         static private void LeafStartPuzzleNavigation() {
             Game.Events.Dispatch(GameEvents.StartPuzzleNavigation);
