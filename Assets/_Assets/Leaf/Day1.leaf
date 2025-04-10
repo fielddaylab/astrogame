@@ -104,7 +104,7 @@ $endif
 
 $set temp:introMoveTheTelescope = true
 $call HintModals->Hide("TelescopeControls", 0.2)
-Nice job! Your equipment seems to be working.
+Nice! Your equipment seems to be working.
 See those three lights above your monitor? Feel up for a game of hot an cold?
 $call StartNeutrinoNavigation()
 $call HintModals->SlideInFromLeft("NeutrinoNav", 0.4)
@@ -181,8 +181,11 @@ Look for objects with a blue highlight.
 $set temp:waitingForNeutrinoStar = false
 $set temp:waitingForManualOpen = true
 $call HintModals->Hide("SelectStar", 0.2)
+$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 650)
 {@Dad} Great! 
 Now see if you can find Elijah’s operator manual. It should have all the info you need.
+$call Wait(0.3)
+$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 
 :: OnRefGuideOpened
 @trigger    OnRefGuideOpened
@@ -194,9 +197,12 @@ Now see if you can find Elijah’s operator manual. It should have all the info 
 
 $set temp:waitingForManualOpen = false
 $call SetInputState(false)
+$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 650)
 {@Dad} Do you see your photometer in the equipment stack? That should tell you what the apparent magnitude of the star is. 
 All you need to do is find that number in your reference guide and submit the data.
 $call SetInputState(true)
+$call Wait(0.3)
+$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 
 :: PlayerLeavesNeutrinoTask
 @trigger    OnLeaveNeutrinoRegion
@@ -213,8 +219,11 @@ $call SetInputState(true)
 :: IncorrectSubmission
 @trigger    OnIncorrectOpenIdSubmission
 
+$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 650)
 {@Dad} Hmm, looks like that wasn’t accurate. 
 Remember to look at your photometer, and then line it up with the closest range in your manual.
+$call Wait(0.3)
+$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 
 :: DupliacteSubmission
 @trigger    OnDuplicateOpenIdSubmission
@@ -230,6 +239,7 @@ You won’t get any science points for identifying that property again.
 @cutscene
 @once
 
+$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $call SetInputState(false)
 Fantastic Job kiddo, looks like you earned some science points!
 $call Wait(1)
@@ -325,11 +335,14 @@ $call StartPuzzleMode()
 {@Astrid} Whoooaa...
 
 $call Wait(1)
+$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 650)
 {@Dad} Alright kiddo, this was the.. important thing I was telling you about earlier. 
 On your screen is all known information about the stars in Persius. 
 I need you to input data from your gear into the identification grid that just appeared.
 There should be more information in your manual.
 $call SetInputState(true)
+$call Wait(0.3)
+$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 
 :: PerseusPuzzleComplete
 @trigger    CorrectPuzzleSubmission
