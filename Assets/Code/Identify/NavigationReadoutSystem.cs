@@ -44,7 +44,11 @@ namespace Astro {
             } else if (newDist > 0.999) {
                 ReviewModuleUtility.ShowResultSprite(true, module);
                 if (!m_StateB.ConstellationSnapRoutine.Exists()){
-                    m_StateB.ConstellationSnapRoutine = Routine.Start( PuzzleNavigationUtility.SnapConstellationAlignment() );
+                    PuzzleState puzzleState = Find.State<PuzzleState>();
+                    EqCoords target = puzzleState.ActivePuzzle.PuzzleCoordinates;
+
+                    m_StateB.ConstellationSnapRoutine = Routine.Start( PuzzleNavigationUtility.SnapConstellationAlignment(target) )
+                        .OnComplete(() => { Game.Events.Dispatch(GameEvents.PuzzleNavigationComplete); });
                 }
             }
 
@@ -66,7 +70,7 @@ namespace Astro {
         }
 
         public void ProcessNeutrinoNav() {
-            float newDist = m_StateC.CameraDistanceFromOrigin; 
+            float newDist = m_StateC.CameraDistanceFromOrigin;
             ReviewModule module = m_StateA.ReviewModule;
 
             int prevPips = module.PipsRevealed;

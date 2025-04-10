@@ -14,6 +14,7 @@ using UnityEngine.UI;
 public sealed class NeutrinoNavigationState : SharedStateComponent, IRegistrationCallbacks {
     [NonSerialized] public bool NavigationModeActive = false;
     [NonSerialized] public float CameraDistanceFromOrigin = -1;
+    [NonSerialized] public Vector3 CameraForward = Vector3.zero;
     [NonSerialized] public bool ReadoutDirty = false;
 
     public void OnRegister() {
@@ -79,6 +80,7 @@ public static class NeutrinoNavigationUtility {
         Vector3 spaceCamForward = Geom.Forward(spaceCameraQuat);
         float newDist = Vector3.Dot(targetFoward, spaceCamForward);
 
+        navState.CameraForward = spaceCamForward;
         navState.CameraDistanceFromOrigin = newDist;
         navState.ReadoutDirty = true;
     }
