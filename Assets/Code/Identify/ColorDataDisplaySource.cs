@@ -26,7 +26,9 @@ namespace Astro
                 );
 
             for (int i = 0; i < Panels.Length; i++) {
-                ColorDataUtility.SetPanelMaterials(Panels[i].PanelMesh, Panels[i].ColorId, false);
+                if (Panels[i].PopulateOnRegister) {
+                    ColorDataUtility.SetPanelMaterials(Panels[i].PanelMesh, Panels[i].ColorId, false);
+                }
             }
         }
     }

@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using FieldDay;
 using FieldDay.Systems;
+using BeauRoutine;
+using System.ComponentModel;
+using TMPro;
+using UnityEditor;
 
 namespace Astro
 {
@@ -17,23 +21,53 @@ namespace Astro
 
             var highlightState = Find.State<SlotHighlightState>();
 
+            if (component.IsSource) { // Instrument Load Button (source) highlights
+                TryHighlightInstrumentButton(transferState, highlightState, highlight, component);
+            } else { // Puzzle Cell (target) highlights
+                TryHighlightPuzzleCell(transferState, highlightState, highlight, component);
+            }
+        }
+
+        private bool TryHighlightPuzzleCell(DataTransferState transferState, SlotHighlightState highlightState, RelevantSlotHighlight highlight, DataSlot slot) {
             bool sourceNotNull = transferState.SelectedSource != null;
             bool targetIsNull = transferState.SelectedTarget == null;
             bool hasSibling = sourceNotNull && transferState.SelectedSource.SiblingSlot != null;
-            bool typesMatch = sourceNotNull && ((component.Type & transferState.SelectedSource.Type) != 0 || (hasSibling && (component.Type & transferState.SelectedSource.SiblingSlot.Type) != 0));
-            bool slotIsModifiable = component.Modifiable;
-
+            bool typesMatch = sourceNotNull && ((slot.Type & transferState.SelectedSource.Type) != 0 || (hasSibling && (slot.Type & transferState.SelectedSource.SiblingSlot.Type) != 0));
+            bool slotIsModifiable = slot.Modifiable;
             bool isHighlightedAvailable = sourceNotNull && targetIsNull && typesMatch && slotIsModifiable;
-            bool isHighlightedSelected = component.Equals(transferState.SelectedTarget);
+            bool isHighlightedSelected = slot.Equals(transferState.SelectedTarget);
 
             if (isHighlightedSelected) {
                 SlotHighlightUtility.SetSelectedHighlight(highlightState, highlight, true);
-            } 
-            else if (isHighlightedAvailable) {
+                return true;
+            } else if (isHighlightedAvailable) {
                 SlotHighlightUtility.SetAvailableHighlight(highlightState, highlight, true);
-            }
-            else {
+                return true;
+            } else {
                 SlotHighlightUtility.SetSelectedHighlight(highlightState, highlight, false);
+                return false;
+            }
+        }
+
+        private bool TryHighlightInstrumentButton(DataTransferState transferState, SlotHighlightState highlightState, RelevantSlotHighlight highlight, DataSlot slot) {
+            bool targetNotNull = transferState.SelectedTarget != null;
+            bool sourceIsNull = transferState.SelectedSource == null;
+            bool typesMatch = targetNotNull && ((transferState.SelectedTarget.Type & slot.Type) != 0);
+            bool siblingExists = slot.SiblingSlot != null;
+            bool siblingMatches = targetNotNull && siblingExists && ((transferState.SelectedTarget.Type & slot.SiblingSlot.Type) != 0);
+            bool targetModifiable = targetNotNull && transferState.SelectedTarget.Modifiable;
+
+            bool slotIsMatchingInstrument = targetNotNull && sourceIsNull && (typesMatch || siblingMatches) && targetModifiable;
+            bool slotIsSelectedInstrument = slot.Equals(transferState.SelectedSource);
+            if (slotIsMatchingInstrument) {
+                SlotHighlightUtility.SetInstrumentHighlight(highlightState, highlight, true);
+                return true;
+            } else if (slotIsSelectedInstrument) {
+                SlotHighlightUtility.SetInstrumentHighlight(highlightState, highlight, true);
+                return true;
+            } else {
+                SlotHighlightUtility.SetInstrumentHighlight(highlightState, highlight, false);
+                return false;
             }
         }
     }

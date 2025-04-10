@@ -5,6 +5,10 @@
 @cutscene
 @who    IntroCutscene
 
+$call InitUpdateMasks()
+$call SetInstrumentUnlocked(CoordinateInstrument, true)
+$call SetInstrumentUnlocked(PhotometerInstrument, true)
+$call SetInstrumentUnlocked(SpectrometerInstrument, true)
 $call SetInputState(false)
 $call StopPuzzleMode()
 $call StopOpenMode()
@@ -23,7 +27,7 @@ $call PlayMusic("Music.Gently-Falling-Piano", 1)
 
 {@Radio} Star HQ to Station Seven. Elijah, do you copy?
 $call MoveToView("Right")
-{@Radio} Please log in and provide status update. 
+{@Radio} Please log in and provide status update.
 
 $call Wait(2)
 
@@ -74,6 +78,7 @@ $call MonitorUI->PlayRadioDownload(4.0)
 {@Dad} OK, looks like you received the coordinates. 
 {@Dad} See if you can move your telescope.
 
+$call StartMonitorControls()
 $call SetInputState(true)
 $call StopMusic(2)
 $call HintModals->SlideInFromRight("TelescopeControls", 0.4)
@@ -99,7 +104,7 @@ $endif
 
 $set temp:introMoveTheTelescope = true
 $call HintModals->Hide("TelescopeControls", 0.2)
-Nice job! Your equipment seems to be working.
+Nice! Your equipment seems to be working.
 See those three lights above your monitor? Feel up for a game of hot an cold?
 $call StartNeutrinoNavigation()
 $call HintModals->SlideInFromLeft("NeutrinoNav", 0.4)
@@ -143,11 +148,11 @@ $call Wait(3)
 $call HintModals->Hide("NeutrinoNav", 0.2)
 {@Dad} Nice Job! 
 $call SetInputState(false)
+$call StartOpenMode()
 {@Dad} Early this morning, Ice Cube detected a high energy neutrino coming from one of several possible stars in this location.
 You’ll see each of them highlighted on your display. 
 Identifying these stars will be a great way for you get your feet wet and upgrade your system.
 $call StopNeutrinoNavigation()
-$call StartOpenMode()
 
 {@Dad} Alight. Select a possible neutrino origin on your display.
 $set temp:waitingForNeutrinoStar = true
@@ -174,22 +179,30 @@ Look for objects with a blue highlight.
 @once
 
 $set temp:waitingForNeutrinoStar = false
+$set temp:waitingForManualOpen = true
 $call HintModals->Hide("SelectStar", 0.2)
-$call SetInputState(false)
+$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 650)
 {@Dad} Great! 
 Now see if you can find Elijah’s operator manual. It should have all the info you need.
-$set temp:waitingForManualOpen = true
-$call SetInputState(true)
+$call Wait(0.3)
+$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 
 :: OnRefGuideOpened
 @trigger    OnRefGuideOpened
 @when   temp:waitingForManualOpen
+@boostScore 200
+@interrupt
 @cutscene
 @once
 
 $set temp:waitingForManualOpen = false
+$call SetInputState(false)
+$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 650)
 {@Dad} Do you see your photometer in the equipment stack? That should tell you what the apparent magnitude of the star is. 
 All you need to do is find that number in your reference guide and submit the data.
+$call SetInputState(true)
+$call Wait(0.3)
+$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 
 :: PlayerLeavesNeutrinoTask
 @trigger    OnLeaveNeutrinoRegion
@@ -206,8 +219,11 @@ All you need to do is find that number in your reference guide and submit the da
 :: IncorrectSubmission
 @trigger    OnIncorrectOpenIdSubmission
 
+$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 650)
 {@Dad} Hmm, looks like that wasn’t accurate. 
 Remember to look at your photometer, and then line it up with the closest range in your manual.
+$call Wait(0.3)
+$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 
 :: DupliacteSubmission
 @trigger    OnDuplicateOpenIdSubmission
@@ -218,9 +234,12 @@ You won’t get any science points for identifying that property again.
 :: FirstPoint
 @trigger    PointsUpdated
 @when   sciencePoints > 0
+@boostScore 300
+@interrupt
 @cutscene
 @once
 
+$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $call SetInputState(false)
 Fantastic Job kiddo, looks like you earned some science points!
 $call Wait(1)
@@ -250,6 +269,7 @@ $call HintModals->Hide("RadioControls", 0.2)
 $call MonitorUI->PlayRadioDownload(2)
 $call Wait(1)
 $call MonitorUI->ShowCeresLogo()
+$call SetInstrumentUnlocked(ColorInstrument, true)
 {@Radio} Congratulations on being awarded clearance level 2. 
 You are now cleared to use the color meter. 
 Please reference your CERES Operator Manual for further information about your equipment. 
@@ -315,13 +335,14 @@ $call StartPuzzleMode()
 {@Astrid} Whoooaa...
 
 $call Wait(1)
+$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 650)
 {@Dad} Alright kiddo, this was the.. important thing I was telling you about earlier. 
 On your screen is all known information about the stars in Persius. 
 I need you to input data from your gear into the identification grid that just appeared.
 There should be more information in your manual.
 $call SetInputState(true)
-
-$call SetInstrumentUnlocked(ColorInstrument, true)
+$call Wait(0.3)
+$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 
 :: PerseusPuzzleComplete
 @trigger    CorrectPuzzleSubmission

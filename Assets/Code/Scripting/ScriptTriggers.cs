@@ -104,6 +104,18 @@ namespace Astro {
             GameLoop.SuspendUpdates(AstroGame.InstrumentUpdateMask);
         }
 
+        
+        [LeafMember("StartMonitorControls")]
+        static private void LeafStartMonitorControls() {
+            GameLoop.ResumeUpdates(AstroGame.MonitorControlsUpdateMask);
+        }
+
+        [LeafMember("StopMonitorControls")]
+        static private void LeafStopMonitorControls()
+        {
+            GameLoop.SuspendUpdates(AstroGame.MonitorControlsUpdateMask);
+        }
+
         [LeafMember("StartOpenMode")]
         static private void LeafStartOpenMode(){
             Game.Events.Dispatch(GameEvents.StartOpenMode);
