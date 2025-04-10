@@ -325,44 +325,38 @@ namespace Astro {
             state.DocumentRoutine.Replace(MoveDocToPos(doc.transform, state.StoredDocPos))
                 .OnComplete(() =>
                 {
-                    // HACK
-                    if(doc.Renderer.Video == null 
-                    || doc.Renderer.FrontAnimation == null 
-                    || doc.Renderer.BackBodyText == null
-                    || doc.Renderer.FrontStaticImg) { return; }
-
                     // Replace with low-res assets
                     // if video, replace with low-res version
-                    if (doc.Renderer.Video.url.Length > 0)
+                    if (doc.Renderer.Video?.url.Length > 0)
                     {
-                        doc.Renderer.FrontAnimation.gameObject.SetActive(false);
-                        doc.Renderer.LowResImgFront.gameObject.SetActive(true);
+                        doc.Renderer.FrontAnimation?.gameObject.SetActive(false);
+                        doc.Renderer.LowResImgFront?.gameObject.SetActive(true);
                     }
                     // if image, replace with low-res version
                     if (doc.Renderer.FrontStaticImg?.Path?.Length > 0)
                     {
-                        doc.Renderer.FrontStaticImg.gameObject.SetActive(false);
-                        doc.Renderer.FrontStaticImg.Unload();
-                        doc.Renderer.LowResImgFront.gameObject.SetActive(true);
-                        doc.Renderer.LowResImgFront.Preload();
+                        doc.Renderer.FrontStaticImg?.gameObject.SetActive(false);
+                        doc.Renderer.FrontStaticImg?.Unload();
+                        doc.Renderer.LowResImgFront?.gameObject.SetActive(true);
+                        doc.Renderer.LowResImgFront?.Preload();
                     }
                     // if front text, hide body text and display default text scribbles
-                    if (doc.Renderer.FrontBodyText.text.Length > 0)
+                    if (doc.Renderer.FrontBodyText?.text.Length > 0)
                     {
-                        doc.Renderer.FrontBodyText.gameObject.SetActive(false);
-                        doc.Renderer.LowResImgFront.gameObject.SetActive(true);
-                        doc.Renderer.LowResImgFront.Preload();
+                        doc.Renderer.FrontBodyText?.gameObject.SetActive(false);
+                        doc.Renderer.LowResImgFront?.gameObject.SetActive(true);
+                        doc.Renderer.LowResImgFront?.Preload();
                     }
                     // if back text, hide body text and display default text scribbles
                     if (doc.Renderer.BackBodyText?.text.Length > 0)
                     {
-                        doc.Renderer.BackBodyText.gameObject.SetActive(false);
-                        doc.Renderer.LowResImgBack.gameObject.SetActive(true);
-                        doc.Renderer.LowResImgBack.Preload();
+                        doc.Renderer.BackBodyText?.gameObject.SetActive(false);
+                        doc.Renderer.LowResImgBack?.gameObject.SetActive(true);
+                        doc.Renderer.LowResImgBack?.Preload();
                     }
                 });
             // stop video
-            if (doc.Renderer.Video.isPlaying) {
+            if (doc.Renderer.Video && doc.Renderer.Video.isPlaying) {
                 doc.Renderer.Video.Pause();
                 doc.Renderer.Video.frame = (long)doc.Renderer.Video.frameCount - 1;
             }
@@ -415,7 +409,7 @@ namespace Astro {
             }
 
             // if front text, hide default text scribbles and enable body text
-            if (doc.Renderer.FrontBodyText.text.Length > 0) {
+            if (doc.Renderer.FrontBodyText?.text.Length > 0) {
                 doc.Renderer.FrontBodyText.gameObject.SetActive(true);
                 doc.Renderer.LowResImgFront.gameObject.SetActive(false);
                 doc.Renderer.LowResImgFront.Unload();
