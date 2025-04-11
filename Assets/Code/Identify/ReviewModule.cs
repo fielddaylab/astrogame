@@ -1,6 +1,7 @@
 
 using System;
 using BeauUtil;
+using FieldDay.Audio;
 using FieldDay.Components;
 using FieldDay.Rendering;
 using TMPro;
@@ -16,6 +17,10 @@ namespace Astro {
         [SerializeField] public TMP_Text PointsDisplay;
         [SerializeField] public RenderAtlasOutput PointsOutput;
 
+        [Header("Sound Effects")]
+        [AudioEventRef] public StringHash32[] PipCountSounds;
+        public Transform SoundAnchor;
+
         [Header("Materials")]
         public Material UnlitPipMaterial;
         public Material LitPipMaterial;
@@ -23,6 +28,7 @@ namespace Astro {
         public Material FailureMaterial;
 
         [NonSerialized] public int PipsRevealed;
+        [NonSerialized] public bool ResultShown;
 
     }
 
@@ -35,7 +41,10 @@ namespace Astro {
 
     public static class ReviewModuleUtility {
         public static void SetPipReadout(ReviewModule module, int numPips) {
-            module.PipsRevealed = numPips;
+            if (module.PipsRevealed != numPips) {
+                module.PipsRevealed = numPips;
+                Sfx.PlayDetached(module.PipCountSounds[numPips], module.SoundAnchor);
+            }
 
             for (int i = 0; i < module.CountdownSprites.Length; i++) { 
                 if (i < numPips){ 
@@ -47,11 +56,23 @@ namespace Astro {
         }
 
         public static void ShowResultSprite(bool correct, ReviewModule module) {
+            if (module.ResultShown) {
+                return;
+            }
+
             module.Result.SetSharedMaterialAtIndex(1, correct ? module.SuccessMaterial : module.FailureMaterial);
+            module.ResultShown = true;
+
+            if (correct) {
+                Sfx.PlayDetached("Oneshot.Review.Success", module.SoundAnchor);
+            } else {
+                Sfx.PlayDetached("Oneshot.Review.Failure", module.SoundAnchor);
+            }
         }
 
         public static void ResetReview(ReviewModule module) {
             module.PipsRevealed = 0;
+            module.ResultShown = false;
             foreach (MeshRenderer pip in module.CountdownSprites) {
                 pip.SetSharedMaterialAtIndex(1, module.UnlitPipMaterial);
             }
