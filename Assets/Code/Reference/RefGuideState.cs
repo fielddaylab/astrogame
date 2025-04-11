@@ -167,6 +167,8 @@ namespace Astro.Reference {
 
             yield return Routine.Inline(rig.RootTransform.MoveTo(rig.RootTransform.localPosition.y + 0.1f, 0.3f, Axis.Y, Space.Self).Ease(Curve.BackOut).From());
 
+            PopulateReferenceColliders(state.CurrentPage, rig);
+
             yield return 0.15f;
             yield return Tween.ZeroToOne(SetRefGuideCoverAngle, 0.45f).Ease(Curve.Smooth);
             rig.CoverRenderer.enabled = false;
@@ -236,6 +238,7 @@ namespace Astro.Reference {
             }
 
             RefGuideRig rig = Find.State<RefGuideRig>();
+            rgs.CurrentPage = newPage;
             PopulateContents(rig.Contents, newPage);
             PopulateReferenceColliders(newPage, rig);
             SelectControl(null);
