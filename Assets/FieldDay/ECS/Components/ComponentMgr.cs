@@ -131,14 +131,16 @@ namespace FieldDay.Components
             Assert.True(m_ModificationLock > 0, "Unbalanced Lock/Unlock calls");
             if (m_ModificationLock-- == 1)
             {
-                while (m_RemovalQueue.TryPopFront(out IComponentData component))
-                {
-                    DeregisterImpl(component);
-                }
-                while (m_AddQueue.TryPopFront(out IComponentData component))
-                {
-                    RegisterImpl(component);
-                }
+                ManualFlush();
+            }
+        }
+
+        private void ManualFlush() {
+            while (m_RemovalQueue.TryPopFront(out IComponentData component)) {
+                DeregisterImpl(component);
+            }
+            while (m_AddQueue.TryPopFront(out IComponentData component)) {
+                RegisterImpl(component);
             }
         }
 
@@ -276,6 +278,8 @@ namespace FieldDay.Components
         /// </summary>
         private void OnNewSystemRegistered(ISystem system)
         {
+            ManualFlush();
+
             IComponentSystem componentSystem = system as IComponentSystem;
             List<IComponentData> components;
             if (componentSystem != null && (components = m_ComponentLists[ComponentIndex.Get(componentSystem.ComponentType)]) != null)

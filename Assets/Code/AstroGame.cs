@@ -10,6 +10,7 @@ using FieldDay.Debugging;
 using FieldDay.Scripting;
 using FieldDay.SharedState;
 using FieldDay.UI.Animation;
+using UnityEngine;
 
 [assembly: InternalsVisibleTo("Assembly-CSharp-Editor")]
 
@@ -58,6 +59,13 @@ namespace Astro {
             SharedState.Register(progress);
 
             Rendering.EnableAspectClamping(4, 3);
+
+            //GameLoop.OnDebugUpdate.Register(() => {
+            //    using(var psb = PooledStringBuilder.Create()) {
+            //        psb.Builder.Append("Frame #: ").AppendNoAlloc(Frame.Index);
+            //        DebugDraw.AddViewportText(new Vector2(0.5f, 1), new Vector2(0, -8), psb, Color.yellow, 0, TextAnchor.UpperCenter, DebugTextStyle.BackgroundDarkOpaque);
+            //    }
+            //});
         }
 
         [InvokeOnBoot]

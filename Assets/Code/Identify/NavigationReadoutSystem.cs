@@ -13,6 +13,11 @@ namespace Astro {
     [SysUpdate(GameLoopPhase.Update, 0, AstroGame.MonitorControlsUpdateMask)]
     public class NavigationReadoutSystem : SharedStateSystemBehaviour<PlayerPointsState, PuzzleNavigationState, NeutrinoNavigationState> {
 
+        public const float OnePipThreshold = 0; // 180 degrees
+        public const float TwoPipThreshold = 0.708f; // ~90 degrees
+        public const float ThreePipThreshold = 0.923f; // ~45 degrees
+        public const float SuccessThreshold = 0.995f; // ~11 degrees
+
         public override bool HasWork() {
             return base.HasWork() && (m_StateB.NavigationModeActive || m_StateC.NavigationModeActive);
         }
@@ -32,22 +37,25 @@ namespace Astro {
 
             int prevPips = module.PipsRevealed;
 
-            if (newDist < 0) {
+            if (newDist < OnePipThreshold) {
+                module.Result.SetSharedMaterialAtIndex(1, module.UnlitPipMaterial);
+                ReviewModuleUtility.SetPipReadout(module, 0);
+            } else if (newDist < TwoPipThreshold) {
                 module.Result.SetSharedMaterialAtIndex(1, module.UnlitPipMaterial);
                 ReviewModuleUtility.SetPipReadout(module, 1);
-            } else if (newDist > 0 && newDist < 0.5) {
+            } else if (newDist < ThreePipThreshold) {
                 module.Result.SetSharedMaterialAtIndex(1, module.UnlitPipMaterial);
                 ReviewModuleUtility.SetPipReadout(module, 2);
-            } else if (newDist > 0.5 && newDist < 0.998) {
+            } else if (newDist < SuccessThreshold) {
                 module.Result.SetSharedMaterialAtIndex(1, module.UnlitPipMaterial);
                 ReviewModuleUtility.SetPipReadout(module, 3);
-            } else if (newDist > 0.999) {
+            } else {
                 ReviewModuleUtility.ShowResultSprite(true, module);
-                if (!m_StateB.ConstellationSnapRoutine.Exists()){
+                if (!m_StateB.ConstellationSnapRoutine.Exists()) {
                     PuzzleState puzzleState = Find.State<PuzzleState>();
                     EqCoords target = puzzleState.ActivePuzzle.PuzzleCoordinates;
 
-                    m_StateB.ConstellationSnapRoutine = Routine.Start( PuzzleNavigationUtility.SnapConstellationAlignment(target) )
+                    m_StateB.ConstellationSnapRoutine = Routine.Start(PuzzleNavigationUtility.SnapConstellationAlignment(target))
                         .OnComplete(() => { Game.Events.Dispatch(GameEvents.PuzzleNavigationComplete); });
                 }
             }
@@ -75,16 +83,19 @@ namespace Astro {
 
             int prevPips = module.PipsRevealed;
 
-            if (newDist < 0) {
+            if (newDist < OnePipThreshold) {
+                module.Result.SetSharedMaterialAtIndex(1, module.UnlitPipMaterial);
+                ReviewModuleUtility.SetPipReadout(module, 0);
+            } else if (newDist < TwoPipThreshold) {
                 module.Result.SetSharedMaterialAtIndex(1, module.UnlitPipMaterial);
                 ReviewModuleUtility.SetPipReadout(module, 1);
-            } else if (newDist > 0 && newDist < 0.5) {
+            } else if (newDist < ThreePipThreshold) {
                 module.Result.SetSharedMaterialAtIndex(1, module.UnlitPipMaterial);
                 ReviewModuleUtility.SetPipReadout(module, 2);
-            } else if (newDist > 0.5 && newDist < 0.98) {
+            } else if (newDist < SuccessThreshold) {
                 module.Result.SetSharedMaterialAtIndex(1, module.UnlitPipMaterial);
                 ReviewModuleUtility.SetPipReadout(module, 3);
-            } else if (newDist > 0.98) {
+            } else {
                 ReviewModuleUtility.ShowResultSprite(true, module);
                 Game.Events.Dispatch(GameEvents.NeutrinoNavigationComplete);
                 ReviewModuleUtility.ResetReview(module);

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using BeauRoutine.Splines;
 using BeauUtil;
 using FieldDay;
+using FieldDay.Debugging;
 using FieldDay.Scenes;
 using FieldDay.SharedState;
 using UnityEngine;

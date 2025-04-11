@@ -4,6 +4,7 @@ using Astro.Reference;
 using BeauRoutine;
 using BeauRoutine.Splines;
 using BeauUtil;
+using BeauUtil.Debugger;
 using FieldDay;
 using FieldDay.Scenes;
 using FieldDay.Scripting;
@@ -25,7 +26,7 @@ namespace Astro.Reference {
 
         #endregion // Inspector
 
-        [Header("Data")]
+        [NonSerialized] public bool IsAvailableOnNode;
         [NonSerialized] public ReferenceClassification SelectedRefClassification;
         [NonSerialized] public ReferencePageAsset CurrentPage;
         [NonSerialized] public int CurrentPageNum;
@@ -34,6 +35,8 @@ namespace Astro.Reference {
 
         [NonSerialized] public Routine TransitionRoutine;
         [NonSerialized] public RefGuideInteractionState CurrentState;
+
+        [NonSerialized] public ViewNode OwnedNode;
 
         #region Registration
 
@@ -52,7 +55,18 @@ namespace Astro.Reference {
         IEnumerator<WorkSlicer.Result?> IScenePreload.Preload() {
             PageList = Find.GlobalAsset<ReferencePageList>();
             ReferenceUtility.LoadPage(0, this);
-            return null;
+
+            yield return null;
+
+            OwnedNode = ViewNavUtility.GetNodeById("Right");
+            OwnedNode.OnExit.Register(() => {
+                ReferenceUtility.SetReferenceActive(false);
+                IsAvailableOnNode = false;
+            });
+
+            OwnedNode.OnEnter.Register(() => {
+                IsAvailableOnNode = true;
+            });
         }
 
         #endregion // Registration
@@ -125,6 +139,8 @@ namespace Astro.Reference {
             RefGuideState guide = Find.State<RefGuideState>();
             RefGuideRig rig = Find.State<RefGuideRig>();
             if (guide.CurrentState == RefGuideInteractionState.Transitioning) {
+                // TODO: handle interrupting the transition
+                Log.Warn("[ReferenceUtility] Attempting to set ref guide state while transitioning");
                 return;
             }
 
@@ -222,6 +238,7 @@ namespace Astro.Reference {
             RefGuideRig rig = Find.State<RefGuideRig>();
             PopulateContents(rig.Contents, newPage);
             PopulateReferenceColliders(newPage, rig);
+            SelectControl(null);
         }
 
         public static void LoadNextPage(RefGuideState rgs) {
@@ -280,6 +297,7 @@ namespace Astro.Reference {
             if (region == null) {
                 rgs.SelectedRefClassification = null;
                 rig.SelectionGraphic.gameObject.SetActive(false);
+                rgs.SubmitButton.gameObject.SetActive(false);
                 return;
             }
 
