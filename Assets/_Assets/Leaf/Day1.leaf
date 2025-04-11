@@ -25,49 +25,44 @@ $call TelescopeLook(155, -30)
 
 $call PlayMusic("Music.Gently-Falling-Piano", 1)
 
-$call MoveToView("Right")
-{@Radio} Star HQ to Station Seven. Elijah, do you copy?\
-Please log in and provide status update. 
-
-$call Wait(2)
-
-{@Astrid} Hi—um, this is Astrid, Elijah’s ... friend. Elijah doesn't seem to be here.\
-Hello?\
-Ugh. They can’t hear me.
-
-{@Radio} Station Seven, please log in and report.
-
+{@Astrid} Whoa. This place has really changed.\
+Elijah, where are you? $[Day1/Astrid/l1_a_01]
 $call Wait(1)
 
-{@Astrid} I can’t, I don’t know how ...
+$call MoveToView("Right")
+{@Radio} Star HQ to Station Seven. Elijah, do you copy?\
+Please log in and provide status report. $[Day1/Radio/l1_r_1]
 
-$call Wait(2)
+{@Astrid} Hi—um, this is Astrid, Elijah’s ... friend. Elijah's not here.\
+Hello? Ugh. They can’t hear me. $[Day1/Astrid/l1_a_02]
+
+{@Radio} Station Seven, please log in and report. $[Day1/Radio/l1_r_2] 
+
+{@Astrid} I- I can’t, I don’t know how... $[Day1/Astrid/l1_a_03]
 
 {@Dad} I told you, he's not there... Astrid? Is that you? $[Day1/Dad/l1_d_1]
 
-{@Astrid} (*gasp*) Dad! I can’t believe it's you.
-Are you still at the South Pole? Are you okay?
-$call Wait(2)
+{@Astrid} (*gasp*) Dad! I- I can’t believe it's you.\
+Are you still at the South Pole? Are you okay? $[Day1/Astrid/l1_a_04]
 
-{@Dad} Until I can get you clearance, this is a one-way radio. So I can't hear you...\
-I’m sorry, Astrid . . . I wish I could’ve warned you in time.\
+{@Dad} Until I can get you clearance, this is a one-way radio. So I can't hear you... I’m sorry, Astrid . . . I wish I could’ve warned you in time.\
 Elijah’s not there. He probably won’t be back for a while. When I saw his station come online. I assumed it was you.\
 And if it really is you... Happy Birthday kiddo. $[Day1/Dad/l1_d_2]
 
-{@Astrid} What? Why not? Where is he?
-Ugh, forgot . . . you can’t hear me. 
+{@Astrid} What? Why not? Where is he!?\
+Ugh, forgot . . . you can’t hear me. $[Day1/Astrid/l1_a_05]
 
-{@Dad} But.. in the mean time, my team here at IceCube have been working on rebuilding our knowledge of the cosmos.  $[Day1/Dad/l1_d_3]
-What we lost during the collapse.. But then Elijah reached out to us. He’s onto something big...
+{@Dad} But.. in the mean time, my team here at IceCube have been working on rebuilding our knowledge of the cosmos.\ 
+What we lost during the collapse.. But then Elijah reached out to us. He’s onto something big... $[Day1/Dad/l1_d_3]
 
-{@Astrid} Onto what??
+{@Astrid} Onto what?? $[Day1/Astrid/l1_a_06]
 
 {@Dad} I'm so glad you're there though. We could really use your help. $[Day1/Dad/l1_d_4]
 
-{@Astrid} Because I know how any of this stuff works...
+{@Astrid} Because I know how any of this stuff works... $[Day1/Astrid/l1_a_07]
 
-{@Dad} You don’t have clearance to most of the equipment, but that will come in time, first you need to submit data the old fashioned way. $[Day1/Dad/l1_d_5]
-{@Dad} Sending you the data now... $[Day1/Dad/l1_d_6]
+{@Dad} You don’t have clearance to use... most of the equipment, but that will come in time, first you need to submit data the old fashioned way. $[Day1/Dad/l1_d_5]
+{@Dad} Sending you data... now. $[Day1/Dad/l1_d_6]
 
 $call Wait(1)
 
@@ -102,8 +97,7 @@ $endif
 
 $set temp:introMoveTheTelescope = true
 $call HintModals->Hide("TelescopeControls", 0.2)
-Awesome, your equipment seems to be working.\
-See those three dots above your monitor? Feel up for a game of hot an cold? $[Day1/Dad/l1_d_s3]
+Awesome, your equipment seems to be working. See those three dots above your monitor? Feel up for a game of hot an cold? $[Day1/Dad/l1_d_s3]
 $call StartNeutrinoNavigation()
 $call HintModals->SlideInFromLeft("NeutrinoNav", 0.4)
 
@@ -113,8 +107,8 @@ $call HintModals->SlideInFromLeft("NeutrinoNav", 0.4)
 @once
 
 {@Dad} Nice! Getting warmer... $[Day1/Dad/l1_d_s4]
-$call Wait(3)
-{@Astrid} Remember when I was little and you used to make me find my easter basket this way?
+$call Wait(2)
+{@Astrid} Remember when I was little and you used to make me find my easter basket this way? $[Day1/Astrid/l1_a_08]
 
 :: DadHotColdEncouragement2
 @trigger    OnNeutrinoNavWarmer
@@ -123,19 +117,12 @@ $call Wait(3)
 
 {@Dad} Waaaaarrrrrmmmmmmeeerrrr! $[Day1/Dad/l1_d_s6]
 
-:: DadColder1
+:: DadColder
 @trigger    OnNeutrinoNavColder
 @when   newPips == 1
-@once
 
-{@Dad} Getting Colder... $[Day1/Dad/l1_d_s5]
+{@Dad} Colder... $[Day1/Dad/l1_d_s5]
 
-:: DadColder2
-@trigger    OnNeutrinoNavColder
-@when   newPips == 2
-@once
-
-{@Dad} Colder...
 
 :: NeutrinoNavigationComplete
 @trigger    NeutrinoNavigationComplete
@@ -146,12 +133,10 @@ $call Wait(3)
 $call SetInputState(false)
 $call AlignCamToNeutrino()
 $call HintModals->Hide("NeutrinoNav", 0.2)
-{@Dad} Nice Job!
 $call SetInputState(false)
 $call StartOpenMode()
-{@Dad} Early this morning, Ice Cube detected a high energy neutrino coming from one of several possible stars in this location.\
-You’ll see each of them highlighted on your display.\
-Identifying these stars will be a great way for you get your feet wet and upgrade your system. $[Day1/Dad/l1_d_s7]
+{@Dad} Nice Job! So earlier this morning, Ice Cube detected a high energy neutrino coming from one of several possible stars in this location.\
+You’ll see each of them highlighted on your display. Identifying these stars will be a great way for you get your feet wet and upgrade your gear. $[Day1/Dad/l1_d_s7]
 $call StopNeutrinoNavigation()
 
 {@Dad} Alight. Select a possible neutrino origin on your display. $[Day1/Dad/l1_d_s8]
@@ -166,8 +151,7 @@ $call SetInputState(true)
 @cutscene
 @interrupt
 
-{@Dad} Oops.
-It doesn't look like that is a possible neutrino origin.
+{@Dad} Oops. It doesn't look like that is a possible neutrino origin.\
 Look for objects with a blue highlight.
 
 :: OnNeutrinoStarSelected
@@ -238,7 +222,7 @@ You won’t get any science points for identifying that property again. $[Day1/D
 @once
 
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
-See if you can determine the apparent magnitude of the other stars in this cluster. $[Day1/Dad/l1_d_s15]
+{@Dad} See if you can determine the apparent magnitude of some of the other stars in this cluster. $[Day1/Dad/l1_d_s15]
 
 :: AnothaPoint
 @trigger    PointsUpdated
@@ -247,7 +231,7 @@ See if you can determine the apparent magnitude of the other stars in this clust
 @cutscene
 @once
 
-Great Job! go for another one. $[Day1/Dad/l1_d_s18]
+{@Dad} Great Job! Go for another one. $[Day1/Dad/l1_d_s18]
 
 :: PointsUpdated
 @trigger    PointsUpdated
@@ -274,27 +258,21 @@ $call MonitorUI->PlayRadioDownload(2)
 $call Wait(1)
 $call MonitorUI->ShowCeresLogo()
 $call SetInstrumentUnlocked(ColorInstrument, true)
-{@Radio} Congratulations on being awarded clearance level 2.\ 
-You are now cleared to use the color meter.\
-Please reference your CERES Operator Manual for further information about your equipment.
+{@Radio} Congratulations on being awarded clearance level 2. You are now cleared to use the color meter.\
+Please reference your CERES Operator Manual for further information about your equipment.\
+Thanking you for being an important part of the CERES Distributed Network of Citizen Observatories.\
+Together, we will map the stars for a better tomorrow. $[Day1/Radio/l1_r_3]
 
-{@Astrid} Riviting...
+{@Astrid} Ugh, Riviting... $[Day1/Astrid/l1_a_11]
 
-{@Radio} Thanking you for being an important part of the CERES Distributed Network of Citizen Observatories.\
-Together, we will map the stars for a better tomorrow.
-
-$call Wait(2)
-{@Astrid} Huh...
-$call Wait(2)
-
-{@Radio} Tuning you to the Ice Cube CERES headquarters for further instruction...
+{@Radio} Tuning you to the Ice Cube CERES headquarters for further instruction... $[Day1/Radio/l1_r_4]
 $call MonitorUI->HideCeresLogo()
 $call Wait(1)
 
 {@Dad} Awesome, your rig is upgraded! Up for another game of hot and cold?\
 This time I need you to find the constellation Perseus. $[Day1/Dad/l1_d_s20] 
 
-{@Astrid} Perseus, huh?
+{@Astrid} Perseus, huh? $[Day1/Astrid/l1_a_12]
 
 $call StartPuzzleNavigation()
 $call SetInputState(true)
@@ -304,7 +282,7 @@ $call SetInputState(true)
 @when   newPips == 2
 @once
 
-{@Dad} Getting waarrmer... $[Day1/Dad/l1_d_s21]
+{@Dad} Waarrmer... $[Day1/Dad/l1_d_s21]
 
 :: DadHotColdEncouragement4
 @trigger    OnConstellationNavWarmer
@@ -338,13 +316,11 @@ $call StopPuzzleNavigation()
 $call SetInputState(false)
 $call SetRefGuideActive(false)
 $call StartPuzzleMode()
-{@Astrid} Whoooaa... what's that?
+{@Astrid} Whoooaa... what's that? $[Day1/Astrid/l1_a_13]
 
 $call Wait(1)
-{@Dad} Alright kiddo, this was the... important thing I was telling you about earlier.\
-On your screen is all known information about the stars in Persius.\
-You just need to logic your way through it and input data from your equipment into the grid.\ 
-I’ll help you get started. $[Day1/Dad/l1_d_s24]
+{@Dad} Alright kiddo, this was the... important thing I was telling you about earlier. On your screen is all known information about the stars in Persius.\
+You just need to logic your way through it and input data from your equipment into the grid. I’ll help you get started. $[Day1/Dad/l1_d_s24]
 {@Dad} Select the star that matches the only location listen on your grid.\
 You’ll see locations in your celestial compass. $[Day1/Dad/l1_d_s25]
 $call HintModals->SlideInFromRight("FirstPuzzleStar", 0.4)
@@ -362,7 +338,7 @@ $set temp:waitingForSelectAtik = true
 $set temp:waitingForSelectAtik = false
 $call HintModals->Hide("FirstPuzzleStar", 0.2)
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 650)
-Great, we can use our color meter and photometer to fill in data for Atik, select the Apparent Magnintude space in the puzzle grid. $[Day1/Dad/l1_d_s26]
+{@Dad} Great, we can use our color meter and photometer to fill in data for Atik, select the Apparent Magnintude space in the puzzle grid. $[Day1/Dad/l1_d_s26]
 $call Wait(1)
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 
@@ -374,10 +350,10 @@ $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $call ClearMonitorSelection()
 $call StopPuzzleMode()
 $call SetInputState(false)
-{@Dad}  Excellent! $[Day1/Dad/l1_d_s31]
+{@Dad}  Awesome! $[Day1/Dad/l1_d_s31]
 Gosh it’s late where you’re at.. Get some rest kiddo.\
 We’ll try to figure out 2 way communication tomorrow... $[Day1/Dad/l1_d_s33]
 
-{@Astrid} (*yawns*) That's about the only thing you've said that's made any sense...
+{@Astrid} (*yawns*) That's about the only thing you've said that's made any sense... $[Day1/Astrid/l1_a_14]
 $call Wait(1)
 $call LoadNextDay()

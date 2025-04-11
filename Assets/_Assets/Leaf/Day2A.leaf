@@ -12,11 +12,11 @@ $call SetInstrumentUnlocked(SpectrometerInstrument, true)
 $call SetInstrumentUnlocked(ColorInstrument, true)
 
 $call MoveToView("DocumentPuzzle")
-{@Astrid} At least the mail service is working well. 
+{@Astrid} Looks like I got some mail... At least the mail service is still working... $[Day2/Astrid/l2_a_1]
 $call StopPuzzleMode()
 $call StopOpenMode()
 $call SpawnDocumentToCamera("Day2DadPostcard")
-{@Astrid} A postcard from Dad.
+{@Astrid} Wow... Wish I could see the auroras there with you, Dad... $[Day1/Astrid/l2d_a_1]
 $call SetInputState(true)
 
 :: SpawnPuzzleDocs1
@@ -25,8 +25,10 @@ $call SetInputState(true)
 @once
 
 $call Wait(1)
+{@Astrid} Elijah! Finally, some news. $[Day2/Astrid/l2_a_2]
 $call SpawnDocumentToCamera("Day2ElijahPostcard")
-{@Astrid} And one from Elijah.
+$call Wait(1)
+{@Astrid} Oh Elijah... What are you getting yourself into? $[Day2/Astrid/l2d_a_2]
 
 :: SpawnPuzzleDocs2
 @trigger    DocumentInspectEnd
@@ -35,30 +37,30 @@ $call SpawnDocumentToCamera("Day2ElijahPostcard")
 
 $call Wait(1)
 $call SpawnDocumentToCamera("Day2Martha")
-{@Astrid} And another one from Aunt Martha.
 
 :: DocumentPuzzleStart
 @trigger    DocumentInspectEnd
 @when   documentId == "Day2Martha"
 @once
 
-{@Astrid} Where is Elijah? Is he okay?
+{@Astrid} Where is Elijah? Is he okay? $[Day2/Astrid/l2_a_3]
 $call StartDocumentPuzzle("Day2DocumentPuzzle")
 
 :: IncorrectDocumentResponse1
 @trigger    DocumentPuzzlePromptStart
 @when documentId == "Day2DadPostcard"
 
-{@Astrid} Elijah at IceCube...? No, that wouldn't make sense.
+{@Astrid} Elijah at IceCube...? No, that wouldn't make sense. $[Day2/Astrid/l2d_a_3]
 
 :: IncorrectDocumentResponse2
 @trigger    DocumentPuzzlePromptStart
-@when documentId == "Day2DadPostcard"
-{@Astrid} So Elijah is staying with Aunt Martha..?
+@when documentId == "Day2ElijahPostcard"
+
+{@Astrid} So Elijah is staying with Aunt Martha...? $[Day2/Astrid/l2d_a_4]
 
 :: CorrectDocumentResponse
 @trigger    DocumentPuzzlePromptStart
-@when documentId == "Day2ElijahPostcard"
+@when documentId == "Day2Martha"
 @once
 
 $call SetInputState(false)
@@ -68,10 +70,7 @@ $call MoveToView("Desk")
 $call Wait(1)
 
 $call MoveToView("Right")
-{@Radio} Star HQ to Station Seven.
-IceCube is reading a high-energy neutrino emission from the area of the Hydra Constellation. 
-Identification of nearby celestial objects is requested. 
-Uploading area of interest... (*beeeep screeech boop beep boop beeeep*)
+{@Radio} Star HQ to Station Seven. IceCube is reading a high-energy neutrino emission from the area of the Hydra Constellation. Identification of nearby celestial objects is requested. Uploading area of interest... $[Day2/Radio/l2_r_1]
 
 $call WaitForMovedToView("Desk")
 $call StartNeutrinoNavigation()
@@ -93,21 +92,20 @@ $call StartOpenMode()
 $call StopOpenMode()
 $call ClearMonitorSelection()
 $call SetInputState(false)
-{@Dad} Hey Astrid, I hope you got my letter about project hercules!
+{@Dad} Hey Astrid, you there? Looks like your system is on... I hope you got my letter about project hercules. $[Day2/Dad/l2_d_1]
 
-{@Astrid} I did... not that you can hear me...
+{@Astrid} I did... not that I can tell you that... $[Day2/Astrid/l2_a_4]
 
-{@Dad} There's a sattelite, built to withstand a CME. 
-If we could decrypt what is stored on it... it would change everything.
-Each puzzle reveals part of the password. That's what you've been working on...
+{@Dad} There's a sattelite, built to withstand a CME.\
+If we could decrypt what is stored on it... it would change everything. $[Day2/Dad/l2_d_4]
+Each puzzle reveals part of the password. That's what you've been working on... $[Day2/Dad/l2_d_5]
 
-{@Astrid} These puzzles.... reveal the password to the satellite...
+{@Astrid} These puzzles.... reveal the password to the satellite? $[Day2/Astrid/l2_a_5]
 
-{@Dad} The satellite was put in orbit by the guy who funded Elijah’s old lab.
-Sort of a secret back-up plan, in case anything ever happened.
+{@Dad} Yeah, the guy who built it was... let's just say, excentric. Your next puzzle is the constellation Hercules.\
+See if the reference guide can point you in the right direction. $[Day2/Dad/l2_d_6]
 
-The guy who built it was... let's just say, excentric. Your next puzzle is the constellation Hercules.
-See if the reference guide can point you in the right direction.
+{@Astrid} Ugh. I still don’t get it. Elijah said we might be too late. Too late for what? $[Day2/Astrid/l2_a_6]
 
 $call SetInputState(true)
 $call StartPuzzleNavigation()
@@ -117,9 +115,7 @@ $call StartPuzzleNavigation()
 @once
 
 $call StopPuzzleNavigation()
-{@Radio} This is where an instrument unlock would happen.
-{@Dad} Please tune radio to 375 mhz...
-{@Radio} Unlocking now. Stand By...
+// {@Dad} Please tune radio to 375 mhz...
 $call StartPuzzleMode()
 
 :: HerculesPuzzleComplete
