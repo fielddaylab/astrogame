@@ -136,11 +136,12 @@ namespace Astro
             }
         }
 
-        public static void ClearRows(PuzzleState state, BitArray rowsCorrectness) {
-            if (state.ActivePuzzle.Rows.Length != rowsCorrectness.Length) {
-                throw new ArgumentException("[PuzzleUtility] Row correctness length doesn't match number of rows!");
-            } 
-            for (int r = 0; r < rowsCorrectness.Length; r++) {
+        public static void ClearRows(PuzzleState state, BitSet32 rowsCorrectness) {
+            //if (state.ActivePuzzle.Rows.Length != rowsCorrectness.Length) {
+            //    throw new ArgumentException("[PuzzleUtility] Row correctness length doesn't match number of rows!");
+            //}
+            //
+            for (int r = 0; r < state.ActivePuzzle.Rows.Length; r++) {
                 if (!rowsCorrectness[r]) { // if row incorrect:
                     for (int c = 0; c < state.Display.NumCols; c++) { // go through each cell
                         DataUtility.TryClearData(state.Display.Cells[r * state.Display.NumCols + c].DataSlot);

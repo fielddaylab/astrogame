@@ -13,7 +13,7 @@ using Leaf.Runtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+//using System.Linq;
 using UnityEngine;
 
 namespace Astro.Reference {
@@ -367,7 +367,7 @@ namespace Astro.Reference {
             DayConfigAsset day = Find.NamedAsset<DayConfigAsset>(story.Days[state.DayIndex]);
 
             UIFocus focus = Find.State<FocusState>().CurrentFocus;
-            return day.NeutrinoEvent.RelevantObjectIds.Contains(focus.TargetData.AssetId);
+            return Array.IndexOf(day.NeutrinoEvent.RelevantObjectIds, focus.TargetData.AssetId) >= 0;
         }
 
         public static bool AssetSubmissionCompleted() {

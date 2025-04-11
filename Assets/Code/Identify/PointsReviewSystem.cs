@@ -75,7 +75,7 @@ namespace Astro {
 
         private void CheckPuzzle() {
             PuzzleState puzzle = Find.State<PuzzleState>();
-            if (PuzzleUtility.CheckSolutionCorrect(puzzle, out BitArray rowsCorrectness)) {
+            if (PuzzleUtility.CheckSolutionCorrect(puzzle, out BitSet32 rowsCorrectness)) {
                 OnCorrectPuzzleSubmission.Invoke(puzzle.ActivePuzzle.DisplayName);
                 ShowResultSprite(true, m_State);
                 PointsUtility.AddPoints(1, m_State);
