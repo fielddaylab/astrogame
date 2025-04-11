@@ -99,6 +99,9 @@ GameObject:
   - component: {fileID: 4318892829675524799}
   - component: {fileID: 5700785875046588977}
   - component: {fileID: 8605254742746512502}
+  - component: {fileID: 9072909825554849689}
+  - component: {fileID: 5168492817498778390}
+  - component: {fileID: 6730760738030882521}
   m_Layer: 6
   m_Name: spectromMod_v1
   m_TagString: Untagged
@@ -217,6 +220,7 @@ MonoBehaviour:
   m_Target: {fileID: 8249933874315370666}
   m_Renderers:
   - {fileID: 3431215487387641239}
+  - {fileID: 4394267625158328336}
   m_MatIndex: 0
   SwapSpeed: 1
   m_InitMat: {fileID: 2100000, guid: 2f75848563b72cb45877dc22eb77cec5, type: 2}
@@ -240,6 +244,59 @@ MonoBehaviour:
   SwapSpeed: 1
   m_InitMat: {fileID: 2100000, guid: 2f75848563b72cb45877dc22eb77cec5, type: 2}
   m_SwapTo: {fileID: 2100000, guid: 1173e83d69392a045b7bc5960c8eaafe, type: 2}
+--- !u!114 &9072909825554849689
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1391463076238217271}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 808d7706b9890e74cb5c1f86dc9f8b53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Id:
+    m_Source: SpectrometerInstrument
+    m_HashValue: 484499543
+  m_ClassName:
+    m_Source: SpectrometerInstrument
+    m_HashValue: 484499543
+--- !u!114 &5168492817498778390
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1391463076238217271}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb698c5096be21e4ca2e23688e5f744c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Target: {fileID: 8249933874315370666}
+  m_Components:
+  - {fileID: 6918794047519705031}
+  - {fileID: 6027320938849945794}
+  m_InitVal: 0
+  m_SetTo: 1
+--- !u!114 &6730760738030882521
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1391463076238217271}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f387505cb3b14e647a777d08826df94b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Target: {fileID: 8249933874315370666}
+  m_Slots:
+  - {fileID: 1296281115437083586}
+  m_InitVal: 0
+  m_SetTo: 1
 --- !u!1 &1685012645731001522
 GameObject:
   m_ObjectHideFlags: 0
