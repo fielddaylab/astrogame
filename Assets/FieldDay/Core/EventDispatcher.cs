@@ -274,7 +274,7 @@ namespace FieldDay {
             foreach (var kv in m_HandlerBlocks) {
                 int eventDeadCount = kv.Value.DeregisterAllWithDeadContext();
                 if (eventDeadCount > 0) {
-                    Log.Warn("[EventDispatcher] Found {0} stale handlers for event '{1}' - make sure to deregister your handlers in OnDisable or OnDestroy", eventDeadCount, new StringHash32(kv.Key).ToDebugString());
+                    Log.Error("[EventDispatcher] Found {0} stale handlers for event '{1}' - make sure to deregister your handlers in OnDisable or OnDestroy", eventDeadCount, new StringHash32(kv.Key).ToDebugString());
                     if (kv.Value.IsEmpty) {
                         m_BlockPool.PushBack(kv.Value);
                         m_TempEventIdList.Add(kv.Key);

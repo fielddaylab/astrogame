@@ -56,6 +56,10 @@ namespace FieldDay.Systems {
         }
 
         public void Add(TComponent component) {
+            if (!ComponentUtility.IsValid(component)) {
+                Assert.Fail("Attempting to add null component of type '{0}' to system '{1}'", typeof(TComponent).Name, GetType().Name);
+            }
+
             Assert.False(m_Components.Contains(component));
             m_Components.PushBack(component);
             OnComponentAdded(component);
@@ -141,6 +145,10 @@ namespace FieldDay.Systems {
         }
 
         public void Add(TPrimary component) {
+            if (!ComponentUtility.IsValid(component)) {
+                Assert.Fail("Attempting to add null component of type '{0}' to system '{1}'", typeof(TPrimary).Name, GetType().Name);
+            }
+
             int found = m_Components.FindIndex((a, b) => a.Primary == b, component);
             Assert.True(found < 0, "component already added");
             if (ComponentUtility.Sibling(component, out TSecondary additional0)) {
@@ -233,6 +241,10 @@ namespace FieldDay.Systems {
         }
 
         public void Add(TPrimary component) {
+            if (!ComponentUtility.IsValid(component)) {
+                Assert.Fail("Attempting to add null component of type '{0}' to system '{1}'", typeof(TPrimary).Name, GetType().Name);
+            }
+
             int found = m_Components.FindIndex((a, b) => a.Primary == b, component);
             Assert.True(found < 0, "component already added");
             if (ComponentUtility.Siblings(component, out TComponentA additionalA, out TComponentB additionalB)) {
@@ -326,6 +338,10 @@ namespace FieldDay.Systems {
         }
 
         public void Add(TPrimary component) {
+            if (!ComponentUtility.IsValid(component)) {
+                Assert.Fail("Attempting to add null component of type '{0}' to system '{1}'", typeof(TPrimary).Name, GetType().Name);
+            }
+
             int found = m_Components.FindIndex((a, b) => a.Primary == b, component);
             Assert.True(found < 0, "component already added");
             if (ComponentUtility.Siblings(component, out TComponentA additionalA, out TComponentB additionalB, out TComponentC additionalC)) {

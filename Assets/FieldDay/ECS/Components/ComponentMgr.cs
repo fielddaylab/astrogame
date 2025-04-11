@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using BeauPools;
 using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay.Systems;
@@ -105,6 +106,50 @@ namespace FieldDay.Components
             if (deregistered) {
                 m_SystemsMgr.RemoveComponent(component);
                 RegistrationCallbacks.InvokeDeregister(component);
+            }
+        }
+
+        internal unsafe void SanityCheckComponentLists() {
+            ManualFlush();
+
+            int removed = 0;
+            int idxCount = ComponentIndex.Count;
+            int componentsRemovedWordCount = 4 + UnsafeBitSet.Size(idxCount);
+            uint* componentsRemovedWords = stackalloc uint[componentsRemovedWordCount];
+            UnsafeBitSet componentTypeBits = new UnsafeBitSet(componentsRemovedWords, componentsRemovedWordCount);
+
+            for(int i = ComponentIndex.Count - 1; i >= 0; i--) {
+                List<IComponentData> components = m_ComponentLists[i];
+
+                if (components == null) {
+                    continue;
+                }
+                
+                bool isUnity = typeof(UnityEngine.Object).IsAssignableFrom(ComponentIndex.Type(i));
+
+                for(int cI = components.Count - 1; cI >= 0; cI--) {
+                    IComponentData component = components[cI];
+                    if (ReferenceEquals(component, null) || (isUnity && !(UnityEngine.Object) component)) {
+                        componentTypeBits.Set(i);
+                        DeregisterImpl(component);
+                        removed++;
+                    }
+                }
+            }
+
+            if (removed > 0) {
+                using (PooledStringBuilder psb = PooledStringBuilder.Create()) {
+                    psb.Builder.Append("[ComponentMgr] Removed ").AppendNoAlloc(removed)
+                        .Append(" dead components that were not deregistered!");
+
+                    for(int i = 0; i < idxCount; i++) {
+                        if (componentTypeBits[i]) {
+                            psb.Builder.Append("\n - ").Append(ComponentIndex.Type(i).FullName);
+                        }
+                    }
+
+                    Log.Error(psb.Builder.Flush());
+                }
             }
         }
 

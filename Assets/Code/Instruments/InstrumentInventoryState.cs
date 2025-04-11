@@ -7,11 +7,12 @@ using UnityEngine;
 
 using Leaf.Runtime;
 using FieldDay.Scripting;
+using FieldDay.Scenes;
 
 
 namespace Astro
 {
-    public class InstrumentInventoryState : SharedStateComponent
+    public class InstrumentInventoryState : SharedStateComponent, IScenePreload
     {
         // General access to instruments
         public RingBuffer<LabInstrument> ActiveInstruments = new RingBuffer<LabInstrument>(8);
@@ -19,15 +20,14 @@ namespace Astro
         // Quicker access structured on instrument data types
         public Dictionary<DataTypeMask, List<LabInstrument>> ActiveInstrumentMap = new Dictionary<DataTypeMask, List<LabInstrument>>();
 
-        public void Start()
-        {
+        public IEnumerator<WorkSlicer.Result?> Preload() {
             // Load unlocked instruments from player progress
             var progressState = Find.State<PlayerProgressState>();
-            foreach (var instrumentID in progressState.UnlockedInstruments)
-            {
+            foreach (var instrumentID in progressState.UnlockedInstruments) {
                 var instrument = ScriptUtility.FindActor(instrumentID).GetComponent<LabInstrument>();
                 InstrumentInventoryUtility.SetInstrumentUnlocked(instrument, true, false, "");
             }
+            return null;
         }
     }
 

@@ -81,8 +81,25 @@ namespace FieldDay.Components {
         /// </summary>
         private delegate IComponentData ComponentSiblingPredicate(in IComponentData primary, Type secondary);
 
+        /// <summary>
+        /// Filter for getting if a component is not null.
+        /// </summary>
+        private delegate bool ComponentValidPredicate(in IComponentData primary);
+
         static private readonly ComponentSiblingPredicate UnityComponentPredicate = (in IComponentData primary, Type secondary) => {
             return (IComponentData) ((Component) primary).GetComponent(secondary);
+        };
+
+        static private readonly ComponentSiblingPredicate DefaultComponentPredicate = (in IComponentData primary, Type secondary) => {
+            return null;
+        };
+
+        static private readonly ComponentValidPredicate UnityComponentValidPredicate = (in IComponentData primary) => {
+            return ((UnityEngine.Object) primary);
+        };
+
+        static private readonly ComponentValidPredicate DefaultComponentValidPredicate = (in IComponentData primary) => {
+            return !ReferenceEquals(primary, null);
         };
 
         static private class PrimaryLookup<TPrimary> where TPrimary : class, IComponentData {
@@ -91,9 +108,19 @@ namespace FieldDay.Components {
             /// </summary>
             static private readonly ComponentSiblingPredicate SiblingFilter = GetSiblingPredicate(typeof(TPrimary));
 
+            /// <summary>
+            /// Predicate that retrieves a sibling component.
+            /// </summary>
+            static private readonly ComponentValidPredicate ValidFilter = GetValidPredicate(typeof(TPrimary));
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             static public TComponent GetSibling<TComponent>(TPrimary primary) where TComponent : class, IComponentData {
                 return (TComponent) SiblingFilter(primary, typeof(TComponent));
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            static public bool IsValid(TPrimary primary) {
+                return ValidFilter(primary);
             }
         }
 
@@ -106,8 +133,19 @@ namespace FieldDay.Components {
                 return UnityComponentPredicate;
             }
 
-            Assert.Fail("Component type '{0}' does not have any corresponding default sibling predicate", primaryType.FullName);
-            return null;
+            return DefaultComponentPredicate;
+        }
+
+        /// <summary>
+        /// Retrieves a predicate that can get if a component instance is valid.
+        /// </summary>
+        static private ComponentValidPredicate GetValidPredicate(Type primaryType) {
+            Assert.True(IComponentDataType.IsAssignableFrom(primaryType), "Component type '{0}' is not an IComponentData type", primaryType.FullName);
+            if (UnityComponentType.IsAssignableFrom(primaryType)) {
+                return UnityComponentValidPredicate;
+            }
+
+            return DefaultComponentValidPredicate;
         }
 
         /// <summary>
@@ -157,6 +195,13 @@ namespace FieldDay.Components {
             componentB = PrimaryLookup<TPrimary>.GetSibling<TComponentB>(primary);
             componentC = PrimaryLookup<TPrimary>.GetSibling<TComponentC>(primary);
             return componentA != null && componentB != null && componentC != null;
+        }
+
+        /// <summary>
+        /// Returns if this component is a valid instance.
+        /// </summary>
+        static public bool IsValid<TComponent>(TComponent component) where TComponent : class, IComponentData {
+            return PrimaryLookup<TComponent>.IsValid(component);
         }
     }
 }

@@ -1,12 +1,14 @@
+using BeauUtil;
 using FieldDay;
 using FieldDay.Components;
+using FieldDay.Scenes;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Astro
 {
-    public class InstrumentComponentSetActiveTrigger : BatchedComponent, IRegistrationCallbacks
+    public class InstrumentComponentSetActiveTrigger : BatchedComponent, IRegistrationCallbacks, IScenePreload
     {
         [SerializeField] private LabInstrument m_Target;
         [SerializeField] private MonoBehaviour[] m_Components;
@@ -21,7 +23,6 @@ namespace Astro
         public void OnRegister()
         {
             m_Target.OnUnlock.Register(SetVals);
-            InitVals();
         }
 
         private void InitVals()
@@ -30,6 +31,11 @@ namespace Astro
             {
                 comp.enabled = m_InitVal;
             }
+        }
+
+        IEnumerator<WorkSlicer.Result?> IScenePreload.Preload() {
+            InitVals();
+            return null;
         }
 
         private void SetVals()
