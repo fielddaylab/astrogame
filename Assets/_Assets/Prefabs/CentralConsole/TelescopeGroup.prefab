@@ -51,6 +51,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ae620349e7bce24688d2ab26f9be5a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Always: 0
   DestroyInactiveChildren: 0
   Recursive: 0
   DestroyGameObject: 0
@@ -81,10 +82,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 998edd88251c0df4f97e235252646196, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Aperture: {fileID: 4026753806482455937}
   Shaft: {fileID: 2638514943219616133}
   Base: {fileID: 7813597836302440004}
   Dome: {fileID: 0}
   RotationOffset: {x: 0, y: 180, z: 0}
+  DomeRotationOffset: {x: 0, y: 90, z: 0}
   AutoSync: 1
 --- !u!114 &5378270274764840701
 MonoBehaviour:
@@ -140,6 +143,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50634220160ab954e9fe854b9851e936, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &3002139842864621983
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4026753806482455937}
+  m_Layer: 0
+  m_Name: Aperture
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4026753806482455937
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3002139842864621983}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -5.814, y: 1.55, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2638514943219616133}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &5313633419225502744
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -234,7 +268,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -1360031915813446243, guid: 68c73aba31fb06141b9d95c545b6a72f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4026753806482455937}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 68c73aba31fb06141b9d95c545b6a72f, type: 3}
       insertIndex: -1
@@ -262,6 +299,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ae620349e7bce24688d2ab26f9be5a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Always: 0
   DestroyInactiveChildren: 0
   Recursive: 0
   DestroyGameObject: 1

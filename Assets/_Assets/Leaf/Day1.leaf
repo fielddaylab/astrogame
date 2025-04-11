@@ -147,7 +147,7 @@ $call SetInputState(true)
 @cutscene
 @interrupt
 
-{@Dad} Oops. It doesn't look like that is a possible neutrino origin. Look for objects with a blue highlight.
+{@Dad} Oops. It doesn't look like that is a possible neutrino origin. Look for objects with a blue highlight. $[Day1/Dad/l1_d_s35]
 
 :: OnNeutrinoStarSelected
 @trigger    OnNeutrinoStarSelected
@@ -238,7 +238,8 @@ $call SetInputState(false)
 $call SetRefGuideActive(false)
 $call StopOpenMode()
 $call ClearMonitorSelection()
-{@Dad} Looks like you’ve identified enough stars to earn a higher clearance level. You’ll need to tune to the right frequency on your radio to unlock your equipment. Tune to 375mHz. $[Day1/Dad/l1_d_s19]
+{@Dad} Looks like you’ve identified enough stars to earn a higher clearance level. $[Day1/Dad/l1_d_s19]
+You’ll need to tune to the right frequency on your radio to unlock your equipment. $[Day1/Dad/l1_d_s34]
 // {@Dad} You’ll need to tune to the right frequency on your radio to unlock your equipment. Tune to 375mHz. $[Day1/Dad/l1_d_s34]
 
 $call HintModals->SlideInFromRight("RadioControls", 0.4) 

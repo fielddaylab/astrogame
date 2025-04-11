@@ -1,4 +1,5 @@
 using BeauUtil;
+using BeauUtil.UI;
 using FieldDay;
 using FieldDay.Scripting;
 using FieldDay.SharedState;
@@ -10,7 +11,7 @@ using static Astro.PuzzleAsset;
 namespace Astro {
     public class NavProjectionState : SharedStateComponent, IRegistrationCallbacks {
         [NonSerialized] public bool Initialized = false;
-        public Sprite StarOutlineSprite;
+        // public Sprite StarOutlineSprite;
 
         public Color NavigationCompleteColor;
         
@@ -18,6 +19,9 @@ namespace Astro {
         public RectTransform NavigationArrow;
         public RectTransform OutlineGroup;
         public CanvasGroup BoarderGroup;
+
+        public Sprite NeutrinoReticleElbow;
+        public Sprite ConstellationReticleElbow;
 
         public void OnRegister() {
             Game.Scenes.QueueOnLoad(() => {
@@ -47,6 +51,11 @@ namespace Astro {
             state.NavigationArrow.gameObject.SetActive(false);
             state.NavigationCanvas.gameObject.SetActive(true);
             state.OutlineGroup.gameObject.SetActive(true);
+
+            // Set approrpiate elbow sprites
+            foreach (Image image in state.BoarderGroup.transform.GetComponentsInChildren<Image>()) {
+                image.sprite = state.ConstellationReticleElbow;
+            }
             state.BoarderGroup.gameObject.SetActive(true);
             state.Initialized = false;
 
@@ -66,7 +75,12 @@ namespace Astro {
 
             state.OutlineGroup.gameObject.SetActive(false);
             state.NavigationCanvas.gameObject.SetActive(true);
-            state.NavigationArrow.gameObject.SetActive(true);
+            state.NavigationArrow.gameObject.SetActive(false);
+
+            // Set approrpiate elbow sprites
+            foreach (Image image in state.BoarderGroup.transform.GetComponentsInChildren<Image>()) {
+                image.sprite = state.NeutrinoReticleElbow;
+            }
             state.BoarderGroup.gameObject.SetActive(true);
         }
 
@@ -182,7 +196,7 @@ namespace Astro {
                 var navFocus = focusPools.Focii.Alloc(navState.OutlineGroup);
                 navFocus.name = currAsset.DisplayName + " (Navigation Outline)";
                 // TODO we can remove sprite representations on the nav ui if we dont have outlines
-                InitNavRepresntation(navFocus, currAsset, DetermineSprite(navState, currAsset.Category));
+                InitNavRepresntation(navFocus, currAsset, null);
 
                 outlineState.ActiveOutlines.PushBack(navFocus);
 
@@ -202,7 +216,7 @@ namespace Astro {
 
                 var connection = new GameObject(ca1.DisplayName + "_to_" + ca2.DisplayName, typeof(RectTransform));
                 connection.transform.SetParent(navState.OutlineGroup, false);
-                connection.AddComponent<Image>();
+                connection.AddComponent<RoundedRectGraphic>().color = new Color(0.9490196f, 1, 0.9411765f);
                 RectTransform connectionRect = connection.GetComponent<RectTransform>();
 
                 Vector2 canvasSize = navState.NavigationCanvas.GetComponent<RectTransform>().sizeDelta;
@@ -222,29 +236,7 @@ namespace Astro {
             navState.Initialized = true;
         }
 
-        private static Sprite DetermineSprite(NavProjectionState navState, CelestialObjectCategory category)
-        {
-            switch (category)
-            {
-                case CelestialObjectCategory.Star:
-                    return navState.StarOutlineSprite;
-                case CelestialObjectCategory.Planet:
-                    return null;
-                case CelestialObjectCategory.Satellite:
-                    return null;
-                case CelestialObjectCategory.Constellation:
-                    return null;
-                case CelestialObjectCategory.Galaxy:
-                    return null;
-                case CelestialObjectCategory.Comet:
-                    return null;
-                default:
-                    return null;
-            }
-        }
-
-        public static void InitNavRepresntation(UIFocus focus, CelestialAsset asset, Sprite represent2D)
-        {
+        public static void InitNavRepresntation(UIFocus focus, CelestialAsset asset, Sprite represent2D) {
             focus.Represent2D.sprite = represent2D;
             if (represent2D == null)
             {
