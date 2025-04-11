@@ -13,7 +13,7 @@ using Leaf.Runtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+//using System.Linq;
 using UnityEngine;
 
 namespace Astro.Reference {
@@ -167,6 +167,8 @@ namespace Astro.Reference {
 
             yield return Routine.Inline(rig.RootTransform.MoveTo(rig.RootTransform.localPosition.y + 0.1f, 0.3f, Axis.Y, Space.Self).Ease(Curve.BackOut).From());
 
+            PopulateReferenceColliders(state.CurrentPage, rig);
+
             yield return 0.15f;
             yield return Tween.ZeroToOne(SetRefGuideCoverAngle, 0.45f).Ease(Curve.Smooth);
             rig.CoverRenderer.enabled = false;
@@ -236,6 +238,7 @@ namespace Astro.Reference {
             }
 
             RefGuideRig rig = Find.State<RefGuideRig>();
+            rgs.CurrentPage = newPage;
             PopulateContents(rig.Contents, newPage);
             PopulateReferenceColliders(newPage, rig);
             SelectControl(null);
@@ -364,7 +367,7 @@ namespace Astro.Reference {
             DayConfigAsset day = Find.NamedAsset<DayConfigAsset>(story.Days[state.DayIndex]);
 
             UIFocus focus = Find.State<FocusState>().CurrentFocus;
-            return day.NeutrinoEvent.RelevantObjectIds.Contains(focus.TargetData.AssetId);
+            return Array.IndexOf(day.NeutrinoEvent.RelevantObjectIds, focus.TargetData.AssetId) >= 0;
         }
 
         public static bool AssetSubmissionCompleted() {

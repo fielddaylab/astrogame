@@ -3,6 +3,7 @@ using FieldDay;
 using System;
 using BeauUtil.Debugger;
 using System.Collections;
+using BeauUtil;
 
 namespace Astro {
     [SysUpdate(GameLoopPhase.Update, 501, AstroGame.SubmissionUpdateMask)] // After RowSelectSystem
@@ -47,29 +48,40 @@ namespace Astro {
         public static void SetButtonMode(SubmitButton button, SubmitButtonType type) {
             button.ButtonType = type;
         }
-        public static bool CheckSolutionCorrect(PuzzleState state, out BitArray rowsCorrect) {
+        public static bool CheckSolutionCorrect(PuzzleState state, out BitSet32 rowsCorrect) {
+
             // convert combined flags to array of single flags
-            DataTypeMask[] types = Array.FindAll((DataTypeMask[])Enum.GetValues(typeof(DataTypeMask)), t => state.ActivePuzzle.RequiredProperties.HasFlag(t));
+            DataTypeMask types = state.ActivePuzzle.RequiredProperties;
+            
             DataPacket refData;
             PuzzleCell currentCell;
             bool allCorrect = true;
             // iterate through rows: each row is a CelestialAsset
-            rowsCorrect = new BitArray(state.ActivePuzzle.Rows.Length);
+            rowsCorrect = new BitSet32();
+            
             for (int r = 0; r < state.ActivePuzzle.Rows.Length; r++) {
                 rowsCorrect[r] = true;
                 CelestialAsset asset = Find.NamedAsset<CelestialAsset>(state.ActivePuzzle.Rows[r].Object);
                 // iterate through columns: each column is a required property
-                for (int c = 0; c < types.Length; c++) {
-                    if (types[c] == 0x0) continue; // skip "None"
-                    refData = CelestialAsset.MaskAssetToData(types[c], asset);
+                int c = 0;
+                foreach (var type in Bits.Enumerate(types)) {
+                    if (type == 0) {
+                        c++;
+                        continue;
+                    }
+
+                    refData = CelestialAsset.MaskAssetToData(type, asset);
                     currentCell = state.Display.Cells[r * state.Display.NumCols + c];
                     if (!currentCell.DataSlot.CurrentData.Equals(refData)) {
                         rowsCorrect[r] = false;
                         allCorrect = false;
                         break;
                     }
+
+                    c++;
                 }
             }
+
             return allCorrect;
         }
     }
