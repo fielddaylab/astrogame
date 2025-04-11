@@ -136,12 +136,12 @@ CapsuleCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Radius: 0.5000001
   m_Height: 2.0000005
   m_Direction: 1
-  m_Center: {x: 0, y: -0.00000023841858, z: -0.00000017881393}
+  m_Center: {x: 0, y: 0.33, z: -0.00000017881393}
 --- !u!114 &3761208601314932492
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -149,7 +149,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1281013315825818201}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 38d587e5b249a5141b2b8e4cc3bb1223, type: 3}
   m_Name: 
@@ -162,7 +162,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1281013315825818201}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6d5b06be8f1cdcc4b862158da906d7cd, type: 3}
   m_Name: 
@@ -171,6 +171,7 @@ MonoBehaviour:
   InputSensitivity: 0.001
   RotateSpeed: 350
   PassThrough: 0
+  PivotAxis: 2
   DialRoot: {fileID: 4735598116178778755}
 --- !u!114 &4650424282245153396
 MonoBehaviour:
@@ -179,7 +180,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1281013315825818201}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5a59a59fc4e9a014c8fbb22f00e5eeff, type: 3}
   m_Name: 
@@ -677,7 +678,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b37f50672d471b48920bf6e31265282, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Source: {fileID: 6577076053538657198}
+  Source: {fileID: 3827233604263034350}
   LinearMap: 1000
   Offset: -500
   Readout: {fileID: 940652880209475202}
@@ -932,7 +933,11 @@ GameObject:
   - component: {fileID: 3473847070102823968}
   - component: {fileID: 2637665130408840377}
   - component: {fileID: 1328853723682577569}
-  m_Layer: 0
+  - component: {fileID: 197322208638150183}
+  - component: {fileID: 1092996088064853014}
+  - component: {fileID: 6563104402430807285}
+  - component: {fileID: 3827233604263034350}
+  m_Layer: 6
   m_Name: radioVol_v1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1004,3 +1009,73 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!136 &197322208638150183
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8773723321672037086}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.15
+  m_Height: 0.46
+  m_Direction: 0
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1092996088064853014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8773723321672037086}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a59a59fc4e9a014c8fbb22f00e5eeff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AlwaysFireClickEvents: 0
+  CursorType:
+    m_HashValue: 2902038721
+  Tooltip: 
+--- !u!114 &6563104402430807285
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8773723321672037086}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38d587e5b249a5141b2b8e4cc3bb1223, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsDraggable: 1
+--- !u!114 &3827233604263034350
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8773723321672037086}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d5b06be8f1cdcc4b862158da906d7cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BaseVal: 0.5
+  InputSensitivity: 0.001
+  RotateSpeed: 1050
+  PassThrough: 0
+  PivotAxis: 1
+  DialRoot: {fileID: 3473847070102823968}

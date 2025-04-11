@@ -1037,6 +1037,7 @@ namespace FieldDay.Scenes {
 
                     m_CurrentUnloadOperation.Clear();
                     Game.Events?.CleanupDeadReferences();
+                    Game.Components.SanityCheckComponentLists();
                     return true;
                 } else {
                     return false;

@@ -6,7 +6,8 @@ using UnityEngine;
 
 namespace Astro
 {
-    public class ArchiveInteractSystem : ComponentSystemBehaviour<LabInteractable, ArchiveInteractable>
+    [SysUpdate(GameLoopPhase.Update, 0, AstroGame.DocumentUpdateMask)]
+    public class ArchiveInteractSystem : ComponentSystemBehaviour<ArchiveInteractable, LabInteractable>
     {
         public override void ProcessWork(float deltaTime)
         {
@@ -17,10 +18,10 @@ namespace Astro
 
             foreach (var component in m_Components)
             {
-                if (!component.Primary.InteractReceived) { continue; }
+                if (!component.Secondary.InteractReceived) { continue; }
 
                 // load the relevant archive history
-                ArchiveUtility.LoadArchive(archiveState, boardState, component.Secondary.ArchiveIndex);
+                ArchiveUtility.LoadArchive(archiveState, boardState, component.Primary.ArchiveIndex);
             }
         }
     }

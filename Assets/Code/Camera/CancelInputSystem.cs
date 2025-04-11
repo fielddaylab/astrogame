@@ -11,7 +11,7 @@ namespace Astro
     /// Tracks when nothing in particular is clicked so that various systems may behave accordingly,
     /// such as by cancelling focus.
     /// </summary>
-    [SysUpdate(GameLoopPhase.Update, 1000)] // After InteractSelectSlotSystem, before SlotEffectSystem
+    [SysUpdate(GameLoopPhase.Update, 1000, AstroGame.InteractUpdateMask)] // After InteractSelectSlotSystem, before SlotEffectSystem
     public class CancelInputSystem : SharedStateSystemBehaviour<CancelInputState>
     {
         public override void ProcessWork(float deltaTime)
@@ -25,9 +25,7 @@ namespace Astro
             if (m_State.ClickedThisFrame && !m_State.SlotClicked) {
                 // clicked on nothing in particular
                 // cancel data slot transfer states
-                var transferState = Find.State<DataTransferState>();
-                DataUtility.AssignSelectedSource(transferState, null);
-                DataUtility.AssignSelectedTarget(transferState, null);
+                DataUtility.ClearSelections(Find.State<DataTransferState>());
             }
         }
     }

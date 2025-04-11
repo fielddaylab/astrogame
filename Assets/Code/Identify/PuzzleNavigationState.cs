@@ -109,7 +109,7 @@ public static class PuzzleNavigationUtility {
         puzzleNavState.ReadoutDirty = true;
     }
 
-    public static IEnumerator SnapConstellationAlignment() {
+    public static IEnumerator SnapConstellationAlignment(EqCoords targetCoords) {
         InputState inputState = Find.State<InputState>();
         SpaceCameraState spaceCameraState = Find.State<SpaceCameraState>();
         NavProjectionState navProjectionState = Find.State<NavProjectionState>();
@@ -117,10 +117,7 @@ public static class PuzzleNavigationUtility {
         bool inputCache = inputState.InputEnabled;
         InputUtility.SetInputEnabled(inputState, false);
 
-        PuzzleState puzzleState = Find.State<PuzzleState>();
-
-        EqCoords target = puzzleState.ActivePuzzle.PuzzleCoordinates;
-        Quaternion targetQuat = WorldPositionUtility.GetLocalLookRotation(spaceCameraState, target);
+        Quaternion targetQuat = WorldPositionUtility.GetLocalLookRotation(spaceCameraState, targetCoords);
 
         CanvasGroup boarder = navProjectionState.BoarderGroup;
         CanvasGroup outline = navProjectionState.OutlineGroup.GetComponent<CanvasGroup>();
@@ -137,7 +134,6 @@ public static class PuzzleNavigationUtility {
         boarder.alpha = 1.0f;
 
         InputUtility.SetInputEnabled(inputState, inputCache);
-        Game.Events.Dispatch(GameEvents.PuzzleNavigationComplete);
     }
 
     // Helper for updating the edge color of constellations in camera snap routine

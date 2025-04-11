@@ -7,7 +7,7 @@ using BeauUtil;
 using System.Linq;
 
 namespace Astro {
-    [SysUpdate(GameLoopPhaseMask.Update)]
+    [SysUpdate(GameLoopPhaseMask.Update, 0, AstroGame.MonitorControlsUpdateMask)]
     public class NeutrinoHighlightSystem : SharedStateSystemBehaviour<NeutrinoHighlightState, FocusState, FocusPools, SkyGenerationState>
     {
         public override void ProcessWork(float deltaTime)

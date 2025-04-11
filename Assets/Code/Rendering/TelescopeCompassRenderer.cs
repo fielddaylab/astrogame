@@ -23,7 +23,6 @@ namespace Astro {
         [Header("Output")]
         public DynamicMeshFilter ArcOutput;
         public DynamicMeshFilter ArcEdgeOutput;
-        public RenderAtlasOutput Screen;
 
         #endregion // Inspector
 
@@ -52,8 +51,6 @@ namespace Astro {
 
             ArcOutput.Upload(ArcMeshData, MeshDataUploadFlags.Default);
             ArcEdgeOutput.Upload(ArcEdgeData, MeshDataUploadFlags.Default);
-
-            Screen.MarkDirty();
         }
 
         private unsafe Vector3 GenerateRA(float raDegrees, Vector3 baseline, int res) {

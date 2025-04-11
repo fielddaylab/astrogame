@@ -84,12 +84,22 @@ namespace FieldDay.Animation {
     [StructLayout(LayoutKind.Explicit)]
     public struct LiteAnimatorStateParam {
         [FieldOffset(0)] public bool Bool;
+        [FieldOffset(0)] public BitSet128 Bits;
+
         [FieldOffset(0)] public int Int;
+        [FieldOffset(0)] public unsafe fixed int PackedInts[4];
+        
         [FieldOffset(0)] public float Float;
+        [FieldOffset(0)] public unsafe fixed int PackedFloats[4];
+
         [FieldOffset(0)] public Vector2 Float2;
         [FieldOffset(0)] public Vector3 Float3;
         [FieldOffset(0)] public Vector4 Float4;
         [FieldOffset(0)] public Quaternion Quaternion;
         [FieldOffset(0)] public RuntimeObjectHandle Object;
+
+        [FieldOffset(0)] public Color ColorF;
+        [FieldOffset(0)] public Color32 Color;
+        [FieldOffset(0)] public unsafe fixed uint PackedColors[4];
     }
 }

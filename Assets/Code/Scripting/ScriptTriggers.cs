@@ -77,51 +77,115 @@ namespace Astro {
         static private void LeafSetInputState(bool enabled) {
             var state = Find.State<InputState>();
             InputUtility.SetInputEnabled(state, enabled);
+
+            if (enabled) {
+                GameLoop.ResumeUpdates(AstroGame.InteractUpdateMask);
+            }
+            else {
+                GameLoop.SuspendUpdates(AstroGame.InteractUpdateMask);
+            }
         }
 
         [LeafMember("StartPuzzleMode")]
         static private void LeafStartPuzzleMode() {
             Game.Events.Dispatch(GameEvents.StartPuzzleMode);
+
+            GameLoop.ResumeUpdates(AstroGame.MonitorControlsUpdateMask);
+            GameLoop.ResumeUpdates(AstroGame.SubmissionUpdateMask);
+            GameLoop.ResumeUpdates(AstroGame.InstrumentUpdateMask);
         }
 
         [LeafMember("StopPuzzleMode")]
         static private void LeafStopPuzzleMode() {
             Game.Events.Dispatch(GameEvents.StopPuzzleMode);
+
+            GameLoop.SuspendUpdates(AstroGame.MonitorControlsUpdateMask);
+            GameLoop.SuspendUpdates(AstroGame.SubmissionUpdateMask);
+            GameLoop.SuspendUpdates(AstroGame.InstrumentUpdateMask);
+        }
+
+        
+        [LeafMember("StartMonitorControls")]
+        static private void LeafStartMonitorControls() {
+            GameLoop.ResumeUpdates(AstroGame.MonitorControlsUpdateMask);
+        }
+
+        [LeafMember("StopMonitorControls")]
+        static private void LeafStopMonitorControls()
+        {
+            GameLoop.SuspendUpdates(AstroGame.MonitorControlsUpdateMask);
         }
 
         [LeafMember("StartOpenMode")]
         static private void LeafStartOpenMode(){
             Game.Events.Dispatch(GameEvents.StartOpenMode);
+
+            GameLoop.ResumeUpdates(AstroGame.MonitorControlsUpdateMask);
+            GameLoop.ResumeUpdates(AstroGame.SubmissionUpdateMask);
+            GameLoop.ResumeUpdates(AstroGame.InstrumentUpdateMask);
         }
 
         [LeafMember("StopOpenMode")]
         static private void LeafStopOpenMode(){
             Game.Events.Dispatch(GameEvents.StopOpenMode);
+
+            GameLoop.SuspendUpdates(AstroGame.MonitorControlsUpdateMask);
+            GameLoop.SuspendUpdates(AstroGame.SubmissionUpdateMask);
+            GameLoop.SuspendUpdates(AstroGame.InstrumentUpdateMask);
         }
 
         [LeafMember("StartNeutrinoNavigation")]
         static private void LeafStartNeutrinoNavigation() {
             Game.Events.Dispatch(GameEvents.StartNeutrinoNavigation);
+
+            GameLoop.ResumeUpdates(AstroGame.MonitorControlsUpdateMask);
         }
-        
+
         [LeafMember("StopNeutrinoNavigation")]
         static private void LeafStopNeutrinoNavigation() {
             Game.Events.Dispatch(GameEvents.StopNeutrinoNavigation);
+
+            GameLoop.SuspendUpdates(AstroGame.MonitorControlsUpdateMask);
+        }
+
+        [LeafMember("AlignCamToNeutrino")]
+        static private void LeafAlignCamToNeutrino()
+        {
+            DayConfigAsset config = DayConfigUtil.GetConfigForState();
+            if (!config) return;
+            EqCoords target = config.NeutrinoEvent.NeutrinoCoordinates;
+
+            var navState = Find.State<PuzzleNavigationState>();
+            navState.ConstellationSnapRoutine.Replace(PuzzleNavigationUtility.SnapConstellationAlignment(target));
         }
 
         [LeafMember("StartPuzzleNavigation")]
         static private void LeafStartPuzzleNavigation() {
             Game.Events.Dispatch(GameEvents.StartPuzzleNavigation);
+
+            GameLoop.ResumeUpdates(AstroGame.MonitorControlsUpdateMask);
         }
 
         [LeafMember("StopPuzzleNavigation")]
         static private void LeafStopPuzzleNavigation() {
             Game.Events.Dispatch(GameEvents.StopPuzzleNavigation);
+
+            GameLoop.SuspendUpdates(AstroGame.MonitorControlsUpdateMask);
         }
-        
+
         [LeafMember("ClearMonitorSelection")]
         static private void LeafClearMonitorSelection() {
             Game.Events.Dispatch(GameEvents.MonitorEmptySpaceClicked);
+        }
+
+        [LeafMember("InitUpdateMasks")]
+        static private void LeafInitUpdateMasks()
+        {
+            GameLoop.SuspendUpdates(AstroGame.InteractUpdateMask);
+            GameLoop.SuspendUpdates(AstroGame.SubmissionUpdateMask);
+            GameLoop.SuspendUpdates(AstroGame.DocumentUpdateMask);
+            GameLoop.SuspendUpdates(AstroGame.InstrumentUpdateMask);
+            GameLoop.SuspendUpdates(AstroGame.MonitorControlsUpdateMask);
         }
     }
 }

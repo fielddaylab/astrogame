@@ -21,7 +21,7 @@ namespace Astro
             playerState.DayLayouts.Add(new ArchiveLayout());
 
             // create archive stacks according to day (skip intro day)
-            for (int i = 1; i <= archiveState.CurrArchiveIndex; i++)
+            for (int i = archiveState.DayOffset; i <= archiveState.CurrArchiveIndex; i++)
             {
                 ArchiveUtility.CreateStack(archiveState, i);
             }

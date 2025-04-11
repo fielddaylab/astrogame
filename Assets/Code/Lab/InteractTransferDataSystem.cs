@@ -6,12 +6,12 @@ using FieldDay;
 
 namespace Astro
 {
-    [SysUpdate(GameLoopPhase.Update, 1000)] // After RowSelectSystem
-    public class InteractTransferDataSystem : ComponentSystemBehaviour<LabInteractable, InteractTransferData>
+    [SysUpdate(GameLoopPhase.Update, 1000, AstroGame.InstrumentUpdateMask)] // After RowSelectSystem
+    public class InteractTransferDataSystem : ComponentSystemBehaviour<InteractTransferData, LabInteractable>
     {
-        public override void ProcessWorkForComponent(LabInteractable primary, InteractTransferData secondary, float deltaTime)
+        public override void ProcessWorkForComponent(InteractTransferData primary, LabInteractable secondary, float deltaTime)
         {
-            if (!primary.InteractReceived) { return; }
+            if (!secondary.InteractReceived) { return; }
 
             // Transfer data on interact if there is a valid destination
             var dataState = Find.State<DataTransferState>();
@@ -19,6 +19,7 @@ namespace Astro
                 if (DataUtility.TryTransferData(dataState.SelectedSource, dataState.SelectedTarget)) {
                     Debug.Log("[InteractTransferSystem] Transfer success");
                     PuzzleUtility.CheckEnableSubmit(Find.State<PuzzleState>());
+                    DataUtility.ClearSelections(dataState);
                     return;
                 }
             }

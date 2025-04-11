@@ -4,13 +4,14 @@ using UnityEngine;
 using FieldDay.Systems;
 using FieldDay;
 using FieldDay.HID;
+using Astro.Reference;
 
 namespace Astro {
     /// <summary>
     /// Responsible for triggering Lab Interactables
     /// </summary>
     /// 
-    [SysUpdate(GameLoopPhase.Update, 0)]
+    [SysUpdate(GameLoopPhase.Update, 0, AstroGame.InteractUpdateMask)]
     public class MouseInteractionSystem : SharedStateSystemBehaviour<LabInteractableState, DocumentBoardState, InputState> {
 
         public override void ProcessWork(float deltaTime) {
@@ -24,8 +25,8 @@ namespace Astro {
 
                 if (Physics.Raycast(ray, out RaycastHit hit, 10f, m_StateC.ClickableLayerMask)) {
 
-                    if (hit.collider.TryGetComponent(out RefGuideRegion refRegion)) {
-                        ReferenceUtility.SelectRegion(refRegion);
+                    if (hit.collider.TryGetComponent(out RefGuideControl refControl)) {
+                        ReferenceUtility.HandleControl(refControl);
                     }
 
                     if (hit.collider.TryGetComponent(out DocumentPart docPart)) {

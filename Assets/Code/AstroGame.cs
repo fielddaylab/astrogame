@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using BeauPools;
 using BeauRoutine;
 using BeauUtil;
 using BeauUtil.Debugger;
@@ -8,11 +9,20 @@ using FieldDay;
 using FieldDay.Debugging;
 using FieldDay.Scripting;
 using FieldDay.SharedState;
+using FieldDay.UI.Animation;
+using UnityEngine;
 
 [assembly: InternalsVisibleTo("Assembly-CSharp-Editor")]
 
 namespace Astro {
     public sealed class AstroGame : Game {
+        
+        public const int SubmissionUpdateMask = 1 << 0;
+        public const int DocumentUpdateMask = 1 << 1;
+        public const int InstrumentUpdateMask = 1 << 2;
+        public const int MonitorControlsUpdateMask = 1 << 3;
+        public const int InteractUpdateMask = 1 << 4;
+
         static public new EventDispatcher<EvtArgs> Events { get; private set; }
 
         [DebugMenuFactory]
@@ -49,6 +59,13 @@ namespace Astro {
             SharedState.Register(progress);
 
             Rendering.EnableAspectClamping(4, 3);
+
+            //GameLoop.OnDebugUpdate.Register(() => {
+            //    using(var psb = PooledStringBuilder.Create()) {
+            //        psb.Builder.Append("Frame #: ").AppendNoAlloc(Frame.Index);
+            //        DebugDraw.AddViewportText(new Vector2(0.5f, 1), new Vector2(0, -8), psb, Color.yellow, 0, TextAnchor.UpperCenter, DebugTextStyle.BackgroundDarkOpaque);
+            //    }
+            //});
         }
 
         [InvokeOnBoot]

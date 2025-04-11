@@ -7,39 +7,50 @@ using UnityEngine;
 
 using Leaf.Runtime;
 using FieldDay.Scripting;
+using FieldDay.Scenes;
 
 
 namespace Astro
 {
-    public class InstrumentInventoryState : SharedStateComponent
+    public class InstrumentInventoryState : SharedStateComponent, IScenePreload
     {
         // General access to instruments
         public RingBuffer<LabInstrument> ActiveInstruments = new RingBuffer<LabInstrument>(8);
 
         // Quicker access structured on instrument data types
         public Dictionary<DataTypeMask, List<LabInstrument>> ActiveInstrumentMap = new Dictionary<DataTypeMask, List<LabInstrument>>();
+
+        public IEnumerator<WorkSlicer.Result?> Preload() {
+            // Load unlocked instruments from player progress
+            var progressState = Find.State<PlayerProgressState>();
+            foreach (var instrumentID in progressState.UnlockedInstruments) {
+                var instrument = ScriptUtility.FindActor(instrumentID).GetComponent<LabInstrument>();
+                InstrumentInventoryUtility.SetInstrumentUnlocked(instrument, true, false, "");
+            }
+            return null;
+        }
     }
 
     public static class InstrumentInventoryUtility
     {
-        public static void RegisterInstrument(LabInstrument instrument)
-        {
-            //instrument.UnlockText.SetText(instrument.PointsToUnlock.ToStringLookup());
+        public static void RegisterInstrument(LabInstrument instrument) {
 
-            SetInstrumentUnlocked(instrument, true);
         }
 
         [LeafMember("SetInstrumentUnlocked")]
         private static void LeafSetInstrumentUnlocked(ScriptActor actor, bool unlocked) {
             LabInstrument instrument = actor.GetComponent<LabInstrument>();
-            SetInstrumentUnlocked(instrument, unlocked);
+            SetInstrumentUnlocked(instrument, unlocked, true, actor.Id);
         }
 
-        public static void SetInstrumentUnlocked(LabInstrument instrument, bool unlocked) {
-            //instrument.Unlocked = unlocked;
-            //instrument.LockPanel.SetActive(!unlocked);
+        public static void SetInstrumentUnlocked(LabInstrument instrument, bool unlocked, bool registerToProgress, StringHash32 actorId) {
             if (unlocked) {
+                if (registerToProgress) {
+                    var progressState = Find.State<PlayerProgressState>();
+                    progressState.UnlockedInstruments.Add(actorId);
+                }
                 AddToActiveInstruments(instrument);
+                instrument.OnUnlock?.Invoke(instrument);
             }
         }
 

@@ -1,5 +1,6 @@
 using FieldDay;
 using FieldDay.Components;
+using FieldDay.Scripting;
 using FieldDay.Systems;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using UnityEngine;
 
 namespace Astro
 {
-    [SysUpdate(GameLoopPhase.Update)]
+    [SysUpdate(GameLoopPhase.Update, 0, AstroGame.MonitorControlsUpdateMask)]
     public class SpaceCameraControllerSystem : SharedStateSystemBehaviour<SpaceCameraState>
     {
         public override void ProcessWork(float deltaTime)
@@ -127,21 +128,25 @@ namespace Astro
             {
                 // look up
                 AdjustVertLook(-m_State.LookIncrement * Frame.DeltaRatio);
+                ScriptUtility.Trigger(ScriptEvents.OnTelescopeMoved);
             }
             if (Game.Input.IsKeyPressed(KeyCode.DownArrow) || Game.Input.IsKeyPressed(KeyCode.S))
             {
                 // look down
                 AdjustVertLook(m_State.LookIncrement * Frame.DeltaRatio);
+                ScriptUtility.Trigger(ScriptEvents.OnTelescopeMoved);
             }
             if (Game.Input.IsKeyPressed(KeyCode.LeftArrow) || Game.Input.IsKeyPressed(KeyCode.A))
             {
                 // look left
                 AdjustHorizLook(-m_State.LookIncrement * Frame.DeltaRatio);
+                ScriptUtility.Trigger(ScriptEvents.OnTelescopeMoved);
             }
             if (Game.Input.IsKeyPressed(KeyCode.RightArrow) || Game.Input.IsKeyPressed(KeyCode.D))
             {
                 // look right
                 AdjustHorizLook(m_State.LookIncrement * Frame.DeltaRatio);
+                ScriptUtility.Trigger(ScriptEvents.OnTelescopeMoved);
             }
         }
 
@@ -151,21 +156,25 @@ namespace Astro
             {
                 // look up
                 AdjustVertLook(-m_State.SmoothLookIncrement * Frame.DeltaRatio);
+                ScriptUtility.Trigger(ScriptEvents.OnTelescopeMoved);
             }
             else if (Game.Input.IsKeyDown(KeyCode.DownArrow) || Game.Input.IsKeyDown(KeyCode.S))
             {
                 // look down
                 AdjustVertLook(m_State.SmoothLookIncrement * Frame.DeltaRatio);
+                ScriptUtility.Trigger(ScriptEvents.OnTelescopeMoved);
             }
             if (Game.Input.IsKeyDown(KeyCode.LeftArrow) || Game.Input.IsKeyDown(KeyCode.A))
             {
                 // look left
                 AdjustHorizLook(-m_State.SmoothLookIncrement * Frame.DeltaRatio);
+                ScriptUtility.Trigger(ScriptEvents.OnTelescopeMoved);
             }
             else if (Game.Input.IsKeyDown(KeyCode.RightArrow) || Game.Input.IsKeyDown(KeyCode.D))
             {
                 // look right
                 AdjustHorizLook(m_State.SmoothLookIncrement * Frame.DeltaRatio);
+                ScriptUtility.Trigger(ScriptEvents.OnTelescopeMoved);
             }
         }
 

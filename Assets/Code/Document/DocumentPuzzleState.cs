@@ -45,24 +45,20 @@ namespace Astro
         #region Sequence
 
         public static void StartDocumentPuzzle(DocumentPuzzleState puzzleState, ViewState viewState, DocumentPuzzleAsset puzzleAsset) {
-            // Shift focus to document board
-            var targetNode = ViewNavUtility.GetNodeById("Left");
-            ViewNavUtility.MoveToNode(viewState, targetNode);
-
             // Set current puzzle
             puzzleState.CurrPuzzle = puzzleAsset;
             if (puzzleAsset) {
                 SpawnQuestionDocument(puzzleState.CurrPuzzle.QuestionAsset.AssetId);
-
-                // TODO: start dragging
             }
 
             puzzleState.PuzzleActive = true;
+            GameLoop.ResumeUpdates(AstroGame.DocumentUpdateMask);
         }
 
         public static void EndDocumentPuzzle(DocumentPuzzleState state)
         {
             state.PuzzleActive = false;
+            GameLoop.SuspendUpdates(AstroGame.DocumentUpdateMask);
         }
 
         #endregion // Sequence

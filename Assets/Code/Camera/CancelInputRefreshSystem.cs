@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Astro
 {
-    [SysUpdate(GameLoopPhase.LateUpdate)]
+    [SysUpdate(GameLoopPhase.LateUpdate, 0, AstroGame.InteractUpdateMask)]
     public class CancelInputRefreshSystem : SharedStateSystemBehaviour<CancelInputState>
     {
         public override void ProcessWork(float deltaTime)

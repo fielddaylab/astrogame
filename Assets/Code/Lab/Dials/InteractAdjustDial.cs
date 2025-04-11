@@ -1,3 +1,4 @@
+using BeauRoutine;
 using FieldDay;
 using FieldDay.Components;
 using System;
@@ -14,7 +15,8 @@ namespace Astro
         public float InputSensitivity = 1; // how sensitive the dial is to input
         public float RotateSpeed = 1; // how quickly the dial rotates according to input
         public bool PassThrough = false; // true if dial can rotate indefinitely despite being bounded in value,
-                                            // false if dial rotation can be determined by dial value
+                                         // false if dial rotation can be determined by dial value
+        public Axis PivotAxis;
         [NonSerialized] public float CurrRawVal; // the current raw value on the dial
         [NonSerialized] public float CurrConstrainedVal; // the current constrained value on the dial
         [NonSerialized] public float RawValDelta = 0;

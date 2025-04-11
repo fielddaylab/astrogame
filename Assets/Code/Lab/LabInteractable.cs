@@ -1,4 +1,7 @@
 using System;
+using BeauUtil;
+using BeauUtil.Debugger;
+using FieldDay;
 using FieldDay.Components;
 using FieldDay.HID;
 using UnityEngine;
@@ -13,8 +16,22 @@ namespace Astro {
         [NonSerialized] public bool IsDragging = false;
         [NonSerialized] public CursorHint Cursor;
 
+        //private string m_CachedPath;
+
         private void Awake() {
             Cursor = GetComponent<CursorHint>();
         }
+
+        //void IRegistrationCallbacks.OnDeregister() {
+        //    if (!this) {
+        //        Log.Error("Hey WTF I was deleted {0}", m_CachedPath);
+        //    } else {
+        //        Log.Msg("[LabInteractable] Deregistering {0}", m_CachedPath);
+        //    }
+        //}
+
+        //void IRegistrationCallbacks.OnRegister() {
+        //    Log.Msg("[LabInteractable] Registering {0}", m_CachedPath ?? (m_CachedPath = UnityHelper.FullPath(gameObject)));
+        //}
     }
 }

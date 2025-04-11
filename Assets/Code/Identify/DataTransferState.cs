@@ -29,7 +29,7 @@ namespace Astro {
                 return false;
             }
 
-            if (TrySetData(target, source.CurrentData)) {
+            if (TrySetData(target, source.CurrentData) || TrySetData(target, source.SiblingSlot.CurrentData)) {
                 source.OnDataTransferred.Invoke(target);
                 return true;
             }
@@ -47,6 +47,12 @@ namespace Astro {
         static public void AssignSelectedTarget(DataTransferState state, DataSlot target)
         {
             state.SelectedTarget = target;
+            state.SourceUpdated = true;
+        }
+
+        static public void ClearSelections(DataTransferState state) {
+            state.SelectedTarget = null;
+            state.SelectedSource = null;
             state.SourceUpdated = true;
         }
     }

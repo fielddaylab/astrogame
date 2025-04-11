@@ -785,6 +785,36 @@ namespace ScriptableBake {
 
         #endregion // Prefabs
 
+        #region In Scene
+
+        /// <summary>
+        /// Returns the currently loaded component that passes the given predicate.
+        /// </summary>
+        static public T FindComponent<T>(Predicate<T> predicate) where T : UnityEngine.Component {
+            var objects = GameObject.FindObjectsByType(typeof(T), FindObjectsInactive.Include, FindObjectsSortMode.None);
+            for(int i = 0; i < objects.Length; i++) {
+                if (predicate((T) objects[i])) {
+                    return (T) objects[i];
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Returns the currently loaded component that passes the given predicate.
+        /// </summary>
+        static public T FindComponent<T, U>(Func<T, U, bool> predicate, in U predicateArg) where T : UnityEngine.Component {
+            var objects = GameObject.FindObjectsByType(typeof(T), FindObjectsInactive.Include, FindObjectsSortMode.None);
+            for (int i = 0; i < objects.Length; i++) {
+                if (predicate((T) objects[i], predicateArg)) {
+                    return (T) objects[i];
+                }
+            }
+            return null;
+        }
+
+        #endregion // In Scene
+
         static private IEnumerable<string> AssetPaths(string filter) {
             string[] guids = AssetDatabase.FindAssets(filter);
             if (guids != null) {
@@ -1083,6 +1113,7 @@ namespace ScriptableBake {
 
         internal BakeFlags m_Flags;
         private Dictionary<string, object> m_ValueCache;
+        private ulong m_ComponentTypeFlags;
         internal List<IBaked> m_AdditionalBakeQueue; 
 
         /// <summary>

@@ -22,6 +22,7 @@ namespace Astro
         public float ColSpacing;
         public float BaseCellWidth;
         public LabInteractable SubmitButton;
+        //public Collider BackgroundCollider;
     }
 
     public static partial class PuzzleUtility
@@ -143,6 +144,7 @@ namespace Astro
                 if (!rowsCorrectness[r]) { // if row incorrect:
                     for (int c = 0; c < state.Display.NumCols; c++) { // go through each cell
                         DataUtility.TryClearData(state.Display.Cells[r * state.Display.NumCols + c].DataSlot);
+                        state.Display.Cells[r * state.Display.NumCols + c].AtlasOutput.MarkDirty();
                     }
                 }
             }

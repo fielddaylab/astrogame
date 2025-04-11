@@ -1,9 +1,15 @@
 #basePath	Day1
 
-
 :: OpeningCutscene
 @trigger SceneReady
+@cutscene
 @who    IntroCutscene
+
+$call InitUpdateMasks()
+$call SetInstrumentUnlocked(CoordinateInstrument, true)
+$call SetInstrumentUnlocked(PhotometerInstrument, true)
+// $call SetInstrumentUnlocked(SpectrometerInstrument, true)
+$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $call SetInputState(false)
 $call StopPuzzleMode()
 $call StopOpenMode()
@@ -15,131 +21,319 @@ $call TelescopeLook(155, -30)
 :: ArrivalAtTheShed
 @trigger    CutsceneEnd
 @when cutsceneId == "IntroCutscene"
+@cutscene
 @who    Radio
 
 $call PlayMusic("Music.Gently-Falling-Piano", 1)
-{@Astrid} Whoa. This place has really changed.
-Elijah, where are you?
 
-$call Wait(2)
+{@Astrid} Whoa. This place has really changed. Elijah, where are you? $[Day1/Astrid/l1_a_01]
+$call Wait(1)
 
-{@Radio} Star HQ to Station Seven. Elijah, do you copy?
 $call MoveToView("Right")
-{@Radio} Please log in and provide status update. 
+{@Radio} Star HQ to Station Seven. Elijah, do you copy? Please log in and provide status report. $[Day1/Radio/l1_r_1]
 
-$call Wait(2)
+{@Astrid} Hi—um, this is Astrid, Elijah’s ... friend. Elijah's not here. Hello? Ugh. They can’t hear me. $[Day1/Astrid/l1_a_02]
 
-{@Astrid} Hi—um, this is Astrid, Elijah’s ... friend. Elijah’s not here.
-$call Wait(1)
-{@Astrid} Hello?
-$call Wait(1)
-{@Astrid} Ugh. They can’t hear me.
-$call Wait(2)
+{@Radio} Station Seven, please log in and report. $[Day1/Radio/l1_r_2] 
 
-{@Radio} Station Seven, please log in and report.
+{@Astrid} I- I can’t, I don’t know how... $[Day1/Astrid/l1_a_03]
 
-$call Wait(1)
+{@Dad} I told you, he's not there... Astrid? Is that you? $[Day1/Dad/l1_d_1]
 
-{@Astrid} I can’t, I don’t know how ...
+{@Astrid} (*gasp*) Dad! I- I can’t believe it's you. Are you still at the South Pole? Are you okay? $[Day1/Astrid/l1_a_04]
 
-$call Wait(2)
+{@Dad} Until I can get you clearance, this is a one-way radio. So I can't hear you... $[Day1/Dad/l1_d_2]
+{@Dad} I’m sorry, Astrid . . . I wish I could’ve warned you in time. Elijah’s not there. He probably won’t be back for a while.  $[Day1/Dad/l1_d_2(2)]
+{@Dad} When I saw his station come online. I assumed it was you. And if it really is you... Happy Birthday kiddo. $[Day1/Dad/l1_d_2(3)]
 
-{@Dad} Astrid, is that you?
-$call Wait(1)
+{@Astrid} What? Why not? Where is he!? Ugh, forgot . . . you can’t hear me. $[Day1/Astrid/l1_a_05]
 
-{@Astrid} Dad! I can’t believe it's you.
-Are you still at the South Pole? Are you okay?
-$call Wait(2)
+{@Dad} Anyhow, my team here at IceCube have been working on rebuilding our knowledge of the cosmos.  $[Day1/Dad/l1_d_3]
+{@Dad} What we lost during the collapse... then Elijah reached out to us. He’s onto something big... $[Day1/Dad/l1_d_3(2)]
 
-{@Dad} This is a one-way radio, so you won’t be able to talk to us. But I have a feeling that’s you. Happy birthday, kiddo. 
-I heard from your aunt Martha that you managed to track down Elijah’s address.
-I’m sorry, Astrid ... I wish I could’ve warned you in time. 
-Elijah’s not there. He probably won’t be back for a while.
+{@Astrid} Onto what?? $[Day1/Astrid/l1_a_06]
 
-$call Wait(2)
+{@Dad} I'm so glad you're there though. We could really use your help. $[Day1/Dad/l1_d_4]
 
-{@Astrid} What? 
-$call Wait(1)
-Why not? 
-$call Wait(1)
-Where is he? 
-$call Wait(2)
-Ugh, forgot ... you can’t hear me. 
-$call Wait(2)
+{@Astrid} Because I know how any of this stuff works... $[Day1/Astrid/l1_a_07]
 
-{@Dad} Hold on. 
-$call Wait(1)
-We just recieved a neutrino emission from the Ursa Major region. 
-What better way to spend your birthday than to help us with a little astronomy?
+{@Dad} You don’t have clearance to use... most of the equipment, but that will come in time. First you need to submit data the old fashioned way. $[Day1/Dad/l1_d_5]
+{@Dad} Sending you data... now. $[Day1/Dad/l1_d_6]
 
-$call Wait(2)
-{@Astrid} ...sure dad. 
 $call Wait(1)
 
-Uploading area of interest... (*neutrino upload noises*)
+$call WaitForMovedToView("Monitor")
+$call MonitorUI->PlayRadioDownload(4.0)
 
-$call WaitForMovedToView("Desk")
-$call StartNeutrinoNavigation()
+{@Dad} OK, looks like you received the coordinates. $[Day1/Dad/l1_d_7] 
+{@Dad} See if you can move your telescope. $[Day1/Dad/l1_d_8]
+
+$call StartMonitorControls()
 $call SetInputState(true)
 $call StopMusic(2)
+$call HintModals->SlideInFromRight("TelescopeControls", 0.4)
+$set temp:introMoveTheTelescope = false
+$goto .MoveTelescopeReminder
+
+:: MoveTelescopeReminder
+$call Wait(10)
+$if !temp:introMoveTheTelescope
+    {@Dad} See if you can move your telescope. $[Day1/Dad/l1_d_8(1)]
+    $goto .MoveTelescopeReminder
+$endif
+// //TODO Shake UI hint
+
+:: MoveYourTelescope
+@trigger    OnTelescopeMoved
+@when   !temp:introMoveTheTelescope
+@boostScore 100
+@interrupt
+@cutscene
+@once
+
+$set temp:introMoveTheTelescope = true
+$call HintModals->Hide("TelescopeControls", 0.2)
+{@Dad} Awesome, your equipment seems to be working. See those three dots above your monitor? Feel up for a game of hot an cold? $[Day1/Dad/l1_d_s3]
+$call StartNeutrinoNavigation()
+$call HintModals->SlideInFromLeft("NeutrinoNav", 0.4)
+
+:: DadHotColdEncouragement1
+@trigger    OnNeutrinoNavWarmer
+@when   newPips == 2
+@once
+
+{@Dad} Nice! Getting warmer... $[Day1/Dad/l1_d_s4]
+$call Wait(2)
+{@Astrid} Remember when I was little and you used to make me find my easter basket this way? $[Day1/Astrid/l1_a_08]
+
+:: DadHotColdEncouragement2
+@trigger    OnNeutrinoNavWarmer
+@when   newPips == 3
+@once
+
+{@Dad} Waaaaarrrrrmmmmmmeeerrrr! $[Day1/Dad/l1_d_s6]
+
+:: DadColder
+@trigger    OnNeutrinoNavColder
+@when   newPips == 1
+
+{@Dad} Colder... $[Day1/Dad/l1_d_s5]
+
 
 :: NeutrinoNavigationComplete
 @trigger    NeutrinoNavigationComplete
+@boostScore 100
+@cutscene
 @once
 
-{@Radio} Neutrino Origin Detected
-$call StopNeutrinoNavigation()
+$call SetInputState(false)
+$call AlignCamToNeutrino()
+$call HintModals->Hide("NeutrinoNav", 0.2)
+$call SetInputState(false)
 $call StartOpenMode()
+{@Dad} Nice Job! So earlier this morning, Ice Cube detected a high energy neutrino coming from one of several possible stars in this location. $[Day1/Dad/l1_d_s7]
+{@Dad} You’ll see each of them highlighted on your display. Identifying these stars will be a great way for you get your feet wet and upgrade your gear. $[Day1/Dad/l1_d_s7(2)]
+$call StopNeutrinoNavigation()
+
+{@Dad} Alight. Select a possible neutrino origin on your display. $[Day1/Dad/l1_d_s8]
+$set temp:waitingForNeutrinoStar = true
+
+$call HintModals->SlideInFromLeft("SelectStar", 0.4)
+$call SetInputState(true)
+
+:: OnStarSelected
+@trigger    OnStarSelected
+@when   temp:waitingForNeutrinoStar
+@cutscene
+@interrupt
+
+{@Dad} Oops. It doesn't look like that is a possible neutrino origin. Look for objects with a blue highlight.
+
+:: OnNeutrinoStarSelected
+@trigger    OnNeutrinoStarSelected
+@when   temp:waitingForNeutrinoStar
+@boostScore 100
+@interrupt
+@cutscene
+@once
+
+$set temp:waitingForNeutrinoStar = false
+$set temp:waitingForManualOpen = true
+$call HintModals->Hide("SelectStar", 0.2)
+$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 650)
+{@Dad} Great! See if you can find Elijah’s operator manual. It's small, spiral bound... $[Day1/Dad/l1_d_s9]
+$call Wait(1)
+$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
+
+:: OnRefGuideOpened
+@trigger    OnRefGuideOpened
+@when   temp:waitingForManualOpen
+@boostScore 200
+@interrupt
+@cutscene
+@once
+
+$set temp:waitingForManualOpen = false
+$call SetInputState(false)
+$call SubtitleController->SetSubtitlePosition(0.5, 1, 0, -140)
+$call MoveToView("Right")
+{@Dad} Do you see your photometer in the equipment stack? That should tell you what the apparent magnitude of the star. $[Day1/Dad/l1_d_s11]
+{@Dad} All you need to do is find that number in your reference guide and submit the data. $[Day1/Dad/l1_d_s11(2)]
+$call SetInputState(true)
+$call Wait(1)
+$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
+
+:: PlayerLeavesNeutrinoTask
+@trigger    OnLeaveNeutrinoRegion
+@once
+
+{@Dad} Hmmm, you might want to stay on target Little Bear. $[Day1/Dad/l1_d_s10]
+
+:: PlayerLeavesNeutrinoTask2
+@trigger    OnLeaveNeutrinoRegion
+@once
+
+{@Dad} Looks like you’re drifting away from the cluster Astrid. $[Day1/Dad/l1_d_s17]
+
+:: IncorrectSubmission
+@trigger    OnIncorrectOpenIdSubmission
+
+$call SubtitleController->SetSubtitlePosition(0.5, 1, 0, -140)
+{@Dad} Hmm, that wasn’t correct, remember to look at your photometer, and then line it up with the closest range in your manual. $[Day1/Dad/l1_d_s13]
+$call Wait(1)
+$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
+
+:: DupliacteSubmission
+@trigger    OnDuplicateOpenIdSubmission
+
+{@Dad} Looks like you’ve already submitted that info. You won’t get any science points for identifying that property again. $[Day1/Dad/l1_d_s14]
+
+:: FirstPoint
+@trigger    PointsUpdated
+@when   sciencePoints > 0
+@interrupt
+@cutscene
+@once
+
+$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
+{@Dad} See if you can determine the apparent magnitude of some of the other stars in this cluster. $[Day1/Dad/l1_d_s15]
+
+:: AnothaPoint
+@trigger    PointsUpdated
+@when   sciencePoints > 1
+@interrupt
+@cutscene
+@once
+
+{@Dad} Great Job! Go for another one. $[Day1/Dad/l1_d_s18]
 
 :: PointsUpdated
 @trigger    PointsUpdated
 @when   sciencePoints > 2
+@boostScore 100
+@cutscene
 @once
 
+$call SetInputState(false)
+$call SetRefGuideActive(false)
 $call StopOpenMode()
 $call ClearMonitorSelection()
-{@Radio} Star HQ to Station Seven.
-The STAR Coalition has requests your assistance identifying starts in the Perseus constellation.
-Please align your telescope to the Perseus region. 
+{@Dad} Looks like you’ve identified enough stars to earn a higher clearance level. You’ll need to tune to the right frequency on your radio to unlock your equipment. Tune to 375mHz. $[Day1/Dad/l1_d_s19]
+// {@Dad} You’ll need to tune to the right frequency on your radio to unlock your equipment. Tune to 375mHz. $[Day1/Dad/l1_d_s34]
+
+$call HintModals->SlideInFromRight("RadioControls", 0.4) 
+
+$call Wait(1)
+
+$call HintModals->Hide("RadioControls", 0.2)
+
+//TODO Seperate Node Here
+$call MonitorUI->PlayRadioDownload(2)
+$call Wait(1)
+$call MonitorUI->ShowCeresLogo()
+$call SetInstrumentUnlocked(ColorInstrument, true)
+{@Radio} Congratulations on being awarded clearance level 2. You are now cleared to use the color meter.  $[Day1/Radio/l1_r_3]
+{@Radio} Please reference your CERES Operator Manual for further information about your equipment.  $[Day1/Radio/l1_r_3(2)]
+{@Radio} Thanking you for being an important part of the CERES Distributed Network of Citizen Observatories. Together, we will map the stars for a better tomorrow. $[Day1/Radio/l1_r_3(3)]
+
+{@Astrid} Ugh, riviting... $[Day1/Astrid/l1_a_11]
+
+{@Radio} Tuning you to the Ice Cube CERES headquarters for further instruction... $[Day1/Radio/l1_r_4]
+$call MonitorUI->HideCeresLogo()
+$call Wait(1)
+
+{@Dad} Awesome, your rig is upgraded! Up for another game of hot and cold? This time I need you to find the constellation Perseus. $[Day1/Dad/l1_d_s20] 
+
+{@Astrid} Perseus, huh? $[Day1/Astrid/l1_a_12]
+
 $call StartPuzzleNavigation()
+$call SetInputState(true)
+
+:: DadHotColdEncouragement3
+@trigger    OnConstellationNavWarmer
+@when   newPips == 2
+@once
+
+{@Dad} Waarrmer... $[Day1/Dad/l1_d_s21]
+
+:: DadHotColdEncouragement4
+@trigger    OnConstellationNavWarmer
+@when   newPips == 3
+@once
+
+{@Dad} Waaaaarrrrrmmmmmmeeerrrr! $[Day1/Dad/l1_d_s23]
+
+:: DadColder3
+@trigger    OnConstellationNavColder
+@when   newPips == 1
+@once
+
+{@Dad} Getting Colder... $[Day1/Dad/l1_d_s22] 
+
+:: DadColder4
+@trigger    OnConstellationNavColder
+@when   newPips == 2
+@once
+
+{@Dad} Colder...
 
 :: PuzzleNavigationComplete
 @trigger    PuzzleNavigationComplete
+@boostScore 100
+@cutscene
 @once
 
+$call SubtitleController->SetSubtitlePosition(0.5, 1, 0, -140)
 $call StopPuzzleNavigation()
-{@Radio} This task will require your astral color instrument. 
-{@Radio} Unlocking now. Stand By...
-
-{@Dad} There’s not much time, so I’ll give you the short version.
-My team here at IceCube has started an underground group called the STAR Coalition. We’re trying to rebuild our knowledge of the night sky. 
-$call Wait(1)
-It’s not easy ... so much was lost during the Collapse.
-$call Wait(1)
-But then Elijah reached out to us. He’s onto something big. It’s called Project Hercules. 
-$call Wait(2)
-
-{@Astrid} Project Hercules? 
-$call Wait(1)
-
-{@Dad} I’ll explain more later. For now, we need your help. 
-Elijah has been working on a series of puzzles. I was hoping you could pick up where he left off.
-$call Wait(2)
-
-{@Astrid} Me? 
-$call Wait(1)
-Dad, I just got here. 
-$call Wait(1)
-I don’t know how any of this stuff works!
-$call Wait(1)
-
-{@Dad} See if you can find Elijah’s reference guide. It should have all the data you need.
-
-{@Dad} Time’s up. I gotta go.
-I’ll explain more later.
-Love you, Little Bear. Good luck.
-$call SetInstrumentUnlocked(ColorInstrument, true)
+$call SetInputState(false)
+$call SetRefGuideActive(false)
 $call StartPuzzleMode()
+{@Astrid} Whoooaa... what's that? $[Day1/Astrid/l1_a_13]
+
+$call Wait(1)
+{@Dad} Alright kiddo, this was the... important thing I was telling you about earlier. $[Day1/Dad/l1_d_s24]
+{@Dad} On your screen is all known information about the stars in Persius. You just need to logic your way through it and input data from your equipment into the grid.  $[Day1/Dad/l1_d_s24(2)]
+{@Dad} I’ll help you get started. $[Day1/Dad/l1_d_s24(3)]
+{@Dad} Alight, select the star that matches the <i>only</i> coordinates listed on your grid. You’ll see those coordinates in your celestial compass. $[Day1/Dad/l1_d_s25]
+$call Wait(0.5)
+$call HintModals->SlideInFromRight("FirstPuzzleStar", 0.4)
+$call SetInputState(true)
+$call Wait(1)
+$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
+$set temp:waitingForSelectAtik = true
+
+:: FirstPuzzleStarSelected
+@trigger   OnStarSelected
+@when   starName = "Atik", temp:waitingForSelectAtik
+@cutscene
+@once
+
+$set temp:waitingForSelectAtik = false
+$call HintModals->Hide("FirstPuzzleStar", 0.2)
+$call SubtitleController->SetSubtitlePosition(0.5, 1, 0, -140)
+{@Dad} Great, you can use our color meter and photometer to fill in data for Atik, select the Apparent Magnintude space in the puzzle grid. $[Day1/Dad/l1_d_s26]
+$call Wait(1)
+$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 
 :: PerseusPuzzleComplete
 @trigger    CorrectPuzzleSubmission
@@ -149,17 +343,9 @@ $call StartPuzzleMode()
 $call ClearMonitorSelection()
 $call StopPuzzleMode()
 $call SetInputState(false)
-{@Astrid} Time to turn in for the night.
-Oh, what's this?
-$call WaitForMovedToView("Left")
-$call SpawnDocumentToCamera("Day1Martha")
-$call SetInputState(true)
+{@Dad}  Awesome! $[Day1/Dad/l1_d_s31]
+{@Dad} Gosh it’s late where you’re at... Get some rest kiddo. We’ll try to figure out 2 way communication tomorrow... $[Day1/Dad/l1_d_s33]
 
-:: EndDay
-@trigger    DocumentInspectEnd
-@when   documentId == "Day1Martha"
-@once
-
-$call SetInputState(false)
+{@Astrid} (*yawns*) That's about the only thing you've said that's made any sense... $[Day1/Astrid/l1_a_14]
 $call Wait(1)
 $call LoadNextDay()
