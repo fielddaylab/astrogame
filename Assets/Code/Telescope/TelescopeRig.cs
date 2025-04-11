@@ -40,7 +40,7 @@ namespace Astro {
             rig.Base.localEulerAngles = localBase;
 
             var localDome = rig.Dome.localEulerAngles;
-            localDome.y = yRot + rig.RotationOffset.y; // CalcDomeRotation(rig, yRot) + rig.RotationOffset.y;
+            localDome.y = -CalcDomeRotation(rig, yRot);
             rig.Dome.localEulerAngles = localDome;
 
             var localShaft = rig.Shaft.localEulerAngles;
@@ -68,54 +68,12 @@ namespace Astro {
             float a = Vector3.Distance(domePos, basePos);
 
             // Calculate b = distance from telescope to edge of dome
-            Vector3 edgePoint = Vector3.zero;
+            // Use of Law of Sines SSA
+            var sinC = Mathf.Sin(baseRot * Mathf.Deg2Rad) / r * a;
+            var cTheta = Mathf.Asin(sinC) * Mathf.Rad2Deg;
 
-            /*
-            // get tan(theta) = slope
-            var slope = Mathf.Tan(baseRot * Mathf.Deg2Rad);
-
-            // use slope Ax + By + C = 0 -> y = (-Ax - C) / B
-            var a1 = -slope;
-            var b1 = 1;
-            var c1 = (basePos - domePos).z;
-
-            var EPS = 0.2f;
-
-
-            double x0 = -a1* c1 / (a1* a1+ b1* b1), y0 = -b1* c1 / (a1* a1+ b1* b1);
-            if (c1 * c1 > r * r * (a1* a1+ b1* b1) + EPS)
-            {
-
-            }
-            else if (Mathf.Abs(c1 * c1 - r * r * (a1* a1+ b1* b1)) < EPS)
-            {
-                edgePoint = new Vector3((float)x0, 0, (float)y0);
-            }
-            else
-            {
-                double d = r * r - c1 * c1 / (a1* a1+ b1* b1);
-                double mult = Math.Sqrt(d / (a1* a1+ b1* b1));
-                double ax, ay, bx, by;
-                ax = x0 + b1 * mult;
-                bx = x0 - b1 * mult;
-                ay = y0 - a1 * mult;
-                by = y0 + a1 * mult;
-                edgePoint = new Vector3((float)ax, 0, (float)bx);
-            }
-            */
-
-            // Vector3 edgePoint = new Vector3((float)x0, 0, (float)y0); // basePos + ; // new Vector3(Mathf.Cos(baseRot * Mathf.Deg2Rad) * r, 0, Mathf.Sin(baseRot * Mathf.Deg2Rad) * r);
-            float b = Vector3.Distance(edgePoint, basePos);
-            Debug.Log("[Circle math] curr b: " + b);
-
-            // Calculate dome angle using Cosine
-            float cosTheta = (Mathf.Pow(r, 2) + Mathf.Pow(a, 2) - Mathf.Pow(b, 2)) / (2 * a * r);
-            Debug.Log("[Circle math] curr cos: " + cosTheta);
-            float finalYRot = Mathf.Acos(cosTheta) * Mathf.Rad2Deg;
-            // if (edgePoint.z < 0) { finalYRot *= -1; }
-            Debug.Log("[Circle math] curr arccos: " + Mathf.Acos(cosTheta) * Mathf.Rad2Deg);
-
-            // var finalYRot = Quaternion.LookRotation((edgePoint - domePos).normalized).eulerAngles.y;
+            var targetTheta = 180 + cTheta - baseRot;
+            var finalYRot = targetTheta;
 
             return finalYRot;
         }
