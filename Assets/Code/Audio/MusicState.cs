@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Linq;
 using BeauUtil;
+using BeauUtil.Debugger;
 using BeauUWT;
 using EasyAssetStreaming;
 using FieldDay;
@@ -13,7 +14,8 @@ using UnityEngine;
 namespace Astro.Audio {
     public sealed class MusicState : SharedStateComponent, IRegistrationCallbacks {
         [NonSerialized] public AudioHandle MusicTrack;
-        [NonSerialized] public string MusicTag = "music"; 
+        [NonSerialized] public string MusicTag = "music";
+        [NonSerialized] public RingBuffer<StringHash32> TrackQueue = new RingBuffer<StringHash32>(2, RingBufferMode.Expand);
 
         public void OnDeregister() {
             Sfx.Stop(MusicTrack);
@@ -25,15 +27,22 @@ namespace Astro.Audio {
 
 
     static public class MusicUtility {
+
+        [LeafMember("QueueMusic")]
+        static private void LeafQueueMusic(StringHash32 track) {
+            MusicState state = Find.State<MusicState>();
+            state.TrackQueue.PushBack(track);
+        }
+
         [LeafMember("PlayMusic")]
-        static private IEnumerator LeafPlayMusic(StringHash32 track, float fadeInTime = 0) {
+        static public IEnumerator LeafPlayMusic(StringHash32 track, float fadeInTime = 0) {
             MusicState state = Find.State<MusicState>();
             if (state.MusicTrack.IsValid) {
                 StopMusic(fadeInTime);
                 yield return fadeInTime;
             }
 
-            state.MusicTrack = Sfx.Play(track); 
+            state.MusicTrack = Sfx.Play(track);
             Sfx.OverrideTag(state.MusicTrack, state.MusicTag);
             if (fadeInTime > 0) {
                 Sfx.SetVolume(state.MusicTrack, 0);
