@@ -15,6 +15,7 @@ $call MoveToView("DocumentPuzzle")
 {@Astrid} Looks like I got some mail... At least the mail service is still working... $[Day2/Astrid/l2_a_1]
 $call StopPuzzleMode()
 $call StopOpenMode()
+$call SetInputState(false)
 $call SpawnDocumentToCamera("Day2DadPostcard")
 {@Astrid} Wow... Wish I could see the auroras there with you, Dad... $[Day2/Astrid/l2d_a_1]
 $call SetInputState(true)
@@ -24,19 +25,23 @@ $call SetInputState(true)
 @when   documentId == "Day2DadPostcard"
 @once
 
+$call SetInputState(false)
 $call Wait(1)
 {@Astrid} Elijah! Finally, some news. $[Day2/Astrid/l2_a_2]
 $call SpawnDocumentToCamera("Day2ElijahPostcard")
 $call Wait(1)
 {@Astrid} Oh Elijah... What are you getting yourself into? $[Day2/Astrid/l2d_a_2]
+$call SetInputState(true)
 
 :: SpawnPuzzleDocs2
 @trigger    DocumentInspectEnd
 @when   documentId == "Day2ElijahPostcard"
 @once
 
+$call SetInputState(false)
 $call Wait(1)
 $call SpawnDocumentToCamera("Day2Martha")
+$call SetInputState(true)
 
 :: DocumentPuzzleStart
 @trigger    DocumentInspectEnd
@@ -70,7 +75,8 @@ $call MoveToView("Desk")
 $call Wait(1)
 
 $call MoveToView("Right")
-{@Radio} Star HQ to Station Seven. IceCube is reading a high-energy neutrino emission from the area of the Hydra Constellation. Identification of nearby celestial objects is requested. Uploading area of interest... $[Day2/Radio/l2_r_1]
+{@Radio} Star HQ to Station Seven. IceCube is reading a high-energy neutrino emission from the area of the Hydra Constellation. $[Day2/Radio/l2_r_1]
+{@Radio} Identification of nearby celestial objects is requested. Uploading area of interest... $[Day2/Radio/l2_r_1(2)]
 
 $call WaitForMovedToView("Desk")
 $call StartNeutrinoNavigation()
@@ -92,18 +98,17 @@ $call StartOpenMode()
 $call StopOpenMode()
 $call ClearMonitorSelection()
 $call SetInputState(false)
+$call SetRefGuideActive(false)
 {@Dad} Hey Astrid, you there? Looks like your system is on... I hope you got my letter about project hercules. $[Day2/Dad/l2_d_1]
 
-{@Astrid} I did... not that I can tell you that... $[Day2/Astrid/l2_a_4]
+{@Astrid} I did... n- not that I can tell you that... $[Day2/Astrid/l2_a_4]
 
-{@Dad} There's a sattelite, built to withstand a CME.\
-If we could decrypt what is stored on it... it would change everything. $[Day2/Dad/l2_d_4]
-Each puzzle reveals part of the password. That's what you've been working on... $[Day2/Dad/l2_d_5]
+{@Dad} There's a sattelite, built to withstand a CME. If we could decrypt what is stored on it... it would change everything. $[Day2/Dad/l2_d_4]
+{@Dad} The sattelite is encrypted. Each puzzle reveals part of the password. That's what you've been working on... $[Day2/Dad/l2_d_5]
 
 {@Astrid} These puzzles.... reveal the password to the satellite? $[Day2/Astrid/l2_a_5]
 
-{@Dad} Yeah, the guy who built it was... let's just say, excentric. Your next puzzle is the constellation Hercules.\
-See if the reference guide can point you in the right direction. $[Day2/Dad/l2_d_6]
+{@Dad} Yeah, the guy who built it was... let's just say, excentric. Your next puzzle is the constellation Hercules. See if the reference guide can point you in the right direction. $[Day2/Dad/l2_d_6]
 
 {@Astrid} Ugh. I still don’t get it. Elijah said we might be too late. Too late for what? $[Day2/Astrid/l2_a_6]
 
