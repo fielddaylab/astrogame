@@ -2,6 +2,7 @@ using BeauRoutine;
 using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay;
+using FieldDay.Audio;
 using FieldDay.Debugging;
 using FieldDay.Rendering;
 using FieldDay.Scripting;
@@ -23,6 +24,10 @@ namespace Astro {
         }
 
         public override void ProcessWork(float deltaTime) {
+            if (m_StateA.ReviewModule.ResultShown) {
+                return;
+            }
+
             if (m_StateB.NavigationModeActive && m_StateB.ReadoutDirty) {
                 ProcessConstellationNav();
             }
@@ -50,8 +55,8 @@ namespace Astro {
                 module.Result.SetSharedMaterialAtIndex(1, module.UnlitPipMaterial);
                 ReviewModuleUtility.SetPipReadout(module, 3);
             } else {
-                ReviewModuleUtility.ShowResultSprite(true, module);
                 if (!m_StateB.ConstellationSnapRoutine.Exists()) {
+                    ReviewModuleUtility.ShowResultSprite(true, module);
                     PuzzleState puzzleState = Find.State<PuzzleState>();
                     EqCoords target = puzzleState.ActivePuzzle.PuzzleCoordinates;
 
@@ -95,7 +100,8 @@ namespace Astro {
             } else if (newDist < SuccessThreshold) {
                 module.Result.SetSharedMaterialAtIndex(1, module.UnlitPipMaterial);
                 ReviewModuleUtility.SetPipReadout(module, 3);
-            } else {
+            } else if (!m_StateC.ResultShown) {
+                m_StateC.ResultShown = true;
                 ReviewModuleUtility.ShowResultSprite(true, module);
                 Game.Events.Dispatch(GameEvents.NeutrinoNavigationComplete);
                 ReviewModuleUtility.ResetReview(module);

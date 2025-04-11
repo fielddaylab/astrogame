@@ -16,6 +16,7 @@ public sealed class NeutrinoNavigationState : SharedStateComponent, IRegistratio
     [NonSerialized] public float CameraDistanceFromOrigin = -1;
     [NonSerialized] public Vector3 CameraForward = Vector3.zero;
     [NonSerialized] public bool ReadoutDirty = false;
+    [NonSerialized] public bool ResultShown = false;
 
     public void OnRegister() {
         Game.Events.Register(GameEvents.StartNeutrinoNavigation, NavigationCanvasUtil.SetupNeutrinoNavUI);
@@ -41,6 +42,7 @@ public static class NeutrinoNavigationUtility {
 
         NeutrinoNavigationState navState = Find.State<NeutrinoNavigationState>();
         navState.NavigationModeActive = true;
+        navState.ResultShown = false;
 
         ViewNavUtility.LeafMoveToNode("Monitor");
         state.OnLookUpdated.Invoke(state);

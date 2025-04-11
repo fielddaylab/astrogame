@@ -8,6 +8,7 @@ using FieldDay.Systems;
 using System.Collections;
 using UnityEngine;
 using Astro.Reference;
+using FieldDay.Audio;
 
 namespace Astro {
     [SysUpdate(GameLoopPhase.Update, 0, AstroGame.SubmissionUpdateMask)]
@@ -46,6 +47,7 @@ namespace Astro {
             if (timerProgress * (numPips + 1) > (module.PipsRevealed + 1)) {
                 module.CountdownSprites[module.PipsRevealed].SetSharedMaterialAtIndex(1, module.LitPipMaterial);
                 module.PipsRevealed++;
+                Sfx.PlayDetached(module.PipCountSounds[module.PipsRevealed], module.SoundAnchor);
             } else return;
         }
 
@@ -63,8 +65,10 @@ namespace Astro {
             ReviewModule module = state.ReviewModule;
 
             if (correct) {
+                Sfx.PlayDetached("Oneshot.Review.Success", module.SoundAnchor);
                 module.Result.SetSharedMaterialAtIndex(1, module.SuccessMaterial);
             } else {
+                Sfx.PlayDetached("Oneshot.Review.Failure", module.SoundAnchor);
                 if (ReferenceUtility.AssetSubmissionCompleted()){
                     module.Result.SetSharedMaterialAtIndex(1, module.LitPipMaterial);
                 } else {
