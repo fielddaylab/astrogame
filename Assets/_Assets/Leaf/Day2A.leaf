@@ -8,7 +8,7 @@
 $call InitUpdateMasks()
 $call SetInstrumentUnlocked(CoordinateInstrument, true)
 $call SetInstrumentUnlocked(PhotometerInstrument, true)
-$call SetInstrumentUnlocked(SpectrometerInstrument, true)
+// $call SetInstrumentUnlocked(SpectrometerInstrument, true)
 $call SetInstrumentUnlocked(ColorInstrument, true)
 
 $call MoveToView("DocumentPuzzle")
@@ -16,7 +16,7 @@ $call MoveToView("DocumentPuzzle")
 $call StopPuzzleMode()
 $call StopOpenMode()
 $call SpawnDocumentToCamera("Day2DadPostcard")
-{@Astrid} Wow... Wish I could see the auroras there with you, Dad... $[Day1/Astrid/l2d_a_1]
+{@Astrid} Wow... Wish I could see the auroras there with you, Dad... $[Day2/Astrid/l2d_a_1]
 $call SetInputState(true)
 
 :: SpawnPuzzleDocs1

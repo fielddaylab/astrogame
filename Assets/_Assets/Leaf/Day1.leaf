@@ -8,7 +8,8 @@
 $call InitUpdateMasks()
 $call SetInstrumentUnlocked(CoordinateInstrument, true)
 $call SetInstrumentUnlocked(PhotometerInstrument, true)
-$call SetInstrumentUnlocked(SpectrometerInstrument, true)
+// $call SetInstrumentUnlocked(SpectrometerInstrument, true)
+$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $call SetInputState(false)
 $call StopPuzzleMode()
 $call StopOpenMode()
@@ -45,9 +46,7 @@ Hello? Ugh. They can’t hear me. $[Day1/Astrid/l1_a_02]
 {@Astrid} (*gasp*) Dad! I- I can’t believe it's you.\
 Are you still at the South Pole? Are you okay? $[Day1/Astrid/l1_a_04]
 
-{@Dad} Until I can get you clearance, this is a one-way radio. So I can't hear you... I’m sorry, Astrid . . . I wish I could’ve warned you in time.\
-Elijah’s not there. He probably won’t be back for a while. When I saw his station come online. I assumed it was you.\
-And if it really is you... Happy Birthday kiddo. $[Day1/Dad/l1_d_2]
+{@Dad} Until I can get you clearance, this is a one-way radio. So I can't hear you... I’m sorry, Astrid . . . I wish I could’ve warned you in time. Elijah’s not there. He probably won’t be back for a while. When I saw his station come online. I assumed it was you. And if it really is you... Happy Birthday kiddo. $[Day1/Dad/l1_d_2]
 
 {@Astrid} What? Why not? Where is he!?\
 Ugh, forgot . . . you can’t hear me. $[Day1/Astrid/l1_a_05]
@@ -180,10 +179,9 @@ $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 
 $set temp:waitingForManualOpen = false
 $call SetInputState(false)
-$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 650)
+$call SubtitleController->SetSubtitlePosition(0.5, 1, 0, -140)
 $call MoveToView("Right")
-{@Dad} Do you see your photometer in the equipment stack? That should tell you what the apparent magnitude of the star is.\
-All you need to do is find that number in your reference guide and submit the data. $[Day1/Dad/l1_d_s11]
+{@Dad} Do you see your photometer in the equipment stack? That should tell you what the apparent magnitude of the star is. All you need to do is find that number in your reference guide and submit the data. $[Day1/Dad/l1_d_s11]
 $call SetInputState(true)
 $call Wait(1)
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
@@ -203,7 +201,7 @@ $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 :: IncorrectSubmission
 @trigger    OnIncorrectOpenIdSubmission
 
-$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 650)
+$call SubtitleController->SetSubtitlePosition(0.5, 1, 0, -140)
 {@Dad} Hmm, that wasn’t correct, remember to look at your photometer, and then line it up with the closest range in your manual. $[Day1/Dad/l1_d_s13]
 $call Wait(1)
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
@@ -258,10 +256,7 @@ $call MonitorUI->PlayRadioDownload(2)
 $call Wait(1)
 $call MonitorUI->ShowCeresLogo()
 $call SetInstrumentUnlocked(ColorInstrument, true)
-{@Radio} Congratulations on being awarded clearance level 2. You are now cleared to use the color meter.\
-Please reference your CERES Operator Manual for further information about your equipment.\
-Thanking you for being an important part of the CERES Distributed Network of Citizen Observatories.\
-Together, we will map the stars for a better tomorrow. $[Day1/Radio/l1_r_3]
+{@Radio} Congratulations on being awarded clearance level 2. You are now cleared to use the color meter. Please reference your CERES Operator Manual for further information about your equipment. Thanking you for being an important part of the CERES Distributed Network of Citizen Observatories. Together, we will map the stars for a better tomorrow. $[Day1/Radio/l1_r_3]
 
 {@Astrid} Ugh, Riviting... $[Day1/Astrid/l1_a_11]
 
@@ -311,7 +306,7 @@ $call SetInputState(true)
 @cutscene
 @once
 
-$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 650)
+$call SubtitleController->SetSubtitlePosition(0.5, 1, 0, -140)
 $call StopPuzzleNavigation()
 $call SetInputState(false)
 $call SetRefGuideActive(false)
@@ -337,7 +332,7 @@ $set temp:waitingForSelectAtik = true
 
 $set temp:waitingForSelectAtik = false
 $call HintModals->Hide("FirstPuzzleStar", 0.2)
-$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 650)
+$call SubtitleController->SetSubtitlePosition(0.5, 1, 0, -140)
 {@Dad} Great, we can use our color meter and photometer to fill in data for Atik, select the Apparent Magnintude space in the puzzle grid. $[Day1/Dad/l1_d_s26]
 $call Wait(1)
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
