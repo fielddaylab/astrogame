@@ -208,29 +208,11 @@ $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 
 {@Dad} Looks like you’ve already submitted that info. You won’t get any science points for identifying that property again. $[Day1/Dad/l1_d_s14]
 
-:: FirstPoint
-@trigger    PointsUpdated
-@when   sciencePoints > 0
-@interrupt
-@cutscene
-@once
-
-$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
-{@Dad} See if you can determine the apparent magnitude of some of the other stars in this cluster. $[Day1/Dad/l1_d_s15]
-
-:: AnothaPoint
-@trigger    PointsUpdated
-@when   sciencePoints > 1
-@interrupt
-@cutscene
-@once
-
-{@Dad} Great Job! Go for another one. $[Day1/Dad/l1_d_s18]
-
 :: PointsUpdated
 @trigger    PointsUpdated
 @when   sciencePoints > 2
-@boostScore 100
+@boostScore 200
+@interrupt
 @cutscene
 @once
 
@@ -239,8 +221,7 @@ $call SetRefGuideActive(false)
 $call StopOpenMode()
 $call ClearMonitorSelection()
 {@Dad} Looks like you’ve identified enough stars to earn a higher clearance level. $[Day1/Dad/l1_d_s19]
-You’ll need to tune to the right frequency on your radio to unlock your equipment. $[Day1/Dad/l1_d_s34]
-// {@Dad} You’ll need to tune to the right frequency on your radio to unlock your equipment. Tune to 375mHz. $[Day1/Dad/l1_d_s34]
+{@Dad} You’ll need to tune to the right frequency on your radio to unlock your equipment. $[Day1/Dad/l1_d_s34]
 
 $call HintModals->SlideInFromRight("RadioControls", 0.4) 
 
@@ -269,6 +250,26 @@ $call Wait(1)
 
 $call StartPuzzleNavigation()
 $call SetInputState(true)
+
+:: AnothaPoint
+@trigger    PointsUpdated
+@when   sciencePoints > 1
+@interrupt
+@cutscene
+@once
+
+{@Dad} Great Job! Go for another one. $[Day1/Dad/l1_d_s18]
+
+:: FirstPoint
+@trigger    PointsUpdated
+@when   sciencePoints > 0
+@interrupt
+@cutscene
+@once
+
+$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
+{@Dad} See if you can determine the apparent magnitude of some of the other stars in this cluster. $[Day1/Dad/l1_d_s15]
+
 
 :: DadHotColdEncouragement3
 @trigger    OnConstellationNavWarmer

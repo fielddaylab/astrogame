@@ -10,6 +10,7 @@ using BeauUtil.Debugger;
 using FieldDay.Rendering;
 using System.Collections;
 using UnityEngine.UI;
+using BeauUtil.UI;
 
 public sealed class PuzzleNavigationState : SharedStateComponent, IRegistrationCallbacks {
     [NonSerialized] public bool NavigationModeActive = false;
@@ -122,12 +123,11 @@ public static class PuzzleNavigationUtility {
         CanvasGroup boarder = navProjectionState.BoarderGroup;
         CanvasGroup outline = navProjectionState.OutlineGroup.GetComponent<CanvasGroup>();
         yield return spaceCameraState.Camera.RootTransform.RotateQuaternionTo(targetQuat, 0.5f, Space.Self).Ease(Curve.Smooth).OnUpdate((_) => spaceCameraState.LookUpdatedThisFrame = true);
-        // TODO: Figure out how to make the FocusVisuals update throughout the rotation tween
         spaceCameraState.OnLookUpdated.Invoke(spaceCameraState);
         yield return Routine.Combine(
             Tween.Value(1f, 0.2f, (f) => { outline.alpha = f; }, Mathf.Lerp, 0.4f),
             Tween.Value(boarder.alpha, 0f, (f) => { boarder.alpha = f; }, Mathf.Lerp, 0.4f),
-            Tween.Color(Color.white, navProjectionState.NavigationCompleteColor, (c) => { UpdateEdgeGroupColor(navProjectionState.OutlineGroup, c); }, 0.4f, ColorUpdate.FullColor)
+            Tween.Color(navProjectionState.ConstellationEdgeColor, navProjectionState.NavigationCompleteColor, (c) => { UpdateEdgeGroupColor(navProjectionState.OutlineGroup, c); }, 0.4f, ColorUpdate.FullColor)
         ); 
 
         boarder.gameObject.SetActive(false);
@@ -138,9 +138,8 @@ public static class PuzzleNavigationUtility {
 
     // Helper for updating the edge color of constellations in camera snap routine
     private static void UpdateEdgeGroupColor(RectTransform OutlineGroup, Color color) {
-        Image[] edgeImages = OutlineGroup.GetComponentsInChildren<Image>();
-        for(int i = 0; i < edgeImages.Length; i++) {
-            edgeImages[i].color = color;
+        foreach(RoundedRectGraphic graphic in OutlineGroup.GetComponentsInChildren<RoundedRectGraphic>()) {
+            graphic.color = color;
         }
     }
 }

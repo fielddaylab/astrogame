@@ -38,7 +38,6 @@ public static class NeutrinoNavigationUtility {
     public static void OnNeutrinoNavStart() {
         SpaceCameraState state = Find.State<SpaceCameraState>();
         state.OnLookUpdated.Register(UpdateCameraDistanceFromPuzzle);
-        state.OnLookUpdated.Register(NavigationCanvasUtil.UpdatedNeutrinoNavigationArrow);
 
         NeutrinoNavigationState navState = Find.State<NeutrinoNavigationState>();
         navState.NavigationModeActive = true;
@@ -53,7 +52,10 @@ public static class NeutrinoNavigationUtility {
         navState.ReadoutDirty = false;
 
         SpaceCameraState state = Find.State<SpaceCameraState>();
+        state.OnLookUpdated.Register(NavigationCanvasUtil.UpdatedNeutrinoNavigationArrow);
         state.OnLookUpdated.Deregister(UpdateCameraDistanceFromPuzzle);
+
+        state.OnLookUpdated.Invoke(state);
 
         ViewNavUtility.LeafMoveToNode("Desk");
     }

@@ -13,6 +13,7 @@ namespace Astro {
         [NonSerialized] public bool Initialized = false;
         // public Sprite StarOutlineSprite;
 
+        public Color ConstellationEdgeColor = new Color(0.9490196f, 1, 0.9411765f, 1);
         public Color NavigationCompleteColor;
         
         public Canvas NavigationCanvas;
@@ -75,7 +76,7 @@ namespace Astro {
 
             state.OutlineGroup.gameObject.SetActive(false);
             state.NavigationCanvas.gameObject.SetActive(true);
-            state.NavigationArrow.gameObject.SetActive(false);
+            // state.NavigationArrow.gameObject.SetActive(false);
 
             // Set approrpiate elbow sprites
             foreach (Image image in state.BoarderGroup.transform.GetComponentsInChildren<Image>()) {
@@ -216,14 +217,14 @@ namespace Astro {
 
                 var connection = new GameObject(ca1.DisplayName + "_to_" + ca2.DisplayName, typeof(RectTransform));
                 connection.transform.SetParent(navState.OutlineGroup, false);
-                connection.AddComponent<RoundedRectGraphic>().color = new Color(0.9490196f, 1, 0.9411765f);
+                connection.AddComponent<RoundedRectGraphic>().color = navState.ConstellationEdgeColor;
                 RectTransform connectionRect = connection.GetComponent<RectTransform>();
 
                 Vector2 canvasSize = navState.NavigationCanvas.GetComponent<RectTransform>().sizeDelta;
                 float focusARadius = focusA.Rect.sizeDelta.x / 2;
                 float focusBRadius = focusB.Rect.sizeDelta.x / 2;
-                connectionRect.sizeDelta = new Vector2(5, Vector2.Distance(focusA.Rect.anchorMin * canvasSize, focusB.Rect.anchorMin * canvasSize) - focusARadius - focusBRadius);
-                connectionRect.sizeDelta = new Vector2(5, Vector2.Distance(focusA.Rect.anchorMin * canvasSize, focusB.Rect.anchorMin * canvasSize) - 75);
+                connectionRect.sizeDelta = new Vector2(10, Vector2.Distance(focusA.Rect.anchorMin * canvasSize, focusB.Rect.anchorMin * canvasSize) - focusARadius - focusBRadius);
+                connectionRect.sizeDelta = new Vector2(10, Vector2.Distance(focusA.Rect.anchorMin * canvasSize, focusB.Rect.anchorMin * canvasSize) - 75);
 
                 connectionRect.anchorMin = connectionRect.anchorMax = (focusA.Rect.anchorMax + focusB.Rect.anchorMax) / 2;
                 Vector2 vector = (focusA.Rect.anchorMax * canvasSize) - (focusB.Rect.anchorMin * canvasSize);
