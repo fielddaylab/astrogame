@@ -17,7 +17,7 @@ namespace Astro {
         public const float OnePipThreshold = 0; // 180 degrees
         public const float TwoPipThreshold = 0.708f; // ~90 degrees
         public const float ThreePipThreshold = 0.923f; // ~45 degrees
-        public const float SuccessThreshold = 0.995f; // ~11 degrees
+        public const float SuccessThreshold = 0.992f; // ~11 degrees
 
         public override bool HasWork() {
             return base.HasWork() && (m_StateB.NavigationModeActive || m_StateC.NavigationModeActive);

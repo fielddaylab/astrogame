@@ -65,9 +65,10 @@ namespace Astro
             OnLookUpdated.Register(() => { 
                 LookUpdatedThisFrame = true; 
 
-                //// Note: This is sometimes helpful for aligning puzzles
-                //Quaternion spaceCameraQuat = Camera.RootTransform.rotation;
-                //Debug.Log("[SpaceCameraState] Camera RA:" + CoordinateUtility.DegreesToRA(360 - spaceCameraQuat.eulerAngles.y) + " D:" + CoordinateUtility.DecimalDegreesToDeclination(360 - spaceCameraQuat.eulerAngles.x));
+                // Note: This is sometimes helpful for aligning puzzles
+                Quaternion spaceCameraQuat = Camera.RootTransform.rotation;
+                Debug.Log("[SpaceCameraState] Camera RA:" + CoordinateUtility.DDToHms(360 - spaceCameraQuat.eulerAngles.y) + " D:" + CoordinateUtility.DDToHms(360 - spaceCameraQuat.eulerAngles.x));
+    
             });
         }
 

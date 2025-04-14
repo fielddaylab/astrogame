@@ -222,13 +222,13 @@ $call SetRefGuideActive(false)
 $call StopOpenMode()
 $call ClearMonitorSelection()
 {@Dad} Looks like you’ve identified enough stars to earn a higher clearance level. $[Day1/Dad/l1_d_s19]
-{@Dad} You’ll need to tune to the right frequency on your radio to unlock your equipment. $[Day1/Dad/l1_d_s34]
+// {@Dad} You’ll need to tune to the right frequency on your radio to unlock your equipment. $[Day1/Dad/l1_d_s34]
 
-$call HintModals->SlideInFromRight("RadioControls", 0.4) 
+// $call HintModals->SlideInFromRight("RadioControls", 0.4) 
 
-$call Wait(1)
+// $call Wait(1)
 
-$call HintModals->Hide("RadioControls", 0.2)
+// $call HintModals->Hide("RadioControls", 0.2)
 
 //TODO Seperate Node Here
 $call MonitorUI->PlayRadioDownload(2)
