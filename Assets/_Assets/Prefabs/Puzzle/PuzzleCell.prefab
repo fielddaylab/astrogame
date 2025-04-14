@@ -206,10 +206,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6e1e5c9a6cabc244b21469a89a3b6c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SiblingSlot: {fileID: 0}
   Type: 1
   Displays:
   - {fileID: 1543409281594491740}
   IsSource: 0
+  IsActive: 1
 --- !u!114 &8600434541101467969
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -635,7 +637,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 10.666667, y: 2}
+  m_SizeDelta: {x: 10, y: 2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!23 &1125274799558881995
 MeshRenderer:
@@ -730,8 +732,8 @@ MonoBehaviour:
   m_fontSizeBase: 12
   m_fontWeight: 400
   m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_fontSizeMin: 8
+  m_fontSizeMax: 14
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -784,7 +786,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Formatting: 3
-  NullText: <#666>--------------
+  NullText: 
   DefaultOutput: {fileID: 5038129313852722445}
   OutputTransform: {fileID: 0}
   OutputRender: {fileID: 937271960468291535}

@@ -99,6 +99,7 @@ GameObject:
   - component: {fileID: 4318892829675524799}
   - component: {fileID: 5700785875046588977}
   - component: {fileID: 8605254742746512502}
+  - component: {fileID: 4781566269522962509}
   - component: {fileID: 9072909825554849689}
   - component: {fileID: 5168492817498778390}
   - component: {fileID: 6730760738030882521}
@@ -244,6 +245,26 @@ MonoBehaviour:
   SwapSpeed: 1
   m_InitMat: {fileID: 2100000, guid: 2f75848563b72cb45877dc22eb77cec5, type: 2}
   m_SwapTo: {fileID: 2100000, guid: 1173e83d69392a045b7bc5960c8eaafe, type: 2}
+--- !u!114 &4781566269522962509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1391463076238217271}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ef9024f0f439a84dbfe13735dcd5a50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Target: {fileID: 8249933874315370666}
+  m_Renderers:
+  - {fileID: 2683097722533292435}
+  - {fileID: 4575102160552859525}
+  m_MatIndex: 0
+  SwapSpeed: 1
+  m_InitMat: {fileID: 2100000, guid: db38c7371ff57ab42ad30ca7451537e8, type: 2}
+  m_SwapTo: {fileID: -8330174609607452025, guid: d3176e11c74bec74f9baf6f84b0042c9, type: 2}
 --- !u!114 &9072909825554849689
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -922,7 +943,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  - {fileID: -8330174609607452025, guid: d3176e11c74bec74f9baf6f84b0042c9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -966,8 +987,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Spectrometer
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: d3176e11c74bec74f9baf6f84b0042c9, type: 2}
+  m_sharedMaterial: {fileID: -8330174609607452025, guid: d3176e11c74bec74f9baf6f84b0042c9, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
