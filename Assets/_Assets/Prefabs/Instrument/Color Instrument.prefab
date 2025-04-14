@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 1442156123430313470}
   - component: {fileID: 3065410088887504822}
   - component: {fileID: 6648558114267294752}
+  - component: {fileID: 5530025320728383362}
   - component: {fileID: 4917676076770392529}
   - component: {fileID: 5249715261198134064}
   - component: {fileID: 235637667976877260}
@@ -175,6 +176,26 @@ MonoBehaviour:
   SwapSpeed: 1
   m_InitMat: {fileID: 2100000, guid: 2f75848563b72cb45877dc22eb77cec5, type: 2}
   m_SwapTo: {fileID: 2100000, guid: cbb982c3e0035df48983610d16cec627, type: 2}
+--- !u!114 &5530025320728383362
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1594254822178239427}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ef9024f0f439a84dbfe13735dcd5a50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Target: {fileID: 6533512667492188472}
+  m_Renderers:
+  - {fileID: 3279237678524263677}
+  - {fileID: 7368937699893400880}
+  m_MatIndex: 0
+  SwapSpeed: 1
+  m_InitMat: {fileID: 2100000, guid: db38c7371ff57ab42ad30ca7451537e8, type: 2}
+  m_SwapTo: {fileID: -8330174609607452025, guid: d3176e11c74bec74f9baf6f84b0042c9, type: 2}
 --- !u!114 &4917676076770392529
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -714,7 +735,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Color/Temp Meter
+  m_text: Color Meter
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
