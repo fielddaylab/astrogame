@@ -181,12 +181,14 @@ namespace FieldDay.Components
         }
 
         private void ManualFlush() {
-            while (m_RemovalQueue.TryPopFront(out IComponentData component)) {
-                DeregisterImpl(component);
-            }
-            while (m_AddQueue.TryPopFront(out IComponentData component)) {
-                RegisterImpl(component);
-            }
+            do {
+                while (m_RemovalQueue.TryPopFront(out IComponentData component)) {
+                    DeregisterImpl(component);
+                }
+                while (m_AddQueue.TryPopFront(out IComponentData component)) {
+                    RegisterImpl(component);
+                }
+            } while (m_RemovalQueue.Count + m_AddQueue.Count != 0);
         }
 
         /// <summary>

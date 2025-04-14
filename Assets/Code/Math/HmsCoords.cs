@@ -16,12 +16,20 @@ namespace Astro {
             Hours = (short) vec.x;
             Minutes = (short) vec.y;
             Seconds = vec.z;
+
+            CoordinateUtility.Sanitize(ref Hours, ref Minutes, ref Seconds);
         }
 
         public HmsCoords(int hours, int minutes, float seconds) {
             Hours = (short) hours;
             Minutes = (short) minutes;
             Seconds = seconds;
+
+            CoordinateUtility.Sanitize(ref Hours, ref Minutes, ref Seconds);
+        }
+
+        public void Sanitize() {
+            CoordinateUtility.Sanitize(ref Hours, ref Minutes, ref Seconds);
         }
 
         #region Overrides
@@ -69,22 +77,7 @@ namespace Astro {
             int m = a.Minutes + b.Minutes;
             float s = a.Seconds + b.Seconds;
 
-            if (s < 0) {
-                s += 60;
-                m--;
-            } else if (s >= 60) {
-                s -= 60;
-                m++;
-            }
-
-            if (m < 0) {
-                m += 60;
-                h--;
-            } else if (m >= 60) {
-                m -= 60;
-                h++;
-            }
-
+            CoordinateUtility.Sanitize(ref h, ref m, ref s);
             return new HmsCoords(h, m, s);
         }
 
@@ -93,22 +86,7 @@ namespace Astro {
             int m = a.Minutes - b.Minutes;
             float s = a.Seconds - b.Seconds;
 
-            if (s < 0) {
-                s += 60;
-                m--;
-            } else if (s >= 60) {
-                s -= 60;
-                m++;
-            }
-
-            if (m < 0) {
-                m += 60;
-                h--;
-            } else if (m >= 60) {
-                m -= 60;
-                h++;
-            }
-
+            CoordinateUtility.Sanitize(ref h, ref m, ref s);
             return new HmsCoords(h, m, s);
         }
 

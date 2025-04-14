@@ -200,6 +200,46 @@ namespace Astro
 
         #endregion // Cartesian Coordinates
 
+        #region Sanitization
+
+        static public void Sanitize(ref short h, ref short m, ref float s) {
+            if (s < 0) {
+                s += 60;
+                m--;
+            } else if (s >= 60) {
+                s -= 60;
+                m++;
+            }
+
+            if (m < 0) {
+                m += 60;
+                h--;
+            } else if (m >= 60) {
+                m -= 60;
+                h++;
+            }
+        }
+
+        static public void Sanitize(ref int h, ref int m, ref float s) {
+            if (s < 0) {
+                s += 60;
+                m--;
+            } else if (s >= 60) {
+                s -= 60;
+                m++;
+            }
+
+            if (m < 0) {
+                m += 60;
+                h--;
+            } else if (m >= 60) {
+                m -= 60;
+                h++;
+            }
+        }
+
+        #endregion // Sanitization
+
         //public static Vector2 CartesianToPolar(Vector3 cartPoint)
         //{
         //    Vector2 polarPoint;
@@ -225,7 +265,7 @@ namespace Astro
 
         //    //an origin vector, representing lat,lon of 0,0. 
         //    var origin = new Vector3(0, 0, 1);
-             
+
         //    // build a quaternion using euler angles for lat,lon
         //    var rotation = Quaternion.Euler(polarPoint.x, polarPoint.y, 0);
 

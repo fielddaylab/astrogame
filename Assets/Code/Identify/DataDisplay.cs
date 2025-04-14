@@ -127,6 +127,9 @@ namespace Astro {
 
                 case DataTypeMask.Coordinates: {
                     EqCoords coords = packet.Value.Coordinates;
+                    coords.Declination.Sanitize();
+                    coords.RightAscension.Sanitize();
+
                     bool rightAsc = flags == 0 || (flags & DataFormattingFlags.RightAscension) != 0;
                     bool decl = flags == 0 || (flags & DataFormattingFlags.Declination) != 0;
                     bool hasSeparator = rightAsc & decl;
