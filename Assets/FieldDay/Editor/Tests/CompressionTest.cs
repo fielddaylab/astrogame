@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace FieldDay.Editor.Tests {
     static public class CompressionTest {
-        [MenuItem("Field Day/Tests/Compression Test")]
+        [MenuItem("Field Day/Testing/Compression Test")]
         static private void Test() {
             string filePath = EditorUtility.OpenFilePanel("Open File To Compress", "Assets", string.Empty);
             if (string.IsNullOrEmpty(filePath)) {

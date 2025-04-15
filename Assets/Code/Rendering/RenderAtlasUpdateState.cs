@@ -39,6 +39,9 @@ namespace Astro {
             Game.Assets.AddNamed(Atlas.AssetId, Atlas);
             s_Cache.Add(Atlas.AssetId, this);
             Atlas.OnTextureCreated.Register(OnRenderTextureCreated);
+            if (Atlas.Texture != null) {
+                OnRenderTextureCreated();
+            }
         }
 
         #endregion // IRegistrationCallbacks

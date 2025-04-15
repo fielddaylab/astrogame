@@ -141,6 +141,7 @@ $set temp:waitingForNeutrinoStar = true
 
 $call HintModals->SlideInFromLeft("SelectStar", 0.4)
 $call SetInputState(true)
+$call SetRefGuidePagesLocked(true)
 
 :: OnStarSelected
 @trigger    OnStarSelected
@@ -321,6 +322,8 @@ $call Wait(1)
 $call Wait(0.5)
 $call HintModals->SlideInFromRight("FirstPuzzleStar", 0.4)
 $call SetInputState(true)
+$call SetRefGuidePagesLocked(false)
+$call OpenRefGuidePage("DataTransfer")
 $call Wait(1)
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $set temp:waitingForSelectAtik = true

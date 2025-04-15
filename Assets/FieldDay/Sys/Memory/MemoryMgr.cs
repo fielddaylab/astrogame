@@ -41,6 +41,9 @@ namespace FieldDay.Memory {
         private RingBuffer<Unsafe.ArenaHandle> m_ArenaTracker;
 #endif // MEMORY_LEAK_DETECTION
 
+        /// <summary>
+        /// Pool root that lives in the DontDestroyOnLoad scene.
+        /// </summary>
         public Transform PersistentPrefabPoolRoot {
             get { return m_PersistentPoolRoot; }
         }

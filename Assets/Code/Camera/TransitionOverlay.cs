@@ -13,7 +13,8 @@ namespace Astro {
 
         private void Awake() {
             Game.Scenes.RegisterTransitionHandlers(UnloadHandler, LoadHandler);
-            if (!GameLoop.IsBooted()) {
+            
+            if (!GameLoop.IsBooted() && SceneManager.GetActiveScene().buildIndex != 0) {
                 DefaultFader.Show(Color.black, 0);
             } else {
                 DefaultFader.Hide(0, false);
@@ -21,8 +22,6 @@ namespace Astro {
 
             Game.Scenes.OnMainSceneUnloading.Register(OnMainSceneUnloading);
             Game.Scenes.OnMainSceneReady.Register(OnMainSceneReady);
-
-            //Game.Gui.FlushCommands();
         }
 
         private void OnMainSceneUnloading() {
