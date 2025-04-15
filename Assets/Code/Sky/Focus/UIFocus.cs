@@ -23,6 +23,11 @@ namespace Astro
         [NonSerialized] public Image NeutrinoHighlight;
     }
 
+    public struct UIFocusPackedData {
+        public Vector3 TargetPos;
+        public Vector3 TargetVector;
+    }
+
     public static partial class FocusableUtility
     {
         public static void InitFocusable(FocusState state, UIFocus focus, Transform target, CelestialAsset asset, Sprite represent2D)
@@ -38,6 +43,8 @@ namespace Astro
             float scaleFactor = Mathf.Pow(0.6f, asset.ApparentMagnitude);
             focus.Rect.localScale = new Vector3(scaleFactor, scaleFactor, 1);
 
+            float invScaleFactor = Mathf.Sqrt(1f / scaleFactor);
+            focus.Button.transform.localScale = new Vector3(invScaleFactor, invScaleFactor, 1);
             focus.Button.onClick.RemoveAllListeners();
             focus.Button.onClick.AddListener(() => { FocusableUtility.SetCurrentFocus(state, focus); });
         }

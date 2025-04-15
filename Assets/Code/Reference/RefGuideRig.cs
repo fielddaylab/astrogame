@@ -20,6 +20,7 @@ namespace Astro.Reference {
         public Collider[] OpenControls;
         public ActiveGroup OpenRenderers;
         public RefGuideContents Contents;
+        public Collider OpenRaycastBlocker;
 
         [Header("Closed State")]
         public MeshRenderer CoverRenderer;
@@ -46,6 +47,7 @@ namespace Astro.Reference {
 
         [Header("Selection")]
         public RefGuideControlPage[] ControlPages;
+        public ActiveGroup PageControls;
         public Transform SelectionGraphic;
 
         IEnumerator<WorkSlicer.Result?> IScenePreload.Preload() {
@@ -76,6 +78,8 @@ namespace Astro.Reference {
             if (!isOpen) {
                 rig.SelectionGraphic.gameObject.SetActive(false);
             }
+
+            rig.OpenRaycastBlocker.enabled = isOpen;
         }
 
         static public void SetGuideInteraction(RefGuideRig rig, RefGuideInteractionState state) {

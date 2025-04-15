@@ -144,7 +144,7 @@ namespace FieldDay.Data {
 #if UNITY_EDITOR
 
         private const string EditorTestPrefsKey = "FieldDay/UseCachedReflectionData";
-        private const string EditorTestMenuItem = "Field Day/Test with Cached Reflection Data";
+        private const string EditorTestMenuItem = "Field Day/Testing/Test with Cached Reflection Data";
 
         [MenuItem(EditorTestMenuItem, validate = false)]
         static private void TestingCheckbox() {

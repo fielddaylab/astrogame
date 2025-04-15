@@ -61,6 +61,8 @@ namespace Astro {
 
         public static void ForceLocalRotation(SpaceCameraState camState, Vector3 angles) {
 
+            angles.x = MathUtils.Wrap(angles.x, -180, 180);
+            angles.y = MathUtils.Wrap(angles.y, -180, 180);
             angles.z = 0;
             camState.Camera.RootTransform.localEulerAngles = angles;
 

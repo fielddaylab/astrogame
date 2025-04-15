@@ -30,7 +30,7 @@ namespace UnityEngine {
         }
 
         static public string Report(bool includeSecureInfo = false) {
-            StringBuilder sb = new StringBuilder(256);
+            StringBuilder sb = new StringBuilder(1024);
             Report(sb, includeSecureInfo);
             return sb.ToString();
         }

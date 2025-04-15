@@ -204,6 +204,9 @@ namespace FieldDay {
         static private bool s_AppFocusState = false;
         static private bool s_AppPauseState = false;
 
+        // crash
+        static private bool s_Crashed = false;
+
         // profiling
         static private PhaseTiming s_TimeProfiling;
 
@@ -686,6 +689,10 @@ namespace FieldDay {
                 return;
             }
 #endif // UNITY_EDITOR
+            if (s_Crashed) {
+                return;
+            }
+
             SetCurrentPhase(GameLoopPhase.ApplicationPreRender);
             OnApplicationPreRender.Invoke();
             if (!IsPaused()) {
@@ -702,14 +709,14 @@ namespace FieldDay {
 
         private IEnumerator LateFixedUpdateRoutine() {
             object fixedUpdate = new WaitForFixedUpdate();
-            while(true) {
+            while(!s_Crashed) {
                 yield return fixedUpdate;
                 LateFixedUpdate();
             }
         }
 
         static private IEnumerator EndOfFrameCoroutine() {
-            while (true) {
+            while (!s_Crashed) {
                 yield return s_EndOfFrame;
                 OnEndOfFrame();
             }
@@ -780,6 +787,10 @@ namespace FieldDay {
         }
 
         static private void OnPreCanvasRender() {
+            if (s_Crashed) {
+                return;
+            }
+
             SetCurrentPhase(GameLoopPhase.CanvasPreRender);
             Game.Gui.FlushCommands();
             OnCanvasPreRender.Invoke();
@@ -829,9 +840,13 @@ namespace FieldDay {
             Routine.Settings.Paused = true;
             GameLoop.SetDebugPause(true);
             AudioListener.pause = true;
+            s_DebugPause = true;
+            s_TimeScale = s_QueuedTimeScale = 0;
+            s_ReadyForRender = false;
+            s_Crashed = true;
 
             // disable all raycasters
-            foreach(var raycaster in GameObject.FindObjectsOfType<BaseRaycaster>()) {
+            foreach (var raycaster in GameObject.FindObjectsOfType<BaseRaycaster>()) {
                 raycaster.enabled = false;
             }
 
@@ -846,6 +861,7 @@ namespace FieldDay {
             }
 
             context = contextBuilder.Flush();
+            s_Instance.enabled = false;
         }
 
         #endregion // Handlers
@@ -1021,6 +1037,10 @@ namespace FieldDay {
         /// Sets the debug pause value.
         /// </summary>
         static internal void SetDebugPause(bool paused) {
+            if (s_Crashed) {
+                return;
+            }
+
             s_DebugPause = paused;
         }
 

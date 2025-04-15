@@ -1,13 +1,20 @@
+#if (UNITY_EDITOR && !IGNORE_UNITY_EDITOR) || DEVELOPMENT_BUILD
+#define DEVELOPMENT
+#endif
+
 using System;
 using UnityEngine;
 using EasyBugReporter;
 using TMPro;
 using UnityEngine.UI;
 using BeauUtil.Debugger;
-
+using System.Runtime.CompilerServices;
+using System.Threading;
+using Unity.IL2CPP.CompilerServices;
 
 #if UNITY_EDITOR
 using UnityEditor;
+using UnityEngine.EventSystems;
 #endif // UNITY_EDITOR
 
 namespace FieldDay.Debugging {
@@ -93,10 +100,12 @@ namespace FieldDay.Debugging {
                 return;
             }
 
-            OnExceptionEncountered(condition, null);
+            //Console.WriteLine("log exception");
+            OnExceptionEncountered(string.Join('\n', condition, stackTrace), null);
         }
 
         static private void OnUnhandledException(object sender, UnhandledExceptionEventArgs e) {
+            //Console.WriteLine("unhandled exception");
             OnExceptionEncountered(null, e.ExceptionObject as Exception);
         }
 
@@ -106,10 +115,12 @@ namespace FieldDay.Debugging {
             }
 
 #if UNITY_EDITOR
-            if (EditorApplication.isCompiling || EditorApplication.isPaused || !EditorApplication.isPlayingOrWillChangePlaymode) {
-                return;
-            }
+            //if (EditorApplication.isCompiling || EditorApplication.isPaused || EditorApplication.isPlayingOrWillChangePlaymode) {
+            //    return;
+            //}
 #endif // UNITY_EDITOR
+
+            Cursor.visible = true;
 
             if (!s_Instance) {
                 string context = null;
@@ -131,11 +142,85 @@ namespace FieldDay.Debugging {
 
         #endregion // Static API
 
+#if DEVELOPMENT
+
         [EngineMenuFactory]
         static private DMInfo CreateDebugMenu() {
-            DMInfo sysMenu = new DMInfo("Logging");
+            DMInfo sysMenu = new DMInfo("Crash");
             sysMenu.AddToggle("Enable Crash Handler", () => Enabled, (b) => Enabled = b);
+            sysMenu.AddButton("Generate Dump", () => BugReporter.DumpContext());
+            sysMenu.AddDivider();
+            sysMenu.AddButton("Crash (NullRef)", CrashNullRef);
+            sysMenu.AddButton("Crash (NullPtr)", CrashNullPtr);
+            sysMenu.AddButton("Crash (SegFault)", CrashSegFault);
+            sysMenu.AddButton("Crash (Assert)", CrashAssertion);
+            sysMenu.AddButton("Crash (StackOverflow)", CrashStackOverflow);
+            sysMenu.AddButton("Hang (MutexDeadlock)", HangMutexDeadlock, ExcludeEditor);
+            sysMenu.AddButton("Hang (InfiniteLoop)", HangInfiniteLoop, ExcludeEditor);
             return sysMenu;
         }
-    }
+
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static private void CrashNullRef() {
+            IEventDispatcher dispatcher = null;
+            dispatcher.Queue("dummy");
+        }
+
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        static private unsafe void CrashNullPtr() {
+            Vector3* v = null;
+            float y = v->y;
+        }
+
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        [Il2CppSetOption(Option.NullChecks, false)]
+        static private unsafe void CrashSegFault() {
+            int* ptr = null;
+            ptr[0] = 5;
+            ptr[1] = 8;
+            ptr[2] = ptr[0];
+        }
+
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        [Il2CppSetOption(Option.NullChecks, false)]
+        static private unsafe void CrashAssertion() {
+            Assert.True(false, "Crash menu created this assertion");
+        }
+
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        [Il2CppSetOption(Option.NullChecks, false)]
+        static private unsafe void CrashStackOverflow() {
+            RawStateBlock64 randomState = default;
+            randomState.Store<Vector3>(UnityEngine.Random.insideUnitSphere);
+            CrashStackOverflow();
+        }
+
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        [Il2CppSetOption(Option.NullChecks, false)]
+        static private unsafe void HangMutexDeadlock() {
+            object lockObj = new object();
+            Monitor.Enter(lockObj);
+            Monitor.Wait(lockObj);
+        }
+
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        [Il2CppSetOption(Option.NullChecks, false)]
+        static private unsafe void HangInfiniteLoop() {
+            int x = 0;
+            while (true) {
+                x++;
+            }
+        }
+
+        static private readonly DMPredicate ExcludeEditor =
+#if UNITY_EDITOR
+            () => {
+                return false;
+            };
+#else
+            null;
+#endif // UNITY_EDITOR
+
+#endif // DEVELOPMENT
+        }
 }

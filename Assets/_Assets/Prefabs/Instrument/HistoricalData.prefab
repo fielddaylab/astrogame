@@ -1253,7 +1253,7 @@ GameObject:
   - component: {fileID: 9003648085655162836}
   - component: {fileID: 8935877911823854717}
   m_Layer: 0
-  m_Name: Label
+  m_Name: LoadLabel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1605,7 +1605,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  - {fileID: -8330174609607452025, guid: d3176e11c74bec74f9baf6f84b0042c9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1649,8 +1649,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Historical Data
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: d3176e11c74bec74f9baf6f84b0042c9, type: 2}
+  m_sharedMaterial: {fileID: -8330174609607452025, guid: d3176e11c74bec74f9baf6f84b0042c9, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1902,6 +1902,7 @@ GameObject:
   - component: {fileID: 1800999007493928299}
   - component: {fileID: 8546977357105807306}
   - component: {fileID: 2792645171119329128}
+  - component: {fileID: 8285807879497583509}
   - component: {fileID: 4193828603179455488}
   - component: {fileID: 2825065481645819592}
   m_Layer: 6
@@ -2085,6 +2086,26 @@ MonoBehaviour:
   SwapSpeed: 1
   m_InitMat: {fileID: 2100000, guid: 2f75848563b72cb45877dc22eb77cec5, type: 2}
   m_SwapTo: {fileID: 2100000, guid: bedffcec42124c043a416fee40b3eccd, type: 2}
+--- !u!114 &8285807879497583509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8208293276545956980}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ef9024f0f439a84dbfe13735dcd5a50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Target: {fileID: 7532169060903844120}
+  m_Renderers:
+  - {fileID: 9003648085655162836}
+  - {fileID: 2933980030475119610}
+  m_MatIndex: 0
+  SwapSpeed: 1
+  m_InitMat: {fileID: 2100000, guid: db38c7371ff57ab42ad30ca7451537e8, type: 2}
+  m_SwapTo: {fileID: -8330174609607452025, guid: d3176e11c74bec74f9baf6f84b0042c9, type: 2}
 --- !u!114 &4193828603179455488
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,8 +1,14 @@
 using System;
 using System.Collections.Generic;
 using BeauUtil;
+using BeauUtil.Debugger;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+
+#if UNITY_EDITOR
+using UnityEditor;
+using UnityEditor.SceneManagement;
+#endif // UNITY_EDITOR
 
 namespace FieldDay.Scenes {
     /// <summary>
@@ -70,6 +76,48 @@ namespace FieldDay.Scenes {
         }
 
         #endregion // Utilities
+
+#if UNITY_EDITOR
+
+        [MenuItem("Field Day/Load All Scene Layers")]
+        static public void EditorLoadInActiveScene() {
+            EditorLoadInScene(SceneManager.GetActiveScene());
+        }
+
+        [MenuItem("Field Day/Load All Scene Layers", validate = true)]
+        static private bool EditorLoadInActiveScene_Validate() {
+            return !EditorApplication.isPlayingOrWillChangePlaymode;
+        }
+
+        static public void EditorLoadInScene(Scene scene) {
+            if (EditorApplication.isPlayingOrWillChangePlaymode) {
+                return;
+            }
+
+            List<ImportScene> imports = new List<ImportScene>();
+            scene.GetAllComponents<ImportScene>(true, imports);
+            if (imports.Count > 0) {
+                Log.Msg("[ImportScene] Found {0} ImportScene objects in scene '{1}'", imports.Count, scene.path);
+                foreach(var import in imports) {
+                    bool shouldLoad = !import.Transform && import.Scene.IsValid;
+                    if (shouldLoad) {
+                        shouldLoad = import.Merge || (import.Flags & SceneImportFlags.Persistent) != 0;
+                    }
+
+                    if (!shouldLoad) {
+                        continue;
+                    }
+
+                    Scene loaded = EditorSceneManager.GetSceneByPath(import.Scene.Path);
+                    if (!loaded.isLoaded) {
+                        Log.Msg("[ImportScene] Opening scene '{0}'...", import.Scene.Path);
+                        EditorSceneManager.OpenScene(import.Scene.Path, OpenSceneMode.Additive);
+                    };
+                }
+            }
+        }
+
+#endif // UNITY_EDITOR
     }
 
     /// <summary>

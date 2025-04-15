@@ -83,6 +83,10 @@ namespace FieldDay.Debugging {
         private void Awake() {
             GameLoop.OnDebugUpdate.Register(OnPreUpdate);
             GameLoop.QueuePreUpdate(LoadMenu);
+
+            GameLoop.OnCrashReport.Register(() => {
+                Destroy(gameObject);
+            });
         }
 
         private void Start() {

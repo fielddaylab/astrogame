@@ -62,6 +62,7 @@ namespace EasyBugReporter {
             }
 
             private IEnumerator EndOfFrameLoop() {
+                yield return null;
                 while(true) {
                     UpdateDumpWork();
                     yield return EndOfFrame;

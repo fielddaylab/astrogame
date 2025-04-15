@@ -89,7 +89,7 @@ namespace ScriptableBake {
         }
 
         private const string EditorTestPrefsKey = "ScriptableBake/AlwaysFlattenHierarchy";
-        private const string EditorTestMenuItem = "Field Day/Test with Flattened Hierarchies";
+        private const string EditorTestMenuItem = "Field Day/Testing/Test with Flattened Hierarchies";
 
         [MenuItem(EditorTestMenuItem, validate = false)]
         static private void TestingCheckbox() {

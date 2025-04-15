@@ -33,6 +33,8 @@ namespace Astro.Reference {
         [NonSerialized] public ReferencePageList PageList;
         [NonSerialized] public bool SubmissionActive = true;
 
+        [NonSerialized] public bool AllowPageChanges = true;
+
         [NonSerialized] public Routine TransitionRoutine;
         [NonSerialized] public RefGuideInteractionState CurrentState;
 
@@ -88,18 +90,26 @@ namespace Astro.Reference {
                 return;
             }
 
+            var state = Find.State<RefGuideState>();
+
             switch (control.ControlType) {
                 case RefGuideControlType.PrevPage: {
-                    LoadPreviousPage(Find.State<RefGuideState>());
+                    if (state.AllowPageChanges) {
+                        LoadPreviousPage(state);
+                    }
                     break;
                 }
                 case RefGuideControlType.NextPage: {
-                    LoadNextPage(Find.State<RefGuideState>());
+                    if (state.AllowPageChanges) {
+                        LoadNextPage(state);
+                    }
                     break;
                 }
 
                 case RefGuideControlType.Bookmark: {
-                    LoadPage(control.GetComponentInParent<RefGuideBookmark>().Page, Find.State<RefGuideState>());
+                    if (state.AllowPageChanges) {
+                        LoadPage(control.GetComponentInParent<RefGuideBookmark>().Page, state);
+                    }
                     break;
                 }
 
@@ -258,6 +268,14 @@ namespace Astro.Reference {
 
         #endregion // Page Loading
 
+        static public void SetPageTurnLocked(bool locked) {
+            var state = Find.State<RefGuideState>();
+            var rig = Find.State<RefGuideRig>();
+
+            state.AllowPageChanges = !locked;
+            rig.PageControls.SetActive(!locked);
+        }
+
         private static void PopulateReferenceColliders(ReferencePageAsset page, RefGuideRig rig) {
             if (page == null) {
                 ClearReferenceColliders(rig);
@@ -389,6 +407,22 @@ namespace Astro.Reference {
         [LeafMember("SetRefGuideActive")]
         private static void LeafSetRefGuideActive(bool active) {
             SetReferenceActive(active);
+        }
+
+        [LeafMember("SetRefGuidePagesLocked")]
+        private static void LeafSetRefGuidePagesLocked(bool locked) {
+            SetPageTurnLocked(locked);
+        }
+
+        [LeafMember("SetRefGuidePage")]
+        private static void LeafSetRefGuidePage(StringHash32 pageId) {
+            LoadPage(pageId);
+        }
+
+        [LeafMember("OpenRefGuidePage")]
+        private static void LeafOpenRefGuidePage(StringHash32 pageId) {
+            SetReferenceActive(true);
+            LoadPage(pageId);
         }
     }
 }
