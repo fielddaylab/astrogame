@@ -1,6 +1,6 @@
+using FieldDay;
 using FieldDay.SharedState;
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 namespace Astro
@@ -12,5 +12,6 @@ namespace Astro
         public Material AvailableCellMat;
         public Material SelectedCellMat;
         public Material SelectedInstrumentMat;
+        public Material DimmedInstrumentMat;
     }
 }

@@ -13,6 +13,7 @@ namespace Astro
     {
         public MeshRenderer Mesh;
         [NonSerialized] public Material OriginalMaterial;
+        [NonSerialized] public bool Dimmed;
 
         private void Awake() {
             if (Mesh) {
@@ -38,9 +39,28 @@ namespace Astro
         }
 
         static public void SetInstrumentHighlight(SlotHighlightState highlightState, RelevantSlotHighlight highlight, bool active) {
+            if (highlight.Dimmed) { return; }
             var mats = highlight.Mesh.sharedMaterials;
             mats[0] = active ? highlightState.SelectedInstrumentMat : highlight.OriginalMaterial;
             highlight.Mesh.sharedMaterials = mats;
+        }
+
+        static public void SetInstrumentDimmed(SlotHighlightState highlightState, RelevantSlotHighlight highlight, bool dimmed) {
+            var mats = highlight.Mesh.sharedMaterials;
+            mats[0] = dimmed ? highlightState.DimmedInstrumentMat : highlight.OriginalMaterial;
+            highlight.Mesh.sharedMaterials = mats;
+            highlight.Dimmed = dimmed;
+        }
+
+        public static void SetInstrumentButtonsDimmed(InstrumentInventoryState state, bool dim) {
+            SlotHighlightState highlightState = Find.State<SlotHighlightState>();
+            foreach (LabInstrument instrument in state.ActiveInstruments) {
+                foreach (DataSlot slot in instrument.AutoPopulated) {
+                    if (slot.TryGetComponent(out RelevantSlotHighlight effect)) {
+                        SetInstrumentDimmed(highlightState, effect, dim);
+                    }
+                }
+            }
         }
     }
 }

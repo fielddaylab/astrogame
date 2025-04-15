@@ -1,12 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using FieldDay;
 using FieldDay.Systems;
-using BeauRoutine;
-using System.ComponentModel;
-using TMPro;
-using UnityEditor;
 
 namespace Astro
 {
@@ -18,6 +11,7 @@ namespace Astro
             var transferState = Find.State<DataTransferState>();
             if (!transferState.SourceUpdated) { return; }
             if (transferState.SelectedSource != null && !transferState.SelectedSource.IsSource) { return; }
+            if (highlight.Dimmed) { return;  }
 
             var highlightState = Find.State<SlotHighlightState>();
 

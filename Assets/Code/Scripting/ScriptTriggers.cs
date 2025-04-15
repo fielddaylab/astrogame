@@ -123,6 +123,7 @@ namespace Astro {
             GameLoop.ResumeUpdates(AstroGame.MonitorControlsUpdateMask);
             GameLoop.ResumeUpdates(AstroGame.SubmissionUpdateMask);
             GameLoop.ResumeUpdates(AstroGame.InstrumentUpdateMask);
+            SlotHighlightUtility.SetInstrumentButtonsDimmed(Find.State<InstrumentInventoryState>(), true);
         }
 
         [LeafMember("StopOpenMode")]
@@ -132,6 +133,7 @@ namespace Astro {
             GameLoop.SuspendUpdates(AstroGame.MonitorControlsUpdateMask);
             GameLoop.SuspendUpdates(AstroGame.SubmissionUpdateMask);
             GameLoop.SuspendUpdates(AstroGame.InstrumentUpdateMask);
+            SlotHighlightUtility.SetInstrumentButtonsDimmed(Find.State<InstrumentInventoryState>(), false);
         }
 
         [LeafMember("StartNeutrinoNavigation")]
