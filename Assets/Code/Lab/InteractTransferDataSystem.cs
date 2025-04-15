@@ -24,6 +24,8 @@ namespace Astro
                 }
             }
             Debug.Log("[InteractTransferSystem] Transfer unsuccessful");
+            // bandaid fix for weird behavior - locked instruments' load buttons stuck in "interact received" and spamming "transfer unsuccessful"
+            secondary.InteractReceived = false;
         }
     }
 

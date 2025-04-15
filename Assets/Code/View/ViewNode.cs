@@ -14,6 +14,7 @@ namespace Astro {
 
         [Header("Objects To Activate")]
         public ActiveGroup Group;
+        public bool AllowSlotSelection = true;
 
         [Header("Links")]
         public SerializedHash32[] LinkGroups;

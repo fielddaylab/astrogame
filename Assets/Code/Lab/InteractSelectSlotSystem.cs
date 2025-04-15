@@ -8,11 +8,16 @@ using BeauRoutine;
 namespace Astro
 {
     [SysUpdate(GameLoopPhase.Update, 500, AstroGame.SubmissionUpdateMask)] // After Interactable Select System
-    public class InteractSelectSlotSystem : ComponentSystemBehaviour<InteractSelectSlot, LabInteractable>
-    {
+    public class InteractSelectSlotSystem : ComponentSystemBehaviour<InteractSelectSlot, LabInteractable> {
+
+        public override bool HasWork() {
+            return base.HasWork() && Find.State<ViewState>().ActiveNode.AllowSlotSelection;
+        }
+
         public override void ProcessWorkForComponent(InteractSelectSlot primary, LabInteractable secondary, float deltaTime)
         {
             if (!secondary.InteractReceived) { return; }
+            if (!primary.DataSlot.IsActive) { return; }
 
             var transferState = Find.State<DataTransferState>();
             var cancelInputState = Find.State<CancelInputState>();
