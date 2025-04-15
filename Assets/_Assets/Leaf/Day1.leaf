@@ -271,7 +271,6 @@ $call SetInputState(true)
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 {@Dad} See if you can determine the apparent magnitude of some of the other stars in this cluster. $[Day1/Dad/l1_d_s15]
 
-
 :: DadHotColdEncouragement3
 @trigger    OnConstellationNavWarmer
 @when   newPips == 2
@@ -337,6 +336,19 @@ $call SubtitleController->SetSubtitlePosition(0.5, 1, 0, -140)
 {@Dad} Great, you can use our color meter and photometer to fill in data for Atik, select the Apparent Magnintude space in the puzzle grid. $[Day1/Dad/l1_d_s26]
 $call Wait(1)
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
+
+:: PuzzleGridReadyForSubmission
+@trigger    OnPuzzleGridFullyPopulated
+@cutscene
+@once
+
+{@Dad} Alright, looks like you can submit your data. give it a shot! $[Day1/Dad/l1_d_s30]
+
+:: IncorrectPuzzleSubmission
+@trigger    IncorrectPuzzleSubmission
+@cutscene
+
+{@Dad} Hmm, looks like that wasn’t correct... $[Day1/Dad/l1_d_s32]
 
 :: PerseusPuzzleComplete
 @trigger    CorrectPuzzleSubmission

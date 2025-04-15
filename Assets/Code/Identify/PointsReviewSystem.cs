@@ -87,8 +87,8 @@ namespace Astro {
                 puzzle.ActivePuzzle = null;
 
                 Log.Msg("[PointsReviewSystem] Puzzle CORRECT! :D");
-                // DocumentUtility.SpawnDocument("CorrectDocument");
             } else {
+                ScriptUtility.Trigger(ScriptEvents.IncorrectPuzzleSubmission);
                 ShowResultSprite(false, m_State);
                 Log.Msg("[SubmitPuzzleSystem] Puzzle INCORRECT! D:");
                 // TODO: show incorrect cells
