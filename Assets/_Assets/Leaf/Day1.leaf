@@ -93,7 +93,7 @@ $endif
 
 $set temp:introMoveTheTelescope = true
 $call HintModals->Hide("TelescopeControls", 0.2)
-{@Dad} Awesome, your equipment seems to be working. See those three dots above your monitor? Feel up for a game of hot an cold? $[Day1/Dad/l1_d_s3]
+{@Dad} Awesome, your equipment seems to be working. See those three dots above your monitor? Feel up for a game of hot and cold? $[Day1/Dad/l1_d_s3]
 $call StartNeutrinoNavigation()
 $call HintModals->SlideInFromLeft("NeutrinoNav", 0.4)
 
@@ -314,9 +314,9 @@ $call StartPuzzleMode()
 
 $call Wait(1)
 {@Dad} Alright kiddo, this was the... important thing I was telling you about earlier. $[Day1/Dad/l1_d_s24]
-{@Dad} On your screen is all known information about the stars in Persius. You just need to logic your way through it and input data from your equipment into the grid.  $[Day1/Dad/l1_d_s24(2)]
+{@Dad} On your screen is all known information about the stars in Perseus. You just need to logic your way through it and input data from your equipment into the grid.  $[Day1/Dad/l1_d_s24(2)]
 {@Dad} I’ll help you get started. $[Day1/Dad/l1_d_s24(3)]
-{@Dad} Alight, select the star that matches the <i>only</i> coordinates listed on your grid. You’ll see those coordinates in your celestial compass. $[Day1/Dad/l1_d_s25]
+{@Dad} Alright, select the star that matches the <i>only</i> coordinates listed on your grid. You’ll see those coordinates in your celestial compass. $[Day1/Dad/l1_d_s25]
 $call Wait(0.5)
 $call HintModals->SlideInFromRight("FirstPuzzleStar", 0.4)
 $call SetInputState(true)
@@ -361,7 +361,7 @@ $call ClearMonitorSelection()
 $call StopPuzzleMode()
 $call SetInputState(false)
 {@Dad}  Awesome! $[Day1/Dad/l1_d_s31]
-{@Dad} Gosh it’s late where you’re at... Get some rest kiddo. We’ll try to figure out 2 way communication tomorrow... $[Day1/Dad/l1_d_s33]
+{@Dad} Gosh it’s late where you’re at... Get some rest kiddo. We’ll try to figure out 2-way communication tomorrow... $[Day1/Dad/l1_d_s33]
 
 {@Astrid} (*yawns*) That's about the only thing you've said that's made any sense... $[Day1/Astrid/l1_a_14]
 $call Wait(1)
