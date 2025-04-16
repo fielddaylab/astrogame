@@ -311,6 +311,7 @@ $call StopPuzzleNavigation()
 $call SetInputState(false)
 $call SetRefGuideActive(false)
 $call StartPuzzleMode()
+$call OpenRefGuidePage("DataTransfer")
 {@Astrid} Whoooaa... what's that? $[Day1/Astrid/l1_a_13]
 
 $call Wait(1)
@@ -322,7 +323,6 @@ $call Wait(0.5)
 $call HintModals->SlideInFromRight("FirstPuzzleStar", 0.4)
 $call SetInputState(true)
 $call SetRefGuidePagesLocked(false)
-$call OpenRefGuidePage("DataTransfer")
 $call Wait(1)
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $set temp:waitingForSelectAtik = true
@@ -336,8 +336,8 @@ $set temp:waitingForSelectAtik = true
 $set temp:waitingForSelectAtik = false
 $call HintModals->Hide("FirstPuzzleStar", 0.2)
 $call SubtitleController->SetSubtitlePosition(0.5, 1, 0, -140)
-$call SetRefGuideActive(false)
 {@Dad} Great, you can use our color meter and photometer to fill in data for Atik, select the Apparent Magnintude space in the puzzle grid. $[Day1/Dad/l1_d_s26]
+$call SetRefGuideActive(false)
 $call Wait(1)
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 
