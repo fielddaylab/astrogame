@@ -1,3 +1,7 @@
+#if (UNITY_EDITOR && !IGNORE_UNITY_EDITOR) || DEVELOPMENT_BUILD
+#define DEVELOPMENT
+#endif
+
 using FieldDay.Systems;
 using FieldDay.SharedState;
 using FieldDay.Components;
@@ -19,6 +23,17 @@ namespace FieldDay {
     /// Maintains references to game engine components.
     /// </summary>
     public class Game {
+
+        /// <summary>
+        /// Is this a development build?
+        /// </summary>
+        public const bool IsDevBuild =
+#if DEVELOPMENT
+            true;
+#else
+            false;
+#endif // DEVELOPMENT
+
         /// <summary>
         /// Audio manager. Maintains audio playback.
         /// </summary>

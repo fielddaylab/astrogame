@@ -35,6 +35,7 @@ namespace Astro {
             camState.HorizLook = clampedAngles.y;
             camState.VertLook = clampedAngles.x;
 
+            camState.LookUpdatedThisFrame = true;
             camState.OnLookUpdated.Invoke(camState);
         }
 
@@ -69,6 +70,7 @@ namespace Astro {
             camState.HorizLook = angles.y;
             camState.VertLook = angles.x;
 
+            camState.LookUpdatedThisFrame = true;
             camState.OnLookUpdated.Invoke(camState);
         }
     }

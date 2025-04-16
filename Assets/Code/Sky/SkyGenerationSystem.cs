@@ -1,4 +1,5 @@
 using BeauPools;
+using BeauUtil;
 using FieldDay;
 using FieldDay.Systems;
 using System.Collections;
@@ -31,9 +32,13 @@ namespace Astro
             var spaceCamera = Find.State<SpaceCameraState>();
 
             focusPools.Focii.Free(focusState.ActiveFocii);
+            focusState.ActiveFociiVisibleBits.Clear();
 
             CelestialObjectVisMask visMask = m_State.VisMask;
 
+            Vector3 camPos = spaceCamera.Camera.RootTransform.position;
+
+            int fociiAllocated = 0;
             foreach(var obj in dome.AboveHorizon) {
                 if ((obj.Resource.Visibility & visMask) == 0) {
                     continue;
@@ -43,6 +48,12 @@ namespace Astro
                 // TODO: assign relevant 2D representation
                 FocusableUtility.InitFocusable(focusState, newFocus, obj.transform, obj.Resource, DetermineSprite(obj.Resource.Category));
                 focusState.ActiveFocii.PushBack(newFocus);
+
+                UIFocusPackedData packed;
+                packed.TargetPos = obj.transform.position;
+                packed.TargetVector = Vector3.Normalize(packed.TargetPos - camPos);
+
+                focusState.ActiveFociiPacked[fociiAllocated++] = packed;
             }
 
             m_State.IsDirty = false;

@@ -13,7 +13,10 @@ namespace Astro
 {
     public class FocusState : SharedStateComponent
     {
-        [NonSerialized] public RingBuffer<UIFocus> ActiveFocii = new RingBuffer<UIFocus>(8, RingBufferMode.Expand);
+        [NonSerialized] public RingBuffer<UIFocus> ActiveFocii = new RingBuffer<UIFocus>(64, RingBufferMode.Expand);
+        [NonSerialized] public UIFocusPackedData[] ActiveFociiPacked = new UIFocusPackedData[128];
+        [NonSerialized] public BitSet256 ActiveFociiVisibleBits;
+
         [NonSerialized] public UIFocus CurrentFocus = null;
         [NonSerialized] public bool FocusUpdated = false;
         [NonSerialized] public bool MonitorInputActive = false;

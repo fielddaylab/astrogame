@@ -45,6 +45,7 @@ public static class NeutrinoNavigationUtility {
         navState.ResultShown = false;
 
         ViewNavUtility.LeafMoveToNode("Monitor");
+        state.LookUpdatedThisFrame = true;
         state.OnLookUpdated.Invoke(state);
     }
 
@@ -57,6 +58,7 @@ public static class NeutrinoNavigationUtility {
         state.OnLookUpdated.Register(NavigationCanvasUtil.UpdatedNeutrinoNavigationArrow);
         state.OnLookUpdated.Deregister(UpdateCameraDistanceFromPuzzle);
 
+        state.LookUpdatedThisFrame = true;
         state.OnLookUpdated.Invoke(state);
 
         ViewNavUtility.LeafMoveToNode("Desk");

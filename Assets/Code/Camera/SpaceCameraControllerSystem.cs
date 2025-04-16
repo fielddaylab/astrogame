@@ -1,7 +1,10 @@
+using BeauPools;
 using FieldDay;
 using FieldDay.Components;
+using FieldDay.Debugging;
 using FieldDay.Scripting;
 using FieldDay.Systems;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,37 +18,82 @@ namespace Astro
         {
             base.ProcessWork(deltaTime);
 
-            ProcessInputs();
+            UpdateFlags updated = ProcessInputs();
+
+            if (updated != 0) {
+                m_State.LookUpdatedThisFrame = true;
+                m_State.OnLookUpdated.Invoke(m_State);
+
+                if ((updated & UpdateFlags.Rotation) != 0) {
+                    ScriptUtility.Trigger(ScriptEvents.OnTelescopeMoved);
+                }
+            }
+
+            if (Game.IsDevBuild) {
+                if (DebugInput.IsPressed(KeyCode.T)) {
+                    DebugFlags.ToggleFlag(SpaceCameraState.DebuggingFlags.DisplayLookCoords);
+                }
+
+                if (DebugFlags.IsFlagSet(SpaceCameraState.DebuggingFlags.DisplayLookCoords)) {
+                    Vector3 spaceCameraEuler = m_State.Camera.RootTransform.eulerAngles;
+                    HmsCoords hor = CoordinateUtility.DDToHms(360 - spaceCameraEuler.y);
+                    DmsCoords vert = CoordinateUtility.DDToDms(360 - spaceCameraEuler.x);
+                    using (PooledStringBuilder psb = PooledStringBuilder.Create()) {
+                        psb.Builder.Append("Telescope Aimed At: ");
+                        hor.ToString(psb);
+                        psb.Builder.Append(' ');
+                        vert.ToString(psb);
+
+                        DebugDraw.AddViewportText(new Vector2(0.5f, 1), new Vector2(0, -8), psb,
+                            Color.yellow, 0, TextAnchor.UpperCenter, DebugTextStyle.BackgroundDark);
+                    }
+                }
+            }
         }
 
         #region Input Processing
 
-        private void ProcessInputs() {
-            if (!m_State.InputEnabled) return;
+        private UpdateFlags ProcessInputs() {
+            if (!m_State.InputEnabled) return 0;
 
-            if (!m_State.CameraRotationInputLocked) ProcessLook();
-            if (!m_State.ZoomInputLocked) ProcessZoom();
+            UpdateFlags updated = 0;
+            if (!m_State.CameraRotationInputLocked) {
+                if (ProcessLook()) {
+                    updated |= UpdateFlags.Rotation;
+                }
+            }
+            if (!m_State.ZoomInputLocked) {
+                if (ProcessZoom()) {
+                    updated |= UpdateFlags.Zoom;
+                }
+            }
+
+            return updated;
         }
 
-        private void ProcessLook() {
+        private bool ProcessLook() {
+            bool updated = false;
             if (m_State.EnableMouseAutoControls)
             {
-                ProcessMouseAutoLook();
+                updated |= ProcessMouseAutoLook();
             }
             if (m_State.EnableMouseControls)
             {
-                ProcessMouseDragLook();
+                updated |= ProcessMouseDragLook();
             }
 
             if (m_State.EnableSmoothKeyboardControls) {
-                ProcessKeyboardLookSmooth();
+                updated |=ProcessKeyboardLookSmooth();
             } else {
-                ProcessKeyboardLookDiscrete();
+                updated |=ProcessKeyboardLookDiscrete();
             }
+
+            return updated;
         }
 
-        private void ProcessMouseAutoLook()
+        private bool ProcessMouseAutoLook()
         {
+            bool updated = false;
             var cursorPos = m_State.Camera.Camera.ScreenToViewportPoint(Input.mousePosition);
 
             // Look X
@@ -53,13 +101,13 @@ namespace Astro
             {
                 // look left
                 var adjustedSpeed = (cursorPos.x < m_State.LookRapidThreshold) ? m_State.LookRapidSpeed : m_State.LookSpeed;
-                AdjustHorizLook(-adjustedSpeed * Frame.DeltaTime);
+                updated |= AdjustHorizLook(-adjustedSpeed * Frame.DeltaTime);
             }
             else if (cursorPos.x > 1 - m_State.LookThreshold)
             {
                 // look right
                 var adjustedSpeed = (cursorPos.x > 1 - m_State.LookRapidThreshold) ? m_State.LookRapidSpeed : m_State.LookSpeed;
-                AdjustHorizLook(adjustedSpeed * Frame.DeltaTime);
+                updated |= AdjustHorizLook(adjustedSpeed * Frame.DeltaTime);
             }
 
             // Look Y
@@ -67,167 +115,182 @@ namespace Astro
             {
                 // look down
                 var adjustedSpeed = (cursorPos.y < m_State.LookRapidThreshold) ? m_State.LookRapidSpeed : m_State.LookSpeed;
-                AdjustVertLook(adjustedSpeed * Frame.DeltaTime);
+                updated |= AdjustVertLook(adjustedSpeed * Frame.DeltaTime);
             }
             else if (cursorPos.y > 1 - m_State.LookThreshold)
             {
                 // look up
                 var adjustedSpeed = (cursorPos.y > 1 - m_State.LookRapidThreshold) ? m_State.LookRapidSpeed : m_State.LookSpeed;
-                AdjustVertLook(-adjustedSpeed * Frame.DeltaTime);
+                updated |= AdjustVertLook(-adjustedSpeed * Frame.DeltaTime);
             }
+
+            return updated;
         }
 
-        private void ProcessMouseDragLook()
+        private bool ProcessMouseDragLook()
         {
+            bool updated = false;
             if (m_State.MouseDragLookActive)
             {
                 var cursorPos = m_State.Camera.Camera.ScreenToViewportPoint(Input.mousePosition);
                 var deltaPos = m_State.PrevMousePos - cursorPos;
 
                 // look horizontal
-                AdjustHorizLook(deltaPos.x * m_State.LookDragMod);
+                updated |= AdjustHorizLook(deltaPos.x * m_State.LookDragMod);
 
                 // look vertical
-                AdjustVertLook(-deltaPos.y * m_State.LookDragMod);
+                updated |= AdjustVertLook(-deltaPos.y * m_State.LookDragMod);
 
                 m_State.PrevMousePos = cursorPos;
             }
+            return updated;
         }
 
-        private void AdjustVertLook(float adjustment)
+        private bool AdjustVertLook(float adjustment)
         {
-            m_State.VertLook += adjustment;
+            float oldVertLook = m_State.VertLook;
+            float newVertLook = SpaceCameraUtility.ClampAngle(oldVertLook + adjustment, m_State.LookYClamp.x, m_State.LookYClamp.y);
 
-            m_State.VertLook = SpaceCameraUtility.ClampAngle(m_State.VertLook, m_State.LookYClamp.x, m_State.LookYClamp.y);
+            if (newVertLook != oldVertLook) {
+                m_State.VertLook = newVertLook;
 
-            var angles = m_State.Camera.RootTransform.localEulerAngles;
-            angles.x = m_State.VertLook;
-            angles.z = 0;
-            m_State.Camera.RootTransform.localEulerAngles = angles;
+                var angles = m_State.Camera.RootTransform.localEulerAngles;
+                angles.x = newVertLook;
+                angles.z = 0;
+                m_State.Camera.RootTransform.localEulerAngles = angles;
+                return true;
+            }
 
-            m_State.OnLookUpdated.Invoke(m_State);
+            return false;
         }
 
-        private void AdjustHorizLook(float adjustment)
+        private bool AdjustHorizLook(float adjustment)
         {
-            m_State.HorizLook += adjustment;
+            if (adjustment == 0) {
+                return false;
+            }
 
-            m_State.HorizLook = SpaceCameraUtility.ClampAngle(m_State.HorizLook, m_State.LookXClamp.x, m_State.LookXClamp.y);
+            m_State.HorizLook = SpaceCameraUtility.ClampAngle(m_State.HorizLook + adjustment, m_State.LookXClamp.x, m_State.LookXClamp.y);
 
             var angles = m_State.Camera.RootTransform.localEulerAngles;
             angles.y = m_State.HorizLook;
             angles.z = 0;
             m_State.Camera.RootTransform.localEulerAngles = angles;
 
-            m_State.OnLookUpdated.Invoke(m_State);
+            return true;
         }
 
-        private void ProcessKeyboardLookDiscrete()
+        private bool ProcessKeyboardLookDiscrete()
         {
+            bool updated = false;
             if (Game.Input.IsKeyPressed(KeyCode.UpArrow) || Game.Input.IsKeyPressed(KeyCode.W))
             {
                 // look up
-                AdjustVertLook(-m_State.LookIncrement * Frame.DeltaRatio);
-                ScriptUtility.Trigger(ScriptEvents.OnTelescopeMoved);
+                updated |= AdjustVertLook(-m_State.LookIncrement * Frame.DeltaRatio);
             }
             if (Game.Input.IsKeyPressed(KeyCode.DownArrow) || Game.Input.IsKeyPressed(KeyCode.S))
             {
                 // look down
-                AdjustVertLook(m_State.LookIncrement * Frame.DeltaRatio);
-                ScriptUtility.Trigger(ScriptEvents.OnTelescopeMoved);
+                updated |= AdjustVertLook(m_State.LookIncrement * Frame.DeltaRatio);
             }
             if (Game.Input.IsKeyPressed(KeyCode.LeftArrow) || Game.Input.IsKeyPressed(KeyCode.A))
             {
                 // look left
-                AdjustHorizLook(-m_State.LookIncrement * Frame.DeltaRatio);
-                ScriptUtility.Trigger(ScriptEvents.OnTelescopeMoved);
+                updated |= AdjustHorizLook(-m_State.LookIncrement * Frame.DeltaRatio);
             }
             if (Game.Input.IsKeyPressed(KeyCode.RightArrow) || Game.Input.IsKeyPressed(KeyCode.D))
             {
                 // look right
-                AdjustHorizLook(m_State.LookIncrement * Frame.DeltaRatio);
-                ScriptUtility.Trigger(ScriptEvents.OnTelescopeMoved);
+                updated |= AdjustHorizLook(m_State.LookIncrement * Frame.DeltaRatio);
             }
+
+            return updated;
         }
 
-        private void ProcessKeyboardLookSmooth()
+        private bool ProcessKeyboardLookSmooth()
         {
+            bool updated = false;
             if (Game.Input.IsKeyDown(KeyCode.UpArrow) || Game.Input.IsKeyDown(KeyCode.W))
             {
                 // look up
-                AdjustVertLook(-m_State.SmoothLookIncrement * Frame.DeltaRatio);
-                ScriptUtility.Trigger(ScriptEvents.OnTelescopeMoved);
+                updated |= AdjustVertLook(-m_State.SmoothLookIncrement * Frame.DeltaRatio);
             }
             else if (Game.Input.IsKeyDown(KeyCode.DownArrow) || Game.Input.IsKeyDown(KeyCode.S))
             {
                 // look down
-                AdjustVertLook(m_State.SmoothLookIncrement * Frame.DeltaRatio);
-                ScriptUtility.Trigger(ScriptEvents.OnTelescopeMoved);
+                updated |= AdjustVertLook(m_State.SmoothLookIncrement * Frame.DeltaRatio);
             }
             if (Game.Input.IsKeyDown(KeyCode.LeftArrow) || Game.Input.IsKeyDown(KeyCode.A))
             {
                 // look left
-                AdjustHorizLook(-m_State.SmoothLookIncrement * Frame.DeltaRatio);
-                ScriptUtility.Trigger(ScriptEvents.OnTelescopeMoved);
+                updated |= AdjustHorizLook(-m_State.SmoothLookIncrement * Frame.DeltaRatio);
             }
             else if (Game.Input.IsKeyDown(KeyCode.RightArrow) || Game.Input.IsKeyDown(KeyCode.D))
             {
                 // look right
-                AdjustHorizLook(m_State.SmoothLookIncrement * Frame.DeltaRatio);
-                ScriptUtility.Trigger(ScriptEvents.OnTelescopeMoved);
+                updated |= AdjustHorizLook(m_State.SmoothLookIncrement * Frame.DeltaRatio);
             }
+
+            return updated;
         }
 
-        private void ProcessZoom() {
+        private bool ProcessZoom() {
+            bool updated = false;
             if (m_State.EnableMouseControls)
             {
-                ProcessMouseZoom();
+                updated |= ProcessMouseZoom();
             }
 
-            ProcessKeyboardZoom();
+            updated |= ProcessKeyboardZoom();
+            return updated;
         }
 
-        private void ProcessMouseZoom()
+        private bool ProcessMouseZoom()
         {
             var yScrollDelta = Input.mouseScrollDelta.y;
             if (yScrollDelta != 0 && !Game.Input.AreDevicesPaused())
             {
-                float newZoom = m_State.Camera.Camera.fieldOfView;
+                float oldZoom = m_State.Camera.Camera.fieldOfView;
+                float newZoom = Mathf.Clamp(oldZoom - yScrollDelta * m_State.ZoomSpeed, m_State.ZoomBounds.x, m_State.ZoomBounds.y);
 
                 // inverse relationship: as player scrolls updwards, fov decreases
-                newZoom = Mathf.Clamp(newZoom - yScrollDelta * m_State.ZoomSpeed, m_State.ZoomBounds.x, m_State.ZoomBounds.y);
-
-                m_State.Camera.Camera.fieldOfView = newZoom;
-                
-                m_State.OnLookUpdated.Invoke(m_State);
+                if (newZoom != oldZoom) {
+                    m_State.Camera.Camera.fieldOfView = newZoom;
+                    m_State.Zoom = m_State.Camera.OriginalFOV / newZoom;
+                    return true;
+                }
             }
+
+            return false;
         }
 
-        private void ProcessKeyboardZoom()
+        private bool ProcessKeyboardZoom()
         {
+            float oldZoom = m_State.Zoom;
+            float newZoom = oldZoom;
+
             if (Game.Input.IsKeyPressed(KeyCode.I)) {
-                // Zoom out
-                float newZoom = m_State.Zoom;
-
                 newZoom = Mathf.Clamp(newZoom - m_State.ZoomIncrement, m_State.ZoomBounds.x, m_State.ZoomBounds.y);
-
-                m_State.Zoom = newZoom;
-                m_State.Camera.Camera.fieldOfView = m_State.Camera.OriginalFOV / newZoom;
-                m_State.OnLookUpdated.Invoke(m_State);
             }
             if (Game.Input.IsKeyPressed(KeyCode.K)) {
-                // Zoom in
-                float newZoom = m_State.Zoom;
-
                 newZoom = Mathf.Clamp(newZoom + m_State.ZoomIncrement, m_State.ZoomBounds.x, m_State.ZoomBounds.y);
+            }
 
+            if (oldZoom != newZoom) {
                 m_State.Zoom = newZoom;
                 m_State.Camera.Camera.fieldOfView = m_State.Camera.OriginalFOV / newZoom;
-                m_State.OnLookUpdated.Invoke(m_State);
+                return true;
             }
+
+            return false;
         }
 
         #endregion // Input Processing
 
+        [Flags]
+        public enum UpdateFlags {
+            Rotation = 0x01,
+            Zoom = 0x02
+        }
     }
 }
