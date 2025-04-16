@@ -71,7 +71,6 @@ $call MonitorUI->PlayRadioDownload(4.0)
 
 $call StartMonitorControls()
 $call SetInputState(true)
-$call StopMusic(2)
 $call HintModals->SlideInFromRight("TelescopeControls", 0.4)
 $set temp:introMoveTheTelescope = false
 $goto .MoveTelescopeReminder
