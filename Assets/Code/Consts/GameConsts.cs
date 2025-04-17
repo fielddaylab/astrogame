@@ -27,6 +27,7 @@ public static class ScriptEvents {
     public static readonly StringHash32 PuzzleNavigationComplete = "PuzzleNavigationComplete";
     public static readonly StringHash32 OnPuzzleGridFullyPopulated = "OnPuzzleGridFullyPopulated";
     public static readonly StringHash32 OnPuzzleCellSelected = "OnPuzzleCellSelected";
+    public static readonly StringHash32 OnPuzzleCellFilled = "OnPuzzleCellFilled";
     public static readonly StringHash32 IncorrectPuzzleSubmission = "IncorrectPuzzleSubmission";
     public static readonly StringHash32 CorrectPuzzleSubmission = "CorrectPuzzleSubmission";
     public static readonly StringHash32 DocumentInspectStart = "DocumentInspectStart";

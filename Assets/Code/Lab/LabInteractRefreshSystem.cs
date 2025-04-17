@@ -6,7 +6,7 @@ using FieldDay;
 
 namespace Astro
 {
-    [SysUpdate(GameLoopPhase.LateUpdate, 0, AstroGame.InteractUpdateMask)] // After trigger processing systems
+    [SysUpdate(GameLoopPhase.LateUpdate, 0)] // After trigger processing systems
     public class LabInteractRefreshSystem : ComponentSystemBehaviour<LabInteractable>
     {
         public override void ProcessWorkForComponent(LabInteractable component, float deltaTime)

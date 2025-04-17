@@ -29,7 +29,7 @@ namespace Astro {
 
         // TUTORIAL ISOLATION
         public bool IsIsolated;
-        public StringHash32 IsolatedSlot;
+        public RingBuffer<StringHash32> IsolatedSlots = new RingBuffer<StringHash32>(2, RingBufferMode.Expand);
 
         public PuzzleCellLibrary Library;
 
@@ -107,8 +107,10 @@ namespace Astro {
 
         public static bool IsSlotIsolated(PuzzleState state, StringHash32 slotId)
         {
-            if (state.IsolatedSlot.Equals(slotId)) {
-                return true;
+            foreach (var isolated in state.IsolatedSlots) {
+                if (isolated.Equals(slotId)) {
+                    return true;
+                }
             }
 
             return false;
@@ -126,8 +128,31 @@ namespace Astro {
             sb.Append(col.ToStringLookup());
             StringHash32 slotId = sb.ToString();
 
-            state.IsolatedSlot = slotId;
+            state.IsolatedSlots.PushBack(slotId);
             state.IsIsolated = true;
+        }
+
+        [LeafMember("AddIsolatedSlot")]
+        public static void LeafAddIsolatedSlot(StringHash32 slotId)
+        {
+            PuzzleState state = Find.State<PuzzleState>();
+
+            state.IsolatedSlots.PushBack(slotId);
+            state.IsIsolated = true;
+        }
+
+        [LeafMember("RemoveIsolatedSlot")]
+        public static void LeafRemoveIsolatedSlot(StringHash32 slotId)
+        {
+            PuzzleState state = Find.State<PuzzleState>();
+
+            if (state.IsolatedSlots.Contains(slotId)) {
+                state.IsolatedSlots.Remove(slotId);
+
+                if (state.IsolatedSlots.Count == 0) {
+                    state.IsIsolated = false;
+                }
+            }
         }
 
         [LeafMember("ReleaseIsolatedPuzzle")]
@@ -135,6 +160,7 @@ namespace Astro {
         {
             PuzzleState state = Find.State<PuzzleState>();
             state.IsIsolated = false;
+            state.IsolatedSlots.Clear();
         }
     }
 }

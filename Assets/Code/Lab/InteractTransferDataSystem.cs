@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using FieldDay.Systems;
 using FieldDay;
+using FieldDay.Scripting;
 
 namespace Astro
 {
@@ -16,16 +17,25 @@ namespace Astro
             // Transfer data on interact if there is a valid destination
             var dataState = Find.State<DataTransferState>();
             if (dataState.SelectedTarget != null && dataState.SelectedSource != null && dataState.SelectedSource.HasData && dataState.SelectedTarget.Modifiable) {
+                var targetSlotId = dataState.SelectedTarget.SlotId;
                 if (DataUtility.TryTransferData(dataState.SelectedSource, dataState.SelectedTarget)) {
                     Debug.Log("[InteractTransferSystem] Transfer success");
                     PuzzleUtility.CheckEnableSubmit(Find.State<PuzzleState>());
                     DataUtility.ClearSelections(dataState);
+
+                    using (var table = TempVarTable.Alloc())
+                    {
+                        table.Set("cellId", targetSlotId);
+                        ScriptUtility.Trigger(ScriptEvents.OnPuzzleCellFilled, table);
+                    }
+
                     return;
                 }
+                else {
+                    Debug.Log("[InteractTransferSystem] Transfer unsuccessful");
+                }
             }
-            Debug.Log("[InteractTransferSystem] Transfer unsuccessful");
-            // bandaid fix for weird behavior - locked instruments' load buttons stuck in "interact received" and spamming "transfer unsuccessful"
-            secondary.InteractReceived = false;
+
         }
     }
 
