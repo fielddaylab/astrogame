@@ -37,6 +37,11 @@ namespace Astro
     {
         public static void InitFocusable(FocusState state, UIFocus focus, Transform target, CelestialAsset asset, Sprite represent2D)
         {
+#if UNITY_EDITOR
+            focus.gameObject.name = asset.DisplayName;
+            focus.Button.name = asset.DisplayName + " (Button)";
+#endif // UNITY_EDITOR
+
             focus.Target = target;
             focus.Represent2D.sprite = represent2D;
             if (represent2D == null) {
@@ -46,10 +51,11 @@ namespace Astro
             focus.TargetData = asset;
 
             float scaleFactor = Mathf.Pow(0.6f, asset.ApparentMagnitude);
-            focus.Root.localScale = new Vector3(scaleFactor, scaleFactor, 1);
+            focus.Root.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
 
-            float invScaleFactor = Mathf.Sqrt(1f / scaleFactor);
-            focus.Clickable.radius = 0.5f * invScaleFactor;
+            float clickableRadius = 0.6f * Math.Min(1, 1 / scaleFactor);
+
+            focus.Clickable.radius = clickableRadius / scaleFactor;
         }
     }
 }

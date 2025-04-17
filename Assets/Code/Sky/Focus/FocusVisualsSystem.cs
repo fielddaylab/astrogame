@@ -35,19 +35,27 @@ namespace Astro {
 
             Quaternion billboardRot = Quaternion.LookRotation(-forward, up);
 
+            ref var packedEnabled = ref focusState.ActiveFociiVisibleBits;
             var packedData = focusState.ActiveFociiPacked;
             int packedIdx = 0;
             foreach (UIFocus focus in focusState.ActiveFocii) {
-                float dot = Vector3.Dot(packedData[packedIdx++].TargetVector, forward);
-                
+                float dot = Vector3.Dot(packedData[packedIdx].TargetVector, forward);
+
                 if (dot >= dotProductThreshold) {
-                    focus.Represent2D.enabled = true;
-                    focus.Clickable.enabled = true;
                     focus.Root.localRotation = billboardRot;
-                } else {
+
+                    if (!packedEnabled.IsSet(packedIdx)) {
+                        focus.Represent2D.enabled = true;
+                        focus.Clickable.enabled = true;
+                        packedEnabled.Set(packedIdx);
+                    }
+                } else if (packedEnabled.IsSet(packedIdx)) {
                     focus.Represent2D.enabled = false;
                     focus.Clickable.enabled = false;
+                    packedEnabled.Unset(packedIdx);
                 }
+
+                packedIdx++;
             }
         }
     }
