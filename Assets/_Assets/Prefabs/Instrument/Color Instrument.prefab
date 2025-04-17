@@ -46,6 +46,7 @@ Transform:
   - {fileID: 728759487578315701}
   - {fileID: 9215084023744760781}
   - {fileID: 8268024223287040097}
+  - {fileID: 2301026273384886445}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2589876399984160971
@@ -589,6 +590,90 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &6814906968424970813
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2301026273384886445}
+  - component: {fileID: 1038912343037147815}
+  - component: {fileID: 8061687696085462134}
+  m_Layer: 0
+  m_Name: UnlockStatus_Light
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 1
+  m_IsActive: 0
+--- !u!4 &2301026273384886445
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6814906968424970813}
+  serializedVersion: 2
+  m_LocalRotation: {x: -8.657069e-17, y: 0.689941, z: -2.0772817e-18, w: 0.72386557}
+  m_LocalPosition: {x: -1.9768959, y: 0.34245527, z: -0.044730663}
+  m_LocalScale: {x: 0.7256516, y: 0.7256518, z: 0.7256516}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 8094372872503326864}
+  m_LocalEulerAnglesHint: {x: 0, y: 21.089, z: 0}
+--- !u!33 &1038912343037147815
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6814906968424970813}
+  m_Mesh: {fileID: 2335153104536307664, guid: 0b7dbb343f2d7c94ba69eb8214c1bd13, type: 3}
+--- !u!23 &8061687696085462134
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6814906968424970813}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: e174847b4310f434b9a6a5eeab3cabde, type: 2}
+  - {fileID: 2100000, guid: e93a62a980e99fd479911e9cde59ffc4, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 0.2
   m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
