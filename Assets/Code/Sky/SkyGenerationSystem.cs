@@ -37,6 +37,9 @@ namespace Astro
             CelestialObjectVisMask visMask = m_State.VisMask;
 
             Vector3 camPos = spaceCamera.Camera.RootTransform.position;
+            Vector3 camUp = spaceCamera.Camera.RootTransform.up;
+
+            spaceCamera.StarRoot.position = camPos;
 
             int fociiAllocated = 0;
             foreach(var obj in dome.AboveHorizon) {
@@ -44,7 +47,7 @@ namespace Astro
                     continue;
                 }
 
-                var newFocus = focusPools.Focii.Alloc(spaceCamera.Canvas.transform);
+                var newFocus = focusPools.Focii.Alloc(spaceCamera.StarRoot);
                 // TODO: assign relevant 2D representation
                 FocusableUtility.InitFocusable(focusState, newFocus, obj.transform, obj.Resource, DetermineSprite(obj.Resource.Category));
                 focusState.ActiveFocii.PushBack(newFocus);
@@ -54,6 +57,8 @@ namespace Astro
                 packed.TargetVector = Vector3.Normalize(packed.TargetPos - camPos);
 
                 focusState.ActiveFociiPacked[fociiAllocated++] = packed;
+
+                newFocus.Root.SetLocalPositionAndRotation(packed.TargetVector * 20, Quaternion.LookRotation(-packed.TargetVector, camUp));
             }
 
             m_State.IsDirty = false;

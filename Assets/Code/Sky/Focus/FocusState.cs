@@ -20,7 +20,8 @@ namespace Astro
         [NonSerialized] public UIFocus CurrentFocus = null;
         [NonSerialized] public bool FocusUpdated = false;
         [NonSerialized] public bool MonitorInputActive = false;
-        public Graphic FocusOutline;
+
+        public SpriteRenderer FocusOutline;
 
         protected override void OnEnable() {
             base.OnEnable();

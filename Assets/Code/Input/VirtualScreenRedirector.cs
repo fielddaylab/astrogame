@@ -17,7 +17,7 @@ namespace Astro {
 
         public Camera screenCamera; // Reference to the camera responsible for rendering the virtual screen's rendertexture
 
-        public GraphicRaycaster screenCaster; // Reference to the GraphicRaycaster of the canvas displayed on the virtual screen
+        public BaseRaycaster screenCaster; // Reference to the GraphicRaycaster of the canvas displayed on the virtual screen
 
         private PointerEventData copyEventData;
 

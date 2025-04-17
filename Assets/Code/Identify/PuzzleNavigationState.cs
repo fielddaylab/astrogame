@@ -11,6 +11,7 @@ using FieldDay.Rendering;
 using System.Collections;
 using UnityEngine.UI;
 using BeauUtil.UI;
+using BeauPools;
 
 public sealed class PuzzleNavigationState : SharedStateComponent, IRegistrationCallbacks {
     [NonSerialized] public bool NavigationModeActive = false;
@@ -138,8 +139,11 @@ public static class PuzzleNavigationUtility {
 
     // Helper for updating the edge color of constellations in camera snap routine
     private static void UpdateEdgeGroupColor(RectTransform OutlineGroup, Color color) {
-        foreach(RoundedRectGraphic graphic in OutlineGroup.GetComponentsInChildren<RoundedRectGraphic>()) {
-            graphic.color = color;
+        using (PooledList<RoundedRectGraphic> list = PooledList<RoundedRectGraphic>.Create()) {
+            OutlineGroup.GetComponentsInChildren<RoundedRectGraphic>(list);
+            foreach (RoundedRectGraphic graphic in list) {
+                graphic.color = color;
+            }
         }
     }
 }

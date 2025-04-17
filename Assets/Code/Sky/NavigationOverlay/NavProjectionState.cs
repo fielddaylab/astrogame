@@ -1,12 +1,13 @@
 using BeauUtil;
+using BeauUtil.Debugger;
 using BeauUtil.UI;
 using FieldDay;
+using FieldDay.Assets;
 using FieldDay.Scripting;
 using FieldDay.SharedState;
 using System;
 using UnityEngine;
 using UnityEngine.UI;
-using static Astro.PuzzleAsset;
 
 namespace Astro {
     public class NavProjectionState : SharedStateComponent, IRegistrationCallbacks {
@@ -17,6 +18,7 @@ namespace Astro {
         public Color NavigationCompleteColor;
         
         public Canvas NavigationCanvas;
+        public float EdgeInset = 38;
         public RectTransform NavigationArrow;
         public RectTransform OutlineGroup;
         public CanvasGroup BoarderGroup;
@@ -158,11 +160,10 @@ namespace Astro {
             && viewportPosition.z > 0;
         }
 
-        public static void InitNavProjectionSystem(NavProjectionState navState)
+        public static unsafe void InitNavProjectionSystem(NavProjectionState navState)
         {
             var dome = Find.State<SkyDome>();
             var focusPools = Find.State<FocusPools>();
-            var outlineState = Find.State<OutlineState>();
 
             var puzzleState = Find.State<PuzzleState>();
             var spaceCam = Find.State<SpaceCameraState>();
@@ -188,46 +189,53 @@ namespace Astro {
                 GameObject.Destroy(navState.OutlineGroup.GetChild(i).gameObject);
             }
 
-            for (int i = 0; i < puzzleState.ActivePuzzle.Rows.Length; i++)
+            Vector2 canvasSize = navState.OutlineGroup.rect.size;
+            int rowCount = puzzleState.ActivePuzzle.Rows.Length;
+            StringHash32* rowAssetIds = stackalloc StringHash32[rowCount];
+            Vector2* rowAnchors = stackalloc Vector2[rowCount];
+
+            for (int i = 0; i < rowCount; i++)
             {
-                CelestialAsset currAsset = Find.NamedAsset<CelestialAsset>(puzzleState.ActivePuzzle.Rows[i].Object);
+                StringHash32 assetId = puzzleState.ActivePuzzle.Rows[i].Object;
+                rowAssetIds[i] = assetId;
+
+                CelestialAsset currAsset = Find.NamedAsset<CelestialAsset>(assetId);
                 Vector3 assetPostion = CelestialPositionerUtility.GetObjectPosition(center, currAsset.Coords.RightAscension, currAsset.Coords.Declination);
 
-                // Use UIFocus pool
-                var navFocus = focusPools.Focii.Alloc(navState.OutlineGroup);
-                navFocus.name = currAsset.DisplayName + " (Navigation Outline)";
-                // TODO we can remove sprite representations on the nav ui if we dont have outlines
-                InitNavRepresntation(navFocus, currAsset, null);
-
-                outlineState.ActiveOutlines.PushBack(navFocus);
-
-                Vector2 viewPoint = spaceCamera.WorldToViewportPoint(assetPostion);
-                navFocus.Rect.anchorMin = navFocus.Rect.anchorMax = viewPoint;
+                rowAnchors[i] = spaceCamera.WorldToViewportPoint(assetPostion) * canvasSize;
             }
 
             // Create connection for constellations
             for (int i = 0; i < puzzleState.ActivePuzzle.Edges.Length; i++)
             {
-                Edge e = puzzleState.ActivePuzzle.Edges[i];
-                CelestialAsset ca1 = Find.NamedAsset<CelestialAsset>(e.Object1);
-                CelestialAsset ca2 = Find.NamedAsset<CelestialAsset>(e.Object2);
+                PuzzleAsset.Edge e = puzzleState.ActivePuzzle.Edges[i];
 
-                UIFocus focusA = outlineState.ActiveOutlines.Find(x => x.TargetData == ca1);
-                UIFocus focusB = outlineState.ActiveOutlines.Find(x => x.TargetData == ca2);
+                int focusA = FindIndex(rowAssetIds, rowCount, e.Object1);
+                int focusB = FindIndex(rowAssetIds, rowCount, e.Object2);
 
-                var connection = new GameObject(ca1.DisplayName + "_to_" + ca2.DisplayName, typeof(RectTransform));
+                Assert.True(focusA >= 0 && focusB >= 0);
+
+                string displayName =
+#if UNITY_EDITOR
+                    string.Concat(e.Object1.ToDebugString(), "_to_", e.Object2.ToDebugString());
+#else
+                    "connection";
+#endif // UNITY_EDITOR
+
+                var connection = new GameObject(displayName, typeof(RectTransform));
                 connection.transform.SetParent(navState.OutlineGroup, false);
+
                 connection.AddComponent<RoundedRectGraphic>().color = navState.ConstellationEdgeColor;
                 RectTransform connectionRect = connection.GetComponent<RectTransform>();
+                connectionRect.anchorMin = connectionRect.anchorMax = new Vector2(0, 0);
 
-                Vector2 canvasSize = navState.NavigationCanvas.GetComponent<RectTransform>().sizeDelta;
-                float focusARadius = focusA.Rect.sizeDelta.x / 2;
-                float focusBRadius = focusB.Rect.sizeDelta.x / 2;
-                connectionRect.sizeDelta = new Vector2(10, Vector2.Distance(focusA.Rect.anchorMin * canvasSize, focusB.Rect.anchorMin * canvasSize) - focusARadius - focusBRadius);
-                connectionRect.sizeDelta = new Vector2(10, Vector2.Distance(focusA.Rect.anchorMin * canvasSize, focusB.Rect.anchorMin * canvasSize) - 75);
+                Vector2 anchorA = rowAnchors[focusA];
+                Vector2 anchorB = rowAnchors[focusB];
 
-                connectionRect.anchorMin = connectionRect.anchorMax = (focusA.Rect.anchorMax + focusB.Rect.anchorMax) / 2;
-                Vector2 vector = (focusA.Rect.anchorMax * canvasSize) - (focusB.Rect.anchorMin * canvasSize);
+                connectionRect.anchoredPosition = (anchorA + anchorB) / 2;
+                connectionRect.sizeDelta = new Vector2(10, Vector2.Distance(anchorA, anchorB) - navState.EdgeInset);
+
+                Vector2 vector = anchorA - anchorB;
                 float angle = Vector2.Angle(Vector2.up, vector);
                 connectionRect.localEulerAngles = new Vector3(0, 0, angle);
             }
@@ -237,16 +245,14 @@ namespace Astro {
             navState.Initialized = true;
         }
 
-        public static void InitNavRepresntation(UIFocus focus, CelestialAsset asset, Sprite represent2D) {
-            focus.Represent2D.sprite = represent2D;
-            if (represent2D == null)
-            {
-                focus.Represent2D.enabled = false;
+        static private unsafe int FindIndex(StringHash32* buffer, int bufferSize, StringHash32 find) {
+            for(int i = 0; i < bufferSize; i++) {
+                if (buffer[i] == find) {
+                    return i;
+                }
             }
-            // float scaleFactor = 1.5f * Mathf.Pow(0.63f, asset.ApparentMagnitude);
-            // focus.Rect.localScale = new Vector3(scaleFactor, scaleFactor, 1);
-            focus.Represent2D.enabled = false;
-            focus.TargetData = asset;
+
+            return -1;
         }
     }
 }

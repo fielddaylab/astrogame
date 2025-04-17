@@ -12,7 +12,8 @@ namespace Astro {
         }
 
         public override void ProcessWork(float deltaTime) {
-            m_State.MusicTrack = Sfx.Play(m_State.TrackQueue.PopFront());
+            m_State.CurrentTrackId = m_State.TrackQueue.PopFront();
+            m_State.MusicTrack = Sfx.Play(m_State.CurrentTrackId);
             Sfx.OverrideTag(m_State.MusicTrack, m_State.MusicTag);
         }
     }

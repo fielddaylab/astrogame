@@ -561,7 +561,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1443473684}
-  - component: {fileID: 1443473685}
   - component: {fileID: 1443473683}
   - component: {fileID: 1443473687}
   - component: {fileID: 1443473686}
@@ -599,19 +598,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1443473685
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1443473682}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87f012751e1c7f44e9f22e1335077728, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  FocusOutline: {fileID: 1712670055}
 --- !u!114 &1443473686
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -624,8 +610,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90f77194feb777c45ab6eb1d0965e7c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ConstellationEdgeColor: {r: 0.9490196, g: 1, b: 0.9411765, a: 1}
   NavigationCompleteColor: {r: 0.43529412, g: 1, b: 0.34117648, a: 1}
   NavigationCanvas: {fileID: 724395036}
+  EdgeInset: 72
   NavigationArrow: {fileID: 564680097}
   OutlineGroup: {fileID: 730439660}
   BoarderGroup: {fileID: 2027025868}
