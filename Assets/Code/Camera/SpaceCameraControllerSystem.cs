@@ -1,4 +1,5 @@
 using BeauPools;
+using BeauUtil;
 using FieldDay;
 using FieldDay.Components;
 using FieldDay.Debugging;
@@ -44,8 +45,16 @@ namespace Astro
                         psb.Builder.Append(' ');
                         vert.ToString(psb);
 
-                        DebugDraw.AddViewportText(new Vector2(0.5f, 1), new Vector2(0, -8), psb,
-                            Color.yellow, 0, TextAnchor.UpperCenter, DebugTextStyle.BackgroundDark);
+                        DebugDraw.AddLogText(psb, Color.yellow);
+
+                        psb.Builder.Clear();
+
+                        psb.Builder.Append("Local Aim: ")
+                            .AppendNoAlloc(m_State.HorizLook, 2)
+                            .Append(' ')
+                            .AppendNoAlloc(m_State.VertLook, 2);
+
+                        DebugDraw.AddLogText(psb, Color.white);
                     }
                 }
             }

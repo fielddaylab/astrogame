@@ -14,13 +14,18 @@ namespace Astro
         [NonSerialized] public Transform Target;
         [NonSerialized] public CelestialAsset TargetData;
 
-        [NonSerialized] public Renderer TargetRenderer;
-
-        public RectTransform Rect;
-        public RectTransform HighlightRect;
-        public Image Represent2D;
+        public Transform Root;
+        public SpriteRenderer Represent2D;
+        public SphereCollider Clickable;
         public PointerListener Button;
-        [NonSerialized] public Image NeutrinoHighlight;
+
+        private void Awake() {
+            Button.onClick.Register(OnClicked);
+        }
+
+        private void OnClicked() {
+            FocusableUtility.SetCurrentFocus(Find.State<FocusState>(), this);
+        }
     }
 
     public struct UIFocusPackedData {
@@ -37,16 +42,14 @@ namespace Astro
             if (represent2D == null) {
                 focus.Represent2D.enabled = false;
             }
+
             focus.TargetData = asset;
-            focus.TargetRenderer = target.GetComponent<Renderer>();
 
             float scaleFactor = Mathf.Pow(0.6f, asset.ApparentMagnitude);
-            focus.Rect.localScale = new Vector3(scaleFactor, scaleFactor, 1);
+            focus.Root.localScale = new Vector3(scaleFactor, scaleFactor, 1);
 
             float invScaleFactor = Mathf.Sqrt(1f / scaleFactor);
-            focus.Button.transform.localScale = new Vector3(invScaleFactor, invScaleFactor, 1);
-            focus.Button.onClick.RemoveAllListeners();
-            focus.Button.onClick.AddListener(() => { FocusableUtility.SetCurrentFocus(state, focus); });
+            focus.Clickable.radius = 0.5f * invScaleFactor;
         }
     }
 }

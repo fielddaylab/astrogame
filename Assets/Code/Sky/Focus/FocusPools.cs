@@ -11,7 +11,7 @@ namespace Astro
         #region Types
 
         [Serializable] public class FocusPool : SerializablePool<UIFocus> { }
-        [Serializable] public class NeutrinoHighlightPool : SerializablePool<RectTransform> { }
+        [Serializable] public class NeutrinoHighlightPool : SerializablePool<Transform> { }
 
         #endregion // Types
 

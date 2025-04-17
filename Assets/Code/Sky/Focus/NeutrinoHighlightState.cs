@@ -12,7 +12,7 @@ public class NeutrinoHighlightState : SharedStateComponent, IRegistrationCallbac
     [NonSerialized] public bool OpenModeStarted;
     [NonSerialized] public bool OpenModeEnded;
 
-    [NonSerialized] public RingBuffer<RectTransform> ActiveHighlights = new RingBuffer<RectTransform>(8, RingBufferMode.Expand);
+    [NonSerialized] public RingBuffer<Transform> ActiveHighlights = new RingBuffer<Transform>(8, RingBufferMode.Expand);
 
     #region Registration
 
