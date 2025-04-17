@@ -18,7 +18,7 @@ namespace Astro {
             Minutes = (short) vec.y;
             Seconds = vec.z;
 
-            CoordinateUtility.Sanitize(ref Degrees, ref Minutes, ref Seconds);
+            CoordinateUtility.SanitizeDms(ref Degrees, ref Minutes, ref Seconds);
         }
 
         public DmsCoords(int degrees, int minutes, float seconds) {
@@ -26,11 +26,11 @@ namespace Astro {
             Minutes = (short) minutes;
             Seconds = seconds;
 
-            CoordinateUtility.Sanitize(ref Degrees, ref Minutes, ref Seconds);
+            CoordinateUtility.SanitizeDms(ref Degrees, ref Minutes, ref Seconds);
         }
 
         public void Sanitize() {
-            CoordinateUtility.Sanitize(ref Degrees, ref Minutes, ref Seconds);
+            CoordinateUtility.SanitizeDms(ref Degrees, ref Minutes, ref Seconds);
         }
 
         #region Overrides
@@ -81,7 +81,7 @@ namespace Astro {
             int m = a.Minutes + b.Minutes;
             float s = a.Seconds + b.Seconds;
 
-            CoordinateUtility.Sanitize(ref h, ref m, ref s);
+            CoordinateUtility.SanitizeDms(ref h, ref m, ref s);
             return new DmsCoords(h, m, s);
         }
 
@@ -90,7 +90,7 @@ namespace Astro {
             int m = a.Minutes - b.Minutes;
             float s = a.Seconds - b.Seconds;
 
-            CoordinateUtility.Sanitize(ref h, ref m, ref s);
+            CoordinateUtility.SanitizeDms(ref h, ref m, ref s);
             return new DmsCoords(h, m, s);
         }
 

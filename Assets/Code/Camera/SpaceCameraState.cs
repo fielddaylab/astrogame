@@ -20,7 +20,7 @@ namespace Astro
         public bool EnableSmoothKeyboardControls = true;
         public bool InputEnabled = true;
 
-        public Canvas Canvas;
+        public Transform StarRoot;
 
         [Space(5)]
         [Header("Look")]

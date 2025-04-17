@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Linq;
 using BeauUtil;
 using BeauUtil.Debugger;
 using BeauUWT;
@@ -16,10 +15,12 @@ namespace Astro.Audio {
         [NonSerialized] public AudioHandle MusicTrack;
         [NonSerialized] public string MusicTag = "music";
         [NonSerialized] public RingBuffer<StringHash32> TrackQueue = new RingBuffer<StringHash32>(2, RingBufferMode.Expand);
+        [NonSerialized] public StringHash32 CurrentTrackId;
 
         public void OnDeregister() {
             Sfx.Stop(MusicTrack);
             Sfx.StopAllWithTag(MusicTag);
+            CurrentTrackId = default;
          }
 
         public void OnRegister() { }
@@ -37,12 +38,17 @@ namespace Astro.Audio {
         [LeafMember("PlayMusic")]
         static public IEnumerator LeafPlayMusic(StringHash32 track, float fadeInTime = 0) {
             MusicState state = Find.State<MusicState>();
+            if (state.CurrentTrackId == track) {
+                yield break;
+            }
+
             if (state.MusicTrack.IsValid) {
                 StopMusic(fadeInTime);
                 yield return fadeInTime;
             }
 
             state.MusicTrack = Sfx.Play(track);
+            state.CurrentTrackId = track;
             Sfx.OverrideTag(state.MusicTrack, state.MusicTag);
             if (fadeInTime > 0) {
                 Sfx.SetVolume(state.MusicTrack, 0);
@@ -56,6 +62,7 @@ namespace Astro.Audio {
             Sfx.StopAllWithTag(state.MusicTag, fadeOutTime);
 
             state.MusicTrack = default;
+            state.CurrentTrackId = default;
         }
     } 
 }

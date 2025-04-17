@@ -3,10 +3,6 @@ using FieldDay.Components;
 using UnityEngine;
 
 namespace Astro {
-    public sealed class CelestialPositioner : BatchedComponent {
-
-    }
-
     public static class CelestialPositionerUtility
     {
         /// <summary>
