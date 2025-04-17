@@ -341,16 +341,24 @@ $call IsolatePuzzleCell(1, 3)
 $call Wait(1)
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 
-
 :: AtikAppMagSelected
 @trigger    OnPuzzleCellSelected
 @when   cellId = "R1C3", temp:waitingForSelectAppMag
 @cutscene
 @once
-
+$set temp:waitingForFillAppMag = true
 $set temp:waitingForSelectAppMag = false
-$call ReleaseIsolatedPuzzle()
+$call AddIsolatedSlot(Photometer)
+{@Dad} Now click the load button on your photometer to transfer the data.
 
+:: AtikAppMagFilled
+@trigger    OnPuzzleCellFilled
+@when   cellId = "R1C3", temp:waitingForFillAppMag
+@cutscene
+@once
+$set temp:waitingForFillAppMag = false
+$call ReleaseIsolatedPuzzle()
+{@Dad} Well done!
 
 :: PuzzleGridReadyForSubmission
 @trigger    OnPuzzleGridFullyPopulated

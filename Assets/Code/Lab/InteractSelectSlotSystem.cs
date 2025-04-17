@@ -32,7 +32,7 @@ namespace Astro
 
             // If puzzle is locked, only run the following logic on an isolated slot
             var puzzleState = Find.State<PuzzleState>();
-            if (puzzleState.IsIsolated && !puzzleState.IsolatedSlot.Equals(primary.DataSlot.SlotId)) { return; }
+            if (puzzleState.IsIsolated && !PuzzleUtility.IsSlotIsolated(puzzleState, primary.DataSlot.SlotId)) { return; }
 
             // If nothing selected, 
             if (transferState.SelectedSource == null && transferState.SelectedTarget == null) {

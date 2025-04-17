@@ -1,9 +1,12 @@
 using System;
 using BeauUtil;
+using FieldDay;
 using FieldDay.Components;
+using FieldDay.Scripting;
+using UnityEngine;
 
 namespace Astro {
-    public sealed class DataSlot : BatchedComponent {
+    public sealed class DataSlot : BatchedComponent, IRegistrationCallbacks {
         public DataSlot SiblingSlot; // Reference to a paired data slot
         public DataTypeMask Type;
         [Required] public DataDisplay[] Displays;
@@ -14,6 +17,7 @@ namespace Astro {
         [NonSerialized] public bool Modifiable = true;
         [NonSerialized] public DataPacket CurrentData;
 
+        public string OverrideSlotId = String.Empty; // Unique id for data slot
         [NonSerialized] public StringHash32 SlotId = StringHash32.Null; // Unique id for data slot
 
         public readonly CastableEvent<DataPacket> OnDataModified = new CastableEvent<DataPacket>();
@@ -39,6 +43,17 @@ namespace Astro {
         public override int GetHashCode()
         {
             return base.GetHashCode();
+        }
+
+        public void OnRegister()
+        {
+            if (!OverrideSlotId.Equals(String.Empty)) {
+                SlotId = OverrideSlotId;
+            }
+        }
+
+        public void OnDeregister()
+        {
         }
 
         #endregion // Overrides
