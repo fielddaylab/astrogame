@@ -4,6 +4,7 @@ using UnityEngine;
 using FieldDay;
 using FieldDay.Systems;
 using BeauRoutine;
+using FieldDay.Scripting;
 
 namespace Astro
 {
@@ -22,6 +23,16 @@ namespace Astro
             var transferState = Find.State<DataTransferState>();
             var cancelInputState = Find.State<CancelInputState>();
             cancelInputState.SlotClicked = true;
+
+            using (var table = TempVarTable.Alloc())
+            {
+                table.Set("cellId", primary.DataSlot.SlotId);
+                ScriptUtility.Trigger(ScriptEvents.OnPuzzleCellSelected, table);
+            }
+
+            // If puzzle is locked, only run the following logic on an isolated slot
+            var puzzleState = Find.State<PuzzleState>();
+            if (puzzleState.IsIsolated && !puzzleState.IsolatedSlot.Equals(primary.DataSlot.SlotId)) { return; }
 
             // If nothing selected, 
             if (transferState.SelectedSource == null && transferState.SelectedTarget == null) {

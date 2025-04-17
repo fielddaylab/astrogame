@@ -14,6 +14,8 @@ namespace Astro {
         [NonSerialized] public bool Modifiable = true;
         [NonSerialized] public DataPacket CurrentData;
 
+        [NonSerialized] public StringHash32 SlotId = StringHash32.Null; // Unique id for data slot
+
         public readonly CastableEvent<DataPacket> OnDataModified = new CastableEvent<DataPacket>();
         public readonly CastableEvent<DataSlot> OnDataTransferred = new CastableEvent<DataSlot>();
 

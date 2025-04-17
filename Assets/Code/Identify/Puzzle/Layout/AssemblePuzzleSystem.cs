@@ -69,6 +69,14 @@ namespace Astro
                             // provided data is not modifiable
                             newCell.DataSlot.Modifiable = false;
                         }
+                        // assign unique id for each slot
+                        StringBuilder sb = new StringBuilder();
+                        sb.Append('R');
+                        sb.Append(r.ToStringLookup());
+                        sb.Append('C');
+                        sb.Append(c.ToStringLookup());
+                        newCell.DataSlot.SlotId = sb.ToString();
+
                         m_CellWorkList.PushBack(newCell);
                     }
                 }

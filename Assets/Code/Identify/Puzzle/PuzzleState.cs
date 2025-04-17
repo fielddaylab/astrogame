@@ -1,9 +1,12 @@
 using BeauPools;
+using BeauUtil;
 using FieldDay;
 using FieldDay.SharedState;
+using Leaf.Runtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 namespace Astro {
@@ -23,6 +26,10 @@ namespace Astro {
         // INDIVIDUAL CELL IMPLEMENTATION
         public bool[,] SelectedCells;
         public DataTypeMask RelevantColFilter;
+
+        // TUTORIAL ISOLATION
+        public bool IsIsolated;
+        public StringHash32 IsolatedSlot;
 
         public PuzzleCellLibrary Library;
 
@@ -98,5 +105,36 @@ namespace Astro {
             display.ClueGroup.gameObject.SetActive(true);
         }
 
+        public static bool IsSlotIsolated(PuzzleState state, StringHash32 slotId)
+        {
+            if (state.IsolatedSlot.Equals(slotId)) {
+                return true;
+            }
+
+            return false;
+        }
+
+        [LeafMember("IsolatePuzzleCell")]
+        public static void LeafIsolatePuzzleCell(int row, int col)
+        {
+            PuzzleState state = Find.State<PuzzleState>();
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append('R');
+            sb.Append(row.ToStringLookup());
+            sb.Append('C');
+            sb.Append(col.ToStringLookup());
+            StringHash32 slotId = sb.ToString();
+
+            state.IsolatedSlot = slotId;
+            state.IsIsolated = true;
+        }
+
+        [LeafMember("ReleaseIsolatedPuzzle")]
+        public static void LeafReleaseIsolatePuzzle()
+        {
+            PuzzleState state = Find.State<PuzzleState>();
+            state.IsIsolated = false;
+        }
     }
 }
