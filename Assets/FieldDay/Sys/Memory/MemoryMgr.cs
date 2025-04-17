@@ -197,14 +197,15 @@ namespace FieldDay.Memory {
         #region Debugging
 
         private enum DebuggingFlags {
-            LogGCState
+            LogGCState,
+            DisplayMemoryStats
         }
 
 #if DEVELOPMENT
 
         [EngineMenuFactory]
         static private DMInfo CreateDebugMenu() {
-            DMInfo info = new DMInfo("MemoryMgr");
+            DMInfo info = new DMInfo("Memory");
 
             DebugFlags.Menu.AddFlagToggle(info, "Log All GC Events", DebuggingFlags.LogGCState);
             info.AddButton("Force GC Collect (Manual)", () => GC.Collect());

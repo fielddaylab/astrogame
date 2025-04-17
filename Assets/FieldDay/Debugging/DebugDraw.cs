@@ -718,7 +718,9 @@ namespace FieldDay.Debugging {
                 TryFreeDebugString(debugStr);
             }
 
-            DecayTextForBuffer(deltaTime, buffer);
+            if (deltaTime > 0) {
+                DecayTextForBuffer(deltaTime, buffer);
+            }
         }
 
         static private void DecayText(float deltaTime) {

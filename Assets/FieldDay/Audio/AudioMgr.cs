@@ -193,6 +193,17 @@ namespace FieldDay.Audio {
                         break;
                     }
                 }
+
+                if (DebugFlags.IsFlagSet(DebuggingFlags.DisplayStats)) {
+                    using(PooledStringBuilder psb = PooledStringBuilder.Create()) {
+                        psb.Builder.Append("Audio Instance Count: ").AppendNoAlloc(m_ActiveVoices.Count)
+                            .Append("\n   Active Tweens: ").AppendNoAlloc(m_FloatTweenList.Length)
+                            .Append("\n   Active Position Trackers: ").AppendNoAlloc(m_PositionSyncList.Length)
+                            .Append("\n   Clip Preload Queue: ").AppendNoAlloc(m_PreloadQueue.Count);
+
+                        DebugDraw.AddLogText(psb, ColorBank.Aqua);
+                    }
+                }
             }
         }
 
@@ -367,7 +378,8 @@ namespace FieldDay.Audio {
         }
 
         private enum DebuggingFlags {
-            TraceExecution
+            TraceExecution,
+            DisplayStats
         }
 
 #if DEVELOPMENT
@@ -375,8 +387,8 @@ namespace FieldDay.Audio {
         [EngineMenuFactory]
         static private DMInfo CreateAudioDebugMenu() {
             DMInfo info = new DMInfo("Audio", 16);
-            //DebugFlags.Menu.AddSingleFrameFlagButton(info, "Trace Execution for Frame", DebuggingFlags.TraceExecution);
-            //DebugFlags.Menu.AddFlagToggle(info, "Render Debug Info", DebuggingFlags.VisualizeEntireScreen);
+            DebugFlags.Menu.AddSingleFrameFlagButton(info, "Trace Execution for Frame", DebuggingFlags.TraceExecution);
+            DebugFlags.Menu.AddFlagToggle(info, "Display Stats", DebuggingFlags.DisplayStats);
             //info.AddDivider();
 
             return info;
