@@ -174,6 +174,22 @@ namespace FieldDay.Memory {
             m_PersistentPoolRoot = prefabPoolGO.transform;
         }
 
+        internal void Update() {
+            if (DebugFlags.IsFlagSet(DebuggingFlags.DisplayBasicStats)) {
+                long gcMem = GC.GetTotalMemory(false);
+                ulong textureMem = Texture.currentTextureMemory;
+
+                using (PooledStringBuilder psb = PooledStringBuilder.Create()) {
+                    psb.Builder.Append("Managed Memory: ");
+                    Unsafe.FormatBytes(gcMem, psb);
+                    psb.Builder.Append("\nTexture Memory: ");
+                    Unsafe.FormatBytes((long)textureMem, psb);
+
+                    DebugDraw.AddLogText(psb, Color.yellow);
+                }
+            }
+        }
+
         internal void Shutdown() {
             m_MeshPool.Dispose();
             m_MaterialPool.Dispose();
@@ -198,7 +214,7 @@ namespace FieldDay.Memory {
 
         private enum DebuggingFlags {
             LogGCState,
-            DisplayMemoryStats
+            DisplayBasicStats
         }
 
 #if DEVELOPMENT
@@ -207,6 +223,8 @@ namespace FieldDay.Memory {
         static private DMInfo CreateDebugMenu() {
             DMInfo info = new DMInfo("Memory");
 
+            DebugFlags.Menu.AddFlagToggle(info, "Display Basic Stats", DebuggingFlags.DisplayBasicStats);
+            info.AddDivider();
             DebugFlags.Menu.AddFlagToggle(info, "Log All GC Events", DebuggingFlags.LogGCState);
             info.AddButton("Force GC Collect (Manual)", () => GC.Collect());
             info.AddButton("Add Memory Pressure (128KiB)", () => GenerateMemoryPressure(Unsafe.KiB * 128));

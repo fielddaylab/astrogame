@@ -18,6 +18,20 @@ namespace FieldDay.Audio {
         private const float MaxLowHighPassCutoff = 20000;
         private const float LowHighPassCutoffRange = MaxLowHighPassCutoff - MinLowHighPassCutoff;
 
+        private const float MinPitch =
+#if UNITY_WEBGL
+            0.07f;
+#else
+            0;
+#endif // UNITY_WEBGL
+
+        private const float MaxPitch =
+#if UNITY_WEBGL
+            8;
+#else
+            16;
+#endif // UNITY_WEBGL
+
         #region Voice Data
 
         private sealed unsafe class VoiceData {
@@ -331,7 +345,7 @@ namespace FieldDay.Audio {
             AudioVoiceComponents components = voiceData.Components;
 
             components.Source.volume = block.Volume;
-            components.Source.pitch = block.Pitch;
+            components.Source.pitch = Math.Min(MaxPitch, Math.Max(MinPitch, block.Pitch));
             components.Source.panStereo = block.Pan;
             components.Source.mute = block.Mute;
 

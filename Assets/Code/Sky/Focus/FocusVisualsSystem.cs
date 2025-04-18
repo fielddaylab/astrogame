@@ -12,9 +12,9 @@ namespace Astro {
     public class FocusVisualsSystem : SharedStateSystemBehaviour<FocusState, SpaceCameraState> {
         public override void ProcessWork(float deltaTime) {
             if (m_StateB.LookUpdatedThisFrame) {
-                using (Profiling.Time("updating star focii", ProfileTimeUnits.Microseconds)) {
+                //using (Profiling.Time("updating star focii", ProfileTimeUnits.Microseconds)) {
                     UpdateFociiPositions(m_StateA, m_StateB);
-                }
+                //}
 
                 if (m_StateA.CurrentFocus) {
                     FocusVisualsUtility.AlignFocusOutlineToTarget(m_StateB, m_StateA);

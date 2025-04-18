@@ -638,6 +638,7 @@ namespace FieldDay {
             Game.Events.Flush();
             Game.Gui.FlushCommands();
             Game.Audio.LateUpdate(Frame.UnscaledDeltaTime);
+            Game.Memory.Update();
 
             FlushQueue(s_AfterLateUpdateQueue);
             Game.Scenes.Update();
