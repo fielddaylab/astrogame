@@ -116,6 +116,18 @@ namespace Astro {
             GameLoop.SuspendUpdates(AstroGame.MonitorControlsUpdateMask);
         }
 
+        [LeafMember("LockMonitorFocus")]
+        static private void LeafLockMonitorFocus()
+        {
+            Game.Events.Dispatch(GameEvents.LockMonitorFocus);
+        }
+
+        [LeafMember("UnlockMonitorFocus")]
+        static private void LeafUnlockMonitorFocus()
+        {
+            Game.Events.Dispatch(GameEvents.UnlockMonitorFocus);
+        }
+
         [LeafMember("StartOpenMode")]
         static private void LeafStartOpenMode(){
             Game.Events.Dispatch(GameEvents.StartOpenMode);

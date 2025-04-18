@@ -32,6 +32,10 @@ namespace Astro
 
             Game.Events.Register(GameEvents.StartPuzzleNavigation, () => { MonitorInputActive = false; });
             Game.Events.Register(GameEvents.StopPuzzleNavigation, () => { MonitorInputActive = true; });
+
+            Game.Events.Register(GameEvents.LockMonitorFocus, () => { MonitorInputActive = false; });
+            Game.Events.Register(GameEvents.UnlockMonitorFocus, () => { MonitorInputActive = true; });
+
         }
     }
 

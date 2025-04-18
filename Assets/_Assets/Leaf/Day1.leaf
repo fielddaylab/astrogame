@@ -332,6 +332,7 @@ $set temp:waitingForSelectAtik = true
 @cutscene
 @once
 
+$call LockMonitorFocus()
 $set temp:waitingForSelectAppMag = true
 $set temp:waitingForSelectAtik = false
 $call HintModals->Hide("FirstPuzzleStar", 0.2)
@@ -357,6 +358,7 @@ $call AddIsolatedSlot(Photometer)
 @cutscene
 @once
 $set temp:waitingForFillAppMag = false
+$call UnlockMonitorFocus()
 $call ReleaseIsolatedPuzzle()
 {@Dad} Well done!
 
