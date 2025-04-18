@@ -15,6 +15,10 @@ using System.Runtime.InteropServices;
 using UnityEngine.Rendering;
 using BeauPools;
 using System.Text;
+using System.Collections;
+using System.Collections.Generic;
+
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -87,11 +91,20 @@ namespace FieldDay.Debugging {
             public DebugTextStyle Style;
         }
 
+        [DefaultSorter(typeof(GroupedTextRenderState.Sorter))]
         private struct GroupedTextRenderState {
+            public ulong Index;
+
             public Color32 Color;
             public DrawState State;
 
             public DebugString Text;
+
+            public class Sorter : IComparer<GroupedTextRenderState> {
+                int IComparer<GroupedTextRenderState>.Compare(GroupedTextRenderState x, GroupedTextRenderState y) {
+                    return x.Index < y.Index ? -1 : 1;
+                }
+            }
         }
 
         private struct DebugString {
@@ -226,6 +239,7 @@ namespace FieldDay.Debugging {
         [NonSerialized] static private DebugDraw s_Instance;
         [NonSerialized] static private Camera s_MainCameraOverride;
         [NonSerialized] static private bool s_PauseAll = false;
+        [NonSerialized] static private ulong s_LogIndex = 0;
 
         [NonSerialized] private bool m_InitializedResources = false;
 
@@ -745,6 +759,8 @@ namespace FieldDay.Debugging {
         }
 
         static private void DecayTextForBuffer(float deltaTime, RingBuffer<GroupedTextRenderState> buffer) {
+            bool updated = false;
+            
             for (int i = buffer.Count - 1; i >= 0; i--) {
                 ref GroupedTextRenderState state = ref buffer[i];
 
@@ -752,7 +768,12 @@ namespace FieldDay.Debugging {
                 if (state.State.Duration <= 0) {
                     TryFreeDebugString(state.Text);
                     buffer.FastRemoveAt(i);
+                    updated = true;
                 }
+            }
+
+            if (updated && buffer.Count > 1) {
+                buffer.Sort();
             }
         }
 
@@ -936,6 +957,7 @@ namespace FieldDay.Debugging {
             renderState.Color = color;
             renderState.State.Duration = duration;
             renderState.Text = AllocDebugString(text);
+            renderState.Index = s_LogIndex++;
             s_ActiveLogTexts.PushBack(renderState);
 #endif // DEVELOPMENT && !SKIP_ONGUI
         }
@@ -950,6 +972,7 @@ namespace FieldDay.Debugging {
             renderState.Color = color;
             renderState.State.Duration = duration;
             renderState.Text = AllocDebugString(text);
+            renderState.Index = s_LogIndex++;
             s_ActiveLogTexts.PushBack(renderState);
 #endif // DEVELOPMENT && !SKIP_ONGUI
         }

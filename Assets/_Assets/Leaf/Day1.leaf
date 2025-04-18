@@ -73,7 +73,7 @@ $call StartMonitorControls()
 $call SetInputState(true)
 $call HintModals->SlideInFromRight("TelescopeControls", 0.4)
 $set temp:introMoveTheTelescope = false
-$goto .MoveTelescopeReminder
+$branch .MoveTelescopeReminder
 
 :: MoveTelescopeReminder
 $call Wait(10)
@@ -125,6 +125,7 @@ $call Wait(2)
 @boostScore 100
 @cutscene
 @once
+@interrupt
 
 $call SetInputState(false)
 $call AlignCamToNeutrino()

@@ -229,6 +229,13 @@ namespace FieldDay.Vox {
         }
 
         /// <summary>
+        /// Returns if the given request is valid.
+        /// </summary>
+        static public bool IsValid(VoxRequestHandle id) {
+            return Requests.RequestIdGenerator.IsValid(id.m_Id);
+        }
+
+        /// <summary>
         /// Returns if the given request is playing.
         /// </summary>
         static public bool IsPlaying(VoxRequestHandle id) {
