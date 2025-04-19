@@ -58,6 +58,8 @@ MonoBehaviour:
     Assemblies:
     - AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
       TypeCount: 2
+    - AssemblyName: FieldDay.Scripting, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      TypeCount: 1
     Types:
     - TypeName: Astro.AstroGame
       Self: 0
@@ -67,10 +69,16 @@ MonoBehaviour:
       Self: 0
       MemberCount: 1
       OverloadCount: 0
+    - TypeName: FieldDay.Scripting.ScriptDebugHooks
+      Self: 0
+      MemberCount: 1
+      OverloadCount: 0
     Members:
     - MemberName: OnBoot
       Type: 8
     - MemberName: Init
+      Type: 8
+    - MemberName: OnBoot
       Type: 8
     OverloadedMethods: []
     TypeReferences: []
