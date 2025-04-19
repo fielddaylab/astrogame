@@ -48,8 +48,11 @@ $call SetInputState(true)
 @when   documentId == "Day2Martha"
 @once
 
-{@Astrid} Where is Elijah? Is he okay? $[Day2/Astrid/l2_a_3]
+$call SetInputState(false)
+$call Wait(1)
 $call StartDocumentPuzzle("Day2DocumentPuzzle")
+{@Astrid} Where is Elijah? Is he okay? $[Day2/Astrid/l2_a_3]
+$call SetInputState(true)
 
 :: IncorrectDocumentResponse1
 @trigger    DocumentPuzzlePromptStart

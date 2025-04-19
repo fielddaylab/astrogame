@@ -7,7 +7,7 @@ using ScriptableBake;
 using UnityEngine;
 
 namespace Astro {
-    [RequireComponent(typeof(DocumentRenderer))]
+    // [RequireComponent(typeof(DocumentRenderer))]
     public sealed class DocumentInteractable : BatchedComponent, IRegistrationCallbacks {
         [HideInInspector] public DocumentRenderer Renderer;
         [HideInInspector] public DocumentPart[] Parts;
