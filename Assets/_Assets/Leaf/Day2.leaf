@@ -8,7 +8,6 @@
 $call InitUpdateMasks()
 $call SetInstrumentUnlocked(CoordinateInstrument, true)
 $call SetInstrumentUnlocked(PhotometerInstrument, true)
-// $call SetInstrumentUnlocked(SpectrometerInstrument, true)
 $call SetInstrumentUnlocked(ColorInstrument, true)
 
 $call MoveToView("DocumentPuzzle")
@@ -120,7 +119,21 @@ $call StartPuzzleNavigation()
 @once
 
 $call StopPuzzleNavigation()
-// {@Dad} Please tune radio to 375 mhz...
+$call SetInputState(false)
+$call SetRefGuideActive(false)
+$call ClearMonitorSelection()
+
+$call MonitorUI->PlayRadioDownload(2)
+$call Wait(1)
+$call MonitorUI->ShowCeresLogo()
+$call SetInstrumentUnlocked(SpectrometerInstrument, true)
+{@Radio} Congratulations on being awarded clearance level 3. You are now cleared to use the spectrometer.
+{@Radio} Please reference your CERES Operator Manual for further information about your equipment.  $[Day1/Radio/l1_r_3(2)]
+{@Radio} Thanking you for being an important part of the CERES Distributed Network of Citizen Observatories. Together, we will map the stars for a better tomorrow. $[Day1/Radio/l1_r_3(3)]
+$call Wait(0.5)
+{@Radio} Tuning you to the Ice Cube CERES headquarters for further instruction... $[Day1/Radio/l1_r_4]
+$call MonitorUI->HideCeresLogo()
+$call Wait(1)
 $call StartPuzzleMode()
 
 :: HerculesPuzzleComplete
