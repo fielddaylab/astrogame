@@ -7,8 +7,8 @@ using ScriptableBake;
 using UnityEngine;
 
 namespace Astro {
-    [RequireComponent(typeof(DocumentRenderer))]
-    public sealed class DocumentInteractable : BatchedComponent, IRegistrationCallbacks {
+    // [RequireComponent(typeof(DocumentRenderer))]
+    public sealed class DocumentInteractable : BatchedComponent {
         [HideInInspector] public DocumentRenderer Renderer;
         [HideInInspector] public DocumentPart[] Parts;
 
@@ -18,12 +18,9 @@ namespace Astro {
         [NonSerialized] public bool IsDragging;
         public Transform Paper;
 
-        public void OnDeregister() {
-        }
-
-        public void OnRegister() {
+        private void Awake() {
             Renderer = GetComponent<DocumentRenderer>();
-            Parts = GetComponentsInChildren<DocumentPart>(true);
+            Parts = GetComponentsInChildren<DocumentPart>(true); 
         }
     }
 

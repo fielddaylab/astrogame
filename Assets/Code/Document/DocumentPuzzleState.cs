@@ -1,33 +1,18 @@
 using BeauUtil;
 using FieldDay;
-using FieldDay.Scripting;
 using FieldDay.SharedState;
 using Leaf.Runtime;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace Astro
-{
-    public class DocumentPuzzleState : SharedStateComponent
-    {
+namespace Astro {
+    public class DocumentPuzzleState : SharedStateComponent {
         [NonSerialized] public bool PuzzleActive = false;
         [NonSerialized] public DocumentPuzzleAsset CurrPuzzle = null;
         [NonSerialized] public DocumentRenderer CurrHoverDoc = null;
     }
 
-    public static partial class DocumentUtility
-    {
-        #region Spawning
-
-        private static void SpawnQuestionDocument(StringHash32 id)
-        {
-            SpawnDocument(Find.NamedAsset<DocumentAsset>(id), id);
-        }
-
-        #endregion // Spawning
-
+    public static partial class DocumentUtility {
         #region Leaf
 
         [LeafMember("StartDocumentPuzzle")]
@@ -48,7 +33,10 @@ namespace Astro
             // Set current puzzle
             puzzleState.CurrPuzzle = puzzleAsset;
             if (puzzleAsset) {
-                SpawnQuestionDocument(puzzleState.CurrPuzzle.QuestionAsset.AssetId);
+                StringHash32 questionId = puzzleState.CurrPuzzle.QuestionAsset.AssetId;
+                DocumentBoardState state = Find.State<DocumentBoardState>();
+                ArchiveState archiveState = Find.State<ArchiveState>();
+                SpawnDocumentToCamera(state, archiveState, questionId);
             }
 
             puzzleState.PuzzleActive = true;

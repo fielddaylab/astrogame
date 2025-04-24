@@ -8,20 +8,16 @@ using FieldDay.Scripting;
 namespace Astro
 {
     [SysUpdate(GameLoopPhase.Update, 100, AstroGame.DocumentUpdateMask)] // After MouseInteractionSystem
-    public class DocumentPromptSystem : ComponentSystemBehaviour<DocumentInteractable, DocumentPrompter>
-    {
-        public override void ProcessWork(float deltaTime)
-        {
-            base.ProcessWork(deltaTime);
 
+    public class DocumentPromptSystem : ComponentSystemBehaviour<DocumentInteractable, DocumentPrompter> {
+        public override void ProcessWork(float deltaTime) {
             var puzzleState = Find.State<DocumentPuzzleState>();
             var boardState = Find.State<DocumentBoardState>();
 
-            foreach (var component in m_Components)
-            {
+            foreach (var component in m_Components) {
                 // determine whether this document is being dragged
                 if (!component.Primary.IsDragging) {
-                    break;
+                    continue;
                 }
 
                 // overlap box to find which document this is overlapping
@@ -43,10 +39,6 @@ namespace Astro
                 boardState.DocumentRoutine.Replace(DocumentUtility.MoveAboveRelativeToDoc(boardState.DraggablePlaced, puzzleState.CurrHoverDoc));
             }
 
-        }
-        public override void ProcessWorkForComponent(DocumentInteractable primary, DocumentPrompter secondary, float deltaTime)
-        {
-            base.ProcessWorkForComponent(primary, secondary, deltaTime);
         }
     }
 }
