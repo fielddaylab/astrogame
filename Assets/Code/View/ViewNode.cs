@@ -18,6 +18,7 @@ namespace Astro {
 
         [Header("Links")]
         public SerializedHash32[] LinkGroups;
+        public ViewLink BackLink;
 
         public CastableEvent<ViewNode> OnLoad = new CastableEvent<ViewNode>();
         public CastableEvent<ViewNode> OnEnter = new CastableEvent<ViewNode>();
@@ -66,15 +67,5 @@ namespace Astro {
         }
 
         #endregion // Node
-
-        #region Specific Node Callbacks
-        public static void RegisterNodeCallbacks() {
-            //GetNodeById("MonitorDocuments").OnEnter.Register(DocumentUtility.EnableDocumentInteraction);
-            //GetNodeById("MonitorDocuments").OnExit.Register(DocumentUtility.DisableDocumentInteraction);
-
-        }
-        #endregion // Specific Node Callbacks
-
-
     }
 }

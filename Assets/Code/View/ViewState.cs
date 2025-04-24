@@ -31,7 +31,6 @@ namespace Astro {
         void IRegistrationCallbacks.OnRegister() {
             Game.Scenes.QueueOnLoad(this, () => {
                 ViewNavUtility.SnapToNode(this, DefaultNode);
-                ViewNavUtility.RegisterNodeCallbacks();
             });
         }
     }
@@ -129,6 +128,25 @@ namespace Astro {
         /// </summary>
         static public void MoveByLink(ViewState state, ViewLink link) {
             state.ActiveTransitionRoutine.Replace(state, TransitionRoutine(state, link.TargetNode, link, default));
+        }
+
+        /// <summary>
+        /// Clears the current node.
+        /// </summary>
+        static public void ClearCurrentNode(ViewState state) {
+            if (state.ActiveNode == null) {
+                return;
+            }
+
+            state.ActiveTransitionRoutine.Stop();
+
+            DeactivateAllLinks(state);
+
+            ViewNode oldNode = state.ActiveNode;
+            state.ActiveNode = null;
+
+            oldNode.OnExit.Invoke(oldNode);
+            DeactivateNode(oldNode, false);
         }
 
         static private IEnumerator TransitionRoutine(ViewState state, ViewNode nextNode, ViewLink byLink, TweenSettings transitionOverride) {

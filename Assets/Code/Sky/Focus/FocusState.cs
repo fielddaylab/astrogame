@@ -40,6 +40,11 @@ namespace Astro
 
         protected override void OnDisable() {
             base.OnDisable();
+
+            if (Game.IsShuttingDown) {
+                return;
+            }
+
             Game.Events.DeregisterAll(GameEvents.StartNeutrinoNavigation); 
             Game.Events.DeregisterAll(GameEvents.StopNeutrinoNavigation); 
             Game.Events.DeregisterAll(GameEvents.StartPuzzleNavigation); 

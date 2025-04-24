@@ -35,7 +35,7 @@ namespace FieldDay.Localization {
                 base.OnImportAsset(ctx);
 
                 LocFile file = (LocFile) ctx.mainObject;
-                file.m_Language = LanguageId.IdentifyLanguageFromPath(ctx.assetPath);
+                file.m_Language = LanguageId.IdentifyLanguageFromPath(ctx.assetPath, FileExtensionWithDot);
             }
         }
 #endif // UNITY_EDITOR

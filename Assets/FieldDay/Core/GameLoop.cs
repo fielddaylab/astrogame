@@ -44,6 +44,7 @@ using FieldDay.Perf;
 using FieldDay.SharedState;
 using FieldDay.Systems;
 using FieldDay.Threading;
+using FieldDay.Localization;
 
 #if USE_SRP
 #endif // USE_SRP
@@ -61,6 +62,9 @@ namespace FieldDay {
 
         [SerializeField, Range(30, 120)]
         private int m_TargetFramerate = 60;
+
+        [SerializeField]
+        private LanguageId m_DefaultLanguage = LanguageId.English;
 
         [SerializeField]
         private Sprite m_DefaultPixelSprite;

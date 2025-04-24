@@ -23,7 +23,7 @@ namespace Astro {
             if (m_StateC.InputEnabled && !isCurrentlyDragging && Game.Input.IsMousePressed(FieldDay.HID.MouseButton.Left) && !Game.Input.AreRaycastsPaused()) {
                 var ray = Game.Rendering.PrimaryCamera.ScreenPointToRay(Input.mousePosition);
 
-                if (Physics.Raycast(ray, out RaycastHit hit, 10f, m_StateC.ClickableLayerMask)) {
+                if (Physics.Raycast(ray, out RaycastHit hit, 25f, m_StateC.ClickableLayerMask)) {
 
                     if (hit.collider.TryGetComponent(out RefGuideControl refControl)) {
                         ReferenceUtility.HandleControl(refControl);

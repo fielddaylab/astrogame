@@ -41,6 +41,9 @@ namespace Astro {
             Camera.gameObject.SetActive(true);
             AssetGroup.SetActive(true);
 
+            ViewState state = Find.State<ViewState>();
+            ViewNavUtility.ClearCurrentNode(state);
+
             using (var table = TempVarTable.Alloc()) {
                 table.Set("cutsceneId", this.Actor.Id);
                 ScriptUtility.Trigger(ScriptEvents.CutsceneBegin, table);
