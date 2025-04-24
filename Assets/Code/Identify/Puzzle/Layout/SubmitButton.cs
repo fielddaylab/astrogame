@@ -8,15 +8,20 @@ namespace Astro {
     public class SubmitButton : BatchedComponent, IRegistrationCallbacks {
         public SubmitButtonType ButtonType;
 
-        public void OnRegister() {
-            Game.Events.Register(GameEvents.StartPuzzleMode, () => PuzzleUtility.SetButtonMode(this, SubmitButtonType.SubmitPuzzle));
-            Game.Events.Register(GameEvents.StartOpenMode, () => PuzzleUtility.SetButtonMode(this, SubmitButtonType.SubmitIdentification));
+        private Action setButtonToPuzzle;  
+        private Action setButtonToId;  
 
+        public void OnRegister() {
+            setButtonToPuzzle = () => PuzzleUtility.SetButtonMode(this, SubmitButtonType.SubmitPuzzle);
+            setButtonToId = () => PuzzleUtility.SetButtonMode(this, SubmitButtonType.SubmitIdentification);
+
+            Game.Events.Register(GameEvents.StartPuzzleMode, setButtonToPuzzle);
+            Game.Events.Register(GameEvents.StartOpenMode, () => PuzzleUtility.SetButtonMode(this, SubmitButtonType.SubmitIdentification));
         }
 
         public void OnDeregister() {
-            Game.Events.DeregisterAll(GameEvents.StartPuzzleMode);
-            Game.Events.DeregisterAll(GameEvents.StartOpenMode);
+            Game.Events.Deregister(GameEvents.StartPuzzleMode, setButtonToPuzzle);
+            Game.Events.Deregister(GameEvents.StartOpenMode, setButtonToId);
         }
     }
 
