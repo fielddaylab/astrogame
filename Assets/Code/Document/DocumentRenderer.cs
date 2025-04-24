@@ -10,7 +10,7 @@ namespace Astro {
     [Serializable]
     public struct TextRegion {
         public TMP_Text Text;
-        [StreamingImagePath] public string LowResImage;
+        public Sprite LowResSprite;
     }
 
     [RequireComponent(typeof(DocumentInteractable))]
@@ -69,21 +69,18 @@ namespace Astro {
             else if (asset.ZoomOffsetOverride != default) {
                 renderer.ZoomOffsetOverride = asset.ZoomOffsetOverride;
             }
-
-            // renderer.Interactable.Renderer = renderer;
-            // renderer.Interactable.Parts = renderer.Interactable.GetComponentsInChildren<DocumentPart>(true);
         }
 
         public static void DisplayLowResDocument(DocumentRenderer renderer, DocumentAsset asset) {
             for (int i = 0; i < renderer.TextRegions.Length; i++) {
-                if (renderer.TextRegions[i].LowResImage.Length > 0) {
+                if (renderer.TextRegions[i].LowResSprite != null) {
                     GameObject lowResImage = GameObject.Instantiate(renderer.LowResText, renderer.TextRegions[i].Text.transform);
-                    lowResImage.GetComponent<StreamingQuadTexture>().Path = renderer.TextRegions[i].LowResImage;
-                    lowResImage.GetComponent<StreamingQuadTexture>().Preload();
+                    SpriteRenderer lowResSpriteRender = lowResImage.GetComponent<SpriteRenderer>();
+                    lowResSpriteRender.sprite = renderer.TextRegions[i].LowResSprite;
+                    lowResSpriteRender.size = ((RectTransform) lowResImage.transform.parent).sizeDelta;
 
-                    // TODO Update this 
                     renderer.TextRegions[i].Text.gameObject.GetComponent<MeshRenderer>().enabled = false;
-                    lowResImage.GetComponent<StreamingQuadTexture>().enabled = true;
+                    lowResImage.GetComponent<SpriteRenderer>().enabled = true;
                 }
             }
 
