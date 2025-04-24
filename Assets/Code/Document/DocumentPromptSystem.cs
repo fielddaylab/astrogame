@@ -12,8 +12,6 @@ namespace Astro
     {
         public override void ProcessWork(float deltaTime)
         {
-            base.ProcessWork(deltaTime);
-
             var puzzleState = Find.State<DocumentPuzzleState>();
             var boardState = Find.State<DocumentBoardState>();
 
@@ -21,7 +19,7 @@ namespace Astro
             {
                 // determine whether this document is being dragged
                 if (!component.Primary.IsDragging) {
-                    break;
+                    continue;
                 }
 
                 // overlap box to find which document this is overlapping
@@ -43,10 +41,6 @@ namespace Astro
                 boardState.DocumentRoutine.Replace(DocumentUtility.MoveAboveRelativeToDoc(boardState.DraggablePlaced, puzzleState.CurrHoverDoc));
             }
 
-        }
-        public override void ProcessWorkForComponent(DocumentInteractable primary, DocumentPrompter secondary, float deltaTime)
-        {
-            base.ProcessWorkForComponent(primary, secondary, deltaTime);
         }
     }
 }
