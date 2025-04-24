@@ -8,13 +8,13 @@
 $call InitUpdateMasks()
 $call SetInstrumentUnlocked(CoordinateInstrument, true)
 $call SetInstrumentUnlocked(PhotometerInstrument, true)
-$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $call SetInstrumentUnlocked(ColorInstrument, true)
 
 $call StopPuzzleMode()
 $call StopOpenMode()
 $call MoveToView("DocumentPuzzle")
 {@Astrid} Looks like I got some mail... At least the mail service is still working... $[Day2/Astrid/l2_a_1]
+$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $call SetInputState(false)
 $call SpawnDocumentToCamera("Day2DadPostcard")
 {@Astrid} Wow... wish I could see the auroras there with you, Dad... $[Day2/Astrid/l2d_a_1]
