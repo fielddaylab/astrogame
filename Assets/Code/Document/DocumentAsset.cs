@@ -1,6 +1,5 @@
 using System;
 using EasyAssetStreaming;
-using FieldDay;
 using FieldDay.Assets;
 using UnityEngine;
 
@@ -16,7 +15,6 @@ namespace Astro {
     public struct StreamingDocumentVisual {
         [StreamingPath][SerializeField]
         public string VisualAssetPath;
-        // TODO Update later when we have an atlas for this 
         [StreamingPath][SerializeField]
         public string LowResAssetPath;
     }

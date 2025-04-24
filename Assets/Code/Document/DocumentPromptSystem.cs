@@ -8,15 +8,13 @@ using FieldDay.Scripting;
 namespace Astro
 {
     [SysUpdate(GameLoopPhase.Update, 100, AstroGame.DocumentUpdateMask)] // After MouseInteractionSystem
-    public class DocumentPromptSystem : ComponentSystemBehaviour<DocumentInteractable, DocumentPrompter>
-    {
-        public override void ProcessWork(float deltaTime)
-        {
+
+    public class DocumentPromptSystem : ComponentSystemBehaviour<DocumentInteractable, DocumentPrompter> {
+        public override void ProcessWork(float deltaTime) {
             var puzzleState = Find.State<DocumentPuzzleState>();
             var boardState = Find.State<DocumentBoardState>();
 
-            foreach (var component in m_Components)
-            {
+            foreach (var component in m_Components) {
                 // determine whether this document is being dragged
                 if (!component.Primary.IsDragging) {
                     continue;
