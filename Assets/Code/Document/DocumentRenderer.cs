@@ -35,6 +35,7 @@ namespace Astro {
         }
     }
 
+
     public abstract class DocumentRenderComponent : BatchedComponent {
         public abstract int NumStreamingVisuals { get; }
 
@@ -69,8 +70,8 @@ namespace Astro {
                 renderer.ZoomOffsetOverride = asset.ZoomOffsetOverride;
             }
 
-            renderer.Interactable.Renderer = renderer;
-            renderer.Interactable.Parts = renderer.Interactable.GetComponentsInChildren<DocumentPart>(true);
+            // renderer.Interactable.Renderer = renderer;
+            // renderer.Interactable.Parts = renderer.Interactable.GetComponentsInChildren<DocumentPart>(true);
         }
 
         public static void DisplayLowResDocument(DocumentRenderer renderer, DocumentAsset asset) {
@@ -80,6 +81,7 @@ namespace Astro {
                     lowResImage.GetComponent<StreamingQuadTexture>().Path = renderer.TextRegions[i].LowResImage;
                     lowResImage.GetComponent<StreamingQuadTexture>().Preload();
 
+                    // TODO Update this 
                     renderer.TextRegions[i].Text.gameObject.GetComponent<MeshRenderer>().enabled = false;
                     lowResImage.GetComponent<StreamingQuadTexture>().enabled = true;
                 }

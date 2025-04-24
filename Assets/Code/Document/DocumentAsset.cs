@@ -1,5 +1,6 @@
 using System;
 using EasyAssetStreaming;
+using FieldDay;
 using FieldDay.Assets;
 using UnityEngine;
 
@@ -15,6 +16,7 @@ namespace Astro {
     public struct StreamingDocumentVisual {
         [StreamingPath][SerializeField]
         public string VisualAssetPath;
+        // TODO Update later when we have an atlas for this 
         [StreamingPath][SerializeField]
         public string LowResAssetPath;
     }
@@ -35,7 +37,10 @@ namespace Astro {
         public Vector3 DefaultPinnedPos;
         public Vector3 ZoomOffsetOverride;
 
+#if UNITY_EDITOR
         private void OnValidate() { 
+            if (UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode) return; 
+
             if (Prefab == null) return;
             int numStreamingAssets = 0;
             foreach(DocumentRenderComponent cmp in Prefab.RenderComponents){
@@ -44,5 +49,6 @@ namespace Astro {
             Array.Resize(ref TextFields, Prefab.TextRegions.Length);
             Array.Resize(ref StreamingVisuals, numStreamingAssets);
         }
+#endif
     }
 }
