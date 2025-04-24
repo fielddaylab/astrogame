@@ -23,19 +23,24 @@ namespace Astro
 
         public SpriteRenderer FocusOutline;
 
+        private Action setMonitorInputActive;
+        private Action setMonitorInputInactive;
+
         protected override void OnEnable() {
+            setMonitorInputActive = () => { MonitorInputActive = true; };
+            setMonitorInputInactive = () => { MonitorInputActive = false; };
+
             base.OnEnable();
             Game.Events.Register(GameEvents.MonitorEmptySpaceClicked, FocusableUtility.ClickEmptySpace);
 
-            Game.Events.Register(GameEvents.StartNeutrinoNavigation, () => { MonitorInputActive = false; });
-            Game.Events.Register(GameEvents.StopNeutrinoNavigation, () => { MonitorInputActive = true; });
+            Game.Events.Register(GameEvents.StartNeutrinoNavigation, setMonitorInputInactive);
+            Game.Events.Register(GameEvents.StopNeutrinoNavigation, setMonitorInputActive);
 
-            Game.Events.Register(GameEvents.StartPuzzleNavigation, () => { MonitorInputActive = false; });
-            Game.Events.Register(GameEvents.StopPuzzleNavigation, () => { MonitorInputActive = true; });
+            Game.Events.Register(GameEvents.StartPuzzleNavigation, setMonitorInputInactive);
+            Game.Events.Register(GameEvents.StopPuzzleNavigation, setMonitorInputActive);
 
-            Game.Events.Register(GameEvents.LockMonitorFocus, () => { MonitorInputActive = false; });
-            Game.Events.Register(GameEvents.UnlockMonitorFocus, () => { MonitorInputActive = true; });
-
+            Game.Events.Register(GameEvents.LockMonitorFocus, setMonitorInputInactive);
+            Game.Events.Register(GameEvents.UnlockMonitorFocus, setMonitorInputActive);
         }
 
         protected override void OnDisable() {
@@ -45,12 +50,14 @@ namespace Astro
                 return;
             }
 
-            Game.Events.DeregisterAll(GameEvents.StartNeutrinoNavigation); 
-            Game.Events.DeregisterAll(GameEvents.StopNeutrinoNavigation); 
-            Game.Events.DeregisterAll(GameEvents.StartPuzzleNavigation); 
-            Game.Events.DeregisterAll(GameEvents.StopPuzzleNavigation); 
-            Game.Events.DeregisterAll(GameEvents.LockMonitorFocus); 
-            Game.Events.DeregisterAll(GameEvents.UnlockMonitorFocus); 
+            Game.Events.Deregister(GameEvents.MonitorEmptySpaceClicked, FocusableUtility.ClickEmptySpace);
+            Game.Events.Deregister(GameEvents.StartNeutrinoNavigation, setMonitorInputInactive);
+            Game.Events.Deregister(GameEvents.StopNeutrinoNavigation, setMonitorInputActive);
+            Game.Events.Deregister(GameEvents.StartPuzzleNavigation, setMonitorInputInactive);
+            Game.Events.Deregister(GameEvents.StopPuzzleNavigation, setMonitorInputActive);
+            Game.Events.Deregister(GameEvents.LockMonitorFocus, setMonitorInputInactive);
+            Game.Events.Deregister(GameEvents.UnlockMonitorFocus, setMonitorInputActive);
+
         }
     }
 

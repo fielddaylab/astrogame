@@ -26,7 +26,9 @@ namespace FieldDay.Audio {
 #endif // UNITY_WEBGL
 
         private const float MaxPitch =
-#if UNITY_WEBGL
+#if UNITY_EDITOR
+            64;
+#elif UNITY_WEBGL
             8;
 #else
             16;

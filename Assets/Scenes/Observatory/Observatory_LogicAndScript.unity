@@ -96,7 +96,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000022, guid: d1b1f49e96e28754e81ff04174607f74, type: 2}
+  m_LightingDataAsset: {fileID: 112000010, guid: d1b1f49e96e28754e81ff04174607f74, type: 2}
   m_LightingSettings: {fileID: 4890085278179872738, guid: 6f1803a0335cd4f4a9c123fe06a221ef, type: 2}
 --- !u!196 &4
 NavMeshSettings:
@@ -433,6 +433,7 @@ GameObject:
   - component: {fileID: 138682925}
   - component: {fileID: 138682927}
   - component: {fileID: 138682926}
+  - component: {fileID: 138682928}
   m_Layer: 0
   m_Name: DocumentPuzzleView
   m_TagString: Untagged
@@ -490,6 +491,24 @@ MonoBehaviour:
   AllowSlotSelection: 0
   LinkGroups: []
   BackLink: {fileID: 0}
+--- !u!114 &138682928
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 138682924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd4f7a62f5d45454495b9595af62e528, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HorizontalRange: 1
+  VerticalRange: 1
+  DeadZone: 0.2
+  Edge: 0.8
+  LerpStrength: 10
+  CutsceneScale: 1
 --- !u!1 &150754391
 GameObject:
   m_ObjectHideFlags: 0
@@ -1399,6 +1418,7 @@ GameObject:
   - component: {fileID: 859857339}
   - component: {fileID: 859857341}
   - component: {fileID: 859857340}
+  - component: {fileID: 859857342}
   m_Layer: 0
   m_Name: CenterView
   m_TagString: Untagged
@@ -1456,6 +1476,24 @@ MonoBehaviour:
   AllowSlotSelection: 1
   LinkGroups: []
   BackLink: {fileID: 0}
+--- !u!114 &859857342
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 859857338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd4f7a62f5d45454495b9595af62e528, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HorizontalRange: 10
+  VerticalRange: 4
+  DeadZone: 0.65
+  Edge: 0.85
+  LerpStrength: 1
+  CutsceneScale: 1
 --- !u!1 &885186818
 GameObject:
   m_ObjectHideFlags: 0
@@ -2983,9 +3021,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd4f7a62f5d45454495b9595af62e528, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HorizontalRange: 15
+  HorizontalRange: 35
   VerticalRange: 15
-  DeadZone: 0.2
+  DeadZone: 0.35
   Edge: 0.8
   LerpStrength: 1.2
   CutsceneScale: 1
