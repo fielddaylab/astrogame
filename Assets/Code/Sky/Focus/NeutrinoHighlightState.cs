@@ -16,12 +16,12 @@ public class NeutrinoHighlightState : SharedStateComponent, IRegistrationCallbac
 
     #region Registration
 
-    public void OnDeregister()
-    {
+    public void OnDeregister() {
+        Game.Events.DeregisterAll(GameEvents.StartOpenMode);
+        Game.Events.DeregisterAll(GameEvents.StopOpenMode);
     }
 
-    public void OnRegister()
-    {
+    public void OnRegister() {
         Game.Events.Register(GameEvents.StartOpenMode, () => {
             OpenModeStarted = true;
         });

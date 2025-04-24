@@ -1,1 +1,115 @@
 #basePath	Day4
+
+:: BeginDay
+@trigger    SceneReady
+@boostScore 100
+@who    Astrid
+
+$call InitUpdateMasks()
+$call SetInstrumentUnlocked(CoordinateInstrument, true)
+$call SetInstrumentUnlocked(PhotometerInstrument, true)
+$call SetInstrumentUnlocked(ColorInstrument, true)
+$call SetInstrumentUnlocked(SpectrometerInstrument, true)
+$call SetInstrumentUnlocked(HistoricalDataInstrument, true)
+$call StopPuzzleMode()
+$call StopOpenMode()
+
+// $call MoveToView("DocumentPuzzle")
+{@Astrid} Wait a minute. World’s End is a garden? 
+{@Astrid} That must be what Elijah calls his station! World’s End, the garden of the golden apples. 
+{@Astrid} It’s not about the world ending. It’s about love!
+
+// :: CorrectDocumentResponse
+// @trigger    DocumentPuzzlePromptStart
+// @when documentId == //TODO
+// @once
+
+$call SetInputState(false)
+// {@Astrid} This is it!
+// $call Wait(1)
+$call MoveToView("Right")
+$call Wait(1)
+
+{@Dad} Astrid, come in... Do you want the good news or the bad news first?
+{@Dad} I know, I know. You can’t answer me. So I’ll just start with the good.
+{@Dad} We’ve gotten our tech updated here at the South Pole. 
+{@Dad} When Project Hercules is unlocked, we’ll actually be able to talk to each other! 
+{@Dad} Plus, we’ll have access to all the data stored on the satellite. 
+{@Dad} Star charts, meteor storms, black holes and supernovas... the whole recorded history of the night sky. 
+
+{@Astrid} Wait a second... meteor storms? That’s what Elijah’s been so worried about. 
+{@Astrid} Maybe we’ll be able to figure out when the storm is coming! 
+
+{@Dad} So... onto the bad news. Elijah was supposed to be on his way home by now.
+{@Dad} But I just heard from the STAR station in Kansas City.
+{@Dad} They said they had one more job for him... a station near St. Louis that wasn’t on the map.
+{@Dad} They’ve been cut off from supplies for a while. They need food and water. 
+{@Dad} Elijah agreed to go and help them. That means it’ll be a bit longer before he gets home.
+
+{@Astrid} Ugh. So much for solving this mystery together. Eleven cities in two months. The eleven labors of Elijah. 
+{@Astrid} I guess it’s not quite as bad as Hercules... he ended up with twelve.
+ 
+{@Dad} Anyway, you keep up the great work, Little Bear. We’ll talk soon. Over and out. 
+
+{@Radio} Star HQ to Station Seven. IceCube is reading a high-energy neutrino emission from the area of the Taurus Constellation.
+{@Radio} Identification of nearby celestial objects is requested. Uploading area of interest... $[Day2/Radio/l2_r_1(2)]
+$call WaitForMovedToView("Desk")
+$call StartNeutrinoNavigation()
+$call SetInputState(true)
+
+:: NeutrinoNavigationComplete
+@trigger    NeutrinoNavigationComplete
+@once
+
+{@Radio} Neutrino Origin Detected
+$call StopNeutrinoNavigation()
+$call StartOpenMode()
+
+:: PointsUpdated
+@trigger    PointsUpdated
+@when   sciencePoints > 2
+@once
+
+$call StopOpenMode()
+$call ClearMonitorSelection()
+$call SetInputState(false)
+$call SetRefGuideActive(false)
+$call MonitorUI->PlayRadioDownload(2)
+$call Wait(1)
+$call MonitorUI->ShowCeresLogo()
+$call SetInstrumentUnlocked(HistoricalDataInstrument, true)
+{@Radio} Congratulations on being awarded clearance level 5. You are now cleared to use the infrared module on your telescope.
+{@Radio} Please reference your CERES Operator Manual for further information about your equipment.  $[Day1/Radio/l1_r_3(2)]
+{@Radio} Thanking you for being an important part of the CERES Distributed Network of Citizen Observatories. Together, we will map the stars for a better tomorrow. $[Day1/Radio/l1_r_3(3)]
+$call Wait(0.5)
+{@Radio} Tuning you to the Ice Cube CERES headquarters for further instruction... $[Day1/Radio/l1_r_4]
+$call MonitorUI->HideCeresLogo()
+$call Wait(1)
+$call StartPuzzleNavigation()
+
+:: PuzzleNavigationComplete
+@trigger    PuzzleNavigationComplete
+@once
+
+$call StopPuzzleNavigation()
+$call StartPuzzleMode()
+
+:: HerculesPuzzleComplete
+@trigger    CorrectPuzzleSubmission
+@when   puzzleName == "Draco"
+@once
+
+$call ClearMonitorSelection()
+$call StopPuzzleMode()
+$call SetInputState(false)
+$call EndDay4->BeginCutscene()
+$call Wait(3)
+{@Astrid} Whoa. That’s it. It’s the dragon!
+{@Astrid} I should’ve guessed. Elijah said “the dragon is coming.” It’s going to be a Draconid meteor storm!
+
+:: EndDay
+@trigger    CutsceneEnd
+@when cutsceneId == "EndDay4"
+@who    Astrid
+
+$call LoadNextDay()

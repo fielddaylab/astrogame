@@ -10,20 +10,22 @@ $call SetInstrumentUnlocked(CoordinateInstrument, true)
 $call SetInstrumentUnlocked(PhotometerInstrument, true)
 $call SetInstrumentUnlocked(ColorInstrument, true)
 $call SetInstrumentUnlocked(SpectrometerInstrument, true)
+$call StopPuzzleMode()
+$call StopOpenMode()
 
-$call MoveToView("DocumentPuzzle")
+// $call MoveToView("DocumentPuzzle")
 {@Astrid} Has Elijah gone crazy? 
 {@Astrid} I don’t get it. We need to warn people? About what?
 {@Astrid} Ugh. Elijah, I love you, but I could really use less poetry and more information. 
 
-:: CorrectDocumentResponse
-@trigger    DocumentPuzzlePromptStart
-@when documentId == //TODO
-@once
+// :: CorrectDocumentResponse
+// @trigger    DocumentPuzzlePromptStart
+// @when documentId == //TODO
+// @once
 
 $call SetInputState(false)
-{@Astrid} This is it!
-$call Wait(1)
+// {@Astrid} This is it!
+// $call Wait(1)
 $call MoveToView("Right")
 $call Wait(1)
 
@@ -32,7 +34,7 @@ $call Wait(1)
 {@Dad} I’m sorry, kiddo, but I don’t know much more than you do. 
 {@Dad} A few months ago, Elijah mentioned some kind of secret project he was working on.
 {@Dad} He said it was a big deal. But you know Elijah. Everything’s a big deal to him. 
-{@Dad} He’sa always been a dreamer . .  . I could see it even when you were kids.
+{@Dad} He’s always been a dreamer . .  . I could see it even when you were kids.
 {@Dad} I think sometimes he forgets people can’t read his mind. 
 {@Dad} There could be a logical explanation. Elijah doesn’t seem like the type to go off the deep end.
 {@Dad} But then again, these are strange times.  
@@ -71,7 +73,7 @@ $call SetRefGuideActive(false)
 $call MonitorUI->PlayRadioDownload(2)
 $call Wait(1)
 $call MonitorUI->ShowCeresLogo()
-$call SetInstrumentUnlocked(SpectrometerInstrument, true)
+$call SetInstrumentUnlocked(HistoricalDataInstrument, true)
 {@Radio} Congratulations on being awarded clearance level 4. You are now cleared to use the historical data module.
 {@Radio} Please reference your CERES Operator Manual for further information about your equipment.  $[Day1/Radio/l1_r_3(2)]
 {@Radio} Thanking you for being an important part of the CERES Distributed Network of Citizen Observatories. Together, we will map the stars for a better tomorrow. $[Day1/Radio/l1_r_3(3)]
@@ -96,18 +98,8 @@ $call StartPuzzleMode()
 $call ClearMonitorSelection()
 $call StopPuzzleMode()
 $call SetInputState(false)
-{@Astrid} Whoa. There was a huge Leonid meteor storm in 1833! People thought the world was ending.
-{@Astrid} Does Elijah think it’s going to happen again?
+{@Astrid} Whoa. There was a huge Leonid meteor storm in 1833! People thought the world was ending. Does Elijah think it’s going to happen again?
 {@Astrid} If this is true, people won’t understand what’s happening. Everyone’s gonna panic. 
-// $call EndDay2->BeginCutscene()
 
-//? Can we start another document puzzle here?
-
-:: EndDay
-@trigger    CutsceneEnd
-@when cutsceneId == "EndDay2"
-@who    Radio
-
-Okay. We could write to the newspaper and tell people what’s happening.
-But first we need to know when and where the meteor storm will happen.
+{@Astrid} Okay. We could write to the newspaper and tell people what’s happening, but first we need to know when and where the meteor storm will happen.
 $call LoadNextDay()

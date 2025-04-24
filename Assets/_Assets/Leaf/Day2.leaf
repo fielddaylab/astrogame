@@ -10,10 +10,10 @@ $call SetInstrumentUnlocked(CoordinateInstrument, true)
 $call SetInstrumentUnlocked(PhotometerInstrument, true)
 $call SetInstrumentUnlocked(ColorInstrument, true)
 
-$call MoveToView("DocumentPuzzle")
-{@Astrid} Looks like I got some mail... At least the mail service is still working... $[Day2/Astrid/l2_a_1]
 $call StopPuzzleMode()
 $call StopOpenMode()
+$call MoveToView("DocumentPuzzle")
+{@Astrid} Looks like I got some mail... At least the mail service is still working... $[Day2/Astrid/l2_a_1]
 $call SetInputState(false)
 $call SpawnDocumentToCamera("Day2DadPostcard")
 {@Astrid} Wow... Wish I could see the auroras there with you, Dad... $[Day2/Astrid/l2d_a_1]
