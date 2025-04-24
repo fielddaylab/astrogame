@@ -1,1 +1,57 @@
 #basePath	Day5
+
+:: BeginDay
+@trigger    SceneReady
+@boostScore 100
+@who    Astrid
+
+$call InitUpdateMasks()
+$call SetInstrumentUnlocked(CoordinateInstrument, true)
+$call SetInstrumentUnlocked(PhotometerInstrument, true)
+$call SetInstrumentUnlocked(ColorInstrument, true)
+$call SetInstrumentUnlocked(SpectrometerInstrument, true)
+$call SetInstrumentUnlocked(HistoricalDataInstrument, true)
+$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
+$call StopPuzzleMode()
+$call StopOpenMode()
+
+$call SetInputState(false)
+{@Radio} Star HQ to Station Seven. IceCube is reading a high-energy neutrino emission from the area of the Eridanus Constellation.
+{@Radio} Identification of nearby celestial objects is requested. Uploading area of interest... $[Day2/Radio/l2_r_1(2)]
+$call WaitForMovedToView("Desk")
+$call StartNeutrinoNavigation()
+$call SetInputState(true)
+
+:: NeutrinoNavigationComplete
+@trigger    NeutrinoNavigationComplete
+@once
+
+{@Radio} Neutrino Origin Detected
+$call StopNeutrinoNavigation()
+$call StartOpenMode()
+
+:: PointsUpdated
+@trigger    PointsUpdated
+@when   sciencePoints > 2
+@once
+
+$call StopOpenMode()
+$call ClearMonitorSelection()
+$call StartPuzzleNavigation()
+
+:: PuzzleNavigationComplete
+@trigger    PuzzleNavigationComplete
+@once
+
+$call StopPuzzleNavigation()
+$call StartPuzzleMode()
+
+:: HerculesPuzzleComplete
+@trigger    CorrectPuzzleSubmission
+@when   puzzleName == "Andromeda"
+@once
+
+$call ClearMonitorSelection()
+$call StopPuzzleMode()
+$call SetInputState(false)
+Trigger the final puzzle now

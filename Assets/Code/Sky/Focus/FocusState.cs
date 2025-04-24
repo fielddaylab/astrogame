@@ -37,6 +37,16 @@ namespace Astro
             Game.Events.Register(GameEvents.UnlockMonitorFocus, () => { MonitorInputActive = true; });
 
         }
+
+        protected override void OnDisable() {
+            base.OnDisable();
+            Game.Events.DeregisterAll(GameEvents.StartNeutrinoNavigation); 
+            Game.Events.DeregisterAll(GameEvents.StopNeutrinoNavigation); 
+            Game.Events.DeregisterAll(GameEvents.StartPuzzleNavigation); 
+            Game.Events.DeregisterAll(GameEvents.StopPuzzleNavigation); 
+            Game.Events.DeregisterAll(GameEvents.LockMonitorFocus); 
+            Game.Events.DeregisterAll(GameEvents.UnlockMonitorFocus); 
+        }
     }
 
     public static partial class FocusableUtility {
