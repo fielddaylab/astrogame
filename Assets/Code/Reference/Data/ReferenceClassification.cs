@@ -1,3 +1,4 @@
+using BeauUtil;
 using FieldDay.Assets;
 using System;
 using UnityEngine;
@@ -19,6 +20,8 @@ namespace Astro {
         Photometer = 0x01,
         ColorMeter = 0x02,
         Spectrometer = 0x04,
-        Historical = 0x08
+        Historical = 0x08,
+
+        [Hidden] ALL = Photometer | ColorMeter | Spectrometer | Historical
     }
 }

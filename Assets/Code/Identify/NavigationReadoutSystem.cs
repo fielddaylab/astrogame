@@ -12,7 +12,7 @@ using UnityEngine;
 
 namespace Astro {
     [SysUpdate(GameLoopPhase.Update, 0, AstroGame.MonitorControlsUpdateMask)]
-    public class NavigationReadoutSystem : SharedStateSystemBehaviour<PlayerPointsState, PuzzleNavigationState, NeutrinoNavigationState> {
+    public class NavigationReadoutSystem : SharedStateSystemBehaviour<ReviewState, PuzzleNavigationState, NeutrinoNavigationState> {
 
         public const float OnePipThreshold = 0; // 180 degrees
         public const float TwoPipThreshold = 0.708f; // ~90 degrees

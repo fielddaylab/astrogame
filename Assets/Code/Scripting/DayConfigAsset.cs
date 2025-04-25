@@ -3,6 +3,7 @@ using FieldDay;
 using FieldDay.Assets;
 using Leaf;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Astro {
     [CreateAssetMenu(menuName = "AstroGame/Day Config")] 
@@ -13,6 +14,7 @@ namespace Astro {
 
         public PuzzleAsset DayPuzzle;
         public NeutrinoConfigAsset NeutrinoEvent;
+        public ClassificationTypeMask AcceptedIDSubmissions = ClassificationTypeMask.ALL;
     }
 
     static public class DayConfigUtil {

@@ -46,6 +46,7 @@ public static class ScriptEvents {
     public static readonly StringHash32 OnInvalidOpenIdSubmission = "OnInvalidOpenIdSubmission";
     public static readonly StringHash32 OnDuplicateOpenIdSubmission = "OnDuplicateOpenIdSubmission";
     public static readonly StringHash32 OnIncorrectOpenIdSubmission = "OnIncorrectOpenIdSubmission";
+    public static readonly StringHash32 OnUnacceptedOpenIdSubmission = "OnUnacceptedOpenIdSubmission";
     public static readonly StringHash32 OnNeutrinoNavWarmer = "OnNeutrinoNavWarmer";
     public static readonly StringHash32 OnNeutrinoNavColder = "OnNeutrinoNavColder";
     public static readonly StringHash32 OnLeaveNeutrinoRegion = "OnLeaveNeutrinoRegion";

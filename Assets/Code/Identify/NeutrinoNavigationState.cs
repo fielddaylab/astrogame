@@ -68,7 +68,7 @@ public static class NeutrinoNavigationUtility {
         SpaceCameraState state = Find.State<SpaceCameraState>();
         state.OnLookUpdated.Deregister(NavigationCanvasUtil.UpdatedNeutrinoNavigationArrow);
 
-        ReviewModuleUtility.ResetReview(Find.State<PlayerPointsState>().ReviewModule);
+        ReviewModuleUtility.ResetReview(Find.State<ReviewState>().ReviewModule);
         NavigationCanvasUtil.DisableNeutrinoNavUI();
     }
 

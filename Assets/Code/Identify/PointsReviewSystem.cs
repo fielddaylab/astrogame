@@ -12,10 +12,10 @@ using FieldDay.Audio;
 
 namespace Astro {
     [SysUpdate(GameLoopPhase.Update, 0, AstroGame.SubmissionUpdateMask)]
-    public class PointsReviewSystem : SharedStateSystemBehaviour<PlayerPointsState> {
+    public class PointsReviewSystem : SharedStateSystemBehaviour<ReviewState> {
 
         public override bool HasWork() {
-            return base.HasWork() && (m_State.SubmittedObject || m_State.SubmittedPuzzle);
+            return base.HasWork() && (m_State.CurrentSubmission != 0);
         }
 
         public override void ProcessWork(float deltaTime) {
@@ -33,10 +33,10 @@ namespace Astro {
         }
 
         private void CheckObjectOrPuzzle() {
-            if (m_State.SubmittedObject) {
+            if (m_State.CurrentSubmission == ReviewSubmissionType.Identification) {
                 CheckObjectIdentification();
             } 
-            if (m_State.SubmittedPuzzle) {
+            if (m_State.CurrentSubmission == ReviewSubmissionType.Puzzle) {
                 // if puzzle checking is expensive, could this be amortized over the timer duration?
                 CheckPuzzle();
             }
@@ -57,11 +57,11 @@ namespace Astro {
                 pip.SetSharedMaterialAtIndex(1, module.UnlitPipMaterial);
             }
             module.Result.SetSharedMaterialAtIndex(1, module.UnlitPipMaterial);
-            m_State.SubmittedObject = m_State.SubmittedPuzzle = false;
+            m_State.CurrentSubmission = ReviewSubmissionType.None;
             m_State.ReviewTimer.Paused = false;
         }
 
-        private void ShowResultSprite(bool correct, PlayerPointsState state) {
+        static private void ShowResultSprite(bool correct, ReviewState state) {
             ReviewModule module = state.ReviewModule;
 
             if (correct) {
@@ -69,20 +69,16 @@ namespace Astro {
                 module.Result.SetSharedMaterialAtIndex(1, module.SuccessMaterial);
             } else {
                 Sfx.PlayDetached("Oneshot.Review.Failure", module.SoundAnchor);
-                if (ReferenceUtility.AssetSubmissionCompleted()){
-                    module.Result.SetSharedMaterialAtIndex(1, module.LitPipMaterial);
-                } else {
-                    module.Result.SetSharedMaterialAtIndex(1, module.FailureMaterial);
-                }
+                module.Result.SetSharedMaterialAtIndex(1, module.FailureMaterial);
             }
         }
 
         private void CheckPuzzle() {
             PuzzleState puzzle = Find.State<PuzzleState>();
             if (PuzzleUtility.CheckSolutionCorrect(puzzle, out BitSet32 rowsCorrectness)) {
-                OnCorrectPuzzleSubmission.Invoke(puzzle.ActivePuzzle.DisplayName);
+                ReviewUtility.OnCorrectPuzzleSubmission.Invoke(puzzle.ActivePuzzle.DisplayName);
                 ShowResultSprite(true, m_State);
-                PointsUtility.AddPoints(1, m_State);
+                ReviewUtility.AddPoints(1);
 
                 puzzle.ActivePuzzle = null;
 
@@ -101,29 +97,37 @@ namespace Astro {
             DMInfo info = new DMInfo("Puzzle");
             info.AddButton("Bypass Puzzle", () => {
                 var puzzle = Find.State<PuzzleState>();
-                OnCorrectPuzzleSubmission.Invoke(puzzle.ActivePuzzle.DisplayName);
+                ReviewUtility.OnCorrectPuzzleSubmission.Invoke(puzzle.ActivePuzzle.DisplayName);
                 puzzle.ActivePuzzle = null;
             });
             return info;
         }
 
         private void CheckObjectIdentification() {
-            if (ReferenceUtility.CurrentRefMatchesFocus() && ReferenceUtility.CurrentRefInNeutrinoEvent()) {
-                ShowResultSprite(true, m_State);
-                PointsUtility.AddPoints(1, m_State);
-            } else {
-                ShowResultSprite(false, m_State);
-
-                if(!ReferenceUtility.CurrentRefMatchesFocus() && ReferenceUtility.AssetSubmissionCompleted()){
+            ReviewResult result = ReviewUtility.EvaluateSubmission(m_State.Identification, Find.State<PlayerProgressState>());
+            ShowResultSprite(result == ReviewResult.Success, m_State);
+            switch (result) {
+                case ReviewResult.Success: {
+                    ReviewUtility.AddPoints(1);
+                    break;
+                }
+                case ReviewResult.Duplicate: {
                     ScriptUtility.Trigger(ScriptEvents.OnDuplicateOpenIdSubmission);
-                } else if (!ReferenceUtility.CurrentRefMatchesFocus()){
+                    break;
+                }
+                case ReviewResult.ClassificationNotFound: {
                     ScriptUtility.Trigger(ScriptEvents.OnIncorrectOpenIdSubmission);
-                } else if (!ReferenceUtility.CurrentRefInNeutrinoEvent()) {
+                    break;
+                }
+                case ReviewResult.AssetNotInNeutrinoEvent: {
                     ScriptUtility.Trigger(ScriptEvents.OnInvalidOpenIdSubmission);
+                    break;
+                }
+                case ReviewResult.ClassificationNotInAccepted: {
+                    ScriptUtility.Trigger(ScriptEvents.OnUnacceptedOpenIdSubmission);
+                    break;
                 }
             }
         }
-
-        static public readonly CastableEvent<string> OnCorrectPuzzleSubmission = new CastableEvent<string>();
     }
 }
