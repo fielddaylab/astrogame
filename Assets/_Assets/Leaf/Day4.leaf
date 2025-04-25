@@ -17,10 +17,19 @@ $call StopOpenMode()
 
 $call MoveToView("DocumentPuzzle")
 $call SetInputState(false)
-$call SpawnDocumentToCamera("Day4ElijahPostcard")
+$call SpawnDocumentToCamera("Day41833")
 $call SetInputState(true)
 
 :: SpawnPuzzleDocs1
+@trigger    DocumentInspectEnd
+@when   documentId == "Day41833"
+@once
+
+$call SetInputState(false)
+$call SpawnDocumentToCamera("Day4ElijahPostcard")
+$call SetInputState(true)
+
+:: SpawnPuzzleDocs2
 @trigger    DocumentInspectEnd
 @when   documentId == "Day4ElijahPostcard"
 @once
@@ -29,24 +38,25 @@ $call SetInputState(false)
 $call SpawnDocumentToCamera("Day4Martha")
 $call SetInputState(true)
 
-:: SpawnPuzzleDocs2
-@trigger    DocumentInspectEnd
-@when   documentId == "Day4Martha"
+:: Day4ElijahPostcard
+@trigger    DocumentInspectFlip
+@when   documentId == "Day4ElijahPostcard"
 @once
 
-$call Wait(1)
+$call SetInputState(false)
 {@Astrid} Wait a minute. World’s End is a garden? 
 {@Astrid} That must be what Elijah calls his station! World’s End, the garden of the golden apples. 
 {@Astrid} It’s not about the world ending. It’s about love!
+$call SetInputState(true)
 
-// :: CorrectDocumentResponse
-// @trigger    DocumentPuzzlePromptStart
-// @when documentId == //TODO
-// @once
+:: SpawnPuzzleDocs2
+@trigger    DocumentInspectEnd
+@when   documentId == "Day4Martha"
+@interrupt
+@once
 
+$call Wait(1)
 $call SetInputState(false)
-// {@Astrid} This is it!
-// $call Wait(1)
 $call MoveToView("Right")
 $call Wait(1)
 
@@ -72,7 +82,7 @@ $call Wait(1)
 {@Dad} Anyway, you keep up the great work, Little Bear. We’ll talk soon. Over and out. 
 
 {@Radio} Star HQ to Station Seven. IceCube is reading a high-energy neutrino emission from the area of the Taurus Constellation.
-{@Radio} Identification of nearby celestial objects is requested. Uploading area of interest... $[Day2/Radio/l2_r_1(2)]
+{@Radio} Identification of nearby celestial objects is requested. Uploading area of interest...
 $call StartNeutrinoNavigation()
 $call SetInputState(true)
 

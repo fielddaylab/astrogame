@@ -33,6 +33,7 @@ public static class ScriptEvents {
     public static readonly StringHash32 IncorrectPuzzleSubmission = "IncorrectPuzzleSubmission";
     public static readonly StringHash32 CorrectPuzzleSubmission = "CorrectPuzzleSubmission";
     public static readonly StringHash32 DocumentInspectStart = "DocumentInspectStart";
+    public static readonly StringHash32 DocumentInspectFlip = "DocumentInspectFlip";
     public static readonly StringHash32 DocumentInspectEnd = "DocumentInspectEnd";
     public static readonly StringHash32 DocumentPuzzlePromptStart = "DocumentPuzzlePromptStart";
     public static readonly StringHash32 CutsceneBegin = "CutsceneBegin";

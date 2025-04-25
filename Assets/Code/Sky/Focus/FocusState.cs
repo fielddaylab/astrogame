@@ -30,7 +30,6 @@ namespace Astro
             setMonitorInputActive = () => { MonitorInputActive = true; };
             setMonitorInputInactive = () => { MonitorInputActive = false; };
 
-            base.OnEnable();
             Game.Events.Register(GameEvents.MonitorEmptySpaceClicked, FocusableUtility.ClickEmptySpace);
 
             Game.Events.Register(GameEvents.StartNeutrinoNavigation, setMonitorInputInactive);
@@ -41,14 +40,13 @@ namespace Astro
 
             Game.Events.Register(GameEvents.LockMonitorFocus, setMonitorInputInactive);
             Game.Events.Register(GameEvents.UnlockMonitorFocus, setMonitorInputActive);
+
+            base.OnEnable();
         }
 
         protected override void OnDisable() {
             base.OnDisable();
-
-            if (Game.IsShuttingDown) {
-                return;
-            }
+            if (Game.IsShuttingDown) return;
 
             Game.Events.Deregister(GameEvents.MonitorEmptySpaceClicked, FocusableUtility.ClickEmptySpace);
             Game.Events.Deregister(GameEvents.StartNeutrinoNavigation, setMonitorInputInactive);
@@ -109,8 +107,7 @@ namespace Astro
             return Array.IndexOf(day.NeutrinoEvent.RelevantObjectIds, focus.TargetData.AssetId) >= 0;
         }
 
-        public static void ClickEmptySpace()
-        {
+        public static void ClickEmptySpace() {
             FocusState state = Find.State<FocusState>();
             SetCurrentFocus(state, null);
         }

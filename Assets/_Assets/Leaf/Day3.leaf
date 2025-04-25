@@ -25,7 +25,18 @@ $call SetInputState(true)
 @once
 
 $call SetInputState(false)
+$call Wait(1)
 $call SpawnDocumentToCamera("Day3ElijahPostcard")
+$call SetInputState(true)
+
+:: Day3ElijahPostcardFlavor
+@trigger    DocumentInspectFlip
+@when   documentId == "Day3ElijahPostcard"
+@once
+
+$call SetInputState(false)
+{@Astrid} I don’t get it. We need to warn people? About what?
+{@Astrid} Ugh. Elijah, I love you, but I could really use less poetry and more information. 
 $call SetInputState(true)
 
 :: SpawnPuzzleDocs2
@@ -34,6 +45,7 @@ $call SetInputState(true)
 @once
 
 $call SetInputState(false)
+$call Wait(1)
 $call SpawnDocumentToCamera("Day2ElijahLetter")
 $call SetInputState(true)
 
@@ -50,7 +62,7 @@ $call SetInputState(true)
 
 :: IncorrectDocumentResponse
 @trigger    DocumentPuzzlePromptStart
-@when documentId != "Day2ElijahLetter"
+@when   documentId != "Day2ElijahLetter"
 @interrupt
 
 NO.
@@ -63,9 +75,6 @@ NO.
 $call SetInputState(false)
 {@Astrid} This is it!
 $call Wait(1)
-
-{@Astrid} I don’t get it. We need to warn people? About what?
-{@Astrid} Ugh. Elijah, I love you, but I could really use less poetry and more information. 
 
 $call SetInputState(false)
 $call MoveToView("Right")
@@ -90,7 +99,7 @@ $call Wait(1)
 {@Astrid} Love you, Dad. Sure wish you could hear me. 
 
 {@Radio} Star HQ to Station Seven. IceCube is reading a high-energy neutrino emission from the area of the Orion Constellation.
-{@Radio} Identification of nearby celestial objects is requested. Uploading area of interest... $[Day2/Radio/l2_r_1(2)]
+{@Radio} Identification of nearby celestial objects is requested. Uploading area of interest...
 $call StartNeutrinoNavigation()
 $call SetInputState(true)
 
@@ -117,10 +126,10 @@ $call Wait(1)
 $call MonitorUI->ShowCeresLogo()
 $call SetInstrumentUnlocked(HistoricalDataInstrument, true)
 {@Radio} Congratulations on being awarded clearance level 4. You are now cleared to use the historical data module.
-{@Radio} Please reference your CERES Operator Manual for further information about your equipment.  $[Day1/Radio/l1_r_3(2)]
-{@Radio} Thanking you for being an important part of the CERES Distributed Network of Citizen Observatories. Together, we will map the stars for a better tomorrow. $[Day1/Radio/l1_r_3(3)]
+{@Radio} Please reference your CERES Operator Manual for further information about your equipment.
+{@Radio} Thanking you for being an important part of the CERES Distributed Network of Citizen Observatories. Together, we will map the stars for a better tomorrow.
 $call Wait(0.5)
-{@Radio} Tuning you to the Ice Cube CERES headquarters for further instruction... $[Day1/Radio/l1_r_4]
+{@Radio} Tuning you to the Ice Cube CERES headquarters for further instruction...
 $call MonitorUI->HideCeresLogo()
 $call Wait(1)
 $call StartPuzzleNavigation()
@@ -141,8 +150,28 @@ $call StartPuzzleMode()
 $call ClearMonitorSelection()
 $call StopPuzzleMode()
 $call SetInputState(false)
+$set temp:d3PostcardRead = false
+$call SpawnDocumentToCamera("Day41833")
+$call SetInputState(true)
+
+:: Flip1833
+@trigger    DocumentInspectFlip
+@when   documentId == "Day41833"
+@interrupt
+@once
+
+$call SetInputState(false)
 {@Astrid} Whoa. There was a huge Leonid meteor storm in 1833! People thought the world was ending. Does Elijah think it’s going to happen again?
 {@Astrid} If this is true, people won’t understand what’s happening. Everyone’s gonna panic. 
 
 {@Astrid} Okay. We could write to the newspaper and tell people what’s happening, but first we need to know when and where the meteor storm will happen.
+$call SetInputState(true)
+$set temp:d3PostcardRead = true
+
+:: End1833
+@trigger    DocumentInspectEnd
+@when   documentId == "Day41833", temp:d3PostcardRead
+@interrupt
+@once
+
 $call LoadNextDay()

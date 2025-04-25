@@ -315,6 +315,11 @@ namespace Astro {
             float lift = state.DocZoomed ? 0.5f : -0.5f;
             state.DocumentRoutine.Replace(DocRotateY(doc, lift, angle));
             state.InteractedThisFrame = true;
+
+            using (var table = TempVarTable.Alloc()) {
+                table.Set("documentId", doc.AssetName);
+                ScriptUtility.Trigger(ScriptEvents.DocumentInspectFlip, table);
+            }
         }
 
         #endregion // Interaction
