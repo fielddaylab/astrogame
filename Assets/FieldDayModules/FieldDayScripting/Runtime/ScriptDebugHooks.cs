@@ -7,6 +7,7 @@ using BeauPools;
 using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay.Debugging;
+using FieldDay.HID;
 using FieldDay.Vox;
 using UnityEngine;
 
@@ -37,6 +38,13 @@ namespace FieldDay.Scripting {
             using(PooledStringBuilder psb = PooledStringBuilder.Create()) {
                 ScriptRuntimeState runtime = ScriptUtility.Runtime;
                 ScriptDatabase db = ScriptUtility.DB;
+
+                if (DebugInput.IsPressed(KeyCode.P) || DebugInput.IsPressed(MouseButton.Middle)) {
+                    ScriptThread cutsceneThread = runtime.Cutscene.GetThread<ScriptThread>();
+                    if (cutsceneThread != null) {
+                        cutsceneThread.SkipSingle();
+                    }
+                }
 
                 if (DebugFlags.IsFlagSet(ScriptDebugFlags.DisplayThreadStats)) {
                     psb.Builder.Append("Leaf Stats:\n   ")

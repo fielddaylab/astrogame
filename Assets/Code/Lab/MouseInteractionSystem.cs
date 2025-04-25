@@ -25,11 +25,11 @@ namespace Astro {
 
                 if (Physics.Raycast(ray, out RaycastHit hit, 25f, m_StateC.ClickableLayerMask)) {
 
-                    if (hit.collider.TryGetComponent(out RefGuideControl refControl)) {
+                    if (hit.collider.TryGetComponent(out RefGuideControl refControl) && refControl.isActiveAndEnabled) {
                         ReferenceUtility.HandleControl(refControl);
                     }
 
-                    if (hit.collider.TryGetComponent(out DocumentPart docPart)) {
+                    if (hit.collider.TryGetComponent(out DocumentPart docPart) && docPart.isActiveAndEnabled) {
                         DocumentUtility.ProcessDocPartInteraction(docPart, m_StateB);
                         if (m_StateB.InteractedThisFrame) {
                             return;
@@ -40,13 +40,12 @@ namespace Astro {
                         UseLabInteractable(interactable);
                     }
 
-                    if (hit.collider.TryGetComponent(out ViewLink link)) {
+                    if (hit.collider.TryGetComponent(out ViewLink link) && link.isActiveAndEnabled) {
                         ViewNavUtility.MoveByLink(Find.State<ViewState>(), link);
                     }
 
                     Game.Input.ConsumeAllInputForFrame();
                 }
-
             }
 
             // drag
@@ -74,6 +73,10 @@ namespace Astro {
         }
 
         private void UseLabInteractable(LabInteractable interactable) {
+            if (!interactable.isActiveAndEnabled) {
+                return;
+            }
+
             interactable.InteractReceived = true;
             m_StateA.CurrInteractable = interactable;
             m_StateA.StartMousePos = Input.mousePosition;
