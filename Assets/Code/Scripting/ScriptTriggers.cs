@@ -10,8 +10,8 @@ namespace Astro {
     public static class ScriptTriggers {
         [InvokeOnBoot]
         static public void Init() {
-            PointsUtility.OnPointsUpdated.Register(OnScore);
-            PointsReviewSystem.OnCorrectPuzzleSubmission.Register(OnCorrectPuzzleSubmit);
+            ReviewUtility.OnPointsUpdated.Register(OnScore);
+            ReviewUtility.OnCorrectPuzzleSubmission.Register(OnCorrectPuzzleSubmit);
 
             Game.Events.Register(GameEvents.PuzzleNavigationComplete, OnPuzzleNavComplete);
             Game.Events.Register(GameEvents.NeutrinoNavigationComplete, OnNeutrinoNavComplete);
@@ -19,7 +19,7 @@ namespace Astro {
 
         static private void OnScore() {
             using(var table = TempVarTable.Alloc()) {
-                table.Set("sciencePoints", PointsUtility.GetPoints());
+                table.Set("sciencePoints", ReviewUtility.GetPoints());
                 ScriptUtility.Trigger(ScriptEvents.PointsUpdated, table);
             }
         }

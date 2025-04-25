@@ -16,8 +16,7 @@ namespace FieldDay.Systems {
         #region Work
 
         public virtual bool HasWork() {
-            return isActiveAndEnabled
-                && (m_State = Game.SharedState.FastGet<TState>()) != null;
+            return (m_State = Game.SharedState.FastGet<TState>()) != null;
         }
 
         public virtual void ProcessWork(float deltaTime) {
@@ -51,8 +50,7 @@ namespace FieldDay.Systems {
         #region Work
 
         public virtual bool HasWork() {
-            return isActiveAndEnabled
-                && (m_StateA = Game.SharedState.FastGet<TStateA>()) != null
+            return (m_StateA = Game.SharedState.FastGet<TStateA>()) != null
                 && (m_StateB = Game.SharedState.FastGet<TStateB>()) != null;
         }
 
@@ -90,8 +88,7 @@ namespace FieldDay.Systems {
         #region Work
 
         public virtual bool HasWork() {
-            return isActiveAndEnabled
-                && (m_StateA = Game.SharedState.FastGet<TStateA>()) != null
+            return (m_StateA = Game.SharedState.FastGet<TStateA>()) != null
                 && (m_StateB = Game.SharedState.FastGet<TStateB>()) != null
                 && (m_StateC = Game.SharedState.FastGet<TStateC>()) != null; 
         }
@@ -133,8 +130,7 @@ namespace FieldDay.Systems {
         #region Work
 
         public virtual bool HasWork() {
-            return isActiveAndEnabled
-                && (m_StateA = Game.SharedState.FastGet<TStateA>()) != null
+            return (m_StateA = Game.SharedState.FastGet<TStateA>()) != null
                 && (m_StateB = Game.SharedState.FastGet<TStateB>()) != null
                 && (m_StateC = Game.SharedState.FastGet<TStateC>()) != null
                 && (m_StateD = Game.SharedState.FastGet<TStateD>()) != null;
@@ -180,8 +176,7 @@ namespace FieldDay.Systems {
         #region Work
 
         public virtual bool HasWork() {
-            return isActiveAndEnabled
-                && (m_StateA = Game.SharedState.FastGet<TStateA>()) != null
+            return (m_StateA = Game.SharedState.FastGet<TStateA>()) != null
                 && (m_StateB = Game.SharedState.FastGet<TStateB>()) != null
                 && (m_StateC = Game.SharedState.FastGet<TStateC>()) != null
                 && (m_StateD = Game.SharedState.FastGet<TStateD>()) != null
@@ -231,8 +226,7 @@ namespace FieldDay.Systems {
         #region Work
 
         public virtual bool HasWork() {
-            return isActiveAndEnabled
-                && (m_StateA = Game.SharedState.FastGet<TStateA>()) != null
+            return (m_StateA = Game.SharedState.FastGet<TStateA>()) != null
                 && (m_StateB = Game.SharedState.FastGet<TStateB>()) != null
                 && (m_StateC = Game.SharedState.FastGet<TStateC>()) != null
                 && (m_StateD = Game.SharedState.FastGet<TStateD>()) != null
@@ -286,8 +280,7 @@ namespace FieldDay.Systems {
         #region Work
 
         public virtual bool HasWork() {
-            return isActiveAndEnabled
-                && (m_StateA = Game.SharedState.FastGet<TStateA>()) != null
+            return (m_StateA = Game.SharedState.FastGet<TStateA>()) != null
                 && (m_StateB = Game.SharedState.FastGet<TStateB>()) != null
                 && (m_StateC = Game.SharedState.FastGet<TStateC>()) != null
                 && (m_StateD = Game.SharedState.FastGet<TStateD>()) != null
@@ -345,8 +338,7 @@ namespace FieldDay.Systems {
         #region Work
 
         public virtual bool HasWork() {
-            return isActiveAndEnabled
-                && (m_StateA = Game.SharedState.FastGet<TStateA>()) != null
+            return (m_StateA = Game.SharedState.FastGet<TStateA>()) != null
                 && (m_StateB = Game.SharedState.FastGet<TStateB>()) != null
                 && (m_StateC = Game.SharedState.FastGet<TStateC>()) != null
                 && (m_StateD = Game.SharedState.FastGet<TStateD>()) != null

@@ -69,7 +69,7 @@ namespace Astro
             } else if (!(focus == null || state.CurrentFocus == null) && state.CurrentFocus.TargetData.DisplayName.Equals(focus.TargetData.DisplayName)) {
                 // already focused on this object
                 return;
-            } else if (PointsUtility.ReviewInProgress()) {
+            } else if (ReviewUtility.ReviewInProgress()) {
                 return;
             } else if (!state.MonitorInputActive) {
                 return;
@@ -90,7 +90,7 @@ namespace Astro
             // Scripting
             if(state.CurrentFocus == null) return;
 
-            if (ReferenceUtility.CurrentRefInNeutrinoEvent()) {
+            if (IsCurrentFocusInNeutrinoEvent()) {
                 ScriptUtility.Trigger(ScriptEvents.OnNeutrinoStarSelected);
             } else { 
                 using (var table = TempVarTable.Alloc()) {
@@ -98,6 +98,15 @@ namespace Astro
                     ScriptUtility.Trigger(ScriptEvents.OnStarSelected, table);
                 }
             }
+        }
+
+        public static bool IsCurrentFocusInNeutrinoEvent() {
+            PlayerProgressState state = Find.State<PlayerProgressState>();
+            StoryAsset story = Find.GlobalAsset<StoryAsset>();
+            DayConfigAsset day = Find.NamedAsset<DayConfigAsset>(story.Days[state.DayIndex]);
+
+            UIFocus focus = Find.State<FocusState>().CurrentFocus;
+            return Array.IndexOf(day.NeutrinoEvent.RelevantObjectIds, focus.TargetData.AssetId) >= 0;
         }
 
         public static void ClickEmptySpace()

@@ -23,14 +23,20 @@ public class DialRotationSystem : ComponentSystemBehaviour<InteractAdjustDial>
         {
             rotationAmt = primary.RotateSpeed * primary.ConstrainedValDelta;
         }
-        Vector3 pivot = Vector3.zero;
-        if (primary.PivotAxis == Axis.Y) {
-            pivot = primary.DialRoot.up;
+
+        Vector3 axis = default;
+        switch(primary.PivotAxis) {
+            case Axis.X:
+                axis.x = 1;
+                break;
+            case Axis.Y:
+                axis.y = 1;
+                break;
+            case Axis.Z:
+                axis.z = 1;
+                break;
         }
-        else if (primary.PivotAxis == Axis.X)
-        {
-            pivot = primary.DialRoot.right;
-        }
-        primary.DialRoot.RotateAround(primary.DialRoot.position, pivot, rotationAmt);
+
+        primary.DialRoot.Rotate(axis, rotationAmt, Space.Self);
     }
 }

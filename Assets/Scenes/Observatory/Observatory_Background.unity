@@ -2049,6 +2049,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2100000, guid: 31e5bf051cc210e44af731cec687afb5, type: 2}
     - target: {fileID: 7608975953222411159, guid: 274335d4e7a14b648b587b290f2c8587, type: 3}
+      propertyPath: prewarm
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7608975953222411159, guid: 274335d4e7a14b648b587b290f2c8587, type: 3}
       propertyPath: lengthInSec
       value: 15
       objectReference: {fileID: 0}
@@ -5759,6 +5763,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1256094633}
+  - component: {fileID: 1256094634}
   m_Layer: 0
   m_Name: FX
   m_TagString: Untagged
@@ -5782,6 +5787,23 @@ Transform:
   - {fileID: 948977994}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1256094634
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1256094632}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ae620349e7bce24688d2ab26f9be5a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Always: 0
+  DestroyInactiveChildren: 0
+  Recursive: 0
+  DestroyGameObject: 0
+  IgnoreAnimators: 1
 --- !u!1 &1286434846
 GameObject:
   m_ObjectHideFlags: 0
@@ -6537,7 +6559,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ae620349e7bce24688d2ab26f9be5a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Always: 0
+  Always: 1
   DestroyInactiveChildren: 0
   Recursive: 1
   DestroyGameObject: 1

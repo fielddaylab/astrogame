@@ -4,6 +4,7 @@ using System;
 using BeauUtil.Debugger;
 using System.Collections;
 using BeauUtil;
+using Astro.Reference;
 
 namespace Astro {
     [SysUpdate(GameLoopPhase.Update, 501, AstroGame.SubmissionUpdateMask)] // After RowSelectSystem
@@ -12,6 +13,7 @@ namespace Astro {
     public class SubmitButtonSystem : ComponentSystemBehaviour<SubmitButton, LabInteractable> {
         public override void ProcessWorkForComponent(SubmitButton primary, LabInteractable secondary, float deltaTime) {          
             if (!secondary.InteractReceived) { return; }
+
             if ((primary.ButtonType & SubmitButtonType.SubmitPuzzle) != 0) {
                 if (Find.State<PuzzleState>().ActivePuzzle != null) {
                     TrySubmitPuzzle(primary);
@@ -23,9 +25,9 @@ namespace Astro {
         }
 
         private bool TrySubmitPuzzle(SubmitButton btn) {
-            PlayerPointsState pps = Find.State<PlayerPointsState>();
-            if (!pps.SubmittedPuzzle) {
-                pps.SubmittedPuzzle = true;
+            ReviewState pps = Find.State<ReviewState>();
+            if (pps.CurrentSubmission == ReviewSubmissionType.None) {
+                pps.CurrentSubmission = ReviewSubmissionType.Puzzle;
                 btn.gameObject.SetActive(false);
                 return true;
             }
@@ -33,9 +35,13 @@ namespace Astro {
         }
 
         private bool TrySubmitIdentification(SubmitButton btn) {
-            PlayerPointsState pps = Find.State<PlayerPointsState>();
-            if (!pps.SubmittedObject) {
-                pps.SubmittedObject = true;
+            ReviewState pps = Find.State<ReviewState>();
+            if (pps.CurrentSubmission == ReviewSubmissionType.None) {
+                pps.CurrentSubmission = ReviewSubmissionType.Identification;
+                pps.Identification = new ReviewSubmissionClassification() {
+                    AssetId = Find.State<FocusState>().CurrentFocus.TargetData.AssetId,
+                    Classification = Find.State<RefGuideState>().SelectedRefClassification.AssetId
+                };
                 btn.gameObject.SetActive(false);
                 return true;
             }

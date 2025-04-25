@@ -79,7 +79,7 @@ public static class PuzzleNavigationUtility {
     }
 
     private static void ResetReview() {
-        PlayerPointsState ppState = Find.State<PlayerPointsState>();
+        ReviewState ppState = Find.State<ReviewState>();
         ReviewModule module = ppState.ReviewModule;
 
         module.PipsRevealed = 0;
@@ -87,7 +87,7 @@ public static class PuzzleNavigationUtility {
             pip.SetSharedMaterialAtIndex(1, module.UnlitPipMaterial);
         }
         module.Result.SetSharedMaterialAtIndex(1, module.UnlitPipMaterial);
-        ppState.SubmittedObject = ppState.SubmittedPuzzle = false;
+        ppState.CurrentSubmission = ReviewSubmissionType.None;
         ppState.ReviewTimer.Paused = false;
     }
 

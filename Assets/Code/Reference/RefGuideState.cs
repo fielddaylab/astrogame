@@ -85,11 +85,6 @@ namespace Astro.Reference {
         #region Controls
 
         static public void HandleControl(RefGuideControl control) {
-            // Disallow new selections if we already have an object in review
-            if (Find.State<PlayerPointsState>().SubmittedObject) {
-                return;
-            }
-
             var state = Find.State<RefGuideState>();
 
             switch (control.ControlType) {
@@ -307,11 +302,6 @@ namespace Astro.Reference {
         }
 
         public static void SelectControl(RefGuideControl region) {
-            // Disallow new selections if we already have an object in review
-            if (Find.State<PlayerPointsState>().SubmittedObject) {
-                return;
-            }
-
             RefGuideState rgs = Find.State<RefGuideState>();
             RefGuideRig rig = Find.State<RefGuideRig>();
 
@@ -340,69 +330,10 @@ namespace Astro.Reference {
 
             if (!rgs.SubmissionActive) return;
 
-            rgs.SubmitButton.gameObject.SetActive(focusActive && rgs.SelectedRefClassification != null && !PointsUtility.ReviewInProgress());
+            rgs.SubmitButton.gameObject.SetActive(focusActive && rgs.SelectedRefClassification != null && !ReviewUtility.ReviewInProgress());
         }
 
-        public static ReferenceClassification GetSelectedRef() {
-            return Find.State<RefGuideState>().SelectedRefClassification;
-        }
-
-        public static bool RefEntryMatchesAsset(ReferenceEntry refEntry, CelestialAsset asset) {
-            return asset.ReferenceId.Equals(refEntry.AssetId);
-        }
-
-        public static bool RefClassMatchesAsset(ReferenceClassification refClass, CelestialAsset asset, PlayerProgressState progress) {
-            progress.Classifications.TryGetValue(asset.AssetId, out BitSet32 completed);
-            for (int i = 0; i < asset.ClassIds.Length; i++) {
-                if (completed[i]) {
-                    // Already completed!
-                    return false;
-                }
-                if (asset.ClassIds[i].Equals(refClass.name)) {
-                    completed[i] = true;
-                    progress.Classifications[asset.AssetId] = completed;
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public static bool CurrentRefMatchesFocus() {
-            ReferenceClassification refClass = Find.State<RefGuideState>().SelectedRefClassification;
-            PlayerProgressState progress = Find.State<PlayerProgressState>();
-            UIFocus focus = Find.State<FocusState>().CurrentFocus;
-            if (refClass == null || focus == null) {
-                return false;
-            }
-            return RefClassMatchesAsset(refClass, focus.TargetData, progress);
-
-        }
-
-        public static bool CurrentRefInNeutrinoEvent()
-        {
-            PlayerProgressState state = Find.State<PlayerProgressState>();
-            StoryAsset story = Find.GlobalAsset<StoryAsset>();
-            DayConfigAsset day = Find.NamedAsset<DayConfigAsset>(story.Days[state.DayIndex]);
-
-            UIFocus focus = Find.State<FocusState>().CurrentFocus;
-            return Array.IndexOf(day.NeutrinoEvent.RelevantObjectIds, focus.TargetData.AssetId) >= 0;
-        }
-
-        public static bool AssetSubmissionCompleted() {
-            ReferenceClassification refClass = Find.State<RefGuideState>().SelectedRefClassification;
-            PlayerProgressState progress = Find.State<PlayerProgressState>();
-            UIFocus focus = Find.State<FocusState>().CurrentFocus;
-            if (refClass == null || focus == null) {
-                return false;
-            }
-            progress.Classifications.TryGetValue(focus.TargetData.AssetId, out BitSet32 completed);
-            for (int i = 0; i < focus.TargetData.ClassIds.Length; i++) {
-                if (completed[i]) {
-                    return true;
-                }
-            }
-            return false;
-        }
+        #region Leaf
 
         [LeafMember("SetRefGuideActive")]
         private static void LeafSetRefGuideActive(bool active) {
@@ -424,5 +355,7 @@ namespace Astro.Reference {
             SetReferenceActive(true);
             LoadPage(pageId);
         }
+
+        #endregion // Leaf
     }
 }

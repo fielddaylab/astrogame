@@ -957,90 +957,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2033146589}
   m_Mesh: {fileID: 2335153104536307664, guid: 0b7dbb343f2d7c94ba69eb8214c1bd13, type: 3}
---- !u!1 &2044089155
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2044089156}
-  - component: {fileID: 2044089158}
-  - component: {fileID: 2044089157}
-  m_Layer: 0
-  m_Name: UnlockStatus_Light (1)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
-  m_IsActive: 0
---- !u!4 &2044089156
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2044089155}
-  serializedVersion: 2
-  m_LocalRotation: {x: -8.657071e-17, y: 0.68994105, z: -2.0772854e-18, w: 0.7238656}
-  m_LocalPosition: {x: -1.8930006, y: 0.37099934, z: -0.5600002}
-  m_LocalScale: {x: 0.72565174, y: 0.7256518, z: 0.72565174}
-  m_ConstrainProportionsScale: 1
-  m_Children: []
-  m_Father: {fileID: 1757414672}
-  m_LocalEulerAnglesHint: {x: 0, y: 21.089, z: 0}
---- !u!23 &2044089157
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2044089155}
-  m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: e174847b4310f434b9a6a5eeab3cabde, type: 2}
-  - {fileID: 2100000, guid: aae69f2c36185ea4bb6e7a4738f5b080, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 0.2
-  m_ReceiveGI: 2
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &2044089158
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2044089155}
-  m_Mesh: {fileID: 2335153104536307664, guid: 0b7dbb343f2d7c94ba69eb8214c1bd13, type: 3}
 --- !u!4 &2076441345 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7414546681388126419, guid: 36543bce9fc63304181344ce88794f53, type: 3}
@@ -1105,17 +1021,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 35139148}
     m_Modifications:
-    - target: {fileID: 3314709113050653276, guid: 27b9c0ce00828c845bfacafef4a6f297, type: 3}
-      propertyPath: m_ScaleInLightmap
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 3761208601314932492, guid: 27b9c0ce00828c845bfacafef4a6f297, type: 3}
-      propertyPath: ConnectedViewNode
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 4269403508703375938, guid: 27b9c0ce00828c845bfacafef4a6f297, type: 3}
-      propertyPath: m_ScaleInLightmap
-      value: 0.5
+    - target: {fileID: 940652880209475202, guid: 27b9c0ce00828c845bfacafef4a6f297, type: 3}
+      propertyPath: m_text
+      value: 100 MHZ
       objectReference: {fileID: 0}
     - target: {fileID: 5977188236420505457, guid: 27b9c0ce00828c845bfacafef4a6f297, type: 3}
       propertyPath: m_Name
@@ -1161,20 +1069,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7159974001652271454, guid: 27b9c0ce00828c845bfacafef4a6f297, type: 3}
-      propertyPath: m_ScaleInLightmap
-      value: 0.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 8248423571887653154, guid: 27b9c0ce00828c845bfacafef4a6f297, type: 3}
-      propertyPath: ConnectedViewNode
-      value: 
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 6760705197841689792, guid: 27b9c0ce00828c845bfacafef4a6f297, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2044089156}
+    m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 4159251762068005459, guid: 27b9c0ce00828c845bfacafef4a6f297, type: 3}
       insertIndex: -1
@@ -1191,10 +1088,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 35139148}
     m_Modifications:
-    - target: {fileID: 1306584433238736544, guid: dcf18d6bb0f310c459387a437daf246b, type: 3}
-      propertyPath: m_ScaleInLightmap
-      value: 0.8
-      objectReference: {fileID: 0}
     - target: {fileID: 2584415291808156884, guid: dcf18d6bb0f310c459387a437daf246b, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -1202,14 +1095,6 @@ PrefabInstance:
     - target: {fileID: 3671802896527718167, guid: dcf18d6bb0f310c459387a437daf246b, type: 3}
       propertyPath: m_Name
       value: CoordinateInstrument
-      objectReference: {fileID: 0}
-    - target: {fileID: 3864435900112878003, guid: dcf18d6bb0f310c459387a437daf246b, type: 3}
-      propertyPath: m_ScaleInLightmap
-      value: 0.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 6490866484185223570, guid: dcf18d6bb0f310c459387a437daf246b, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7770932712874590444, guid: dcf18d6bb0f310c459387a437daf246b, type: 3}
       propertyPath: m_Mesh
@@ -1255,12 +1140,7 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8846631204204837000, guid: dcf18d6bb0f310c459387a437daf246b, type: 3}
-      propertyPath: m_ScaleInLightmap
-      value: 0.8
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 7735390921602111476, guid: dcf18d6bb0f310c459387a437daf246b, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -1497,102 +1377,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1436495150}
     m_Modifications:
-    - target: {fileID: 14044460869215424, guid: 0f590db886bdca74fa1859c5c45ecfdb, type: 3}
-      propertyPath: ConnectedViewNode
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 1594254822178239427, guid: 0f590db886bdca74fa1859c5c45ecfdb, type: 3}
       propertyPath: m_Name
       value: Color Instrument
       objectReference: {fileID: 0}
-    - target: {fileID: 1594254822178239427, guid: 0f590db886bdca74fa1859c5c45ecfdb, type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1721582870547005678, guid: 0f590db886bdca74fa1859c5c45ecfdb, type: 3}
-      propertyPath: m_ScaleInLightmap
-      value: 0.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 1721582870547005678, guid: 0f590db886bdca74fa1859c5c45ecfdb, type: 3}
-      propertyPath: m_Materials.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1721582870547005678, guid: 0f590db886bdca74fa1859c5c45ecfdb, type: 3}
-      propertyPath: m_Materials.Array.data[1]
-      value: 
-      objectReference: {fileID: 2100000, guid: 175e59bb04fa5ba4680c1c551d5bdf3b, type: 2}
-    - target: {fileID: 1969408430008175894, guid: 0f590db886bdca74fa1859c5c45ecfdb, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2437429970030286083, guid: 0f590db886bdca74fa1859c5c45ecfdb, type: 3}
-      propertyPath: m_fontSize
-      value: 48
-      objectReference: {fileID: 0}
-    - target: {fileID: 2437429970030286083, guid: 0f590db886bdca74fa1859c5c45ecfdb, type: 3}
-      propertyPath: m_fontSizeBase
-      value: 48
-      objectReference: {fileID: 0}
-    - target: {fileID: 2942049800148290832, guid: 0f590db886bdca74fa1859c5c45ecfdb, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 22
-      objectReference: {fileID: 0}
-    - target: {fileID: 2942049800148290832, guid: 0f590db886bdca74fa1859c5c45ecfdb, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 3677206146369601967, guid: 0f590db886bdca74fa1859c5c45ecfdb, type: 3}
-      propertyPath: ConnectedViewNode
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 3874424702884231639, guid: 0f590db886bdca74fa1859c5c45ecfdb, type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 5130961772983030875, guid: 0f590db886bdca74fa1859c5c45ecfdb, type: 3}
-      propertyPath: ConnectedViewNode
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 6109690493811966653, guid: 0f590db886bdca74fa1859c5c45ecfdb, type: 3}
-      propertyPath: m_fontAsset
-      value: 
-      objectReference: {fileID: 11400000, guid: d3176e11c74bec74f9baf6f84b0042c9, type: 2}
-    - target: {fileID: 6109690493811966653, guid: 0f590db886bdca74fa1859c5c45ecfdb, type: 3}
-      propertyPath: m_sharedMaterial
-      value: 
-      objectReference: {fileID: -8330174609607452025, guid: d3176e11c74bec74f9baf6f84b0042c9, type: 2}
-    - target: {fileID: 6109690493811966653, guid: 0f590db886bdca74fa1859c5c45ecfdb, type: 3}
-      propertyPath: m_hasFontAssetChanged
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6814906968424970813, guid: 0f590db886bdca74fa1859c5c45ecfdb, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6814906968424970813, guid: 0f590db886bdca74fa1859c5c45ecfdb, type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 2147483647
-      objectReference: {fileID: 0}
-    - target: {fileID: 7368937699893400880, guid: 0f590db886bdca74fa1859c5c45ecfdb, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: -8330174609607452025, guid: d3176e11c74bec74f9baf6f84b0042c9, type: 2}
-    - target: {fileID: 8061687696085462134, guid: 0f590db886bdca74fa1859c5c45ecfdb, type: 3}
-      propertyPath: m_ReceiveGI
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8061687696085462134, guid: 0f590db886bdca74fa1859c5c45ecfdb, type: 3}
-      propertyPath: m_CastShadows
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8061687696085462134, guid: 0f590db886bdca74fa1859c5c45ecfdb, type: 3}
-      propertyPath: m_LightProbeUsage
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8061687696085462134, guid: 0f590db886bdca74fa1859c5c45ecfdb, type: 3}
-      propertyPath: m_Materials.Array.data[1]
-      value: 
-      objectReference: {fileID: 2100000, guid: 2f75848563b72cb45877dc22eb77cec5, type: 2}
     - target: {fileID: 8094372872503326864, guid: 0f590db886bdca74fa1859c5c45ecfdb, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.553
@@ -1632,14 +1420,6 @@ PrefabInstance:
     - target: {fileID: 8094372872503326864, guid: 0f590db886bdca74fa1859c5c45ecfdb, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8820582100831711868, guid: 0f590db886bdca74fa1859c5c45ecfdb, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 8820582100831711868, guid: 0f590db886bdca74fa1859c5c45ecfdb, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0.428
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2001,6 +1781,10 @@ PrefabInstance:
     - target: {fileID: 5760028717076094697, guid: 66760fe6bfe143e459f1add34e385d95, type: 3}
       propertyPath: ConnectedViewNode
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6844314319030296580, guid: 66760fe6bfe143e459f1add34e385d95, type: 3}
+      propertyPath: m_text
+      value: 1.79
       objectReference: {fileID: 0}
     - target: {fileID: 7102125432986758275, guid: 66760fe6bfe143e459f1add34e385d95, type: 3}
       propertyPath: m_fontStyle

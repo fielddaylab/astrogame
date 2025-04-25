@@ -54,6 +54,10 @@ namespace Astro {
             }
         }
 
+        public readonly bool InProgress() {
+            return Accumulator > 0;
+        }
+
         public readonly float GetProgress() {
             return Accumulator / Period;
         }

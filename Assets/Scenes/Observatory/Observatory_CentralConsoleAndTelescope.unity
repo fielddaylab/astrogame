@@ -224,14 +224,6 @@ PrefabInstance:
       propertyPath: CountdownSprites.Array.data[2]
       value: 
       objectReference: {fileID: 1331890024}
-    - target: {fileID: 827926755558174731, guid: b7df9a2bf0c06c04f90f3df806e0d93e, type: 3}
-      propertyPath: m_SortingOrder
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5104736621827665501, guid: b7df9a2bf0c06c04f90f3df806e0d93e, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7327797902420997250, guid: b7df9a2bf0c06c04f90f3df806e0d93e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.77
@@ -275,18 +267,6 @@ PrefabInstance:
     - target: {fileID: 7776802270697865316, guid: b7df9a2bf0c06c04f90f3df806e0d93e, type: 3}
       propertyPath: m_Name
       value: Points
-      objectReference: {fileID: 0}
-    - target: {fileID: 8084491342955179796, guid: b7df9a2bf0c06c04f90f3df806e0d93e, type: 3}
-      propertyPath: m_text
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9019308401515433716, guid: b7df9a2bf0c06c04f90f3df806e0d93e, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -3.0852
-      objectReference: {fileID: 0}
-    - target: {fileID: 9019308401515433716, guid: b7df9a2bf0c06c04f90f3df806e0d93e, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -2.353
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -510,6 +490,7 @@ GameObject:
   - component: {fileID: 1366028327}
   - component: {fileID: 1366028326}
   - component: {fileID: 1366028330}
+  - component: {fileID: 1366028331}
   m_Layer: 0
   m_Name: ReviewLogic
   m_TagString: Untagged
@@ -568,13 +549,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 577efc74bc9a0f7419aded9a7b8a63a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ReviewModule: {fileID: 664688569}
-  ReviewTimer:
-    Period: 5
-    Behavior: 1
-  ReviewCooldown:
-    Period: 2
-    Behavior: 1
 --- !u!114 &1366028330
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -588,6 +562,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_InitialCapacity: 2
+--- !u!114 &1366028331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1366028324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf54d10d98d447c49b9db11b854b842b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ReviewModule: {fileID: 664688569}
+  ReviewTimer:
+    Period: 5
+    Behavior: 1
+  ReviewCooldown:
+    Period: 2
+    Behavior: 1
 --- !u!23 &1628318536 stripped
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 6721776592258744711, guid: 547cd4c9214860c4088ccc9080fc0f9f, type: 3}

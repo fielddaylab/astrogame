@@ -15,5 +15,6 @@ namespace Astro
 
         // Any fields or components that are adjusted by dial
         public TMP_Text Readout;
+        public string ReadoutSuffix;
     }
 }

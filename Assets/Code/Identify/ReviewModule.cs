@@ -15,7 +15,6 @@ namespace Astro {
         
         [Header("Points Output")]
         [SerializeField] public TMP_Text PointsDisplay;
-        [SerializeField] public RenderAtlasOutput PointsOutput;
 
         [Header("Sound Effects")]
         [AudioEventRef] public StringHash32[] PipCountSounds;
@@ -32,10 +31,9 @@ namespace Astro {
 
     }
 
-    public static partial class PointsUtility {
-        public static void UpdatePointDisplay(PlayerPointsState state) {
-            state.ReviewModule.PointsDisplay.SetText(state.SciencePoints.ToStringLookup());
-            state.ReviewModule.PointsOutput.MarkDirty();
+    public static partial class ReviewUtility {
+        public static void UpdatePointDisplay(ReviewModule reviewModule, PlayerPointsState points) {
+            reviewModule.PointsDisplay.SetText(points.SciencePoints.ToStringLookup());
         }
     }
 
