@@ -14,9 +14,6 @@ GameObject:
   - component: {fileID: 7501215276715630893}
   - component: {fileID: 6533512667492188472}
   - component: {fileID: 1442156123430313470}
-  - component: {fileID: 6648558114267294752}
-  - component: {fileID: 5530025320728383362}
-  - component: {fileID: 4917676076770392529}
   - component: {fileID: 5249715261198134064}
   - component: {fileID: 235637667976877260}
   - component: {fileID: 6188558229182586883}
@@ -138,69 +135,6 @@ MonoBehaviour:
   m_ClassName:
     m_Source: ColorInstrument
     m_HashValue: 1308806249
---- !u!114 &6648558114267294752
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1594254822178239427}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ef9024f0f439a84dbfe13735dcd5a50, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Target: {fileID: 6533512667492188472}
-  m_Renderers:
-  - {fileID: 1721582870547005678}
-  - {fileID: 6697909524445204055}
-  m_MatIndex: 0
-  SwapSpeed: 1
-  m_InitMat: {fileID: 2100000, guid: 2f75848563b72cb45877dc22eb77cec5, type: 2}
-  m_SwapTo: {fileID: 2100000, guid: cbb982c3e0035df48983610d16cec627, type: 2}
---- !u!114 &5530025320728383362
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1594254822178239427}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ef9024f0f439a84dbfe13735dcd5a50, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Target: {fileID: 6533512667492188472}
-  m_Renderers:
-  - {fileID: 3279237678524263677}
-  - {fileID: 7368937699893400880}
-  m_MatIndex: 0
-  SwapSpeed: 1
-  m_InitMat: {fileID: 2100000, guid: db38c7371ff57ab42ad30ca7451537e8, type: 2}
-  m_SwapTo: {fileID: -8330174609607452025, guid: d3176e11c74bec74f9baf6f84b0042c9, type: 2}
---- !u!114 &4917676076770392529
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1594254822178239427}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0eef51200de27d444ba54acf8f270db6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Target: {fileID: 6533512667492188472}
-  m_Panels:
-  - {fileID: 1707395133975798363}
-  - {fileID: 2009547097382080228}
-  - {fileID: 6611549580945879025}
-  - {fileID: 1988275750597171778}
-  - {fileID: 8671513571107008322}
-  - {fileID: 8237299709037247115}
-  - {fileID: 1955017670908965143}
-  m_MatIndex: 0
-  m_InitMat: {fileID: 2100000, guid: 2f75848563b72cb45877dc22eb77cec5, type: 2}
 --- !u!114 &5249715261198134064
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -676,7 +610,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -8330174609607452025, guid: d3176e11c74bec74f9baf6f84b0042c9, type: 2}
+  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -720,8 +654,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Color Meter
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: d3176e11c74bec74f9baf6f84b0042c9, type: 2}
-  m_sharedMaterial: {fileID: -8330174609607452025, guid: d3176e11c74bec74f9baf6f84b0042c9, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -847,7 +781,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -8330174609607452025, guid: d3176e11c74bec74f9baf6f84b0042c9, type: 2}
+  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -891,8 +825,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Load
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: d3176e11c74bec74f9baf6f84b0042c9, type: 2}
-  m_sharedMaterial: {fileID: -8330174609607452025, guid: d3176e11c74bec74f9baf6f84b0042c9, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

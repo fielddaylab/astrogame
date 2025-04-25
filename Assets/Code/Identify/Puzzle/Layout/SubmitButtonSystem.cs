@@ -28,7 +28,7 @@ namespace Astro {
             ReviewState pps = Find.State<ReviewState>();
             if (pps.CurrentSubmission == ReviewSubmissionType.None) {
                 pps.CurrentSubmission = ReviewSubmissionType.Puzzle;
-                btn.gameObject.SetActive(false);
+                btn.Root.SetActive(false);
                 return true;
             }
             return false;
@@ -42,7 +42,7 @@ namespace Astro {
                     AssetId = Find.State<FocusState>().CurrentFocus.TargetData.AssetId,
                     Classification = Find.State<RefGuideState>().SelectedRefClassification.AssetId
                 };
-                btn.gameObject.SetActive(false);
+                btn.Root.SetActive(false);
                 return true;
             }
             return false;

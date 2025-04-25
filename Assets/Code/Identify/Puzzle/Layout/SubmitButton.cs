@@ -2,11 +2,13 @@
 using FieldDay;
 using FieldDay.Components;
 using System;
+using UnityEngine;
 
 namespace Astro {
 
     public class SubmitButton : BatchedComponent, IRegistrationCallbacks {
         public SubmitButtonType ButtonType;
+        public GameObject Root;
 
         private Action m_SetButtonToPuzzle;  
         private Action m_SetButtonToId;  

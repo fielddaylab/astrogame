@@ -21,7 +21,7 @@ namespace Astro
         public float RowSpacing;
         public float ColSpacing;
         public float BaseCellWidth;
-        public LabInteractable SubmitButton;
+        public SubmitButton SubmitButton;
         //public Collider BackgroundCollider;
     }
 
@@ -33,7 +33,7 @@ namespace Astro
 
         public static void LoadCells(PuzzleDisplay display, RingBuffer<PuzzleCell> cells, PuzzleHeader[] headers, int numCols)
         {
-            display.SubmitButton.gameObject.SetActive(false);
+            display.SubmitButton.Root.SetActive(false);
 
             int numRows = cells.Count / numCols;
             display.Cells = new PuzzleCell[numRows * numCols];

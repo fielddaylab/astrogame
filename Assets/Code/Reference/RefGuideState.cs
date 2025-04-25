@@ -312,7 +312,7 @@ namespace Astro.Reference {
             if (region == null) {
                 rgs.SelectedRefClassification = null;
                 rig.SelectionGraphic.gameObject.SetActive(false);
-                rgs.SubmitButton.gameObject.SetActive(false);
+                rgs.SubmitButton.Root.SetActive(false);
                 return;
             }
 
@@ -334,7 +334,7 @@ namespace Astro.Reference {
 
             if (!rgs.SubmissionActive) return;
 
-            rgs.SubmitButton.gameObject.SetActive(focusActive && rgs.SelectedRefClassification != null && !ReviewUtility.ReviewInProgress());
+            rgs.SubmitButton.Root.SetActive(focusActive && rgs.SelectedRefClassification != null && !ReviewUtility.ReviewInProgress());
         }
 
         #region Leaf
