@@ -1,5 +1,6 @@
 using BeauUtil;
 using FieldDay;
+using FieldDay.Debugging;
 using FieldDay.SharedState;
 using Leaf.Runtime;
 using System;
@@ -10,6 +11,10 @@ namespace Astro {
         [NonSerialized] public bool PuzzleActive = false;
         [NonSerialized] public DocumentPuzzleAsset CurrPuzzle = null;
         [NonSerialized] public DocumentRenderer CurrHoverDoc = null;
+
+        public enum DebuggingFlags {
+            DisplayDocumentHoverInfo
+        }
     }
 
     public static partial class DocumentUtility {
@@ -51,21 +56,32 @@ namespace Astro {
 
         #endregion // Sequence
 
-        public static void UpdatePuzzleHoverAsset(DocumentPuzzleState state, DocumentRenderer doc)
-        {
+        public static void UpdatePuzzleHoverAsset(DocumentPuzzleState state, DocumentRenderer doc) {
             if (doc == null) {
                 if (state.CurrHoverDoc != null) {
-                    Debug.Log("[PuzzleState] Hover ended");
+                    if (Game.IsDevBuild){
+                        if (DebugFlags.IsFlagSet(DocumentPuzzleState.DebuggingFlags.DisplayDocumentHoverInfo)) {
+                            Debug.Log("[DocumentUtility > UpdatePuzzleHoverAsset] Hover ended.");
+                        }
+                    }
                     state.CurrHoverDoc = doc;
                 }
             }
             else if (state.CurrHoverDoc != null && state.CurrHoverDoc.Interactable.AssetName.Equals(doc.Interactable.AssetName)) {
                 // no change in hover asset
+                if (Game.IsDevBuild){
+                    if (DebugFlags.IsFlagSet(DocumentPuzzleState.DebuggingFlags.DisplayDocumentHoverInfo)) {
+                        Debug.Log("[DocumentUtility > UpdatePuzzleHoverAsset] Hover unchanged: " + doc.name);
+                    }
+                }
                 return;
-            }
-            else {
+            } else {
                 // change in hover asset
-                Debug.Log("[PuzzleState] Hover changed");
+                if (Game.IsDevBuild){
+                    if (DebugFlags.IsFlagSet(DocumentPuzzleState.DebuggingFlags.DisplayDocumentHoverInfo)) {
+                        Debug.Log("[PuzzleState] Hover changed: " + doc.name);
+                    }
+                }
                 state.CurrHoverDoc = doc;
             }
         }

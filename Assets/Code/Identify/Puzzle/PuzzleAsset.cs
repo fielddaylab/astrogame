@@ -29,6 +29,7 @@ namespace Astro {
         public Row[] Rows;  
 
         [Header("Constellation")]
+        [AssetName(typeof(CelestialAsset))]public StringHash32[] ConstellationStars;
         public Edge[] Edges;
 
         [Header("Puzzle Position")]

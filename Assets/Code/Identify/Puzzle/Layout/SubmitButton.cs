@@ -2,26 +2,28 @@
 using FieldDay;
 using FieldDay.Components;
 using System;
+using UnityEngine;
 
 namespace Astro {
 
     public class SubmitButton : BatchedComponent, IRegistrationCallbacks {
         public SubmitButtonType ButtonType;
+        public GameObject Root;
 
-        private Action setButtonToPuzzle;  
-        private Action setButtonToId;  
+        private Action m_SetButtonToPuzzle;  
+        private Action m_SetButtonToId;  
 
         public void OnRegister() {
-            setButtonToPuzzle = () => PuzzleUtility.SetButtonMode(this, SubmitButtonType.SubmitPuzzle);
-            setButtonToId = () => PuzzleUtility.SetButtonMode(this, SubmitButtonType.SubmitIdentification);
+            m_SetButtonToPuzzle = () => PuzzleUtility.SetButtonMode(this, SubmitButtonType.SubmitPuzzle);
+            m_SetButtonToId = () => PuzzleUtility.SetButtonMode(this, SubmitButtonType.SubmitIdentification);
 
-            Game.Events.Register(GameEvents.StartPuzzleMode, setButtonToPuzzle);
-            Game.Events.Register(GameEvents.StartOpenMode, () => PuzzleUtility.SetButtonMode(this, SubmitButtonType.SubmitIdentification));
+            Game.Events.Register(GameEvents.StartPuzzleMode, m_SetButtonToPuzzle);
+            Game.Events.Register(GameEvents.StartOpenMode, m_SetButtonToId);
         }
 
         public void OnDeregister() {
-            Game.Events.Deregister(GameEvents.StartPuzzleMode, setButtonToPuzzle);
-            Game.Events.Deregister(GameEvents.StartOpenMode, setButtonToId);
+            Game.Events.Deregister(GameEvents.StartPuzzleMode, m_SetButtonToPuzzle);
+            Game.Events.Deregister(GameEvents.StartOpenMode, m_SetButtonToId);
         }
     }
 

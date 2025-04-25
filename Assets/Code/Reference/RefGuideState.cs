@@ -42,17 +42,21 @@ namespace Astro.Reference {
 
         #region Registration
 
+        private Action m_EnableSubmission;
+        private Action m_DisableSubmission;
+
         public void OnRegister() {
-            Game.Events.Register(GameEvents.StartOpenMode, () => {
-                SubmissionActive = true;
-            });
-            Game.Events.Register(GameEvents.StopOpenMode, () => {
-                SubmissionActive = false;
-                //ReferenceUtility.SelectRegion(null);
-            });
+            m_EnableSubmission = () => { SubmissionActive = true; };
+            m_DisableSubmission = () => { SubmissionActive = false; };
+
+            Game.Events.Register(GameEvents.StartOpenMode, m_EnableSubmission);
+            Game.Events.Register(GameEvents.StopOpenMode, m_DisableSubmission);
         }
 
-        public void OnDeregister(){ return; }
+        public void OnDeregister() {
+            Game.Events.Deregister(GameEvents.StartOpenMode, m_EnableSubmission);
+            Game.Events.Deregister(GameEvents.StopOpenMode, m_DisableSubmission);
+        }
 
         IEnumerator<WorkSlicer.Result?> IScenePreload.Preload() {
             PageList = Find.GlobalAsset<ReferencePageList>();
@@ -308,7 +312,7 @@ namespace Astro.Reference {
             if (region == null) {
                 rgs.SelectedRefClassification = null;
                 rig.SelectionGraphic.gameObject.SetActive(false);
-                rgs.SubmitButton.gameObject.SetActive(false);
+                rgs.SubmitButton.Root.SetActive(false);
                 return;
             }
 
@@ -330,7 +334,7 @@ namespace Astro.Reference {
 
             if (!rgs.SubmissionActive) return;
 
-            rgs.SubmitButton.gameObject.SetActive(focusActive && rgs.SelectedRefClassification != null && !ReviewUtility.ReviewInProgress());
+            rgs.SubmitButton.Root.SetActive(focusActive && rgs.SelectedRefClassification != null && !ReviewUtility.ReviewInProgress());
         }
 
         #region Leaf

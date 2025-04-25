@@ -70,7 +70,6 @@ namespace Astro
         }
     }
 
-
     public static class SpaceCameraUtility {
         public static void OnStartPuzzleNav() {
             SpaceCameraState spaceCameraState = Find.State<SpaceCameraState>();

@@ -1,9 +1,6 @@
 using System;
-using BeauUtil;
-using EasyAssetStreaming;
 using FieldDay.Components;
 using TMPro;
-using UnityEditor;
 using UnityEngine;
 
 namespace Astro {
@@ -22,6 +19,8 @@ namespace Astro {
         public DocumentRenderComponent[] RenderComponents;
 
         public Rect Size;
+        [SerializeField] private bool m_ShowSizeRect = false;
+
         public Vector3 ZoomOffsetOverride;
 
         [HideInInspector] public DocumentInteractable Interactable;
@@ -31,8 +30,15 @@ namespace Astro {
 
         private void Awake() {
             Interactable = GetComponent<DocumentInteractable>();
-            // RenderComponents = GetComponentsInChildren<DocumentRenderComponent>(true);
         }
+
+        void OnDrawGizmos() {
+            if (!m_ShowSizeRect) return; 
+
+            Gizmos.color = new Color(0, 1, 1, 0.25f);
+            Gizmos.DrawCube(new Vector3(Size.x, Size.y, 0f), new Vector3(Size.width, Size.height, 0)); 
+        }
+        
     }
 
 

@@ -34,7 +34,7 @@ namespace Astro
         public static void CheckEnableSubmit(PuzzleState state) {
             if (CheckFullyPopulated(state)) {
                 ScriptUtility.Trigger(ScriptEvents.OnPuzzleGridFullyPopulated);
-                state.Display.SubmitButton.gameObject.SetActive(true);
+                state.Display.SubmitButton.Root.SetActive(true);
             } 
         }
         public static bool CheckFullyPopulated(PuzzleState state) {

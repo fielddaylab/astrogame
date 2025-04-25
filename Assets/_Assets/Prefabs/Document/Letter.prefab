@@ -564,17 +564,18 @@ MonoBehaviour:
   - Text: {fileID: 2894334759073156147}
     LowResSprite: {fileID: 0}
   - Text: {fileID: 8877195870789867535}
-    LowResSprite: {fileID: 21300000, guid: 983ea53d93611e54c9b72189cf36c34e, type: 3}
+    LowResSprite: {fileID: 21300000, guid: 4434b752c071ba54f99577d6c396faa2, type: 3}
   - Text: {fileID: 4188842371131245358}
     LowResSprite: {fileID: 21300000, guid: 983ea53d93611e54c9b72189cf36c34e, type: 3}
   LowResText: {fileID: 3590854300471738432, guid: 64012d8afc9b4674188f28c5df348be1, type: 3}
   RenderComponents: []
   Size:
     serializedVersion: 2
-    x: -0.1
-    y: -1
+    x: 0
+    y: -0.6
     width: 1
-    height: 1.5
+    height: 1.2
+  m_ShowSizeRect: 1
   ZoomOffsetOverride: {x: 0, y: 0.57, z: 1.4}
   Interactable: {fileID: 5048261325816738630}
 --- !u!114 &5048261325816738630
@@ -853,8 +854,8 @@ GameObject:
   - component: {fileID: 2474689672577640952}
   - component: {fileID: 5546744980806363701}
   - component: {fileID: 866560237167711520}
+  - component: {fileID: 8157428848166887378}
   - component: {fileID: 7438050414663025846}
-  - component: {fileID: 8072065093702613619}
   - component: {fileID: 6667050367808568584}
   - component: {fileID: 404873255680151614}
   - component: {fileID: 7918435555496244417}
@@ -931,6 +932,27 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -1
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &8157428848166887378
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8939615069162558731}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 0.05}
+  m_Center: {x: 0, y: 0.000000029802322, z: 0}
 --- !u!114 &7438050414663025846
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -964,27 +986,6 @@ MonoBehaviour:
   m_AutoSize: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!65 &8072065093702613619
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8939615069162558731}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 0.01}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &6667050367808568584
 MonoBehaviour:
   m_ObjectHideFlags: 0
