@@ -26,8 +26,8 @@ $call SetInputState(true)
 @trigger    NeutrinoNavigationComplete
 @once
 
-{@Radio} Neutrino Origin Detected
 $call StopNeutrinoNavigation()
+{@Radio} Neutrino Origin Detected
 $call StartOpenMode()
 
 :: PointsUpdated
@@ -46,9 +46,9 @@ $call StartPuzzleNavigation()
 $call StopPuzzleNavigation()
 $call StartPuzzleMode()
 
-:: HerculesPuzzleComplete
+:: DracoPuzzleComplete
 @trigger    CorrectPuzzleSubmission
-@when   puzzleName == "Andromeda"
+@when   puzzleName == "Draco"
 @once
 
 $call ClearMonitorSelection()

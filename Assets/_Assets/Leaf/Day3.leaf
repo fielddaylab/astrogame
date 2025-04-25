@@ -58,8 +58,8 @@ $call SetInputState(true)
 @trigger    NeutrinoNavigationComplete
 @once
 
-{@Radio} Neutrino Origin Detected
 $call StopNeutrinoNavigation()
+{@Radio} Neutrino Origin Detected
 $call StartOpenMode()
 
 :: PointsUpdated
@@ -67,10 +67,11 @@ $call StartOpenMode()
 @when   sciencePoints > 2
 @once
 
-$call StopOpenMode()
-$call ClearMonitorSelection()
 $call SetInputState(false)
+$call StopOpenMode()
 $call SetRefGuideActive(false)
+$call ClearMonitorSelection()
+
 $call MonitorUI->PlayRadioDownload(2)
 $call Wait(1)
 $call MonitorUI->ShowCeresLogo()
@@ -83,6 +84,7 @@ $call Wait(0.5)
 $call MonitorUI->HideCeresLogo()
 $call Wait(1)
 $call StartPuzzleNavigation()
+$call SetInputState(true)
 
 :: PuzzleNavigationComplete
 @trigger    PuzzleNavigationComplete
@@ -91,7 +93,7 @@ $call StartPuzzleNavigation()
 $call StopPuzzleNavigation()
 $call StartPuzzleMode()
 
-:: HerculesPuzzleComplete
+:: LeoPuzzleComplete
 @trigger    CorrectPuzzleSubmission
 @when   puzzleName == "Leo"
 @once

@@ -10,10 +10,8 @@ using FieldDay.Scripting;
 using FieldDay.Scenes;
 
 
-namespace Astro
-{
-    public class InstrumentInventoryState : SharedStateComponent, IScenePreload
-    {
+namespace Astro {
+    public class InstrumentInventoryState : SharedStateComponent, IScenePreload {
         // General access to instruments
         public RingBuffer<LabInstrument> ActiveInstruments = new RingBuffer<LabInstrument>(8);
 
@@ -49,15 +47,17 @@ namespace Astro
                     var progressState = Find.State<PlayerProgressState>();
                     progressState.UnlockedInstruments.Add(actorId);
                 }
-                AddToActiveInstruments(instrument);
+                TryAddToActiveInstruments(instrument);
                 instrument.OnUnlock?.Invoke(instrument);
             }
         }
 
-        private static void AddToActiveInstruments(LabInstrument instrument, InstrumentInventoryState inventory = null) {
+        private static void TryAddToActiveInstruments(LabInstrument instrument, InstrumentInventoryState inventory = null) {
             if (inventory == null) {
                 inventory = Find.State<InstrumentInventoryState>();
             }
+            if (inventory.ActiveInstruments.Contains(instrument)) return; 
+
             inventory.ActiveInstruments.PushBack(instrument);
 
             var currMap = inventory.ActiveInstrumentMap;

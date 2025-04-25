@@ -28,14 +28,14 @@ $call SetInputState(true)
 $call SetInputState(false)
 $call Wait(1)
 {@Astrid} Elijah! Finally, some news. $[Day2/Astrid/l2_a_2]
-$call SpawnDocumentToCamera("Day2ElijahPostcard")
+$call SpawnDocumentToCamera("Day2ElijahLetter")
 $call Wait(1)
 {@Astrid} Oh Elijah... What are you getting yourself into? $[Day2/Astrid/l2d_a_2]
 $call SetInputState(true)
 
 :: SpawnPuzzleDocs2
 @trigger    DocumentInspectEnd
-@when   documentId == "Day2ElijahPostcard"
+@when   documentId == "Day2ElijahLetter"
 @once
 
 $call SetInputState(false)
@@ -62,7 +62,7 @@ $call SetInputState(true)
 
 :: IncorrectDocumentResponse2
 @trigger    DocumentPuzzlePromptStart
-@when documentId == "Day2ElijahPostcard"
+@when documentId == "Day2ElijahLetter"
 
 {@Astrid} So Elijah is staying with Aunt Martha...? $[Day2/Astrid/l2d_a_4]
 
@@ -89,8 +89,8 @@ $call SetInputState(true)
 @trigger    NeutrinoNavigationComplete
 @once
 
-{@Radio} Neutrino Origin Detected
 $call StopNeutrinoNavigation()
+{@Radio} Neutrino Origin Detected
 $call StartOpenMode()
 
 :: PointsUpdated
@@ -122,8 +122,8 @@ $call StartPuzzleNavigation()
 @trigger    PuzzleNavigationComplete
 @once
 
-$call StopPuzzleNavigation()
 $call SetInputState(false)
+$call StopPuzzleNavigation()
 $call SetRefGuideActive(false)
 $call ClearMonitorSelection()
 
@@ -132,13 +132,14 @@ $call Wait(1)
 $call MonitorUI->ShowCeresLogo()
 $call SetInstrumentUnlocked(SpectrometerInstrument, true)
 {@Radio} Congratulations on being awarded clearance level 3. You are now cleared to use the spectrometer.
-{@Radio} Please reference your CERES Operator Manual for further information about your equipment.  $[Day1/Radio/l1_r_3(2)]
-{@Radio} Thanking you for being an important part of the CERES Distributed Network of Citizen Observatories. Together, we will map the stars for a better tomorrow. $[Day1/Radio/l1_r_3(3)]
+{@Radio} Please reference your CERES Operator Manual for further information about your equipment.  
+{@Radio} Thanking you for being an important part of the CERES Distributed Network of Citizen Observatories. Together, we will map the stars for a better tomorrow.
 $call Wait(0.5)
-{@Radio} Tuning you to the Ice Cube CERES headquarters for further instruction... $[Day1/Radio/l1_r_4]
+{@Radio} Tuning you to the Ice Cube CERES headquarters for further instruction...
 $call MonitorUI->HideCeresLogo()
 $call Wait(1)
 $call StartPuzzleMode()
+$call SetInputState(true)
 
 :: HerculesPuzzleComplete
 @trigger    CorrectPuzzleSubmission

@@ -49,6 +49,7 @@ namespace Astro {
             }
             DocumentRenderer spawned = GameObject.Instantiate(asset.Prefab, state.DocumentParent);
             spawned.Interactable.AssetName = id;
+            spawned.name = id.ToDebugString();
 
             state.SpawnedDocuments.Add(spawned);
 
@@ -123,8 +124,7 @@ namespace Astro {
             return finalPos;
         }
 
-        public static bool OverlapBoxAtPos(DocumentBoardState state, DocumentRenderer doc, out DocumentRenderer hit)
-        {
+        public static bool OverlapBoxAtPos(DocumentBoardState state, DocumentRenderer doc, out DocumentRenderer hit) {
             hit = null;
 
             var offset = state.DocumentParent.transform.position;
@@ -134,8 +134,7 @@ namespace Astro {
 
             Vector3 docExtents = new Vector3(doc.Size.width / 2, doc.Size.height / 2, 1);
             var hits = Physics.OverlapBox(pos, docExtents, state.DocumentParent.transform.rotation, LayerMasks.DocumentInteract_Mask);
-            for (int i = 0; i < hits.Length; i++)
-            {
+            for (int i = 0; i < hits.Length; i++) {
                 var currPart = hits[i].GetComponent<DocumentPart>();
                 var currRenderer = currPart ? currPart.Document.Renderer : null;
                 if (currRenderer && !currRenderer.Interactable.AssetName.Equals(doc.Interactable.AssetName)) {

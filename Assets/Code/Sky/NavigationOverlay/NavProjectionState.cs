@@ -160,8 +160,7 @@ namespace Astro {
             && viewportPosition.z > 0;
         }
 
-        public static unsafe void InitNavProjectionSystem(NavProjectionState navState)
-        {
+        public static unsafe void InitNavProjectionSystem(NavProjectionState navState) {
             var dome = Find.State<SkyDome>();
             var focusPools = Find.State<FocusPools>();
 
@@ -190,28 +189,26 @@ namespace Astro {
             }
 
             Vector2 canvasSize = navState.OutlineGroup.rect.size;
-            int rowCount = puzzleState.ActivePuzzle.Rows.Length;
-            StringHash32* rowAssetIds = stackalloc StringHash32[rowCount];
-            Vector2* rowAnchors = stackalloc Vector2[rowCount];
+            int starCount = puzzleState.ActivePuzzle.ConstellationStars.Length;
+            StringHash32* starAssetIds = stackalloc StringHash32[starCount];
+            Vector2* starAnchors = stackalloc Vector2[starCount];
 
-            for (int i = 0; i < rowCount; i++)
-            {
-                StringHash32 assetId = puzzleState.ActivePuzzle.Rows[i].Object;
-                rowAssetIds[i] = assetId;
+            for (int i = 0; i < starCount; i++) {
+                StringHash32 assetId = puzzleState.ActivePuzzle.ConstellationStars[i];
+                starAssetIds[i] = assetId;
 
                 CelestialAsset currAsset = Find.NamedAsset<CelestialAsset>(assetId);
                 Vector3 assetPostion = CelestialPositionerUtility.GetObjectPosition(center, currAsset.Coords.RightAscension, currAsset.Coords.Declination);
 
-                rowAnchors[i] = spaceCamera.WorldToViewportPoint(assetPostion) * canvasSize;
+                starAnchors[i] = spaceCamera.WorldToViewportPoint(assetPostion) * canvasSize;
             }
 
             // Create connection for constellations
-            for (int i = 0; i < puzzleState.ActivePuzzle.Edges.Length; i++)
-            {
+            for (int i = 0; i < puzzleState.ActivePuzzle.Edges.Length; i++) {
                 PuzzleAsset.Edge e = puzzleState.ActivePuzzle.Edges[i];
 
-                int focusA = FindIndex(rowAssetIds, rowCount, e.Object1);
-                int focusB = FindIndex(rowAssetIds, rowCount, e.Object2);
+                int focusA = FindIndex(starAssetIds, starCount, e.Object1);
+                int focusB = FindIndex(starAssetIds, starCount, e.Object2);
 
                 Assert.True(focusA >= 0 && focusB >= 0);
 
@@ -229,8 +226,8 @@ namespace Astro {
                 RectTransform connectionRect = connection.GetComponent<RectTransform>();
                 connectionRect.anchorMin = connectionRect.anchorMax = new Vector2(0, 0);
 
-                Vector2 anchorA = rowAnchors[focusA];
-                Vector2 anchorB = rowAnchors[focusB];
+                Vector2 anchorA = starAnchors[focusA];
+                Vector2 anchorB = starAnchors[focusB];
 
                 connectionRect.anchoredPosition = (anchorA + anchorB) / 2;
                 connectionRect.sizeDelta = new Vector2(10, Vector2.Distance(anchorA, anchorB) - navState.EdgeInset);
