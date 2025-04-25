@@ -25,7 +25,7 @@ namespace Astro {
         // TODO: Replace with a compressed prefab layout
         public DocumentRenderer Prefab;
 
-        [TextArea] 
+        [TextArea(1, 16)] 
         [SerializeField] public string[] TextFields;
 
         // public StreamingDocumentVisual DocumentVisualTest;

@@ -15,10 +15,21 @@ $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $call StopPuzzleMode()
 $call StopOpenMode()
 
+$call MoveToView("DocumentPuzzle")
+$call SetInputState(false)
+$call SpawnDocumentToCamera("Day5ElijahPostcard")
+$call SetInputState(true)
+
+:: SpawnPuzzleDocs1
+@trigger    DocumentInspectEnd
+@when   documentId == "Day5ElijahPostcard"
+@once
+
+$wait(1)
+$call WaitForMovedToView("Right")
 $call SetInputState(false)
 {@Radio} Star HQ to Station Seven. IceCube is reading a high-energy neutrino emission from the area of the Eridanus Constellation.
-{@Radio} Identification of nearby celestial objects is requested. Uploading area of interest... $[Day2/Radio/l2_r_1(2)]
-$call WaitForMovedToView("Desk")
+{@Radio} Identification of nearby celestial objects is requested. Uploading area of interest...
 $call StartNeutrinoNavigation()
 $call SetInputState(true)
 

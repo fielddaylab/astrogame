@@ -15,7 +15,26 @@ $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $call StopPuzzleMode()
 $call StopOpenMode()
 
-// $call MoveToView("DocumentPuzzle")
+$call MoveToView("DocumentPuzzle")
+$call SetInputState(false)
+$call SpawnDocumentToCamera("Day4ElijahPostcard")
+$call SetInputState(true)
+
+:: SpawnPuzzleDocs1
+@trigger    DocumentInspectEnd
+@when   documentId == "Day4ElijahPostcard"
+@once
+
+$call SetInputState(false)
+$call SpawnDocumentToCamera("Day4Martha")
+$call SetInputState(true)
+
+:: SpawnPuzzleDocs2
+@trigger    DocumentInspectEnd
+@when   documentId == "Day4Martha"
+@once
+
+$call Wait(1)
 {@Astrid} Wait a minute. World’s End is a garden? 
 {@Astrid} That must be what Elijah calls his station! World’s End, the garden of the golden apples. 
 {@Astrid} It’s not about the world ending. It’s about love!
@@ -54,7 +73,6 @@ $call Wait(1)
 
 {@Radio} Star HQ to Station Seven. IceCube is reading a high-energy neutrino emission from the area of the Taurus Constellation.
 {@Radio} Identification of nearby celestial objects is requested. Uploading area of interest... $[Day2/Radio/l2_r_1(2)]
-$call WaitForMovedToView("Desk")
 $call StartNeutrinoNavigation()
 $call SetInputState(true)
 

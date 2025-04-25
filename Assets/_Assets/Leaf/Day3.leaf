@@ -14,19 +14,60 @@ $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $call StopPuzzleMode()
 $call StopOpenMode()
 
-// $call MoveToView("DocumentPuzzle")
+$call MoveToView("DocumentPuzzle")
+$call SetInputState(false)
+$call SpawnDocumentToCamera("MiniLabors")
+$call SetInputState(true)
+
+:: SpawnPuzzleDocs1
+@trigger    DocumentInspectEnd
+@when   documentId == "MiniLabors"
+@once
+
+$call SetInputState(false)
+$call SpawnDocumentToCamera("Day3ElijahPostcard")
+$call SetInputState(true)
+
+:: SpawnPuzzleDocs2
+@trigger    DocumentInspectEnd
+@when   documentId == "Day3ElijahPostcard"
+@once
+
+$call SetInputState(false)
+$call SpawnDocumentToCamera("Day2ElijahLetter")
+$call SetInputState(true)
+
+:: SpawnPuzzleDocs3
+@trigger    DocumentInspectEnd
+@when   documentId == "Day2ElijahLetter"
+@once
+
+$call SetInputState(false)
+$call Wait(1)
+$call StartDocumentPuzzle("Day3DocumentPuzzle")
 {@Astrid} Has Elijah gone crazy? 
+$call SetInputState(true)
+
+:: IncorrectDocumentResponse
+@trigger    DocumentPuzzlePromptStart
+@when documentId != "Day2ElijahLetter"
+@interrupt
+
+NO.
+
+:: CorrectDocumentResponse
+@trigger    DocumentPuzzlePromptStart
+@when   documentId == "Day2ElijahLetter"
+@once
+
+$call SetInputState(false)
+{@Astrid} This is it!
+$call Wait(1)
+
 {@Astrid} I don’t get it. We need to warn people? About what?
 {@Astrid} Ugh. Elijah, I love you, but I could really use less poetry and more information. 
 
-// :: CorrectDocumentResponse
-// @trigger    DocumentPuzzlePromptStart
-// @when documentId == //TODO
-// @once
-
 $call SetInputState(false)
-// {@Astrid} This is it!
-// $call Wait(1)
 $call MoveToView("Right")
 $call Wait(1)
 
@@ -50,7 +91,6 @@ $call Wait(1)
 
 {@Radio} Star HQ to Station Seven. IceCube is reading a high-energy neutrino emission from the area of the Orion Constellation.
 {@Radio} Identification of nearby celestial objects is requested. Uploading area of interest... $[Day2/Radio/l2_r_1(2)]
-$call WaitForMovedToView("Desk")
 $call StartNeutrinoNavigation()
 $call SetInputState(true)
 
