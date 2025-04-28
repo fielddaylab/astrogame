@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Astro
 {
-    [SysUpdate(GameLoopPhase.Update, 0, AstroGame.InstrumentUpdateMask)]
+    [SysUpdate(GameLoopPhase.Update, 0)]
     public class AssetPacketConversionSystem : SharedStateSystemBehaviour<DataPacketDistributionState, InstrumentInventoryState>
     {
         private readonly RingBuffer<DataPacket> m_ConvertedPackets = new RingBuffer<DataPacket>(8);
