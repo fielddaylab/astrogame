@@ -1,6 +1,7 @@
 
 using System;
 using BeauUtil;
+using FieldDay;
 using FieldDay.Audio;
 using FieldDay.Components;
 using FieldDay.Rendering;
@@ -68,13 +69,21 @@ namespace Astro {
             }
         }
 
-        public static void ResetReview(ReviewModule module) {
+        public static void ResetReview(ReviewModule module = null) {
+            if (module == null) {
+                module = Find.State<ReviewState>().ReviewModule;
+            }
+
             module.PipsRevealed = 0;
             module.ResultShown = false;
             foreach (MeshRenderer pip in module.CountdownSprites) {
                 pip.SetSharedMaterialAtIndex(1, module.UnlitPipMaterial);
             }
             module.Result.SetSharedMaterialAtIndex(1, module.UnlitPipMaterial);
+
+            ReviewState review = Find.State<ReviewState>();
+            review.CurrentSubmission = ReviewSubmissionType.None;
+            review.ReviewTimer.Paused = false;
         }
     }
 }

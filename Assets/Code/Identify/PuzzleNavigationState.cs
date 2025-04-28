@@ -55,7 +55,7 @@ public static class PuzzleNavigationUtility {
         PuzzleNavigationState puzzleNavState = Find.State<PuzzleNavigationState>(); 
         puzzleNavState.NavigationModeActive = false;
         puzzleNavState.ReadoutDirty = false;
-        ResetReview();
+        ReviewModuleUtility.ResetReview();
 
         ViewNavUtility.LeafMoveToNode("Right");
     } 
@@ -76,19 +76,6 @@ public static class PuzzleNavigationUtility {
             Game.Events.Dispatch(GameEvents.StopPuzzleNavigation);
         });
         return info;
-    }
-
-    private static void ResetReview() {
-        ReviewState ppState = Find.State<ReviewState>();
-        ReviewModule module = ppState.ReviewModule;
-
-        module.PipsRevealed = 0;
-        foreach (MeshRenderer pip in module.CountdownSprites) {
-            pip.SetSharedMaterialAtIndex(1, module.UnlitPipMaterial);
-        }
-        module.Result.SetSharedMaterialAtIndex(1, module.UnlitPipMaterial);
-        ppState.CurrentSubmission = ReviewSubmissionType.None;
-        ppState.ReviewTimer.Paused = false;
     }
 
     public static void UpdateCameraDistanceFromPuzzle(SpaceCameraState spaceCameraState) {

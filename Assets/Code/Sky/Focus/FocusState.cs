@@ -3,16 +3,11 @@ using FieldDay;
 using FieldDay.Scripting;
 using FieldDay.SharedState;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using Astro.Reference;
 
-namespace Astro
-{
-    public class FocusState : SharedStateComponent
-    {
+namespace Astro {
+    public class FocusState : SharedStateComponent {
         [NonSerialized] public RingBuffer<UIFocus> ActiveFocii = new RingBuffer<UIFocus>(64, RingBufferMode.Expand);
         [NonSerialized] public UIFocusPackedData[] ActiveFociiPacked = new UIFocusPackedData[128];
         [NonSerialized] public BitSet256 ActiveFociiVisibleBits;

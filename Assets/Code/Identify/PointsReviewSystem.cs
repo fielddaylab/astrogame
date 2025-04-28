@@ -28,7 +28,7 @@ namespace Astro {
                 return;
             } 
             if (m_State.ReviewCooldown.Advance(deltaTime)) {
-                ResetReview(m_State.ReviewModule);
+                ReviewModuleUtility.ResetReview( m_State.ReviewModule );
             } 
         }
 
@@ -49,16 +49,6 @@ namespace Astro {
                 module.PipsRevealed++;
                 Sfx.PlayDetached(module.PipCountSounds[module.PipsRevealed], module.SoundAnchor);
             } else return;
-        }
-
-        private void ResetReview(ReviewModule module) {
-            module.PipsRevealed = 0;
-            foreach (MeshRenderer pip in module.CountdownSprites) {
-                pip.SetSharedMaterialAtIndex(1, module.UnlitPipMaterial);
-            }
-            module.Result.SetSharedMaterialAtIndex(1, module.UnlitPipMaterial);
-            m_State.CurrentSubmission = ReviewSubmissionType.None;
-            m_State.ReviewTimer.Paused = false;
         }
 
         static private void ShowResultSprite(bool correct, ReviewState state) {

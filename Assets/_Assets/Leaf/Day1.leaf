@@ -219,6 +219,8 @@ $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 
 $call SetInputState(false)
 $call SetRefGuideActive(false)
+
+$call Wait(3)
 $call StopOpenMode()
 $call ClearMonitorSelection()
 {@Dad} Looks like you’ve identified enough stars to earn a higher clearance level. $[Day1/Dad/l1_d_s19]
@@ -384,11 +386,13 @@ $call AddIsolatedSlot(Photometer)
 @when   puzzleName == "Perseus"
 @once
 
-$call ClearMonitorSelection()
 $call StopPuzzleMode()
 $call SetInputState(false)
+
+$call Wait(3)
+$call ClearMonitorSelection()
 {@Dad}  Awesome! $[Day1/Dad/l1_d_s31]
-{@Dad} Gosh it’s late where you’re at... Get some rest kiddo. We’ll try to figure out 2-way communication tomorrow... $[Day1/Dad/l1_d_s33]
+{@Dad}  Gosh it’s late where you’re at... Get some rest kiddo. We’ll try to figure out 2-way communication tomorrow... $[Day1/Dad/l1_d_s33]
 
 {@Astrid} (*yawns*) That's about the only thing you've said that's made any sense... $[Day1/Astrid/l1_a_14]
 $call Wait(1)
