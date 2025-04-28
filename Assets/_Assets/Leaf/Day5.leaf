@@ -25,7 +25,7 @@ $call SetInputState(true)
 @when   documentId == "Day5ElijahPostcard"
 @once
 
-$wait(1)
+$call Wait(1)
 $call WaitForMovedToView("Right")
 $call SetInputState(false)
 {@Radio} Star HQ to Station Seven. IceCube is reading a high-energy neutrino emission from the area of the Eridanus Constellation.
