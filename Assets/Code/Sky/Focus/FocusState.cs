@@ -21,6 +21,8 @@ namespace Astro {
         private Action setMonitorInputActive;
         private Action setMonitorInputInactive;
 
+        public CastableEvent<UIFocus> OnFocusUpdated = new CastableEvent<UIFocus>();
+
         protected override void OnEnable() {
             setMonitorInputActive = () => { MonitorInputActive = true; };
             setMonitorInputInactive = () => { MonitorInputActive = false; };
@@ -67,10 +69,10 @@ namespace Astro {
             } else if (!state.MonitorInputActive) {
                 return;
             }
-
-
             // TODO: anything that needs to happen to previous focus
 
+            state.OnFocusUpdated.Invoke(focus);
+            
             // Set new focus
             state.CurrentFocus = focus;
             state.FocusUpdated = true;

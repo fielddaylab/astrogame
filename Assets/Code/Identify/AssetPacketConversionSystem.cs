@@ -1,16 +1,13 @@
-using Astro;
 using BeauUtil;
 using FieldDay;
 using FieldDay.Systems;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
-namespace Astro
-{
+namespace Astro {
+    /// <summary>
+    /// Handles the conversion of selected Celestial Assets into their corrisponding DataPackets to be passed to DataPacketDistributionSystem.
+    /// </summary>
     [SysUpdate(GameLoopPhase.Update, 0)]
-    public class AssetPacketConversionSystem : SharedStateSystemBehaviour<DataPacketDistributionState, InstrumentInventoryState>
-    {
+    public class AssetPacketConversionSystem : SharedStateSystemBehaviour<DataPacketDistributionState, InstrumentInventoryState> {
         private readonly RingBuffer<DataPacket> m_ConvertedPackets = new RingBuffer<DataPacket>(8);
         private DataTypeMask m_AvailableInstrumentTypes;
 
@@ -23,8 +20,7 @@ namespace Astro
             m_StateA.DistributeQueue.Clear();
 
             // Create a data packet for each type among all available instruments
-            m_AvailableInstrumentTypes = 0;
-            GatherRelevantDataTypes();
+            m_AvailableInstrumentTypes = GatherRelevantDataTypes();
             GenerateNewPackets();
 
             // Add new packets to the distribution queue
@@ -38,14 +34,18 @@ namespace Astro
             m_StateA.ReadyToConvert = false;
         }
 
-        private void GatherRelevantDataTypes() {
+        private DataTypeMask GatherRelevantDataTypes() {
+            DataTypeMask relevantDataTypes = 0;
             foreach (var instrument in m_StateB.ActiveInstruments) {
-                m_AvailableInstrumentTypes |= InstrumentUtility.GenerateTypeMask(instrument);
+                relevantDataTypes |= InstrumentUtility.GenerateTypeMask(instrument);
             }
+            return relevantDataTypes;
         }
 
-        private void GenerateNewPackets()
-        {
+        /// <summary>
+        /// Queue a DataPacket based on the currently selected celesital asset to be passed to the DataPacketDistributionSystem
+        /// </summary>
+        private void GenerateNewPackets() {
             if ((m_AvailableInstrumentTypes & DataTypeMask.Name) != 0) {
                 DataPacket newPacket;
                 if (m_StateA.ToConvert != null) {
@@ -135,25 +135,6 @@ namespace Astro
                 }
                 m_ConvertedPackets.PushBack(newPacket);
             }
-            /* TODO: historical data handling
-            if ((m_AvailableInstrumentTypes & DataTypeMask.Historical_Coordinates) != 0) {
-                DataPacket newPacket = DataPacket.HistoricalCoordinates(m_StateA.ToConvert.Coords, );
-                m_ConvertedPackets.PushBack(newPacket);
-            }
-
-            if ((m_AvailableInstrumentTypes & DataTypeMask.Historical_Temperature) != 0) {
-                DataPacket newPacket = DataPacket.HistoricalTemperature(m_StateA.ToConvert.Temperature, );
-                m_ConvertedPackets.PushBack(newPacket);
-            }
-            if ((m_AvailableInstrumentTypes & DataTypeMask.Historical_Distance) != 0) {
-                DataPacket newPacket = DataPacket.HistoricalDistance(m_StateA.ToConvert.Distance, );
-                m_ConvertedPackets.PushBack(newPacket);
-            }
-            if ((m_AvailableInstrumentTypes & DataTypeMask.Historical_Color) != 0) {
-                DataPacket newPacket = DataPacket.HistoricalColor(m_StateA.ToConvert.Color, );
-                m_ConvertedPackets.PushBack(newPacket);
-            }
-            */
         }
     }
 }
