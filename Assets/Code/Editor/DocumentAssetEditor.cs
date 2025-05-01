@@ -64,11 +64,12 @@ public class DocumentAssetEditor : Editor {
         m_ShowVisualRegions = EditorGUILayout.Foldout(m_ShowVisualRegions, "Document Visuals");
 
         if (m_ShowVisualRegions) {
+            EditorGUI.indentLevel += 1;
             for (int i = 0; i < asset.Prefab.RenderComponents.Length; i++) {
-                EditorGUI.indentLevel += 1;
-                EditorGUILayout.LabelField(asset.Prefab.RenderComponents[i].name, EditorStyles.boldLabel);
+                EditorGUILayout.LabelField(asset.Prefab.RenderComponents[i].name + " (" + asset.Prefab.RenderComponents[i].GetType().ToString() + ")", EditorStyles.boldLabel);
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("StreamingVisuals").GetArrayElementAtIndex(i), true);
                 serializedObject.ApplyModifiedProperties();
+                EditorGUILayout.Space();
             }
         }
         EditorGUI.indentLevel -= 1;
