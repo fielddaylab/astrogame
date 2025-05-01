@@ -46,6 +46,11 @@ $call StartOpenMode()
 @when   sciencePoints > 2
 @once
 
+$call SetInputState(false)
+$call SetRefGuideActive(false)
+
+$call Wait(3)
+
 $call StopOpenMode()
 $call ClearMonitorSelection()
 $call StartPuzzleNavigation()

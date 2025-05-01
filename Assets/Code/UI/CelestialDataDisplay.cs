@@ -84,6 +84,8 @@ namespace Astro {
             CelestialDataDisplay display = Find.State<CelestialDataDisplay>();
             var focus = Find.State<FocusState>().CurrentFocus; 
 
+            if (focus == null) return;
+
             UpdateDataDisplay(display, focus.TargetData);
             if (!display.Active) {
                 display.AnimRoutine = Routine.Start( display.RevealCelestialDataDisplay() );

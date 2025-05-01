@@ -96,10 +96,13 @@ $call StartOpenMode()
 @when   sciencePoints > 2
 @once
 
-$call StopOpenMode()
-$call ClearMonitorSelection()
 $call SetInputState(false)
 $call SetRefGuideActive(false)
+
+$call Wait(3)
+
+$call StopOpenMode()
+$call ClearMonitorSelection()
 {@Dad} Hey Astrid, you there? Looks like your system is on... I hope you got my letter about Project Hercules. $[Day2/Dad/l2_d_1]
 
 {@Astrid} I did... n- not that I can tell you that... $[Day2/Astrid/l2_a_4]
