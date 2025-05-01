@@ -1,5 +1,6 @@
 
 using System;
+using System.Collections;
 using BeauUtil;
 using FieldDay;
 using FieldDay.Audio;
@@ -35,6 +36,28 @@ namespace Astro {
     public static partial class ReviewUtility {
         public static void UpdatePointDisplay(ReviewModule reviewModule, PlayerPointsState points) {
             reviewModule.PointsDisplay.SetText(points.SciencePoints.ToStringLookup());
+        }
+
+        public static IEnumerator PuzzleCorrectSubmissionRoutine(ReviewModule reviewModule, ReviewState reviewState, float duration) {
+            ShowResultSprite(true, reviewState);
+            ReviewUtility.AddPoints(1);
+
+            yield return duration;
+
+            ReviewModuleUtility.ResetReview(reviewModule);
+        }
+
+        static public void ShowResultSprite(bool correct, ReviewState state) {
+            ReviewModule module = state.ReviewModule;
+
+            if (correct) {
+                Sfx.PlayDetached("Oneshot.Review.Success", module.SoundAnchor);
+                module.Result.SetSharedMaterialAtIndex(1, module.SuccessMaterial);
+            }
+            else {
+                Sfx.PlayDetached("Oneshot.Review.Failure", module.SoundAnchor);
+                module.Result.SetSharedMaterialAtIndex(1, module.FailureMaterial);
+            }
         }
     }
 

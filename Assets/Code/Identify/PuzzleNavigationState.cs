@@ -28,7 +28,7 @@ public sealed class PuzzleNavigationState : SharedStateComponent, IRegistrationC
     public void OnDeregister() {
         Game.Events.Deregister(GameEvents.StopPuzzleNavigation, PuzzleNavigationUtility.OnPuzzleNavStart);
         Game.Events.Deregister(GameEvents.StopPuzzleNavigation, PuzzleNavigationUtility.OnPuzzleNavStopped);
-    } 
+    }
 }
 
 public static class PuzzleNavigationUtility {
@@ -58,7 +58,7 @@ public static class PuzzleNavigationUtility {
         ReviewModuleUtility.ResetReview();
 
         ViewNavUtility.LeafMoveToNode("Right");
-    } 
+    }
 
     [DebugMenuFactory]
     private static DMInfo DebugStartPuzzleNav() {

@@ -1,4 +1,5 @@
 using BeauPools;
+using BeauRoutine;
 using BeauUtil;
 using FieldDay;
 using FieldDay.SharedState;
@@ -36,6 +37,8 @@ namespace Astro {
         [Header("Consts")]
         public Material UnselectedCellMat;
         public Material SelectedCellMat;
+
+        public Routine PuzzleCorrectSubmissionRoutine = new Routine();
 
         public void OnRegister() {
             Game.Events.Register(GameEvents.StartPuzzleMode, PuzzleUtility.ActivatePuzzlePanel);
