@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 
 using TMPro;
@@ -84,27 +85,33 @@ namespace Astro {
             var focus = Find.State<FocusState>().CurrentFocus; 
 
             UpdateDataDisplay(display, focus.TargetData);
+            if (!display.Active) {
+                display.AnimRoutine = Routine.Start( display.RevealCelestialDataDisplay() );
+            }
         }
 
         public static void UpdateDataDisplay(CelestialDataDisplay display, CelestialAsset asset) {
             PlayerProgressState progress = Find.State<PlayerProgressState>();
 
             // Clear Rows
-            foreach (RectTransform child in display.RowGroupTransform.transform.GetComponentsInChildren<RectTransform>()) {
-                GameObject.Destroy(child);
+            for (int i = 0; i < display.RowGroupTransform.childCount; i++) {
+                Transform child = display.RowGroupTransform.GetChild(i);
+                GameObject.Destroy(child.gameObject);
             }
 
             // Populate Identified Data
             progress.Classifications.TryGetValue(asset.AssetId, out BitSet32 identified);
 
-
             foreach (var id in asset.ClassIds) {
                 ReferenceClassification refClass = Find.NamedAsset<ReferenceClassification>(id);
 
-                if (identified[(int) refClass.Type]) {
+                int classificationIdx = Array.IndexOf(asset.ClassIds, id);
+                if (classificationIdx < 0) continue;
+
+                if (identified[classificationIdx]) {
                     RectTransform Row = GameObject.Instantiate(display.DataRowPrefab, display.RowGroupTransform);
-                    Row.Find("Label").GetComponent<TextMeshPro>().SetText( MapTypeToLabel(refClass.Type) );
-                    Row.Find("Value").GetComponent<TextMeshPro>().SetText( refClass.Label );
+                    Row.Find("Label").GetComponent<TextMeshProUGUI>().SetText( MapTypeToLabel(refClass.Type) );
+                    Row.Find("Value").GetComponent<TextMeshProUGUI>().SetText( refClass.Label );
                 } 
             }
 
@@ -117,9 +124,10 @@ namespace Astro {
             progress.Classifications.TryGetValue(asset.AssetId, out BitSet32 identified);
 
             foreach (var id in asset.ClassIds) {
-                ReferenceClassification refClass = Find.NamedAsset<ReferenceClassification>(id);
+                int classificationIdx = Array.IndexOf(asset.ClassIds, id);
+                if (classificationIdx < 0) continue;
 
-                if (identified[(int) refClass.Type]) {
+                if (identified[classificationIdx]) {
                     return true;
                 }
             }
