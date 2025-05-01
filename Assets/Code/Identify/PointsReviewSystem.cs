@@ -99,22 +99,23 @@ namespace Astro {
             switch (result) {
                 case ReviewResult.Success: {
                     ReviewUtility.AddPoints(1);
+                    Game.Events.Dispatch(GameEvents.ValidOpenIdSubmission);
                     break;
                 }
                 case ReviewResult.Duplicate: {
-                    ScriptUtility.Trigger(ScriptEvents.OnDuplicateOpenIdSubmission);
+                    Game.Events.Dispatch(GameEvents.DuplicateOpenIdSubmission);
                     break;
                 }
                 case ReviewResult.ClassificationNotFound: {
-                    ScriptUtility.Trigger(ScriptEvents.OnIncorrectOpenIdSubmission);
+                    Game.Events.Dispatch(GameEvents.IncorrectOpenIdSubmission);
                     break;
                 }
                 case ReviewResult.AssetNotInNeutrinoEvent: {
-                    ScriptUtility.Trigger(ScriptEvents.OnInvalidOpenIdSubmission);
+                    Game.Events.Dispatch(GameEvents.InvalidOpenIdSubmission);
                     break;
                 }
                 case ReviewResult.ClassificationNotInAccepted: {
-                    ScriptUtility.Trigger(ScriptEvents.OnUnacceptedOpenIdSubmission);
+                    Game.Events.Dispatch(GameEvents.UnacceptedOpenIdSubmission);
                     break;
                 }
             }

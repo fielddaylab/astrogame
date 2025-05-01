@@ -456,6 +456,7 @@ GameObject:
   - component: {fileID: 4268974672881665525}
   - component: {fileID: 9038163948193205017}
   - component: {fileID: 3833254959200583745}
+  - component: {fileID: 4869005419066719335}
   m_Layer: 0
   m_Name: Star Data Overlay
   m_TagString: Untagged
@@ -558,6 +559,22 @@ CanvasGroup:
   m_Interactable: 0
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &4869005419066719335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2948888161670161437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16e60f9edae22a24893ac65a67171630, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Active: 0
+  DataDisplayPanel: {fileID: 3833254959200583745}
+  RowGroupTransform: {fileID: 5718785539419201597}
+  DataRowPrefab: {fileID: 2268585796697110223, guid: 2432ae9c59b617f4ca5fc2cb3c8ca2ce, type: 3}
 --- !u!1 &3096512313667780966
 GameObject:
   m_ObjectHideFlags: 0
@@ -569,7 +586,6 @@ GameObject:
   - component: {fileID: 1107974096786131401}
   - component: {fileID: 8787088534142287262}
   - component: {fileID: 3610864503599694441}
-  - component: {fileID: 9059154156514033652}
   m_Layer: 0
   m_Name: Header
   m_TagString: Untagged
@@ -589,11 +605,11 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 5718785539419201597}
+  m_Father: {fileID: 786392054036789048}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 25, y: -17.6}
+  m_AnchoredPosition: {x: -245.5, y: -88.8}
   m_SizeDelta: {x: 80, y: 24}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &8787088534142287262
@@ -693,26 +709,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &9059154156514033652
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3096512313667780966}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreLayout: 1
-  m_MinWidth: -1
-  m_MinHeight: -1
-  m_PreferredWidth: -1
-  m_PreferredHeight: -1
-  m_FlexibleWidth: -1
-  m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!1 &5578587171585017516
 GameObject:
   m_ObjectHideFlags: 0
@@ -977,8 +973,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1107974096786131401}
+  m_Children: []
   m_Father: {fileID: 786392054036789048}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
@@ -1114,6 +1109,7 @@ RectTransform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 5718785539419201597}
+  - {fileID: 1107974096786131401}
   m_Father: {fileID: 4305778196173218536}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
