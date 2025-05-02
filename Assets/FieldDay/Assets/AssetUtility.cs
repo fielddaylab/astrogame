@@ -198,8 +198,8 @@ namespace FieldDay.Assets {
                 return null;
             }
 
-            static public T FindAsset<T>(string inName) where T : UnityEngine.Object {
-                string[] assetGuids = AssetDatabase.FindAssets(inName + " " + NameFilter(typeof(T)));
+            static public T FindAsset<T>(string name) where T : UnityEngine.Object {
+                string[] assetGuids = AssetDatabase.FindAssets(name + " " + NameFilter(typeof(T)));
                 if (assetGuids == null)
                     return null;
 
@@ -207,7 +207,7 @@ namespace FieldDay.Assets {
                     string path = AssetDatabase.GUIDToAssetPath(assetGuids[i]);
                     foreach (var obj in AssetDatabase.LoadAllAssetsAtPath(path)) {
                         T asset = obj as T;
-                        if (asset && asset.name == inName)
+                        if (asset && asset.name == name)
                             return asset;
                     }
                 }
@@ -215,7 +215,7 @@ namespace FieldDay.Assets {
                 return null;
             }
 
-            static public T FindAsset<T>(StringHash32 inId) where T : UnityEngine.Object {
+            static public T FindAsset<T>(StringHash32 id) where T : UnityEngine.Object {
                 string[] assetGuids = AssetDatabase.FindAssets(NameFilter(typeof(T)));
                 if (assetGuids == null)
                     return null;
@@ -224,7 +224,7 @@ namespace FieldDay.Assets {
                     string path = AssetDatabase.GUIDToAssetPath(assetGuids[i]);
                     foreach (var obj in AssetDatabase.LoadAllAssetsAtPath(path)) {
                         T asset = obj as T;
-                        if (asset && asset.name == inId)
+                        if (asset && asset.name == id)
                             return asset;
                     }
                 }
@@ -232,7 +232,7 @@ namespace FieldDay.Assets {
                 return null;
             }
 
-            static public SceneAsset FindScene(string inName) {
+            static public SceneAsset FindScene(string name) {
                 string[] assetGuids = AssetDatabase.FindAssets("t:SceneAsset");
                 if (assetGuids == null)
                     return null;
@@ -240,7 +240,7 @@ namespace FieldDay.Assets {
                 for (int i = 0; i < assetGuids.Length; i++) {
                     string path = AssetDatabase.GUIDToAssetPath(assetGuids[i]);
                     var obj = AssetDatabase.LoadAssetAtPath<SceneAsset>(path);
-                    if (obj.name != inName)
+                    if (obj.name != name)
                         continue;
                     return obj;
                 }
@@ -248,7 +248,7 @@ namespace FieldDay.Assets {
                 return null;
             }
 
-            static public T FindPrefab<T>(string inName) where T : Component {
+            static public T FindPrefab<T>(string name) where T : Component {
                 string[] assetGuids = AssetDatabase.FindAssets("t:GameObject");
                 if (assetGuids == null)
                     return null;
@@ -256,7 +256,7 @@ namespace FieldDay.Assets {
                 for (int i = 0; i < assetGuids.Length; i++) {
                     string path = AssetDatabase.GUIDToAssetPath(assetGuids[i]);
                     GameObject obj = AssetDatabase.LoadAssetAtPath<GameObject>(path);
-                    if (obj.name != inName)
+                    if (obj.name != name)
                         continue;
                     T component = obj.GetComponent<T>();
                     if (component)
@@ -266,15 +266,15 @@ namespace FieldDay.Assets {
                 return null;
             }
 
-            static public T FindPrefab<T>(string inName, params string[] inDirectories) where T : Component {
-                string[] assetGuids = AssetDatabase.FindAssets("t:GameObject", inDirectories);
+            static public T FindPrefab<T>(string name, params string[] directories) where T : Component {
+                string[] assetGuids = AssetDatabase.FindAssets("t:GameObject", directories);
                 if (assetGuids == null)
                     return null;
 
                 for (int i = 0; i < assetGuids.Length; i++) {
                     string path = AssetDatabase.GUIDToAssetPath(assetGuids[i]);
                     GameObject obj = AssetDatabase.LoadAssetAtPath<GameObject>(path);
-                    if (obj.name != inName)
+                    if (obj.name != name)
                         continue;
                     T component = obj.GetComponent<T>();
                     if (component)
@@ -284,11 +284,11 @@ namespace FieldDay.Assets {
                 return null;
             }
 
-            static public T[] FindAllAssets<T>(params string[] inDirectories) where T : UnityEngine.Object {
-                if (inDirectories.Length == 0)
-                    inDirectories = null;
+            static public T[] FindAllAssets<T>(params string[] directories) where T : UnityEngine.Object {
+                if (directories.Length == 0)
+                    directories = null;
 
-                string[] assetGuids = AssetDatabase.FindAssets(NameFilter(typeof(T)), inDirectories);
+                string[] assetGuids = AssetDatabase.FindAssets(NameFilter(typeof(T)), directories);
                 if (assetGuids == null)
                     return null;
 
@@ -307,11 +307,11 @@ namespace FieldDay.Assets {
                 return arr;
             }
 
-            static public T[] FindAllAssets<T>(Predicate<T> inPredicate, params string[] inDirectories) where T : UnityEngine.Object {
-                if (inDirectories.Length == 0)
-                    inDirectories = null;
+            static public T[] FindAllAssets<T>(Predicate<T> predicate, params string[] directories) where T : UnityEngine.Object {
+                if (directories.Length == 0)
+                    directories = null;
 
-                string[] assetGuids = AssetDatabase.FindAssets(NameFilter(typeof(T)), inDirectories);
+                string[] assetGuids = AssetDatabase.FindAssets(NameFilter(typeof(T)), directories);
                 if (assetGuids == null)
                     return null;
 
@@ -320,12 +320,39 @@ namespace FieldDay.Assets {
                     string path = AssetDatabase.GUIDToAssetPath(assetGuids[i]);
                     foreach (var obj in AssetDatabase.LoadAllAssetsAtPath(path)) {
                         T asset = obj as T;
-                        if (asset && inPredicate(asset))
+                        if (asset && predicate(asset))
                             assets.Add(asset);
                     }
                 }
 
                 T[] arr = new T[assets.Count];
+                assets.CopyTo(arr);
+                return arr;
+            }
+
+            static public TextAsset[] FindAllTextFilesByExtension(string extension, params string[] directories) {
+                if (directories.Length == 0)
+                    directories = null;
+
+                string[] assetGuids = AssetDatabase.FindAssets("t:TextAsset", directories);
+                if (assetGuids == null)
+                    return null;
+
+                HashSet<TextAsset> assets = new HashSet<TextAsset>();
+                for(int i = 0; i < assetGuids.Length; i++) {
+                    string path = AssetDatabase.GUIDToAssetPath(assetGuids[i]);
+                    if (!path.EndsWith(extension))
+                        continue;
+
+                    foreach(var obj in AssetDatabase.LoadAllAssetsAtPath(path)) {
+                        TextAsset asset = obj as TextAsset;
+                        if (asset) {
+                            assets.Add(asset);
+                        }
+                    }
+                }
+
+                TextAsset[] arr = new TextAsset[assets.Count];
                 assets.CopyTo(arr);
                 return arr;
             }

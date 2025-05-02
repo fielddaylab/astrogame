@@ -57,6 +57,11 @@ namespace FieldDay.Debugging {
         [SerializeField] private CanvasGroup m_MinimalGroup = null;
         [SerializeField] private ConsoleTimeDisplay m_TimeDisplay = null;
         [SerializeField] private RaycastZone m_InputBlocker = null;
+        [SerializeField] private CanvasGroup m_KeyboardReferenceGroup = null;
+
+        [Header("Debug Camera")]
+        [SerializeField] private ConsoleCamera m_DebugCamera = null;
+        [SerializeField] private GameObject m_DebugCameraReference = null;
 
         [Header("Debug Menu")]
         [SerializeField] private DMMenuUI m_DebugMenus = null;
@@ -77,12 +82,16 @@ namespace FieldDay.Debugging {
         [NonSerialized] private bool m_MenuUIInitialized;
         [NonSerialized] private StepState m_SingleStepState;
 
+        [NonSerialized] private bool m_CameraLock;
+        [NonSerialized] private Vector2 m_CameraCursorPivot;
+
         static private DMInfo s_RootMenu;
         static private DMInfo s_QuickMenu;
 
         private void Awake() {
             GameLoop.OnDebugUpdate.Register(OnPreUpdate);
             GameLoop.QueuePreUpdate(LoadMenu);
+            GameLoop.OnFrameAdvance.Register(AdvanceSingleStep);
 
             GameLoop.OnCrashReport.Register(() => {
                 Destroy(gameObject);
@@ -93,6 +102,9 @@ namespace FieldDay.Debugging {
             m_DebugMenus.gameObject.SetActive(false);
             m_Canvas.enabled = false;
             m_MinimalGroup.blocksRaycasts = false;
+
+            m_KeyboardReferenceGroup.gameObject.SetActive(false);
+            m_DebugCameraReference.SetActive(false);
 
 #if UNITY_2022_2_OR_NEWER
             UnityEngine.Debug.developerConsoleEnabled = false;
@@ -110,6 +122,7 @@ namespace FieldDay.Debugging {
 
             CheckKeyboardShortcuts();
             CheckTimeInput();
+            CheckCameraControls();
             UpdateMinimalLayer();
             UpdateMenu();
 
@@ -126,6 +139,121 @@ namespace FieldDay.Debugging {
                 || DebugInput.IsPressed(InputModifierKeys.CtrlShift, KeyCode.Backspace)
                 || DebugInput.IsPressed(InputModifierKeys.R1 | InputModifierKeys.R2, XRHandIndex.Right, XRHandButtons.Menu)) {
                 BugReporter.DumpContext();
+                DebugInput.ConsumeAllForFrame();
+            }
+
+            if (DebugInput.IsPressed(InputModifierKeys.CtrlShift, KeyCode.F8)
+                || DebugInput.IsPressed(InputModifierKeys.CtrlShift, KeyCode.L)
+                || DebugInput.IsPressed(InputModifierKeys.L1, XRHandIndex.Left, XRHandButtons.Menu)) {
+                if (DebugDraw.IsRenderingEnabled()) {
+                    DebugDraw.DisableRendering();
+                } else {
+                    DebugDraw.EnableRendering();
+                }
+                DebugInput.ConsumeAllForFrame();
+            }
+
+            if (m_MinimalVisible) {
+                if (DebugInput.IsPressed(KeyCode.Backslash)) {
+                    m_KeyboardReferenceGroup.gameObject.SetActive(!m_KeyboardReferenceGroup.gameObject.activeSelf);
+                    DebugInput.ConsumeAllForFrame();
+                }
+            }
+        }
+
+        private void CheckCameraControls() {
+            if (DebugInput.IsPressed(InputModifierKeys.Shift, KeyCode.C)) {
+                Game.Input.ConsumeAllInputForFrame();
+
+                if (m_DebugCamera.Camera()) {
+                    ClearFreecam();
+                } else {
+                    Camera freeCam = Game.Rendering.PrimaryCamera;
+                    if (!freeCam) {
+                        freeCam = Camera.main;
+                    }
+
+                    if (!freeCam) {
+                        Log.Error("[DebugConsole] No camera available for freecam");
+                        DebugDraw.AddLogText("No camera available for freecam", Color.red, 1);
+                    } else {
+                        SetMinimalVisible(true);
+                        m_DebugCameraReference.SetActive(true);
+                        m_DebugCamera.SetCamera(freeCam);
+                    }
+                }
+            }
+
+            if (m_DebugCamera.Camera()) {
+                bool hadInput = false;
+                Vector3 move = default;
+
+                if (DebugInput.IsPressed(KeyCode.F)) {
+                    m_CameraLock = !m_CameraLock;
+                    hadInput = true;
+                }
+
+                if (!m_CameraLock) {
+                    if (DebugInput.IsDown(DebugInputButtons.DPadLeft)) {
+                        move.x -= 1;
+                        hadInput = true;
+                    }
+                    if (DebugInput.IsDown(DebugInputButtons.DPadRight)) {
+                        move.x += 1;
+                        hadInput = true;
+                    }
+                    if (DebugInput.IsDown(DebugInputButtons.DPadUp)) {
+                        move.z += 1;
+                        hadInput = true;
+                    }
+                    if (DebugInput.IsDown(DebugInputButtons.DPadDown)) {
+                        move.z -= 1;
+                        hadInput = true;
+                    }
+                    if (DebugInput.IsDown(KeyCode.Q)) {
+                        move.y -= 1;
+                        hadInput = true;
+                    }
+                    if (DebugInput.IsDown(KeyCode.E)) {
+                        move.y += 1;
+                        hadInput = true;
+                    }
+
+                    if (DebugInput.IsDown(KeyCode.LeftShift)) {
+                        move *= 4;
+                    }
+
+                    m_DebugCamera.MoveRelative(move * Time.unscaledDeltaTime);
+                }
+
+                if (DebugInput.IsPressed(MouseButton.Right)) {
+                    m_CameraCursorPivot = Input.mousePosition;
+                    hadInput = true;
+
+#if UNITY_EDITOR
+                    UnityEditor.EditorGUIUtility.SetWantsMouseJumping(1);
+#endif // UNITY_EDITOR
+                } else if (DebugInput.IsDown(MouseButton.Right)) {
+                    Vector2 newPos = Input.mousePosition;
+                    Vector2 mouseShift = newPos - m_CameraCursorPivot;
+                    m_CameraCursorPivot = newPos;
+
+                    Vector3 eulerShift;
+                    eulerShift.x = -mouseShift.y;
+                    eulerShift.y = mouseShift.x;
+                    eulerShift.z = 0;
+
+                    m_DebugCamera.Rotate(eulerShift * Time.unscaledDeltaTime);
+                    hadInput = true;
+                } else {
+#if UNITY_EDITOR
+                    UnityEditor.EditorGUIUtility.SetWantsMouseJumping(0);
+#endif // UNITY_EDITOR
+                }
+
+                if (hadInput) {
+                    Game.Input.ConsumeAllInputForFrame();
+                }
             }
         }
 
@@ -147,6 +275,8 @@ namespace FieldDay.Debugging {
                     }
                 } else if (Input.GetKeyDown(KeyCode.Alpha0)) {
                     UpdateTimescale(1);
+                } else if (Input.GetKeyDown(KeyCode.Alpha9)) {
+                    QueueSingleStep();
                 }
             }
         }
@@ -355,7 +485,6 @@ namespace FieldDay.Debugging {
         private void QueueSingleStep() {
             if (m_SingleStepState == StepState.Uninitialized) {
                 m_SingleStepState = StepState.Queued;
-                GameLoop.QueueEndOfFrame(AdvanceSingleStep);
             }
         }
 
@@ -364,12 +493,13 @@ namespace FieldDay.Debugging {
                 case StepState.Executing: {
                     m_SingleStepState = StepState.Uninitialized;
                     SetPaused(true);
+                    SetMenuVisible(true);
+                    SetMinimalVisible(true);
                     break;
                 }
                 case StepState.Queued: {
                     m_SingleStepState = StepState.Executing;
                     SetPaused(false);
-                    GameLoop.QueueEndOfFrame(AdvanceSingleStep);
                     break;
                 }
             }
@@ -403,13 +533,29 @@ namespace FieldDay.Debugging {
 
             if (!visible) {
                 SetMenuVisible(false);
+                ClearFreecam();
             }
         }
 
         #endregion // Minimal Layer
 
-#endif // DEVELOPMENT
+        #region Freecam
+
+        private void ClearFreecam() {
+            if (m_DebugCamera.SetCamera(null)) {
+                m_DebugCameraReference.SetActive(false);
+                m_CameraLock = false;
+
+#if UNITY_EDITOR
+                UnityEditor.EditorGUIUtility.SetWantsMouseJumping(0);
+#endif // UNITY_EDITOR
+            }
         }
+
+        #endregion // Freecam
+
+#endif // DEVELOPMENT
+    }
 
     /// <summary>
     /// Attribute marking a static method to be invoked to create a root debug menu.

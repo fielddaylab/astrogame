@@ -173,4 +173,12 @@ namespace FieldDay.Data {
             Skip(size);
         }
     }
+
+    /// <summary>
+    /// Interface for a class that can be written to and read from a ByteWriter/Reader
+    /// </summary>
+    public interface IByteSerializable {
+        void WriteTo(ref ByteWriter writer);
+        void ReadFrom(ref ByteReader reader);
+    }
 }

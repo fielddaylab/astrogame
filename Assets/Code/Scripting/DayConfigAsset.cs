@@ -1,3 +1,4 @@
+using Astro.Radio;
 using BeauUtil;
 using FieldDay;
 using FieldDay.Assets;
@@ -15,6 +16,7 @@ namespace Astro {
         public PuzzleAsset DayPuzzle;
         public NeutrinoConfigAsset NeutrinoEvent;
         public ClassificationTypeMask AcceptedIDSubmissions = ClassificationTypeMask.ALL;
+        public RadioChannelSet RadioChannels;
     }
 
     static public class DayConfigUtil {

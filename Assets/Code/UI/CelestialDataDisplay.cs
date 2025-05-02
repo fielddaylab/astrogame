@@ -104,7 +104,9 @@ namespace Astro {
             display.NumRevealedRows = 0;
 
             // Populate Identified Data
-            progress.Classifications.TryGetValue(asset.AssetId, out BitSet32 identified);
+            progress.Knowledge.TryGetValue(asset.AssetId, out var knowledge);
+
+            BitSet32 identified = knowledge.Classifications;
 
             for (int classificationIdx = 0; classificationIdx < asset.ClassIds.Length; classificationIdx++) {
                 if (classificationIdx < 0) continue;
@@ -127,7 +129,9 @@ namespace Astro {
         public static bool IdentifiedDataToDisplay(CelestialAsset asset) {
             PlayerProgressState progress = Find.State<PlayerProgressState>();
 
-            progress.Classifications.TryGetValue(asset.AssetId, out BitSet32 identified);
+            progress.Knowledge.TryGetValue(asset.AssetId, out var knowledge);
+
+            BitSet32 identified = knowledge.Classifications;
 
             for (int classificationIdx = 0; classificationIdx < asset.ClassIds.Length; classificationIdx++) {
                 if (classificationIdx < 0) continue;

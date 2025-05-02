@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using FieldDay.Components;
 using TMPro;
+using System;
 
 namespace Astro
 {
@@ -16,5 +17,8 @@ namespace Astro
         // Any fields or components that are adjusted by dial
         public TMP_Text Readout;
         public string ReadoutSuffix;
+
+        [NonSerialized] public int CurrentValue;
+        [NonSerialized] public bool Updated;
     }
 }

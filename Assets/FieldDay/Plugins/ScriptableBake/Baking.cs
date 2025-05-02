@@ -699,6 +699,28 @@ namespace ScriptableBake {
             return output;
         }
 
+        /// <summary>
+        /// Finds all TextAssets with the given extension in the given directories.
+        /// </summary>
+        static public TextAsset[] FindTextAssets(string extension, params string[] directories) {
+            HashSet<TextAsset> found = new HashSet<TextAsset>();
+            foreach (var path in AssetPaths(SearchFilter(typeof(TextAsset)), directories)) {
+                if (!path.EndsWith(extension))
+                    continue;
+
+                foreach (var obj in AssetDatabase.LoadAllAssetsAtPath(path)) {
+                    TextAsset asset = obj as TextAsset;
+                    if (asset) {
+                        found.Add(asset);
+                    }
+                }
+            }
+
+            TextAsset[] output = new TextAsset[found.Count];
+            found.CopyTo(output);
+            return output;
+        }
+
         #endregion // Assets
 
         #region Scenes

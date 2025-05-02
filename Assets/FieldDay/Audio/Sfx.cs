@@ -17,6 +17,16 @@ namespace FieldDay.Audio {
                 });
         }
 
+        static public AudioHandle Play(StringHash32 eventId, SfxPlayArgs playArgs) {
+            return Game.Audio.QueuePlayAudioCommand(AudioCommandType.PlayClipFromName,
+                new PlayCommandData() {
+                    Asset = eventId,
+                    Volume = playArgs.Volume,
+                    Pitch = playArgs.Pitch,
+                    RotationOffset = Quaternion.identity,
+                });
+        }
+
         static public AudioHandle Play(StringHash32 eventId, Transform position) {
             return Game.Audio.QueuePlayAudioCommand(AudioCommandType.PlayClipFromName,
                 new PlayCommandData() {
@@ -28,12 +38,35 @@ namespace FieldDay.Audio {
                 });
         }
 
+        static public AudioHandle Play(StringHash32 eventId, Transform position, SfxPlayArgs playArgs) {
+            return Game.Audio.QueuePlayAudioCommand(AudioCommandType.PlayClipFromName,
+                new PlayCommandData() {
+                    Asset = eventId,
+                    TransformOrAudioSourceId = UnityHelper.Id(position),
+                    Volume = playArgs.Volume,
+                    Pitch = playArgs.Pitch,
+                    RotationOffset = Quaternion.identity,
+                });
+        }
+
         static public AudioHandle PlayDetached(StringHash32 eventId, Transform position) {
             return Game.Audio.QueuePlayAudioCommand(AudioCommandType.PlayClipFromName,
                 new PlayCommandData() {
                     Asset = eventId,
                     Volume = 1,
                     Pitch = 1,
+                    TransformOffset = position.position,
+                    TransformOffsetSpace = Space.World,
+                    RotationOffset = position.rotation,
+                });
+        }
+
+        static public AudioHandle PlayDetached(StringHash32 eventId, Transform position, SfxPlayArgs playArgs) {
+            return Game.Audio.QueuePlayAudioCommand(AudioCommandType.PlayClipFromName,
+                new PlayCommandData() {
+                    Asset = eventId,
+                    Volume = playArgs.Volume,
+                    Pitch = playArgs.Pitch,
                     TransformOffset = position.position,
                     TransformOffsetSpace = Space.World,
                     RotationOffset = position.rotation,
@@ -52,6 +85,18 @@ namespace FieldDay.Audio {
                 });
         }
 
+        static public AudioHandle PlayDetached(StringHash32 eventId, Vector3 position, Quaternion rotation, SfxPlayArgs playArgs) {
+            return Game.Audio.QueuePlayAudioCommand(AudioCommandType.PlayClipFromName,
+                new PlayCommandData() {
+                    Asset = eventId,
+                    Volume = playArgs.Volume,
+                    Pitch = playArgs.Pitch,
+                    TransformOffset = position,
+                    TransformOffsetSpace = Space.World,
+                    RotationOffset = rotation,
+                });
+        }
+
         static public AudioHandle PlayFrom(StringHash32 eventId, AudioSource source) {
             return Game.Audio.QueuePlayAudioCommand(AudioCommandType.PlayClipFromName,
                 new PlayCommandData() {
@@ -59,6 +104,18 @@ namespace FieldDay.Audio {
                     TransformOrAudioSourceId = UnityHelper.Id(source),
                     Volume = 1,
                     Pitch = 1,
+                    RotationOffset = Quaternion.identity,
+                    Flags = AudioPlaybackFlags.UseProvidedSource
+                });
+        }
+
+        static public AudioHandle PlayFrom(StringHash32 eventId, AudioSource source, SfxPlayArgs playArgs) {
+            return Game.Audio.QueuePlayAudioCommand(AudioCommandType.PlayClipFromName,
+                new PlayCommandData() {
+                    Asset = eventId,
+                    TransformOrAudioSourceId = UnityHelper.Id(source),
+                    Volume = playArgs.Volume,
+                    Pitch = playArgs.Pitch,
                     RotationOffset = Quaternion.identity,
                     Flags = AudioPlaybackFlags.UseProvidedSource
                 });
@@ -72,6 +129,19 @@ namespace FieldDay.Audio {
                     TransformOrAudioSourceId = UnityHelper.Id(source),
                     Volume = 1,
                     Pitch = 1,
+                    RotationOffset = Quaternion.identity,
+                    Flags = AudioPlaybackFlags.UseProvidedSource | AudioPlaybackFlags.SecondaryClipOverride
+                });
+        }
+
+        static public AudioHandle PlayFrom(StringHash32 eventId, AudioClip clipOverride, AudioSource source, SfxPlayArgs playArgs) {
+            return Game.Audio.QueuePlayAudioCommand(AudioCommandType.PlayClipFromName,
+                new PlayCommandData() {
+                    Asset = eventId,
+                    SecondaryAsset = clipOverride,
+                    TransformOrAudioSourceId = UnityHelper.Id(source),
+                    Volume = playArgs.Volume,
+                    Pitch = playArgs.Pitch,
                     RotationOffset = Quaternion.identity,
                     Flags = AudioPlaybackFlags.UseProvidedSource | AudioPlaybackFlags.SecondaryClipOverride
                 });
@@ -174,6 +244,10 @@ namespace FieldDay.Audio {
             return Game.Audio.IsVoiceActive(handle);
         }
 
+        static public AudioSource GetSource(AudioHandle handle) {
+            return Game.Audio.GetVoiceSource(handle);
+        }
+
         #endregion // Queries
 
         #region Properties
@@ -189,6 +263,10 @@ namespace FieldDay.Audio {
         }
 
         static public void SetVolume(AudioHandle handle, float volume, float transitionTime = 0, Curve transitionCurve = Curve.Linear) {
+            if (!handle.IsValid) {
+                return;
+            }
+
             Game.Audio.QueueAudioCommand(new AudioCommand() {
                 Type = AudioCommandType.SetVoiceFloatParameter,
                 FloatParam = new FloatParamChangeCommandData() {
@@ -202,6 +280,10 @@ namespace FieldDay.Audio {
         }
 
         static public void SetPitch(AudioHandle handle, float pitch, float transitionTime = 0, Curve transitionCurve = Curve.Linear) {
+            if (!handle.IsValid) {
+                return;
+            }
+
             Game.Audio.QueueAudioCommand(new AudioCommand() {
                 Type = AudioCommandType.SetVoiceFloatParameter,
                 FloatParam = new FloatParamChangeCommandData() {
@@ -215,6 +297,10 @@ namespace FieldDay.Audio {
         }
 
         static public void SetPaused(AudioHandle handle, bool paused) {
+            if (!handle.IsValid) {
+                return;
+            }
+
             Game.Audio.QueueAudioCommand(new AudioCommand() {
                 Type = AudioCommandType.SetVoiceBoolParameter,
                 BoolParam = new BoolParamChangeCommandData() {
@@ -226,6 +312,10 @@ namespace FieldDay.Audio {
         }
 
         static public void SetMute(AudioHandle handle, bool mute) {
+            if (!handle.IsValid) {
+                return;
+            }
+
             Game.Audio.QueueAudioCommand(new AudioCommand() {
                 Type = AudioCommandType.SetVoiceBoolParameter,
                 BoolParam = new BoolParamChangeCommandData() {
@@ -288,6 +378,25 @@ namespace FieldDay.Audio {
             });
         }
 
+        static public void Seek(AudioHandle handle, float position) {
+            if (!handle.IsValid) {
+                return;
+            }
+
+            Game.Audio.QueueAudioCommand(new AudioCommand() {
+                Type = AudioCommandType.Seek,
+                Seek = new SeekCommandData() {
+                    Handle = handle.m_Id,
+                    Position = position
+                }
+            });
+        }
+
         #endregion // Properties
+    }
+
+    public struct SfxPlayArgs {
+        public float Volume;
+        public float Pitch;
     }
 }
