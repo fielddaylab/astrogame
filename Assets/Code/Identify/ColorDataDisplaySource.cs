@@ -25,11 +25,18 @@ namespace Astro
                 () => { ColorDataUtility.OnClear(this); }
                 );
 
-            for (int i = 0; i < Panels.Length; i++) {
-                if (Panels[i].PopulateOnRegister) {
-                    ColorDataUtility.SetPanelMaterials(Panels[i].PanelMesh, Panels[i].ColorId, false);
+            Game.Scenes.QueueOnEnable(() =>
+            {
+                for (int i = 0; i < Panels.Length; i++)
+                {
+                    if (Panels[i].PopulateOnRegister)
+                    {
+                        ColorDataUtility.SetPanelMaterials(Panels[i].PanelMesh, Panels[i].ColorId, false);
+                    }
                 }
             }
+            );
+
         }
     }
 
