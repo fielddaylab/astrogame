@@ -15,6 +15,12 @@ namespace Astro {
 
             Game.Events.Register(GameEvents.PuzzleNavigationComplete, OnPuzzleNavComplete);
             Game.Events.Register(GameEvents.NeutrinoNavigationComplete, OnNeutrinoNavComplete);
+
+            Game.Events.Register(GameEvents.ValidOpenIdSubmission, OnValidOpenIdSubmission);
+            Game.Events.Register(GameEvents.InvalidOpenIdSubmission, OnInvalidOpenIdSubmission);
+            Game.Events.Register(GameEvents.IncorrectOpenIdSubmission, OnIncorrectOpenIdSubmission);
+            Game.Events.Register(GameEvents.DuplicateOpenIdSubmission, OnDuplicateOpenIdSubmission);
+            Game.Events.Register(GameEvents.UnacceptedOpenIdSubmission, OnUnacceptedOpenIdSubmission);
         }
 
         static private void OnScore() {
@@ -37,6 +43,26 @@ namespace Astro {
 
         static private void OnNeutrinoNavComplete() {
             ScriptUtility.Trigger(ScriptEvents.NeutrinoNavigationComplete);
+        }
+
+        static private void OnValidOpenIdSubmission() {
+            ScriptUtility.Trigger(ScriptEvents.OnValidOpenIdSubmission);
+        }
+
+        static private void OnIncorrectOpenIdSubmission() {
+            ScriptUtility.Trigger(ScriptEvents.OnIncorrectOpenIdSubmission);
+        }
+
+        static private void OnInvalidOpenIdSubmission() {
+            ScriptUtility.Trigger(ScriptEvents.OnInvalidOpenIdSubmission);
+        }
+
+        static private void OnDuplicateOpenIdSubmission() {
+            ScriptUtility.Trigger(ScriptEvents.OnDuplicateOpenIdSubmission);
+        }
+
+        static private void OnUnacceptedOpenIdSubmission() {
+            ScriptUtility.Trigger(ScriptEvents.OnUnacceptedOpenIdSubmission);
         }
 
         // TODO make this actually process more than one day

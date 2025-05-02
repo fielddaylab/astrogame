@@ -132,6 +132,7 @@ $call AlignCamToNeutrino()
 $call HintModals->Hide("NeutrinoNav", 0.2)
 $call SetInputState(false)
 $call StartOpenMode()
+$call MoveToView("Right")
 {@Dad} Nice Job! So earlier this morning, Ice Cube detected a high energy neutrino coming from one of several possible stars in this location. $[Day1/Dad/l1_d_s7]
 {@Dad} You’ll see each of them highlighted on your display. Identifying these stars will be a great way for you get your feet wet and upgrade your gear. $[Day1/Dad/l1_d_s7(2)]
 
@@ -319,14 +320,11 @@ $call Wait(1)
 {@Dad} On your screen is all known information about the stars in Perseus. You just need to logic your way through it and input data from your equipment into the grid.  $[Day1/Dad/l1_d_s24(2)]
 {@Dad} I’ll help you get started. $[Day1/Dad/l1_d_s24(3)]
 {@Dad} Alright, select the star that matches the <i>only</i> coordinates listed on your grid. You’ll see those coordinates in your celestial compass. $[Day1/Dad/l1_d_s25]
+$set temp:waitingForSelectAtik = true
 $call Wait(0.5)
 $call HintModals->SlideInFromRight("FirstPuzzleStar", 0.4)
 $call SetInputState(true)
-$call SetRefGuidePagesLocked(false)
-$call OpenRefGuidePage("DataTransfer")
-$call Wait(1)
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
-$set temp:waitingForSelectAtik = true
 
 :: FirstPuzzleStarSelected
 @trigger   OnStarSelected
@@ -355,7 +353,10 @@ $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $set temp:waitingForFillAppMag = false
 $call UnlockMonitorFocus()
 $call ReleaseIsolatedPuzzle()
-{@Dad} Well done!
+{@Dad} Well done! You should be able to fill in the rest.
+$call SetRefGuidePagesLocked(false)
+$call OpenRefGuidePage("DataTransfer")
+$call Wait(1)
 
 :: AtikAppMagSelected
 @trigger    OnPuzzleCellSelected

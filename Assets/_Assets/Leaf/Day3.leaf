@@ -117,8 +117,11 @@ $call StartOpenMode()
 @once
 
 $call SetInputState(false)
-$call StopOpenMode()
 $call SetRefGuideActive(false)
+
+$call Wait(3)
+
+$call StopOpenMode()
 $call ClearMonitorSelection()
 
 $call MonitorUI->PlayRadioDownload(2)

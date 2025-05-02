@@ -51,31 +51,18 @@ namespace Astro {
             } else return;
         }
 
-        static private void ShowResultSprite(bool correct, ReviewState state) {
-            ReviewModule module = state.ReviewModule;
-
-            if (correct) {
-                Sfx.PlayDetached("Oneshot.Review.Success", module.SoundAnchor);
-                module.Result.SetSharedMaterialAtIndex(1, module.SuccessMaterial);
-            } else {
-                Sfx.PlayDetached("Oneshot.Review.Failure", module.SoundAnchor);
-                module.Result.SetSharedMaterialAtIndex(1, module.FailureMaterial);
-            }
-        }
-
         private void CheckPuzzle() {
             PuzzleState puzzle = Find.State<PuzzleState>();
             if (PuzzleUtility.CheckSolutionCorrect(puzzle, out BitSet32 rowsCorrectness)) {
                 ReviewUtility.OnCorrectPuzzleSubmission.Invoke(puzzle.ActivePuzzle.DisplayName);
-                ShowResultSprite(true, m_State);
-                ReviewUtility.AddPoints(1);
+                puzzle.PuzzleCorrectSubmissionRoutine.Replace(ReviewUtility.PuzzleCorrectSubmissionRoutine(m_State.ReviewModule, m_State, 2));
 
                 puzzle.ActivePuzzle = null;
 
                 Log.Msg("[PointsReviewSystem] Puzzle CORRECT! :D");
             } else {
                 ScriptUtility.Trigger(ScriptEvents.IncorrectPuzzleSubmission);
-                ShowResultSprite(false, m_State);
+                ReviewUtility.ShowResultSprite(false, m_State);
                 Log.Msg("[SubmitPuzzleSystem] Puzzle INCORRECT! D:");
                 // TODO: show incorrect cells
                 PuzzleUtility.ClearRows(puzzle, rowsCorrectness);
@@ -95,26 +82,27 @@ namespace Astro {
 
         private void CheckObjectIdentification() {
             ReviewResult result = ReviewUtility.EvaluateSubmission(m_State.Identification, Find.State<PlayerProgressState>());
-            ShowResultSprite(result == ReviewResult.Success, m_State);
+            ReviewUtility.ShowResultSprite(result == ReviewResult.Success, m_State);
             switch (result) {
                 case ReviewResult.Success: {
                     ReviewUtility.AddPoints(1);
+                    Game.Events.Dispatch(GameEvents.ValidOpenIdSubmission);
                     break;
                 }
                 case ReviewResult.Duplicate: {
-                    ScriptUtility.Trigger(ScriptEvents.OnDuplicateOpenIdSubmission);
+                    Game.Events.Dispatch(GameEvents.DuplicateOpenIdSubmission);
                     break;
                 }
                 case ReviewResult.ClassificationNotFound: {
-                    ScriptUtility.Trigger(ScriptEvents.OnIncorrectOpenIdSubmission);
+                    Game.Events.Dispatch(GameEvents.IncorrectOpenIdSubmission);
                     break;
                 }
                 case ReviewResult.AssetNotInNeutrinoEvent: {
-                    ScriptUtility.Trigger(ScriptEvents.OnInvalidOpenIdSubmission);
+                    Game.Events.Dispatch(GameEvents.InvalidOpenIdSubmission);
                     break;
                 }
                 case ReviewResult.ClassificationNotInAccepted: {
-                    ScriptUtility.Trigger(ScriptEvents.OnUnacceptedOpenIdSubmission);
+                    Game.Events.Dispatch(GameEvents.UnacceptedOpenIdSubmission);
                     break;
                 }
             }

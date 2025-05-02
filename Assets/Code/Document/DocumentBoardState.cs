@@ -88,7 +88,9 @@ namespace Astro {
             var spawned = SpawnDocument(asset, id, state);
             // Init pinned position
             spawned.transform.SetParent(state.DocumentParent, false);
-            spawned.transform.localPosition = FindAvailablePos(state, spawned);
+            if (spawned.transform.localPosition == Vector3.zero) {
+                spawned.transform.localPosition = FindAvailablePos(state, spawned);
+            }
             state.OverrideStoredDocPos = spawned.transform.position;
             state.OverrideStoredDoc = true;
             // Spawn below player view
@@ -109,13 +111,14 @@ namespace Astro {
             int maxTries = 10;
             for (int i = 0; i < maxTries; i++) {
                 // random point on board
-                float xExtents = state.DraggableBounds.x / 2;
-                float yExtents = state.DraggableBounds.y / 2;
+                float xExtents = state.DraggableBounds.x * 0.6f;
+                float yExtents = state.DraggableBounds.y * 0.6f;
                 var offset = state.DocumentParent.transform.position;
                 Vector3 pos = offset + new Vector3(UnityEngine.Random.Range(-xExtents, xExtents), UnityEngine.Random.Range(-yExtents, yExtents), 0);
+                Vector3 boxPos = pos - new Vector3(0, doc.Size.height / 2, 0);
 
-                Vector3 docExtents = new Vector3(doc.Size.width / 2, doc.Size.height / 2, 1);
-                if (!Physics.CheckBox(pos, docExtents, state.DocumentParent.transform.rotation, LayerMasks.DocumentInteract_Mask)) {
+                Vector3 docExtents = new Vector3(doc.Size.width, doc.Size.height, 5);
+                if (!Physics.CheckBox(boxPos, docExtents, state.DocumentParent.transform.rotation, LayerMasks.DocumentInteract_Mask) || (i == maxTries - 1)) {
                     finalPos = pos - offset;
                     break;
                 }

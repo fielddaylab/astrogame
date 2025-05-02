@@ -1,17 +1,16 @@
 using FieldDay;
 using FieldDay.Systems;
 
-namespace Astro
-{
+namespace Astro {
     [SysUpdate(GameLoopPhase.Update, 2000, AstroGame.SubmissionUpdateMask)] // After InteractSelectSlotSystem
-    public class SlotEffectSystem : ComponentSystemBehaviour<DataSlot, RelevantSlotHighlight>
-    {
-        public override void ProcessWorkForComponent(DataSlot component, RelevantSlotHighlight highlight, float deltaTime)
-        {
+    public class SlotEffectSystem : ComponentSystemBehaviour<DataSlot, RelevantSlotHighlight> {
+        public override void ProcessWorkForComponent(DataSlot component, RelevantSlotHighlight highlight, float deltaTime) {
             var transferState = Find.State<DataTransferState>();
             if (!transferState.SourceUpdated) { return; }
             if (transferState.SelectedSource != null && !transferState.SelectedSource.IsSource) { return; }
-            if (highlight.Dimmed) { return;  }
+            if (highlight.Dimmed) { return; }
+            // We will not highlight grid/buttons if the player has no star selected
+            if (Find.State<FocusState>().CurrentFocus == null) return;
 
             var highlightState = Find.State<SlotHighlightState>();
 
