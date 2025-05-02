@@ -42,6 +42,7 @@ $call SetInputState(true)
 :: Day3ElijahPostcardFlavor
 @trigger    DocumentInspectFlip
 @when   documentId == "Day3ElijahPostcard"
+@cutscene
 @once
 
 $call SetInputState(false)
@@ -80,6 +81,7 @@ NO.
 :: CorrectDocumentResponse
 @trigger    DocumentPuzzlePromptStart
 @when   documentId == "Day2ElijahLetter"
+@cutscene
 @once
 
 $call SetInputState(false)
@@ -124,6 +126,7 @@ $call StartOpenMode()
 :: PointsUpdated
 @trigger    PointsUpdated
 @when   sciencePoints > 2
+@cutscene
 @once
 
 $call SetInputState(false)
@@ -158,6 +161,7 @@ $call StartPuzzleMode()
 :: LeoPuzzleComplete
 @trigger    CorrectPuzzleSubmission
 @when   puzzleName == "Leo"
+@cutscene
 @once
 
 $call ClearMonitorSelection()

@@ -17,7 +17,7 @@ namespace Astro {
 
         public CanvasGroup DataDisplayPanel;
         public RectTransform RowGroupTransform;
-        public RectTransform DataRowPrefab;
+        [HideInInspector] public int NumRevealedRows;
 
         protected override void OnEnable() {
             Game.Events.Register(GameEvents.ValidOpenIdSubmission, CelestialDataDisplayUtil.UpdateCurrentDataDisplay);
@@ -25,6 +25,7 @@ namespace Astro {
                 Find.State<FocusState>().OnFocusUpdated.Register(CelestialDataDisplayUtil.OnFocusUpdated);
             }); 
 
+            NumRevealedRows = 0;
             base.OnEnable();
         }
 
@@ -98,22 +99,25 @@ namespace Astro {
             // Clear Rows
             for (int i = 0; i < display.RowGroupTransform.childCount; i++) {
                 Transform child = display.RowGroupTransform.GetChild(i);
-                GameObject.Destroy(child.gameObject);
+                child.gameObject.SetActive(false);
             }
+            display.NumRevealedRows = 0;
 
             // Populate Identified Data
             progress.Knowledge.TryGetValue(asset.AssetId, out var knowledge);
 
             BitSet32 identified = knowledge.Classifications;
 
-            foreach (var id in asset.ClassIds) {
-                ReferenceClassification refClass = Find.NamedAsset<ReferenceClassification>(id);
-
-                int classificationIdx = Array.IndexOf(asset.ClassIds, id);
+            for (int classificationIdx = 0; classificationIdx < asset.ClassIds.Length; classificationIdx++) {
                 if (classificationIdx < 0) continue;
 
+                StringHash32 id = asset.ClassIds[classificationIdx];
+                ReferenceClassification refClass = Find.NamedAsset<ReferenceClassification>(id);
+
                 if (identified[classificationIdx]) {
-                    RectTransform Row = GameObject.Instantiate(display.DataRowPrefab, display.RowGroupTransform);
+                    Transform Row = display.RowGroupTransform.GetChild( display.NumRevealedRows );
+                    Row.gameObject.SetActive(true);
+                    display.NumRevealedRows++;
                     Row.Find("Label").GetComponent<TextMeshProUGUI>().SetText( MapTypeToLabel(refClass.Type) );
                     Row.Find("Value").GetComponent<TextMeshProUGUI>().SetText( refClass.Label );
                 } 
@@ -129,10 +133,9 @@ namespace Astro {
 
             BitSet32 identified = knowledge.Classifications;
 
-            foreach (var id in asset.ClassIds) {
-                int classificationIdx = Array.IndexOf(asset.ClassIds, id);
+            for (int classificationIdx = 0; classificationIdx < asset.ClassIds.Length; classificationIdx++) {
                 if (classificationIdx < 0) continue;
-
+                
                 if (identified[classificationIdx]) {
                     return true;
                 }
@@ -147,6 +150,9 @@ namespace Astro {
                     return "BRIGHTNESS:";
                 }
                 case ClassificationTypeMask.ColorMeter: {
+                    return "SPECTRAL-TYPE:";
+                }
+                case (ClassificationTypeMask.ColorMeter & ClassificationTypeMask.Spectrometer): {
                     return "SPECTRAL-TYPE:";
                 }
                 case ClassificationTypeMask.Spectrometer: {

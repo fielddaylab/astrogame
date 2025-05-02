@@ -3,6 +3,7 @@
 :: BeginDay
 @trigger    SceneReady
 @boostScore 100
+@cutscene
 @who    Astrid
 
 $call InitUpdateMasks()
@@ -23,6 +24,7 @@ $call SetInputState(true)
 :: SpawnPuzzleDocs1
 @trigger    DocumentInspectEnd
 @when   documentId == "Day2DadUrsaPostcard"
+@cutscene
 @once
 
 $call SetInputState(false)
@@ -69,6 +71,7 @@ $call SetInputState(true)
 :: CorrectDocumentResponse
 @trigger    DocumentPuzzlePromptStart
 @when documentId == "Day2Martha"
+@cutscene
 @once
 
 $call SetInputState(false)
@@ -94,6 +97,7 @@ $call StartOpenMode()
 :: PointsUpdated
 @trigger    PointsUpdated
 @when   sciencePoints > 2
+@cutscene
 @once
 
 $call SetInputState(false)
@@ -121,6 +125,7 @@ $call StartPuzzleNavigation()
 
 :: PuzzleNavigationComplete
 @trigger    PuzzleNavigationComplete
+@cutscene
 @once
 
 $call SetInputState(false)
@@ -145,6 +150,7 @@ $call SetInputState(true)
 :: HerculesPuzzleComplete
 @trigger    CorrectPuzzleSubmission
 @when   puzzleName == "Hercules"
+@cutscene
 @once
 
 $call ClearMonitorSelection()
