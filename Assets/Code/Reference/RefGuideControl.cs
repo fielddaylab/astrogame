@@ -15,6 +15,7 @@ namespace Astro.Reference {
         NextPage,
         ToggleActive,
         Bookmark,
-        Classification
+        Classification,
+        Classification_Toggle,
     }
 }

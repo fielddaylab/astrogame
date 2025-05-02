@@ -117,6 +117,11 @@ namespace Astro.Reference {
                     break;
                 }
 
+                case RefGuideControlType.Classification_Toggle: {
+                    SelectControl(control);
+                    break;
+                }
+
                 case RefGuideControlType.ToggleActive: {
                     ToggleReferenceActive();
                     break;
@@ -285,7 +290,9 @@ namespace Astro.Reference {
                 if (ctrlPage.PageId == page.AssetId) {
                     for(int i = 0; i < ctrlPage.Regions.Length; i++) {
                         ctrlPage.Colliders[i].enabled = true;
-                        ctrlPage.Regions[i].Classification = page.Classifications[i];
+                        if (i < page.Classifications.Length && i > 0) {
+                            ctrlPage.Regions[i].Classification = page.Classifications[i];
+                        }
                     }
                 } else {
                     foreach(var ctrl in ctrlPage.Colliders) {
@@ -302,7 +309,10 @@ namespace Astro.Reference {
                 }
             }
 
-            rig.SelectionGraphic.gameObject.SetActive(false);
+            for (int i = 0; i < rig.SelectionPool.childCount; i++) {
+                GameObject child = rig.SelectionPool.GetChild(i).gameObject;
+                child.SetActive(false);
+            }
         }
 
         public static void SelectControl(RefGuideControl region) {
@@ -311,7 +321,10 @@ namespace Astro.Reference {
 
             if (region == null) {
                 rgs.SelectedRefClassification = null;
-                rig.SelectionGraphic.gameObject.SetActive(false);
+                for (int i = 0; i < rig.SelectionPool.childCount; i++) {
+                    GameObject child = rig.SelectionPool.GetChild(i).gameObject;
+                    child.SetActive(false);
+                }
                 rgs.SubmitButton.Root.SetActive(false);
                 return;
             }
@@ -322,9 +335,11 @@ namespace Astro.Reference {
             Bounds b = PhysicsUtils.GetLocalBounds(c);
             Vector2 off = region.transform.localPosition;
 
-            rig.SelectionGraphic.SetPosition(b.center + (Vector3) off, Axis.XY, Space.Self);
-            rig.SelectionGraphic.SetScale(b.size, Axis.XY);
-            rig.SelectionGraphic.gameObject.SetActive(true);
+            Transform highlight = rig.SelectionPool.GetChild(1);
+
+            highlight.SetPosition(b.center + (Vector3) off, Axis.XY, Space.Self);
+            highlight.SetScale(b.size, Axis.XY);
+            highlight.gameObject.SetActive(true);
 
             TryEnableIDSubmit(Find.State<FocusState>().CurrentFocus != null);
         }

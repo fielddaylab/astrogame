@@ -48,7 +48,7 @@ namespace Astro.Reference {
         [Header("Selection")]
         public RefGuideControlPage[] ControlPages;
         public ActiveGroup PageControls;
-        public Transform SelectionGraphic;
+        public Transform SelectionPool;
 
         IEnumerator<WorkSlicer.Result?> IScenePreload.Preload() {
             ReferenceUtility.SetGuideOpenVisibility(this, false);
@@ -76,7 +76,10 @@ namespace Astro.Reference {
             rig.OpenLight.enabled = isOpen;
 
             if (!isOpen) {
-                rig.SelectionGraphic.gameObject.SetActive(false);
+                for (int i = 0; i < rig.SelectionPool.childCount; i++) {
+                    GameObject child = rig.SelectionPool.GetChild(i).gameObject;
+                    child.SetActive(false);
+                }
             }
 
             rig.OpenRaycastBlocker.enabled = isOpen;
