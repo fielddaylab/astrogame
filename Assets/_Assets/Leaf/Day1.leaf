@@ -151,6 +151,37 @@ $call SetRefGuidePagesLocked(true)
 
 {@Dad} Oops. It doesn't look like that is a possible neutrino origin. Look for objects with a blue highlight. $[Day1/Dad/l1_d_s35]
 
+:: OnRefGuideClosed
+@trigger    OnRefGuideClosed
+@boostScore 300
+@interrupt
+
+$set temp:guideOpen = false
+
+:: IntroRefGuideOpened
+@trigger    OnRefGuideOpened
+@when   temp:waitingForManualOpen
+@boostScore 300
+@interrupt
+@cutscene
+@once
+
+$set temp:waitingForManualOpen = false
+$call SetInputState(false)
+$call SubtitleController->SetSubtitlePosition(0.5, 1, 0, -140)
+$call MoveToView("Right")
+{@Dad} Do you see your photometer in the equipment stack? That should tell you what the apparent magnitude of the star. $[Day1/Dad/l1_d_s11]
+{@Dad} All you need to do is find that number in your reference guide and submit the data. $[Day1/Dad/l1_d_s11(2)]
+$call SetInputState(true)
+$call Wait(1)
+$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
+
+:: OnRefGuideOpened
+@trigger    OnRefGuideOpened
+@interrupt
+
+$set temp:guideOpen = true
+
 :: OnNeutrinoStarSelected
 @trigger    OnNeutrinoStarSelected
 @when   temp:waitingForNeutrinoStar
@@ -163,25 +194,12 @@ $set temp:waitingForNeutrinoStar = false
 $set temp:waitingForManualOpen = true
 $call HintModals->Hide("SelectStar", 0.2)
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 650)
+
+$if temp:guideOpen
+    $goto .IntroRefGuideOpened
+$endif
+
 {@Dad} Great! See if you can find Elijah’s operator manual. It's small, spiral bound... $[Day1/Dad/l1_d_s9]
-$call Wait(1)
-$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
-
-:: OnRefGuideOpened
-@trigger    OnRefGuideOpened
-@when   temp:waitingForManualOpen
-@boostScore 200
-@interrupt
-@cutscene
-@once
-
-$set temp:waitingForManualOpen = false
-$call SetInputState(false)
-$call SubtitleController->SetSubtitlePosition(0.5, 1, 0, -140)
-$call MoveToView("Right")
-{@Dad} Do you see your photometer in the equipment stack? That should tell you what the apparent magnitude of the star. $[Day1/Dad/l1_d_s11]
-{@Dad} All you need to do is find that number in your reference guide and submit the data. $[Day1/Dad/l1_d_s11(2)]
-$call SetInputState(true)
 $call Wait(1)
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 
