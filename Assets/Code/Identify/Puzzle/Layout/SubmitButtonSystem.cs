@@ -36,16 +36,15 @@ namespace Astro {
 
         private bool TrySubmitIdentification(SubmitButton btn) {
             ReviewState pps = Find.State<ReviewState>();
-            if (pps.CurrentSubmission == ReviewSubmissionType.None) {
-                pps.CurrentSubmission = ReviewSubmissionType.Identification;
-                pps.Identification = new ReviewSubmissionClassification() {
-                    AssetId = Find.State<FocusState>().CurrentFocus.TargetData.AssetId,
-                    Classification = Find.State<RefGuideState>().SelectedRefClassification.AssetId
-                };
-                btn.Root.SetActive(false);
-                return true;
-            }
-            return false;
+            if (pps.CurrentSubmission != ReviewSubmissionType.None) return false;
+
+            pps.CurrentSubmission = ReviewSubmissionType.Identification;
+            pps.Identification = new ReviewSubmissionClassification() {
+                AssetId = Find.State<FocusState>().CurrentFocus.TargetData.AssetId,
+                Classification = Find.State<RefGuideState>().SelectedRefClassification.AssetId
+            };
+            btn.Root.SetActive(false);
+            return true;
         }
     }
 
