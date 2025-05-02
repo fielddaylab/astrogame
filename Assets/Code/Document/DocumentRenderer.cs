@@ -56,7 +56,9 @@ namespace Astro {
                 TMP_Text tmpText = renderer.TextRegions[i].Text;
                 // Remove any low res images
                 for (int j = 0; j < tmpText.transform.childCount; j++) {
-                    GameObject.Destroy(tmpText.transform.GetChild(j).gameObject); 
+                    if (renderer.TextRegions[j].Text.text.Length > 0) {
+                        GameObject.Destroy(tmpText.transform.GetChild(j).gameObject);
+                    }
                 }
 
                 tmpText.SetText(asset.TextFields[i]);
@@ -79,7 +81,7 @@ namespace Astro {
 
         public static void DisplayLowResDocument(DocumentRenderer renderer, DocumentAsset asset) {
             for (int i = 0; i < renderer.TextRegions.Length; i++) {
-                if (renderer.TextRegions[i].LowResSprite != null) {
+                if (renderer.TextRegions[i].LowResSprite != null && renderer.TextRegions[i].Text.text.Length > 0) {
                     GameObject lowResImage = GameObject.Instantiate(renderer.LowResText, renderer.TextRegions[i].Text.transform);
                     SpriteRenderer lowResSpriteRender = lowResImage.GetComponent<SpriteRenderer>();
                     lowResSpriteRender.sprite = renderer.TextRegions[i].LowResSprite;

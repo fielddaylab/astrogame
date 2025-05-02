@@ -26,6 +26,16 @@ $call SetInputState(true)
 
 $call SetInputState(false)
 $call Wait(1)
+$call SpawnDocumentToCamera("Day3DadIcecubePostcard")
+$call SetInputState(true)
+
+:: SpawnPuzzleDocsPostcard
+@trigger    DocumentInspectEnd
+@when   documentId == "Day3DadIcecubePostcard"
+@once
+
+$call SetInputState(false)
+$call Wait(1)
 $call SpawnDocumentToCamera("Day3ElijahPostcard")
 $call SetInputState(true)
 
