@@ -61,7 +61,7 @@ public static class NeutrinoNavigationUtility {
         state.LookUpdatedThisFrame = true;
         state.OnLookUpdated.Invoke(state);
 
-        ViewNavUtility.LeafMoveToNode("Desk");
+        ViewNavUtility.LeafMoveToNode("Right");
     }
 
     public static void OnOpenIdStopped() { 
