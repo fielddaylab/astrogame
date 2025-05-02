@@ -42,6 +42,7 @@ namespace Astro.Radio {
             if (Sfx.IsActive(m_State.StaticAudioHandle)) {
                 float vol = m_State.StaticVolume * (1 - m_State.NormalizedChannelStrength);
                 Sfx.SetVolume(m_State.StaticAudioHandle, vol);
+
                 //using (var psb = PooledStringBuilder.Create()) {
                 //    psb.Builder.Append("Radio Static volume: ").AppendNoAlloc(vol, 3);
                 //    DebugDraw.AddLogText(psb, Color.green);
