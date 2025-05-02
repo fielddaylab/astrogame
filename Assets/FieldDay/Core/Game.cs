@@ -15,6 +15,7 @@ using FieldDay.HID;
 using FieldDay.Rendering;
 using FieldDay.Animation;
 using FieldDay.Memory;
+using FieldDay.Perf;
 
 [assembly: InternalsVisibleTo("FieldDay.Core.Editor")]
 
@@ -93,6 +94,11 @@ namespace FieldDay {
         /// Memory manager. Maintains memory pools.
         /// </summary>
         static public MemoryMgr Memory { get; internal set; }
+
+        /// <summary>
+        /// Performance and profiling manager.
+        /// </summary>
+        static public PerformanceMgr Perf { get; internal set; }
 
         /// <summary>
         /// Event dispatcher. Maintains event dispatch.

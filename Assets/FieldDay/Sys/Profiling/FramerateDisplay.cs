@@ -22,7 +22,6 @@ namespace FieldDay.Perf {
         [SerializeField] private bool m_ForceEnabled = false;
 
         [Header("Framerate")]
-        [SerializeField] private int m_TargetFramerate = 60;
         [SerializeField] private int m_AveragingFrames = 8;
 
         [Header("Framerate Drop Warning")]
@@ -39,7 +38,6 @@ namespace FieldDay.Perf {
         [NonSerialized] private long m_LastTimestamp;
         [NonSerialized] private int m_FrameCooldown;
 
-        [NonSerialized] private long m_WarningThreshold;
         [NonSerialized] private float m_WarningTimeLeft = 0;
 
         private Coroutine m_EOFCoroutine;
@@ -77,8 +75,6 @@ namespace FieldDay.Perf {
             if (!Application.isEditor) {
                 GetComponent<RectTransform>().anchoredPosition += m_BuildOffset;
             }
-
-            m_WarningThreshold = (long) (Stopwatch.Frequency / (m_TargetFramerate - m_FramerateDropTolerance));
         }
 
         private void OnEnable() {
@@ -137,6 +133,12 @@ namespace FieldDay.Perf {
                 long amt = timestamp - m_LastTimestamp;
                 m_FrameAccumulation += amt;
                 m_FrameCount++;
+
+                int targetFPS = Application.targetFrameRate;
+                if (targetFPS < 0) {
+                    targetFPS = 60;
+                }
+
                 if (m_FrameCount >= m_AveragingFrames) {
                     double framerate = m_FrameCount * (double)Stopwatch.Frequency / m_FrameAccumulation;
                     m_FrameAccumulation = 0;
@@ -145,7 +147,7 @@ namespace FieldDay.Perf {
                     BuildFramerateStringNoGC(m_TextBuilder, framerate);
                     m_TextDisplay.SetText(m_TextBuilder);
 
-                    double framerateFraction = framerate / m_TargetFramerate;
+                    double framerateFraction = framerate / targetFPS;
                     if (framerateFraction <= 0.5) {
                         m_TextDisplay.color = m_CriticalTextColor;
                     } else if (framerateFraction <= 0.8) {
@@ -156,7 +158,9 @@ namespace FieldDay.Perf {
                 }
 
                 if (m_FramerateDropWarning != null) {
-                    if (amt > m_WarningThreshold) {
+                    float warningThreshold = (long) (Stopwatch.Frequency / (targetFPS - m_FramerateDropTolerance));
+
+                    if (amt > warningThreshold) {
                         m_FramerateDropWarning.SetActive(true);
                         m_WarningTimeLeft = m_FramerateDropWarningDuration;
                     } else if (m_WarningTimeLeft > 0) {

@@ -409,6 +409,14 @@ namespace FieldDay.Audio {
             return m_VoiceIdAllocator.IsValid(handle.m_Id);
         }
 
+        internal AudioSource GetVoiceSource(AudioHandle handle) {
+            var voice = FindVoiceForId(handle.m_Id);
+            if (voice != null) {
+                return voice.Components.Source;
+            }
+            return null;
+        }
+
         #endregion // Voice Queries
 
         #region Cleanup

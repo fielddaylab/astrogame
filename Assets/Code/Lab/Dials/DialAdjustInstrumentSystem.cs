@@ -18,10 +18,16 @@ public class DialAdjustInstrumentSystem : ComponentSystemBehaviour<DialAdjustabl
         {
             using(PooledStringBuilder psb = PooledStringBuilder.Create()) {
                 int finalVal = (int) Mathf.Round(primary.Source.CurrConstrainedVal * primary.LinearMap + primary.Offset);
+                primary.CurrentValue = finalVal;
                 psb.Builder.AppendNoAlloc(finalVal);
                 psb.Builder.Append(primary.ReadoutSuffix);
                 primary.Readout.SetText(psb);
+                primary.Updated = true;
             }
+        }
+        else
+        {
+            primary.Updated = false;
         }
     }
 }

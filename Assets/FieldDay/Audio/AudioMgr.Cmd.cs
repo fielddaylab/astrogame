@@ -73,6 +73,11 @@ namespace FieldDay.Audio {
                         break;
                     }
 
+                    case AudioCommandType.Seek: {
+                        Cmd_Seek(cmd.Seek);
+                        break;
+                    }
+
                     default: {
                         Log.Error("[AudioMgr] Unknown audio command type '{0}'", cmd.Type);
                         break;
@@ -228,6 +233,13 @@ namespace FieldDay.Audio {
             ref BusData bus = ref FindBusForId(volumeChange.BusId);
             if (!Unsafe.IsNullRef(ref bus)) {
                 bus.ConfigVolume = volumeChange.Target;
+            }
+        }
+
+        private unsafe void Cmd_Seek(SeekCommandData seekData) {
+            VoiceData voice = FindVoiceForId(seekData.Handle);
+            if (voice != null) {
+                voice.Components.Source.time = seekData.Position;
             }
         }
 

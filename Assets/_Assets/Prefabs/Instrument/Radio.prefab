@@ -26,12 +26,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1009582038554810574}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.49913388, y: 0.5008647, z: 0.5008647, w: 0.49913388}
-  m_LocalPosition: {x: 0.027, y: 0.824, z: 0.044}
-  m_LocalScale: {x: 5, y: 5, z: 5}
+  m_LocalRotation: {x: -0, y: 0.70832956, z: -0, w: 0.70588183}
+  m_LocalPosition: {x: -0.021400303, y: -0.16610026, z: -0.6178002}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 4735598116178778755}
+  m_Father: {fileID: 6760705197841689792}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &4489773917218239608
 MeshFilter:
@@ -83,112 +83,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!1 &1281013315825818201
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4735598116178778755}
-  - component: {fileID: 5809791851175156663}
-  - component: {fileID: 3761208601314932492}
-  - component: {fileID: 6577076053538657198}
-  - component: {fileID: 4650424282245153396}
-  m_Layer: 6
-  m_Name: Radio Dial
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4735598116178778755
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1281013315825818201}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -0.026800126, y: -0.17490005, z: -0.45300004}
-  m_LocalScale: {x: 0.2, y: 0.20000006, z: 0.20000002}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 6208594534483894790}
-  m_Father: {fileID: 6760705197841689792}
-  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
---- !u!136 &5809791851175156663
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1281013315825818201}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Radius: 0.5000001
-  m_Height: 2.0000005
-  m_Direction: 1
-  m_Center: {x: 0, y: 0.33, z: -0.00000017881393}
---- !u!114 &3761208601314932492
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1281013315825818201}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38d587e5b249a5141b2b8e4cc3bb1223, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  IsDraggable: 1
---- !u!114 &6577076053538657198
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1281013315825818201}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d5b06be8f1cdcc4b862158da906d7cd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  BaseVal: 0.5
-  InputSensitivity: 0.001
-  RotateSpeed: 350
-  PassThrough: 0
-  PivotAxis: 2
-  DialRoot: {fileID: 4735598116178778755}
---- !u!114 &4650424282245153396
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1281013315825818201}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a59a59fc4e9a014c8fbb22f00e5eeff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_AlwaysFireClickEvents: 0
-  CursorType:
-    m_HashValue: 2902038721
-  Tooltip: 
 --- !u!1 &2529536829873752493
 GameObject:
   m_ObjectHideFlags: 0
@@ -1021,7 +915,7 @@ MonoBehaviour:
   m_verticalMapping: 0
   m_uvLineOffset: 0
   m_geometrySortingOrder: 0
-  m_IsTextObjectScaleStatic: 0
+  m_IsTextObjectScaleStatic: 1
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
@@ -1258,6 +1152,8 @@ GameObject:
   - component: {fileID: 4117750139922670441}
   - component: {fileID: 6887677028303343155}
   - component: {fileID: 1931213718087620366}
+  - component: {fileID: 8378457690339946792}
+  - component: {fileID: 4111966688559501168}
   m_Layer: 0
   m_Name: Radio
   m_TagString: Untagged
@@ -1281,7 +1177,7 @@ Transform:
   - {fileID: 7186115532149751378}
   - {fileID: 2719814247132171890}
   - {fileID: 6669144384343378317}
-  - {fileID: 4735598116178778755}
+  - {fileID: 6208594534483894790}
   - {fileID: 4620389612206128688}
   - {fileID: 2206526595102520992}
   m_Father: {fileID: 0}
@@ -1350,8 +1246,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6323979951eae743a07c84a7a1d3d3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Dial: {fileID: 4117750139922670441}
   StreamEmitter: {fileID: 6788618275836854612}
   StaticEmitter: {fileID: 654519670812344457}
+--- !u!114 &8378457690339946792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5977188236420505457}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8050b45733e4a9a4eb05dc558f6e4832, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OneshotEvent:
+    m_HashValue: 1687572531
+  LoopedEvent:
+    m_HashValue: 968609903
+  FallbackClip: {fileID: 8300000, guid: beeab8f2d02528749bc3900372131694, type: 3}
+--- !u!114 &4111966688559501168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5977188236420505457}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a57e4b302e053dc4b8227bf389f85bda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Packs:
+  - {fileID: 11400000, guid: 4eaea3e0e72a3634c811272dad125de3, type: 2}
 --- !u!1 &6049459236354813290
 GameObject:
   m_ObjectHideFlags: 0

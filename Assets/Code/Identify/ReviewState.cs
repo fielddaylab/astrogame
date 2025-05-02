@@ -25,6 +25,7 @@ namespace Astro {
     public struct ReviewSubmissionClassification {
         public StringHash32 AssetId;
         public StringHash32 Classification;
+        public SpectrographMaterialMask Materials;
     }
 
     public enum ReviewSubmissionType {
@@ -56,48 +57,66 @@ namespace Astro {
         #region Open Identification Submission
 
         static public ReviewResult EvaluateSubmission(ReviewSubmissionClassification submission, PlayerProgressState progress) {
-            Assert.True(!submission.AssetId.IsEmpty && !submission.Classification.IsEmpty, "Empty submission");
+            Assert.True(!submission.AssetId.IsEmpty, "Empty submission");
 
             CelestialAsset asset = Find.NamedAsset<CelestialAsset>(submission.AssetId);
-            ReferenceClassification classification = Find.NamedAsset<ReferenceClassification>(submission.Classification);
             DayConfigAsset config = DayConfigUtil.GetConfigForState();
+            
+            if (!submission.Classification.IsEmpty) {
+                return EvaluateClassificationSubmission(submission, progress, asset, config);
+            } else if (submission.Materials != 0) {
+                return EvaluateClassificationMaterialMask(submission, progress, asset, config);
+            } else {
+                Assert.Fail("Empty submission - didn't have classification or material mask");
+                return ReviewResult.ClassificationNotInAccepted;
+            }
+        }
+
+        static private ReviewResult EvaluateClassificationSubmission(ReviewSubmissionClassification submission, PlayerProgressState progress, CelestialAsset asset, DayConfigAsset config) {
+            ReferenceClassification classification = Find.NamedAsset<ReferenceClassification>(submission.Classification);
 
             // check if this is an accepted submission type
-            if ((classification.Type & config.AcceptedIDSubmissions) == 0) {
-                return ReviewResult.ClassificationNotInAccepted;
-            } else if (!ArrayUtils.Contains(config.NeutrinoEvent.RelevantObjectIds, submission.AssetId)) {
+            if (!ArrayUtils.Contains(config.NeutrinoEvent.RelevantObjectIds, submission.AssetId)) {
                 return ReviewResult.AssetNotInNeutrinoEvent;
+            } else if ((classification.Type & config.AcceptedIDSubmissions) == 0) {
+                return ReviewResult.ClassificationNotInAccepted;
             }
 
-            progress.Classifications.TryGetValue(submission.AssetId, out BitSet32 completed);
-            int classificationIdx = Array.IndexOf(asset.ClassIds, submission.Classification);
-            if (classificationIdx < 0) {
+            PlayerKnowledgeQueryResult query = PlayerKnowledgeUtility.MarkNewClassification(asset, submission.Classification, out PlayerCelestialAssetKnowledge knowledgeRecord);
+
+            switch (query) {
+                case PlayerKnowledgeQueryResult.InvalidData:
+                    return ReviewResult.ClassificationNotFound;
+                case PlayerKnowledgeQueryResult.Known:
+                    return ReviewResult.Duplicate;
+                case PlayerKnowledgeQueryResult.NewKnowledge:
+                default:
+                    return ReviewResult.Success;
+            }
+        }
+
+        static private ReviewResult EvaluateClassificationMaterialMask(ReviewSubmissionClassification submission, PlayerProgressState progress, CelestialAsset asset, DayConfigAsset config) {
+            // check if this is an accepted submission type
+            if (!ArrayUtils.Contains(config.NeutrinoEvent.RelevantObjectIds, submission.AssetId)) {
+                return ReviewResult.AssetNotInNeutrinoEvent;
+            } else if ((ClassificationTypeMask.Spectrometer & config.AcceptedIDSubmissions) == 0) {
+                return ReviewResult.ClassificationNotInAccepted;
+            }
+
+            if (submission.Materials != asset.Spectrograph) {
                 return ReviewResult.ClassificationNotFound;
             }
 
-            if (completed[classificationIdx]) {
-                return ReviewResult.Duplicate;
-            }
+            PlayerKnowledgeQueryResult query = PlayerKnowledgeUtility.KnowsFlags(asset.AssetId, PlayerCelestialAssetKnowledgeFlags.IdentifiedResources, out PlayerCelestialAssetKnowledge knowledgeRecord);
 
-            completed[classificationIdx] = true;
-            progress.Classifications[asset.AssetId] = completed;
-            return ReviewResult.Success;
-        }
-
-        public static bool AssetSubmissionCompleted() {
-            ReferenceClassification refClass = Find.State<RefGuideState>().SelectedRefClassification;
-            PlayerProgressState progress = Find.State<PlayerProgressState>();
-            UIFocus focus = Find.State<FocusState>().CurrentFocus;
-            if (refClass == null || focus == null) {
-                return false;
+            switch (query) {
+                case PlayerKnowledgeQueryResult.Known:
+                    return ReviewResult.Duplicate;
+                default:
+                    knowledgeRecord.Flags |= PlayerCelestialAssetKnowledgeFlags.IdentifiedResources;
+                    PlayerKnowledgeUtility.UpdateKnowledge(asset.AssetId, knowledgeRecord);
+                    return ReviewResult.Success;
             }
-            progress.Classifications.TryGetValue(focus.TargetData.AssetId, out BitSet32 completed);
-            for (int i = 0; i < focus.TargetData.ClassIds.Length; i++) {
-                if (completed[i]) {
-                    return true;
-                }
-            }
-            return false;
         }
 
         #endregion // Open Identification Submission

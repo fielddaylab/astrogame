@@ -40,7 +40,7 @@ namespace Astro {
         }
 
         private IEnumerator LoadHandler(Scene scene, StringHash32 tag) {
-            DefaultFader.Hide(0.5f, false);
+            DefaultFader.Hide(0.5f, 0.04f, false);
             yield return 0.2f;
         }
     }

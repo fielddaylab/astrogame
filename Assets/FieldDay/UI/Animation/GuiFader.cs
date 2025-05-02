@@ -26,26 +26,36 @@ namespace FieldDay.UI.Animation {
 
         public AnimHandle Hide(float duration, bool autoFree = true) {
             Game.Animation.CancelAnimation(ref SequenceHandle);
-            return StartHide(duration, Curve.Linear, autoFree);
+            return StartHide(duration, 0, Curve.Linear, autoFree);
+        }
+
+        public AnimHandle Hide(float duration, float delay, bool autoFree = true) {
+            Game.Animation.CancelAnimation(ref SequenceHandle);
+            return StartHide(duration, delay, Curve.Linear, autoFree);
         }
 
         public AnimHandle Hide(float duration, Curve easing, bool autoFree = true) {
             Game.Animation.CancelAnimation(ref SequenceHandle);
-            return StartHide(duration, easing, autoFree);
+            return StartHide(duration, 0, easing, autoFree);
+        }
+
+        public AnimHandle Hide(float duration, float delay, Curve easing, bool autoFree = true) {
+            Game.Animation.CancelAnimation(ref SequenceHandle);
+            return StartHide(duration, delay, easing, autoFree);
         }
 
         public AnimHandle Flash(Color color, float duration, bool autoFree = true) {
             Game.Animation.CancelAnimation(ref SequenceHandle);
             Graphic.color = color;
             GuiCommands.SetActive(Graphic.gameObject, true);
-            return StartHide(duration, Curve.Linear, autoFree);
+            return StartHide(duration, 0, Curve.Linear, autoFree);
         }
 
         public AnimHandle Flash(Color color, float duration, Curve easing, bool autoFree = true) {
             Game.Animation.CancelAnimation(ref SequenceHandle);
             Graphic.color = color;
             GuiCommands.SetActive(Graphic.gameObject, true);
-            return StartHide(duration, easing, autoFree);
+            return StartHide(duration, 0, easing, autoFree);
         }
 
         #region Internals
@@ -66,10 +76,10 @@ namespace FieldDay.UI.Animation {
             return (FadeHandle = Game.Animation.AddLiteAnimator(FadeAnimator, this, state));
         }
 
-        private AnimHandle StartHide(float duration, Curve easing, bool autoFree) {
+        private AnimHandle StartHide(float duration, float delay, Curve easing, bool autoFree) {
             Game.Animation.CancelAnimation(ref FadeHandle);
 
-            if (duration <= 0) {
+            if ((duration + delay) <= 0) {
                 GuiCommands.SetActive(Graphic.gameObject, false);
                 Graphic.color = Color.clear;
                 if (autoFree && m_Allocated) {
@@ -79,7 +89,7 @@ namespace FieldDay.UI.Animation {
             }
 
             LiteAnimatorState state = default;
-            state.ResetTime(duration);
+            state.ResetTimeWithDelay(duration, delay);
             state.InitParamA.ColorF = Graphic.color.WithAlpha(0);
             state.InitParamB.Bool = m_Allocated && autoFree;
             state.Easing = easing;
