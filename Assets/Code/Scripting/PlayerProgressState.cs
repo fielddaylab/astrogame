@@ -32,7 +32,7 @@ namespace Astro {
     }
 
     [Flags]
-    public enum PlayerCelestialAssetKnowledgeFlags : ushort {
+    public enum PlayerCelestialAssetKnowledgeFlags : uint {
         IdentifiedResources = 0x01,
     }
 
@@ -70,28 +70,6 @@ namespace Astro {
             return record.Classifications[idx] ? PlayerKnowledgeQueryResult.Known : PlayerKnowledgeQueryResult.NotKnown;
         }
 
-        static public PlayerKnowledgeQueryResult MarkNewClassification(StringHash32 assetId, StringHash32 classificationId, out PlayerCelestialAssetKnowledge record) {
-            CelestialAsset asset = Find.NamedAsset<CelestialAsset>(assetId);
-            int idx = Array.IndexOf(asset.ClassIds, classificationId);
-            if (idx < 0) {
-                record = default;
-                return PlayerKnowledgeQueryResult.InvalidData;
-            }
-
-            PlayerProgressState state = Find.State<PlayerProgressState>();
-            if (!state.Knowledge.TryGetValue(assetId, out record)) {
-                return PlayerKnowledgeQueryResult.NotKnown;
-            }
-
-            if (record.Classifications[idx]) {
-                return PlayerKnowledgeQueryResult.Known;
-            } else {
-                record.Classifications.Set(idx);
-                state.Knowledge[assetId] = record;
-                return PlayerKnowledgeQueryResult.NewKnowledge;
-            }
-        }
-
         static public PlayerKnowledgeQueryResult MarkNewClassification(CelestialAsset asset, StringHash32 classificationId, out PlayerCelestialAssetKnowledge record) {
             Assert.NotNullOrDestroyed(asset);
             int idx = Array.IndexOf(asset.ClassIds, classificationId);
@@ -102,7 +80,9 @@ namespace Astro {
 
             PlayerProgressState state = Find.State<PlayerProgressState>();
             if (!state.Knowledge.TryGetValue(asset.AssetId, out record)) {
-                return PlayerKnowledgeQueryResult.NotKnown;
+                record.Classifications.Set(idx);
+                state.Knowledge[asset.AssetId] = record;
+                return PlayerKnowledgeQueryResult.NewKnowledge;
             }
 
             if (record.Classifications[idx]) {
