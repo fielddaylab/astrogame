@@ -17,27 +17,34 @@ $call MoveToView("DocumentPuzzle")
 {@Astrid} Looks like I got some mail... At least the mail service is still working... $[Day2/Astrid/l2_a_1]
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $call SetInputState(false)
-$call SpawnDocumentToCamera("Day2DadUrsaPostcard")
+$call SpawnDocumentToCamera("Day2DadIcecubePostcard")
 {@Astrid} Wow... wish I could see the auroras there with you, Dad... $[Day2/Astrid/l2d_a_1]
 $call SetInputState(true)
 
 :: SpawnPuzzleDocs1
 @trigger    DocumentInspectEnd
-@when   documentId == "Day2DadUrsaPostcard"
+@when   documentId == "Day2DadIcecubePostcard"
 @cutscene
 @once
 
 $call SetInputState(false)
 $call Wait(1)
 {@Astrid} Elijah! Finally, some news. $[Day2/Astrid/l2_a_2]
-$call SpawnDocumentToCamera("Day2ElijahLetter")
+$call SpawnDocumentToCamera("HerculesPostcard")
+$call SetInputState(true)
+
+:: FlipHercules
+@trigger    DocumentInspectFlip
+@when   documentId == "HerculesPostcard"
+@interrupt
+@once
+
 $call Wait(1)
 {@Astrid} Oh Elijah... What are you getting yourself into? $[Day2/Astrid/l2d_a_2]
-$call SetInputState(true)
 
 :: SpawnPuzzleDocs2
 @trigger    DocumentInspectEnd
-@when   documentId == "Day2ElijahLetter"
+@when   documentId == "HerculesPostcard"
 @once
 
 $call SetInputState(false)
@@ -64,7 +71,7 @@ $call SetInputState(true)
 
 :: IncorrectDocumentResponse2
 @trigger    DocumentPuzzlePromptStart
-@when documentId == "Day2ElijahLetter"
+@when documentId == "HerculesPostcard"
 
 {@Astrid} So Elijah is staying with Aunt Martha...? $[Day2/Astrid/l2d_a_4]
 
