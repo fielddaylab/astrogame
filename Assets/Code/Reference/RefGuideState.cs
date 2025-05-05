@@ -256,7 +256,7 @@ namespace Astro.Reference {
 
             RefGuideRig rig = Find.State<RefGuideRig>();
             rgs.CurrentPage = newPage;
-            rgs.SelectedMaterials = new SpectrographMaterialMask();
+            rgs.SelectedMaterials &= ~rgs.SelectedMaterials;
             PopulateContents(rig.Contents, newPage);
             PopulateReferenceColliders(newPage, rig);
             ToggleControl(null, rgs);
@@ -404,7 +404,8 @@ namespace Astro.Reference {
 
             if (!rgs.SubmissionActive) return;
 
-            rgs.SubmitButton.Root.SetActive(focusActive && rgs.SelectedRefClassification != null && !ReviewUtility.ReviewInProgress());
+            bool refGuideselection = rgs.SelectedRefClassification != null || rgs.SelectedMaterials != 0;
+            rgs.SubmitButton.Root.SetActive(focusActive && refGuideselection && !ReviewUtility.ReviewInProgress());
         }
 
         #region Leaf

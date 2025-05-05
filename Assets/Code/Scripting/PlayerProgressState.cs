@@ -11,7 +11,7 @@ namespace Astro {
         public int DayIndex = 0;
 
         /// <summary>
-        /// A map of CelestialAssets to 
+        /// A dictonary mapping CelestialAssets to PlayerCelestialAssetKnowledge
         /// </summary>
         public Dictionary<StringHash32, PlayerCelestialAssetKnowledge> Knowledge = MapUtils.Create<StringHash32, PlayerCelestialAssetKnowledge>(64);
 

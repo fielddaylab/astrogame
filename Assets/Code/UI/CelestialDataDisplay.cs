@@ -9,6 +9,7 @@ using BeauRoutine;
 
 using FieldDay;
 using FieldDay.SharedState;
+using System.Text;
 
 namespace Astro {
     public class CelestialDataDisplay : SharedStateComponent {
@@ -108,6 +109,7 @@ namespace Astro {
 
             BitSet32 identified = knowledge.Classifications;
 
+            // Start with classifications
             for (int classificationIdx = 0; classificationIdx < asset.ClassIds.Length; classificationIdx++) {
                 if (classificationIdx < 0) continue;
 
@@ -121,6 +123,15 @@ namespace Astro {
                     Row.Find("Label").GetComponent<TextMeshProUGUI>().SetText( MapTypeToLabel(refClass.Type) );
                     Row.Find("Value").GetComponent<TextMeshProUGUI>().SetText( refClass.Label );
                 } 
+            }
+
+            // Special case for spectrometer reading
+            if ((knowledge.Flags & PlayerCelestialAssetKnowledgeFlags.IdentifiedResources) != 0) {
+                Transform Row = display.RowGroupTransform.GetChild( display.NumRevealedRows );
+                Row.gameObject.SetActive(true);
+                display.NumRevealedRows++;
+                Row.Find("Label").GetComponent<TextMeshProUGUI>().SetText("Elements");
+                Row.Find("Value").GetComponent<TextMeshProUGUI>().SetText( BuildMaterialsLabel(asset.Spectrograph) );
             }
 
             return; 
@@ -145,26 +156,49 @@ namespace Astro {
         }
 
         private static string MapTypeToLabel(ClassificationTypeMask type) {
-            switch (type) {
-                case ClassificationTypeMask.Photometer: {
-                    return "BRIGHTNESS:";
-                }
-                case ClassificationTypeMask.ColorMeter: {
-                    return "SPECTRAL-TYPE:";
-                }
-                case (ClassificationTypeMask.ColorMeter & ClassificationTypeMask.Spectrometer): {
-                    return "SPECTRAL-TYPE:";
-                }
-                case ClassificationTypeMask.Spectrometer: {
-                    return "ELEMENTS:";
-                }
-                case ClassificationTypeMask.Historical: {
-                    return "LUMOSITY:";
-                }
-                default : {
-                    return "UNKOWN:";
-                }
+            if (type.HasFlag(ClassificationTypeMask.Photometer)) {
+                return "BRIGHTNESS:";
+            } else if (type.HasFlag(ClassificationTypeMask.ColorMeter)) {
+                return "SPECTRAL-TYPE:";
+            } else if (type.HasFlag(ClassificationTypeMask.Spectrometer)) {
+                return "SPECTRAL-TYPE:";
+            } else if (type.HasFlag(ClassificationTypeMask.Historical)) {
+                return "LUMOSITY:";
+            } else {
+                return "UNKOWN:";
             }
+        }
+
+        private static string BuildMaterialsLabel(SpectrographMaterialMask materials) {
+            StringBuilder sb = new StringBuilder();
+            if (materials != 0) {
+                if ((materials & SpectrographMaterialMask.Hydrogen) != 0) {
+                    sb.Append("H, ");
+                }
+                if ((materials & SpectrographMaterialMask.Helium) != 0) {
+                    sb.Append("He, ");
+                }
+                if ((materials & SpectrographMaterialMask.Carbon) != 0) {
+                    sb.Append("C, ");
+                }
+                if ((materials & SpectrographMaterialMask.Oxygen) != 0) {
+                    sb.Append("O, ");
+                }
+                if ((materials & SpectrographMaterialMask.Sodium) != 0) {
+                    sb.Append("Na, ");
+                }
+                if ((materials & SpectrographMaterialMask.Magnesium) != 0) {
+                    sb.Append("Mg, ");
+                }
+                if ((materials & SpectrographMaterialMask.Calcium) != 0) {
+                    sb.Append("Ca, ");
+                }
+                if ((materials & SpectrographMaterialMask.Iron) != 0) {
+                    sb.Append("Fe, ");
+                }
+                sb.Length -= 2; // trim last delim
+            }
+            return sb.ToString();
         }
 
     }
