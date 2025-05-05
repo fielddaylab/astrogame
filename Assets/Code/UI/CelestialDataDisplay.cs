@@ -55,13 +55,13 @@ namespace Astro {
             if (focus != null) { // Update the display
                 if (!display.Active) {
                     // Nothing identified for this star yet
-                    if (!IdentifiedDataToDisplay(focus.TargetData)) return;
+                    if (!HasIdDataToDisplay(focus.TargetData)) return;
 
                     // Animate in the display for this star
                     UpdateDataDisplay(display, focus.TargetData);
                     display.AnimRoutine = Routine.Start( display.RevealCelestialDataDisplay() );
                 } else {
-                    if (!IdentifiedDataToDisplay(focus.TargetData)) {
+                    if (!HasIdDataToDisplay(focus.TargetData)) {
                         if (display.AnimRoutine.Exists()) { // Hide Display
                             display.AnimRoutine.OnComplete(() => display.FadeOutCelestialDataDisplay());
                         } else {
@@ -137,7 +137,7 @@ namespace Astro {
             return; 
         }
 
-        public static bool IdentifiedDataToDisplay(CelestialAsset asset) {
+        public static bool HasIdDataToDisplay(CelestialAsset asset) {
             PlayerProgressState progress = Find.State<PlayerProgressState>();
 
             progress.Knowledge.TryGetValue(asset.AssetId, out var knowledge);
@@ -151,6 +151,8 @@ namespace Astro {
                     return true;
                 }
             }
+
+            if ((knowledge.Flags & PlayerCelestialAssetKnowledgeFlags.IdentifiedResources) != 0) return true;
 
             return false;
         }
