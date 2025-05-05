@@ -10,6 +10,9 @@ namespace Astro {
     public sealed class PlayerProgressState : ISharedState {
         public int DayIndex = 0;
 
+        /// <summary>
+        /// A map of CelestialAssets to 
+        /// </summary>
         public Dictionary<StringHash32, PlayerCelestialAssetKnowledge> Knowledge = MapUtils.Create<StringHash32, PlayerCelestialAssetKnowledge>(64);
 
         [NonSerialized] public List<ArchiveLayout> DayLayouts = new List<ArchiveLayout>();
