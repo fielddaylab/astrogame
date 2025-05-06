@@ -65,7 +65,7 @@ $call SetInputState(true)
 
 :: IncorrectDocumentResponse1
 @trigger    DocumentPuzzlePromptStart
-@when documentId == "Day2DadUrsaPostcard"
+@when documentId == "Day2DadIcecubePostcard"
 
 {@Astrid} Elijah at IceCube...? No, that wouldn't make sense. $[Day2/Astrid/l2d_a_3]
 
@@ -82,7 +82,7 @@ $call SetInputState(true)
 @once
 
 $call SetInputState(false)
-{@Astrid} This is it!
+{@Astrid} Yeah, that's it. $[Day2/Astrid/a_confirm_1]
 $call Wait(1)
 $call MoveToView("Desk")
 $call Wait(1)
@@ -163,9 +163,12 @@ $call SetInputState(true)
 $call ClearMonitorSelection()
 $call StopPuzzleMode()
 $call SetInputState(false)
-{@Astrid} Time to turn in for the night.
-Oh, what's this?
+{@Astrid} Ugh, What am I even doing here.
 $call EndDay2->BeginCutscene()
+{@Astrid} Maybe there is a clue on this?
+$call Wait(1)
+{@Astrid} Why is project Hercules so important to you Elijah? 
+{@Astrid} Maybe Dad knows more than he’s sharing on the radio… I’ll write him a letter.
 
 :: EndDay
 @trigger    CutsceneEnd

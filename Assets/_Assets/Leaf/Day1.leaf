@@ -370,7 +370,7 @@ $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $set temp:waitingForFillAppMag = false
 $call UnlockMonitorFocus()
 $call ReleaseIsolatedPuzzle()
-{@Dad} Well done! You should be able to fill in the rest.
+{@Dad} Excellent! Alright, the rest of the puzzle is just process of elimination. Start with your known info, and work your way through. Look in your manual for more information on spectral types. $[Day1/Dad/l1_d_s28]
 $call SetRefGuidePagesLocked(false)
 $call OpenRefGuidePage("DataTransfer")
 $call Wait(1)
@@ -384,7 +384,7 @@ $call Wait(1)
 $set temp:waitingForFillAppMag = true
 $set temp:waitingForSelectAppMag = false
 $call AddIsolatedSlot(Photometer)
-{@Dad} Now click the load button on your photometer to transfer the data.
+{@Dad} Perfect! Now all you have to do is load in data from your photometer. $[Day1/Dad/l1_d_s27]
 
 :: PuzzleGridReadyForSubmission
 @trigger    OnPuzzleGridFullyPopulated
