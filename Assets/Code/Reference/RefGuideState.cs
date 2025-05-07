@@ -190,6 +190,10 @@ namespace Astro.Reference {
             yield return Tween.ZeroToOne(SetRefGuideCoverAngle, 0.45f).Ease(Curve.Smooth);
             rig.CoverRenderer.enabled = false;
 
+            foreach (Collider ctrl in rig.OpenControls) {
+                ctrl.gameObject.SetActive(true);
+            }
+
             yield return rig.RootTransform.MoveTo(rig.OpenPosition.position, 0.12f).Ease(Curve.Smooth);
             SetGuideInteraction(rig, RefGuideInteractionState.Open);
             state.CurrentState = RefGuideInteractionState.Open;
@@ -199,6 +203,10 @@ namespace Astro.Reference {
             state.CurrentState = RefGuideInteractionState.Transitioning;
             SetGuideInteraction(rig, RefGuideInteractionState.Transitioning);
             yield return rig.RootTransform.MoveTo(rig.IntermediatePosition.position, 0.12f).Ease(Curve.BackOut);
+
+            foreach (Collider ctrl in rig.OpenControls) {
+                ctrl.gameObject.SetActive(false);
+            }
 
             rig.CoverRenderer.enabled = true;
             yield return Tween.OneToZero(SetRefGuideCoverAngle, 0.25f).Ease(Curve.Smooth);
