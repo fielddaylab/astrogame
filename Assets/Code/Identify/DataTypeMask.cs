@@ -18,8 +18,9 @@ namespace Astro {
 
         Historical_Coordinates = 0x200,
         Historical_ApparentMagnitude = 0x400,
-        Historical_Temperature = 0x800,
-        Historical_Distance = 0x1000,
+
+        BlueMagnitude = 0x800,
+        InfraredMagnitude = 0x1000,
         Historical_Color = 0x2000
     }
 }

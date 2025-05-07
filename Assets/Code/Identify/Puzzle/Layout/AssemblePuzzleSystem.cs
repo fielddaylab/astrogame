@@ -190,10 +190,10 @@ namespace Astro
             if ((type & DataTypeMask.Historical_ApparentMagnitude) != 0) {
                 return DataTypeLabels.HistoricalApparentMagnitude;
             }
-            if ((type & DataTypeMask.Historical_Temperature) != 0) {
+            if ((type & DataTypeMask.BlueMagnitude) != 0) {
                 return DataTypeLabels.HistoricalTemperature;
             }
-            if ((type & DataTypeMask.Historical_Distance) != 0) {
+            if ((type & DataTypeMask.InfraredMagnitude) != 0) {
                 return DataTypeLabels.HistoricalDistance;
             }
             if ((type & DataTypeMask.Historical_Color) != 0) {

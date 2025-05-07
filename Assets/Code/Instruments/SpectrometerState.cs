@@ -18,13 +18,13 @@ namespace Astro {
         public readonly Dictionary<SpectrographMaterialMask, int[]> Wavelengths = new Dictionary<SpectrographMaterialMask, int[]>() {
             [SpectrographMaterialMask.Hydrogen] = new int[] { 656, 486, 434, 410 },
             [SpectrographMaterialMask.Helium] = new int[] { 588 },
-            [SpectrographMaterialMask.Carbon] = new int[] { },
-            [SpectrographMaterialMask.Iron] = new int[] { 517, 496, 467, 438, 431, 382, 358, 302 },
-            [SpectrographMaterialMask.Calcium] = new int[] { 397, 393 },
+            [SpectrographMaterialMask.Carbon] = new int[] { 427, 723 },
+            [SpectrographMaterialMask.Iron] = new int[] { 517, 496, 467, 438, 431, 382 },
+            [SpectrographMaterialMask.Calcium] = new int[] { 423, 397, 393 },
             [SpectrographMaterialMask.Sodium] = new int[] { 590, 589 },
             [SpectrographMaterialMask.Magnesium] = new int[] { 517, 516 },
             [SpectrographMaterialMask.Oxygen] = new int[] { 687, 628 },
-            [SpectrographMaterialMask.Titanium] = new int[] { 336 }
+            [SpectrographMaterialMask.Titanium] = new int[] { 400, 431, 499 }
         };
     }
 

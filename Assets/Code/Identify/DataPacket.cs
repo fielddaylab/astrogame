@@ -84,6 +84,18 @@ namespace Astro {
             }, false);
         }
 
+        static public DataPacket BlueMagnitude(double blueMag) {
+            return new DataPacket(DataTypeMask.BlueMagnitude, new Datum() {
+                Magnitude = blueMag
+            });
+        }
+
+        static public DataPacket InfraredMagnitude(double infMag) {
+            return new DataPacket(DataTypeMask.InfraredMagnitude, new Datum() {
+                Magnitude = infMag
+            });
+        }
+
         static public DataPacket HistoricalApparentMagnitude(HistoricalPatternAsset pattern) {
             return new DataPacket(DataTypeMask.Historical_ApparentMagnitude, AssetUtility.IdOf(pattern), new Datum());
         }
@@ -111,11 +123,6 @@ namespace Astro {
             });
         }
 
-        static public DataPacket HistoricalTemperature(double temperature, HistoricalPatternAsset pattern) {
-            return new DataPacket(DataTypeMask.Historical_Temperature, AssetUtility.IdOf(pattern), new Datum() {
-                Temperature = temperature
-            });
-        }
 
         static public DataPacket Distance(double distance) {
             return new DataPacket(DataTypeMask.Distance, new Datum() {
@@ -123,11 +130,6 @@ namespace Astro {
             });
         }
 
-        static public DataPacket HistoricalDistance(double distance, HistoricalPatternAsset pattern) {
-            return new DataPacket(DataTypeMask.Historical_Distance, AssetUtility.IdOf(pattern), new Datum() {
-                Distance = distance
-            });
-        }
 
         #endregion // Factory
     
