@@ -80,10 +80,13 @@ namespace Astro {
                 case DataTypeMask.Historical_ApparentMagnitude: {
                         return DataPacket.HistoricalApparentMagnitude(asset.HistoricalBrightness);
                     }
-
+                case DataTypeMask.BlueMagnitude: {
+                        return DataPacket.BlueMagnitude(asset.ApparentBlueMagnitude);
+                    }
+                case DataTypeMask.InfraredMagnitude: {
+                        return DataPacket.InfraredMagnitude(asset.ApparentIRMagnitude);
+                    }
                 case DataTypeMask.Historical_Coordinates:
-                case DataTypeMask.Historical_Temperature: 
-                case DataTypeMask.Historical_Distance: 
                 case DataTypeMask.Historical_Color: {
                         Log.Error("[CelestialAsset.MaskAssetToData] celestial asset historical data unimplemented!");
                         throw new ArgumentException("DataMaskType " + type + " not implemented");                    }
