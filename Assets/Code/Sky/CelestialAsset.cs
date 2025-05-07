@@ -27,6 +27,8 @@ namespace Astro {
 
         [Header("Magnitude")]
         public float ApparentMagnitude;
+        public float ApparentBlueMagnitude;
+        public float ApparentIRMagnitude;
         public float AbsoluteMagnitude;
         public HistoricalPatternAsset HistoricalBrightness;
 
