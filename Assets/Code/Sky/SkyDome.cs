@@ -14,6 +14,11 @@ namespace Astro {
         [HideInInspector] public Vector3 Position;
         public float Radius = 1000;
 
+        [Header("Horizon")]
+        public MeshRenderer HorizonPlane;
+        public MeshRenderer HorizonRing;
+        public MeshRenderer HorizonGlow;
+
         [NonSerialized] public CelestialObject[] AllObjects;
         [NonSerialized] public RingBuffer<CelestialObject> AboveHorizon = new RingBuffer<CelestialObject>(128, RingBufferMode.Expand);
 

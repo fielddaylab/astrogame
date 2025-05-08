@@ -26,6 +26,12 @@ namespace Astro {
             cam.LookUpdatedThisFrame = true;
 
             FocusableUtility.SetCurrentFocus(Find.State<FocusState>(), null);
+
+            // Horizon materials
+            var skyDome = Find.State<SkyDome>();
+            skyDome.HorizonPlane.material = toggle ? state.HorizonPlaneRadioMaterial : state.HorizonPlaneVisibleMaterial;
+            skyDome.HorizonRing.material = toggle ? state.HorizonRingRadioMaterial : state.HorizonRingVisibleMaterial;
+            skyDome.HorizonGlow.material = toggle ? state.HorizonGlowRadioMaterial : state.HorizonGlowVisibleMaterial;
         }
     }
 }
