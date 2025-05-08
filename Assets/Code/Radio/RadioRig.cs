@@ -1,7 +1,9 @@
 using System;
 using BeauUtil;
+using BeauUtil.Debugger;
 using FieldDay;
 using FieldDay.Audio;
+using FieldDay.Localization;
 using FieldDay.SharedState;
 using FieldDay.Vox;
 using UnityEngine;

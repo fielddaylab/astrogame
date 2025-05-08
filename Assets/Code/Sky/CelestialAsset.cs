@@ -62,6 +62,9 @@ namespace Astro {
                 case DataTypeMask.Color: {
                         return DataPacket.Color(asset.ColorId);
                     }
+                case DataTypeMask.ColorIndex: {
+                    return DataPacket.ColorIndex(asset.ApparentBlueMagnitude - asset.ApparentMagnitude);
+                }
                 case DataTypeMask.ApparentMagnitude: {
                         return DataPacket.ApparentMagnitude(asset.ApparentMagnitude);
                     }

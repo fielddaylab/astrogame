@@ -30,7 +30,6 @@ namespace Astro.Reference {
 
         [Header("Pages")]
         public RefGuideBoookmarkRow TopTabs;
-        public RefGuideBoookmarkRow RightTabs;
 
         [Header("Positions")]
         public Transform ClosedPosition;
@@ -68,9 +67,6 @@ namespace Astro.Reference {
             foreach(var tab in rig.TopTabs.Bookmarks) {
                 tab.Contents.SetActive(isOpen);
             }
-            foreach (var tab in rig.RightTabs.Bookmarks) {
-                tab.Contents.SetActive(isOpen);
-            }
 
             rig.OpenRenderers.SetActive(isOpen);
             rig.OpenLight.enabled = isOpen;
@@ -89,10 +85,6 @@ namespace Astro.Reference {
             rig.ClosedToggle.enabled = state == RefGuideInteractionState.Closed;
 
             foreach(var tab in rig.TopTabs.Bookmarks) {
-                tab.Clickable.enabled = state == RefGuideInteractionState.Open;
-            }
-
-            foreach (var tab in rig.RightTabs.Bookmarks) {
                 tab.Clickable.enabled = state == RefGuideInteractionState.Open;
             }
 

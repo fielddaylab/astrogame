@@ -25,6 +25,8 @@ namespace Astro {
             skyGen.IsDirty = true;
             cam.LookUpdatedThisFrame = true;
 
+            AstroGame.Events.Dispatch(GameEvents.MonitorSwitchedFilter, EvtArgs.Create(skyGen.VisMask));
+
             FocusableUtility.SetCurrentFocus(Find.State<FocusState>(), null);
 
             // Horizon materials

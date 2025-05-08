@@ -8,7 +8,7 @@ namespace Astro {
     /// </summary>
     [SysUpdate(GameLoopPhase.Update, 0)]
     public class AssetPacketConversionSystem : SharedStateSystemBehaviour<DataPacketDistributionState, InstrumentInventoryState> {
-        private readonly RingBuffer<DataPacket> m_ConvertedPackets = new RingBuffer<DataPacket>(8);
+        private readonly RingBuffer<DataPacket> m_ConvertedPackets = new RingBuffer<DataPacket>(16);
         private DataTypeMask m_AvailableInstrumentTypes;
 
         public override void ProcessWork(float deltaTime) {
@@ -76,6 +76,15 @@ namespace Astro {
                 }
                 m_ConvertedPackets.PushBack(newPacket);
             }
+            if ((m_AvailableInstrumentTypes & DataTypeMask.ColorIndex) != 0) {
+                DataPacket newPacket;
+                if (m_StateA.ToConvert != null) {
+                    newPacket = DataPacket.ColorIndex(m_StateA.ToConvert.ApparentBlueMagnitude - m_StateA.ToConvert.ApparentMagnitude);
+                } else {
+                    newPacket = DataPacket.Null(DataTypeMask.ColorIndex);
+                }
+                m_ConvertedPackets.PushBack(newPacket);
+            }
             if ((m_AvailableInstrumentTypes & DataTypeMask.ApparentMagnitude) != 0) {
                 DataPacket newPacket;
                 if (m_StateA.ToConvert != null) {
@@ -83,6 +92,24 @@ namespace Astro {
                 }
                 else {
                     newPacket = DataPacket.MinAppMagnitude();
+                }
+                m_ConvertedPackets.PushBack(newPacket);
+            }
+            if ((m_AvailableInstrumentTypes & DataTypeMask.BlueMagnitude) != 0) {
+                DataPacket newPacket;
+                if (m_StateA.ToConvert != null) {
+                    newPacket = DataPacket.BlueMagnitude(m_StateA.ToConvert.ApparentBlueMagnitude);
+                } else {
+                    newPacket = DataPacket.MinBlueMagnitude();
+                }
+                m_ConvertedPackets.PushBack(newPacket);
+            }
+            if ((m_AvailableInstrumentTypes & DataTypeMask.InfraredMagnitude) != 0) {
+                DataPacket newPacket;
+                if (m_StateA.ToConvert != null) {
+                    newPacket = DataPacket.InfraredMagnitude(m_StateA.ToConvert.ApparentIRMagnitude);
+                } else {
+                    newPacket = DataPacket.MinIRMagnitude();
                 }
                 m_ConvertedPackets.PushBack(newPacket);
             }

@@ -20,11 +20,11 @@ namespace Astro {
 
         public IEnumerator<WorkSlicer.Result?> Preload() {
             // Load unlocked instruments from player progress
-            var progressState = Find.State<PlayerProgressState>();
-            foreach (var instrumentID in progressState.UnlockedInstruments) {
-                var instrument = ScriptUtility.FindActor(instrumentID).GetComponent<LabInstrument>();
-                InstrumentInventoryUtility.SetInstrumentUnlocked(instrument, true, false, "");
-            }
+            //var progressState = Find.State<PlayerProgressState>();
+            //foreach (var instrumentID in progressState.UnlockedInstruments) {
+            //    var instrument = ScriptUtility.FindActor(instrumentID).GetComponent<LabInstrument>();
+            //    InstrumentInventoryUtility.SetInstrumentUnlocked(instrument, true, false, "");
+            //}
             return null;
         }
     }
@@ -44,8 +44,8 @@ namespace Astro {
         public static void SetInstrumentUnlocked(LabInstrument instrument, bool unlocked, bool registerToProgress, StringHash32 actorId) {
             if (unlocked) {
                 if (registerToProgress) {
-                    var progressState = Find.State<PlayerProgressState>();
-                    progressState.UnlockedInstruments.Add(actorId);
+                    //var progressState = Find.State<PlayerProgressState>();
+                    //progressState.UnlockedInstruments.Add(actorId);
                 }
                 TryAddToActiveInstruments(instrument);
                 instrument.OnUnlock?.Invoke(instrument);

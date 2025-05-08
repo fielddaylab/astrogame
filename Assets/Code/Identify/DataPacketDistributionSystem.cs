@@ -10,7 +10,7 @@ namespace Astro
     [SysUpdate(GameLoopPhase.Update, 0)]
     public class DataPacketDistributionSystem : SharedStateSystemBehaviour<DataPacketDistributionState, InstrumentInventoryState>
     {
-        private readonly RingBuffer<DataPacket> m_DistributeWorkList = new RingBuffer<DataPacket>(8);
+        private readonly RingBuffer<DataPacket> m_DistributeWorkList = new RingBuffer<DataPacket>(16);
 
         public override void ProcessWork(float deltaTime)
         {

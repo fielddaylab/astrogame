@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 using FieldDay.HID;
 using UnityEngine;
 using FieldDay.HID.XR;
+using BeauUtil.Debugger;
 
 #if USING_XR && !UNITY_WEBGL
 using UnityEngine.XR;
@@ -37,6 +38,29 @@ namespace FieldDay.Debugging {
 #endif // USING_XR && !UNITY_WEBGL
 
 #endif // DEVELOPMENT
+
+        #region Pause/Resume
+
+#if DEVELOPMENT
+        static private uint s_PauseDepth;
+#endif // DEVELOPMENT
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static internal void Pause() {
+#if DEVELOPMENT
+            s_PauseDepth++;
+#endif // DEVELOPMENT
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static internal void Resume() {
+#if DEVELOPMENT
+            Assert.True(s_PauseDepth > 0, "Mismatched DebugInput.Pause/Resume calls");
+            s_PauseDepth--;
+#endif // DEVELOPMENT
+        }
+
+        #endregion // Pause/Resume
 
         #region Update
 
@@ -201,7 +225,7 @@ namespace FieldDay.Debugging {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public bool IsDown(KeyCode key) {
 #if DEVELOPMENT
-            return Input.GetKey(key);
+            return s_PauseDepth == 0 && Input.GetKey(key);
 #else
             return false;
 #endif // DEVELOPMENT
@@ -210,7 +234,7 @@ namespace FieldDay.Debugging {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public bool IsDown(InputModifierKeys modifiers, KeyCode key) {
 #if DEVELOPMENT
-            return s_ModifierStates.IsDownAll(modifiers) && Input.GetKey(key);
+            return s_PauseDepth == 0 && s_ModifierStates.IsDownAll(modifiers) && Input.GetKey(key);
 #else
             return false;
 #endif // DEVELOPMENT
@@ -219,7 +243,7 @@ namespace FieldDay.Debugging {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public bool IsPressed(KeyCode key) {
 #if DEVELOPMENT
-            return Input.GetKeyDown(key);
+            return s_PauseDepth == 0 && Input.GetKeyDown(key);
 #else
             return false;
 #endif // DEVELOPMENT
@@ -228,7 +252,7 @@ namespace FieldDay.Debugging {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public bool IsPressed(InputModifierKeys modifiers, KeyCode key) {
 #if DEVELOPMENT
-            return s_ModifierStates.IsDownAll(modifiers) && Input.GetKeyDown(key);
+            return s_PauseDepth == 0 && s_ModifierStates.IsDownAll(modifiers) && Input.GetKeyDown(key);
 #else
             return false;
 #endif // DEVELOPMENT
@@ -237,7 +261,7 @@ namespace FieldDay.Debugging {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public bool IsReleased(KeyCode key) {
 #if DEVELOPMENT
-            return Input.GetKeyUp(key);
+            return s_PauseDepth == 0 && Input.GetKeyUp(key);
 #else
             return false;
 #endif // DEVELOPMENT
@@ -246,7 +270,7 @@ namespace FieldDay.Debugging {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public bool IsReleased(InputModifierKeys modifiers, KeyCode key) {
 #if DEVELOPMENT
-            return s_ModifierStates.IsDownAll(modifiers) && Input.GetKeyUp(key);
+            return s_PauseDepth == 0 && s_ModifierStates.IsDownAll(modifiers) && Input.GetKeyUp(key);
 #else
             return false;
 #endif // DEVELOPMENT
@@ -259,7 +283,7 @@ namespace FieldDay.Debugging {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public bool IsDown(MouseButton button) {
 #if DEVELOPMENT
-            return Input.GetMouseButton((int) button);
+            return s_PauseDepth == 0 && Input.GetMouseButton((int) button);
 #else
             return false;
 #endif // DEVELOPMENT
@@ -268,7 +292,7 @@ namespace FieldDay.Debugging {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public bool IsPressed(MouseButton button) {
 #if DEVELOPMENT
-            return Input.GetMouseButtonDown((int) button);
+            return s_PauseDepth == 0 && Input.GetMouseButtonDown((int) button);
 #else
             return false;
 #endif // DEVELOPMENT
@@ -277,7 +301,7 @@ namespace FieldDay.Debugging {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public bool IsReleased(MouseButton button) {
 #if DEVELOPMENT
-            return Input.GetMouseButtonUp((int) button);
+            return s_PauseDepth == 0 && Input.GetMouseButtonUp((int) button);
 #else
             return false;
 #endif // DEVELOPMENT
@@ -290,7 +314,7 @@ namespace FieldDay.Debugging {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public bool IsDown(DebugInputButtons button) {
 #if DEVELOPMENT
-            return s_ButtonStates.IsDown(button);
+            return s_PauseDepth == 0 && s_ButtonStates.IsDown(button);
 #else
             return false;
 #endif // DEVELOPMENT
@@ -299,7 +323,7 @@ namespace FieldDay.Debugging {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public bool IsDown(InputModifierKeys modifiers, DebugInputButtons button) {
 #if DEVELOPMENT
-            return s_ModifierStates.IsDownAll(modifiers) && s_ButtonStates.IsDown(button);
+            return s_PauseDepth == 0 && s_ModifierStates.IsDownAll(modifiers) && s_ButtonStates.IsDown(button);
 #else
             return false;
 #endif // DEVELOPMENT
@@ -308,7 +332,7 @@ namespace FieldDay.Debugging {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public bool IsDown(InputModifierKeys modifiers) {
 #if DEVELOPMENT
-            return s_ModifierStates.IsDownAll(modifiers);
+            return s_PauseDepth == 0 && s_ModifierStates.IsDownAll(modifiers);
 #else
             return false;
 #endif // DEVELOPMENT
@@ -317,7 +341,7 @@ namespace FieldDay.Debugging {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public bool IsPressed(DebugInputButtons button) {
 #if DEVELOPMENT
-            return s_ButtonStates.IsPressed(button);
+            return s_PauseDepth == 0 && s_ButtonStates.IsPressed(button);
 #else
             return false;
 #endif // DEVELOPMENT
@@ -326,7 +350,7 @@ namespace FieldDay.Debugging {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public bool ConsumePress(DebugInputButtons button) {
 #if DEVELOPMENT
-            return s_ButtonStates.ConsumePress(button);
+            return s_PauseDepth == 0 && s_ButtonStates.ConsumePress(button);
 #else
             return false;
 #endif // DEVELOPMENT
@@ -335,7 +359,7 @@ namespace FieldDay.Debugging {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public bool IsPressed(InputModifierKeys modifiers, DebugInputButtons button) {
 #if DEVELOPMENT
-            return s_ModifierStates.IsDownAll(modifiers) && s_ButtonStates.IsPressed(button);
+            return s_PauseDepth == 0 && s_ModifierStates.IsDownAll(modifiers) && s_ButtonStates.IsPressed(button);
 #else
             return false;
 #endif // DEVELOPMENT
@@ -344,7 +368,7 @@ namespace FieldDay.Debugging {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public bool ConsumePress(InputModifierKeys modifiers, DebugInputButtons button) {
 #if DEVELOPMENT
-            return s_ModifierStates.IsDownAll(modifiers) && s_ButtonStates.ConsumePress(button);
+            return s_PauseDepth == 0 && s_ModifierStates.IsDownAll(modifiers) && s_ButtonStates.ConsumePress(button);
 #else
             return false;
 #endif // DEVELOPMENT
@@ -353,7 +377,7 @@ namespace FieldDay.Debugging {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public bool IsReleased(DebugInputButtons button) {
 #if DEVELOPMENT
-            return s_ButtonStates.IsReleased(button);
+            return s_PauseDepth == 0 && s_ButtonStates.IsReleased(button);
 #else
             return false;
 #endif // DEVELOPMENT
@@ -362,7 +386,7 @@ namespace FieldDay.Debugging {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public bool IsReleased(InputModifierKeys modifiers, DebugInputButtons button) {
 #if DEVELOPMENT
-            return s_ModifierStates.IsDownAll(modifiers) && s_ButtonStates.IsReleased(button);
+            return s_PauseDepth == 0 && s_ModifierStates.IsDownAll(modifiers) && s_ButtonStates.IsReleased(button);
 #else
             return false;
 #endif // DEVELOPMENT
@@ -375,7 +399,7 @@ namespace FieldDay.Debugging {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public bool IsDown(XRHandIndex hand, XRHandButtons xrButton) {
 #if DEVELOPMENT && USING_XR && !UNITY_WEBGL
-            return HandInput(hand).IsDown(xrButton);
+            return s_PauseDepth == 0 && HandInput(hand).IsDown(xrButton);
 #else
             return false;
 #endif // DEVELOPMENT && USING_XR && !UNITY_WEBGL
@@ -384,7 +408,7 @@ namespace FieldDay.Debugging {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public bool IsDown(InputModifierKeys modifiers, XRHandIndex hand, XRHandButtons xrButton) {
 #if DEVELOPMENT && USING_XR && !UNITY_WEBGL
-            return s_ModifierStates.IsDownAll(modifiers) && HandInput(hand).IsDown(xrButton);
+            return s_PauseDepth == 0 && s_ModifierStates.IsDownAll(modifiers) && HandInput(hand).IsDown(xrButton);
 #else
             return false;
 #endif // DEVELOPMENT && USING_XR && !UNITY_WEBGL
@@ -393,7 +417,7 @@ namespace FieldDay.Debugging {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public bool IsPressed(XRHandIndex hand, XRHandButtons xrButton) {
 #if DEVELOPMENT && USING_XR && !UNITY_WEBGL
-            return HandInput(hand).IsPressed(xrButton);
+            return s_PauseDepth == 0 && HandInput(hand).IsPressed(xrButton);
 #else
             return false;
 #endif // DEVELOPMENT && USING_XR && !UNITY_WEBGL
@@ -402,7 +426,7 @@ namespace FieldDay.Debugging {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public bool ConsumePress(XRHandIndex hand, XRHandButtons xrButton) {
 #if DEVELOPMENT && USING_XR && !UNITY_WEBGL
-            return HandInput(hand).ConsumePress(xrButton);
+            return s_PauseDepth == 0 && HandInput(hand).ConsumePress(xrButton);
 #else
             return false;
 #endif // DEVELOPMENT && USING_XR && !UNITY_WEBGL
@@ -411,7 +435,7 @@ namespace FieldDay.Debugging {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public bool IsPressed(InputModifierKeys modifiers, XRHandIndex hand, XRHandButtons xrButton) {
 #if DEVELOPMENT && USING_XR && !UNITY_WEBGL
-            return s_ModifierStates.IsDownAll(modifiers) && HandInput(hand).IsPressed(xrButton);
+            return s_PauseDepth == 0 && s_ModifierStates.IsDownAll(modifiers) && HandInput(hand).IsPressed(xrButton);
 #else
             return false;
 #endif // DEVELOPMENT && USING_XR && !UNITY_WEBGL
@@ -420,7 +444,7 @@ namespace FieldDay.Debugging {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public bool ConsumePress(InputModifierKeys modifiers, XRHandIndex hand, XRHandButtons xrButton) {
 #if DEVELOPMENT && USING_XR && !UNITY_WEBGL
-            return s_ModifierStates.IsDownAll(modifiers) && HandInput(hand).ConsumePress(xrButton);
+            return s_PauseDepth == 0 && s_ModifierStates.IsDownAll(modifiers) && HandInput(hand).ConsumePress(xrButton);
 #else
             return false;
 #endif // DEVELOPMENT && USING_XR && !UNITY_WEBGL
@@ -429,7 +453,7 @@ namespace FieldDay.Debugging {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public bool IsReleased(XRHandIndex hand, XRHandButtons xrButton) {
 #if DEVELOPMENT && USING_XR && !UNITY_WEBGL
-            return HandInput(hand).IsReleased(xrButton);
+            return s_PauseDepth == 0 && HandInput(hand).IsReleased(xrButton);
 #else
             return false;
 #endif // DEVELOPMENT && USING_XR && !UNITY_WEBGL
@@ -438,7 +462,7 @@ namespace FieldDay.Debugging {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public bool IsReleased(InputModifierKeys modifiers, XRHandIndex hand, XRHandButtons xrButton) {
 #if DEVELOPMENT && USING_XR && !UNITY_WEBGL
-            return s_ModifierStates.IsDownAll(modifiers) && HandInput(hand).IsReleased(xrButton);
+            return s_PauseDepth == 0 && s_ModifierStates.IsDownAll(modifiers) && HandInput(hand).IsReleased(xrButton);
 #else
             return false;
 #endif // DEVELOPMENT && USING_XR && !UNITY_WEBGL

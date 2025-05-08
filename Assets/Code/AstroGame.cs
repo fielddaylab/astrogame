@@ -40,6 +40,19 @@ namespace Astro {
             foreach(var dayId in story.Days){
                 RegisterDayLoadButton(info, dayId);
             }
+
+#if DEVELOPMENT
+            if (story.DEBUG_SandboxDay) {
+                info.AddDivider();
+                info.AddButton("Load Sandbox", () => {
+                    ScriptUtility.KillAllThreads();
+                    Game.Events.Dispatch(GameEvents.BeforeNextDayLoad);
+                    Log.Msg("[ScriptTriggers] Loading sandbox day");
+                    Find.State<PlayerProgressState>().LoadDebugScene = true;
+                    Game.Scenes.LoadMainScene(story.DEBUG_SandboxDay.Scene, true);
+                });
+            }
+#endif // DEVELOPMENT
             return info;
         }
 
@@ -47,6 +60,10 @@ namespace Astro {
             menu.AddButton("Load " + Find.NamedAsset<DayConfigAsset>(dayId).name, () => {
                 ScriptUtility.KillAllThreads();
                 ScriptTriggers.LoadDay(dayId);
+
+#if DEVELOPMENT
+                Find.State<PlayerProgressState>().LoadDebugScene = false;
+#endif // DEVELOPMENT
             });
         }
 

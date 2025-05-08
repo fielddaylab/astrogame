@@ -24,6 +24,7 @@ public static class GameEvents {
     public static readonly StringHash32 LockMonitorFocus = "lock-monitor-focus";
     public static readonly StringHash32 UnlockMonitorFocus = "unlock-monitor-focus";
     public static readonly StringHash32 BeforeNextDayLoad = "before-next-day-load";
+    public static readonly StringHash32 MonitorSwitchedFilter = "monitor-switched-filter";
 }
 
 public static class ScriptEvents {

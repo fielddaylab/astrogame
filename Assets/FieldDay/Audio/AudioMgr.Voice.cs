@@ -541,6 +541,7 @@ namespace FieldDay.Audio {
         private AudioVoiceComponents ConstructNewSource(IPool<AudioVoiceComponents> p) {
             GameObject go = new GameObject("unused audio voice");
             go.transform.SetParent(m_AudioSourceRoot.transform);
+            go.hideFlags = HideFlags.DontSave;
 
             AudioSource source = go.AddComponent<AudioSource>();
             source.enabled = false;

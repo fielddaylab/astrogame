@@ -41,7 +41,7 @@ namespace Astro {
             foreach (UIFocus focus in focusState.ActiveFocii) {
                 float dot = Vector3.Dot(packedData[packedIdx].TargetVector, forward);
 
-                if (dot >= dotProductThreshold) {
+                if (focus.IsVisibleInCurrentFilter && dot >= dotProductThreshold) {
                     focus.Root.localRotation = billboardRot;
 
                     if (!packedEnabled.IsSet(packedIdx)) {

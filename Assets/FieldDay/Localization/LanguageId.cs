@@ -61,6 +61,22 @@ namespace FieldDay.Localization {
             get { return m_Raw; }
         }
 
+        public char Char0 {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get { return (char) m_0; }
+        }
+
+        public char Char1 {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get { return (char) m_1; }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void ToChars(out char a, out char b) {
+            a = (char) m_0;
+            b = (char) m_1;
+        }
+
         #region Interfaces
 
         public bool Equals(LanguageId other) {

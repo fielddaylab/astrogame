@@ -366,6 +366,33 @@ namespace FieldDay.Debugging {
 
         #endregion // Flags
 
+        #region Testing
+
+#if DEVELOPMENT
+        static private bool s_IsRunningAutomatedTest;
+#endif // DEVELOPMENT
+
+        /// <summary>
+        /// Returns if time controls are allowed.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static public bool IsAutomatedTestActive() {
+#if DEVELOPMENT
+            return s_IsRunningAutomatedTest;
+#else
+            return false;
+#endif // DEVELOPMENT
+        }
+
+        [Conditional("DEVELOPMENT"), Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
+        static internal void SetAutomatedTestActive(bool active) {
+#if DEVELOPMENT
+            s_IsRunningAutomatedTest = active;
+#endif // DEVELOPMENT
+        }
+
+        #endregion // Testing
+
         #region Object Selection
 
         /// <summary>

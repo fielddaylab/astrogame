@@ -12,6 +12,9 @@ using UnityEngine.UI;
 namespace Astro.Reference {
     public class RefGuideContents : MonoBehaviour {
         public StreamingQuadTexture Background;
+        public Transform RealtimeRoot;
+
+        [NonSerialized] public Transform RealtimeChildEnabled;
     }
 
 
@@ -23,10 +26,29 @@ namespace Astro.Reference {
             }
 
             contents.Background.Path = page.BackgroundImagePath;
+            if (contents.RealtimeChildEnabled) {
+                contents.RealtimeChildEnabled.gameObject.SetActive(false);
+                contents.RealtimeChildEnabled = null;
+            }
+
+            if (string.IsNullOrEmpty(page.BackgroundImagePath)) {
+                contents.Background.Unload();
+
+                Transform realtime = contents.RealtimeRoot.Find(page.name);
+                if (realtime) {
+                    contents.RealtimeChildEnabled = realtime;
+                    contents.RealtimeChildEnabled.gameObject.SetActive(true);
+                }
+            }
         }
 
         private static void ClearContents(RefGuideContents contents) {
             contents.Background.Path = null;
+
+            if (contents.RealtimeChildEnabled) {
+                contents.RealtimeChildEnabled.gameObject.SetActive(false);
+                contents.RealtimeChildEnabled = null;
+            }
         }
     }
 }

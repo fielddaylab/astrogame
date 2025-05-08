@@ -13,6 +13,7 @@ namespace Astro
     {
         [NonSerialized] public Transform Target;
         [NonSerialized] public CelestialAsset TargetData;
+        [NonSerialized] public bool IsVisibleInCurrentFilter;
 
         public Transform Root;
         public SpriteRenderer Represent2D;

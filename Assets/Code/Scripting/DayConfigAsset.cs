@@ -24,6 +24,12 @@ namespace Astro {
             PlayerProgressState state = Find.State<PlayerProgressState>();
             StoryAsset story = Find.GlobalAsset<StoryAsset>();
 
+#if DEVELOPMENT
+            if (state.LoadDebugScene && story.DEBUG_SandboxDay) {
+                return story.DEBUG_SandboxDay;
+            }
+#endif // DEVELOPMENT
+
             StringHash32 configId = story.Days[state.DayIndex];
             return Find.NamedAsset<DayConfigAsset>(configId);
         }

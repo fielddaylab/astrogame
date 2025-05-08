@@ -96,7 +96,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000010, guid: d1b1f49e96e28754e81ff04174607f74, type: 2}
+  m_LightingDataAsset: {fileID: 112000018, guid: d1b1f49e96e28754e81ff04174607f74, type: 2}
   m_LightingSettings: {fileID: 4890085278179872738, guid: 6f1803a0335cd4f4a9c123fe06a221ef, type: 2}
 --- !u!196 &4
 NavMeshSettings:
@@ -5654,6 +5654,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3721426793606140654, guid: 1b9a0282eb7f09f428b6f6c5a31009c5, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1893051963}
+    - targetCorrespondingSourceObject: {fileID: 3721426793606140654, guid: 1b9a0282eb7f09f428b6f6c5a31009c5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1893051964}
     - targetCorrespondingSourceObject: {fileID: 2400052228253231139, guid: 1b9a0282eb7f09f428b6f6c5a31009c5, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1076681092}
@@ -6560,9 +6563,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Always: 0
-  DestroyInactiveChildren: 0
+  DestroyInactiveChildren: 1
   Recursive: 1
   DestroyGameObject: 1
+  IgnoreAnimators: 1
+--- !u!114 &1893051964
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1893051961}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d527cbae564d45547b4a948ae6e39f98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Always: 0
   IgnoreAnimators: 1
 --- !u!4 &1936858027 stripped
 Transform:

@@ -3,16 +3,27 @@
 using Astro;
 using FieldDay;
 using FieldDay.Components;
+using ScriptableBake;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 namespace Astro {
 
-    public class Spectrograph : BatchedComponent {
+    public class Spectrograph : BatchedComponent, IBaked {
         public MeshRenderer Background;
         [NonSerialized] public SpectrographMaterialMask CurrentElements;
         // TODO: use pools for lines?
         public List<GameObject> Lines;
+
+#if UNITY_EDITOR
+        int IBaked.Order => 1000;
+
+        bool IBaked.Bake(BakeFlags flags, BakeContext context) {
+            Background.sharedMaterial = Find.Any<SpectrometerState>().BlankBackground;
+            return true;
+        }
+
+#endif // UNITY_EDITOR
     }
 
     [Flags]
@@ -74,9 +85,9 @@ namespace Astro {
 
         private static void UpdateBackground(Spectrograph graph, SpectrometerState state) {
             if (graph.CurrentElements == 0) {
-                graph.Background.material = state.BlankBackground;
+                graph.Background.sharedMaterial = state.BlankBackground;
             } else {
-                graph.Background.material = state.SpectrumBackground;
+                graph.Background.sharedMaterial = state.SpectrumBackground;
             }
         }
     }
