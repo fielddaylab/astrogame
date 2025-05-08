@@ -50,10 +50,13 @@ namespace Astro
 
             focus.TargetData = asset;
 
-            float scaleFactor = Mathf.Pow(0.6f, asset.ApparentMagnitude);
+            float baseVal = 0.88f;
+            float minVal = 0.05f;
+            float maxVal = 0.32f;
+            float scaleFactor = Mathf.Clamp(Mathf.Pow(baseVal, asset.ApparentMagnitude) - 0.45f, minVal, maxVal);
             focus.Root.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
 
-            float clickableRadius = 0.6f * Math.Min(1, 1 / scaleFactor);
+            float clickableRadius = baseVal * Math.Min(1, 1 / scaleFactor);
 
             focus.Clickable.radius = clickableRadius / scaleFactor;
         }
