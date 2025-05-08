@@ -348,14 +348,14 @@ namespace Astro.Reference {
                 Bounds b = PhysicsUtils.GetLocalBounds(c);
                 Vector2 off = region.transform.localPosition;
 
-                Transform highlight = rig.SelectionPool.GetChild(1);
+                Transform highlight = rig.SelectionPool.GetChild(0);
 
                 highlight.SetPosition(b.center + (Vector3) off, Axis.XY, Space.Self);
                 highlight.SetScale(b.size, Axis.XY);
                 highlight.gameObject.SetActive(true);
             } else {
                 rgs.SelectedRefClassification = null;
-                Transform highlight = rig.SelectionPool.GetChild(1);
+                Transform highlight = rig.SelectionPool.GetChild(0);
                 highlight.gameObject.SetActive(false);
             }
 
