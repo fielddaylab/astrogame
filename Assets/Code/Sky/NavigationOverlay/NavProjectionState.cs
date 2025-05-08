@@ -134,8 +134,10 @@ namespace Astro {
                 direction.Normalize();
                 navArrow.gameObject.SetActive(true);
                 
-                if (!Find.State<NeutrinoNavigationState>().NavigationModeActive) ScriptUtility.Trigger(ScriptEvents.OnLeaveNeutrinoRegion);
-                 
+                if (!(Find.State<NavigationState>().CurrentNavigationMode != NavigationMode.Inactive)){
+                    ScriptUtility.Trigger(ScriptEvents.OnLeaveNeutrinoRegion);
+                }                  
+
                 // Position the arrow within the screen bounds
                 Vector2 canvasSize = navCanvas.GetComponent<RectTransform>().sizeDelta / 2;
 

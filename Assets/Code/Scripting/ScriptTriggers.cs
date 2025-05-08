@@ -195,8 +195,8 @@ namespace Astro {
             if (!config) return;
             EqCoords target = config.NeutrinoEvent.NeutrinoCoordinates;
 
-            var navState = Find.State<PuzzleNavigationState>();
-            navState.ConstellationSnapRoutine.Replace(PuzzleNavigationUtility.SnapConstellationAlignment(target));
+            var navState = Find.State<NavigationState>();
+            navState.ConstellationSnapRoutine.Replace(NavigationUtility.SnapAlignment(target));
         }
 
         [LeafMember("StartPuzzleNavigation")]
