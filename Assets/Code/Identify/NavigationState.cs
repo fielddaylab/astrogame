@@ -135,40 +135,31 @@ namespace Astro {
         public static void UpdateCameraDistanceFromPuzzle(SpaceCameraState spaceCameraState) { 
             NavigationState navState = Find.State<NavigationState>();
 
-            //TODO Clean more
+            EqCoords target = new EqCoords();
             if (navState.CurrentNavigationMode == NavigationMode.Neutrino) {
+                // Target comes from the neutrino origin for this day
                 DayConfigAsset config = DayConfigUtil.GetConfigForState();
-
                 if (!config) return;
 
-                EqCoords target = config.NeutrinoEvent.NeutrinoCoordinates;
-                Vector3 targetFoward = WorldPositionUtility.GetLookVector(target);
-
-                Quaternion spaceCameraQuat = spaceCameraState.Camera.RootTransform.rotation;
-
-                Vector3 spaceCamForward = Geom.Forward(spaceCameraQuat);
-                float newDist = Vector3.Dot(targetFoward, spaceCamForward);
-
-                navState.CameraForward = spaceCamForward;
-                navState.CameraDistanceFromTarget = newDist;
-                navState.ReadoutDirty = true;
+                target = config.NeutrinoEvent.NeutrinoCoordinates;
             } else if (navState.CurrentNavigationMode == NavigationMode.Constellation) {
+                // Target comes from the active puzzle for this day
                 PuzzleState puzzleState = Find.State<PuzzleState>();
-
                 if (!puzzleState.ActivePuzzle) return;
 
-                EqCoords target = puzzleState.ActivePuzzle.PuzzleCoordinates;
-                Vector3 targetFoward = WorldPositionUtility.GetLookVector(target);
-
-                Quaternion spaceCameraQuat = spaceCameraState.Camera.RootTransform.rotation;
-
-                Vector3 spaceCamForward = Geom.Forward(spaceCameraQuat);
-
-                float newDist = Vector3.Dot(targetFoward, spaceCamForward);
-
-                navState.CameraDistanceFromTarget = newDist;
-                navState.ReadoutDirty = true;
+                target = puzzleState.ActivePuzzle.PuzzleCoordinates;
             }
+
+            Vector3 targetFoward = WorldPositionUtility.GetLookVector(target);
+
+            Quaternion spaceCameraQuat = spaceCameraState.Camera.RootTransform.rotation;
+
+            Vector3 spaceCamForward = Geom.Forward(spaceCameraQuat);
+            float newDist = Vector3.Dot(targetFoward, spaceCamForward);
+
+            navState.CameraForward = spaceCamForward;
+            navState.CameraDistanceFromTarget = newDist;
+            navState.ReadoutDirty = true;
         }
 
         public static IEnumerator SnapAlignment(EqCoords targetCoords) {
