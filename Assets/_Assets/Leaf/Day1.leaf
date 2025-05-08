@@ -11,6 +11,7 @@ $call SetInstrumentUnlocked(PhotometerInstrument, true)
 $call SetInputState(false)
 $call StopPuzzleMode()
 $call StopOpenMode()
+$call SetRefGuidePagesLocked(true)
 $call PlayMusic("Music.Gently-Falling", 1)
 $call IntroCutscene->BeginCutscene()
 $call Wait(2)
@@ -140,7 +141,6 @@ $set temp:waitingForNeutrinoStar = true
 
 $call HintModals->SlideInFromLeft("SelectStar", 0.4)
 $call SetInputState(true)
-$call SetRefGuidePagesLocked(true)
 
 :: OnStarSelected
 @trigger    OnStarSelected
