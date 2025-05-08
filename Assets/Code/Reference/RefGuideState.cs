@@ -192,7 +192,12 @@ namespace Astro.Reference {
             yield return Tween.ZeroToOne(SetRefGuideCoverAngle, 0.45f).Ease(Curve.Smooth);
             rig.CoverRenderer.enabled = false;
 
-            foreach (Collider ctrl in rig.OpenControls) {
+            foreach (Collider collider in rig.OpenControls) {
+                GameObject ctrlObject = collider.gameObject;
+                RefGuideControl ctrl = ctrlObject.GetComponent<RefGuideControl>();
+
+                bool isPageTurn = ctrl.ControlType == RefGuideControlType.NextPage || ctrl.ControlType == RefGuideControlType.PrevPage;
+                if (isPageTurn && !Find.State<RefGuideState>().AllowPageChanges) continue;
                 ctrl.gameObject.SetActive(true);
             }
 
