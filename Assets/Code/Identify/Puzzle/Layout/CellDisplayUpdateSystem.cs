@@ -1,3 +1,4 @@
+using BeauRoutine;
 using FieldDay;
 using FieldDay.Scripting;
 using FieldDay.Systems;
@@ -34,7 +35,7 @@ namespace Astro
         public static void CheckEnableSubmit(PuzzleState state) {
             if (CheckFullyPopulated(state)) {
                 ScriptUtility.Trigger(ScriptEvents.OnPuzzleGridFullyPopulated);
-                state.Display.SubmitButton.Root.SetActive(true);
+                Routine.Start( state.Display.SubmitButton.SetButtonActive(true) );
             } 
         }
         public static bool CheckFullyPopulated(PuzzleState state) {

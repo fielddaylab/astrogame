@@ -5,6 +5,7 @@ using BeauUtil.Debugger;
 using System.Collections;
 using BeauUtil;
 using Astro.Reference;
+using BeauRoutine;
 
 namespace Astro {
     [SysUpdate(GameLoopPhase.Update, 501, AstroGame.SubmissionUpdateMask)] // After RowSelectSystem
@@ -28,7 +29,7 @@ namespace Astro {
             ReviewState pps = Find.State<ReviewState>();
             if (pps.CurrentSubmission == ReviewSubmissionType.None) {
                 pps.CurrentSubmission = ReviewSubmissionType.Puzzle;
-                btn.Root.SetActive(false);
+                Routine.Start( btn.SetButtonActive(false) );
                 return true;
             }
             return false;
@@ -50,7 +51,7 @@ namespace Astro {
                 Classification = classId,
                 Materials = rgs.SelectedMaterials
             };
-            btn.Root.SetActive(false);
+            Routine.Start( btn.SetButtonActive(false) );
             return true;
         }
     }

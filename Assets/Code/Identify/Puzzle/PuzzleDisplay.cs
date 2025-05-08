@@ -31,9 +31,8 @@ namespace Astro
         static private float OFFSCREEN_SPACING = 40;
         static private Vector3 DEFAULT_RENDER_SCALE = new Vector3(0.51f, 0.23f, 1);
 
-        public static void LoadCells(PuzzleDisplay display, RingBuffer<PuzzleCell> cells, PuzzleHeader[] headers, int numCols)
-        {
-            display.SubmitButton.Root.SetActive(false);
+        public static void LoadCells(PuzzleDisplay display, RingBuffer<PuzzleCell> cells, PuzzleHeader[] headers, int numCols) {
+            Routine.Start( display.SubmitButton.SetButtonActive(false) );
 
             int numRows = cells.Count / numCols;
             display.Cells = new PuzzleCell[numRows * numCols];

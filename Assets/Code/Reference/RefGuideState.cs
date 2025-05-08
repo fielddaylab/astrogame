@@ -14,6 +14,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
+
 
 //using System.Linq;
 using UnityEngine;
@@ -337,7 +339,8 @@ namespace Astro.Reference {
                     GameObject child = rig.SelectionPool.GetChild(i).gameObject;
                     child.SetActive(false);
                 }
-                rgs.SubmitButton.Root.SetActive(false);
+                // rgs.SubmitButton.Root.SetActive(false);
+                Routine.Start( rgs.SubmitButton.SetButtonActive(false) );
                 return;
             }
 
@@ -371,7 +374,8 @@ namespace Astro.Reference {
                     GameObject child = rig.SelectionPool.GetChild(i).gameObject;
                     child.SetActive(false);
                 }
-                rgs.SubmitButton.Root.SetActive(false);
+                // rgs.SubmitButton.Root.SetActive(false);
+                Routine.Start( rgs.SubmitButton.SetButtonActive(false) );
                 return;
             }
 
@@ -413,7 +417,9 @@ namespace Astro.Reference {
             if (!rgs.SubmissionActive) return;
 
             bool refGuideselection = rgs.SelectedRefClassification != null || rgs.SelectedMaterials != 0;
-            rgs.SubmitButton.Root.SetActive(focusActive && refGuideselection && !ReviewUtility.ReviewInProgress());
+
+            bool buttonActive = focusActive && refGuideselection && !ReviewUtility.ReviewInProgress();
+            Routine.Start( rgs.SubmitButton.SetButtonActive(buttonActive) );
         }
 
         #region Leaf
