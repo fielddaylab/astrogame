@@ -115,10 +115,10 @@ $call Wait(1)
 $call MonitorUI->ShowCeresLogo()
 // $call SetInstrumentUnlocked(HistoricalDataInstrument, true)
 {@Radio} Congratulations on being awarded clearance level 5. You are now cleared to use the infrared module on your telescope.
-{@Radio} Please reference your CERES Operator Manual for further information about your equipment.
-{@Radio} Thanking you for being an important part of the CERES Distributed Network of Citizen Observatories. Together, we will map the stars for a better tomorrow.
+{@Radio} Please reference your CERES Operator Manual for further information about your equipment.  $[Day4/Radio/l1_r_3(2)]
+{@Radio} Thanking you for being an important part of the CERES Distributed Network of Citizen Observatories. Together, we will map the stars for a better tomorrow. $[Day4/Radio/l1_r_3(3)]
 $call Wait(0.5)
-{@Radio} Tuning you to the Ice Cube CERES headquarters for further instruction...
+{@Radio} Tuning you to the Ice Cube CERES headquarters for further instruction... $[Day4/Radio/l1_r_4]
 $call MonitorUI->HideCeresLogo()
 $call Wait(1)
 $call StartPuzzleNavigation()

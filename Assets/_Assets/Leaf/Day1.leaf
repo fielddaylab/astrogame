@@ -402,12 +402,14 @@ $call AddIsolatedSlot(Photometer)
 :: PerseusPuzzleComplete
 @trigger    CorrectPuzzleSubmission
 @when   puzzleName == "Perseus"
+@cutscene
+@interrupt
 @once
 
 $call StopPuzzleMode()
 $call SetInputState(false)
 
-$call Wait(3)
+$call Wait(2)
 $call ClearMonitorSelection()
 {@Dad}  Awesome! $[Day1/Dad/l1_d_s31]
 {@Dad}  Gosh it’s late where you’re at... Get some rest kiddo. We’ll try to figure out 2-way communication tomorrow... $[Day1/Dad/l1_d_s33]
