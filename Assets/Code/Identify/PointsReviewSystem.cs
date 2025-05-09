@@ -80,6 +80,19 @@ namespace Astro {
             return info;
         }
 
+        [DebugMenuFactory]
+        private static DMInfo SpawnPuzzle() {
+            DMInfo info = new DMInfo("Puzzle");
+            info.AddButton("Spawn Puzzle", () => {
+                Game.Events.Dispatch(GameEvents.StartPuzzleMode);
+
+                GameLoop.ResumeUpdates(AstroGame.MonitorControlsUpdateMask);
+                GameLoop.ResumeUpdates(AstroGame.SubmissionUpdateMask);
+                GameLoop.ResumeUpdates(AstroGame.InstrumentUpdateMask);
+            });
+            return info;
+        }
+
         private void CheckObjectIdentification() {
             ReviewResult result = ReviewUtility.EvaluateSubmission(m_State.Identification, Find.State<PlayerProgressState>());
             ReviewUtility.ShowResultSprite(result == ReviewResult.Success, m_State);
