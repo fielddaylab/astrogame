@@ -19,6 +19,7 @@ namespace Astro {
         [Header("Components")]
         public TMP_Text DefaultOutput;
         public Transform OutputTransform;
+        public RenderAtlasOutput OutputAtlas;
 
         public readonly CastableEvent<DataPacket, DataFormattingFlags> OnDisplayRequested = new CastableEvent<DataPacket, DataFormattingFlags>();
         public readonly ActionEvent OnDisplayCleared = new ActionEvent();
@@ -73,6 +74,10 @@ namespace Astro {
             } else {
                 display.OnDisplayRequested.Invoke(packet, display.Formatting);
             }
+
+            if (display.OutputAtlas) {
+                display.OutputAtlas.MarkDirty();
+            }
         }
 
         static public void ClearDisplay(DataDisplay display) {
@@ -85,6 +90,9 @@ namespace Astro {
             }
 
             display.OnDisplayCleared.Invoke();
+            if (display.OutputAtlas) {
+                display.OutputAtlas.MarkDirty();
+            }
         }
 
         static public void SetDisplayHidden(DataDisplay display, bool hide) {
@@ -132,7 +140,7 @@ namespace Astro {
                 }
 
                 case DataTypeMask.Distance: {
-                    sb.AppendNoAlloc(packet.Value.Distance, 2).Append("lightyears");
+                    sb.AppendNoAlloc(packet.Value.Distance, 2).Append(" lightyears");
                     return true;
                 }
 

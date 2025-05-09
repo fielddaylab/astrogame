@@ -30,6 +30,7 @@ namespace Astro {
                     // check if focus is relevant to neutrino
                     if (day.NeutrinoEvent.RelevantObjectIds.Contains(focus.TargetData.AssetId))
                     {
+                        focus.HasHighlight = true;
                         var newHighlight = m_StateC.NeutrinoHighlights.Alloc(focus.Root);
                         m_StateA.ActiveHighlights.PushBack(newHighlight);
                     }
@@ -44,6 +45,9 @@ namespace Astro {
 
                 // clear existing highlights
                 foreach (var highlight in m_StateA.ActiveHighlights) {
+                    if (highlight.parent.TryGetComponent(out UIFocus focus)) {
+                        focus.HasHighlight = false;
+                    }
                     m_StateC.NeutrinoHighlights.Free(highlight);
                 }
 

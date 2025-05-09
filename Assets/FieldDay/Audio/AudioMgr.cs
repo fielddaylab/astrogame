@@ -194,9 +194,10 @@ namespace FieldDay.Audio {
                     }
                 }
 
+#if DEVELOPMENT
                 if (DebugFlags.IsFlagSet(DebuggingFlags.DisplayStats)) {
                     using(PooledStringBuilder psb = PooledStringBuilder.Create()) {
-                        psb.Builder.Append("Audio Instance Count: ").AppendNoAlloc(m_ActiveVoices.Count)
+                        psb.Builder.Append("Voice Count: ").AppendNoAlloc(m_ActiveVoices.Count)
                             .Append("\n   Active Tweens: ").AppendNoAlloc(m_FloatTweenList.Length)
                             .Append("\n   Active Position Trackers: ").AppendNoAlloc(m_PositionSyncList.Length)
                             .Append("\n   Clip Preload Queue: ").AppendNoAlloc(m_PreloadQueue.Count);
@@ -204,6 +205,39 @@ namespace FieldDay.Audio {
                         DebugDraw.AddLogText(psb, ColorBank.Aqua);
                     }
                 }
+
+                if (DebugFlags.IsFlagSet(DebuggingFlags.DisplayVoiceList)) {
+                    using (PooledStringBuilder psb = PooledStringBuilder.Create()) {
+                        psb.Builder.Append("Voice Count: ").AppendNoAlloc(m_ActiveVoices.Count);
+                        foreach(var voice in m_ActiveVoices) {
+                            psb.Builder.Append("\n   ").Append(voice.DebugName);
+                            AudioSource src = voice.Components.Source;
+                            psb.Builder.Append(" (").AppendNoAlloc(src.time, 2).Append('/')
+                                .AppendNoAlloc(src.clip.length, 2);
+                            if (src.loop) {
+                                psb.Builder.Append('L');
+                            }
+                            psb.Builder.Append(") ");
+                            switch(voice.State) {
+                                case VoiceState.Paused: {
+                                    psb.Builder.Append("[PAUSED]");
+                                    break;
+                                }
+                                case VoiceState.PlayRequested: {
+                                    psb.Builder.Append("[QUEUED]");
+                                    break;
+                                }
+                                case VoiceState.Stopped: {
+                                    psb.Builder.Append("[DONE]");
+                                    break;
+                                }
+                            }
+                        }
+
+                        DebugDraw.AddViewportText(new Vector2(0, 1), new Vector2(8, -8), psb, ColorBank.Teal, 0, TextAnchor.UpperLeft, DebugTextStyle.BackgroundDark); ;
+                    }
+                }
+#endif // DEVELOPMENT
             }
         }
 
@@ -211,6 +245,11 @@ namespace FieldDay.Audio {
             Unsafe.TryDestroyArena(ref m_Arena);
             m_TargetablePropertyBlocks = default;
 
+            foreach(var voice in m_ActiveVoices) {
+                if ((voice.Flags & AudioPlaybackFlags.UseProvidedSource) == 0) {
+                    m_VoiceComponentPool.Free(voice.Components);
+                }
+            }
             m_VoiceComponentPool.Clear();
         }
 
@@ -261,6 +300,7 @@ namespace FieldDay.Audio {
 
         private void OnAudioBusUnloaded(AudioBus bus) {
             // should never be unloaded whyyyyyy
+            throw new InvalidOperationException("AudioBus instances should all be loaded at boot. They cannot be unloaded.");
         }
 
         #endregion // Asset Handlers
@@ -379,7 +419,8 @@ namespace FieldDay.Audio {
 
         private enum DebuggingFlags {
             TraceExecution,
-            DisplayStats
+            DisplayStats,
+            DisplayVoiceList
         }
 
 #if DEVELOPMENT
@@ -388,8 +429,9 @@ namespace FieldDay.Audio {
         static private DMInfo CreateAudioDebugMenu() {
             DMInfo info = new DMInfo("Audio", 16);
             DebugFlags.Menu.AddSingleFrameFlagButton(info, "Trace Execution for Frame", DebuggingFlags.TraceExecution);
+            info.AddDivider();
             DebugFlags.Menu.AddFlagToggle(info, "Display Stats", DebuggingFlags.DisplayStats);
-            //info.AddDivider();
+            DebugFlags.Menu.AddFlagToggle(info, "Display Voices", DebuggingFlags.DisplayVoiceList);
 
             return info;
         }

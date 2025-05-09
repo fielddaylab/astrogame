@@ -11,22 +11,12 @@ using FieldDay.Scenes;
 
 
 namespace Astro {
-    public class InstrumentInventoryState : SharedStateComponent, IScenePreload {
+    public class InstrumentInventoryState : SharedStateComponent {
         // General access to instruments
         public RingBuffer<LabInstrument> ActiveInstruments = new RingBuffer<LabInstrument>(8);
 
         // Quicker access structured on instrument data types
         public Dictionary<DataTypeMask, List<LabInstrument>> ActiveInstrumentMap = new Dictionary<DataTypeMask, List<LabInstrument>>();
-
-        public IEnumerator<WorkSlicer.Result?> Preload() {
-            // Load unlocked instruments from player progress
-            //var progressState = Find.State<PlayerProgressState>();
-            //foreach (var instrumentID in progressState.UnlockedInstruments) {
-            //    var instrument = ScriptUtility.FindActor(instrumentID).GetComponent<LabInstrument>();
-            //    InstrumentInventoryUtility.SetInstrumentUnlocked(instrument, true, false, "");
-            //}
-            return null;
-        }
     }
 
     public static class InstrumentInventoryUtility

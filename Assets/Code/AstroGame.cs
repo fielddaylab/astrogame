@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Astro.Audio;
 using BeauPools;
 using BeauRoutine;
 using BeauUtil;
@@ -46,6 +47,7 @@ namespace Astro {
                 info.AddDivider();
                 info.AddButton("Load Sandbox", () => {
                     ScriptUtility.KillAllThreads();
+                    MusicUtility.StopMusic();
                     Game.Events.Dispatch(GameEvents.BeforeNextDayLoad);
                     Log.Msg("[ScriptTriggers] Loading sandbox day");
                     Find.State<PlayerProgressState>().LoadDebugScene = true;
@@ -60,6 +62,7 @@ namespace Astro {
             menu.AddButton("Load " + Find.NamedAsset<DayConfigAsset>(dayId).name, () => {
                 ScriptUtility.KillAllThreads();
                 ScriptTriggers.LoadDay(dayId);
+                MusicUtility.StopMusic();
 
 #if DEVELOPMENT
                 Find.State<PlayerProgressState>().LoadDebugScene = false;

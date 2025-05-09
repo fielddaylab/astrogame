@@ -40,6 +40,10 @@ public static class PuzzleNavigationUtility {
         puzzleNavState.NavigationModeActive = true;
 
         ViewNavUtility.LeafMoveToNode("Monitor");
+
+        WavelengthToggleState wavelengthState = Find.State<WavelengthToggleState>();
+        wavelengthState.AllowChanges = false;
+        WavelengthToggleUtility.SetMask(wavelengthState, CelestialObjectVisMask.Visible);
     } 
 
     public static void OnPuzzleNavComplete() {
@@ -58,6 +62,9 @@ public static class PuzzleNavigationUtility {
         ReviewModuleUtility.ResetReview();
 
         ViewNavUtility.LeafMoveToNode("Right");
+
+        WavelengthToggleState wavelengthState = Find.State<WavelengthToggleState>();
+        wavelengthState.AllowChanges = true;
     }
 
     [DebugMenuFactory]

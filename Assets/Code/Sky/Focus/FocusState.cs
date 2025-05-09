@@ -82,8 +82,10 @@ namespace Astro {
 
             ReferenceUtility.TryEnableIDSubmit(focus != null);
 
+            AstroGame.Events.Dispatch(GameEvents.OnStarSelected, EvtArgs.Ref(state.CurrentFocus));
+
             // Scripting
-            if(state.CurrentFocus == null) return;
+            if (state.CurrentFocus == null) return;
 
             if (IsCurrentFocusInNeutrinoEvent()) {
                 ScriptUtility.Trigger(ScriptEvents.OnNeutrinoStarSelected);

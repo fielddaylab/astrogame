@@ -51,6 +51,7 @@ MonoBehaviour:
   NullText: 
   DefaultOutput: {fileID: 0}
   OutputTransform: {fileID: 2445994067923915254}
+  OutputAtlas: {fileID: 0}
 --- !u!114 &1296281115437083586
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -69,6 +70,7 @@ MonoBehaviour:
   - {fileID: 974958788367027013}
   IsSource: 1
   IsActive: 1
+  IsHidingData: 0
   OverrideSlotId: Spectrometer
 --- !u!114 &2364724321605996629
 MonoBehaviour:
@@ -95,11 +97,12 @@ GameObject:
   - component: {fileID: 8249933874315370666}
   - component: {fileID: 4318892829675524799}
   - component: {fileID: 5700785875046588977}
-  - component: {fileID: 4781566269522962509}
   - component: {fileID: 1466819941318455010}
   - component: {fileID: 9072909825554849689}
   - component: {fileID: 5168492817498778390}
   - component: {fileID: 6730760738030882521}
+  - component: {fileID: 866240012559369713}
+  - component: {fileID: 5031059136945308033}
   m_Layer: 6
   m_Name: spectromMod_v1
   m_TagString: Untagged
@@ -171,26 +174,6 @@ MonoBehaviour:
   SwapSpeed: 1
   m_InitMat: {fileID: 2100000, guid: 2f75848563b72cb45877dc22eb77cec5, type: 2}
   m_SwapTo: {fileID: 2100000, guid: 02d3b54cf9c85c34fb8813b47892f149, type: 2}
---- !u!114 &4781566269522962509
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1391463076238217271}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ef9024f0f439a84dbfe13735dcd5a50, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Target: {fileID: 8249933874315370666}
-  m_Renderers:
-  - {fileID: 2683097722533292435}
-  - {fileID: 4575102160552859525}
-  m_MatIndex: 0
-  SwapSpeed: 1
-  m_InitMat: {fileID: 2100000, guid: db38c7371ff57ab42ad30ca7451537e8, type: 2}
-  m_SwapTo: {fileID: -8330174609607452025, guid: d3176e11c74bec74f9baf6f84b0042c9, type: 2}
 --- !u!114 &1466819941318455010
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -263,6 +246,40 @@ MonoBehaviour:
   - {fileID: 1296281115437083586}
   m_InitVal: 0
   m_SetTo: 1
+--- !u!114 &866240012559369713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1391463076238217271}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 011709f6930d15c4ea72fbc0b119e1d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Target: {fileID: 8249933874315370666}
+  m_Renderers:
+  - {fileID: 4575102160552859525}
+  m_InitVal: 0
+  m_SetTo: 1
+--- !u!114 &5031059136945308033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1391463076238217271}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ae620349e7bce24688d2ab26f9be5a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Always: 0
+  DestroyInactiveChildren: 0
+  Recursive: 0
+  DestroyGameObject: 0
+  IgnoreAnimators: 1
 --- !u!1 &1685012645731001522
 GameObject:
   m_ObjectHideFlags: 0
@@ -713,6 +730,7 @@ MonoBehaviour:
   Movable: {fileID: 6171828971102902529}
   LocalDisplacement: {x: 0.04, y: 0, z: 0}
   IsToggle: 0
+  AutoToggle: 0
   ClickSfx:
     m_HashValue: 2435162801
   ToggleSfx:

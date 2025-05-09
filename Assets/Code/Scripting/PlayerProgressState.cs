@@ -41,6 +41,11 @@ namespace Astro {
     [Flags]
     public enum PlayerCelestialAssetKnowledgeFlags : uint {
         IdentifiedResources = 0x01,
+        HasReadVisibleAppMag = 0x02,
+        HasReadBlueAppMag = 0x04,
+        HasReadIRAppMag = 0x08,
+
+        HasReadBothVisibleAndBlue = HasReadVisibleAppMag | HasReadBlueAppMag
     }
 
     static public class PlayerKnowledgeUtility {

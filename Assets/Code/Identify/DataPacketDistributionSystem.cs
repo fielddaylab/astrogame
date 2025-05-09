@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Astro
 {
-    [SysUpdate(GameLoopPhase.Update, 0)]
+    [SysUpdate(GameLoopPhase.Update, 10000)]
     public class DataPacketDistributionSystem : SharedStateSystemBehaviour<DataPacketDistributionState, InstrumentInventoryState>
     {
         private readonly RingBuffer<DataPacket> m_DistributeWorkList = new RingBuffer<DataPacket>(16);

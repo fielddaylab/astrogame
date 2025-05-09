@@ -1,3 +1,7 @@
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#define DEVELOPMENT
+#endif // UNITY_EDITOR || DEVELOPMENT_BUILD
+
 #if !UNITY_WEBGL
 #define SUPPORTS_AUDIOEFFECTS
 #endif // !UNITY_WEBGL
@@ -54,6 +58,10 @@ namespace FieldDay.Audio {
             public short PositionSyncIndex;
             public short KillTweenIndex;
             public FloatTweenIndices FloatTweens;
+
+#if DEVELOPMENT
+            public string DebugName;
+#endif // DEVELOPMENT
         }
 
         private enum VoiceState : byte {
@@ -509,6 +517,10 @@ namespace FieldDay.Audio {
             voice.Handle = default;
             voice.PlayStartedTS = -1;
             voice.FrameEnded = Frame.InvalidIndex;
+
+#if DEVELOPMENT
+            voice.DebugName = null;
+#endif // DEVELOPMENT
 
             m_VoiceDataPool.Free(voice);
         }

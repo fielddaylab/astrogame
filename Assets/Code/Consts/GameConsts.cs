@@ -24,7 +24,9 @@ public static class GameEvents {
     public static readonly StringHash32 LockMonitorFocus = "lock-monitor-focus";
     public static readonly StringHash32 UnlockMonitorFocus = "unlock-monitor-focus";
     public static readonly StringHash32 BeforeNextDayLoad = "before-next-day-load";
+
     public static readonly StringHash32 MonitorSwitchedFilter = "monitor-switched-filter";
+    public static readonly StringHash32 OnStarSelected = "monitor-star-selected";
 }
 
 public static class ScriptEvents {
@@ -73,7 +75,7 @@ public static class DataTypeLabels
     public static readonly string Distance = "Distance";
     public static readonly string HistoricalCoordinates = "H. Coords";
     public static readonly string HistoricalApparentMagnitude = "H. App. Magnitude";
-    public static readonly string HistoricalTemperature = "H. Temperature";
-    public static readonly string HistoricalDistance = "H. Distance";
+    public static readonly string BlueMagnitude = "Blue App. Magnitude";
+    public static readonly string InfraredMagnitude = "Infrared App. Magnitude";
     public static readonly string HistoricalColor = "H. Color";
 }

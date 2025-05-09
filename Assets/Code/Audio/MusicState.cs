@@ -57,7 +57,7 @@ namespace Astro.Audio {
         }
 
         [LeafMember("StopMusic")]
-        static private void StopMusic(float fadeOutTime = 0) {
+        static public void StopMusic(float fadeOutTime = 0) {
             MusicState state = Find.State<MusicState>();
             Sfx.StopAllWithTag(state.MusicTag, fadeOutTime);
 

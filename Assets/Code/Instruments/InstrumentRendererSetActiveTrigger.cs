@@ -1,17 +1,18 @@
-using BeauUtil;
 using FieldDay;
 using FieldDay.Components;
-using FieldDay.Scenes;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Astro
 {
-    public class InstrumentComponentSetActiveTrigger : BatchedComponent, IRegistrationCallbacks, IScenePreload
+    /// <summary>
+    /// Marks renderers as active on Instrument Unlock
+    /// </summary>
+    public class InstrumentRendererSetActiveTrigger : BatchedComponent, IRegistrationCallbacks
     {
         [SerializeField] private LabInstrument m_Target;
-        [SerializeField] private MonoBehaviour[] m_Components;
+        [SerializeField] private Renderer[] m_Renderers;
         [SerializeField] private bool m_InitVal;
         [SerializeField] private bool m_SetTo = true;
 
@@ -23,26 +24,22 @@ namespace Astro
         public void OnRegister()
         {
             m_Target.OnUnlock.Register(SetVals);
+            InitVals();
         }
 
         private void InitVals()
         {
-            foreach (var comp in m_Components)
+            foreach (var slot in m_Renderers)
             {
-                comp.enabled = m_InitVal;
+                slot.enabled = m_InitVal;
             }
-        }
-
-        IEnumerator<WorkSlicer.Result?> IScenePreload.Preload() {
-            InitVals();
-            return null;
         }
 
         private void SetVals()
         {
-            foreach (var comp in m_Components)
+            foreach (var slot in m_Renderers)
             {
-                comp.enabled = m_SetTo;
+                slot.enabled = m_SetTo;
             }
         }
     }

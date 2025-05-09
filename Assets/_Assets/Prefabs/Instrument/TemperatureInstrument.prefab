@@ -190,6 +190,7 @@ MonoBehaviour:
   NullText: ----K
   DefaultOutput: {fileID: 6128771299235368714}
   OutputTransform: {fileID: 0}
+  OutputAtlas: {fileID: 0}
 --- !u!114 &4182304740078956692
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -208,7 +209,8 @@ MonoBehaviour:
   - {fileID: 1423877700553296081}
   IsSource: 1
   IsActive: 0
-  OverrideSlotId: 
+  IsHidingData: 0
+  OverrideSlotId: Temperature
 --- !u!114 &1160521460837154828
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -267,7 +269,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ae620349e7bce24688d2ab26f9be5a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Always: 0
+  Always: 1
   DestroyInactiveChildren: 0
   Recursive: 0
   DestroyGameObject: 1
@@ -371,7 +373,9 @@ GameObject:
   - component: {fileID: 1081187474360938735}
   - component: {fileID: 4850234138305161126}
   - component: {fileID: 5590026634199791374}
-  - component: {fileID: 8103872655835361089}
+  - component: {fileID: 7863897794543675806}
+  - component: {fileID: 1513280169475559686}
+  - component: {fileID: 1723686094114423243}
   m_Layer: 6
   m_Name: TemperatureInstrument
   m_TagString: Untagged
@@ -497,7 +501,25 @@ MonoBehaviour:
   SwapSpeed: 1
   m_InitMat: {fileID: 2100000, guid: 2f75848563b72cb45877dc22eb77cec5, type: 2}
   m_SwapTo: {fileID: 2100000, guid: aae69f2c36185ea4bb6e7a4738f5b080, type: 2}
---- !u!114 &8103872655835361089
+--- !u!114 &7863897794543675806
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5831406407145760971}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 011709f6930d15c4ea72fbc0b119e1d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Target: {fileID: 6759188942793463851}
+  m_Renderers:
+  - {fileID: 9196511175976507199}
+  - {fileID: 5089426240107272034}
+  m_InitVal: 0
+  m_SetTo: 1
+--- !u!114 &1513280169475559686
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -511,12 +533,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Target: {fileID: 6759188942793463851}
   m_Renderers:
-  - {fileID: 9100806316151082495}
-  - {fileID: 5089426240107272034}
+  - {fileID: 8878552598789935655}
   m_MatIndex: 0
   SwapSpeed: 1
-  m_InitMat: {fileID: 2100000, guid: db38c7371ff57ab42ad30ca7451537e8, type: 2}
-  m_SwapTo: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_InitMat: {fileID: 2100000, guid: 2f75848563b72cb45877dc22eb77cec5, type: 2}
+  m_SwapTo: {fileID: 2100000, guid: 17d9da1e192b3c948b74a691682fc3ca, type: 2}
+--- !u!114 &1723686094114423243
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5831406407145760971}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ae620349e7bce24688d2ab26f9be5a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Always: 0
+  DestroyInactiveChildren: 0
+  Recursive: 0
+  DestroyGameObject: 0
+  IgnoreAnimators: 1
 --- !u!1 &6759433452560260564
 GameObject:
   m_ObjectHideFlags: 0
@@ -646,6 +684,7 @@ MonoBehaviour:
   Movable: {fileID: 2185201715194476701}
   LocalDisplacement: {x: -0.04, y: 0, z: 0}
   IsToggle: 0
+  AutoToggle: 0
   ClickSfx:
     m_HashValue: 2435162801
   ToggleSfx:
@@ -709,7 +748,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  - {fileID: -2053649777416516534, guid: a3700265c06e7dc4289ca6b84a62bb76, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -753,8 +792,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Temperature
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a3700265c06e7dc4289ca6b84a62bb76, type: 2}
+  m_sharedMaterial: {fileID: -2053649777416516534, guid: a3700265c06e7dc4289ca6b84a62bb76, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

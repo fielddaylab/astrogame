@@ -41,6 +41,14 @@ namespace Astro {
         [Header("Constellation Path")]
         [AssetName(typeof(SkyRegionBounds))] public StringHash32 ConstellationBoundaryId;
 
+#if UNITY_EDITOR
+        private void OnValidate() {
+            if ((Visibility & CelestialObjectVisMask.Visible) != 0) {
+                Visibility |= CelestialObjectVisMask.Blue | CelestialObjectVisMask.Infrared;
+            }
+        }
+#endif // UNITY_EDITOR
+
         #endregion // Inspector
 
         /// <summary>
@@ -113,7 +121,8 @@ namespace Astro {
     [Flags]
     public enum CelestialObjectVisMask {
         Visible = 0x01,
-        Radio = 0x02
+        Infrared = 0x02,
+        Blue = 0x04,
     }
     public sealed class ConstellationIdAttribute : AssetNameAttribute {
         public ConstellationIdAttribute() : base(typeof(CelestialAsset), true) { }

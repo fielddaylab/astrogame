@@ -127,6 +127,28 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3683244059978207770, guid: 737adc3e7f83dd94b80e585158d42a3a, type: 3}
   m_PrefabInstance: {fileID: 1558833556847029042}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &41435365 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5570855126330278802, guid: 547cd4c9214860c4088ccc9080fc0f9f, type: 3}
+  m_PrefabInstance: {fileID: 462649433229653661}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c213f765f524eae438bc5cd397dc9b34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &105168745 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 949516819235753085, guid: 547cd4c9214860c4088ccc9080fc0f9f, type: 3}
+  m_PrefabInstance: {fileID: 462649433229653661}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c213f765f524eae438bc5cd397dc9b34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &361457958
 GameObject:
   m_ObjectHideFlags: 0
@@ -140,7 +162,7 @@ GameObject:
   - component: {fileID: 361457959}
   - component: {fileID: 361457962}
   m_Layer: 0
-  m_Name: RadioLogic
+  m_Name: WavelengthLogic
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -158,18 +180,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43d0b499d1ace984c90e0efee7984a25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Button: {fileID: 1142292674}
+  VisibleButton: {fileID: 41435365}
+  BlueButton: {fileID: 105168745}
+  InfraredButton: {fileID: 1142292674}
   VisibleMaterial: {fileID: 2100000, guid: 7f42b81d971beb9448b0c5cf189fbb2a, type: 2}
-  RadioMaterial: {fileID: 2100000, guid: 7e12db00e5861c94db7e9a411ca29abf, type: 2}
+  BlueMaterial: {fileID: 2100000, guid: 6e80ce263de2b584a999aced93e23eff, type: 2}
+  InfraredMaterial: {fileID: 2100000, guid: 7e12db00e5861c94db7e9a411ca29abf, type: 2}
   HorizonPlaneVisibleMaterial: {fileID: 2100000, guid: fe9576405f2c8d74d9b747f29a6f57ac, type: 2}
   HorizonPlaneBlueMaterial: {fileID: 2100000, guid: b7b5c67dd3c62ed42ba4d08824224d4c, type: 2}
-  HorizonPlaneRadioMaterial: {fileID: 2100000, guid: 1ddcb039bd74a83458fe3e0916a14f43, type: 2}
+  HorizonPlaneInfraredMaterial: {fileID: 2100000, guid: 1ddcb039bd74a83458fe3e0916a14f43, type: 2}
   HorizonRingVisibleMaterial: {fileID: 2100000, guid: 3397e99ae68c46a479640c98147e7421, type: 2}
   HorizonRingBlueMaterial: {fileID: 2100000, guid: 2c6d389a8591380438369eb87624bda0, type: 2}
-  HorizonRingRadioMaterial: {fileID: 2100000, guid: 71294ddd65ede8d4eb6f8f3d1d796fac, type: 2}
+  HorizonRingInfraredMaterial: {fileID: 2100000, guid: 71294ddd65ede8d4eb6f8f3d1d796fac, type: 2}
   HorizonGlowVisibleMaterial: {fileID: 2100000, guid: 0d8a95cbbbfa29f4b8404ae055762161, type: 2}
   HorizonGlowBlueMaterial: {fileID: 2100000, guid: 72ce42b1998399541b9a1b175351615b, type: 2}
-  HorizonGlowRadioMaterial: {fileID: 2100000, guid: b3f088b7900fee942b348c2209332bae, type: 2}
+  HorizonGlowInfraredMaterial: {fileID: 2100000, guid: b3f088b7900fee942b348c2209332bae, type: 2}
 --- !u!114 &361457960
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -209,6 +234,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e1101b79ced80f47b4ad422f338068a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_InitialCapacity: 3
 --- !u!1 &848053348
 GameObject:
   m_ObjectHideFlags: 0
@@ -774,7 +800,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8695456584644774168, guid: 547cd4c9214860c4088ccc9080fc0f9f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 0}
-    - targetCorrespondingSourceObject: {fileID: 3743611180101865937, guid: 547cd4c9214860c4088ccc9080fc0f9f, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 887349668725823432, guid: 547cd4c9214860c4088ccc9080fc0f9f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 547cd4c9214860c4088ccc9080fc0f9f, type: 3}

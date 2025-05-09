@@ -47,6 +47,10 @@ public static class NeutrinoNavigationUtility {
         ViewNavUtility.LeafMoveToNode("Monitor");
         state.LookUpdatedThisFrame = true;
         state.OnLookUpdated.Invoke(state);
+
+        WavelengthToggleState wavelengthState = Find.State<WavelengthToggleState>();
+        wavelengthState.AllowChanges = false;
+        WavelengthToggleUtility.SetMask(wavelengthState, CelestialObjectVisMask.Visible);
     }
 
     public static void OnNeutrinoNavStopped() {
@@ -60,6 +64,9 @@ public static class NeutrinoNavigationUtility {
 
         state.LookUpdatedThisFrame = true;
         state.OnLookUpdated.Invoke(state);
+
+        WavelengthToggleState wavelengthState = Find.State<WavelengthToggleState>();
+        wavelengthState.AllowChanges = true;
 
         ViewNavUtility.LeafMoveToNode("Right");
     }

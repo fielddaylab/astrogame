@@ -15,7 +15,7 @@ namespace Astro {
             var highlightState = Find.State<SlotHighlightState>();
 
             if (component.IsSource) { // Instrument Load Button (source) highlights
-                if (component.IsActive) {
+                if (component.IsActive && !component.IsHidingData) {
                     TryHighlightInstrumentButton(transferState, highlightState, highlight, component);
                 }
             } else { // Puzzle Cell (target) highlights
@@ -45,6 +45,10 @@ namespace Astro {
         }
 
         private bool TryHighlightInstrumentButton(DataTransferState transferState, SlotHighlightState highlightState, RelevantSlotHighlight highlight, DataSlot slot) {
+            if (highlight.Ignored) {
+                return false;
+            }
+
             bool targetNotNull = transferState.SelectedTarget != null;
             bool sourceIsNull = transferState.SelectedSource == null;
             bool typesMatch = targetNotNull && ((transferState.SelectedTarget.Type & slot.Type) != 0);

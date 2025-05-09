@@ -12,6 +12,7 @@ namespace Astro {
         [Required] public DataDisplay[] Displays;
         public bool IsSource;
         public bool IsActive = true;
+        public bool IsHidingData;
 
         [NonSerialized] public bool HasData;
         [NonSerialized] public bool Modifiable = true;
@@ -63,13 +64,15 @@ namespace Astro {
         static public bool TrySetData(DataSlot slot, DataPacket packet) {
             if ((packet.Type & slot.Type) == 0) {
                 return false;
-            }
+        }
 
             if (!slot.HasData || !slot.CurrentData.Equals(packet)) {
                 slot.HasData = true;
                 slot.CurrentData = packet;
-                foreach (var display in slot.Displays) {
-                    PopulateDisplay(display, packet);
+                if (!slot.IsHidingData) {
+                    foreach (var display in slot.Displays) {
+                        PopulateDisplay(display, packet);
+                    }
                 }
                 slot.OnDataModified.Invoke(packet);
             }
@@ -93,6 +96,28 @@ namespace Astro {
                 return true;
             }
             return false;
+        }
+
+        static public void HideData(DataSlot slot) {
+            if (!slot.IsHidingData) {
+                slot.IsHidingData = true;
+                if (slot.HasData) {
+                    foreach (var display in slot.Displays) {
+                        ClearDisplay(display);
+                    }
+                }
+            }
+        }
+
+        static public void RevealData(DataSlot slot) {
+            if (slot.IsHidingData) {
+                slot.IsHidingData = false;
+                if (slot.HasData) {
+                    foreach (var display in slot.Displays) {
+                        PopulateDisplay(display, slot.CurrentData);
+                    }
+                }
+            }
         }
     }
 }

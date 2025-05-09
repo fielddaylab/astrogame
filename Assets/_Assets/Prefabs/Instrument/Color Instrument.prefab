@@ -15,7 +15,9 @@ GameObject:
   - component: {fileID: 235637667976877260}
   - component: {fileID: 6188558229182586883}
   - component: {fileID: 3589326370406881479}
-  - component: {fileID: 3160525825203235979}
+  - component: {fileID: 4626048893742860156}
+  - component: {fileID: 612337092296513097}
+  - component: {fileID: 4017715203241062320}
   m_Layer: 6
   m_Name: Color Instrument
   m_TagString: Untagged
@@ -143,7 +145,25 @@ MonoBehaviour:
   SwapSpeed: 1
   m_InitMat: {fileID: 2100000, guid: 2f75848563b72cb45877dc22eb77cec5, type: 2}
   m_SwapTo: {fileID: 2100000, guid: aae69f2c36185ea4bb6e7a4738f5b080, type: 2}
---- !u!114 &3160525825203235979
+--- !u!114 &4626048893742860156
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1594254822178239427}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 011709f6930d15c4ea72fbc0b119e1d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Target: {fileID: 6533512667492188472}
+  m_Renderers:
+  - {fileID: 8444295266575669229}
+  - {fileID: 7305366589377039026}
+  m_InitVal: 0
+  m_SetTo: 1
+--- !u!114 &612337092296513097
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -157,12 +177,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Target: {fileID: 6533512667492188472}
   m_Renderers:
-  - {fileID: 7368937699893400880}
-  - {fileID: 3279237678524263677}
+  - {fileID: 6697909524445204055}
   m_MatIndex: 0
   SwapSpeed: 1
-  m_InitMat: {fileID: 2100000, guid: db38c7371ff57ab42ad30ca7451537e8, type: 2}
-  m_SwapTo: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_InitMat: {fileID: 2100000, guid: a914d19d4425ee041a17563d128457c5, type: 2}
+  m_SwapTo: {fileID: 2100000, guid: 17d9da1e192b3c948b74a691682fc3ca, type: 2}
+--- !u!114 &4017715203241062320
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1594254822178239427}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ae620349e7bce24688d2ab26f9be5a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Always: 0
+  DestroyInactiveChildren: 0
+  Recursive: 0
+  DestroyGameObject: 0
+  IgnoreAnimators: 1
 --- !u!1 &1728720626148072859
 GameObject:
   m_ObjectHideFlags: 0
@@ -292,6 +328,7 @@ MonoBehaviour:
   Movable: {fileID: 6110043546329935470}
   LocalDisplacement: {x: -0.04, y: 0, z: 0}
   IsToggle: 0
+  AutoToggle: 0
   ClickSfx:
     m_HashValue: 2435162801
   ToggleSfx:
@@ -395,7 +432,6 @@ GameObject:
   - component: {fileID: 1702174487126809636}
   - component: {fileID: 497425580477478112}
   - component: {fileID: 9172251493109878227}
-  - component: {fileID: 6497388951462484226}
   m_Layer: 6
   m_Name: ColorIndex
   m_TagString: Untagged
@@ -572,6 +608,7 @@ MonoBehaviour:
   NullText: ---
   DefaultOutput: {fileID: 1702174487126809636}
   OutputTransform: {fileID: 0}
+  OutputAtlas: {fileID: 0}
 --- !u!114 &9172251493109878227
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -590,20 +627,8 @@ MonoBehaviour:
   - {fileID: 497425580477478112}
   IsSource: 1
   IsActive: 0
-  OverrideSlotId: 
---- !u!114 &6497388951462484226
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5599620441138103039}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8024ff296cca524c8e8b4f8dff4009c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Mesh: {fileID: 6697909524445204055}
+  IsHidingData: 0
+  OverrideSlotId: ColorIndex
 --- !u!1 &6316125335154494426
 GameObject:
   m_ObjectHideFlags: 0
@@ -618,6 +643,7 @@ GameObject:
   - component: {fileID: 1174308918916720926}
   - component: {fileID: 9132523622678892291}
   - component: {fileID: 4590931907902667025}
+  - component: {fileID: 1284734507558039380}
   m_Layer: 6
   m_Name: ColorQuad
   m_TagString: Untagged
@@ -708,6 +734,7 @@ MonoBehaviour:
   - {fileID: 4590931907902667025}
   IsSource: 1
   IsActive: 0
+  IsHidingData: 0
   OverrideSlotId: Color
 --- !u!114 &9132523622678892291
 MonoBehaviour:
@@ -739,6 +766,20 @@ MonoBehaviour:
   NullText: 
   DefaultOutput: {fileID: 0}
   OutputTransform: {fileID: 0}
+  OutputAtlas: {fileID: 0}
+--- !u!114 &1284734507558039380
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6316125335154494426}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8024ff296cca524c8e8b4f8dff4009c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Mesh: {fileID: 6697909524445204055}
 --- !u!1 &6814906968424970813
 GameObject:
   m_ObjectHideFlags: 0
@@ -880,7 +921,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  - {fileID: -2053649777416516534, guid: a3700265c06e7dc4289ca6b84a62bb76, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -924,8 +965,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Color Index
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a3700265c06e7dc4289ca6b84a62bb76, type: 2}
+  m_sharedMaterial: {fileID: -2053649777416516534, guid: a3700265c06e7dc4289ca6b84a62bb76, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1211,7 +1252,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ae620349e7bce24688d2ab26f9be5a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Always: 0
+  Always: 1
   DestroyInactiveChildren: 0
   Recursive: 0
   DestroyGameObject: 1
