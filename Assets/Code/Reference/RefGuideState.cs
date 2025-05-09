@@ -13,11 +13,6 @@ using Leaf.Runtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using TMPro;
-
-
-//using System.Linq;
 using UnityEngine;
 
 namespace Astro.Reference {
@@ -390,7 +385,7 @@ namespace Astro.Reference {
                 rgs.SelectedMaterials |= region.Material;
             }
 
-            RefGuideControlPage page = Array.Find(rig.ControlPages, p => p.Regions.Contains(region));
+            RefGuideControlPage page = Array.Find(rig.ControlPages, p => Array.IndexOf(p.Regions, region) != -1);
 
             // Update highlights
             for (int i = 0; i < rig.SelectionPool.childCount; i++) {
