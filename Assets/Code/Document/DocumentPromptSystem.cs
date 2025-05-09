@@ -44,6 +44,8 @@ namespace Astro {
 
                 // move question to specific position relative to document
                 boardState.DocumentRoutine.Replace(DocumentUtility.MoveAboveRelativeToDoc(boardState.DraggablePlaced, puzzleState.CurrHoverDoc));
+                // clear document highlight
+                DocumentUtility.SetDocumentHighlight(puzzleState.CurrHoverDoc, Color.white);
             }
 
         }

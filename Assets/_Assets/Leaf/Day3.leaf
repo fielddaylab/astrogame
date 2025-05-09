@@ -36,14 +36,13 @@ $call SetInputState(true)
 @cutscene
 @once
 
-$call SetInputState(false)
 {@Astrid} I don’t get it. We need to warn people? About what?
 {@Astrid} Ugh. Elijah, I love you, but I could really use less poetry and more information. 
-$call SetInputState(true)
 
 :: SpawnPuzzleDocs2
 @trigger    DocumentInspectEnd
 @when   documentId == "Day3ElijahPostcard"
+@interrupt
 @once
 
 $call SetInputState(false)
@@ -54,13 +53,14 @@ $call SetInputState(true)
 :: SpawnPuzzleDocs3
 @trigger    DocumentInspectEnd
 @when   documentId == "HerculesPostcard"
+@interrupt
 @once
 
 $call SetInputState(false)
 $call Wait(1)
 $call StartDocumentPuzzle("Day3DocumentPuzzle")
-{@Astrid} Has Elijah gone crazy? 
 $call SetInputState(true)
+{@Astrid} Has Elijah gone crazy? 
 
 :: IncorrectDocumentResponse
 @trigger    DocumentPuzzlePromptStart

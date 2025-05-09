@@ -26,6 +26,7 @@ namespace Astro {
         None,
         Zoom,
         Move,
+        Close,
         Flip
     }
 }

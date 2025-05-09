@@ -1,4 +1,5 @@
 using BeauUtil;
+using EasyAssetStreaming;
 using FieldDay;
 using FieldDay.Debugging;
 using FieldDay.SharedState;
@@ -12,8 +13,15 @@ namespace Astro {
         [NonSerialized] public DocumentPuzzleAsset CurrPuzzle = null;
         [NonSerialized] public DocumentRenderer CurrHoverDoc = null;
 
+        [SerializeField] private Color32 m_docHighlightColor;
+        [SerializeField] public static Color32 DocHighlightColor;
+
         public enum DebuggingFlags {
             DisplayDocumentHoverInfo
+        }
+
+        private void Awake() {
+           DocHighlightColor = m_docHighlightColor; 
         }
     }
 
@@ -64,7 +72,8 @@ namespace Astro {
                             Debug.Log("[DocumentUtility > UpdatePuzzleHoverAsset] Hover ended.");
                         }
                     }
-                    state.CurrHoverDoc = doc;
+                    SetDocumentHighlight(state.CurrHoverDoc, Color.white);
+                    state.CurrHoverDoc = null;
                 }
             }
             else if (state.CurrHoverDoc != null && state.CurrHoverDoc.Interactable.AssetName.Equals(doc.Interactable.AssetName)) {
@@ -82,7 +91,22 @@ namespace Astro {
                         Debug.Log("[PuzzleState] Hover changed: " + doc.name);
                     }
                 }
+                SetDocumentHighlight(state.CurrHoverDoc, Color.white);
                 state.CurrHoverDoc = doc;
+                SetDocumentHighlight(state.CurrHoverDoc, DocumentPuzzleState.DocHighlightColor);
+            }
+        }
+
+        public static void SetDocumentHighlight(DocumentRenderer doc, Color color) {
+            if (doc == null) return;
+
+            StreamingQuadTexture[] textures = doc.GetComponentsInChildren<StreamingQuadTexture>(true);
+            foreach (var texture in textures) {
+                texture.Color = color;
+            }
+            ColorGroup[] cgs = doc.GetComponentsInChildren<ColorGroup>(true);
+            foreach (var cg in cgs) {
+                cg.Color = color;
             }
         }
     }

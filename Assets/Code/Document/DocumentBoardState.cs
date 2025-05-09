@@ -1,6 +1,5 @@
 using BeauRoutine;
 using BeauUtil;
-using EasyAssetStreaming;
 using FieldDay;
 using FieldDay.Assets;
 using FieldDay.HID;
@@ -38,6 +37,9 @@ namespace Astro {
         [Range(0f, 1f)] public float FollowSpeed;
         public Vector3 DocHoverOffset;
         public Vector3 DocZoomOffset;
+
+        public static readonly DocPartFunction[] ZoomActiveFunctions = new []{ DocPartFunction.Close, DocPartFunction.Flip };
+        public static readonly DocPartFunction[] BoardActiveFunctions = new []{ DocPartFunction.Move, DocPartFunction.Zoom, DocPartFunction.Flip };
     }
 
     public static partial class DocumentUtility {
@@ -182,6 +184,10 @@ namespace Astro {
                         ToggleZoomDoc(docPart.Document, state);
                         break;
                     }
+                case DocPartFunction.Close: {
+                        ReturnDocToBoard(docPart.Document, state);
+                        break;
+                    }
                 case DocPartFunction.Flip: {
                         FlipDoc(docPart.Document, state);
                         break;
@@ -213,6 +219,10 @@ namespace Astro {
                 state.SelectedDocument = null;
             }
             state.InteractedThisFrame = true;
+
+            //check if we are currently over a puzzle doc
+            DocumentRenderer hoverDoc = Find.State<DocumentPuzzleState>().CurrHoverDoc;
+            if (hoverDoc != null) SetDocumentHighlight(hoverDoc, DocumentPuzzleState.DocHighlightColor);
         }
 
         public static void DeselectDocument(DocumentBoardState state) {
@@ -220,15 +230,13 @@ namespace Astro {
         }
 
         public static void ToggleZoomDoc(DocumentInteractable doc, DocumentBoardState state = null) {
-            if (doc == null) {
-                return;
-            }
-            if (state == null) {
-                state = Find.State<DocumentBoardState>();
-            }
+            if (doc == null) return;
+            if (state == null) state = Find.State<DocumentBoardState>();
+
             if (state.SelectedDocument) {
                 DeselectDocument(state);
             }
+
             if (state.DocZoomed) {
                 // Return doc to board
                 ReturnDocToBoard(doc, state);
@@ -236,11 +244,22 @@ namespace Astro {
                 // Bring doc to camera
                 BringDocToCam(doc, state);
             }
+
             state.InteractedThisFrame = true;
         }
 
         private static void ReturnDocToBoard(DocumentInteractable doc, DocumentBoardState state) {
             SetInteractionLayer(state.DocZoomed, LayerMasks.DocumentInteract_Index);
+
+            var docParts = doc.GetComponentsInChildren<DocumentPart>(true);
+            foreach (DocumentPart part in docParts) {
+                if (Array.IndexOf(DocumentBoardState.BoardActiveFunctions, part.PartType) != -1) {
+                    part.gameObject.SetActive(true);
+                } else {
+                    part.gameObject.SetActive(false);
+                } 
+            }
+
             state.DocumentRoutine.Replace(MoveDocToPos(doc.transform, state.StoredDocPos))
                 .OnComplete(() =>
                 {
@@ -277,11 +296,19 @@ namespace Astro {
             DocumentUtility.DisplayFullDocument(renderer, asset);
 
             state.DocumentRoutine.Replace(MoveDocToCam(viewState, doc.transform, Game.Rendering.PrimaryCamera.transform, zoomOffset))
-                .OnComplete(() =>
-                {
+                .OnComplete(() => {
                     using (var table = TempVarTable.Alloc()) {
                         table.Set("documentId", doc.AssetName);
                         ScriptUtility.Trigger(ScriptEvents.DocumentInspectStart, table);
+                    }
+
+                    var docParts = doc.GetComponentsInChildren<DocumentPart>(true);
+                    foreach (DocumentPart part in docParts) {
+                        if (Array.IndexOf(DocumentBoardState.ZoomActiveFunctions, part.PartType) != -1) {
+                            part.gameObject.SetActive(true);
+                        } else {
+                            part.gameObject.SetActive(false);
+                        } 
                     }
                 });
 
@@ -328,8 +355,7 @@ namespace Astro {
         #endregion // Interaction
 
         #region Routines
-        public static IEnumerator MoveAboveRelativeToDoc(DocumentInteractable doc, DocumentRenderer relativeTo)
-        {
+        public static IEnumerator MoveAboveRelativeToDoc(DocumentInteractable doc, DocumentRenderer relativeTo) {
             // align to bottom-left with out-sticking margin
             var margin = 0.2f;
             var localOffset = new Vector3(-relativeTo.Size.width / 2 + doc.Renderer.Size.width / 2 - margin, -relativeTo.Size.height + doc.Renderer.Size.height / 2, -0.01f);
