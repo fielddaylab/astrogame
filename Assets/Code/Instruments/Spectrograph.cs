@@ -26,6 +26,7 @@ namespace Astro {
         Magnesium = 0x040,
         Oxygen = 0x080,
         Titanium = 0x100,
+        Lithium = 0x200,
 
         OType = Hydrogen | Helium,
         BType = Hydrogen | Helium | Carbon,

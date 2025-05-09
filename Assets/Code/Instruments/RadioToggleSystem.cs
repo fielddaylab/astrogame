@@ -21,7 +21,7 @@ namespace Astro {
 
             state.CurrentState = toggle;
             cam.Skybox.material = toggle ? state.RadioMaterial : state.VisibleMaterial;
-            skyGen.VisMask = toggle ? CelestialObjectVisMask.Radio : CelestialObjectVisMask.Visible;
+            skyGen.VisMask = toggle ? CelestialObjectVisMask.Infrared : CelestialObjectVisMask.Visible;
             skyGen.IsDirty = true;
             cam.LookUpdatedThisFrame = true;
 
