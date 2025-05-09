@@ -72,7 +72,7 @@ public static class DataTypeLabels
     public static readonly string Distance = "Distance";
     public static readonly string HistoricalCoordinates = "H. Coords";
     public static readonly string HistoricalApparentMagnitude = "H. App. Magnitude";
-    public static readonly string HistoricalTemperature = "H. Temperature";
-    public static readonly string HistoricalDistance = "H. Distance";
+    public static readonly string BlueMagnitude = "Blue Magnitude";
+    public static readonly string InfraredMagnitude = "IR Magnitude";
     public static readonly string HistoricalColor = "H. Color";
 }
