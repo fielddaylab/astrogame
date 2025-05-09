@@ -99,7 +99,7 @@ namespace FieldDay.Debugging {
 
         static private void BeginTest(in SmokeTestData test) {
             try {
-                test.Setup?.Invoke();
+                test.Prolog?.Invoke();
             }
             catch(Exception e) {
                 UnityEngine.Debug.LogException(e);
@@ -108,7 +108,7 @@ namespace FieldDay.Debugging {
 
         static private void EndTest(in SmokeTestData test) {
             try {
-                test.Teardown?.Invoke();
+                test.Epilog?.Invoke();
             } catch (Exception e) {
                 UnityEngine.Debug.LogException(e);
             }
@@ -166,10 +166,10 @@ namespace FieldDay.Debugging {
 
     public struct SmokeTestData {
         public string Name;
-        public Action Setup;
+        public Action Prolog;
         public Action Execute;
         public Func<IEnumerator> ExecuteAsync;
-        public Action Teardown;
+        public Action Epilog;
         public float TimeOut;
     }
 
