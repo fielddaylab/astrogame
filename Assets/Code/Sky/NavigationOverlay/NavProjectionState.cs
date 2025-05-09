@@ -191,12 +191,12 @@ namespace Astro {
             }
 
             Vector2 canvasSize = navState.OutlineGroup.rect.size;
-            int starCount = puzzleState.ActivePuzzle.Stars.Length;
+            int starCount = puzzleState.ActivePuzzle.ConstellationStars.Length;
             StringHash32* starAssetIds = stackalloc StringHash32[starCount];
             Vector2* starAnchors = stackalloc Vector2[starCount];
 
             for (int i = 0; i < starCount; i++) {
-                StringHash32 assetId = puzzleState.ActivePuzzle.Stars[i];
+                StringHash32 assetId = puzzleState.ActivePuzzle.ConstellationStars[i];
                 starAssetIds[i] = assetId;
 
                 CelestialAsset currAsset = Find.NamedAsset<CelestialAsset>(assetId);

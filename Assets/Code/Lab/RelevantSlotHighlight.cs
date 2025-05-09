@@ -14,6 +14,7 @@ namespace Astro
         public MeshRenderer Mesh;
         [NonSerialized] public Material OriginalMaterial;
         [NonSerialized] public bool Dimmed;
+        [NonSerialized] public bool Ignored;
 
         private void Awake() {
             if (Mesh) {

@@ -21,6 +21,8 @@ namespace Astro {
 
         BlueMagnitude = 0x800,
         InfraredMagnitude = 0x1000,
-        Historical_Color = 0x2000
+        Historical_Color = 0x2000,
+
+        ColorIndex = 0x4000
     }
 }

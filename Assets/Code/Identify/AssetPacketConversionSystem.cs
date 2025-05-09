@@ -6,9 +6,9 @@ namespace Astro {
     /// <summary>
     /// Handles the conversion of selected Celestial Assets into their corrisponding DataPackets to be passed to DataPacketDistributionSystem.
     /// </summary>
-    [SysUpdate(GameLoopPhase.Update, 0)]
+    [SysUpdate(GameLoopPhase.Update, 9999)]
     public class AssetPacketConversionSystem : SharedStateSystemBehaviour<DataPacketDistributionState, InstrumentInventoryState> {
-        private readonly RingBuffer<DataPacket> m_ConvertedPackets = new RingBuffer<DataPacket>(8);
+        private readonly RingBuffer<DataPacket> m_ConvertedPackets = new RingBuffer<DataPacket>(16);
         private DataTypeMask m_AvailableInstrumentTypes;
 
         public override void ProcessWork(float deltaTime) {
@@ -66,16 +66,8 @@ namespace Astro {
                 }
                 m_ConvertedPackets.PushBack(newPacket);
             }
-            if ((m_AvailableInstrumentTypes & DataTypeMask.Color) != 0) {
-                DataPacket newPacket;
-                if (m_StateA.ToConvert != null) {
-                    newPacket = DataPacket.Color(m_StateA.ToConvert.ColorId);
-                }
-                else {
-                    newPacket = DataPacket.Null(DataTypeMask.Color);
-                }
-                m_ConvertedPackets.PushBack(newPacket);
-            }
+
+            // Photometer packets first
             if ((m_AvailableInstrumentTypes & DataTypeMask.ApparentMagnitude) != 0) {
                 DataPacket newPacket;
                 if (m_StateA.ToConvert != null) {
@@ -83,6 +75,24 @@ namespace Astro {
                 }
                 else {
                     newPacket = DataPacket.MinAppMagnitude();
+                }
+                m_ConvertedPackets.PushBack(newPacket);
+            }
+            if ((m_AvailableInstrumentTypes & DataTypeMask.BlueMagnitude) != 0) {
+                DataPacket newPacket;
+                if (m_StateA.ToConvert != null) {
+                    newPacket = DataPacket.BlueMagnitude(m_StateA.ToConvert.ApparentBlueMagnitude);
+                } else {
+                    newPacket = DataPacket.MinBlueMagnitude();
+                }
+                m_ConvertedPackets.PushBack(newPacket);
+            }
+            if ((m_AvailableInstrumentTypes & DataTypeMask.InfraredMagnitude) != 0) {
+                DataPacket newPacket;
+                if (m_StateA.ToConvert != null) {
+                    newPacket = DataPacket.InfraredMagnitude(m_StateA.ToConvert.ApparentIRMagnitude);
+                } else {
+                    newPacket = DataPacket.MinIRMagnitude();
                 }
                 m_ConvertedPackets.PushBack(newPacket);
             }
@@ -96,6 +106,28 @@ namespace Astro {
                 }
                 m_ConvertedPackets.PushBack(newPacket);
             }
+
+            // Color packets second, to handle their dependency on photometer packets
+            if ((m_AvailableInstrumentTypes & DataTypeMask.Color) != 0) {
+                DataPacket newPacket;
+                if (m_StateA.ToConvert != null) {
+                    newPacket = DataPacket.Color(m_StateA.ToConvert.ColorId);
+                } else {
+                    newPacket = DataPacket.Null(DataTypeMask.Color);
+                }
+                m_ConvertedPackets.PushBack(newPacket);
+            }
+            if ((m_AvailableInstrumentTypes & DataTypeMask.ColorIndex) != 0) {
+                DataPacket newPacket;
+                if (m_StateA.ToConvert != null) {
+                    newPacket = DataPacket.ColorIndex(m_StateA.ToConvert.ApparentBlueMagnitude - m_StateA.ToConvert.ApparentMagnitude);
+                } else {
+                    newPacket = DataPacket.Null(DataTypeMask.ColorIndex);
+                }
+                m_ConvertedPackets.PushBack(newPacket);
+            }
+
+            // and then everything else, no dependencies
             if ((m_AvailableInstrumentTypes & DataTypeMask.MaterialSpectrum) != 0) {
                 DataPacket newPacket;
                 if (m_StateA.ToConvert != null) {

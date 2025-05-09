@@ -162,6 +162,11 @@ namespace FieldDay.Debugging {
         }
 
         private void CheckCameraControls() {
+            if (DebugFlags.IsAutomatedTestActive()) {
+                ClearFreecam();
+                return;
+            }
+
             if (DebugInput.IsPressed(InputModifierKeys.Shift, KeyCode.C)) {
                 Game.Input.ConsumeAllInputForFrame();
 
@@ -262,7 +267,7 @@ namespace FieldDay.Debugging {
         #region Time Scale
 
         private void CheckTimeInput() {
-            if (!DebugFlags.AllowTimeControl()) {
+            if (!DebugFlags.AllowTimeControl() || DebugFlags.IsAutomatedTestActive()) {
                 return;
             }
 
@@ -332,7 +337,7 @@ namespace FieldDay.Debugging {
 
         private void UpdateMenu() {
 
-            bool canHaveMenuOpen = !GameLoop.IsLoading;
+            bool canHaveMenuOpen = !GameLoop.IsLoading && !DebugFlags.IsAutomatedTestActive();
 
             if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.W) && canHaveMenuOpen) {
                 SetMenuVisible(!m_MenuOpen);

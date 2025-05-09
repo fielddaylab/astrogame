@@ -18,7 +18,7 @@ namespace Astro
         public override void ProcessWorkForComponent(InteractSelectSlot primary, LabInteractable secondary, float deltaTime)
         {
             if (!secondary.InteractReceived) { return; }
-            if (!primary.DataSlot.IsActive) { return; }
+            if (!primary.DataSlot.IsActive || primary.DataSlot.IsHidingData) { return; }
 
             var transferState = Find.State<DataTransferState>();
             var cancelInputState = Find.State<CancelInputState>();

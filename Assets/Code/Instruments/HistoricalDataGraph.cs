@@ -59,7 +59,7 @@ namespace Astro {
         }
 
         public static void UpdatePatternMaterial(HistoricalDataGraph graph, HistoricalDataState state) {
-            graph.DisplayTarget.material = GetPatternMaterial(graph.CurrentType, state);
+            graph.DisplayTarget.sharedMaterial = GetPatternMaterial(graph.CurrentType, state);
         }
 
         public static Material GetPatternMaterial (HistoricalPatternType type, HistoricalDataState state) {
@@ -79,7 +79,7 @@ namespace Astro {
                 graph.Scale = 48f / (float)packet.Value.Distance;
             }
             graph.CurrentType = HistoricalPatternType.Parallax;
-            graph.DisplayTarget.material = hds.PatternMaterials.Find(pm => (pm.Pattern == graph.CurrentType)).Material;
+            graph.DisplayTarget.sharedMaterial = hds.PatternMaterials.Find(pm => (pm.Pattern == graph.CurrentType)).Material;
             UpdateScale(graph);
         }
 

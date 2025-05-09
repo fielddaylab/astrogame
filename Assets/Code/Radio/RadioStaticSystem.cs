@@ -88,7 +88,7 @@ namespace Astro.Radio {
         }
 
         static private void UpdateTuning(RadioRig state, float deltaTime) {
-            if (state.Dial.Updated) {
+            if (state.Dial.Updated || (state.NormalizedChannelStrength > 0 && state.NormalizedChannelStrength < 0.85f)) {
                 state.StaticModeTimer = 0;
             } else {
                 state.StaticModeTimer += deltaTime;

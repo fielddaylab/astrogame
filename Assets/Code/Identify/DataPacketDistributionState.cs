@@ -11,7 +11,7 @@ namespace Astro
     {
         [NonSerialized] public CelestialAsset ToConvert;
         [NonSerialized] public bool ReadyToConvert;
-        public RingBuffer<DataPacket> DistributeQueue = new RingBuffer<DataPacket>(8);
+        public RingBuffer<DataPacket> DistributeQueue = new RingBuffer<DataPacket>(16);
     }
 
     public static class DataDistributionUtility

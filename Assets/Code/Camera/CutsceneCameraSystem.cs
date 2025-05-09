@@ -3,7 +3,7 @@ using FieldDay.Systems;
 using UnityEngine;
 
 namespace Astro {
-    [SysUpdate(GameLoopPhase.LateUpdate, 10000)]
+    [SysUpdate(GameLoopPhase.ApplicationPreRender, 10000)]
     public sealed class CutsceneCameraSystem : ComponentSystemBehaviour<CutsceneCamera> {
         public override void ProcessWork(float deltaTime) {
             ViewState view = Find.State<ViewState>();

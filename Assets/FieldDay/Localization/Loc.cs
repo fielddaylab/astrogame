@@ -1,0 +1,137 @@
+using System.Text;
+using BeauUtil;
+using BeauUtil.Debugger;
+
+namespace FieldDay.Localization {
+    static public class Loc {
+        #region Cached Vars
+
+        static private LanguageId s_DefaultLang = LanguageId.English;
+        static private LanguageId s_CurrentLang = LanguageId.Spanish;
+
+        #endregion // Cached Vars
+
+        #region File Paths
+
+        /// <summary>
+        /// Localizes a file path. This replaces instances of
+        /// the default language's two-letter code with the current language.
+        /// Specifically, the formats /en/, en/, and .en
+        /// </summary>
+        static public unsafe string Path(string path) {
+            Assert.NotNull(path);
+            
+            if (s_CurrentLang == s_DefaultLang) {
+                return path;
+            }
+
+            int pathLen = path.Length;
+            if (pathLen < 3) {
+                return path;
+            }
+
+            char* buff = stackalloc char[pathLen];
+            fixed(char* p = path) {
+                Unsafe.FastCopyArray(p, pathLen, buff);
+            }
+
+            s_DefaultLang.ToChars(out char checkA, out char checkB);
+            s_CurrentLang.ToChars(out char newA, out char newB);
+
+            bool changed = false;
+            int idx = 0;
+
+            if (buff[0] == checkA && buff[1] == checkB && buff[2] == '/') {
+                buff[0] = newA;
+                buff[1] = newB;
+                changed = true;
+                idx += 3;
+            }
+
+            for (; idx < pathLen - 2; idx++) {
+                char c = buff[idx];
+                if (c == '/' && idx + 3 < pathLen && buff[idx + 3] == '/') {
+                    // two character path
+                    if (buff[idx + 1] == checkA && buff[idx + 2] == checkB) {
+                        buff[idx + 1] = newA;
+                        buff[idx + 2] = newB;
+                        changed = true;
+                    }
+                    idx += 3;
+                } else if (c == '.') {
+                    if ((idx + 2 == pathLen) || ((idx + 3) < pathLen && buff[idx + 3] == '.')) {
+                        // two character extension
+                        if (buff[idx + 1] == checkA && buff[idx + 2] == checkB) {
+                            buff[idx + 1] = newA;
+                            buff[idx + 2] = newB;
+                            changed = true;
+                        }
+                        idx += 3;
+                    }
+                }
+            }
+
+            if (changed) {
+                return new string(buff, 0, pathLen);
+            }
+
+            return path;
+        }
+
+        /// <summary>
+        /// Localizes a file path. This replaces instances of
+        /// the default language's two-letter code with the current language.
+        /// Specifically, the formats /en/, en/, and .en
+        /// </summary>
+        static public unsafe void Path(StringBuilder path) {
+            Assert.NotNull(path);
+
+            if (s_CurrentLang == s_DefaultLang) {
+                return;
+            }
+
+            int pathLen = path.Length;
+            if (pathLen < 3) {
+                return;
+            }
+
+            s_DefaultLang.ToChars(out char checkA, out char checkB);
+            s_CurrentLang.ToChars(out char newA, out char newB);
+
+            bool changed = false;
+            int idx = 0;
+
+            if (path[0] == checkA && path[1] == checkB && path[2] == '/') {
+                path[0] = newA;
+                path[1] = newB;
+                changed = true;
+                idx += 3;
+            }
+
+            for (; idx < pathLen - 2; idx++) {
+                char c = path[idx];
+                if (c == '/' && idx + 3 < pathLen && path[idx + 3] == '/') {
+                    // two character path
+                    if (path[idx + 1] == checkA && path[idx + 2] == checkB) {
+                        path[idx + 1] = newA;
+                        path[idx + 2] = newB;
+                        changed = true;
+                    }
+                    idx += 3;
+                } else if (c == '.') {
+                    if ((idx + 2 == pathLen) || ((idx + 3) < pathLen && path[idx + 3] == '.')) {
+                        // two character extension
+                        if (path[idx + 1] == checkA && path[idx + 2] == checkB) {
+                            path[idx + 1] = newA;
+                            path[idx + 2] = newB;
+                            changed = true;
+                        }
+                        idx += 3;
+                    }
+                }
+            }
+        }
+
+        #endregion // File Paths
+    }
+}

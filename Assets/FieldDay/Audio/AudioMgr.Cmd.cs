@@ -1,3 +1,7 @@
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#define DEVELOPMENT
+#endif // UNITY_EDITOR || DEVELOPMENT_BUILD
+
 using BeauRoutine;
 using BeauUtil;
 using BeauUtil.Debugger;
@@ -396,6 +400,10 @@ namespace FieldDay.Audio {
 
             voice.EventId = evt ? evt.CachedId : default;
             voice.BusIndex = evt ? evt.CachedBusIndex : 0;
+
+#if DEVELOPMENT
+            voice.DebugName = clip.name;
+#endif // DEVELOPMENT
 
             if ((cmd.Flags & AudioPlaybackFlags.UseProvidedSource) == 0) {
                 if (playbackPos) {

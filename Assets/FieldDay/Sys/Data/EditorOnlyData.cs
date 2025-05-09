@@ -5,6 +5,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using BeauUtil;
+using FieldDay.Localization;
 using UnityEngine;
 
 namespace FieldDay.Data {

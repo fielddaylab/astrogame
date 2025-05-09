@@ -58,6 +58,10 @@ namespace Astro {
             navState.CurrentNavigationMode = NavigationMode.Constellation;
 
             ViewNavUtility.LeafMoveToNode("Monitor");
+
+            WavelengthToggleState wavelengthState = Find.State<WavelengthToggleState>();
+            wavelengthState.AllowChanges = false;
+            WavelengthToggleUtility.SetMask(wavelengthState, CelestialObjectVisMask.Visible);
         } 
 
         public static void OnPuzzleNavComplete() {
@@ -76,6 +80,9 @@ namespace Astro {
             ReviewModuleUtility.ResetReview();
 
             ViewNavUtility.LeafMoveToNode("Right");
+
+            WavelengthToggleState wavelengthState = Find.State<WavelengthToggleState>();
+            wavelengthState.AllowChanges = true;
         }
 
         public static void OnNeutrinoNavStart() {
@@ -89,6 +96,10 @@ namespace Astro {
             ViewNavUtility.LeafMoveToNode("Monitor");
             state.LookUpdatedThisFrame = true;
             state.OnLookUpdated.Invoke(state);
+
+            WavelengthToggleState wavelengthState = Find.State<WavelengthToggleState>();
+            wavelengthState.AllowChanges = false;
+            WavelengthToggleUtility.SetMask(wavelengthState, CelestialObjectVisMask.Visible);
         }
 
         public static void OnNeutrinoNavStopped() {
@@ -104,6 +115,9 @@ namespace Astro {
             state.OnLookUpdated.Invoke(state);
 
             ViewNavUtility.LeafMoveToNode("Right");
+
+            WavelengthToggleState wavelengthState = Find.State<WavelengthToggleState>();
+            wavelengthState.AllowChanges = true;
         }
 
         public static void OnOpenIdStopped() { 

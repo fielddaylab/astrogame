@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using BeauRoutine;
+using FieldDay.Rendering;
 
 namespace Astro
 {
@@ -16,8 +17,6 @@ namespace Astro
         [SerializeField] private Material m_InitMat;
         [SerializeField] private Material m_SwapTo;
 
-        private Routine m_TriggerRoutine;
-
         public void OnDeregister()
         {
             m_Target.OnUnlock.Deregister(SwapMats);
@@ -27,22 +26,20 @@ namespace Astro
         {
             m_Target.OnUnlock.Register(SwapMats);
             InitMats();
-            m_TriggerRoutine = new Routine();
         }
 
         private void InitMats()
         {
-            foreach (var renderer in m_Renderers)
-            {
-                var mats = renderer.sharedMaterials;
-                mats[m_MatIndex] = m_InitMat;
-                renderer.sharedMaterials = mats;
+            foreach (var renderer in m_Renderers) {
+                renderer.SetSharedMaterialAtIndex(m_MatIndex, m_InitMat);
             }
         }
 
         private void SwapMats()
         {
-            m_TriggerRoutine.Replace(SwapMatsRoutine());
+            foreach (var renderer in m_Renderers) {
+                renderer.SetSharedMaterialAtIndex(m_MatIndex, m_SwapTo);
+            }
         }
 
         private IEnumerator SwapMatsRoutine()

@@ -28,8 +28,8 @@ namespace Astro {
         public DataTypeMask RequiredProperties;
         public Row[] Rows;  
 
-        [Header("Constellation Display")]
-        [AssetName(typeof(CelestialAsset))]public StringHash32[] Stars;
+        [Header("Constellation")]
+        [AssetName(typeof(CelestialAsset))]public StringHash32[] ConstellationStars;
         public Edge[] Edges;
 
         [Header("Puzzle Position")]

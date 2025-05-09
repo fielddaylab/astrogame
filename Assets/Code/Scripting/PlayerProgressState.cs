@@ -16,7 +16,11 @@ namespace Astro {
         public Dictionary<StringHash32, PlayerCelestialAssetKnowledge> Knowledge = MapUtils.Create<StringHash32, PlayerCelestialAssetKnowledge>(64);
 
         [NonSerialized] public List<ArchiveLayout> DayLayouts = new List<ArchiveLayout>();
-        [NonSerialized] public List<StringHash32> UnlockedInstruments = new List<StringHash32>();
+        //[NonSerialized] public List<StringHash32> UnlockedInstruments = new List<StringHash32>();
+
+#if DEVELOPMENT
+        [NonSerialized] public bool LoadDebugScene;
+#endif // DEVELOPMENT
     }
 
     public struct PlayerCelestialAssetKnowledge : IByteSerializable {
@@ -37,6 +41,11 @@ namespace Astro {
     [Flags]
     public enum PlayerCelestialAssetKnowledgeFlags : uint {
         IdentifiedResources = 0x01,
+        HasReadVisibleAppMag = 0x02,
+        HasReadBlueAppMag = 0x04,
+        HasReadIRAppMag = 0x08,
+
+        HasReadBothVisibleAndBlue = HasReadVisibleAppMag | HasReadBlueAppMag
     }
 
     static public class PlayerKnowledgeUtility {

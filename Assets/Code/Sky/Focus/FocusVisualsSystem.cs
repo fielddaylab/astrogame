@@ -12,17 +12,24 @@ namespace Astro {
     public class FocusVisualsSystem : SharedStateSystemBehaviour<FocusState, SpaceCameraState> {
         public override void ProcessWork(float deltaTime) {
             if (m_StateB.LookUpdatedThisFrame) {
-                //using (Profiling.Time("updating star focii", ProfileTimeUnits.Microseconds)) {
-                    UpdateFociiPositions(m_StateA, m_StateB);
-                //}
+
+                CameraParams parms = CalculateParams(m_StateB);
+
+                UpdateFociiPositions(parms, m_StateA, m_StateB);
 
                 if (m_StateA.CurrentFocus) {
-                    FocusVisualsUtility.AlignFocusOutlineToTarget(m_StateB, m_StateA);
+                    FocusVisualsUtility.AlignFocusOutlineToTarget(m_StateB, m_StateA, parms.Billboard);
                 }
             }
         }
 
-        static private void UpdateFociiPositions(FocusState focusState, SpaceCameraState spaceCam) {
+        private struct CameraParams {
+            public Vector3 Forward;
+            public float DotProductThreshold;
+            public Quaternion Billboard;
+        }
+
+        static private CameraParams CalculateParams(SpaceCameraState spaceCam) {
             Camera refCam = spaceCam.Camera.Camera;
             Transform refCamTransform = refCam.transform;
 
@@ -33,26 +40,38 @@ namespace Astro {
             Vector3 forward = Geom.Forward(refCamRot);
             Vector3 up = Geom.Up(refCamRot);
 
-            Quaternion billboardRot = Quaternion.LookRotation(-forward, up);
+            CameraParams parms;
+            parms.Billboard = Quaternion.LookRotation(-forward, up);
+            parms.Forward = forward;
+            parms.DotProductThreshold = dotProductThreshold;
+            return parms;
+        }
 
+        static private void UpdateFociiPositions(in CameraParams parms, FocusState focusState, SpaceCameraState spaceCam) {
             ref var packedEnabled = ref focusState.ActiveFociiVisibleBits;
             var packedData = focusState.ActiveFociiPacked;
             int packedIdx = 0;
             foreach (UIFocus focus in focusState.ActiveFocii) {
-                float dot = Vector3.Dot(packedData[packedIdx].TargetVector, forward);
+                float dot = Vector3.Dot(packedData[packedIdx].TargetVector, parms.Forward);
 
-                if (dot >= dotProductThreshold) {
-                    focus.Root.localRotation = billboardRot;
+                if (focus.IsVisibleInCurrentFilter && dot >= parms.DotProductThreshold) {
+                    focus.Root.localRotation = parms.Billboard;
 
                     if (!packedEnabled.IsSet(packedIdx)) {
                         focus.Represent2D.enabled = true;
                         focus.Clickable.enabled = true;
                         packedEnabled.Set(packedIdx);
                     }
-                } else if (packedEnabled.IsSet(packedIdx)) {
-                    focus.Represent2D.enabled = false;
-                    focus.Clickable.enabled = false;
-                    packedEnabled.Unset(packedIdx);
+                } else {
+                    if (focus.HasHighlight) {
+                        focus.Root.localRotation = parms.Billboard;
+                    }
+
+                    if (packedEnabled.IsSet(packedIdx)) {
+                        focus.Represent2D.enabled = false;
+                        focus.Clickable.enabled = false;
+                        packedEnabled.Unset(packedIdx);
+                    }
                 }
 
                 packedIdx++;
@@ -64,6 +83,11 @@ namespace Astro {
         public static void AlignFocusOutlineToTarget(SpaceCameraState spaceCam, FocusState state) {
             state.CurrentFocus.Root.GetPositionAndRotation(out var p, out var r);
             state.FocusOutline.transform.SetPositionAndRotation(p, r);
+        }
+
+        public static void AlignFocusOutlineToTarget(SpaceCameraState spaceCam, FocusState state, Quaternion overrideRotation) {
+            Vector3 p = state.CurrentFocus.Root.position;
+            state.FocusOutline.transform.SetPositionAndRotation(p, overrideRotation);
         }
     }
 }

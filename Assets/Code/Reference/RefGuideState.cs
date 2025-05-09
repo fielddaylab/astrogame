@@ -270,6 +270,7 @@ namespace Astro.Reference {
             PopulateContents(rig.Contents, newPage);
             PopulateReferenceColliders(newPage, rig);
             ToggleControl(null, rgs);
+            AdjustAllBookmarkPositions(rig, rgs.CurrentPageNum, rgs.PageList.Pages.Count - 1);
         }
 
         public static void LoadNextPage(RefGuideState rgs) {

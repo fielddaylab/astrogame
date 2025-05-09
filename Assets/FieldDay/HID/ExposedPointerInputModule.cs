@@ -121,13 +121,15 @@ namespace FieldDay.HID {
 
             base.Process();
 
+            BaseInput cachedInput = input;
+
             if (m_Mode == PointerInputMode.Mouse) {
-                if (UnityEngine.Input.touchCount > 0 || !UnityEngine.Input.mousePresent) {
+                if (cachedInput.touchCount > 0 || !cachedInput.mousePresent) {
                     m_Mode = PointerInputMode.Touch;
                     OnModeChanged?.Invoke(m_Mode);
                 }
             } else {
-                if (UnityEngine.Input.GetMouseButtonDown(0) || UnityEngine.Input.GetMouseButtonDown(1) || UnityEngine.Input.GetMouseButtonDown(2)) {
+                if (cachedInput.GetMouseButtonDown(0) || cachedInput.GetMouseButtonDown(1) || cachedInput.GetMouseButtonDown(2)) {
                     m_Mode = PointerInputMode.Mouse;
                     OnModeChanged?.Invoke(m_Mode);
                 }

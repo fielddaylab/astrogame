@@ -1,3 +1,4 @@
+using BeauUtil.Debugger;
 using FieldDay.Components;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,5 +9,29 @@ namespace Astro
     public class InteractTransferData : BatchedComponent
     {
         public DataSlot DataSlot;
+    }
+
+    static public partial class DataUtility {
+        static public void Rewire(InteractTransferData transfer, DataSlot slot) {
+            Assert.NotNullOrDestroyed(slot);
+
+            if (transfer.DataSlot == slot) {
+                return;
+            }
+
+            if (transfer.DataSlot != null) {
+                if (transfer.DataSlot.TryGetComponent(out RelevantSlotHighlight highlight)) {
+                    highlight.Ignored = true;
+                }
+            }
+
+            transfer.DataSlot = slot;
+            if (transfer.TryGetComponent(out InteractSelectSlot select)) {
+                select.DataSlot = slot;
+            }
+            if (slot.TryGetComponent(out RelevantSlotHighlight newHighlight)) {
+                newHighlight.Ignored = false;
+            }
+        }
     }
 }

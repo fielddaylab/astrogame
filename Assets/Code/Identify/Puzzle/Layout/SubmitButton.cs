@@ -45,10 +45,10 @@ namespace Astro {
             GetComponent<BoxCollider>().enabled = active;
 
             if (active) {
-                ButtonMesh.material = ActiveButtonMaterial;
+                ButtonMesh.sharedMaterial = ActiveButtonMaterial;
                 yield return labButton.Movable.MoveTo(labButton.OriginalDisplacement, 0.1f, Axis.XYZ, Space.Self).Ease(Curve.BackOut);
             } else {
-                ButtonMesh.material = InactiveButtonMaterial;
+                ButtonMesh.sharedMaterial = InactiveButtonMaterial;
                 labButton.Movable.position = labButton.OriginalDisplacement + labButton.LocalDisplacement;
             }
             
