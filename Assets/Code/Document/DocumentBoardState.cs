@@ -363,12 +363,18 @@ namespace Astro {
         #endregion // Interaction
 
         #region Routines
+        /// <summary>
+        /// Used for moving question docs to a specific position relative to another document
+        /// </summary>
+        /// <param name="doc">the document the player has in hand</param>
+        /// <param name="relativeTo">the document player is currently hovering over</param>
         public static IEnumerator MoveAboveRelativeToDoc(DocumentInteractable doc, DocumentRenderer relativeTo) {
             // align to bottom-left with out-sticking margin
             var margin = 0.2f;
-            var localOffset = new Vector3(-relativeTo.Size.width / 2 + doc.Renderer.Size.width / 2 - margin, -relativeTo.Size.height + doc.Renderer.Size.height / 2, -0.01f);
+            var localOffset = new Vector3(-relativeTo.Size.width / 2 + doc.Renderer.Size.width / 2 - margin, -relativeTo.Size.height + doc.Renderer.Size.height / 2, -0.25f);
             var globalOffset = relativeTo.transform.TransformVector(localOffset);
-            yield return doc.transform.MoveTo(relativeTo.transform.position + globalOffset, 0.2f).Ease(Curve.CubeIn);
+            Vector3 targetPos = relativeTo.transform.position + globalOffset;
+            yield return doc.transform.MoveTo(targetPos, 0.2f).Ease(Curve.CubeIn);
         }
 
         private static IEnumerator ToggleDocHover(Transform doc, Vector3 hoverOffset) {
