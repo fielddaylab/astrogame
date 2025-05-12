@@ -6,16 +6,22 @@ using FieldDay;
 using FieldDay.Scripting;
 using FieldDay.Debugging;
 using BeauPools;
+using UnityEditor;
 
 namespace Astro {
     [SysUpdate(GameLoopPhase.Update, 100, AstroGame.DocumentUpdateMask)] // After MouseInteractionSystem
 
-    public class DocumentPromptSystem : ComponentSystemBehaviour<DocumentInteractable, DocumentPrompter> {
+    public class DocumentPromptSystem : ComponentSystemBehaviour<DocumentInteractable, DocumentPrompter> { 
+        DocumentInteractable doc;
+        DocumentPrompter prompter;
+
         public override void ProcessWork(float deltaTime) {
             var puzzleState = Find.State<DocumentPuzzleState>();
             var boardState = Find.State<DocumentBoardState>();
 
             foreach (var component in m_Components) {
+                doc = component.Primary;
+                prompter = component.Secondary;
                 // determine whether this document is being dragged
                 if (!component.Primary.IsDragging) {
                     continue;
@@ -48,6 +54,20 @@ namespace Astro {
                 DocumentUtility.SetDocumentHighlight(puzzleState.CurrHoverDoc, Color.white);
             }
 
+        }
+
+        void OnDrawGizmosSelected() {
+            if (doc == null || prompter == null) return;
+            var boardState = Find.State<DocumentBoardState>();
+
+            Vector3 docExtents = new Vector3(doc.Renderer.Size.width / 2, doc.Renderer.Size.height / 2, 1);
+            var position = doc.transform.position + new Vector3(0f, doc.Renderer.Size.y, 0f);
+
+            var oldMatrix = Gizmos.matrix;
+            Gizmos.color = Color.green;
+            Gizmos.matrix = Matrix4x4.TRS(position, doc.transform.rotation, docExtents * 2);
+            Gizmos.DrawWireCube(Vector3.zero, Vector3.one);
+            Gizmos.matrix = oldMatrix;
         }
 
         private void DrawDebugDocumentDisplay(DocumentInteractable doc, DocumentPuzzleState state){

@@ -40,6 +40,17 @@ namespace Astro {
 
         public static readonly DocPartFunction[] ZoomActiveFunctions = new []{ DocPartFunction.Close, DocPartFunction.Flip };
         public static readonly DocPartFunction[] BoardActiveFunctions = new []{ DocPartFunction.Move, DocPartFunction.Zoom, DocPartFunction.Flip };
+
+        void OnDrawGizmosSelected() { 
+            var oldMatrix = Gizmos.matrix;
+            Gizmos.color = Color.red;
+            var position = DocumentParent.transform.position;
+            var rotation = DocumentParent.transform.rotation;
+            var scale = (Vector3) DraggableBounds.size;
+            Gizmos.matrix = Matrix4x4.TRS(position, rotation, scale);
+            Gizmos.DrawWireCube(Vector3.zero, Vector3.one);
+            Gizmos.matrix = oldMatrix;
+        }
     }
 
     public static partial class DocumentUtility {
@@ -132,13 +143,10 @@ namespace Astro {
         public static bool OverlapBoxAtPos(DocumentBoardState state, DocumentRenderer doc, out DocumentRenderer hit) {
             hit = null;
 
-            var offset = state.DocumentParent.transform.position;
-            var localPos = doc.transform.localPosition;
-            localPos.z = 0;
-            Vector3 pos = offset + localPos;
-
             Vector3 docExtents = new Vector3(doc.Size.width / 2, doc.Size.height / 2, 1);
-            var hits = Physics.OverlapBox(pos, docExtents, state.DocumentParent.transform.rotation, LayerMasks.DocumentInteract_Mask);
+            var position = doc.transform.position + new Vector3(0f, doc.Size.y, 0f);
+
+            var hits = Physics.OverlapBox(position, docExtents, doc.transform.rotation, LayerMasks.DocumentInteract_Mask);
             for (int i = 0; i < hits.Length; i++) {
                 var currPart = hits[i].GetComponent<DocumentPart>();
                 var currRenderer = currPart ? currPart.Document.Renderer : null;
