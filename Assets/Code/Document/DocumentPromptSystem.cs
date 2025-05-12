@@ -76,7 +76,7 @@ namespace Astro {
             Vector3 docExtents = new Vector3(renderer.Size.width / 2, renderer.Size.height / 2, 1);
             Vector3 position = renderer.transform.position + new Vector3(0f, renderer.Size.y, 0f);
             Matrix4x4 m = Matrix4x4.TRS(position, renderer.transform.rotation, docExtents * 2);
-            Bounds bounds = new Bounds(Vector3.zero, Vector3.one);
+            Bounds bounds = new Bounds(Vector3.zero, new Vector3(1, 1, 0));
             DebugDraw.AddOrientedBounds(m, bounds, Color.green, 0.1f); 
         }
     }
