@@ -1,43 +1,40 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using FieldDay.Systems;
 using FieldDay;
 using FieldDay.Scripting;
 using FieldDay.Debugging;
 using BeauPools;
-using UnityEditor;
 
 namespace Astro {
     [SysUpdate(GameLoopPhase.Update, 100, AstroGame.DocumentUpdateMask)] // After MouseInteractionSystem
 
     public class DocumentPromptSystem : ComponentSystemBehaviour<DocumentInteractable, DocumentPrompter> { 
-        DocumentInteractable doc;
-        DocumentPrompter prompter;
-
         public override void ProcessWork(float deltaTime) {
             var puzzleState = Find.State<DocumentPuzzleState>();
             var boardState = Find.State<DocumentBoardState>();
 
             foreach (var component in m_Components) {
-                doc = component.Primary;
-                prompter = component.Secondary;
                 // determine whether this document is being dragged
                 if (!component.Primary.IsDragging) {
                     continue;
                 }
 
+                var renderer = component.Primary.Renderer;
+
                 // overlap box to find which document this is overlapping
-                DocumentUtility.OverlapBoxAtPos(boardState, component.Primary.Renderer, out DocumentRenderer hit);
+                DocumentUtility.OverlapBoxAtPos(boardState, renderer, out DocumentRenderer hit);
+                if (Game.IsDevBuild && DebugFlags.IsFlagSet(DocumentPuzzleState.DebuggingFlags.DisplayDocumentHoverInfo)) {
+                    DrawDebugDocumentDisplay(component.Primary, puzzleState);
+                }
 
                 // record last known hover asset
                 DocumentUtility.UpdatePuzzleHoverAsset(puzzleState, hit);
-                if (Game.IsDevBuild) {
-                    if (DebugInput.IsPressed(KeyCode.P)) {
-                        DebugFlags.ToggleFlag(DocumentPuzzleState.DebuggingFlags.DisplayDocumentHoverInfo);
-                    }
+            }
 
-                    DrawDebugDocumentDisplay(component.Primary, puzzleState);
+            // set debugging flags
+            if (Game.IsDevBuild){
+                if (DebugInput.IsPressed(KeyCode.LeftBracket)) {
+                    DebugFlags.ToggleFlag(DocumentPuzzleState.DebuggingFlags.DisplayDocumentHoverInfo);
                 }
             }
 
@@ -54,20 +51,6 @@ namespace Astro {
                 DocumentUtility.SetDocumentHighlight(puzzleState.CurrHoverDoc, Color.white);
             }
 
-        }
-
-        void OnDrawGizmosSelected() {
-            if (doc == null || prompter == null) return;
-            var boardState = Find.State<DocumentBoardState>();
-
-            Vector3 docExtents = new Vector3(doc.Renderer.Size.width / 2, doc.Renderer.Size.height / 2, 1);
-            var position = doc.transform.position + new Vector3(0f, doc.Renderer.Size.y, 0f);
-
-            var oldMatrix = Gizmos.matrix;
-            Gizmos.color = Color.green;
-            Gizmos.matrix = Matrix4x4.TRS(position, doc.transform.rotation, docExtents * 2);
-            Gizmos.DrawWireCube(Vector3.zero, Vector3.one);
-            Gizmos.matrix = oldMatrix;
         }
 
         private void DrawDebugDocumentDisplay(DocumentInteractable doc, DocumentPuzzleState state){
@@ -88,7 +71,13 @@ namespace Astro {
                 }
                 DebugDraw.AddLogText(psb, Color.yellow);
             }
- 
+                
+            var renderer = doc.Renderer;
+            Vector3 docExtents = new Vector3(renderer.Size.width / 2, renderer.Size.height / 2, 1);
+            Vector3 position = renderer.transform.position + new Vector3(0f, renderer.Size.y, 0f);
+            Matrix4x4 m = Matrix4x4.TRS(position, renderer.transform.rotation, docExtents * 2);
+            Bounds bounds = new Bounds(Vector3.zero, Vector3.one);
+            DebugDraw.AddOrientedBounds(m, bounds, Color.green, 0.1f); 
         }
     }
 }
