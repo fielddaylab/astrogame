@@ -258,6 +258,10 @@ namespace FieldDay {
                 Log.Msg("[GameLoop] Creating performance manager...");
                 Game.Perf = new PerformanceMgr();
 
+                Log.Msg("[GameLoop] Creating localization manager...");
+                // TODO: create localization manager
+                Loc.ConfigureDefaultLanguage(m_DefaultLanguage);
+
                 Log.Msg("[GameLoop] Creating asset manager...");
                 Game.Assets = new AssetMgr();
 

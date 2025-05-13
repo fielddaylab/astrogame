@@ -326,6 +326,17 @@ namespace FieldDay.Audio {
             });
         }
 
+        static public void SetBusPaused(StringHash32 busId, bool paused) {
+            Game.Audio.QueueAudioCommand(new AudioCommand() {
+                Type = AudioCommandType.SetBusBoolParameter,
+                BoolParam = new BoolParamChangeCommandData() {
+                    Handle = busId,
+                    Property = AudioBoolPropertyType.Pause,
+                    Target = paused
+                }
+            });
+        }
+
         static public void SetBusVolume(StringHash32 busId, float volume, float transitionTime = 0, Curve transitionCurve = Curve.Linear) {
             Game.Audio.QueueAudioCommand(new AudioCommand() {
                 Type = AudioCommandType.SetBusFloatParameter,

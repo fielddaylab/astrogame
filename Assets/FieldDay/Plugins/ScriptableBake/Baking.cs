@@ -282,8 +282,10 @@ namespace ScriptableBake {
                 if ((flags & FlattenFlags.DestroyInactive) != 0 && !child.gameObject.activeSelf) {
                     GameObject.DestroyImmediate(child.gameObject);
                 } else {
+                    child.GetPositionAndRotation(out Vector3 p, out Quaternion q);
                     child.SetParent(parent, true);
                     child.SetSiblingIndex(siblingIdx++);
+                    child.SetPositionAndRotation(p, q);
                 }
             }
         }
@@ -306,8 +308,10 @@ namespace ScriptableBake {
                 if ((flags & FlattenFlags.DestroyInactive) != 0 && !child.gameObject.activeSelf) {
                     GameObject.DestroyImmediate(child.gameObject);
                 } else {
+                    child.GetPositionAndRotation(out Vector3 p, out Quaternion q);
                     child.SetParent(parent, true);
                     child.SetSiblingIndex(siblingIndex++);
+                    child.SetPositionAndRotation(p, q);
                     FlattenHierarchyRecursive(child, parent, flags, ref siblingIndex);
                 }
             }
