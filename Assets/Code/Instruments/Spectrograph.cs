@@ -18,7 +18,7 @@ namespace Astro {
 
         public void OnRegister() {
             if (BackgroundWidth == default) {
-                BackgroundWidth = Background.gameObject.transform.localScale.x
+                BackgroundWidth = Background.gameObject.transform.localScale.x;
             }
         }
 
