@@ -97,25 +97,29 @@ MonoBehaviour:
     LookupInherit: 0
     Assemblies:
     - AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-      TypeCount: 5
+      TypeCount: 6
     - AssemblyName: FieldDay.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
       TypeCount: 1
     - AssemblyName: FieldDay.Scripting, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
       TypeCount: 1
     Types:
-    - TypeName: PuzzleNavigationUtility
-      Self: 0
-      MemberCount: 2
-      OverloadCount: 0
     - TypeName: Astro.AstroGame
       Self: 0
       MemberCount: 1
       OverloadCount: 0
+    - TypeName: Astro.NavigationUtility
+      Self: 0
+      MemberCount: 2
+      OverloadCount: 0
     - TypeName: Astro.PointsReviewSystem
+      Self: 0
+      MemberCount: 2
+      OverloadCount: 0
+    - TypeName: Astro.ReviewUtility
       Self: 0
       MemberCount: 1
       OverloadCount: 0
-    - TypeName: Astro.ReviewUtility
+    - TypeName: Astro.InstrumentInventoryUtility
       Self: 0
       MemberCount: 1
       OverloadCount: 0
@@ -132,15 +136,19 @@ MonoBehaviour:
       MemberCount: 1
       OverloadCount: 0
     Members:
+    - MemberName: LoadLevel
+      Type: 8
     - MemberName: DebugStartPuzzleNav
       Type: 8
     - MemberName: DebugStopPuzzleNav
       Type: 8
-    - MemberName: LoadLevel
-      Type: 8
     - MemberName: SubmitCorrectPuzzleSolution
       Type: 8
+    - MemberName: SpawnPuzzle
+      Type: 8
     - MemberName: PointsMenu
+      Type: 8
+    - MemberName: CreateDebugMenu
       Type: 8
     - MemberName: DebugMenu
       Type: 8

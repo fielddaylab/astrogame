@@ -6,10 +6,19 @@ namespace FieldDay.Localization {
     static public class Loc {
         #region Cached Vars
 
-        static private LanguageId s_DefaultLang = LanguageId.English;
-        static private LanguageId s_CurrentLang = LanguageId.Spanish;
+        static private LanguageId s_DefaultLang;
+        static private LanguageId s_CurrentLang;
 
         #endregion // Cached Vars
+
+        #region Defaults
+
+        static public void ConfigureDefaultLanguage(LanguageId defaultLanguageId) {
+            Assert.True(s_DefaultLang.IsEmpty && s_CurrentLang.IsEmpty, "Defaults have already been configured!");
+            s_DefaultLang = s_CurrentLang = defaultLanguageId;
+        }
+
+        #endregion // Defaults
 
         #region File Paths
 

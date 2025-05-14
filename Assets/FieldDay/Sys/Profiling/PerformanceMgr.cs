@@ -74,6 +74,8 @@ namespace FieldDay.Perf {
 
 #if DEVELOPMENT
 
+        static private int m_FrameSeek = 1;
+
         static private readonly int[] s_Framerates = new int[] {
             -1,
             20,
@@ -121,6 +123,7 @@ namespace FieldDay.Perf {
             info.AddDivider();
 
             DebugFlags.Menu.AddFlagToggle(info, "Display Frame Profiling Time", DebuggingFlags.DisplayLastFrameStats);
+            info.AddSlider("Frame Selection", () => m_FrameSeek, (f) => m_FrameSeek = (int) f, 1, BufferSize, 1, (string) null, () => DebugFlags.IsFlagSet(DebuggingFlags.DisplayLastFrameStats), 1);
 
             return info;
         }

@@ -13,6 +13,16 @@ using UnityEngine;
 namespace FieldDay.Debugging {
     static public class SmokeTestMgr {
 #if DEVELOPMENT
+        private enum SmokeTestState {
+            Uninitialized,
+            Running,
+            Success,
+            TimedOut,
+            EncounteredError,
+            EncounteredException,
+            EncounteredAssert
+        }
+
         static private readonly RingBuffer<SmokeTestData> s_ScheduledTests = new RingBuffer<SmokeTestData>(64, RingBufferMode.Fixed);
         static private Routine s_CurrentTestRoutine;
         static private SmokeTestState s_TestState;
@@ -171,15 +181,5 @@ namespace FieldDay.Debugging {
         public Func<IEnumerator> ExecuteAsync;
         public Action Epilog;
         public float TimeOut;
-    }
-
-    public enum SmokeTestState {
-        Uninitialized,
-        Running,
-        Success,
-        TimedOut,
-        EncounteredError,
-        EncounteredException,
-        EncounteredAssert
     }
 }
