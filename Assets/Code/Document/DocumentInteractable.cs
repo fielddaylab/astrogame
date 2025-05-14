@@ -16,7 +16,7 @@ namespace Astro {
 
         [NonSerialized] public bool Flipped;
         [NonSerialized] public bool IsDragging;
-        public Transform Paper;
+        public Transform BodyRoot;
 
         private void Awake() {
             Renderer = GetComponent<DocumentRenderer>();

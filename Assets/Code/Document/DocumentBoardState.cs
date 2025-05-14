@@ -404,12 +404,12 @@ namespace Astro {
         private static IEnumerator DocRotateY(DocumentInteractable doc, float lift, float angle) {
             yield return Routine.Combine(
                 doc.transform.MoveTo(doc.transform.localPosition.z + lift, 0.2f, Axis.Z, Space.Self).Ease(Curve.CubeIn),
-                doc.Paper.MoveTo(doc.Paper.localPosition.y - 0.1f, 0.2f, Axis.Y, Space.Self).Ease(Curve.CubeIn)
+                doc.BodyRoot.MoveTo(doc.BodyRoot.localPosition.y - 0.1f, 0.2f, Axis.Y, Space.Self).Ease(Curve.CubeIn)
             );
-            yield return doc.Paper.RotateTo(doc.Paper.localRotation.y + angle, 0.3f, Axis.Y, Space.Self, AngleMode.Absolute).Ease(Curve.SineInOut);
+            yield return doc.BodyRoot.RotateTo(doc.BodyRoot.localRotation.y + angle, 0.3f, Axis.Y, Space.Self, AngleMode.Absolute).Ease(Curve.SineInOut);
             
             yield return Routine.Combine(
-                doc.Paper.MoveTo(doc.Paper.localPosition.y + 0.1f, 0.2f, Axis.Y, Space.Self).Ease(Curve.CubeIn),
+                doc.BodyRoot.MoveTo(doc.BodyRoot.localPosition.y + 0.1f, 0.2f, Axis.Y, Space.Self).Ease(Curve.CubeIn),
                 doc.transform.MoveTo(doc.transform.localPosition.z - lift, 0.2f, Axis.Z, Space.Self).Ease(Curve.CubeIn)
             );
             yield return null;
