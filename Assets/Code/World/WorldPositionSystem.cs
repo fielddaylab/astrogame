@@ -73,5 +73,17 @@ namespace Astro {
             camState.LookUpdatedThisFrame = true;
             camState.OnLookUpdated.Invoke(camState);
         }
+
+        public static void UpdateLookCoordinatesFromCurrentLook(SpaceCameraState camState) {
+            Vector3 angles = camState.Camera.RootTransform.localEulerAngles;
+            angles.x = MathUtils.Wrap(angles.x, -180, 180);
+            angles.y = MathUtils.Wrap(angles.y, -180, 180);
+            angles.z = 0;
+
+            camState.HorizLook = angles.y;
+            camState.VertLook = angles.x;
+            camState.LookUpdatedThisFrame = true;
+            camState.OnLookUpdated.Invoke(camState);
+        }
     }
 }
