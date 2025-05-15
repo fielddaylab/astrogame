@@ -159,6 +159,22 @@ namespace FieldDay.Animation {
             return m_HandleIdGenerator.IsValid(handle.Id);
         }
 
+        /// <summary>
+        /// Cancels all animations.
+        /// </summary>
+        public void CancelAll() {
+            CancelAll(m_FixedUpdateLiteAnimators);
+            CancelAll(m_UnscaledUpdateLiteAnimators);
+            CancelAll(m_UpdateLiteAnimators);
+        }
+
+        private void CancelAll(RingBuffer<LiteAnimatorRecord> records) {
+            while(records.TryPopBack(out LiteAnimatorRecord record)) {
+                record.Animator.ResetAnimation(record.Target, ref record.State);
+                m_HandleIdGenerator.Free(record.Handle);
+            }
+        }
+
         private RingBuffer<LiteAnimatorRecord> GetLiteAnimators(GameLoopPhase phase) {
             switch (phase) {
                 case GameLoopPhase.FixedUpdate:

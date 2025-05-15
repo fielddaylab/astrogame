@@ -31,6 +31,10 @@ namespace FieldDay.Scripting {
         [InvokeOnBoot]
         static private void OnBoot() {
             GameLoop.OnDebugUpdate.Register(DebugUpdate);
+
+            SmokeTestMgr.RegisterResetHandler(() => {
+                ScriptUtility.KillAllThreads();
+            });
         }
 
 

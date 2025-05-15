@@ -3,6 +3,7 @@
 using BeauRoutine;
 using BeauUtil;
 using BeauUtil.Debugger;
+using FieldDay.Audio;
 using System;
 using System.Collections;
 using System.Diagnostics;
@@ -177,6 +178,10 @@ namespace FieldDay.Debugging {
                 Time.timeScale = 1;
                 s_TimeOutAccumulator = 0;
                 s_LogAccumulator.Length = 0;
+
+                Sfx.StopAll();
+                Game.Processes.KillAll();
+                Game.Animation.CancelAll();
 
                 if (s_Reset != null) {
                     s_Reset();

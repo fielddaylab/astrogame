@@ -101,6 +101,19 @@ namespace FieldDay.Processes {
 
         #endregion // Lookups
 
+        #region Operations
+
+        /// <summary>
+        /// Kills all processes.
+        /// </summary>
+        public void KillAll() {
+            foreach(var p in m_AllProcesses) {
+                p.Kill();
+            }
+        }
+
+        #endregion // Operations
+
         #region Events
 
         internal void DebugUpdate(float deltaTime, int categoryMask) {
