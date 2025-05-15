@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 7591642954294801313}
   - component: {fileID: 4961491623190650379}
   m_Layer: 6
-  m_Name: BlueMag
+  m_Name: VisMag
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -172,7 +172,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 559411227255927749}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9541d86e2fd84c1d9990edf0852d74ab, type: 3}
   m_Name: 
@@ -194,8 +194,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294959360
-  m_fontColor: {r: 0, g: 0.882353, b: 1, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -322,12 +322,12 @@ GameObject:
   - component: {fileID: 465601117742767449}
   - component: {fileID: 7784422434836941295}
   m_Layer: 6
-  m_Name: VisMag
+  m_Name: BlueMag
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7185411745241187372
 RectTransform:
   m_ObjectHideFlags: 0
@@ -418,8 +418,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4294959360
+  m_fontColor: {r: 0, g: 0.88235295, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -561,8 +561,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 651926992803266927}
   - {fileID: 7877986218135659202}
+  - {fileID: 651926992803266927}
   - {fileID: 2753078580511949567}
   m_Father: {fileID: 8853334957855964770}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -595,7 +595,7 @@ GameObject:
   - component: {fileID: 1619105264983709281}
   - component: {fileID: 1465166152987092806}
   m_Layer: 6
-  m_Name: VisibleLight
+  m_Name: BlueLight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -644,7 +644,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 483148f3620b2b54fb245dc751744210, type: 2}
+  - {fileID: 2100000, guid: 6f982a7548130cd4792cd7f22f45ddef, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -720,16 +720,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d35da4b2cea347d4e8c0fd34325b0f1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ApparentSlot: {fileID: 465601117742767449}
+  ApparentSlot: {fileID: 7591642954294801313}
   AbsoluteSlot: {fileID: 4689378108868261011}
   AbsoluteIndicator: {fileID: 2371128511419311588}
-  BlueSlot: {fileID: 7591642954294801313}
+  BlueSlot: {fileID: 465601117742767449}
   IRSlot: {fileID: 2067239058951293596}
   TransferPort: {fileID: 5898480835687772310}
-  VisibleLight: {fileID: 1465166152987092806}
-  BlueLight: {fileID: 8869742297161136690}
+  VisibleLight: {fileID: 8869742297161136690}
+  BlueLight: {fileID: 1465166152987092806}
   IRLight: {fileID: 6229928302364862403}
-  LightLitMaterial: {fileID: 2100000, guid: 5b81753389954cd409d9016df5857e92, type: 2}
+  LightLitMaterial: {fileID: 2100000, guid: 483148f3620b2b54fb245dc751744210, type: 2}
   LightUnlitMaterial: {fileID: 2100000, guid: 6f982a7548130cd4792cd7f22f45ddef, type: 2}
   DependentSlots: []
 --- !u!114 &7404601679685020724
@@ -745,9 +745,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AutoPopulated:
-  - {fileID: 465601117742767449}
-  - {fileID: 4689378108868261011}
   - {fileID: 7591642954294801313}
+  - {fileID: 4689378108868261011}
+  - {fileID: 465601117742767449}
   - {fileID: 2067239058951293596}
 --- !u!114 &5082321426108468324
 MonoBehaviour:
@@ -892,7 +892,7 @@ GameObject:
   - component: {fileID: 3451764108898783744}
   - component: {fileID: 8869742297161136690}
   m_Layer: 6
-  m_Name: BlueLight
+  m_Name: VisibleLight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -941,7 +941,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 6f982a7548130cd4792cd7f22f45ddef, type: 2}
+  - {fileID: 2100000, guid: 483148f3620b2b54fb245dc751744210, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1047,7 +1047,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19eeff9df0f7fa947aa073d9ca8f57fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DataSlot: {fileID: 465601117742767449}
+  DataSlot: {fileID: 7591642954294801313}
 --- !u!114 &8058473870210999526
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1060,7 +1060,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8abbcafcfdd13ab429d150c839fbd958, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DataSlot: {fileID: 465601117742767449}
+  DataSlot: {fileID: 7591642954294801313}
 --- !u!114 &6297842379877324536
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1550,7 +1550,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5598535123906891494}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.031}
+  m_LocalPosition: {x: 0, y: 0, z: 0.03099994}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -1558,7 +1558,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.787, y: 0.347}
+  m_AnchoredPosition: {x: 0.787, y: 0.562}
   m_SizeDelta: {x: 0.4, y: 0.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!23 &3124803286090203195
@@ -1765,7 +1765,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &191590756450777054
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1834,7 +1834,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5782680119082328726}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9541d86e2fd84c1d9990edf0852d74ab, type: 3}
   m_Name: 

@@ -57,6 +57,10 @@ namespace Astro
             SlotHighlightState highlightState = Find.State<SlotHighlightState>();
             foreach (LabInstrument instrument in state.ActiveInstruments) {
                 foreach (DataSlot slot in instrument.AutoPopulated) {
+                    if (slot.IsHidingData) {
+                        continue;
+                    }
+
                     if (slot.TryGetComponent(out RelevantSlotHighlight effect)) {
                         SetInstrumentDimmed(highlightState, effect, dim);
                     }

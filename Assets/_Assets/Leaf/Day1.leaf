@@ -326,7 +326,6 @@ $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 @cutscene
 @once
 
-$call SetInstrumentUnlocked(BlueWavelength, true)
 $call SubtitleController->SetSubtitlePosition(0.5, 1, 0, -140)
 $call StopPuzzleNavigation()
 $call SetInputState(false)
@@ -372,6 +371,7 @@ $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $set temp:waitingForFillAppMag = false
 $call UnlockMonitorFocus()
 $call ReleaseIsolatedPuzzle()
+$call SetInstrumentUnlocked(BlueWavelength, true)
 {@Dad} Excellent! Alright, the rest of the puzzle is just process of elimination. Start with your known info, and work your way through. Look in your manual for more information on spectral types. $[Day1/Dad/l1_d_s28]
 $call SetRefGuidePagesLocked(false)
 $call OpenRefGuidePage("DataTransfer")

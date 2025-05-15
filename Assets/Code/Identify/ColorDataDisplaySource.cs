@@ -31,12 +31,12 @@ namespace Astro
     {
         public static void OnRequest(ColorDataDisplaySource display, DataPacket packet, DataFormattingFlags flags)
         {
-            ColorDataUtility.SetPanelMaterials(display.Panel, packet.Value.AssetId, false);
+            ColorDataUtility.SetPanelMaterials(display.Panel, packet.Value.AssetId, true);
         }
 
         public static void OnClear(ColorDataDisplaySource display)
         {
-            ColorDataUtility.SetPanelMaterials(display.Panel, default, false);
+            ColorDataUtility.SetPanelMaterials(display.Panel, default, true);
         }
 
         public static void SetIndicatorMaterials(MeshRenderer mesh, bool active)
