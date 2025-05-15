@@ -25,14 +25,14 @@ namespace Astro {
         }
 
         static private void OnScore() {
-            using(var table = TempVarTable.Alloc()) {
+            using (var table = TempVarTable.Alloc()) {
                 table.Set("sciencePoints", ReviewUtility.GetPoints());
                 ScriptUtility.Trigger(ScriptEvents.PointsUpdated, table);
             }
         }
 
         static private void OnCorrectPuzzleSubmit() {
-            using(var table = TempVarTable.Alloc()) {
+            using (var table = TempVarTable.Alloc()) {
                 table.Set("puzzleName", Find.State<PuzzleState>().ActivePuzzle.DisplayName);
                 ScriptUtility.Trigger(ScriptEvents.CorrectPuzzleSubmission, table);
             }
@@ -85,7 +85,7 @@ namespace Astro {
             PlayerProgressState state = Find.State<PlayerProgressState>();
             StoryAsset story = Find.GlobalAsset<StoryAsset>();
             for (int i = 0; i < story.Days.Length; i++) {
-                if (story.Days[i] == dayId){
+                if (story.Days[i] == dayId) {
                     state.DayIndex = i;
                     break;
                 }
@@ -132,7 +132,7 @@ namespace Astro {
             GameLoop.SuspendUpdates(AstroGame.InstrumentUpdateMask);
         }
 
-        
+
         [LeafMember("StartMonitorControls")]
         static private void LeafStartMonitorControls() {
             GameLoop.ResumeUpdates(AstroGame.MonitorControlsUpdateMask);
@@ -157,7 +157,7 @@ namespace Astro {
         }
 
         [LeafMember("StartOpenMode")]
-        static private void LeafStartOpenMode(){
+        static private void LeafStartOpenMode() {
             Game.Events.Dispatch(GameEvents.StartOpenMode);
 
             GameLoop.ResumeUpdates(AstroGame.MonitorControlsUpdateMask);
@@ -167,7 +167,7 @@ namespace Astro {
         }
 
         [LeafMember("StopOpenMode")]
-        static private void LeafStopOpenMode(){
+        static private void LeafStopOpenMode() {
             Game.Events.Dispatch(GameEvents.StopOpenMode);
 
             GameLoop.SuspendUpdates(AstroGame.MonitorControlsUpdateMask);
@@ -221,13 +221,19 @@ namespace Astro {
         }
 
         [LeafMember("InitUpdateMasks")]
-        static private void LeafInitUpdateMasks()
-        {
+        static private void LeafInitUpdateMasks() {
             GameLoop.SuspendUpdates(AstroGame.InteractUpdateMask);
             GameLoop.SuspendUpdates(AstroGame.SubmissionUpdateMask);
             GameLoop.SuspendUpdates(AstroGame.DocumentUpdateMask);
             GameLoop.SuspendUpdates(AstroGame.InstrumentUpdateMask);
             GameLoop.SuspendUpdates(AstroGame.MonitorControlsUpdateMask);
+        }
+
+        [LeafMember("ToggleDeskPicture")]
+        static private void LeafToggleDeskPicture() {
+            BackgroundState bgState = Find.State<BackgroundState>();
+            bgState.DeskPicture.SetActive(!bgState.DeskPicture.activeSelf)
+            ;
         }
     }
 }
