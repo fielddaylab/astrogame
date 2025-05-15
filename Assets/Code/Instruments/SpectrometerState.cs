@@ -17,14 +17,16 @@ namespace Astro {
 
         public readonly Dictionary<SpectrographMaterialMask, int[]> Wavelengths = new Dictionary<SpectrographMaterialMask, int[]>() {
             [SpectrographMaterialMask.Hydrogen] = new int[] { 656, 486, 434, 410 },
-            [SpectrographMaterialMask.Helium] = new int[] { 588 },
+            [SpectrographMaterialMask.Helium] = new int[] { 575 }, // fictionalized
             [SpectrographMaterialMask.Carbon] = new int[] { 427, 723 },
-            [SpectrographMaterialMask.Iron] = new int[] { 517, 496, 467, 438, 431, 382 },
-            [SpectrographMaterialMask.Calcium] = new int[] { 423, 397, 393 },
-            [SpectrographMaterialMask.Sodium] = new int[] { 590, 589 },
-            [SpectrographMaterialMask.Magnesium] = new int[] { 517, 516 },
+            [SpectrographMaterialMask.Iron] = new int[] { 527, 516, 495, 467, 438, 431, 382 },
+            [SpectrographMaterialMask.Calcium] = new int[] { 430, 397, 393 },
+            [SpectrographMaterialMask.Sodium] = new int[] { 590, 595 },
+            [SpectrographMaterialMask.Magnesium] = new int[] { 518, 521 }, // fictionalized
             [SpectrographMaterialMask.Oxygen] = new int[] { 687, 628 },
-            [SpectrographMaterialMask.Titanium] = new int[] { 400, 431, 499 }
+            [SpectrographMaterialMask.Titanium] = new int[] { 404, 451, 478, 490, 507, 542},
+            [SpectrographMaterialMask.Lithium] = new int[] { 559, 677 } // fictionalized
+
         };
     }
 
