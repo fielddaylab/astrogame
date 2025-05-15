@@ -189,7 +189,7 @@ namespace Astro {
             CanvasGroup boarder = navProjectionState.BoarderGroup;
             CanvasGroup outline = navProjectionState.OutlineGroup.GetComponent<CanvasGroup>();
             CanvasGroup puzzleOutline = navProjectionState.PuzzleOutlineGroup.GetComponent<CanvasGroup>();
-            yield return spaceCameraState.Camera.RootTransform.RotateQuaternionTo(targetQuat, 0.5f, Space.Self).Ease(Curve.Smooth).OnUpdate((_) => spaceCameraState.LookUpdatedThisFrame = true);
+            yield return spaceCameraState.Camera.RootTransform.RotateQuaternionTo(targetQuat, 0.5f, Space.Self).Ease(Curve.Smooth).OnUpdate(OnCameraAutomaticallyRotated);
             spaceCameraState.OnLookUpdated.Invoke(spaceCameraState);
             yield return Routine.Combine(
                 Tween.Value(1f, 0.04f, (f) => { outline.alpha = f; }, Mathf.Lerp, 0.4f),
@@ -202,6 +202,11 @@ namespace Astro {
             boarder.alpha = 1.0f;
 
             InputUtility.SetInputEnabled(inputState, inputCache);
+        }
+
+        private static void OnCameraAutomaticallyRotated(float _) {
+            var state = Find.State<SpaceCameraState>();
+            WorldPositionUtility.UpdateLookCoordinatesFromCurrentLook(state);
         }
 
         // Helper for updating the edge color of constellations in camera snap routine
