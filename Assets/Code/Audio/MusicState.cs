@@ -14,7 +14,7 @@ namespace Astro.Audio {
     public sealed class MusicState : SharedStateComponent, IRegistrationCallbacks {
         [NonSerialized] public AudioHandle MusicTrack;
         [NonSerialized] public string MusicTag = "music";
-        [NonSerialized] public RingBuffer<StringHash32> TrackQueue = new RingBuffer<StringHash32>(2, RingBufferMode.Expand);
+        [NonSerialized] public RingBuffer<QueuedTrack> TrackQueue = new RingBuffer<QueuedTrack>(2, RingBufferMode.Expand);
         [NonSerialized] public StringHash32 CurrentTrackId;
 
         public void OnDeregister() {
@@ -24,19 +24,27 @@ namespace Astro.Audio {
          }
 
         public void OnRegister() { }
+
+        public struct QueuedTrack {
+            public StringHash32 TrackId;
+            public float Delay;
+        }
     }
 
 
     static public class MusicUtility {
 
         [LeafMember("QueueMusic")]
-        static private void LeafQueueMusic(StringHash32 track) {
+        static public void QueueMusic(StringHash32 track, float delay = 0) {
             MusicState state = Find.State<MusicState>();
-            state.TrackQueue.PushBack(track);
+            state.TrackQueue.PushBack(new MusicState.QueuedTrack() {
+                TrackId = track,
+                Delay = delay
+            });
         }
 
         [LeafMember("PlayMusic")]
-        static public IEnumerator LeafPlayMusic(StringHash32 track, float fadeInTime = 0) {
+        static public IEnumerator PlayMusic(StringHash32 track, float fadeInTime = 0) {
             MusicState state = Find.State<MusicState>();
             if (state.CurrentTrackId == track) {
                 yield break;

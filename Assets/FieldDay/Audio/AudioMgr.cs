@@ -269,9 +269,11 @@ namespace FieldDay.Audio {
         }
 
         private void OnAudioEventLoaded(AudioEvent evt) {
-            foreach(var clip in evt.Samples) {
-                if (!clip.preloadAudioData && clip.loadState == AudioDataLoadState.Unloaded) {
-                    m_PreloadQueue.PushBack(clip);
+            if (evt.PreloadSamples) {
+                foreach (var clip in evt.Samples) {
+                    if (!clip.preloadAudioData && clip.loadState == AudioDataLoadState.Unloaded) {
+                        m_PreloadQueue.PushBack(clip);
+                    }
                 }
             }
 

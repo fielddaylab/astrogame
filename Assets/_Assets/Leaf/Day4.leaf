@@ -18,6 +18,7 @@ $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $call StopPuzzleMode()
 $call StopOpenMode()
 
+$call QueueMusic("Music.Moonthought", 3)
 $call MoveToView("DocumentPuzzle")
 $call SetInputState(false)
 $call SpawnDocumentToCamera("Day41833")

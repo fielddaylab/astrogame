@@ -12,6 +12,7 @@ $call SetInputState(false)
 $call StopPuzzleMode()
 $call StopOpenMode()
 $call SetRefGuidePagesLocked(true)
+
 $call PlayMusic("Music.Gently-Falling", 1)
 $call IntroCutscene->BeginCutscene()
 $call Wait(2)
@@ -22,9 +23,6 @@ $call TelescopeLook(155, -30)
 @when cutsceneId == "IntroCutscene"
 @cutscene
 @who    Radio
-
-$call PlayMusic("Music.Gently-Falling-Piano", 1)
-$call QueueMusic("Music.StarDome")
 
 {@Astrid} Whoa. This place has really changed. Elijah, where are you? $[Day1/Astrid/l1_a_01]
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)

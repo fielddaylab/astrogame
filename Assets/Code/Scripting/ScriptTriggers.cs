@@ -1,4 +1,5 @@
 using System.Collections;
+using Astro.Audio;
 using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay;
@@ -93,6 +94,7 @@ namespace Astro {
             var day = Find.NamedAsset<DayConfigAsset>(dayId);
 
             Game.Events.Dispatch(GameEvents.BeforeNextDayLoad);
+            MusicUtility.StopMusic(1);
 
             Log.Msg("[ScriptTriggers] Loading day '{0}'", day.name);
 

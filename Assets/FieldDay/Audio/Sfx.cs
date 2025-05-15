@@ -23,6 +23,7 @@ namespace FieldDay.Audio {
                     Asset = eventId,
                     Volume = playArgs.Volume,
                     Pitch = playArgs.Pitch,
+                    Delay = playArgs.Delay,
                     RotationOffset = Quaternion.identity,
                 });
         }
@@ -45,6 +46,7 @@ namespace FieldDay.Audio {
                     TransformOrAudioSourceId = UnityHelper.Id(position),
                     Volume = playArgs.Volume,
                     Pitch = playArgs.Pitch,
+                    Delay = playArgs.Delay,
                     RotationOffset = Quaternion.identity,
                 });
         }
@@ -67,6 +69,7 @@ namespace FieldDay.Audio {
                     Asset = eventId,
                     Volume = playArgs.Volume,
                     Pitch = playArgs.Pitch,
+                    Delay = playArgs.Delay,
                     TransformOffset = position.position,
                     TransformOffsetSpace = Space.World,
                     RotationOffset = position.rotation,
@@ -91,6 +94,7 @@ namespace FieldDay.Audio {
                     Asset = eventId,
                     Volume = playArgs.Volume,
                     Pitch = playArgs.Pitch,
+                    Delay = playArgs.Delay,
                     TransformOffset = position,
                     TransformOffsetSpace = Space.World,
                     RotationOffset = rotation,
@@ -116,6 +120,7 @@ namespace FieldDay.Audio {
                     TransformOrAudioSourceId = UnityHelper.Id(source),
                     Volume = playArgs.Volume,
                     Pitch = playArgs.Pitch,
+                    Delay = playArgs.Delay,
                     RotationOffset = Quaternion.identity,
                     Flags = AudioPlaybackFlags.UseProvidedSource
                 });
@@ -142,6 +147,7 @@ namespace FieldDay.Audio {
                     TransformOrAudioSourceId = UnityHelper.Id(source),
                     Volume = playArgs.Volume,
                     Pitch = playArgs.Pitch,
+                    Delay = playArgs.Delay,
                     RotationOffset = Quaternion.identity,
                     Flags = AudioPlaybackFlags.UseProvidedSource | AudioPlaybackFlags.SecondaryClipOverride
                 });
@@ -409,5 +415,6 @@ namespace FieldDay.Audio {
     public struct SfxPlayArgs {
         public float Volume;
         public float Pitch;
+        public float Delay;
     }
 }

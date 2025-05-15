@@ -11,6 +11,7 @@ namespace FieldDay.Audio {
     [CreateAssetMenu(menuName = "Field Day/Audio/Audio Event")]
     public sealed class AudioEvent : NamedAsset, IRegistrationCallbacks {
         public AudioClip[] Samples = Array.Empty<AudioClip>();
+        public bool PreloadSamples = true;
 
         [Header("Playback Parameters")]
         public FloatRange Volume = new FloatRange(1);

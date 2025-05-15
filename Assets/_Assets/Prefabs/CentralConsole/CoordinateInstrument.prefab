@@ -137,7 +137,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 382894310779284138}
   m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: -0.197}
+  m_LocalPosition: {x: 0, y: 0, z: -0.34}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -145,8 +145,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.715, y: -1.11}
-  m_SizeDelta: {x: 1, y: 0.2}
+  m_AnchoredPosition: {x: 0.729, y: 0.816}
+  m_SizeDelta: {x: 0.4, y: 0.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!23 &822877328254015596
 MeshRenderer:
@@ -168,7 +168,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  - {fileID: 356065229798095122, guid: 01c68ffeee9a9b749b0a0c98a298f76d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -210,17 +210,17 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Coordinates
+  m_text: DSC
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 01c68ffeee9a9b749b0a0c98a298f76d, type: 2}
+  m_sharedMaterial: {fileID: 356065229798095122, guid: 01c68ffeee9a9b749b0a0c98a298f76d, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4278211231
+  m_fontColor: {r: 0.6226415, g: 0.31996855, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -237,14 +237,14 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 1.0001035
-  m_fontSizeBase: 1.0001035
+  m_fontSize: 1.2
+  m_fontSizeBase: 1.2
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 16
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -825,6 +825,7 @@ MonoBehaviour:
   - {fileID: 8090257914234935735}
   IsSource: 1
   IsActive: 1
+  IsHidingData: 0
   OverrideSlotId: Coordinates
 --- !u!114 &2224644140939705243
 MonoBehaviour:
@@ -1000,6 +1001,7 @@ MonoBehaviour:
   Movable: {fileID: 3243134843805792967}
   LocalDisplacement: {x: -0.04, y: 0, z: 0}
   IsToggle: 0
+  AutoToggle: 0
   ClickSfx:
     m_HashValue: 2118717671
   ToggleSfx:
@@ -1586,7 +1588,7 @@ MonoBehaviour:
   NullText: <#666>-------------------
   DefaultOutput: {fileID: 3014286141769228212}
   OutputTransform: {fileID: 0}
-  OutputRender: {fileID: 0}
+  OutputAtlas: {fileID: 0}
 --- !u!1 &5236488462150842969
 GameObject:
   m_ObjectHideFlags: 0
@@ -1957,4 +1959,4 @@ MonoBehaviour:
   NullText: <#666>-------------------
   DefaultOutput: {fileID: 3915969055390870147}
   OutputTransform: {fileID: 0}
-  OutputRender: {fileID: 0}
+  OutputAtlas: {fileID: 0}
