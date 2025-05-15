@@ -400,7 +400,7 @@ namespace Astro.Reference {
 
                 Collider c = r.GetComponent<Collider>();
                 Bounds b = PhysicsUtils.GetLocalBounds(c);
-                Vector2 off = r.transform.localPosition;
+                Vector2 off = r.transform.localPosition + r.transform.parent.localPosition;
 
                 Transform highlight = rig.SelectionPool.GetChild(i);
 
