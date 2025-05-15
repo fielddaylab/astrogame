@@ -19,8 +19,11 @@ namespace Astro {
         
         public Canvas NavigationCanvas;
         public float EdgeInset = 38;
+        [SerializeField] private float m_EdgeWidth = 10;
+        public float EdgeWidth => m_EdgeWidth;
         public RectTransform NavigationArrow;
         public RectTransform OutlineGroup;
+        public RectTransform PuzzleOutlineGroup;
         public CanvasGroup BoarderGroup;
 
         public Sprite NeutrinoReticleElbow;
@@ -185,9 +188,11 @@ namespace Astro {
             spaceCamera.fieldOfView = spaceCam.Camera.OriginalFOV / puzzleState.ActivePuzzle.PuzzleCameraZoom;
 
             // Remove any old projections
-            for (int i = 0; i < navState.OutlineGroup.childCount; i++)
-            {
+            for (int i = 0; i < navState.OutlineGroup.childCount; i++) {
                 GameObject.Destroy(navState.OutlineGroup.GetChild(i).gameObject);
+            }
+            for (int i = 0; i < navState.PuzzleOutlineGroup.childCount; i++) {
+                GameObject.Destroy(navState.PuzzleOutlineGroup.GetChild(i).gameObject);
             }
 
             Vector2 canvasSize = navState.OutlineGroup.rect.size;
@@ -221,8 +226,23 @@ namespace Astro {
                     "connection";
 #endif // UNITY_EDITOR
 
+
+                StringHash32[] puzzleStars = new StringHash32[ puzzleState.ActivePuzzle.Rows.Length ];
+                for (int j = 0; j < puzzleState.ActivePuzzle.Rows.Length; j++) {
+                    puzzleStars[j] = puzzleState.ActivePuzzle.Rows[j].Object;
+                }
+
                 var connection = new GameObject(displayName, typeof(RectTransform));
-                connection.transform.SetParent(navState.OutlineGroup, false);
+
+                RectTransform edgeParentObject;
+                if (Array.IndexOf(puzzleStars, e.Object1) != -1 && Array.IndexOf(puzzleStars, e.Object2) != -1) {
+                    // This is one of the stars in our puzzle
+                    edgeParentObject = navState.PuzzleOutlineGroup;
+                } else {
+                    // This is a star in the constellation but not the puzzle
+                    edgeParentObject = navState.OutlineGroup;
+                }
+                connection.transform.SetParent(edgeParentObject, false);
 
                 connection.AddComponent<RoundedRectGraphic>().color = navState.ConstellationEdgeColor;
                 RectTransform connectionRect = connection.GetComponent<RectTransform>();
@@ -232,7 +252,7 @@ namespace Astro {
                 Vector2 anchorB = starAnchors[focusB];
 
                 connectionRect.anchoredPosition = (anchorA + anchorB) / 2;
-                connectionRect.sizeDelta = new Vector2(10, Vector2.Distance(anchorA, anchorB) - navState.EdgeInset);
+                connectionRect.sizeDelta = new Vector2(navState.EdgeWidth, Vector2.Distance(anchorA, anchorB) - navState.EdgeInset);
 
                 Vector2 vector = anchorA - anchorB;
                 float angle = Vector2.Angle(Vector2.up, vector);
