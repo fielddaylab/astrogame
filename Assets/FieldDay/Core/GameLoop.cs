@@ -1036,7 +1036,16 @@ namespace FieldDay {
         /// Updates the target framerate.
         /// </summary>
         static public void SetTargetFramerate(int targetFramerate) {
+#if UNITY_WEBGL && !UNITY_EDITOR
+            if (targetFramerate == 60) {
+                Application.targetFrameRate = -1;
+            } else {
+                Application.targetFrameRate = targetFramerate;
+            }
+#else
             Application.targetFrameRate = targetFramerate;
+#endif // UNITY_WEBGL && !UNITY_EDITOR
+
             s_Instance.m_TargetFramerate = targetFramerate <= 0 ? 60 : targetFramerate;
         }
 

@@ -256,7 +256,6 @@ $call Wait(1)
 $call MonitorUI->ShowCeresLogo()
 $call SetInstrumentUnlocked(ColorInstrument, true)
 $call SetInstrumentUnlocked(TemperatureInstrument, true)
-$call SetInstrumentUnlocked(BlueWavelength, true)
 {@Radio} Congratulations on being awarded clearance level 2. You are now cleared to use the color meter.  $[Day1/Radio/l1_r_3]
 {@Radio} Please reference your CERES Operator Manual for further information about your equipment.  $[Day1/Radio/l1_r_3(2)]
 {@Radio} Thanking you for being an important part of the CERES Distributed Network of Citizen Observatories. Together, we will map the stars for a better tomorrow. $[Day1/Radio/l1_r_3(3)]
@@ -327,6 +326,7 @@ $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 @cutscene
 @once
 
+$call SetInstrumentUnlocked(BlueWavelength, true)
 $call SubtitleController->SetSubtitlePosition(0.5, 1, 0, -140)
 $call StopPuzzleNavigation()
 $call SetInputState(false)

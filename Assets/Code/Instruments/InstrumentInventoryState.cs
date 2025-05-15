@@ -80,7 +80,7 @@ namespace Astro {
         }
 
         static private void AddInstrumentUnlockButton(DMInfo info, string instrumentName) {
-            info.AddButton("Unlock " + instrumentName, () => {
+            info.AddButton("Unlock " + ReflectionCache.InspectorName(instrumentName), () => {
                 ScriptActor actor = ScriptUtility.FindActor(instrumentName);
                 if (actor != null) {
                     SetInstrumentUnlocked(actor.GetComponent<LabInstrument>(), true, true, actor.Id);

@@ -14,7 +14,7 @@ namespace FieldDay.Perf {
     public sealed class PerformanceMgr {
         private const int BufferSize =
 #if DEVELOPMENT
-            60;
+            120;
 #else
             5;
 #endif // UNITY_EDITOR
@@ -24,6 +24,12 @@ namespace FieldDay.Perf {
             m_TimingBuffer = new RingBuffer<PhaseTimingData>(BufferSize, RingBufferMode.Overwrite);
 
             GameLoop.OnDebugUpdate.Register(OnDebugUpdate);
+
+            if (PerfUtility.IsSecureContext()) {
+                UnityEngine.Debug.Log("[PerformanceMgr] Running in a secure context!");
+            } else {
+                UnityEngine.Debug.LogWarning("[PerformanceMgr] Not running in a secure context");
+            }
         }
 
         internal void Shutdown() {
@@ -33,20 +39,42 @@ namespace FieldDay.Perf {
         private unsafe void OnDebugUpdate() {
 #if DEVELOPMENT
             if (DebugFlags.IsFlagSet(DebuggingFlags.DisplayLastFrameStats) && m_TimingBuffer.Count > 0) {
-                PhaseTimingData timingData = m_TimingBuffer.PeekBack();
-                
-                uint totalTicks = timingData.TotalDuration;
-                using(var psb = PooledStringBuilder.CreateLarge()) {
-                    psb.Builder.Append("Frame -1: ").AppendNoAlloc(Profiling.TicksToMillisecs(totalTicks), 2).Append("ms\n");
-                    for(int i = 0; i < PhaseBuckets.MaxBuckets; i++) {
-                        double microsecs = Profiling.TicksToMicrosecs(timingData.Duration[i]);
-                        double percent = 100 * timingData.Duration[i] / (double) totalTicks;
-                        psb.Builder.Append("  ").Append(s_PhaseStrings[i]).Append(": ").AppendNoAlloc(microsecs, 1).Append("μs ")
-                            .AppendNoAlloc(percent, 1).Append("%\n");
-                    }
-                    psb.Builder.Length -= 1;
+                int frameIndex = Math.Max(0, m_TimingBuffer.Count - s_FrameSeek);
+                PhaseTimingData timingData = m_TimingBuffer[frameIndex];
 
-                    DebugDraw.AddLogText(psb.Builder, Color.white);
+                uint totalTicks = timingData.TotalDuration;
+                double desiredFrameDuration = PerfUtility.TargetFrameDurationMS();
+                double frameDuration = Profiling.TicksToMillisecs(totalTicks);
+                double framePerf = desiredFrameDuration / frameDuration;
+
+                if (totalTicks > 0) {
+                    Color color = Color.white;
+                    if (framePerf > 1.2) {
+                        color = Color.green;
+                    } else if (framePerf < 0.80) {
+                        color = Color.red;
+                    } else if (framePerf < 0.999) {
+                        color = Color.yellow;
+                    }
+
+                    using (var psb = PooledStringBuilder.CreateLarge()) {
+                        psb.Builder.Append("Frame -").AppendNoAlloc(m_TimingBuffer.Count - frameIndex).Append(":\t")
+                            .AppendNoAlloc(frameDuration, 2).Append("ms\t");
+                        psb.Builder.AppendNoAlloc(100.0 * framePerf, 1).Append("%") 
+                            .Append("\n");
+
+                        for (int i = 0; i < PhaseBuckets.MaxBuckets; i++) {
+                            double microsecs = Profiling.TicksToMicrosecs(timingData.Duration[i]);
+                            double percent = 100 * timingData.Duration[i] / (double)totalTicks;
+                            psb.Builder.Append("  ").Append(s_PhaseStrings[i]).Append(":\t").AppendNoAlloc(microsecs, 1).Append("μs\t")
+                                .AppendNoAlloc(percent, 1).Append("%\n");
+                        }
+                        psb.Builder.Length -= 1;
+
+                        DebugDraw.AddLogText(psb.Builder, color);
+                    }
+                } else {
+                    DebugDraw.AddLogText("Frame INVALID", Color.red);
                 }
             }
 #endif // DEVELOPMENT
@@ -74,7 +102,7 @@ namespace FieldDay.Perf {
 
 #if DEVELOPMENT
 
-        static private int m_FrameSeek = 1;
+        static private int s_FrameSeek = 1;
 
         static private readonly int[] s_Framerates = new int[] {
             -1,
@@ -96,7 +124,7 @@ namespace FieldDay.Perf {
 
         static private readonly string[] s_PhaseStrings = new string[] {
             "DbgUpd", "PreUpd", "FixedUpd", "LateFixedUpd",
-            "Upd", "UnscaledUpd", "LateUpd", "UnscaledLateUpd",
+            "Upd", "UnscUpd", "LateUpd", "UnscLateUpd",
             "CanvasPre", "RenderPre", "PreCull", "PreRender", "PostRender", "FrameAdv"
         };
 
@@ -123,7 +151,7 @@ namespace FieldDay.Perf {
             info.AddDivider();
 
             DebugFlags.Menu.AddFlagToggle(info, "Display Frame Profiling Time", DebuggingFlags.DisplayLastFrameStats);
-            info.AddSlider("Frame Selection", () => m_FrameSeek, (f) => m_FrameSeek = (int) f, 1, BufferSize, 1, (string) null, () => DebugFlags.IsFlagSet(DebuggingFlags.DisplayLastFrameStats), 1);
+            info.AddSlider("Frame Selection", () => s_FrameSeek, (f) => s_FrameSeek = (int) f, 1, BufferSize, 1, "{0}", () => DebugFlags.IsFlagSet(DebuggingFlags.DisplayLastFrameStats), 1);
 
             return info;
         }

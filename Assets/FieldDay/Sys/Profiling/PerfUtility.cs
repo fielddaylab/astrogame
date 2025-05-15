@@ -4,6 +4,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay.Debugging;
@@ -23,5 +24,19 @@ namespace FieldDay.Perf {
             return 1000f / TargetFramerate();
         }
 
+        static public bool IsSecureContext() {
+#if UNITY_WEBGL && !UNITY_EDITOR
+            return WebPerf_IsCrossOriginIsolated();
+#elif UNITY_EDITOR
+            return true;
+#else
+            return Application.sandboxType == ApplicationSandboxType.Sandboxed;
+#endif // UNITY_WEBGL && !UNITY_EDITOR
+        }
+
+#if UNITY_WEBGL
+        [DllImport("__Internal")]
+        static private extern bool WebPerf_IsCrossOriginIsolated();
+#endif // UNITY_WEBGL
     }
 }
