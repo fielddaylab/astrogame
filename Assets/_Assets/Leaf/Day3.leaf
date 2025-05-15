@@ -133,6 +133,7 @@ $call ClearMonitorSelection()
 $call MonitorUI->PlayRadioDownload(2)
 $call Wait(1)
 $call MonitorUI->ShowCeresLogo()
+$call SetInstrumentUnlocked(InfraredWavelength, true)
 $call SetInstrumentUnlocked(HistoricalDataInstrument, true)
 {@Radio} Congratulations on being awarded clearance level 4. You are now cleared to use the historical data module.
 {@Radio} Please reference your CERES Operator Manual for further information about your equipment.  $[Day3/Radio/l1_r_3(2)]
