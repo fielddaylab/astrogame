@@ -41,6 +41,8 @@ namespace Astro {
                 }
                 TryAddToActiveInstruments(instrument);
                 instrument.OnUnlock?.Invoke(instrument);
+
+                AstroGame.Events.Queue(GameEvents.InstrumentUnlocked, ScriptUtility.ActorId(instrument));
             }
         }
 
@@ -68,6 +70,8 @@ namespace Astro {
         static private DMInfo CreateDebugMenu() {
             DMInfo menu = new DMInfo("Instruments", 6);
             AddInstrumentUnlockButton(menu, "PhotometerInstrument");
+            AddInstrumentUnlockButton(menu, "BlueWavelength");
+            AddInstrumentUnlockButton(menu, "InfraredWavelength");
             AddInstrumentUnlockButton(menu, "ColorInstrument");
             AddInstrumentUnlockButton(menu, "TemperatureInstrument");
             AddInstrumentUnlockButton(menu, "SpectrometerInstrument");

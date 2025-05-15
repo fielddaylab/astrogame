@@ -33,6 +33,12 @@ static public class LayerMasks {
     // Layer 10: DocumentSurface
     public const int DocumentSurface_Index = 10;
     public const int DocumentSurface_Mask = 1024;
+    // Layer 11: ObservatoryDome
+    public const int ObservatoryDome_Index = 11;
+    public const int ObservatoryDome_Mask = 2048;
+    // Layer 12: TelescopeLight
+    public const int TelescopeLight_Index = 12;
+    public const int TelescopeLight_Mask = 4096;
     // Layer 15: TopLayer
     public const int TopLayer_Index = 15;
     public const int TopLayer_Mask = 32768;
@@ -44,6 +50,10 @@ static public class SortingLayers {
     
     // Layer Default
     public const int Default = 0;
+    // Layer Top
+    public const int Top = -866544273;
+    // Layer UI
+    public const int UI = 2029780405;
 }
 static public class UnityTags {
     
@@ -67,4 +77,13 @@ static public class RenderingLayers {
     // Rendering Layer 0: Default
     public const uint Default_Index = 0;
     public const uint Default_Mask = 1;
+    // Rendering Layer 1: Telescope_Lighting
+    public const uint Telescope_Lighting_Index = 1;
+    public const uint Telescope_Lighting_Mask = 2;
+    // Rendering Layer 2: Dome_Lighting
+    public const uint Dome_Lighting_Index = 2;
+    public const uint Dome_Lighting_Mask = 4;
+    // Rendering Layer 3: RefGuide_Lighting
+    public const uint RefGuide_Lighting_Index = 3;
+    public const uint RefGuide_Lighting_Mask = 8;
 }

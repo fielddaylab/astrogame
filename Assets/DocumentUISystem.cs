@@ -6,9 +6,9 @@ namespace Astro {
 
         public override void ProcessWorkForComponent(DocumentUI element, float deltaTime) {
             if(element.IsHighlighted) {
-                element.Renderer.material = element.HoverMaterial;
+                element.Renderer.sharedMaterial = element.HoverMaterial;
             } else {
-                element.Renderer.material = element.BaseMateral;
+                element.Renderer.sharedMaterial = element.BaseMateral;
             }
         }
     }

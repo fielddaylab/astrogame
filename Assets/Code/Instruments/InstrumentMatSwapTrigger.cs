@@ -6,10 +6,8 @@ using UnityEngine;
 using BeauRoutine;
 using FieldDay.Rendering;
 
-namespace Astro
-{
-    public class InstrumentMatSwapTrigger : BatchedComponent, IRegistrationCallbacks
-    {
+namespace Astro {
+    public class InstrumentMatSwapTrigger : BatchedComponent, IRegistrationCallbacks {
         [SerializeField] private LabInstrument m_Target;
         [SerializeField] private MeshRenderer[] m_Renderers;
         [SerializeField] private int m_MatIndex;
@@ -17,39 +15,32 @@ namespace Astro
         [SerializeField] private Material m_InitMat;
         [SerializeField] private Material m_SwapTo;
 
-        public void OnDeregister()
-        {
+        public void OnDeregister() {
             m_Target.OnUnlock.Deregister(SwapMats);
         }
 
-        public void OnRegister()
-        {
+        public void OnRegister() {
             m_Target.OnUnlock.Register(SwapMats);
             InitMats();
         }
 
-        private void InitMats()
-        {
+        private void InitMats() {
             foreach (var renderer in m_Renderers) {
                 renderer.SetSharedMaterialAtIndex(m_MatIndex, m_InitMat);
             }
         }
 
-        private void SwapMats()
-        {
+        private void SwapMats() {
             foreach (var renderer in m_Renderers) {
                 renderer.SetSharedMaterialAtIndex(m_MatIndex, m_SwapTo);
             }
         }
 
-        private IEnumerator SwapMatsRoutine()
-        {
+        private IEnumerator SwapMatsRoutine() {
             float lerp = 0;
             float swapInflectionPoint = 0;
-            while (lerp < swapInflectionPoint)
-            {
-                foreach (var renderer in m_Renderers)
-                {
+            while (lerp < swapInflectionPoint) {
+                foreach (var renderer in m_Renderers) {
                     var mats = renderer.materials;
                     mats[m_MatIndex].Lerp(m_InitMat, m_SwapTo, lerp);
                     renderer.materials = mats;
@@ -60,17 +51,14 @@ namespace Astro
                 yield return null;
             }
 
-            foreach (var renderer in m_Renderers)
-            {
+            foreach (var renderer in m_Renderers) {
                 var mats = renderer.materials;
                 mats[m_MatIndex] = m_SwapTo;
                 renderer.materials = mats;
             }
 
-            while (lerp < 1)
-            {
-                foreach (var renderer in m_Renderers)
-                {
+            while (lerp < 1) {
+                foreach (var renderer in m_Renderers) {
                     var mats = renderer.materials;
                     mats[m_MatIndex].Lerp(m_InitMat, m_SwapTo, lerp);
                     renderer.materials = mats;
@@ -81,8 +69,7 @@ namespace Astro
                 yield return null;
             }
 
-            foreach (var renderer in m_Renderers)
-            {
+            foreach (var renderer in m_Renderers) {
                 var mats = renderer.materials;
                 mats[m_MatIndex].Lerp(m_InitMat, m_SwapTo, 1);
                 renderer.materials = mats;

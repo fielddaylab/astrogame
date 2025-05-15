@@ -39,7 +39,8 @@ namespace Astro {
         public void OnRegister() {
             PhotometerUtility.TogglePhotometerMode(false, this);
             AstroGame.Events.Register<CelestialObjectVisMask>(GameEvents.MonitorSwitchedFilter, OnFilterSwitched)
-                .Register<UIFocus>(GameEvents.OnStarSelected, OnStarSelected);
+                .Register<UIFocus>(GameEvents.OnStarSelected, OnStarSelected)
+                .Register<StringHash32>(GameEvents.InstrumentUnlocked, OnInstrumentUnlocked);
         }
 
         private void OnFilterSwitched(CelestialObjectVisMask visibility) {
@@ -48,6 +49,10 @@ namespace Astro {
 
         private void OnStarSelected(UIFocus focus) {
             PhotometerUtility.HandleStarSelected(this, Find.State<SkyGenerationState>().VisMask, focus);
+        }
+
+        private void OnInstrumentUnlocked(StringHash32 instrumentId) {
+            PhotometerUtility.HandleInstrumentUnlocked(this, instrumentId);
         }
     }
 
@@ -152,6 +157,18 @@ namespace Astro {
                 DataUtility.RevealData(photometer.AbsoluteSlot);
             } else {
                 DataUtility.HideData(photometer.AbsoluteSlot);
+            }
+        }
+
+        public static void HandleInstrumentUnlocked(Photometer photometer, StringHash32 instrumentId) {
+            if (instrumentId == "BlueWavelength") {
+                foreach(var display in photometer.BlueSlot.Displays) {
+                    display.DefaultOutput.enabled = true;
+                }
+            } else if (instrumentId == "InfraredWavelength") {
+                foreach (var display in photometer.IRSlot.Displays) {
+                    display.DefaultOutput.enabled = true;
+                }
             }
         }
 
