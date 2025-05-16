@@ -54,8 +54,8 @@ namespace Astro {
         OType = Hydrogen | Helium,
         BType = Hydrogen | Helium | Carbon,
         AType = Hydrogen | Helium | Carbon | Iron | Calcium,
-        FType = Hydrogen | Helium | Carbon | Iron | Calcium | Sodium | Magnesium,
-        GType = Hydrogen | Helium | Carbon | Iron | Calcium | Sodium | Magnesium,
+        FType = Hydrogen | Helium | Carbon | Iron | Calcium | Sodium | Magnesium | Oxygen,
+        GType = Hydrogen | Helium | Carbon | Iron | Calcium | Sodium | Magnesium | Oxygen,
         KType = Helium | Carbon | Iron | Calcium | Sodium | Magnesium | Oxygen ,
         MType = Helium | Carbon | Iron | Calcium | Sodium | Magnesium | Oxygen | Titanium
 
