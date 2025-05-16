@@ -24,12 +24,6 @@ namespace Astro
             var cancelInputState = Find.State<CancelInputState>();
             cancelInputState.SlotClicked = true;
 
-            using (var table = TempVarTable.Alloc())
-            {
-                table.Set("cellId", primary.DataSlot.SlotId);
-                ScriptUtility.Trigger(ScriptEvents.OnPuzzleCellSelected, table);
-            }
-
             // If puzzle is locked, only run the following logic on an isolated slot
             var puzzleState = Find.State<PuzzleState>();
             if (puzzleState.IsIsolated && !PuzzleUtility.IsSlotIsolated(puzzleState, primary.DataSlot.SlotId)) { return; }

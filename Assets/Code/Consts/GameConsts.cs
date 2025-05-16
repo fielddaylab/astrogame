@@ -48,6 +48,7 @@ public static class ScriptEvents {
     public static readonly StringHash32 CutsceneBegin = "CutsceneBegin";
     public static readonly StringHash32 CutsceneEnd = "CutsceneEnd";
     public static readonly StringHash32 OnTelescopeMoved = "OnTelescopeMoved";
+    public static readonly StringHash32 OnLabInteraction = "OnLabInteraction";
     public static readonly StringHash32 OnStarSelected = "OnStarSelected";
     public static readonly StringHash32 OnNeutrinoStarSelected = "OnNeutrinoStarSelected";
     public static readonly StringHash32 OnRefGuideOpened = "OnRefGuideOpened";
