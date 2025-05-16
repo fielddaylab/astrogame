@@ -7,6 +7,8 @@
 
 $call InitUpdateMasks()
 $call ToggleDeskPicture()
+$call EnableDocumentClose("Day3ElijahPostcard", false)
+$call EnableDocumentClose("Day41833", false)
 $call SetInstrumentUnlocked(CoordinateInstrument, true)
 $call SetInstrumentUnlocked(PhotometerInstrument, true)
 $call SetInstrumentUnlocked(BlueWavelength, true)
@@ -20,17 +22,6 @@ $call QueueMusic("Music.Moonthought", 3)
 
 $call MoveToView("DocumentPuzzle")
 $call SetInputState(false)
-$call SpawnDocumentToCamera("MiniLabors")
-$call SetInputState(true)
-
-:: SpawnPuzzleDocs1
-@trigger    DocumentInspectEnd
-@when   documentId == "MiniLabors"
-@once
-
-$call SetInputState(false)
-$call Wait(1)
-
 $call SpawnDocumentToCamera("Day3ElijahPostcard")
 $call SetInputState(true)
 
@@ -40,23 +31,28 @@ $call SetInputState(true)
 @cutscene
 @once
 
+$call SetInputState(false)
 {@Astrid} I don’t get it. We need to warn people? About what?
 {@Astrid} Ugh. Elijah, I love you, but I could really use less poetry and more information. 
+$call EnableDocumentClose("Day3ElijahPostcard", true, true)
+$call SetInputState(true)
 
 :: SpawnPuzzleDocs2
 @trigger    DocumentInspectEnd
 @when   documentId == "Day3ElijahPostcard"
 @interrupt
+@cutscene
 @once
 
 $call SetInputState(false)
 $call Wait(1)
-$call SpawnDocumentToCamera("HerculesPostcard")
+$call SpawnDocumentToCamera("Day3Dad")
+{@Astrid} Dad... I'm so glad to hear more from him than the few little blips on the radio. 
 $call SetInputState(true)
 
 :: SpawnPuzzleDocs3
 @trigger    DocumentInspectEnd
-@when   documentId == "HerculesPostcard"
+@when   documentId == "Day3Dad"
 @interrupt
 @once
 
@@ -68,14 +64,14 @@ $call SetInputState(true)
 
 :: IncorrectDocumentResponse
 @trigger    DocumentPuzzlePromptStart
-@when   documentId != "HerculesPostcard"
+@when   documentId != "Day3Dad"
 @interrupt
 
 NO.
 
 :: CorrectDocumentResponse
 @trigger    DocumentPuzzlePromptStart
-@when   documentId == "HerculesPostcard"
+@when   documentId == "Day3Dad"
 @cutscene
 @once
 
@@ -87,26 +83,34 @@ $call SetInputState(false)
 $call MoveToView("Right")
 $call Wait(1)
 
-{@Dad} Astrid, this is Ursa Major. Great job identifying Hercules! 
-{@Dad} I got your letter about Elijah, and all those cryptic notes you found.  
-{@Dad} I’m sorry, kiddo, but I don’t know much more than you do. 
-{@Dad} A few months ago, Elijah mentioned some kind of secret project he was working on.
-{@Dad} He said it was a big deal. But you know Elijah. Everything’s a big deal to him. 
-{@Dad} He’s always been a dreamer . .  . I could see it even when you were kids.
-{@Dad} I think sometimes he forgets people can’t read his mind. 
-{@Dad} There could be a logical explanation. Elijah doesn’t seem like the type to go off the deep end.
-{@Dad} But then again, these are strange times.  
+{@Dad} Astrid, this is Ursa Major. You there?
 
-{@Astrid} Oookay. I gotta be honest, Dad. That’s not exactly comforting. 
+{@Astrid} Dad!
 
-{@Dad} For now, why don’t you keep exploring? I’ll let you know when we’ve got your next assignment. 
-{@Dad} And in the meantime, I’ll see if I can find out more about Elijah. 
-{@Dad} Love you, Little Bear.
+{@Dad} Sorry I've been out of touch the last few weeks. ..We have a short window to talk. 
+{@Dad} I got your letter about Elijah, and all those cryptic notes you found.
+{@Dad} You know, we are under so much scrutiny here to get resources for our work. 
+{@Dad} We need to be on the same page with our efforts or we could be shut down.  This work really matters. 
 
-{@Astrid} Love you, Dad. Sure wish you could hear me. 
+{@Astrid} I get it, I just... I think he might have something here.
 
-{@Radio} Star HQ to Station Seven. IceCube is reading a high-energy neutrino emission from the area of the Orion Constellation.
+{@Dad} I know Elijah thinks this side quest is important... That kid...
+
+{@Astrid} When do you think you're gonna be able to come home? 
+
+{@Dad} Oh Astrid. I miss you too. The last transport back is in a few months. 
+{@Dad} Hopefully I'll get through some of this work before the end of the season. 
+
+{@Astrid} Dad! If you don't get back this season, you'll have to overwinter another year! I just can't...
+
+{@Dad} Astrid... I'll do what I can. Time's up. I love you.
+
+$call Wait(1)
+
+{@Radio} CERES HQ to Station Twelve. IceCube is reading a high-energy neutrino emission from the area of the Orion Constellation.
 {@Radio} Identification of nearby celestial objects is requested. Uploading area of interest...
+$call WaitForMovedToView("Monitor")
+$call MonitorUI->PlayRadioDownload(2)
 $call StartNeutrinoNavigation()
 $call SetInputState(true)
 
@@ -115,7 +119,6 @@ $call SetInputState(true)
 @once
 
 $call StopNeutrinoNavigation()
-{@Radio} Neutrino Origin Detected
 $call StartOpenMode()
 
 :: PointsUpdated
@@ -137,12 +140,28 @@ $call Wait(1)
 $call MonitorUI->ShowCeresLogo()
 $call SetInstrumentUnlocked(InfraredWavelength, true)
 $call SetInstrumentUnlocked(HistoricalDataInstrument, true)
-{@Radio} Congratulations on being awarded clearance level 4. You are now cleared to use the historical data module.
-{@Radio} Please reference your CERES Operator Manual for further information about your equipment.  $[Day3/Radio/l1_r_3(2)]
-{@Radio} Thanking you for being an important part of the CERES Distributed Network of Citizen Observatories. Together, we will map the stars for a better tomorrow. $[Day3/Radio/l1_r_3(3)]
-$call Wait(0.5)
-{@Radio} Tuning you to the Ice Cube CERES headquarters for further instruction... $[Day3/Radio/l1_r_4]
+{@Radio} Congratulations on being awarded clearance level 3. You are now cleared to use the historical data module.  
+{@Radio} This will allow you to measure parallax over a period of time so that you can determine the distance of the stars.
+{@Radio} You have also been cleared to use the infrared filter. 
+{@Radio} Please reference your CERES Operator Manual for further information about your equipment.
+{@Radio} Thanking you for being an important part of the CERES Distributed Network of Citizen Observatories. 
+{@Radio} Together, we will map the stars for a better tomorrow.
 $call MonitorUI->HideCeresLogo()
+$call Wait(1)
+
+{@Astrid} Wait, does this mean that Elijah got a satellite uplink working? Oh man, Dad is going to be so surprised. 
+{@Astrid} How did he do it? 
+{@Astrid} I bet he put it together out of all this old tech lying around. We used to have so much fun wiring up old radios.
+
+//TODO
+$call OpenRefGuidePage("DataTransfer")
+$call Wait(1)
+{@Astrid} Leo... the lion. I think I'm ready to wrestle my way through this one. 
+{@Astrid} If I can just figure out this encryption key its going to really ... well, I'm not sure. 
+{@Astrid} Stop the "end of the world" or something? 
+{@Astrid} (*Sigh*) I can't really figure that out right now. Back to astronomy. This is pretty fun no matter what happens. 
+
+(*typing sounds*)
 $call Wait(1)
 $call StartPuzzleNavigation()
 $call SetInputState(true)
@@ -154,6 +173,27 @@ $call SetInputState(true)
 $call StopPuzzleNavigation()
 $call StartPuzzleMode()
 
+{@Astrid} Elijah had figured out that Zosma isn’t the nearest star...
+{@Astrid} Now that I've got that parallax data, I can finish what he started.
+{@Astrid} From what I remember, when Earth orbits the Sun, our point of view shifts. 
+{@Astrid} And when we look at a nearby star from two different positions months apart, it seems to move slightly against the background stars.
+{@Astrid} That's parallax. The closer the star, the bigger the shift. The farther away it is, the smaller the shift.
+{@Astrid} Now that I have this data I can figure out the distance from the stars. 
+{@Astrid} We couldn'tve figured this out without years of data that was lost. 
+$set temp:LeoPuzzleStarted = true
+
+:: FirstInfrared
+@trigger OnLabInteraction
+@when   actorId == "InfraredFilter"
+@cutscene
+@once
+
+{@Astrid} Infrared filter, cool.
+{@Astrid} I can't see visible light through space dust, but I can see infrared—it cuts right through. 
+{@Astrid} Visible light shows the glowing stuff, but infrared is like heat vision.
+{@Astrid} Wait… this one’s brightest in infrared? 
+{@Astrid} That means I won’t see much in the visible wavelengths, but with the infrared filter, it should stand out.
+
 :: LeoPuzzleComplete
 @trigger    CorrectPuzzleSubmission
 @when   puzzleName == "Leo"
@@ -163,6 +203,12 @@ $call StartPuzzleMode()
 $call ClearMonitorSelection()
 $call StopPuzzleMode()
 $call SetInputState(false)
+{@Elijah} Well… if Leo’s puzzle opened, that means the historical data made it through. Something’s working.
+{@Elijah} That would mean that least part of the system’s still alive.
+{@Elijah} Alright. Stay focused. Keep moving.
+$call Wait(1)
+
+{@Astrid} Whoa… what's this picture? It must have fallen out of the reference guide?
 $set temp:d3PostcardRead = false
 $call SpawnDocumentToCamera("Day41833")
 $call SetInputState(true)
@@ -175,12 +221,22 @@ $call SetInputState(true)
 @once
 
 $call SetInputState(false)
-{@Astrid} Whoa. There was a huge Leonid meteor storm in 1833! People thought the world was ending. Does Elijah think it’s going to happen again?
+{@Astrid} The 1833 Leonid Meteor Storm... I’ve never heard of this before.
+{@Astrid} It looks like the sky was completely filled with meteors—not just a few streaks, but thousands. Like the whole sky was breaking apart.
+{@Astrid} People must have thought the world was ending.... wait...
+{@Astrid} Does he think it’s going to happen again? Is that what he has been hinting at? 
 {@Astrid} If this is true, people won’t understand what’s happening. Everyone’s gonna panic. 
-
-{@Astrid} Okay. We could write to the newspaper and tell people what’s happening, but first we need to know when and where the meteor storm will happen.
-$call SetInputState(true)
+{@Astrid} It would look like the sky is falling - the end of the world.
+{@Astrid} Oh God. Things are just starting to get better. 
+{@Astrid} If something like this hit now… it’d be worse. So much worse.
+{@Astrid} I feel pretty safe up here at the edge of nowhere. It would be nice if I wasn't totally alone. 
+{@Astrid} Maybe I could write to the newspaper and tell people what’s happening?
+{@Astrid} Sigh. but I guess I would need to know what is actually happening.
+{@Astrid} When and where is this meteor storm coming?
+{@Astrid} Elijah! What have you gotten us into?
 $set temp:d3PostcardRead = true
+$call EnableDocumentClose("Day41833", true, true)
+$call SetInputState(true)
 
 :: End1833
 @trigger    DocumentInspectEnd
