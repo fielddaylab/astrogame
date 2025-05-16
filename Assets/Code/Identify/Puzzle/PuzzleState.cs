@@ -136,8 +136,7 @@ namespace Astro {
         }
 
         [LeafMember("AddIsolatedSlot")]
-        public static void LeafAddIsolatedSlot(StringHash32 slotId)
-        {
+        public static void LeafAddIsolatedSlot(StringHash32 slotId) {
             PuzzleState state = Find.State<PuzzleState>();
 
             state.IsolatedSlots.PushBack(slotId);

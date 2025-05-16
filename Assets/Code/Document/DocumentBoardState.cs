@@ -256,21 +256,32 @@ namespace Astro {
             state.InteractedThisFrame = true;
         }
 
-        private static void ReturnDocToBoard(DocumentInteractable doc, DocumentBoardState state) {
-            SetInteractionLayer(state.DocZoomed, LayerMasks.DocumentInteract_Index);
-
-            var docParts = doc.GetComponentsInChildren<DocumentPart>(true);
-            foreach (DocumentPart part in docParts) {
-                if (Array.IndexOf(DocumentBoardState.BoardActiveFunctions, part.PartType) != -1) {
-                    part.gameObject.SetActive(true);
+        public static void UpdateEnabledDocParts(DocumentInteractable doc, DocPartFunction[] mode) {
+            foreach (DocumentPart part in doc.Parts) {
+                if (Array.IndexOf(mode, part.PartType) != -1) {
+                    if (part.PartType == DocPartFunction.Close) {
+                        DocumentAsset docAsset = Find.NamedAsset<DocumentAsset>(doc.AssetName);
+                        if (docAsset.CloseEnabled) {
+                            part.gameObject.SetActive(true);
+                        } else {
+                            part.gameObject.SetActive(false);
+                        }
+                    } else {
+                        part.gameObject.SetActive(true);
+                    }
                 } else {
                     part.gameObject.SetActive(false);
                 } 
             }
+        }
+
+        private static void ReturnDocToBoard(DocumentInteractable doc, DocumentBoardState state) {
+            SetInteractionLayer(state.DocZoomed, LayerMasks.DocumentInteract_Index);
+
+            UpdateEnabledDocParts(doc, DocumentBoardState.BoardActiveFunctions);
 
             state.DocumentRoutine.Replace(MoveDocToPos(doc.transform, state.StoredDocPos))
-                .OnComplete(() =>
-                {
+                .OnComplete(() => {
                     DocumentRenderer renderer = doc.Renderer;
                     DocumentAsset asset = Find.NamedAsset<DocumentAsset>(doc.AssetName);
 
@@ -302,21 +313,13 @@ namespace Astro {
             DocumentAsset asset = Find.NamedAsset<DocumentAsset>(doc.AssetName);
 
             DocumentUtility.DisplayFullDocument(renderer, asset);
+            UpdateEnabledDocParts(doc, DocumentBoardState.ZoomActiveFunctions);
 
             state.DocumentRoutine.Replace(MoveDocToCam(viewState, doc.transform, Game.Rendering.PrimaryCamera.transform, zoomOffset))
                 .OnComplete(() => {
                     using (var table = TempVarTable.Alloc()) {
                         table.Set("documentId", doc.AssetName);
                         ScriptUtility.Trigger(ScriptEvents.DocumentInspectStart, table);
-                    }
-
-                    var docParts = doc.GetComponentsInChildren<DocumentPart>(true);
-                    foreach (DocumentPart part in docParts) {
-                        if (Array.IndexOf(DocumentBoardState.ZoomActiveFunctions, part.PartType) != -1) {
-                            part.gameObject.SetActive(true);
-                        } else {
-                            part.gameObject.SetActive(false);
-                        } 
                     }
                 });
 

@@ -35,6 +35,7 @@ public class DocumentAssetEditor : Editor {
 
         EditorGUILayout.PropertyField(serializedObject.FindProperty("Category")); 
         EditorGUILayout.PropertyField(serializedObject.FindProperty("Prefab"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("CloseEnabled"));
         serializedObject.ApplyModifiedProperties();
 
         EditorGUILayout.Space();

@@ -1,11 +1,10 @@
-using System.Collections;
 using Astro.Audio;
 using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay;
-using FieldDay.Assets;
 using FieldDay.Scripting;
 using Leaf.Runtime;
+using UnityEngine;
 
 namespace Astro {
     public static class ScriptTriggers {
@@ -234,6 +233,26 @@ namespace Astro {
             BackgroundState bgState = Find.State<BackgroundState>();
             bgState.DeskPicture.SetActive(!bgState.DeskPicture.activeSelf)
             ;
+        }
+
+        [LeafMember("EnableDocumentClose")]
+        static private void LeafEnableDocumentClose(StringHash32 assetId, bool value, bool updateNow = false) {
+            DocumentAsset docAsset = Find.NamedAsset<DocumentAsset>(assetId);
+            if (docAsset == null) {
+                Debug.LogWarning("[LeafEnableDocumentClose] Failed to find document" + assetId);
+            }
+
+            docAsset.CloseEnabled = value;
+
+            if (updateNow) {
+                DocumentBoardState boardState = Find.State<DocumentBoardState>();
+
+                if (boardState.DocZoomed) {
+                    DocumentUtility.UpdateEnabledDocParts(boardState.DocZoomed, DocumentBoardState.ZoomActiveFunctions);
+                } else {
+                    DocumentUtility.UpdateEnabledDocParts(docAsset.Interactable, DocumentBoardState.BoardActiveFunctions); 
+                }
+            }
         }
     }
 }

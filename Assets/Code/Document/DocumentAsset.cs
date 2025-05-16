@@ -24,28 +24,36 @@ namespace Astro {
         public DocumentCategory Category;
         // TODO: Replace with a compressed prefab layout
         public DocumentRenderer Prefab;
+        [HideInInspector] public DocumentInteractable Interactable = null;
 
-        [TextArea(1, 16)] 
+        [TextArea(1, 16)]
         [SerializeField] public string[] TextFields;
 
-        // public StreamingDocumentVisual DocumentVisualTest;
         [HideInInspector]
         public StreamingDocumentVisual[] StreamingVisuals;
 
         public Vector3 DefaultPinnedPos;
         public Vector3 ZoomOffsetOverride;
 
+        public bool CloseEnabled = true;
+
 #if UNITY_EDITOR
-        private void OnValidate() { 
-            if (UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode) return; 
+        private void OnValidate()
+        {
+            if (UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode) return;
 
             if (Prefab == null) return;
             int numStreamingAssets = 0;
-            foreach(DocumentRenderComponent cmp in Prefab.RenderComponents){
+            foreach (DocumentRenderComponent cmp in Prefab.RenderComponents)
+            {
                 numStreamingAssets += cmp.NumStreamingVisuals;
             }
             Array.Resize(ref TextFields, Prefab.TextRegions.Length);
             Array.Resize(ref StreamingVisuals, numStreamingAssets);
+
+            if (Prefab.gameObject.TryGetComponent(out DocumentInteractable interactable)) {
+                Interactable = interactable;
+            }
         }
 #endif
     }

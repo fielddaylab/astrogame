@@ -7,6 +7,7 @@
 @who    Astrid
 
 $call InitUpdateMasks()
+$call EnableDocumentClose("HerculesPostcard", false)
 $call SetInstrumentUnlocked(CoordinateInstrument, true)
 $call SetInstrumentUnlocked(PhotometerInstrument, true)
 $call SetInstrumentUnlocked(BlueWavelength, true)
@@ -43,6 +44,7 @@ $call QueueMusic("Music.StarDome", 3)
 @once
 
 {@Astrid} Oh Elijah... What are you getting yourself into? $[Day2/Astrid/l2d_a_2]
+$call EnableDocumentClose("HerculesPostcard", true, true)
 
 :: SpawnPuzzleDocs2
 @trigger    DocumentInspectEnd
@@ -171,10 +173,3 @@ $call EndDay2->BeginCutscene()
 $call Wait(1)
 {@Astrid} Why is project Hercules so important to you Elijah? 
 {@Astrid} Maybe Dad knows more than he’s sharing on the radio… I’ll write him a letter.
-
-:: EndDay
-@trigger    CutsceneEnd
-@when cutsceneId == "EndDay2"
-@who    Radio
-
-$call LoadNextDay()
