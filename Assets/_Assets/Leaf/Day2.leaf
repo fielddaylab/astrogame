@@ -214,8 +214,8 @@ $call MoveToView("Right")
 $call OpenRefGuidePage("DataTransfer")
 (*typing sounds*)
 $call Wait(1)
-$call SetInputState(true)
 $call StartPuzzleNavigation()
+$call SetInputState(true)
 
 :: PuzzleNavigationComplete
 @trigger    PuzzleNavigationComplete

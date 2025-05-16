@@ -18,7 +18,7 @@ namespace Astro {
 
         private DataPacket(DataTypeMask type, StringHash32 patternId, Datum value, bool isValid = true) {
             Assert.True((type & (type - 1)) == 0, "Cannot specify combined mask '{0}' as type for data packet", type);
-            Assert.True(type == DataTypeMask.Historical_Coordinates || type == DataTypeMask.Historical_ApparentMagnitude || type == DataTypeMask.Historical_Color, "Cannot specify pattern for non-historical data type '{0}'", type);
+            Assert.True(!isValid || (type == DataTypeMask.Historical_Coordinates || type == DataTypeMask.Historical_ApparentMagnitude || type == DataTypeMask.Historical_Color), "Cannot specify pattern for non-historical data type '{0}'", type);
             IsValid = isValid;
             Type = type;
             HistoricalPatternId = patternId;
@@ -27,7 +27,7 @@ namespace Astro {
 
         private DataPacket(DataTypeMask type, Datum value, bool isValid = true) {
             Assert.True((type & (type - 1)) == 0, "Cannot specify combined mask '{0}' as type for data packet", type);
-            Assert.True(type != DataTypeMask.Historical_Coordinates && type != DataTypeMask.Historical_ApparentMagnitude && type != DataTypeMask.Historical_Color, "Pattern required for historical data type '{0}'", type);
+            Assert.True(!isValid || (type != DataTypeMask.Historical_Coordinates && type != DataTypeMask.Historical_ApparentMagnitude && type != DataTypeMask.Historical_Color), "Pattern required for historical data type '{0}'", type);
             IsValid = isValid;
             Type = type;
             HistoricalPatternId = default;
@@ -154,7 +154,8 @@ namespace Astro {
         public bool Equals(DataPacket other) {
             return Type == other.Type
                 && HistoricalPatternId == other.HistoricalPatternId
-                && Value.Equals(other.Value);
+                && Value.Equals(other.Value)
+                && IsValid == other.IsValid;
         }
     }
 

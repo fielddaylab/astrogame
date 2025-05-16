@@ -163,7 +163,7 @@ namespace Astro {
                 if (m_StateA.ToConvert != null) {
                     newPacket = DataPacket.HistoricalApparentMagnitude(m_StateA.ToConvert.HistoricalBrightness);
                 } else {
-                    newPacket = DataPacket.HistoricalApparentMagnitude(null);
+                    newPacket = DataPacket.Null(DataTypeMask.Historical_ApparentMagnitude);
                 }
                 m_ConvertedPackets.PushBack(newPacket);
             }
