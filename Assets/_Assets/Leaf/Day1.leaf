@@ -24,28 +24,28 @@ $call TelescopeLook(155, -30)
 @cutscene
 @who    Radio
 
-{@Astrid} Whoa. This place has really changed. Elijah, where are you? $[Day1/Astrid/l1_a_01]
+{@Astrid} Whoa. This place has really changed. Elijah, where are you? $[Astrid/L1/l1_a_01]
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $call Wait(1)
 
 $call MoveToView("Right")
 {@Radio} CERES HQ to Station Twelve. Elijah, do you copy? Please log in and provide status report.
-{@Astrid} Oh, a radio signal! How do I work this thing? Hello? This is Astrid... Elijah's friend.
+{@Astrid} Oh, a radio signal! How do I work this thing? Hello? This is Astrid... Elijah's friend. $[Astrid/L1/l1_a_02]
 {@Radio} Station Twelve, please log in and report.
-{@Astrid} Log in? How exactly am I supposed to do that?
+{@Astrid} Log in? How exactly am I supposed to do that? $[Astrid/L1/l1_a_03]
 
 {@Dad} I told you, he's not there... Astrid? Is that you? $[Day1/Dad/l1_d_1]
 
-{@Astrid} (*gasp*) Dad! I- I can’t believe it's you. Are you still at the South Pole? Can you hear me? $[Day1/Astrid/l1_a_04]
+{@Astrid} (*gasp*) Dad! I- I can’t believe it's you. Are you still at the South Pole? Can you hear me? $[Astrid/L1/l1_a_04]
 
-{@Dad}  Loud and clear...Well . . . not clear, exactly. But you know what I mean.
+{@Dad} Loud and clear...Well . . . not clear, exactly. But you know what I mean.
 {@Dad} It’s so good to hear your voice, Little Bear.
 
-{@Astrid} Do you know where Elijah is? I came here looking for him.
+{@Astrid} Do you know where Elijah is? I came here looking for him. $[Astrid/L1/l1_a_05]
 
 {@Dad} I’m sorry, Astrid . . . I wish I could’ve warned you in time. Elijah’s not there. He probably won’t be back for a while.
 
-{@Astrid} What? Why not? Where is he?
+{@Astrid} What? Why not? Where is he? $[Astrid/L1/l1_a_06]
 
 {@Dad} It’s sort of a long story.
 {@Dad} My team here at IceCube is working to rebuild our knowledge of the cosmos, everything that was lost during the collapse. 
@@ -53,24 +53,23 @@ $call MoveToView("Right")
 {@Dad} He said he was heading out to visit the other stations. I haven’t heard from him in awhile - you know him, always hard to pin down
 {@Dad} I haven’t heard from him in awhile - you know him, always hard to pin down
 
-{@Astrid} Wait a second. He’s been working with you?
+{@Astrid} Wait a second. He’s been working with you? $[Astrid/L1/l1_a_07]
 
 {@Monitor} All Ceres transmissions must comply with authorized protocols, or we’ll be forced to revoke your clearance. 
 {@Monitor} This is an official warning.
 {@Monitor} Remember, communication is a privilege, not a right.
 
-{@Astrid} Whoa. Who was that?
+{@Astrid} Whoa. Who was that? $[Astrid/L1/l1_a_08]
 
 {@Dad} Sorry, uh…“Station Twelve,” this channel doesn’t allow for… personal communications. 
 {@Dad} I’ll grant you entry-level access so you can help us. I should sign off now. More later.
 
 $call Wait(1)
 
-
 {@Radio} Station 12, this is CERES HQ. You have been granted entry level access.
 {@Radio} Training begins immediately. Please follow all directives.
 
-{@Astrid} Um, okay... Gosh, there’s a lot of buttons here...
+{@Astrid} Um, okay... Gosh, there’s a lot of buttons here... $[Astrid/L1/l1_a_09]
 $call WaitForMovedToView("Monitor")
 
 {@Radio} I'll help you get up and running. Start by moving your telescope.
@@ -247,7 +246,7 @@ $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 @trigger    OnDuplicateOpenIdSubmission
 @interrupt
 
-{@Astrid} Looks like I have to determine the apparent magnitude of some of the other stars in this cluster.
+{@Astrid} Looks like I have to determine the apparent magnitude of some of the other stars in this cluster. $[Astrid/L1/l1_a_18]
 
 :: PointsUpdated
 @trigger    PointsUpdated
@@ -280,23 +279,23 @@ $call MonitorUI->ShowCeresLogo()
 $call SetInstrumentUnlocked(ColorInstrument, true)
 $call SetInstrumentUnlocked(TemperatureInstrument, true)
 {@Radio} Congratulations on being awarded clearance level one. You are now cleared to use the color meter. $[Day1/Radio/l1_r_3]
-{@Astrid} Starting at the bottom... clearance level one.
+{@Astrid} Starting at the bottom... clearance level one. $[Astrid/L1/l1_a_10]
 {@Radio} Please reference your CERES Operator Manual for further information about your equipment.  $[Day1/Radio/l1_r_3(2)]
 {@Radio} Thanking you for being an important part of the CERES Distributed Network of Citizen Observatories. Together, we will map the stars for a better tomorrow. $[Day1/Radio/l1_r_3(3)]
 
-{@Astrid} Ugh, riviting... $[Day1/Astrid/l1_a_11]
+{@Astrid} Ugh, riviting... $[Astrid/L1/l1_a_11]
 
 {@Radio} Tuning you to the Ice Cube CERES headquarters for further instruction... $[Day1/Radio/l1_r_4]
 $call MonitorUI->HideCeresLogo()
 $call Wait(1)
 
-{@Astrid} (*Sigh*) ...Another birthday without Elijah. Maybe he’s watching the Perseids, wherever he is… 
-{@Astrid} I think I saw something about Perseus in that reference guide...
+{@Astrid} (*Sigh*) ...Another birthday without Elijah. Maybe he’s watching the Perseids, wherever he is...  $[Astrid/L1/l1_a_12]
+{@Astrid} I think I saw something about Perseus in that reference guide... $[Astrid/L1/l1_a_13]
 //TODO
 $call OpenRefGuidePage("DataTransfer")
-{@Astrid} Huh… There’s something about Perseus here…
-{@Astrid} Aha!
-{@Astrid} Can this telescope can help me find Perseus? I hope I didn't miss the meteor shower. 
+{@Astrid} Huh… There’s something about Perseus here… $[Astrid/L1/l1_a_14]
+{@Astrid} Aha! $[Astrid/L1/l1_a_15]
+{@Astrid} Can this telescope can help me find Perseus? I hope I didn't miss the meteor shower. $[Astrid/L1/l1_a_16]
 (*typing sounds*)
 $call StartPuzzleNavigation()
 $call SetInputState(true)
@@ -308,7 +307,7 @@ $call SetInputState(true)
 @cutscene
 @once
 
-{@Astrid} Hah, got it!
+{@Astrid} Okay, got it! $[Astrid/L1/l1_a_17]
 
 :: FirstPoint
 @trigger    PointsUpdated
@@ -359,12 +358,12 @@ $call SetInputState(false)
 $call SetRefGuideActive(false)
 $call StartPuzzleMode()
 
-{@Astrid} (*Wistful sigh*) Happy birthday to me.
-{@Astrid} Whoooaa... what's all this?
-{@Astrid} It must be the data from that Perseus page!
-{@Astrid} Do I finally get to do astronomy? I never thought this would happen. This is wild. 
-{@Astrid} Elijah is so far ahead of me. Well, here goes nothing! Aunt Martha would not be happy about this.
-{@Astrid} Okay, you got this Astrid… Start with what I know - the coordinates for Atik. 
+{@Astrid} (*Wistful sigh*) Happy birthday to me. $[Astrid/L1/l1_a_20]
+{@Astrid} Whoooaa... what's all this? $[Astrid/L1/l1_a_21]
+{@Astrid} It must be the data from that Perseus page! $[Astrid/L1/l1_a_22]
+{@Astrid} Do I finally get to do astronomy? I never thought this would happen. This is wild. $[Astrid/L1/l1_a_23] 
+{@Astrid} Elijah is so far ahead of me. Well, here goes nothing! Aunt Martha would not be happy about this. $[Astrid/L1/l1_a_24]
+{@Astrid} Okay, you got this Astrid… Start with what I know - the coordinates for Atik.  $[Astrid/L1/l1_a_25]
 
 $set temp:waitingForSelectAtik = true
 $call Wait(0.5)
@@ -376,7 +375,7 @@ $branch .SelectAtikReminder
 :: SelectAtikReminder
 $call Wait(10)
 $if temp:waitingForSelectAtik
-    {@Astrid}  It looks like the star compass gives me readings when I select the stars. That helps.
+    {@Astrid}  It looks like the star compass gives me readings when I select the stars. That helps. $[Astrid/L1/l1_a_26]
     $goto .SelectAtikReminder
 $endif
 
@@ -394,7 +393,7 @@ $set temp:waitingForSelectAtik = false
 $call HintModals->Hide("FirstPuzzleStar", 0.2)
 $call SubtitleController->SetSubtitlePosition(0.5, 1, 0, -140)
 $call IsolatePuzzleCell(1, 3)
-{@Astrid} Okay, apparent magnitude… I can load that from the Photometer.
+{@Astrid} Okay, apparent magnitude… I can load that from the Photometer. $[Astrid/L1/l1_a_27]
 $call Wait(1)
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 
@@ -402,7 +401,7 @@ $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 @trigger    OnPuzzleCellSelected
 @when   cellId != "R1C3", temp:waitingForSelectAppMag
 
-{@Astrid} I'm looking for the apparent magnitude space for Atik on this grid...
+{@Astrid} I'm need the apparent magnitude space for Atik on this grid... $[Astrid/L1/l1_a_28]
 
 :: AtikAppMagFilled
 @trigger    OnPuzzleCellFilled
@@ -418,9 +417,8 @@ $call UnlockMonitorFocus()
 $call ReleaseIsolatedPuzzle()
 $call SetInstrumentUnlocked(BlueWavelength, true)
 $call SetInputState(false)
-{@Astrid} Ok, this is the apparent magnitude of the star... how bright it appears to us on earth. 
-{@Astrid} Let's see... to fill in the rest of this sequence, I also need the blue light value. 
-{@Astrid} The blue button on the wavelength filter is there on the moniter.
+{@Astrid} Let's see... to fill in the rest of this sequence, I also need the blue magnitude.  $[Astrid/L1/l1_a_29]
+{@Astrid} The blue wavelength filter is there on the moniter. $[Astrid/L1/l1_a_30]
 $call SetRefGuidePagesLocked(false)
 $call Wait(1)
 $call SetInputState(true)
@@ -439,7 +437,7 @@ $call ReleaseIsolatedPuzzle()
 
 $set temp:waitingForBlueFilter = false
 $set temp:waitingForBlueLight = true
-{@Astrid} Ok, now I can load this data into the blue magnitude space with my photometer just like before.
+{@Astrid} Ok, now I can load this data into the blue magnitude space with my photometer just like before. $[Astrid/L1/l1_a_3]
 $call IsolatePuzzleCell(1, 4)
 
 :: AtikNotBlueFilterSelected
@@ -447,7 +445,7 @@ $call IsolatePuzzleCell(1, 4)
 @when   actorId != "BlueFilter", cellId != "R1C4", temp:waitingForBlueFilter
 @interrupt
 
-{@Astrid} I need to select the blue wavelength filter just below the monitor.
+{@Astrid} I need to select the blue wavelength filter just below the monitor. $[Astrid/L1/l1_a_34]
 
 :: NotBlueLightAstrid
 @trigger OnPuzzleCellSelected
@@ -465,8 +463,8 @@ $call IsolatePuzzleCell(1, 4)
 $set temp:waitingForBlueLight = false
 $call SetInputState(false)
 $call ReleaseIsolatedPuzzle()
-{@Astrid} It looks like I have the apparent magnitude of the star and the blue magnitude... so now I can calculate it’s color. 
-{@Astrid} The hotter the star, the bluer it is. Now I can input the color of the star... I can select the color grid for Atik
+{@Astrid} It looks like I have the apparent magnitude of the star... and the blue magnitude. So now I can calculate it’s color index. $[Astrid/L1/l1_a_35] 
+{@Astrid} The hotter the star, the bluer it is. Now I can input the color of the star... I can select the color space for Atik. $[Astrid/L1/l1_a_36]
 $call IsolatePuzzleCell(1, 2)
 $call SetInputState(true)
 $set temp:waitingForFillColor = true
