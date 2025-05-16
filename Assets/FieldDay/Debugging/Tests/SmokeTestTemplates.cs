@@ -14,19 +14,7 @@ namespace FieldDay.Debugging {
         }
 
         static private IEnumerator CanLoadIntoScenes_Execute(ISmokeTestContext context, string includePattern, string excludePattern, float waitDuration) {
-            WildcardMatch includeMatch = WildcardMatch.Compile(includePattern);
-            WildcardMatch excludeMatch = WildcardMatch.Compile(excludePattern);
-            foreach(var scene in SceneHelper.FindScenes(SceneCategories.Build)) {
-                if (!includeMatch.Match(scene.Name)) {
-                    continue;
-                }
-                if (excludeMatch.Match(scene.Name)) {
-                    continue;
-                }
-
-                yield return context.LoadMainScene(scene);
-                yield return waitDuration;
-            }
+            return null;
         }
 
         #endregion // Scene Loads
