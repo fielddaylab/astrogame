@@ -23,15 +23,7 @@ $call StopOpenMode()
 $call QueueMusic("Music.Moonthought", 3)
 $call MoveToView("DocumentPuzzle")
 $call SetInputState(false)
-$call SpawnDocument("Day41833")
-$call SetInputState(true)
-
-:: SpawnDoc1
-@trigger    DocumentInspectEnd
-@when   documentId == "Day41833"
-@once
-
-$call SetInputState(false)
+$call SpawnDocument("1833")
 $call SpawnDocumentToCamera("Day4ElijahPostcard")
 $call SetInputState(true)
 
@@ -41,7 +33,7 @@ $call SetInputState(true)
 @once
 
 $call SetInputState(false)
-$call SpawnDocumentToCamera("Day4Martha")
+$call SpawnDocumentToCamera("Day4Letter")
 $call SetInputState(true)
 
 :: Day4ElijahPostcard
@@ -56,12 +48,12 @@ $call SetInputState(false)
 {@Astrid} Maybe he shoulda been a painter instead of a rogue astronomer...
 {@Astrid} So World's End  must be what Elijah calls his station! World’s End - like the garden of the golden apples from the Hercules myths.
 {@Astrid} It’s not about the world ending. It’s about...searching for the stars. 
-$call EnableDocumentClose("Day3ElijahPostcard", true, true)
+$call EnableDocumentClose("Day4ElijahPostcard", true, true)
 $call SetInputState(true)
 
 :: SpawnPuzzleDocs3
 @trigger    DocumentInspectEnd
-@when   documentId == "Day4Martha"
+@when   documentId == "Day4Letter"
 @interrupt
 @cutscene
 @once

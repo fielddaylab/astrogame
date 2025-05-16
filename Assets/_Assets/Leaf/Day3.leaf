@@ -8,7 +8,6 @@
 $call InitUpdateMasks()
 $call ToggleDeskPicture()
 $call EnableDocumentClose("Day3ElijahPostcard", false)
-$call EnableDocumentClose("Day41833", false)
 $call SetInstrumentUnlocked(CoordinateInstrument, true)
 $call SetInstrumentUnlocked(PhotometerInstrument, true)
 $call SetInstrumentUnlocked(BlueWavelength, true)
@@ -16,6 +15,8 @@ $call SetInstrumentUnlocked(ColorInstrument, true)
 $call SetInstrumentUnlocked(TemperatureInstrument, true)
 $call SetInstrumentUnlocked(SpectrometerInstrument, true)
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
+$call SpawnDocument("1833")
+
 $call StopPuzzleMode()
 $call StopOpenMode()
 $call QueueMusic("Music.Moonthought", 3)
@@ -64,14 +65,14 @@ $call SetInputState(true)
 
 :: IncorrectDocumentResponse
 @trigger    DocumentPuzzlePromptStart
-@when   documentId != "Day3Dad"
+@when   documentId != "1833"
 @interrupt
 
 NO.
 
 :: CorrectDocumentResponse
 @trigger    DocumentPuzzlePromptStart
-@when   documentId == "Day3Dad"
+@when   documentId == "1833"
 @cutscene
 @once
 
@@ -168,11 +169,13 @@ $call SetInputState(true)
 
 :: PuzzleNavigationComplete
 @trigger    PuzzleNavigationComplete
+@cutscene
 @once
 
 $call StopPuzzleNavigation()
 $call StartPuzzleMode()
 
+$call SetInputState(false)
 {@Astrid} Elijah had figured out that Zosma isn’t the nearest star...
 {@Astrid} Now that I've got that parallax data, I can finish what he started.
 {@Astrid} From what I remember, when Earth orbits the Sun, our point of view shifts. 
@@ -181,6 +184,7 @@ $call StartPuzzleMode()
 {@Astrid} Now that I have this data I can figure out the distance from the stars. 
 {@Astrid} We couldn'tve figured this out without years of data that was lost. 
 $set temp:LeoPuzzleStarted = true
+$call SetInputState(true)
 
 :: FirstInfrared
 @trigger OnLabInteraction
@@ -207,41 +211,5 @@ $call SetInputState(false)
 {@Elijah} That would mean that least part of the system’s still alive.
 {@Elijah} Alright. Stay focused. Keep moving.
 $call Wait(1)
-
-{@Astrid} Whoa… what's this picture? It must have fallen out of the reference guide?
-$set temp:d3PostcardRead = false
-$call SpawnDocumentToCamera("Day41833")
-$call SetInputState(true)
-
-:: Flip1833
-@trigger    DocumentInspectFlip
-@when   documentId == "Day41833"
-@cutscene
-@interrupt
-@once
-
-$call SetInputState(false)
-{@Astrid} The 1833 Leonid Meteor Storm... I’ve never heard of this before.
-{@Astrid} It looks like the sky was completely filled with meteors—not just a few streaks, but thousands. Like the whole sky was breaking apart.
-{@Astrid} People must have thought the world was ending.... wait...
-{@Astrid} Does he think it’s going to happen again? Is that what he has been hinting at? 
-{@Astrid} If this is true, people won’t understand what’s happening. Everyone’s gonna panic. 
-{@Astrid} It would look like the sky is falling - the end of the world.
-{@Astrid} Oh God. Things are just starting to get better. 
-{@Astrid} If something like this hit now… it’d be worse. So much worse.
-{@Astrid} I feel pretty safe up here at the edge of nowhere. It would be nice if I wasn't totally alone. 
-{@Astrid} Maybe I could write to the newspaper and tell people what’s happening?
-{@Astrid} Sigh. but I guess I would need to know what is actually happening.
-{@Astrid} When and where is this meteor storm coming?
-{@Astrid} Elijah! What have you gotten us into?
-$set temp:d3PostcardRead = true
-$call EnableDocumentClose("Day41833", true, true)
-$call SetInputState(true)
-
-:: End1833
-@trigger    DocumentInspectEnd
-@when   documentId == "Day41833", temp:d3PostcardRead
-@interrupt
-@once
 
 $call LoadNextDay()

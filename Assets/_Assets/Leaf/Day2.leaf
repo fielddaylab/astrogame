@@ -8,6 +8,7 @@
 
 $call InitUpdateMasks()
 $call EnableDocumentClose("HerculesPostcard", false)
+$call EnableDocumentClose("1833", false)
 $call SetInstrumentUnlocked(CoordinateInstrument, true)
 $call SetInstrumentUnlocked(PhotometerInstrument, true)
 $call SetInstrumentUnlocked(BlueWavelength, true)
@@ -264,5 +265,42 @@ $call SetInputState(false)
 {@Dad} Astrid, please. Focus on the task at hand. I don't want to get cut off ... frustrated sigh, centering himself
 //Please tune radio to 375 mhz...
 {@Dad} You got your next access level. Stay on target. G'night Little Bear.
+
+{@Astrid} Whoa… what's this picture? It must have fallen out of the reference guide?
+
+$set temp:d3PostcardRead = false
+$call SpawnDocumentToCamera("1833")
+$call SetInputState(true)
+
+:: Flip1833
+@trigger    DocumentInspectFlip
+@when   documentId == "1833"
+@cutscene
+@interrupt
+@once
+
+$call SetInputState(false)
+{@Astrid} The 1833 Leonid Meteor Storm... I’ve never heard of this before.
+{@Astrid} It looks like the sky was completely filled with meteors—not just a few streaks, but thousands. Like the whole sky was breaking apart.
+{@Astrid} People must have thought the world was ending.... wait...
+{@Astrid} Does he think it’s going to happen again? Is that what he has been hinting at? 
+{@Astrid} If this is true, people won’t understand what’s happening. Everyone’s gonna panic. 
+{@Astrid} It would look like the sky is falling - the end of the world.
+{@Astrid} Oh God. Things are just starting to get better. 
+{@Astrid} If something like this hit now… it’d be worse. So much worse.
+{@Astrid} I feel pretty safe up here at the edge of nowhere. It would be nice if I wasn't totally alone. 
+{@Astrid} Maybe I could write to the newspaper and tell people what’s happening?
+{@Astrid} Sigh. but I guess I would need to know what is actually happening.
+{@Astrid} When and where is this meteor storm coming?
+{@Astrid} Elijah! What have you gotten us into?
+$set temp:d3PostcardRead = true
+$call EnableDocumentClose("1833", true, true)
+$call SetInputState(true)
+
+:: End1833
+@trigger    DocumentInspectEnd
+@when   documentId == "1833", temp:d3PostcardRead
+@interrupt
+@once
 
 $call LoadNextDay()
