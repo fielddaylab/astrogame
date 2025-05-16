@@ -1,25 +1,32 @@
 using FieldDay;
 using FieldDay.Systems;
+using UnityEditor;
 
 namespace Astro {
     [SysUpdate(GameLoopPhase.Update, 2000, AstroGame.SubmissionUpdateMask)] // After InteractSelectSlotSystem
     public class SlotEffectSystem : ComponentSystemBehaviour<DataSlot, RelevantSlotHighlight> {
-        public override void ProcessWorkForComponent(DataSlot component, RelevantSlotHighlight highlight, float deltaTime) {
+        public override void ProcessWork(float deltaTime) {
+            if (Find.State<FocusState>().CurrentFocus == null) return;
             var transferState = Find.State<DataTransferState>();
             if (!transferState.SourceUpdated) { return; }
             if (transferState.SelectedSource != null && !transferState.SelectedSource.IsSource) { return; }
-            if (highlight.Dimmed) { return; }
             // We will not highlight grid/buttons if the player has no star selected
-            if (Find.State<FocusState>().CurrentFocus == null) return;
 
             var highlightState = Find.State<SlotHighlightState>();
 
-            if (component.IsSource) { // Instrument Load Button (source) highlights
-                if (component.IsActive && !component.IsHidingData) {
-                    TryHighlightInstrumentButton(transferState, highlightState, highlight, component);
+            foreach(var c in m_Components) {
+                DataSlot component = c.Primary;
+                RelevantSlotHighlight highlight = c.Secondary;
+
+                if (highlight.Dimmed) { continue; }
+
+                if (component.IsSource) { // Instrument Load Button (source) highlights
+                    if (component.IsActive && !component.IsHidingData) {
+                        TryHighlightInstrumentButton(transferState, highlightState, highlight, component);
+                    }
+                } else { // Puzzle Cell (target) highlights
+                    TryHighlightPuzzleCell(transferState, highlightState, highlight, component);
                 }
-            } else { // Puzzle Cell (target) highlights
-                TryHighlightPuzzleCell(transferState, highlightState, highlight, component);
             }
         }
 
