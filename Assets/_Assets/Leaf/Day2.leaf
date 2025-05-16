@@ -13,15 +13,18 @@ $call SetInstrumentUnlocked(PhotometerInstrument, true)
 $call SetInstrumentUnlocked(BlueWavelength, true)
 $call SetInstrumentUnlocked(ColorInstrument, true)
 $call SetInstrumentUnlocked(TemperatureInstrument, true)
+$call SpawnDocument("MiniLabors")
 
 $call StopPuzzleMode()
 $call StopOpenMode()
 $call SetInputState(true)
 $call MoveToView("DocumentPuzzle")
+
 {@Astrid} Looks like I got some mail... At least the mail service is still working... $[Day2/Astrid/l2_a_1]
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $call SpawnDocumentToCamera("Day2DadIcecubePostcard")
-{@Astrid} Wow... wish I could see the auroras there with you, Dad... $[Day2/Astrid/l2d_a_1]
+{@Astrid} Wow... I wonder if he ever feels weird about the auroras there. I think it might freak me out. $[Day2/Astrid/l2d_a_1]
+{@Astrid} Dad said he sent this just a few weeks ago. 
 
 :: SpawnPuzzleDocs1
 @trigger    DocumentInspectEnd
@@ -34,6 +37,7 @@ $call SetInputState(false)
 $call Wait(1)
 {@Astrid} Elijah! Finally, some news. $[Day2/Astrid/l2_a_2]
 $call SpawnDocumentToCamera("HerculesPostcard")
+{@Astrid} I love his postcards. Must be traveling with his art supplies as always. Looks like the Hercules constellation? 
 $call SetInputState(true)
 $call QueueMusic("Music.StarDome", 3)
 
@@ -41,24 +45,47 @@ $call QueueMusic("Music.StarDome", 3)
 @trigger    DocumentInspectFlip
 @when   documentId == "HerculesPostcard"
 @interrupt
+@cutscene
 @once
 
-{@Astrid} Oh Elijah... What are you getting yourself into? $[Day2/Astrid/l2d_a_2]
+{@Astrid} Oh Elijah... Is it safe traveling out there on your own? And what do you mean about the end of the world?
+{@Astrid} What is going to fall apart? Elijah...why with the riddles? I wish you would just say what you mean. 
 $call EnableDocumentClose("HerculesPostcard", true, true)
 
 :: SpawnPuzzleDocs2
 @trigger    DocumentInspectEnd
 @when   documentId == "HerculesPostcard"
+@cutscene
 @once
 
 $call SetInputState(false)
 $call Wait(1)
 $call SpawnDocumentToCamera("Day2Martha")
+{@Astrid} I feel so guilty for leaving Aunt Martha to run the clinic. She really relied on me. 
+$call SetInputState(true)
+
+:: InspectMiniMap
+@trigger    DocumentInspectStart
+@when   documentId == "MiniLabors"
+@once
+
+{@Astrid} Hmmm, the Twelve Labor's of Hercules... Didn't Elijah say something about this in his letter?
+{@Astrid} I bet he is at one of these stations. Or maybe on his way. I hope he is safe. 
+
+:: SpawnPuzzleDocs3
+@trigger    DocumentInspectEnd
+@when   documentId == "Day2Martha"
+@once
+
+$call SetInputState(false)
+$call Wait(1)
+$call SpawnDocumentToCamera("CouplePhoto")
+{@Astrid} Oh! I love this!
 $call SetInputState(true)
 
 :: DocumentPuzzleStart
 @trigger    DocumentInspectEnd
-@when   documentId == "Day2Martha"
+@when   documentId == "CouplePhoto"
 @once
 
 $call SetInputState(false)
@@ -71,39 +98,79 @@ $call SetInputState(true)
 @trigger    DocumentPuzzlePromptStart
 @when documentId == "Day2DadIcecubePostcard"
 
-{@Astrid} Elijah at IceCube...? No, that wouldn't make sense. $[Day2/Astrid/l2d_a_3]
+{@Astrid} Elijah in Antarctica...? No, that wouldn't make sense. 
 
 :: IncorrectDocumentResponse2
 @trigger    DocumentPuzzlePromptStart
 @when documentId == "HerculesPostcard"
 
-{@Astrid} So Elijah is staying with Aunt Martha...? $[Day2/Astrid/l2d_a_4]
+{@Astrid} Staying at Aunt Martha's to help out? They would drive each other crazy. That's not it? $[Day2/Astrid/l2d_a_4]
 
 :: CorrectDocumentResponse
 @trigger    DocumentPuzzlePromptStart
-@when documentId == "Day2Martha"
+@when documentId == "MiniLabors"
 @cutscene
 @once
 
 $call SetInputState(false)
-{@Astrid} Yeah, that looks like it. $[Day2/Astrid/a_confirm_1]
+{@Astrid} That's it. Elijah left Aunt Martha's and is back on the road now headed to one of these stations.
 $call Wait(1)
 $call MoveToView("Desk")
 $call Wait(1)
 
 $call MoveToView("Right")
-{@Radio} Star HQ to Station Seven. IceCube is reading a high-energy neutrino emission from the area of the Hydra Constellation. $[Day2/Radio/l2_r_1]
-{@Radio} Identification of nearby celestial objects is requested. Uploading area of interest... $[Day2/Radio/l2_r_1(2)]
+{@Radio} CERES HQ to Station Twelve.
+{@Radio} IceCube is reading a high-energy neutrino emission from the area of the Hydra Constellation. 
+{@Radio} Identification of nearby celestial objects is requested. Uploading area of interest.
+$call WaitForMovedToView("Monitor")
+$call MonitorUI->PlayRadioDownload(4)
 $call StartNeutrinoNavigation()
 $call SetInputState(true)
 
 :: NeutrinoNavigationComplete
 @trigger    NeutrinoNavigationComplete
+@cutscene
 @once
 
 $call StopNeutrinoNavigation()
-{@Radio} Neutrino Origin Detected
 $call StartOpenMode()
+{@Radio} We need to know the spectral types of these stars. In order to determine that you’ll need to calculate the temperature.
+{@Radio} Select a star on your teescope monitor.
+$set temp:waitingForNeutrinoStar = true
+
+:: OnStarSelected
+@trigger    OnNeutrinoStarSelected
+@when   temp:waitingForNeutrinoStar
+@cutscene
+@interrupt
+@once
+
+$call SetInputState(false)
+{@Radio} Great. Now you’ll need to capture the same data in the blue wavelength.
+{@Radio} Select the blue wavelength filter
+$set temp:waitingForBlueFilter = true
+$call LockMonitorFocus()
+$call SetInputState(true)
+
+:: BlueFilterSelected
+@trigger OnLabInteraction
+@when actorId == "BlueFilter", temp:waitingForBlueFilter
+@interrupt
+@cutscene
+@once
+
+$set temp:waitingForBlueFilter = false
+{@Radio} Now you just need to use that temperature to look up the spectral type in your reference guide.
+{@Radio} Look up the spectral type in your manual, and submit the data.
+
+:: PointsUpdated0
+@trigger    PointsUpdated
+@when   sciencePoints > 0
+@cutscene
+@once
+
+$call UnlockMonitorFocus()
+{@Radio} Nice Job, You're getting the hang of this.
 
 :: PointsUpdated
 @trigger    PointsUpdated
@@ -118,19 +185,35 @@ $call Wait(3)
 
 $call StopOpenMode()
 $call ClearMonitorSelection()
-{@Dad} Hey Astrid, you there? Looks like your system is on... I hope you got my letter about Project Hercules. $[Day2/Dad/l2_d_1]
 
-{@Astrid} I did... n- not that I can tell you that... $[Day2/Astrid/l2_a_4]
+$call MonitorUI->PlayRadioDownload(2)
+$call Wait(1)
+$call MonitorUI->ShowCeresLogo():wait
+$call SetInstrumentUnlocked(SpectrometerInstrument, true)
+{@Radio} Congratulations on being awarded clearance level 3. You are now cleared to use the spectrometer.
+{@Radio} Please reference your CERES Operator Manual for further information about your equipment.  $[Day2/Radio/l1_r_3(2)]
+{@Radio} Thanking you for being an important part of the CERES Distributed Network of Citizen Observatories. Together, we will map the stars for a better tomorrow. $[Day2/Radio/l1_r_3(3)]
+$call MonitorUI->HideCeresLogo()
 
-{@Dad} There's a satellite, built to withstand a CME. If we could decrypt what is stored on it... it would change everything. $[Day2/Dad/l2_d_4]
-{@Dad} The satellite is encrypted. Each puzzle reveals part of the password. That's what you've been working on. $[Day2/Dad/l2_d_5]
+$call MoveToView("Left")
+{@Astrid} Hmmm, Hercules. Just like Elijah's postcard. 
+$call MoveToView("Right")
+{@Astrid} These are the puzzles Elijah had been working on. What is this all for? 
+// $set temp:waitingForRefGuidePuzzle = true
 
-{@Astrid} These puzzles.... reveal the password to the satellite? $[Day2/Astrid/l2_a_5]
+// :: HerculesPuzzleRef
+// @trigger    OnRefGuideOpened
+// @when   temp:waitingForRefGuidePuzzle
+// @boostScore 300
+// @interrupt
+// @cutscene
+// @once
 
-{@Dad} Yeah, the guy who built it was... let's just say, eccentric. Your next puzzle is the constellation Hercules. See if the reference guide can point you in the right direction. $[Day2/Dad/l2_d_6]
-
-{@Astrid} Ugh. I still don’t get it. Elijah said we might be too late. Too late for what? $[Day2/Astrid/l2_a_6]
-
+// $set temp:waitingForRefGuidePuzzle = false
+//TODO
+$call OpenRefGuidePage("DataTransfer")
+(*typing sounds*)
+$call Wait(1)
 $call SetInputState(true)
 $call StartPuzzleNavigation()
 
@@ -143,17 +226,6 @@ $call SetInputState(false)
 $call StopPuzzleNavigation()
 $call SetRefGuideActive(false)
 $call ClearMonitorSelection()
-
-$call MonitorUI->PlayRadioDownload(2)
-$call Wait(1)
-$call MonitorUI->ShowCeresLogo()
-$call SetInstrumentUnlocked(SpectrometerInstrument, true)
-{@Radio} Congratulations on being awarded clearance level 3. You are now cleared to use the spectrometer.
-{@Radio} Please reference your CERES Operator Manual for further information about your equipment.  $[Day2/Radio/l1_r_3(2)]
-{@Radio} Thanking you for being an important part of the CERES Distributed Network of Citizen Observatories. Together, we will map the stars for a better tomorrow. $[Day2/Radio/l1_r_3(3)]
-$call Wait(0.5)
-{@Radio} Tuning you to the Ice Cube CERES headquarters for further instruction... $[Day2/Radio/l1_r_4]
-$call MonitorUI->HideCeresLogo()
 $call Wait(1)
 $call StartPuzzleMode()
 $call SetInputState(true)
@@ -167,9 +239,30 @@ $call SetInputState(true)
 $call ClearMonitorSelection()
 $call StopPuzzleMode()
 $call SetInputState(false)
-{@Astrid} Ugh, What am I even doing here.
-$call EndDay2->BeginCutscene()
-{@Astrid} Maybe there is a clue on this?
-$call Wait(1)
-{@Astrid} Why is project Hercules so important to you Elijah? 
-{@Astrid} Maybe Dad knows more than he’s sharing on the radio… I’ll write him a letter.
+{@Elijah} If you’re hearing this, it means you’ve solved Hercules—and that part of the satellite could come back online soon. 
+{@Elijah} That would be huge. With historical data restored, the other astronomers can finally start seeing the bigger picture.
+{@Elijah} I knew you’d get this far. Keep going. Everything depends on it now.
+
+{@Dad} Astrid... What are you up to? Elijahs puzzles are a wild goose chase. I don't want you getting your hopes up. 
+
+{@Astrid} But dad, I think I'm getting close here...
+{@Astrid} That satellite was built to withstand a CME. If we could decrypt what's stored on it... it would change everything.
+
+{@Dad} Its a lost cause is what it is. Time to focus on our mission. 
+
+{@Astrid} It looks like each of these puzzles reveals part of the password. I actually think I might be making progress here.
+
+{@Dad} The guy who built the satellite was... eccentric putting it mildly. 
+{@Dad} Even if Elijah could have solved it, who knows if it would have worked. 
+
+{@Astrid} Ugh. But Elijah's notes said we might be too late. Too late for what?
+
+{@Monitor} Warning. Station Twelve. You have been flagged non-compliant. You will lose access to this frequency upon any further violation.
+{@Monitor} I advise that you review communication protocols if you want to avoid termination. 
+{@Monitor} Remember, commnication is a privilege, not a right. 
+
+{@Dad} Astrid, please. Focus on the task at hand. I don't want to get cut off ... frustrated sigh, centering himself
+//Please tune radio to 375 mhz...
+{@Dad} You got your next access level. Stay on target. G'night Little Bear.
+
+$call LoadNextDay()
