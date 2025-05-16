@@ -140,7 +140,7 @@ namespace Astro {
                 }
 
                 case DataTypeMask.Distance: {
-                    sb.AppendNoAlloc(packet.Value.Distance, 2).Append(" lightyears");
+                    sb.AppendNoAlloc(packet.Value.Distance, 1).Append(" lightyears");
                     return true;
                 }
 

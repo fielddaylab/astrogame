@@ -20,7 +20,7 @@ namespace Astro {
         public static class ParallaxUtility {
             public static void OnDisplayRequest(ParallaxGraph parallax, DataPacket packet, DataFormattingFlags flags) {
                 HistoricalDataState hds = Find.State<HistoricalDataState>();
-                if (hds.ShowingParallax && (packet.Type & DataTypeMask.Distance) != 0) {
+                if (hds.SendingAbsMag && (packet.Type & DataTypeMask.Distance) != 0) {
                     HistoricalDataUtility.SetParallaxScale(parallax.Graph, packet, hds);
                 }
             }

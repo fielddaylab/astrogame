@@ -12,9 +12,9 @@ namespace Astro {
     public class HistoricalDataGraph : BatchedComponent, IRegistrationCallbacks {
         [NonSerialized] public HistoricalPatternType CurrentType;
         [NonSerialized] public float Scale;
+
         public MeshRenderer DisplayTarget;
         public DataDisplay GraphDisplay;
-        [NonSerialized] public bool PauseGraphUpdates;
 
         public void OnDeregister() {
         }
@@ -30,19 +30,21 @@ namespace Astro {
     public static class HistoricalDataUtility {
 
         public static void OnDisplayRequest(HistoricalDataGraph graph, DataPacket packet, DataFormattingFlags flags) {
-            if (graph.PauseGraphUpdates) return;
-            SetPattern(graph, packet.HistoricalPatternId);
+            if (packet.IsValid) {
+                SetPattern(graph, packet.HistoricalPatternId);
+            } else {
+                ClearPattern(graph);
+            }
         }
         
         public static void OnDisplayClear(HistoricalDataGraph graph) {
-            if (graph.PauseGraphUpdates) return;
             ClearPattern(graph);
         }
 
         public static void ClearPattern(HistoricalDataGraph graph) {
             graph.CurrentType = HistoricalPatternType.None;
             graph.Scale = 1;
-            UpdatePatternMaterial(graph, Find.State<HistoricalDataState>());
+            graph.DisplayTarget.enabled = false;
         }
 
         public static void SetPattern(HistoricalDataGraph graph, StringHash32 assetId) {
@@ -54,6 +56,8 @@ namespace Astro {
                 graph.CurrentType = asset.Type;
                 graph.Scale = asset.WaveAmplitude;
             }
+
+            graph.DisplayTarget.enabled = true;
             UpdatePatternMaterial(graph, Find.State<HistoricalDataState>());
             UpdateScale(graph);
         }
@@ -79,7 +83,7 @@ namespace Astro {
                 graph.Scale = 48f / (float)packet.Value.Distance;
             }
             graph.CurrentType = HistoricalPatternType.Parallax;
-            graph.DisplayTarget.sharedMaterial = hds.PatternMaterials.Find(pm => (pm.Pattern == graph.CurrentType)).Material;
+            graph.DisplayTarget.sharedMaterial = GetPatternMaterial(graph.CurrentType, hds);
             UpdateScale(graph);
         }
 
@@ -89,20 +93,17 @@ namespace Astro {
 
         public static void ToggleInstrumentMode() {
             HistoricalDataState hds = Find.State<HistoricalDataState>();
-            SetParallaxShowing(!hds.ShowingParallax, hds);
+            SetInstrumentMode(!hds.SendingAbsMag, hds);
         }
 
-        public static void SetParallaxShowing(bool parallaxShowing, HistoricalDataState hds) {
-            hds.ShowingParallax = parallaxShowing;
-            hds.KnobRoutine.Replace(SlideRoutine(hds));
-            DataUtility.SetDisplayHidden(hds.DistanceDisplay, !parallaxShowing);
-            ClearPattern(hds.InstrumentGraph);
-            PhotometerUtility.TogglePhotometerMode(parallaxShowing, hds.ConnectedPhotometer);
-            hds.InstrumentGraph.PauseGraphUpdates = parallaxShowing;
+        public static void SetInstrumentMode(bool absMag, HistoricalDataState hds) {
+            hds.SendingAbsMag = absMag;
+            hds.KnobRoutine.Replace(hds, SlideRoutine(hds));
+            PhotometerUtility.TogglePhotometerMode(absMag, hds.ConnectedPhotometer);
         }
 
         private static IEnumerator SlideRoutine(HistoricalDataState hds) {
-            if (hds.ShowingParallax) {
+            if (hds.SendingAbsMag) {
                 yield return hds.ModeKnob.MoveTo(0.4f, 0.4f, Axis.Y, Space.Self).Ease(Curve.CubeIn);
             } else {
                 yield return hds.ModeKnob.MoveTo(0f, 0.4f, Axis.Y, Space.Self).Ease(Curve.CubeIn);

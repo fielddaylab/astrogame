@@ -13,14 +13,14 @@ namespace Astro {
         public Transform ModeKnob;
         public List<PatternMaterialPair> PatternMaterials;
         public Photometer ConnectedPhotometer;
-        [NonSerialized] public bool ShowingParallax;
+        [NonSerialized] public bool SendingAbsMag;
         [NonSerialized] public Routine KnobRoutine;
 
         public void OnDeregister() {
         }
 
         public void OnRegister() {
-            HistoricalDataUtility.SetParallaxShowing(false, this);
+            HistoricalDataUtility.SetInstrumentMode(false, this);
         }
     }
 
