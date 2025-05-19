@@ -141,13 +141,14 @@ $call StopNeutrinoNavigation()
 $call StartOpenMode()
 {@Radio} We need to know the spectral types of these stars. In order to determine that you’ll need to calculate the <i>temperature</i>. $[Radio/L2/l2_r_04]
 {@Radio} We need both <i>visible</i> and <i>blue wavelength</i> measurements ot calculate this. $[Radio/L2/l2_r_09]
-{@Radio} Select a star on your teescope monitor. $[Radio/L2/l2_r_05]
 $set temp:waitingForNeutrinoStar = true
+{@Radio} Select a star on your telescope monitor. $[Radio/L2/l2_r_05]
 
 :: OnStarSelected
 @trigger    OnNeutrinoStarSelected
 @when   temp:waitingForNeutrinoStar
 @cutscene
+@boostScore 100
 @interrupt
 @once
 
@@ -168,6 +169,14 @@ $call SetInputState(true)
 $set temp:waitingForBlueFilter = false
 {@Radio} Now you just need to use that temperature to look up the spectral type in your reference guide. $[Radio/L2/l2_r_08]
 {@Radio} Look up the spectral type in your manual, and submit the data. $[Radio/L2/l2_r_10]
+
+:: BlueFilterNOTSelected
+@trigger OnLabInteraction
+@when   actorId != "BlueFilter", temp:waitingForBlueFilter
+@interrupt
+@cutscene
+
+{@Astrid} The blue wavelength filter is there on the moniter. $[Astrid/L1/l1_a_30]
 
 :: PointsUpdated0
 @trigger    PointsUpdated
@@ -276,7 +285,9 @@ $call Wait(2)
 // {@Dad} Please tune radio to 375 mhz. $[Dad/L2/l2_d_6]
 {@Dad} Looks like you've been getting a lot done there. You got your next access level. Good work! G'night Little Bear. $[Dad/L2/l2_d_7]
 
-{@Astrid} Whoa… what's this picture? It must have fallen out of the reference guide?
+$call Wait(1)
+
+{@Astrid} Whoa… what's this picture? It must have fallen out of the reference guide? $[Astrid/L2/l2_a_32]
 
 $set temp:d3PostcardRead = false
 $call SpawnDocumentToCamera("1833")
@@ -289,19 +300,19 @@ $call SetInputState(true)
 @interrupt
 @once
 
-{@Astrid} The 1833 Leonid Meteor Storm... I’ve never heard of this before.
-{@Astrid} It looks like the sky was completely filled with meteors—not just a few streaks, but thousands. Like the whole sky was breaking apart.
-{@Astrid} People must have thought the world was ending.... wait...
-{@Astrid} Does he think it’s going to happen again? Is that what he has been hinting at? 
-{@Astrid} If this is true, people won’t understand what’s happening. Everyone’s gonna panic. 
-{@Astrid} It would look like the sky is falling - the end of the world.
-{@Astrid} Oh God. Things are just starting to get better. 
-{@Astrid} If something like this hit now… it’d be worse. So much worse.
-{@Astrid} I feel pretty safe up here at the edge of nowhere. It would be nice if I wasn't totally alone. 
-{@Astrid} Maybe I could write to the newspaper and tell people what’s happening?
-{@Astrid} Sigh. but I guess I would need to know what is actually happening.
-{@Astrid} When and where is this meteor storm coming?
-{@Astrid} Elijah! What have you gotten us into?
+{@Astrid} The 1833 Leonid Meteor Storm... I’ve never heard of this before. $[Astrid/L2/l2_a_33]
+{@Astrid} It looks like the sky was completely filled with meteors—not just a few streaks, but thousands. Like the whole sky was breaking apart. $[Astrid/L2/l2_a_34]
+{@Astrid} People must have thought the world was ending.... wait... $[Astrid/L2/l2_a_35]
+{@Astrid} Does he think it’s going to happen again? Is that what he has been hinting at? $[Astrid/L2/l2_a_36]
+{@Astrid} If this is true, people won’t understand what’s happening. Everyone’s gonna panic. $[Astrid/L2/l2_a_37]
+{@Astrid} It would look like the sky is falling - the end of the world. $[Astrid/L2/l2_a_38]
+{@Astrid} Oh God. Things are just starting to get better. $[Astrid/L2/l2_a_39] 
+{@Astrid} If something like this hit now… it’d be worse. So much worse. $[Astrid/L2/l2_a_40]
+{@Astrid} I feel pretty safe up here at the edge of nowhere. It would be nice if I wasn't totally alone. $[Astrid/L2/l2_a_41] 
+{@Astrid} Maybe I could write to the newspaper and tell people what’s happening? $[Astrid/L2/l2_a_42]
+{@Astrid} (*sigh*) But I guess I would need to know what is actually happening. $[Astrid/L2/l2_a_43]
+{@Astrid} When and where is this meteor storm coming? $[Astrid/L2/l2_a_44]
+{@Astrid} Elijah! What have you gotten us into? $[Astrid/L2/l2_a_45]
 $set temp:d3PostcardRead = true
 $call EnableDocumentClose("1833", true, true)
 
