@@ -29,50 +29,49 @@ $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $call Wait(1)
 
 $call MoveToView("Right")
-{@Radio} CERES HQ to Station Twelve. Elijah, do you copy? Please log in and provide status report.
+{@Radio} Ceres HQ to Station Twelve. Elijah, do you copy? Please log in and provide status report. $[Radio/L1/l1_r_01]
 {@Astrid} Oh, a radio signal! How do I work this thing? Hello? This is Astrid... Elijah's friend. $[Astrid/L1/l1_a_02]
-{@Radio} Station Twelve, please log in and report.
+{@Radio} Station Twelve, please log in and report. $[Radio/L1/l1_r_02]
 {@Astrid} Log in? How exactly am I supposed to do that? $[Astrid/L1/l1_a_03]
 
-{@Dad} I told you, he's not there... Astrid? Is that you? $[Day1/Dad/l1_d_1]
+{@Dad} I told you, he's not there... Astrid? Is that you? $[Dad/L1/l1_d_1]
 
 {@Astrid} (*gasp*) Dad! I- I can’t believe it's you. Are you still at the South Pole? Can you hear me? $[Astrid/L1/l1_a_04]
 
-{@Dad} Loud and clear...Well . . . not clear, exactly. But you know what I mean.
-{@Dad} It’s so good to hear your voice, Little Bear.
+{@Dad} Loud and clear... Well ... not clear, exactly. But you know what I mean. $[Dad/L1/l1_d_2]
+{@Dad} It’s <i>so</i> good to hear your voice, Little Bear. $[Dad/L1/l1_d_3]
 
 {@Astrid} Do you know where Elijah is? I came here looking for him. $[Astrid/L1/l1_a_05]
 
-{@Dad} I’m sorry, Astrid . . . I wish I could’ve warned you in time. Elijah’s not there. He probably won’t be back for a while.
+{@Dad} I’m sorry, Astrid ... I wish I could’ve warned you in time. Elijah’s not there. He probably won’t be back for a while. $[Dad/L1/l1_d_4]
 
 {@Astrid} What? Why not? Where is he? $[Astrid/L1/l1_a_06]
 
-{@Dad} It’s sort of a long story.
-{@Dad} My team here at IceCube is working to rebuild our knowledge of the cosmos, everything that was lost during the collapse. 
-{@Dad} Elijah’s been helping us. But a few weeks ago he reached out about something big he’d been working on. 
-{@Dad} He said he was heading out to visit the other stations. I haven’t heard from him in awhile - you know him, always hard to pin down
-{@Dad} I haven’t heard from him in awhile - you know him, always hard to pin down
+{@Dad} It’s sort of a long story. $[Dad/L1/l1_d_5]
+{@Dad} My team here at IceCube is working to rebuild humanity's knowledge of the cosmos, everything that was lost during the collapse.  $[Dad/L1/l1_d_6]
+{@Dad} And Elijah’s been helping us. But a few weeks ago he reached out about something big he’d been working on. $[Dad/L1/l1_d_7]
+{@Dad} He said he was heading out to visit the other stations. $[Dad/L1/l1_d_8]
+{@Dad} Anyway, I haven’t heard from him in awhile - you know him, always hard to pin down. $[Dad/L1/l1_d_9]
 
 {@Astrid} Wait a second. He’s been working with you? $[Astrid/L1/l1_a_07]
 
-{@Monitor} All Ceres transmissions must comply with authorized protocols, or we’ll be forced to revoke your clearance. 
-{@Monitor} This is an official warning.
-{@Monitor} Remember, communication is a privilege, not a right.
+{@Monitor} All Ceres transmissions must comply with authorized protocols, or we’ll be forced to revoke your clearance. $[Monitor/L1/l1_m_1] 
+// {@Monitor} This is an official warning.
+{@Monitor} Remember, communication is a privilege, not a right. $[Monitor/L1/l1_m_2]
 
 {@Astrid} Whoa. Who was that? $[Astrid/L1/l1_a_08]
 
-{@Dad} Sorry, uh…“Station Twelve,” this channel doesn’t allow for… personal communications. 
-{@Dad} I’ll grant you entry-level access so you can help us. I should sign off now. More later.
+{@Dad} Sorry, uh…“Station Twelve,” this channel doesn’t allow for… personal communications. I’ll grant you entry-level access so you can help us. I should sign off now. More later. $[Dad/L1/l1_d_10]
 
 $call Wait(1)
 
-{@Radio} Station 12, this is CERES HQ. You have been granted entry level access.
-{@Radio} Training begins immediately. Please follow all directives.
+{@Radio} Station Twelve, this is CERES HQ. You have been granted entry level access. $[Radio/L1/l1_r_03]
+{@Radio} Training begins immediately. Please follow all directives. $[Radio/L1/l1_r_04]
 
 {@Astrid} Um, okay... Gosh, there’s a lot of buttons here... $[Astrid/L1/l1_a_09]
 $call WaitForMovedToView("Monitor")
 
-{@Radio} I'll help you get up and running. Start by moving your telescope.
+{@Radio} I'll help you get up and running. Start by moving your telescope. $[Radio/L1/l1_r_05]
 
 $call StartMonitorControls()
 $call SetInputState(true)
@@ -83,7 +82,7 @@ $branch .MoveTelescopeReminder
 :: MoveTelescopeReminder
 $call Wait(10)
 $if !temp:introMoveTheTelescope
-    {@Radio} See if you can move your telescope.
+    {@Radio} See if you can move your telescope. $[Radio/L1/l1_r_06]
     $goto .MoveTelescopeReminder
 $endif
 // //TODO Shake UI hint
@@ -100,34 +99,45 @@ $set temp:introMoveTheTelescope = true
 $call HintModals->Hide("TelescopeControls", 0.2)
 
 $call SetInputState(false)
-{@Radio} Your equipment seems to be working. Let’s test it out and look for the constellation Ursa Major. Sending coordinates now…
+{@Radio} Your equipment seems to be working. Let’s test it out and look for the constellation Ursa Major. Sending coordinates now... $[Radio/L1/l1_r_07]
 $call MonitorUI->PlayRadioDownload(4.0)
-OK, looks like you received the coordinates. See those dots above your monitor? They will light up as you near the target.
+OK, looks like you received the coordinates. See those dots above your monitor? They will light up as you near the target. $[Radio/L1/l1_r_08]
 $call SetInputState(true)
 
 $call StartNeutrinoNavigation()
 $call HintModals->SlideInFromLeft("NeutrinoNav", 0.4)
 
-:: DadHotColdEncouragement1
+:: HotColdEncouragement1
 @trigger    OnNeutrinoNavWarmer
 @when   newPips == 1
 @once
 
-{@Radio} Nice! Getting warmer...
+{@Radio} Nice! Getting warmer... $[Radio/L1/l1_r_09a]
 
-:: DadHotColdEncouragement2
+:: HotColdEncouragement2
 @trigger    OnNeutrinoNavWarmer
-@when   newPips == 3
+@when   newPips == 2
 @once
 
-{@Radio} Waaaaarrrrrmmmmmmeeerrrr!
+{@Radio} Nice! Getting warmer... $[Radio/L1/l1_r_09b]
 
-:: DadColder
+:: Colder
+@trigger    OnNeutrinoNavColder
+@when   newPips == 0
+
+{@Radio} Colder... $[Radio/L1/l1_r_10a]
+
+:: Colder2
 @trigger    OnNeutrinoNavColder
 @when   newPips == 1
 
-{@Radio} Colder...
+{@Radio} Colder... $[Radio/L1/l1_r_10b]
 
+:: Colder3
+@trigger    OnNeutrinoNavColder
+@when   newPips == 3
+
+{@Radio} Colder... $[Radio/L1/l1_r_10c]
 
 :: NeutrinoNavigationComplete
 @trigger    NeutrinoNavigationComplete
@@ -142,12 +152,12 @@ $call AlignCamToNeutrino()
 $call HintModals->Hide("NeutrinoNav", 0.2)
 $call SetInputState(false)
 $call StartOpenMode()
-{@Radio} Nice Job! 
+{@Radio} Nice Job! $[Radio/L1/l1_r_11]
 $call Wait(1)
-{@Radio} So earlier this morning, Ice Cube detected a high energy neutrino coming from one of several possible stars in this location.
-{@Radio} You’ll see each of them highlighted on your display. 
-{@Radio} Identifying these stars will be a great way for you to get your feet wet and upgrade your access level.
-{@Radio} Alight. Select a possible neutrino origin on your display.
+{@Radio} So earlier this morning, Ice Cube detected a high energy neutrino coming from one of several possible stars in this location. $[Radio/L1/l1_r_12]
+{@Radio} You’ll see each of them highlighted on your display.  $[Radio/L1/l1_r_13]
+{@Radio} Identifying these stars will be a great way for you to get your feet wet and upgrade your access level. $[Radio/L1/l1_r_14]
+{@Radio} Alight. Select a possible neutrino origin on your display. $[Radio/L1/l1_r_15]
 $set temp:waitingForNeutrinoStar = true
 
 $call HintModals->SlideInFromLeft("SelectStar", 0.4)
@@ -159,7 +169,7 @@ $call SetInputState(true)
 @cutscene
 @interrupt
 
-{@Radio} Hmmm. It doesn't look like that is a possible neutrino origin. Look for objects with a blue highlight.
+{@Radio} Hmmm. It doesn't look like that is a possible neutrino origin. Look for objects with a blue highlight. $[Radio/L1/l1_r_16]
 
 :: OnRefGuideClosed
 @trigger    OnRefGuideClosed
@@ -180,8 +190,9 @@ $set temp:waitingForManualOpen = false
 $call SetInputState(false)
 $call SubtitleController->SetSubtitlePosition(0.5, 1, 0, -140)
 $call MoveToView("Right")
-{@Radio} Do you see your photometer in the equipment stack? That should tell you what the apparent magnitude of the star.
-{@Radio} All you need to do is find that number in your reference guide and submit the data.
+{@Radio} Do you see your photometer in the equipment stack? That should tell you what the apparent magnitude of the star is. $[Radio/L1/l1_r_20]
+{@Radio} All you need to do is find that number in your reference guide and submit the data. $[Radio/L1/l1_r_21]
+{@Radio} Another coalition astronomer will verify your classification. $[Radio/L1/l1_r_18]
 $call SetInputState(true)
 $call Wait(1)
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
@@ -209,7 +220,8 @@ $if temp:guideOpen
     $goto .IntroRefGuideOpened
 $endif
 
-{@Radio} Great! See if you can find Elijah’s operator manual. It's a small, spiral bound notebook.
+$call LockMonitorFocus()
+{@Radio} Great! See if you can find Elijah’s operator manual. It's a small, spiral bound notebook. $[Radio/L1/l1_r_19]
 $call Wait(1)
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 
@@ -217,19 +229,19 @@ $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 @trigger    OnLeaveNeutrinoRegion
 @once
 
-{@Radio} You are headed off target.
+{@Radio} You're headed off target. $[Radio/L1/l1_r_23]
 
 :: PlayerLeavesNeutrinoTask2
 @trigger    OnLeaveNeutrinoRegion
 @once
 
-{@Radio} Looks like you’re drifting away from the cluster.
+{@Radio} Looks like you’re drifting away from the cluster. $[Radio/L1/l1_r_24]
 
 :: IncorrectSubmission
 @trigger    OnIncorrectOpenIdSubmission
 
 $call SubtitleController->SetSubtitlePosition(0.5, 1, 0, -140)
-{@Radio} Hmm, that wasn’t correct, remember to look at your photometer, and then line it up with the closest range in your manual.
+{@Radio} Hmm, that wasn’t correct, remember to look at your photometer, and then line it up with the closest range in your manual. $[Radio/L1/l1_r_22]
 $call Wait(1)
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 
@@ -239,8 +251,8 @@ $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 @cutscene
 @once
 
-{@Radio} Looks like you’ve already submitted that info. 
-{@Radio} You won’t get any points towards your access level for identifying that property again.
+{@Radio} Looks like you’ve already submitted that info. $[Radio/L1/l1_r_25]
+{@Radio} You won’t get any points towards your access level for identifying that property again. $[Radio/L1/l1_r_26]
 
 :: DupliacteSubmission
 @trigger    OnDuplicateOpenIdSubmission
@@ -262,7 +274,7 @@ $call SetRefGuideActive(false)
 $call Wait(3)
 $call StopOpenMode()
 $call ClearMonitorSelection()
-{@Radio} You’ve identified the necessary data to earn a higher access level. 
+{@Radio} You’ve identified the necessary data to earn a higher access level.  $[Radio/L1/l1_r_27]
 // {@Dad} You’ll need to tune to the right frequency on your radio to unlock your equipment. $[Day1/Dad/l1_d_s34]
 
 // $call HintModals->SlideInFromRight("RadioControls", 0.4) 
@@ -274,18 +286,19 @@ $call ClearMonitorSelection()
 //TODO Seperate Node Here
 $call MonitorUI->PlayRadioDownload(2)
 $call Wait(1)
-{@Radio} Ope, and I need to read this thing.... (*clears throat*) 
+{@Radio} Ope, and I need to read this thing.... (*clears throat*) $[Radio/L1/l1_r_29]
 $call MonitorUI->ShowCeresLogo()
 $call SetInstrumentUnlocked(ColorInstrument, true)
 $call SetInstrumentUnlocked(TemperatureInstrument, true)
-{@Radio} Congratulations on being awarded clearance level one. You are now cleared to use the color meter. $[Day1/Radio/l1_r_3]
+{@Radio} Congratulations on being awarded clearance <b>level one</b>. You are now cleared to use the color meter.  $[Radio/L1/l1_r_30]
 {@Astrid} Starting at the bottom... clearance level one. $[Astrid/L1/l1_a_10]
-{@Radio} Please reference your CERES Operator Manual for further information about your equipment.  $[Day1/Radio/l1_r_3(2)]
-{@Radio} Thanking you for being an important part of the CERES Distributed Network of Citizen Observatories. Together, we will map the stars for a better tomorrow. $[Day1/Radio/l1_r_3(3)]
+{@Radio} Please reference your CERES Operator Manual for further information about your equipment. $[Radio/L1/l1_r_31]
+{@Radio} Thanking you for being an important part of the CERES Distributed Network of Citizen Observatories. $[Radio/L1/l1_r_32]
+{@Radio} Together, we will map the stars for a better tomorrow. $[Radio/L1/l1_r_33]
 
 {@Astrid} Ugh, riviting... $[Astrid/L1/l1_a_11]
 
-{@Radio} Tuning you to the Ice Cube CERES headquarters for further instruction... $[Day1/Radio/l1_r_4]
+{@Radio} Tuning you to the Ice Cube CERES headquarters for further instruction... $[Radio/L1/l1_r_34]
 $call MonitorUI->HideCeresLogo()
 $call Wait(1)
 
@@ -297,17 +310,8 @@ $call OpenRefGuidePage("DataTransfer")
 {@Astrid} Aha! $[Astrid/L1/l1_a_15]
 {@Astrid} Can this telescope can help me find Perseus? I hope I didn't miss the meteor shower. $[Astrid/L1/l1_a_16]
 (*typing sounds*)
-$call StartPuzzleNavigation()
 $call SetInputState(true)
-
-:: AnothaPoint
-@trigger    PointsUpdated
-@when   sciencePoints > 1
-@interrupt
-@cutscene
-@once
-
-{@Astrid} Okay, got it! $[Astrid/L1/l1_a_17]
+$call StartPuzzleNavigation()
 
 :: FirstPoint
 @trigger    PointsUpdated
@@ -317,6 +321,8 @@ $call SetInputState(true)
 @once
 
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
+{@Astrid} Okay, got it! $[Astrid/L1/l1_a_17]
+$call UnlockMonitorFocus()
 
 :: HotColdEncouragement3
 @trigger    OnConstellationNavWarmer
@@ -332,14 +338,14 @@ $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 
 {@Astrid} Warmer.
 
-:: Colder3
+:: Colder4
 @trigger    OnConstellationNavColder
-@when   newPips == 1
+@when   newPips == 0
 @once
 
 {@Astrid} Colder...
 
-:: Colder4
+:: Colder5
 @trigger    OnConstellationNavColder
 @when   newPips == 2
 @once
@@ -361,7 +367,7 @@ $call StartPuzzleMode()
 {@Astrid} (*Wistful sigh*) Happy birthday to me. $[Astrid/L1/l1_a_20]
 {@Astrid} Whoooaa... what's all this? $[Astrid/L1/l1_a_21]
 {@Astrid} It must be the data from that Perseus page! $[Astrid/L1/l1_a_22]
-{@Astrid} Do I finally get to do astronomy? I never thought this would happen. This is wild. $[Astrid/L1/l1_a_23] 
+{@Astrid} Do I finally get to do some astronomy? I never thought this would happen. This is wild. $[Astrid/L1/l1_a_23] 
 {@Astrid} Elijah is so far ahead of me. Well, here goes nothing! Aunt Martha would not be happy about this. $[Astrid/L1/l1_a_24]
 {@Astrid} Okay, you got this Astrid… Start with what I know - the coordinates for Atik.  $[Astrid/L1/l1_a_25]
 
@@ -401,7 +407,7 @@ $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 @trigger    OnPuzzleCellSelected
 @when   cellId != "R1C3", temp:waitingForSelectAppMag
 
-{@Astrid} I'm need the apparent magnitude space for Atik on this grid... $[Astrid/L1/l1_a_28]
+{@Astrid} I need the apparent magnitude space for Atik on this grid... $[Astrid/L1/l1_a_28]
 
 :: AtikAppMagFilled
 @trigger    OnPuzzleCellFilled
@@ -417,9 +423,10 @@ $call UnlockMonitorFocus()
 $call ReleaseIsolatedPuzzle()
 $call SetInstrumentUnlocked(BlueWavelength, true)
 $call SetInputState(false)
-{@Astrid} Let's see... to fill in the rest of this sequence, I also need the blue magnitude.  $[Astrid/L1/l1_a_29]
+{@Astrid} Let's see... to fill in the rest of this sequence, I also need the blue magnitude. $[Astrid/L1/l1_a_29]
 {@Astrid} The blue wavelength filter is there on the moniter. $[Astrid/L1/l1_a_30]
 $call SetRefGuidePagesLocked(false)
+$call IsolatePuzzleCell(1, 4)
 $call Wait(1)
 $call SetInputState(true)
 
@@ -437,8 +444,7 @@ $call ReleaseIsolatedPuzzle()
 
 $set temp:waitingForBlueFilter = false
 $set temp:waitingForBlueLight = true
-{@Astrid} Ok, now I can load this data into the blue magnitude space with my photometer just like before. $[Astrid/L1/l1_a_3]
-$call IsolatePuzzleCell(1, 4)
+{@Astrid} Okay! Now I can load this data into the blue magnitude space with my photometer just like before. $[Astrid/L1/l1_a_33]
 
 :: AtikNotBlueFilterSelected
 @trigger    OnLabInteraction
@@ -452,7 +458,7 @@ $call IsolatePuzzleCell(1, 4)
 @when   cellId != "R1C4", temp:waitingForBlueLight
 @interrupt
 
-{@Astrid} It looks like if I select the blue space on the identification grid then I can load it in from the photometer.
+{@Astrid} It looks like if I select the blue space on the identification grid then I can load it in from the photometer. $[Astrid/L1/l1_a_37]
 
 :: AtikBlueMagFilled
 @trigger    OnPuzzleCellFilled
@@ -483,7 +489,7 @@ $call ReleaseIsolatedPuzzle()
 @once
 
 $set temp:waitingForFillColor = false
-{@Astrid} Now it’s just process of elimination. Start with your known info, and work your way through. Maybe the reference guide can help.
+{@Astrid} O-kay! Now it’s just process of elimination. Start with your known info, and work your way through. Maybe the reference guide can help. $[Astrid/L1/l1_a_40]
 $call ReleaseIsolatedPuzzle()
 
 :: AtikAppMagSelected
@@ -501,20 +507,25 @@ $call AddIsolatedSlot(ApparentMagnitude)
 :: AstridThatsNotThePhotometer
 @trigger OnLabInteraction
 @when actorId != "PhotometerLoadBtn", temp:waitingForSelectAppMag
-{@Astrid} Now all I have to do is load in data from the photometer.
+{@Astrid} Hmmm... that's not the photometer. $[Astrid/L1/l1_a_31]
+
+:: AstridThatsNotThePhotometer2
+@trigger OnLabInteraction
+@when actorId != "PhotometerLoadBtn", temp:waitingForFillAppMag
+{@Astrid} Hmmm... that's not the photometer. $[Astrid/L1/l1_a_31]
 
 :: PuzzleGridReadyForSubmission
 @trigger    OnPuzzleGridFullyPopulated
 @cutscene
 @once
 
-{@Astrid} That’s all the data… (*deep breath*) Here goes nothing!
+{@Astrid} That’s all the data… (*deep breath*) Here goes nothing! $[Astrid/L1/l1_a_41]
 
 :: IncorrectPuzzleSubmission
 @trigger    IncorrectPuzzleSubmission
 @cutscene
 
-{@Astrid} Hmm, looks like that wasn’t correct... $[Day1/Dad/l1_d_s32]
+{@Astrid} Hmm, looks like that wasn’t correct...$[Astrid/L1/l1_a_42] 
 
 :: PerseusPuzzleComplete
 @trigger    CorrectPuzzleSubmission
@@ -528,19 +539,19 @@ $call SetInputState(false)
 
 $call Wait(2)
 $call ClearMonitorSelection()
-{@Elijah} If you’re hearing this… it means you didn’t give up. Good. Remember—Perseus didn’t wait for the gods to fix it. 
-{@Elijah} He just did what had to be done. The satellite’s still up there, and maybe—just maybe—someone still believes it matters.
+{@Elijah} If you’re hearing this… it means you didn’t give up. Good. Remember—Perseus didn’t wait for the gods to fix things. $[Elijah/L1/l1_e_01a]
+{@Elijah} He just did what had to be done. The satellite’s still up there, and maybe—just maybe—someone still believes it matters. $[Elijah/L1/l1_e_02]
 
-{@Astrid} Elijah! Its so good to hear a recording of his voice. Its been so long since I've gotten more than a letter. 
-{@Dad} Ceres HQ checking in. Great work today!
-{@Dad} It’s late where you are. Get some rest, kid. I sent you a letter. You should get it in a few weeks.
-{@Astrid} (*yawns*) Ok. I’ll be looking out for it. Can I say I miss you on here?
-{@Dad} (*half-sigh half-laugh*) Over and out, Little Bear.
+{@Astrid} Elijah! Its so good his voice, even if it's just a recording... Its been so long since I've gotten more than a letter. $[Astrid/L1/l1_a_43]
+{@Dad} Ceres HQ checking in. Great work today! $[Dad/L1/l1_d_11]
+{@Dad} It’s late where you are. Get some rest, kiddo. I sent you a letter. You should get it in a few weeks. $[Dad/L1/l1_d_12]
+{@Astrid} (*yawns*) Okay, I’ll be looking out for it. Can I say I miss you on here? $[Astrid/L1/l1_a_44]
+{@Dad} (*half-sigh, half-laugh*) Over and out, Little Bear. $[Dad/L1/l1_d_13]
 $call Wait(1)
 
 $call EndDay2->BeginCutscene()
 $call Wait(1)
-{@Astrid} Huh... What are you getting yourself into, Elijah?
+{@Astrid} Huh... What are you getting yourself into, Elijah? $[Astrid/L1/l1_a_45]
 $call Wait(1)
 
 :: EndDay
