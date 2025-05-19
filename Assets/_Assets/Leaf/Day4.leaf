@@ -116,12 +116,12 @@ $call ClearMonitorSelection()
 
 $call MonitorUI->PlayRadioDownload(2)
 $call Wait(1)
-$call MonitorUI->ShowCeresLogo()
+$call MonitorUI->ShowCERESLogo()
 {@Radio} Congratulations on being awarded clearance level 4. You are now cleared to use the infrared module on your telescope.
 {@Radio} Please reference your CERES Operator Manual for further information about your equipment.
 {@Radio} Thanking you for being an important part of the CERES Distributed Network of Citizen Observatories. Together, we will map the stars for a better tomorrow.
 {@Radio} Tuning you to the Ice Cube CERES headquarters for further instruction...
-$call MonitorUI->HideCeresLogo()
+$call MonitorUI->HideCERESLogo()
 $call Wait(1)
 $call StartPuzzleNavigation()
 $call SetInputState(true)

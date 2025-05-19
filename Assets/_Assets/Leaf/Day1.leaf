@@ -29,7 +29,7 @@ $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $call Wait(1)
 
 $call MoveToView("Right")
-{@Radio} Ceres HQ to Station Twelve. Elijah, do you copy? Please log in and provide status report. $[Radio/L1/l1_r_01]
+{@Radio} CERES HQ to Station Twelve. Elijah, do you copy? Please log in and provide status report. $[Radio/L1/l1_r_01]
 {@Astrid} Oh, a radio signal! How do I work this thing? Hello? This is Astrid... Elijah's friend. $[Astrid/L1/l1_a_02]
 {@Radio} Station Twelve, please log in and report. $[Radio/L1/l1_r_02]
 {@Astrid} Log in? How exactly am I supposed to do that? $[Astrid/L1/l1_a_03]
@@ -55,7 +55,7 @@ $call MoveToView("Right")
 
 {@Astrid} Wait a second. He’s been working with you? $[Astrid/L1/l1_a_07]
 
-{@Monitor} All Ceres transmissions must comply with authorized protocols, or we’ll be forced to revoke your clearance. $[Monitor/L1/l1_m_1] 
+{@Monitor} All CERES transmissions must comply with authorized protocols, or we’ll be forced to revoke your clearance. $[Monitor/L1/l1_m_1] 
 // {@Monitor} This is an official warning.
 {@Monitor} Remember, communication is a privilege, not a right. $[Monitor/L1/l1_m_2]
 
@@ -287,7 +287,7 @@ $call ClearMonitorSelection()
 $call MonitorUI->PlayRadioDownload(2)
 $call Wait(1)
 {@Radio} Ope, and I need to read this thing.... (*clears throat*) $[Radio/L1/l1_r_29]
-$call MonitorUI->ShowCeresLogo()
+$call MonitorUI->ShowCERESLogo()
 $call SetInstrumentUnlocked(ColorInstrument, true)
 $call SetInstrumentUnlocked(TemperatureInstrument, true)
 {@Radio} Congratulations on being awarded clearance <b>level one</b>. You are now cleared to use the color meter.  $[Radio/L1/l1_r_30]
@@ -299,7 +299,7 @@ $call SetInstrumentUnlocked(TemperatureInstrument, true)
 {@Astrid} Ugh, riviting... $[Astrid/L1/l1_a_11]
 
 {@Radio} Tuning you to the Ice Cube CERES headquarters for further instruction... $[Radio/L1/l1_r_34]
-$call MonitorUI->HideCeresLogo()
+$call MonitorUI->HideCERESLogo()
 $call Wait(1)
 
 {@Astrid} (*Sigh*) ...Another birthday without Elijah. Maybe he’s watching the Perseids, wherever he is...  $[Astrid/L1/l1_a_12]
@@ -543,7 +543,7 @@ $call ClearMonitorSelection()
 {@Elijah} He just did what had to be done. The satellite’s still up there, and maybe—just maybe—someone still believes it matters. $[Elijah/L1/l1_e_02]
 
 {@Astrid} Elijah! Its so good his voice, even if it's just a recording... Its been so long since I've gotten more than a letter. $[Astrid/L1/l1_a_43]
-{@Dad} Ceres HQ checking in. Great work today! $[Dad/L1/l1_d_11]
+{@Dad} CERES HQ checking in. Great work today! $[Dad/L1/l1_d_11]
 {@Dad} It’s late where you are. Get some rest, kiddo. I sent you a letter. You should get it in a few weeks. $[Dad/L1/l1_d_12]
 {@Astrid} (*yawns*) Okay, I’ll be looking out for it. Can I say I miss you on here? $[Astrid/L1/l1_a_44]
 {@Dad} (*half-sigh, half-laugh*) Over and out, Little Bear. $[Dad/L1/l1_d_13]
