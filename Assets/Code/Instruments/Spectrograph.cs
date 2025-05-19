@@ -11,7 +11,7 @@ namespace Astro {
 
     public class Spectrograph : BatchedComponent, IBaked, IRegistrationCallbacks {
         public MeshRenderer Background;
-        public float BackgroundWidth;
+        [NonSerialized] public float BackgroundWidth;
         [NonSerialized] public SpectrographMaterialMask CurrentElements;
         // TODO: use pools for lines?
         public List<GameObject> Lines;
@@ -51,13 +51,13 @@ namespace Astro {
         Titanium = 0x100,
         Lithium = 0x200,
 
-        OType = Hydrogen | Helium,
-        BType = Hydrogen | Helium | Carbon,
-        AType = Hydrogen | Helium | Carbon | Iron | Calcium,
-        FType = Hydrogen | Helium | Carbon | Iron | Calcium | Sodium | Magnesium | Oxygen,
-        GType = Hydrogen | Helium | Carbon | Iron | Calcium | Sodium | Magnesium | Oxygen,
-        KType = Helium | Carbon | Iron | Calcium | Sodium | Magnesium | Oxygen ,
-        MType = Helium | Carbon | Iron | Calcium | Sodium | Magnesium | Oxygen | Titanium
+        OType = Helium,
+        BType = Hydrogen | Helium,
+        AType = Hydrogen | Helium | Iron | Calcium,
+        FType = Hydrogen | Helium | Iron | Calcium | Sodium | Magnesium | Oxygen,
+        GType = Hydrogen | Helium | Iron | Calcium | Sodium | Magnesium | Oxygen,
+        KType = Helium | Iron | Calcium | Sodium | Magnesium | Oxygen ,
+        MType = Helium | Iron | Calcium | Sodium | Magnesium | Oxygen | Titanium
 
     }
 
