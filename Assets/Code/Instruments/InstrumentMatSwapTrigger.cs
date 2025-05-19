@@ -7,6 +7,7 @@ using BeauRoutine;
 using FieldDay.Rendering;
 
 namespace Astro {
+    [DefaultExecutionOrder(100)]
     public class InstrumentMatSwapTrigger : BatchedComponent, IRegistrationCallbacks {
         [SerializeField] private LabInstrument m_Target;
         [SerializeField] private MeshRenderer[] m_Renderers;
