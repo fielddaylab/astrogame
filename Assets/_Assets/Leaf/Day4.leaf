@@ -34,6 +34,7 @@ $call SetInputState(true)
 :: SpawnDoc2
 @trigger    DocumentInspectEnd
 @when   documentId == "Day4ElijahPostcard"
+@cutscene
 @once
 
 $call SetInputState(false)
@@ -123,7 +124,6 @@ $call SetInputState(true)
 @once
 
 $call StopNeutrinoNavigation()
-{@Radio} Neutrino Origin Detected
 $call StartOpenMode()
 
 :: PointsUpdated

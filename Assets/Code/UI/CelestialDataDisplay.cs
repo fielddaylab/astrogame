@@ -10,6 +10,8 @@ using BeauRoutine;
 using FieldDay;
 using FieldDay.SharedState;
 using System.Text;
+using BeauPools;
+using BeauUtil.Debugger;
 
 namespace Astro {
     public class CelestialDataDisplay : SharedStateComponent, IRegistrationCallbacks {
@@ -66,23 +68,35 @@ namespace Astro {
     public static class CelestialDataDisplayUtil {
         private static void RevealDataHint(CelestialDataDisplay display, CelestialAsset asset) {
             DayConfigAsset config = DayConfigUtil.GetConfigForState();
-            StringBuilder sb = new StringBuilder();
-            
-            if(config.AcceptedIDSubmissions.HasFlag(ClassificationTypeMask.Photometer) && !HasIdentifiedDataType(ClassificationTypeMask.Photometer, asset)){
-                sb.Append("BRIGHTNESS, ");
-            }
-            if(config.AcceptedIDSubmissions.HasFlag(ClassificationTypeMask.ColorMeter) && !HasIdentifiedDataType(ClassificationTypeMask.ColorMeter, asset)){
-                sb.Append("SPECTRAL-TYPE, ");
-            } 
-            if(config.AcceptedIDSubmissions.HasFlag(ClassificationTypeMask.Spectrometer) && !HasIdentifiedDataType(ClassificationTypeMask.Spectrometer, asset)){
-                sb.Append("ELEMENTS, ");
-            }
-            if(config.AcceptedIDSubmissions.HasFlag(ClassificationTypeMask.Historical) && !HasIdentifiedDataType(ClassificationTypeMask.Historical, asset)){
-                sb.Append("LUMOSITY, ");
-            }
-            sb.Length -= 2;
+            using (PooledStringBuilder psb = PooledStringBuilder.Create())
+            {
 
-            display.HintDisplayText.text = sb.ToString();  
+                if (config.AcceptedIDSubmissions.HasFlag(ClassificationTypeMask.Photometer) && !HasIdentifiedDataType(ClassificationTypeMask.Photometer, asset))
+                {
+                    psb.Builder.Append("BRIGHTNESS, ");
+                }
+                if (config.AcceptedIDSubmissions.HasFlag(ClassificationTypeMask.ColorMeter) && !HasIdentifiedDataType(ClassificationTypeMask.ColorMeter, asset))
+                {
+                    psb.Builder.Append("SPECTRAL-TYPE, ");
+                }
+                if (config.AcceptedIDSubmissions.HasFlag(ClassificationTypeMask.Spectrometer) && !HasIdentifiedDataType(ClassificationTypeMask.Spectrometer, asset))
+                {
+                    psb.Builder.Append("ELEMENTS, ");
+                }
+                if (config.AcceptedIDSubmissions.HasFlag(ClassificationTypeMask.Historical) && !HasIdentifiedDataType(ClassificationTypeMask.Historical, asset))
+                {
+                    psb.Builder.Append("LUMOSITY, ");
+                }
+                if (config.AcceptedIDSubmissions.HasFlag(ClassificationTypeMask.Infrared) && !HasIdentifiedDataType(ClassificationTypeMask.Infrared, asset))
+                {
+                    psb.Builder.Append("SPECTRAL-TYPE, ");
+                }
+                Assert.True(psb.Builder.Length >= 2);
+
+                psb.Builder.Length -= 2;
+
+                display.HintDisplayText.SetText(psb);
+            }
             display.DataRequirmentHint.SetActive(true);
         }
 
@@ -266,6 +280,8 @@ namespace Astro {
                 return "SPECTRAL-TYPE";
             } else if (type.HasFlag(ClassificationTypeMask.Historical)) {
                 return "LUMOSITY";
+            } else if (type.HasFlag(ClassificationTypeMask.Infrared)) {
+                return "SPECTRAL-TYPE";
             } else {
                 return "UNKOWN";
             }
