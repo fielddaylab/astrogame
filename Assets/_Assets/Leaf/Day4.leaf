@@ -72,7 +72,7 @@ $call SetInputState(true)
 @cutscene
 @once
 
-{@Astrid} Ah Dad... Its our constellations. He always did think of us as the big and little dipper. Ursa Major and Ursa Minor. $[Astrid/L4/l4d_a_03] 
+{@Astrid} Oh Dad... Its our constellations. He always did think of us as the big and little dipper. Ursa Major and Ursa Minor. $[Astrid/L4/l4d_a_03] 
 $call EnableDocumentClose("DadUrsaPostcard", true, true)
 
 :: SpawnPuzzleDocs3
@@ -87,29 +87,28 @@ $call SetInputState(false)
 $call MoveToView("Right")
 $call Wait(1)
 
-{@Dad} Astrid, come in... Do you want the good news or the bad news first?
-{@Dad} I know, I know. You can’t answer me. So I’ll just start with the good.
-{@Dad} We’ve gotten our tech updated here at the South Pole. 
-{@Dad} When Project Hercules is unlocked, we’ll actually be able to talk to each other! 
-{@Dad} Plus, we’ll have access to all the data stored on the satellite.
-{@Dad} Star charts, meteor storms, black holes and supernovas... the whole recorded history of the night sky.
+{@Dad} Astrid, are you there? I can't believe you did it. You unlocked the unencrypted portion of the Gorynych Satellite! $[Dad/L4/l4_d_01] 
+{@Dad} Now we'll have access to all the data stored on the satellite. $[Dad/L4/l4_d_02]
+{@Dad} Star charts, meteor storms, black holes and supernovas. The whole recorded history of the night sky! $[Dad/L4/l4_d_03]
 
 {@Astrid} Wait a second... meteor storms? That’s what Elijah’s been so worried about. $[Astrid/L4/l4_a_05]
 {@Astrid} Maybe we’ll be able to figure out when the storm is coming! $[Astrid/L4/l4_a_06]
 
-{@Dad} So... onto the bad news. Elijah was supposed to be on his way home by now.
-{@Dad} But I just heard from the STAR station in Kansas City.
-{@Dad} They said they had one more job for him... a station near St. Louis that wasn’t on the map.
-{@Dad} They’ve been cut off from supplies for a while. They need food and water.
-{@Dad} Elijah agreed to go and help them. That means it’ll be a bit longer before he gets home.
+{@Dad} Speaking of Elijah... He was supposed to be on his way home by now. $[Dad/L4/l4_d_04]
+{@Dad} But I just heard from the CERES station in Tallgrass Prairie National Preserve west of Kansas City. $[Dad/L4/l4_d_05]
+{@Dad} They said they had one more job for him... a station near St. Louis that wasn’t on the map. $[Dad/L4/l4_d_06]
+{@Dad} They’ve been cut off from supplies for a while. They need food and water. $[Dad/L4/l4_d_07]
+{@Dad} Elijah agreed to go and help them. That means it’ll be a bit longer before he gets home. $[Dad/L4/l4_d_08]
 
 {@Astrid} Ugh. So much for solving this mystery together. Eleven cities in two months. The eleven labors of Elijah. $[Astrid/L4/l4_a_07]
 {@Astrid} I guess it’s not quite as bad as Hercules... he ended up with twelve. $[Astrid/L4/l4_a_08]
 
-{@Dad} Anyway, you keep up the great work, Little Bear. We’ll talk soon. Over and out.
+{@Dad} Anyway, you keep up the great work, Little Bear. We’ll talk soon. Over and out. $[Dad/L4/l4_d_09]
 
-{@Radio} CERES HQ to Station Twelve. IceCube is reading a high-energy neutrino emission from the area of the Taurus Constellation.
-{@Radio} Identification of nearby celestial objects is requested. Uploading area of interest...
+$call Wait(1)
+
+{@Radio} CERES HQ to Station Twelve. IceCube is reading a high-energy neutrino emission from the area of the Taurus Constellation. $[Radio/L4/l4_r_01]
+{@Radio} Identification of nearby celestial objects is requested. Uploading area of interest. $[Radio/L4/l4_r_02]
 
 $call WaitForMovedToView("Monitor")
 $call MonitorUI->PlayRadioDownload(2)
@@ -140,10 +139,10 @@ $call ClearMonitorSelection()
 $call MonitorUI->PlayRadioDownload(2)
 $call Wait(1)
 $call MonitorUI->ShowCERESLogo()
-{@Radio} Congratulations on being awarded clearance level 4. You are now cleared to use the infrared module on your telescope.
-{@Radio} Please reference your CERES Operator Manual for further information about your equipment.
-{@Radio} Thanking you for being an important part of the CERES Distributed Network of Citizen Observatories. Together, we will map the stars for a better tomorrow.
-{@Radio} Tuning you to the Ice Cube CERES headquarters for further instruction...
+{@Radio} Congratulations on being awarded clearance level 4. You are now cleared to use the infrared module on your telescope. $[Radio/L4/l4_r_04]
+{@Radio} Please reference your CERES Operator Manual for further information about your equipment. $[Radio/L4/l4_r_05]
+{@Radio} Thanking you for being an important part of the CERES Distributed Network of Citizen Observatories. $[Radio/L4/l4_r_06] 
+{@Radio} Together, we will map the stars for a better tomorrow. $[Radio/L4/l4_r_07]
 $call MonitorUI->HideCERESLogo()
 $call Wait(1)
 $call StartPuzzleNavigation()
