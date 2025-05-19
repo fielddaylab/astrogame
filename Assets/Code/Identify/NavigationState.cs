@@ -56,6 +56,7 @@ namespace Astro {
 
             NavigationState navState = Find.State<NavigationState>();
             navState.CurrentNavigationMode = NavigationMode.Constellation;
+            navState.CameraDistanceFromTarget = -1;
 
             ViewNavUtility.LeafMoveToNode("Monitor");
 
@@ -91,6 +92,7 @@ namespace Astro {
 
             NavigationState navState = Find.State<NavigationState>();
             navState.CurrentNavigationMode = NavigationMode.Neutrino;
+            navState.CameraDistanceFromTarget = -1;
             navState.ResultShown = false;
 
             ViewNavUtility.LeafMoveToNode("Monitor");

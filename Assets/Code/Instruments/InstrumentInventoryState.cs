@@ -76,6 +76,7 @@ namespace Astro {
             AddInstrumentUnlockButton(menu, "TemperatureInstrument");
             AddInstrumentUnlockButton(menu, "SpectrometerInstrument");
             AddInstrumentUnlockButton(menu, "HistoricalDataInstrument");
+            AddInstrumentUnlockButton(menu, "HistoricalDataModeToggle");
             return menu;
         }
 

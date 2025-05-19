@@ -142,6 +142,7 @@ $call ClearMonitorSelection()
 $call MonitorUI->PlayRadioDownload(2)
 $call Wait(1)
 $call MonitorUI->ShowCERESLogo()
+$call SetInstrumentUnlocked(HistoricalDataModeToggle, true)
 {@Radio} Congratulations on being awarded clearance level 4. You are now cleared to use the infrared module on your telescope. $[Radio/L4/l4_r_04]
 {@Radio} Please reference your CERES Operator Manual for further information about your equipment. $[Radio/L4/l4_r_05]
 {@Radio} Thanking you for being an important part of the CERES Distributed Network of Citizen Observatories. $[Radio/L4/l4_r_06] 

@@ -13,6 +13,7 @@ namespace Astro {
         public LeafAsset[] Scripts;
         public HmsCoords SkyRotationOffset;
 
+        public ConsoleTextAsset DayPuzzlePrelude;
         public PuzzleAsset DayPuzzle;
         public NeutrinoConfigAsset NeutrinoEvent;
         public ClassificationTypeMask AcceptedIDSubmissions = ClassificationTypeMask.ALL;
