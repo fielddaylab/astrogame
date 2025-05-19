@@ -32,11 +32,9 @@ $call SetInputState(true)
 @cutscene
 @once
 
-$call SetInputState(false)
 {@Astrid} I don’t get it. We need to warn people? About what? $[Astrid/L3/l3_a_01]
 {@Astrid} Ugh. Elijah, I love you, but I could really use less poetry and more information. $[Astrid/L3/l3_a_02]
 $call EnableDocumentClose("Day3ElijahPostcard", true, true)
-$call SetInputState(true)
 
 :: SpawnPuzzleDocs2
 @trigger    DocumentInspectEnd
@@ -63,19 +61,28 @@ $call StartDocumentPuzzle("Day3DocumentPuzzle")
 $call SetInputState(true)
 {@Astrid} What is Elijah trying to warn people about?
 
+:: DocumentInspect1833
+@trigger    DocumentInspectStart
+@when   documentId == "1833"
+@cutscene
+@once
+
+{@Astrid} Apparently there was some crazy meteor shower - meteor storm - in 1833. Looks like it came from Leo. $[Astrid/L3/l3d_a_01] 
+$call EnableDocumentClose("1833", true, true)
+
 :: IncorrectDocumentResponse
 @trigger    DocumentPuzzlePromptStart
 @when   documentId == "Day3Dad"
 @interrupt
 
-{@Astrid} No, Elijah doesn't think there is going to be another CME. 
+{@Astrid} No, Elijah hasn't said anything about another CME. $[Astrid/L3/l3d_a_04] 
 
 :: IncorrectDocumentResponse2
 @trigger    DocumentPuzzlePromptStart
 @when   documentId == "Day3ElijahPostcard"
 @interrupt
 
-{@Astrid} No, that's not it. Wasn't there a picture with some notes on the back in his letter? 
+{@Astrid} No, that's not it. Weren't there some notes on that picture he sent? $[Astrid/L3/l3d_a_05]
 
 :: CorrectDocumentResponse
 @trigger    DocumentPuzzlePromptStart
@@ -84,8 +91,8 @@ $call SetInputState(true)
 @once
 
 $call SetInputState(false)
-{@Astrid} It looks like Elijah thinks this is supposed to happen again. Is it another Leonid meteor shower? 
-{@Astrid} That won't be till late November. We should have plenty of time to get the word out... why is he so stressed? 
+{@Astrid} I guess... Elijah thinks this is supposed to happen again? Another Leonid storm? $[Astrid/L3/l3d_a_02] 
+{@Astrid} That won't be till late November. We should have plenty of time to get the word out... why is he so stressed? $[Astrid/L3/l3d_a_03] 
 $call Wait(1)
 
 $call SetInputState(false)
@@ -110,7 +117,7 @@ $call Wait(1)
 {@Astrid} When do you think you're gonna be able to come home? $[Astrid/L3/l3_a_07] 
 
 {@Dad} Oh kiddo, I miss you too. The last transport back is in a few months. $[Dad/L3/l3_d_7] 
-{@Dad} Hopefully I'll get through some of this work before the end of the season. $[Dad/L3/l3_d_8] 
+{@Dad} Hopefully I can get through some of this work before the end of the season. $[Dad/L3/l3_d_8] 
 
 {@Astrid} Dad! If you don't get back this season, you'll have to overwinter another year! I just can't... $[Astrid/L3/l3_a_08]
 
@@ -121,9 +128,9 @@ $call Wait(1)
 {@Radio} CERES HQ to Station Twelve. IceCube is reading a high-energy neutrino emission from the area of the Orion Constellation. $[Radio/L3/l3_r_01]
 {@Radio} Identification of nearby celestial objects is requested. Uploading area of interest. $[Radio/L3/l3_r_02]
 $call WaitForMovedToView("Monitor")
+$call SetInputState(true)
 $call MonitorUI->PlayRadioDownload(2)
 $call StartNeutrinoNavigation()
-$call SetInputState(true)
 
 :: NeutrinoNavigationComplete
 @trigger    NeutrinoNavigationComplete
@@ -151,7 +158,7 @@ $call Wait(1)
 $call MonitorUI->ShowCERESLogo()
 $call SetInstrumentUnlocked(InfraredWavelength, true)
 $call SetInstrumentUnlocked(HistoricalDataInstrument, true)
-{@Radio} Congratulations on being awarded clearance level 3. You are now cleared to use the historical data module. $[Radio/L3/l3_r_04]
+{@Radio} Congratulations on being awarded clearance <b>level 3</b>. You are now cleared to use the historical data module. $[Radio/L3/l3_r_04]
 {@Radio} This will allow you to measure parallax over a period of time so that you can determine the distance of the stars. $[Radio/L3/l3_r_05]
 {@Radio} You have also been cleared to use the infrared filter. $[Radio/L3/l3_r_06] 
 {@Radio} Please reference your CERES Operator Manual for further information about your equipment. $[Radio/L3/l3_r_07]

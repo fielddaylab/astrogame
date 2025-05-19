@@ -98,10 +98,10 @@ $endif
 $set temp:introMoveTheTelescope = true
 $call HintModals->Hide("TelescopeControls", 0.2)
 
-$call SetInputState(false)
 {@Radio} Your equipment seems to be working. Let’s test it out and look for the constellation Ursa Major. Sending coordinates now... $[Radio/L1/l1_r_07]
 $call MonitorUI->PlayRadioDownload(4.0)
-OK, looks like you received the coordinates. See those dots above your monitor? They will light up as you near the target. $[Radio/L1/l1_r_08]
+$call SetInputState(false)
+{@Radio} OK, looks like you received the coordinates. See those dots above your monitor? They will light up as you near the target. $[Radio/L1/l1_r_08]
 $call SetInputState(true)
 
 $call StartNeutrinoNavigation()
@@ -476,7 +476,7 @@ $set temp:waitingForBlueLight = false
 $call SetInputState(false)
 $call ReleaseIsolatedPuzzle()
 {@Astrid} It looks like I have the apparent magnitude of the star... and the blue magnitude. So now I can calculate it’s color index. $[Astrid/L1/l1_a_35] 
-{@Astrid} The hotter the star, the bluer it is. Now I can input the color of the star... I can select the color space for Atik. $[Astrid/L1/l1_a_36]
+{@Astrid} The hotter the star, the bluer it is. Now I can load the color of the star... I can select the color space for Atik. $[Astrid/L1/l1_a_36]
 $call IsolatePuzzleCell(1, 2)
 $call SetInputState(true)
 $set temp:waitingForFillColor = true
