@@ -182,7 +182,8 @@ $call Wait(1)
 {@Astrid} Stop the "end of the world" or something? $[Astrid/L3/l3_a_18] 
 {@Astrid} (*Sigh*) I can't really figure that out right now. Back to astronomy. This is pretty fun no matter what happens. $[Astrid/L3/l3_a_19] 
 
-(*typing sounds*)
+$call MoveToView("Monitor")
+$call ConsoleCommandLine->PlayPuzzleConsoleText()
 $call Wait(1)
 $call StartPuzzleNavigation()
 $call SetInputState(true)

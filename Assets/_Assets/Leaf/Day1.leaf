@@ -311,7 +311,8 @@ $call OpenRefGuidePage("ConstellationPerseus")
 {@Astrid} Huh… There’s something about Perseus here… $[Astrid/L1/l1_a_14]
 {@Astrid} Aha! $[Astrid/L1/l1_a_15]
 {@Astrid} Can this telescope can help me find Perseus? I hope I didn't miss the meteor shower. $[Astrid/L1/l1_a_16]
-(*typing sounds*)
+$call MoveToView("Monitor")
+$call ConsoleCommandLine->PlayPuzzleConsoleText()
 $call SetInputState(true)
 $call StartPuzzleNavigation()
 

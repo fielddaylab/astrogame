@@ -230,7 +230,8 @@ $call OpenRefGuidePage("ConstellationPerseus")
 
 // $set temp:waitingForRefGuidePuzzle = false
 //TODO
-(*typing sounds*)
+$call MoveToView("Monitor")
+$call ConsoleCommandLine->PlayPuzzleConsoleText()
 $call Wait(2)
 $call StartPuzzleNavigation()
 $call SetInputState(true)
