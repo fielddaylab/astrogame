@@ -26,7 +26,7 @@ namespace Astro {
         public DocumentRenderer Prefab;
         [HideInInspector] public DocumentInteractable Interactable = null;
 
-        [TextArea(1, 16)]
+        [TextArea(1, 64)]
         [SerializeField] public string[] TextFields;
 
         [HideInInspector]

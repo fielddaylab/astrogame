@@ -7,7 +7,9 @@
 
 $call InitUpdateMasks()
 $call ToggleDeskPicture()
+$call EnableDocumentClose("Day4Letter", false)
 $call EnableDocumentClose("Day4ElijahPostcard", false)
+$call EnableDocumentClose("DadUrsaPostcard", false)
 $call SetInstrumentUnlocked(CoordinateInstrument, true)
 $call SetInstrumentUnlocked(PhotometerInstrument, true)
 $call SetInstrumentUnlocked(BlueWavelength, true)
@@ -23,7 +25,6 @@ $call StopOpenMode()
 $call QueueMusic("Music.Moonthought", 3)
 $call MoveToView("DocumentPuzzle")
 $call SetInputState(false)
-$call SpawnDocument("1833")
 $call SpawnDocumentToCamera("Day4ElijahPostcard")
 $call SetInputState(true)
 
@@ -34,6 +35,10 @@ $call SetInputState(true)
 
 $call SetInputState(false)
 $call SpawnDocumentToCamera("Day4Letter")
+
+{@Astrid} Jocelyn! She must have gotten my last letter and figured out my new address. $[Astrid/L4/l4d_a_01] 
+{@Astrid} This is great... if only i can solve some of Elijah's riddles I'll be able to get the news out to the world! $[Astrid/L4/l4d_a_02]
+$call EnableDocumentClose("Day4Letter", true, true)
 $call SetInputState(true)
 
 :: Day4ElijahPostcard
@@ -43,17 +48,35 @@ $call SetInputState(true)
 @once
 
 $call SetInputState(false)
-{@Astrid} Wait.... World’s End is a garden?
-{@Astrid} This painting is incredible. Elijah is so talented. 
-{@Astrid} Maybe he shoulda been a painter instead of a rogue astronomer...
-{@Astrid} So World's End  must be what Elijah calls his station! World’s End - like the garden of the golden apples from the Hercules myths.
-{@Astrid} It’s not about the world ending. It’s about...searching for the stars. 
+{@Astrid} Wait.... World’s End is a garden? $[Astrid/L4/l4_a_01]
+{@Astrid} This painting is incredible. Elijah is so talented. $[Astrid/L4/l4_a_02] 
+{@Astrid} Maybe he shoulda been a painter instead of a rogue astronomer... $[Astrid/L4/l4_a_02b]
+{@Astrid} So World's End  must be what Elijah calls his station! World’s End - like the garden of the golden apples from the Hercules myths. $[Astrid/L4/l4_a_03]
+{@Astrid} It’s not about the world ending. It’s about...searching for the stars. $[Astrid/L4/l4_a_04] 
 $call EnableDocumentClose("Day4ElijahPostcard", true, true)
 $call SetInputState(true)
 
-:: SpawnPuzzleDocs3
+:: SpawnDoc
 @trigger    DocumentInspectEnd
 @when   documentId == "Day4Letter"
+@once
+
+$call SetInputState(false)
+$call SpawnDocumentToCamera("DadUrsaPostcard")
+$call SetInputState(true)
+
+:: DadUrsaPostcardComment
+@trigger    DocumentInspectFlip
+@when   documentId == "DadUrsaPostcard"
+@cutscene
+@once
+
+{@Astrid} Ah Dad... Its our constellations. He always did think of us as the big and little dipper. Ursa Major and Ursa Minor. $[Astrid/L4/l4d_a_03] 
+$call EnableDocumentClose("DadUrsaPostcard", true, true)
+
+:: SpawnPuzzleDocs3
+@trigger    DocumentInspectEnd
+@when   documentId == "DadUrsaPostcard"
 @interrupt
 @cutscene
 @once
@@ -70,8 +93,8 @@ $call Wait(1)
 {@Dad} Plus, we’ll have access to all the data stored on the satellite.
 {@Dad} Star charts, meteor storms, black holes and supernovas... the whole recorded history of the night sky.
 
-{@Astrid} Wait a second... meteor storms? That’s what Elijah’s been so worried about.
-{@Astrid} Maybe we’ll be able to figure out when the storm is coming!
+{@Astrid} Wait a second... meteor storms? That’s what Elijah’s been so worried about. $[Astrid/L4/l4_a_05]
+{@Astrid} Maybe we’ll be able to figure out when the storm is coming! $[Astrid/L4/l4_a_06]
 
 {@Dad} So... onto the bad news. Elijah was supposed to be on his way home by now.
 {@Dad} But I just heard from the STAR station in Kansas City.
@@ -79,8 +102,8 @@ $call Wait(1)
 {@Dad} They’ve been cut off from supplies for a while. They need food and water.
 {@Dad} Elijah agreed to go and help them. That means it’ll be a bit longer before he gets home.
 
-{@Astrid} Ugh. So much for solving this mystery together. Eleven cities in two months. The eleven labors of Elijah.
-{@Astrid} I guess it’s not quite as bad as Hercules... he ended up with twelve.
+{@Astrid} Ugh. So much for solving this mystery together. Eleven cities in two months. The eleven labors of Elijah. $[Astrid/L4/l4_a_07]
+{@Astrid} I guess it’s not quite as bad as Hercules... he ended up with twelve. $[Astrid/L4/l4_a_08]
 
 {@Dad} Anyway, you keep up the great work, Little Bear. We’ll talk soon. Over and out.
 
@@ -143,8 +166,8 @@ $call StopPuzzleMode()
 $call SetInputState(false)
 $call EndDay4->BeginCutscene()
 $call Wait(3)
-{@Astrid} Whoa. That’s it. It’s the dragon!
-{@Astrid} I should’ve guessed. Elijah said “the dragon is coming.” It’s going to be a Draconid meteor storm!
+{@Astrid} Whoa. That’s it. It’s the dragon! $[Astrid/L4/l4_a_09]
+{@Astrid} I should’ve guessed. Elijah said “the dragon is coming.” It’s going to be a Draconid meteor storm! $[Astrid/L4/l4_a_10]
 
 :: EndDay
 @trigger    CutsceneEnd
