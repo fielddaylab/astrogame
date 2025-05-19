@@ -43,7 +43,7 @@ $call MoveToView("Right")
 
 {@Astrid} Do you know where Elijah is? I came here looking for him. $[Astrid/L1/l1_a_05]
 
-{@Dad} I’m sorry, Astrid ... I wish I could’ve warned you in time. Elijah’s not there. He probably won’t be back for a while. $[Dad/L1/l1_d_4]
+{@Dad} I’m sorry, Astrid, I wish I could’ve warned you in time. Elijah’s not there. He probably won’t be back for a while. $[Dad/L1/l1_d_4]
 
 {@Astrid} What? Why not? Where is he? $[Astrid/L1/l1_a_06]
 
@@ -285,9 +285,9 @@ $call ClearMonitorSelection()
 
 //TODO Seperate Node Here
 $call MonitorUI->PlayRadioDownload(2)
+$call MonitorUI->ShowCERESLogo()
 $call Wait(1)
 {@Radio} Ope, and I need to read this thing.... (*clears throat*) $[Radio/L1/l1_r_29]
-$call MonitorUI->ShowCERESLogo()
 $call SetInstrumentUnlocked(ColorInstrument, true)
 $call SetInstrumentUnlocked(TemperatureInstrument, true)
 {@Radio} Congratulations on being awarded clearance <b>level one</b>. You are now cleared to use the color meter.  $[Radio/L1/l1_r_30]
@@ -424,7 +424,7 @@ $call ReleaseIsolatedPuzzle()
 $call SetInstrumentUnlocked(BlueWavelength, true)
 $call SetInputState(false)
 {@Astrid} Let's see... to fill in the rest of this sequence, I also need the blue magnitude. $[Astrid/L1/l1_a_29]
-{@Astrid} The blue wavelength filter is there on the moniter. $[Astrid/L1/l1_a_30]
+{@Astrid} I need to select the blue wavelength filter just below the monitor. $[Astrid/L1/l1_a_34]
 $call SetRefGuidePagesLocked(false)
 $call IsolatePuzzleCell(1, 4)
 $call Wait(1)
@@ -447,6 +447,7 @@ $call ReleaseIsolatedPuzzle()
 $set temp:waitingForBlueFilter = false
 $set temp:waitingForBlueLight = true
 {@Astrid} Okay! Now I can load this data into the blue magnitude space with my photometer just like before. $[Astrid/L1/l1_a_33]
+$call IsolatePuzzleCell(1, 4)
 
 :: AtikNotBlueFilterSelected
 @trigger    OnLabInteraction
@@ -454,7 +455,7 @@ $set temp:waitingForBlueLight = true
 @interrupt
 @cutscene
 
-{@Astrid} I need to select the blue wavelength filter just below the monitor. $[Astrid/L1/l1_a_34]
+{@Astrid} The blue wavelength filter is there on the moniter. $[Astrid/L1/l1_a_30]
 
 :: NotBlueLightAstrid
 @trigger OnPuzzleCellSelected
@@ -485,9 +486,18 @@ $set temp:waitingForFillColor = true
 @when   cellId == "R1C2", temp:waitingForFillColor
 @interrupt
 @cutscene
-@once
+// @once
 
+{@Astrid} Alright, now I should load the color in from the color indexer. $[Astrid/L1/l1_a_38]
 $call ReleaseIsolatedPuzzle()
+
+:: WhereIsTheColorIndexer
+@trigger    OnLabInteraction
+@when   temp:waitingForFillColor, actorId != "ColorIndexLoadBtn"
+@interrupt
+@cutscene
+
+{@Astrid} Where was the color indexer... oh yeah, to the right of the photometer $[Astrid/L1/l1_a_39]
 
 :: AtikColorFilled
 @trigger OnPuzzleCellFilled
@@ -513,16 +523,8 @@ $call AddIsolatedSlot(ApparentMagnitude)
 {@Astrid} Now all I have to do is load in data from the photometer.
 
 :: AstridThatsNotThePhotometer
-@trigger OnLabInteraction
-@when actorId != "PhotometerLoadBtn", temp:waitingForSelectAppMag
-@interrupt
-@cutscene
-
-{@Astrid} Hmmm... that's not the photometer. $[Astrid/L1/l1_a_31]
-
-:: AstridThatsNotThePhotometer2
-@trigger OnLabInteraction
-@when actorId != "PhotometerLoadBtn", temp:waitingForFillAppMag
+@trigger    OnLabInteraction
+@when   actorId != "PhotometerLoadBtn", temp:waitingForFillAppMag
 @interrupt
 @cutscene
 
