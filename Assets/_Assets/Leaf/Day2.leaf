@@ -1,11 +1,7 @@
 #basePath	Day2
 
-:: BeginDay
-@trigger    SceneReady
-@boostScore 100
-@cutscene
-@who    Astrid
-
+:: Preload
+@function   ScenePreload
 $call InitUpdateMasks()
 $call EnableDocumentClose("HerculesPostcard", false)
 $call EnableDocumentClose("Day2DadIcecubePostcard", false)
@@ -16,9 +12,15 @@ $call SetInstrumentUnlocked(BlueWavelength, true)
 $call SetInstrumentUnlocked(ColorInstrument, true)
 $call SetInstrumentUnlocked(TemperatureInstrument, true)
 $call SpawnDocument("MiniLabors")
-
 $call StopPuzzleMode()
 $call StopOpenMode()
+
+:: BeginDay
+@trigger    SceneReady
+@boostScore 100
+@cutscene
+@who    Astrid
+
 $call SetInputState(false)
 $call MoveToView("DocumentPuzzle")
 

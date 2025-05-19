@@ -1,10 +1,7 @@
 #basePath	Day1
 
-:: OpeningCutscene
-@trigger SceneReady
-@cutscene
-@who    IntroCutscene
-
+:: Preload
+@function   ScenePreload
 $call InitUpdateMasks()
 $call SetInstrumentUnlocked(CoordinateInstrument, true)
 $call SetInstrumentUnlocked(PhotometerInstrument, true)
@@ -12,6 +9,12 @@ $call SetInputState(false)
 $call StopPuzzleMode()
 $call StopOpenMode()
 $call SetRefGuidePagesLocked(true)
+$call IntroCutscene->PrepareCutscene()
+
+:: OpeningCutscene
+@trigger SceneReady
+@cutscene
+@who    IntroCutscene
 
 $call PlayMusic("Music.Gently-Falling", 1)
 $call IntroCutscene->BeginCutscene()

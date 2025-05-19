@@ -90,6 +90,10 @@ namespace Astro {
 
         [InvokeOnBoot]
         static private void OnBoot() {
+            Scenes.OnMainSceneLateEnable.Register(() => {
+                ScriptUtility.Invoke("ScenePreload");
+            });
+
             Scenes.OnMainSceneReady.Register(() => {
                 ScriptUtility.Trigger("SceneReady");
             });

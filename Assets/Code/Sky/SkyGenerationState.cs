@@ -44,6 +44,7 @@ namespace Astro
                 // TODO: assign relevant 2D representation
                 FocusableUtility.InitFocusable(focusState, newFocus, obj.transform, obj.Resource, DetermineSprite(state, obj.Resource.Category));
                 focusState.ActiveFocii.PushBack(newFocus);
+                newFocus.IsVisibleInCurrentFilter = (newFocus.TargetData.Visibility & state.VisMask) != 0;
 
                 UIFocusPackedData packed;
                 packed.TargetPos = obj.transform.position;

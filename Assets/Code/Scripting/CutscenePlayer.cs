@@ -26,6 +26,15 @@ namespace Astro {
             return null;
         }
 
+        [LeafMember("PrepareCutscene")]
+        public void PrepareCutscene() {
+            Director.gameObject.SetActive(true);
+            Director.time = 0;
+            Director.Evaluate();
+            Director.gameObject.SetActive(false);
+            CutsceneUtility.SyncCamera(Camera, Find.State<ViewState>());
+        }
+
         [LeafMember("BeginCutscene")]
         public void BeginCutscene() {
             Director.gameObject.SetActive(true);
