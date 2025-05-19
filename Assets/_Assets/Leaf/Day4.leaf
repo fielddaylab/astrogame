@@ -1,9 +1,7 @@
 #basePath	Day4
 
-:: BeginDay
-@trigger    SceneReady
-@boostScore 100
-@who    Astrid
+:: Preload
+@function   ScenePreload
 
 $call InitUpdateMasks()
 $call ToggleDeskPicture()
@@ -21,6 +19,11 @@ $call SetInstrumentUnlocked(HistoricalDataInstrument, true)
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $call StopPuzzleMode()
 $call StopOpenMode()
+
+:: BeginDay
+@trigger    SceneReady
+@boostScore 100
+@who    Astrid
 
 $call QueueMusic("Music.Moonthought", 3)
 $call MoveToView("DocumentPuzzle")
