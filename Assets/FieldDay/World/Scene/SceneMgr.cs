@@ -129,6 +129,7 @@ namespace FieldDay.Scenes {
             public SceneType Type;
             public SceneImportFlags Flags;
             public Matrix4x4? Transform;
+            public MainSceneTransitionArgs Transition;
         }
 
         private struct UninitializedSceneCallback {
@@ -209,6 +210,10 @@ namespace FieldDay.Scenes {
         internal SceneMgr() {
             CachedUpdateStep = UpdateStep;
             m_CurrentPreloadOperation.Create();
+
+            SceneHelper.IgnoreSceneByName("*_PERSISTENT");
+            SceneHelper.IgnoreSceneByName("*_LAYER");
+            SceneHelper.IgnoreSceneByName("Boot");
         }
 
         #region Public API
@@ -341,27 +346,42 @@ namespace FieldDay.Scenes {
 
         public void LoadMainScene(string scenePath) {
             Assert.False(m_MainSceneLoadProcess.Exists(), "Cannot load main during main scene loading");
-            QueueMainLoadInternal(scenePath, true, false);
+            QueueMainLoadInternal(scenePath, true, false, default);
         }
 
         public void LoadMainScene(string scenePath, bool forceReload) {
             Assert.False(m_MainSceneLoadProcess.Exists(), "Cannot load main during main scene loading");
-            QueueMainLoadInternal(scenePath, true, forceReload);
+            QueueMainLoadInternal(scenePath, true, forceReload, default);
+        }
+
+        public void LoadMainScene(string scenePath, bool forceReload, in MainSceneTransitionArgs transition) {
+            Assert.False(m_MainSceneLoadProcess.Exists(), "Cannot load main during main scene loading");
+            QueueMainLoadInternal(scenePath, true, forceReload, transition);
         }
 
         public void LoadMainScene(SceneReference scene) {
             Assert.False(m_MainSceneLoadProcess.Exists(), "Cannot load main during main scene loading");
-            QueueMainLoadInternal(scene.Path, true, false);
+            QueueMainLoadInternal(scene.Path, true, false, default);
         }
 
         public void LoadMainScene(SceneReference scene, bool forceReload) {
             Assert.False(m_MainSceneLoadProcess.Exists(), "Cannot load main during main scene loading");
-            QueueMainLoadInternal(scene.Path, true, forceReload);
+            QueueMainLoadInternal(scene.Path, true, forceReload, default);
+        }
+
+        public void LoadMainScene(SceneReference scene, bool forceReload, in MainSceneTransitionArgs transition) {
+            Assert.False(m_MainSceneLoadProcess.Exists(), "Cannot load main during main scene loading");
+            QueueMainLoadInternal(scene.Path, true, forceReload, transition);
         }
 
         public void ReloadMainScene() {
             Assert.False(m_MainSceneLoadProcess.Exists(), "Cannot load main during main scene loading");
-            QueueMainLoadInternal(m_MainScene.Scene.path, true, true);
+            QueueMainLoadInternal(m_MainScene.Scene.path, true, true, default);
+        }
+
+        public void ReloadMainScene(in MainSceneTransitionArgs transition) {
+            Assert.False(m_MainSceneLoadProcess.Exists(), "Cannot load main during main scene loading");
+            QueueMainLoadInternal(m_MainScene.Scene.path, true, true, transition);
         }
 
         /// <summary>
@@ -686,7 +706,7 @@ namespace FieldDay.Scenes {
 
         internal void Prepare() {
             if (m_MainScene == null && !m_MainSceneLoadProcess) {
-                QueueMainLoadInternal(SceneManager.GetActiveScene().path, false, true);
+                QueueMainLoadInternal(SceneManager.GetActiveScene().path, false, true, default);
             }
 
             // need to ensure we still have a scene remaining when unloading,
@@ -803,17 +823,18 @@ namespace FieldDay.Scenes {
             }
         }
 
-        private void QueueMainLoadInternal(string path, bool killNonPersistentLoads, bool force) {
+        private void QueueMainLoadInternal(string path, bool killNonPersistentLoads, bool forceReload, in MainSceneTransitionArgs transition) {
             SceneDataExt data = SceneDataExt.GetByPath(path);
 
-            if (!force && data != null && data.IsVisited(SceneDataExt.VisitFlags.Loaded)) {
+            if (!forceReload && data != null && data.IsVisited(SceneDataExt.VisitFlags.Loaded)) {
                 return;
             }
 
             LoadProcessArgs args = new LoadProcessArgs() {
                 Path = path,
                 Type = SceneType.Main,
-                Flags = force ? SceneImportFlags.ForceReload : 0,
+                Flags = forceReload ? SceneImportFlags.ForceReload : 0,
+                Transition = transition,
                 Tag = default,
                 Transform = null
             };
@@ -870,7 +891,7 @@ namespace FieldDay.Scenes {
         }
 
         static private Scene SafeGetSceneByPath(string path) {
-            SceneBinding scene = SceneHelper.FindSceneByPath(path, SceneCategories.Build);
+            SceneBinding scene = SceneHelper.FindSceneByPath(path, SceneCategories.AllBuild);
             Assert.True(scene.IsValid(), "Scene '{0}' is not valid", path);
             return scene;
         }
@@ -882,7 +903,7 @@ namespace FieldDay.Scenes {
         private void ProcessLoadProcessQueue() {
             if (m_LoadProcessQueue.TryPeekFront(out var args)) {
                 Assert.True(!string.IsNullOrEmpty(args.Path), "Empty path provided to scene loader");
-                Assert.True(SceneHelper.FindSceneByPath(args.Path, SceneCategories.Build).IsValid(), "No scene with path '{0}' found", args.Path);
+                Assert.True(SceneHelper.FindSceneByPath(args.Path, SceneCategories.AllBuild).IsValid(), "No scene with path '{0}' found", args.Path);
 
                 if (args.Type == SceneType.Main) {
                     if (m_MainSceneLoadProcess) {
@@ -1256,7 +1277,7 @@ namespace FieldDay.Scenes {
                     if (m_MainTransitionUnload != null) {
                         if (m_MainScene != null || m_AuxScenes.Count > 0) {
                             Scene targetScene = SafeGetSceneByPath(args.Path);
-                            IEnumerator wait = m_MainTransitionUnload(targetScene, args.Tag);
+                            IEnumerator wait = m_MainTransitionUnload(targetScene, args.Tag, args.Transition);
                             if (wait != null) {
                                 yield return wait;
                             }
@@ -1397,6 +1418,7 @@ namespace FieldDay.Scenes {
 
                 if (args.Type == SceneType.Main) {
                     OnMainSceneLateEnable.Invoke();
+                    Game.Events.Dispatch(Scenes.Events.Ready);
                 }
 
                 // one more check for dependencies
@@ -1428,7 +1450,7 @@ namespace FieldDay.Scenes {
 
                     if (m_MainTransitionLoad != null) {
                         Scene targetScene = SafeGetSceneByPath(args.Path);
-                        IEnumerator wait = m_MainTransitionLoad(targetScene, args.Tag);
+                        IEnumerator wait = m_MainTransitionLoad(targetScene, args.Tag, args.Transition);
                         m_MainSceneTransition.Replace(wait);
                     }
                 }
@@ -1563,6 +1585,7 @@ namespace FieldDay.Scenes {
     /// </summary>
     static public class Scenes {
         static public class Events {
+            static public readonly StringHash32 LateEnable = "SceneMgr::LateEnable";
             static public readonly StringHash32 Ready = "SceneMgr::Ready";
             static public readonly StringHash32 PreUnload = "SceneMgr::PreUnload";
         }
@@ -1643,7 +1666,7 @@ namespace FieldDay.Scenes {
     /// <summary>
     /// Delegate for handling scene transitions.
     /// </summary>
-    public delegate IEnumerator SceneTransitionHandler(Scene scene, StringHash32 tag);
+    public delegate IEnumerator SceneTransitionHandler(Scene scene, StringHash32 tag, MainSceneTransitionArgs transitionArgs);
 
     /// <summary>
     /// Scene loading dependency.
@@ -1660,5 +1683,26 @@ namespace FieldDay.Scenes {
         Any = 0,
         BeforeLateEnable = 0x1,
         BeforeReady = 0x2,
+    }
+
+    /// <summary>
+    /// Load flags.
+    /// </summary>
+    public enum SceneTransitionFlags : ushort {
+        HintSkipTransition = 0x01,
+        HintFastTransition = 0x02,
+    }
+
+    public struct MainSceneTransitionArgs {
+        public StringHash32 TransitionType;
+        public SceneTransitionFlags Flags;
+
+        public readonly bool ShouldSkip {
+            get { return (Flags & SceneTransitionFlags.HintSkipTransition) != 0; }
+        }
+
+        public readonly bool ShouldSpeedUp {
+            get { return (Flags & SceneTransitionFlags.HintFastTransition) != 0; }
+        }
     }
 }

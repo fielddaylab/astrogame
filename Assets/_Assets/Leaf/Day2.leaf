@@ -1,0 +1,326 @@
+#basePath	Day2
+
+:: Preload
+@function   ScenePreload
+$call InitUpdateMasks()
+$call EnableDocumentClose("HerculesPostcard", false)
+$call EnableDocumentClose("Day2DadIcecubePostcard", false)
+$call EnableDocumentClose("1833", false)
+$call SetInstrumentUnlocked(CoordinateInstrument, true)
+$call SetInstrumentUnlocked(PhotometerInstrument, true)
+$call SetInstrumentUnlocked(BlueWavelength, true)
+$call SetInstrumentUnlocked(ColorInstrument, true)
+$call SetInstrumentUnlocked(TemperatureInstrument, true)
+$call SpawnDocument("MiniLabors")
+$call StopPuzzleMode()
+$call StopOpenMode()
+
+:: BeginDay
+@trigger    SceneReady
+@boostScore 100
+@cutscene
+@who    Astrid
+
+$call SetInputState(false)
+$call MoveToView("DocumentPuzzle")
+
+{@Astrid} Looks like I got some mail... I guess the postal service is working again. $[Astrid/L2/l2_a_01]
+$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
+$call SpawnDocumentToCamera("Day2DadIcecubePostcard")
+$call SetInputState(true)
+{@Astrid} Wow... I wonder if he ever feels weird about the auroras there. I think it might freak me out. $[Astrid/L2/l2_a_02]
+{@Astrid} Dad said he sent this just a few weeks ago. $[Astrid/L2/l2_a_03] 
+$call EnableDocumentClose("Day2DadIcecubePostcard", true, true)
+
+:: SpawnPuzzleDocs1
+@trigger    DocumentInspectEnd
+@when   documentId == "Day2DadIcecubePostcard"
+@cutscene
+@interrupt
+@once
+
+$call SetInputState(false)
+$call Wait(1)
+{@Astrid} Elijah! Finally, some news. $[Astrid/L2/l2_a_04]
+$call SpawnDocumentToCamera("HerculesPostcard")
+{@Astrid} I love his postcards. Must be traveling with his art supplies as always. Looks like the Hercules constellation? $[Astrid/L2/l2_a_05]
+$call SetInputState(true)
+$call QueueMusic("Music.StarDome", 3)
+
+:: FlipHercules
+@trigger    DocumentInspectFlip
+@when   documentId == "HerculesPostcard"
+@interrupt
+@cutscene
+@once
+
+{@Astrid} Oh Elijah... Is it safe traveling out there on your own? And what do you mean about the end of the world? $[Astrid/L2/l2_a_06]
+{@Astrid} What is going to fall apart? Elijah...why with the riddles? I wish you would just say what you mean. $[Astrid/L2/l2_a_07]
+$call EnableDocumentClose("HerculesPostcard", true, true)
+
+:: SpawnPuzzleDocs2
+@trigger    DocumentInspectEnd
+@when   documentId == "HerculesPostcard"
+@cutscene
+@once
+
+$call SetInputState(false)
+$call Wait(1)
+$call SpawnDocumentToCamera("Day2Martha")
+{@Astrid} I feel so guilty for leaving Aunt Martha to run the clinic. She really relied on me. $[Astrid/L2/l2_a_08]
+$call SetInputState(true)
+
+:: InspectMiniMap
+@trigger    DocumentInspectStart
+@when   documentId == "MiniLabors"
+@once
+
+{@Astrid} Hmmm, the Twelve Labor's of Hercules... Didn't Elijah say something about this in his letter? $[Astrid/L2/l2_a_10]
+{@Astrid} I bet he is at one of these stations. Or maybe on his way. I hope he is safe. $[Astrid/L2/l2_a_11]
+
+:: SpawnPuzzleDocs3
+@trigger    DocumentInspectEnd
+@when   documentId == "Day2Martha"
+@cutscene
+@once
+
+$call SetInputState(false)
+$call Wait(1)
+$call SpawnDocumentToCamera("CouplePhoto")
+{@Astrid} Oh! I love this! $[Astrid/L2/l2_a_09]
+$call SetInputState(true)
+
+:: DocumentPuzzleStart
+@trigger    DocumentInspectEnd
+@when   documentId == "CouplePhoto"
+@once
+
+$call SetInputState(false)
+$call Wait(1)
+$call StartDocumentPuzzle("Day2DocumentPuzzle")
+$call SetInputState(true)
+{@Astrid} Where is Elijah? Is he okay? $[Astrid/L2/l2_a_3]
+
+:: IncorrectDocumentResponse1
+@trigger    DocumentPuzzlePromptStart
+@when documentId == "Day2DadIcecubePostcard"
+
+{@Astrid} Elijah in Antarctica...? No, that wouldn't make sense. $[Astrid/L2/l2_a_14]
+
+:: IncorrectDocumentResponse2
+@trigger    DocumentPuzzlePromptStart
+@when documentId == "Day2Martha"
+
+{@Astrid} Could he be working at Aunt Martha's clinic? They would drive each other crazy, that's not it. $[Astrid/L2/l2_a_12]
+
+:: CorrectDocumentResponse
+@trigger    DocumentPuzzlePromptStart
+@when documentId == "MiniLabors"
+@cutscene
+@once
+
+$call SetInputState(false)
+{@Astrid} That's it! Elijah left Aunt Martha's and is back on the road now headed to one of these stations. $[Astrid/L2/l2_a_15]
+$call Wait(1)
+$call MoveToView("Desk")
+$call Wait(1)
+
+$call MoveToView("Right")
+{@Radio} CERES HQ to Station Twelve. $[Radio/L2/l2_r_01]
+{@Radio} IceCube is reading a high-energy neutrino emission from the area of the Hydra Constellation. $[Radio/L2/l2_r_02]
+{@Radio} Identification of nearby celestial objects is requested. Uploading area of interest. $[Radio/L2/l2_r_03]
+$call WaitForMovedToView("Monitor")
+$call MonitorUI->PlayRadioDownload(4)
+$call StartNeutrinoNavigation()
+$call SetInputState(true)
+
+:: NeutrinoNavigationComplete
+@trigger    NeutrinoNavigationComplete
+@cutscene
+@once
+
+$call StopNeutrinoNavigation()
+$call StartOpenMode()
+{@Radio} We need to know the spectral types of these stars. In order to determine that you’ll need to calculate the <i>temperature</i>. $[Radio/L2/l2_r_04]
+{@Radio} We need both <i>visible</i> and <i>blue wavelength</i> measurements to calculate this. $[Radio/L2/l2_r_09]
+$set temp:waitingForNeutrinoStar = true
+{@Radio} Select a star on your telescope monitor. $[Radio/L2/l2_r_05]
+
+:: OnStarSelected
+@trigger    OnNeutrinoStarSelected
+@when   temp:waitingForNeutrinoStar
+@cutscene
+@boostScore 100
+@interrupt
+@once
+
+$call SetInputState(false)
+{@Radio} Great. Now you’ll need to capture the same data in the blue wavelength. $[Radio/L2/l2_r_06]
+{@Radio} Select the blue wavelength filter. $[Radio/L2/l2_r_07]
+$set temp:waitingForBlueFilter = true
+$call LockMonitorFocus()
+$call SetInputState(true)
+
+:: BlueFilterSelected
+@trigger OnLabInteraction
+@when actorId == "BlueFilter", temp:waitingForBlueFilter
+@interrupt
+@cutscene
+@once
+
+$set temp:waitingForBlueFilter = false
+{@Radio} Now you just need to use that temperature to look up the spectral type in your reference guide. $[Radio/L2/l2_r_08]
+{@Radio} Look up the spectral type in your manual, and submit the data. $[Radio/L2/l2_r_10]
+
+:: BlueFilterNOTSelected
+@trigger OnLabInteraction
+@when   actorId != "BlueFilter", temp:waitingForBlueFilter
+@interrupt
+@cutscene
+
+{@Astrid} The blue wavelength filter is there on the moniter. $[Astrid/L1/l1_a_30]
+
+:: PointsUpdated0
+@trigger    PointsUpdated
+@when   sciencePoints > 0
+@cutscene
+@once
+
+$call UnlockMonitorFocus()
+{@Radio} Nice Job, You're getting the hang of this. $[Radio/L2/l2_r_11]
+
+:: PointsUpdated
+@trigger    PointsUpdated
+@when   sciencePoints > 2
+@boostScore 100
+@interrupt
+@cutscene
+@once
+
+$call SetInputState(false)
+$call SetRefGuideActive(false)
+
+$call Wait(3)
+
+$call StopOpenMode()
+$call ClearMonitorSelection()
+
+$call MonitorUI->PlayRadioDownload(2)
+$call Wait(1)
+$call MonitorUI->ShowCERESLogo():wait
+$call SetInstrumentUnlocked(SpectrometerInstrument, true)
+{@Radio} (*clears throat*) Congratulations on being awarded clearance <b>level 2</b>. You are now cleared to use the spectrometer. $[Radio/L2/l2_r_12]
+{@Radio} Please reference your CERES Operator Manual for further information about your equipment. $[Radio/L2/l2_r_13]
+{@Radio} Thanking you for being an important part of the CERES Distributed Network of Citizen Observatories. $[Radio/L2/l2_r_14]
+{@Radio} Together, we will map the stars for a better tomorrow. $[Radio/L2/l2_r_15]
+$call MonitorUI->HideCERESLogo()
+
+$call OpenRefGuidePage("ConstellationPerseus")
+{@Astrid} Hmmm, Hercules. Just like Elijah's postcard! $[Astrid/L2/l2_a_16]
+{@Astrid} These are the puzzles Elijah had been working on. What is this all for? $[Astrid/L2/l2_a_17]
+// $set temp:waitingForRefGuidePuzzle = true
+
+// :: HerculesPuzzleRef
+// @trigger    OnRefGuideOpened
+// @when   temp:waitingForRefGuidePuzzle
+// @boostScore 300
+// @interrupt
+// @cutscene
+// @once
+
+// $set temp:waitingForRefGuidePuzzle = false
+//TODO
+$call MoveToView("Monitor")
+$call ConsoleCommandLine->PlayPuzzleConsoleText()
+$call Wait(2)
+$call StartPuzzleNavigation()
+$call SetInputState(true)
+
+:: PuzzleNavigationComplete
+@trigger    PuzzleNavigationComplete
+@cutscene
+@once
+
+$call SetInputState(false)
+$call StopPuzzleNavigation()
+$call SetRefGuideActive(false)
+$call ClearMonitorSelection()
+$call Wait(1)
+$call StartPuzzleMode()
+$call SetInputState(true)
+
+:: HerculesPuzzleComplete
+@trigger    CorrectPuzzleSubmission
+@when   puzzleName == "Hercules"
+@cutscene
+@once
+
+$call ClearMonitorSelection()
+$call StopPuzzleMode()
+$call SetInputState(false)
+{@Elijah} If you’re hearing this, it means you’ve solved Hercules—and that part of the satellite could come back online soon. $[Elijah/L2/l2_e_01] 
+{@Elijah} That would be huge. With historical data restored, the other astronomers can finally start seeing the bigger picture. $[Elijah/L2/l2_e_02]
+{@Elijah} I knew you’d get this far. Keep going! Everything depends on it now. $[Elijah/L2/l2_e_03]
+
+$call Wait(2)
+
+{@Dad} Astrid... What are you up to? Elijahs puzzles are a wild goose chase. I don't want you getting your hopes up. $[Dad/L2/l2_d_1]
+
+{@Astrid} But dad, I think I'm getting close here... $[Astrid/L2/l2_a_19]
+{@Astrid} That satellite was built to withstand a CME. If we could decrypt what's stored on it... it would change everything! $[Astrid/L2/l2_a_20]
+
+{@Dad} Its a lost cause is what it is. Time to focus on our mission.  $[Dad/L2/l2_d_2]
+
+{@Astrid} It looks like each of these puzzles reveals part of the password. I actually think I might be making progress here. $[Astrid/L2/l2_a_21]
+
+{@Dad} The guy who built the satellite was... eccentric putting it mildly. $[Dad/L2/l2_d_3] 
+{@Dad} And even if Elijah could have solved it, who knows if it would have worked. $[Dad/L2/l2_d_4]
+
+{@Astrid} Ugh. But Elijah's notes said we might be too late. Too late for what? $[Astrid/L2/l2_a_22]
+
+{@Monitor} Station Twelve, this is a warning. You have been flagged non-compliant. You will lose access to this frequency upon any further violation. $[Monitor/L2/l2_m_1]
+{@Monitor} I advise that you review communication protocols if you want to avoid termination. $[Monitor/L2/l2_m_2] 
+{@Monitor} Remember, your commnication is a privilege, <b>not a right</b>. $[Monitor/L2/l2_m_3] 
+
+{@Dad} Astrid, please. Focus on the task at hand. I don't want to... $[Dad/L2/l2_d_5]
+// {@Dad} Please tune radio to 375 mhz. $[Dad/L2/l2_d_6]
+{@Dad} Looks like you've been getting a lot done there. You got your next access level. Good work! G'night Little Bear. $[Dad/L2/l2_d_7]
+
+$call Wait(1)
+
+{@Astrid} Whoa… what's this picture? It must have fallen out of the reference guide? $[Astrid/L2/l2_a_32]
+
+$set temp:d3PostcardRead = false
+$call SpawnDocumentToCamera("1833")
+$call SetInputState(true)
+
+:: Flip1833
+@trigger    DocumentInspectFlip
+@when   documentId == "1833"
+@cutscene
+@interrupt
+@once
+
+{@Astrid} The 1833 Leonid Meteor Storm... I’ve never heard of this before. $[Astrid/L2/l2_a_33]
+{@Astrid} It looks like the sky was completely filled with meteors—not just a few streaks, but thousands. Like the whole sky was breaking apart. $[Astrid/L2/l2_a_34]
+{@Astrid} People must have thought the world was ending.... wait... $[Astrid/L2/l2_a_35]
+{@Astrid} Does he think it’s going to happen again? Is that what he has been hinting at? $[Astrid/L2/l2_a_36]
+{@Astrid} If this is true, people won’t understand what’s happening. Everyone’s gonna panic. $[Astrid/L2/l2_a_37]
+{@Astrid} It would look like the sky is falling - the end of the world. $[Astrid/L2/l2_a_38]
+{@Astrid} Oh God. Things are just starting to get better. $[Astrid/L2/l2_a_39] 
+{@Astrid} If something like this hit now… it’d be worse. So much worse. $[Astrid/L2/l2_a_40]
+{@Astrid} I feel pretty safe up here at the edge of nowhere. It would be nice if I wasn't totally alone. $[Astrid/L2/l2_a_41] 
+{@Astrid} Maybe I could write to the newspaper and tell people what’s happening? $[Astrid/L2/l2_a_42]
+{@Astrid} (*sigh*) But I guess I would need to know what is actually happening. $[Astrid/L2/l2_a_43]
+{@Astrid} When and where is this meteor storm coming? $[Astrid/L2/l2_a_44]
+{@Astrid} Elijah! What have you gotten us into? $[Astrid/L2/l2_a_45]
+$set temp:d3PostcardRead = true
+$call EnableDocumentClose("1833", true, true)
+
+:: End1833
+@trigger    DocumentInspectEnd
+@when   documentId == "1833", temp:d3PostcardRead
+@interrupt
+@once
+
+$call LoadNextDay()

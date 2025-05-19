@@ -14,36 +14,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DisplayName: Leo
   ClueText:
-  - '[Unimplemented]'
-  - '[Unimplemented]'
-  - '[Unimplemented]'
-  RequiredProperties: 35
+  - 'Zosma and Denebola have the same spectra. '
+  - 'Zosma: Not the nearest star.'
+  - 'Algieba: brightest in Infrared.'
+  RequiredProperties: 4355
   Rows:
+  - Object:
+      m_HashValue: 3553937755
+    ProvidedProperties: 1
+  - Object:
+      m_HashValue: 3607351045
+    ProvidedProperties: 1
+  - Object:
+      m_HashValue: 4235640518
+    ProvidedProperties: 1
   - Object:
       m_HashValue: 3463372912
     ProvidedProperties: 1
-  - Object:
-      m_HashValue: 3553937755
-    ProvidedProperties: 1
-  - Object:
-      m_HashValue: 4235640518
-    ProvidedProperties: 1
-  - Object:
-      m_HashValue: 3607351045
-    ProvidedProperties: 1
+  ConstellationStars:
+  - m_HashValue: 921404591
+  - m_HashValue: 4235640518
+  - m_HashValue: 2509596228
+  - m_HashValue: 3553937755
+  - m_HashValue: 4026563243
+  - m_HashValue: 3463372912
+  - m_HashValue: 3607351045
   Edges:
   - Object1:
+      m_HashValue: 3607351045
+    Object2:
       m_HashValue: 4235640518
-    Object2:
-      m_HashValue: 3607351045
   - Object1:
-      m_HashValue: 3607351045
-    Object2:
       m_HashValue: 3553937755
-  - Object1:
-      m_HashValue: 3607351045
     Object2:
-      m_HashValue: 2509596228
+      m_HashValue: 3607351045
   - Object1:
       m_HashValue: 3463372912
     Object2:
@@ -56,13 +60,21 @@ MonoBehaviour:
       m_HashValue: 921404591
     Object2:
       m_HashValue: 4235640518
+  - Object1:
+      m_HashValue: 4235640518
+    Object2:
+      m_HashValue: 3463372912
+  - Object1:
+      m_HashValue: 921404591
+    Object2:
+      m_HashValue: 4026563243
   PuzzleCoordinates:
     RightAscension:
       Hours: 10
-      Minutes: 38
-      Seconds: 20
+      Minutes: 50
+      Seconds: 35
     Declination:
-      Hours: 19
-      Minutes: 4
-      Seconds: 53
-  PuzzleCameraZoom: 1.5
+      Degrees: 16
+      Minutes: 16
+      Seconds: 57
+  PuzzleCameraZoom: 1.2

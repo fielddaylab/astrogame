@@ -18,7 +18,7 @@ namespace Astro {
 
         private DataPacket(DataTypeMask type, StringHash32 patternId, Datum value, bool isValid = true) {
             Assert.True((type & (type - 1)) == 0, "Cannot specify combined mask '{0}' as type for data packet", type);
-            Assert.True(type >= DataTypeMask.Historical_Coordinates, "Cannot specify pattern for non-historical data type '{0}'", type);
+            Assert.True(!isValid || (type == DataTypeMask.Historical_Coordinates || type == DataTypeMask.Historical_ApparentMagnitude || type == DataTypeMask.Historical_Color), "Cannot specify pattern for non-historical data type '{0}'", type);
             IsValid = isValid;
             Type = type;
             HistoricalPatternId = patternId;
@@ -27,7 +27,7 @@ namespace Astro {
 
         private DataPacket(DataTypeMask type, Datum value, bool isValid = true) {
             Assert.True((type & (type - 1)) == 0, "Cannot specify combined mask '{0}' as type for data packet", type);
-            Assert.True(type < DataTypeMask.Historical_Coordinates, "Pattern required for historical data type '{0}'", type);
+            Assert.True(!isValid || (type != DataTypeMask.Historical_Coordinates && type != DataTypeMask.Historical_ApparentMagnitude && type != DataTypeMask.Historical_Color), "Pattern required for historical data type '{0}'", type);
             IsValid = isValid;
             Type = type;
             HistoricalPatternId = default;
@@ -66,6 +66,12 @@ namespace Astro {
             });
         }
 
+        static public DataPacket ColorIndex(double colorIndex) {
+            return new DataPacket(DataTypeMask.ColorIndex, new Datum() {
+                ColorIndex = colorIndex
+            });
+        }
+
         static public DataPacket HistoricalColor(ReferenceColor colorRef, HistoricalPatternAsset pattern) {
             return new DataPacket(DataTypeMask.Historical_Color, AssetUtility.IdOf(pattern), new Datum() {
                 AssetId = colorRef.AssetId
@@ -81,6 +87,30 @@ namespace Astro {
         static public DataPacket MinAppMagnitude() {
             return new DataPacket(DataTypeMask.ApparentMagnitude, new Datum() {
                 Magnitude = PhotometerUtility.MIN_MAG,
+            }, false);
+        }
+
+        static public DataPacket BlueMagnitude(double blueMag) {
+            return new DataPacket(DataTypeMask.BlueMagnitude, new Datum() {
+                Magnitude = blueMag
+            });
+        }
+
+        static public DataPacket MinBlueMagnitude() {
+            return new DataPacket(DataTypeMask.BlueMagnitude, new Datum() {
+                Magnitude = PhotometerUtility.MIN_MAG
+            }, false);
+        }
+
+        static public DataPacket InfraredMagnitude(double infMag) {
+            return new DataPacket(DataTypeMask.InfraredMagnitude, new Datum() {
+                Magnitude = infMag
+            });
+        }
+
+        static public DataPacket MinIRMagnitude() {
+            return new DataPacket(DataTypeMask.InfraredMagnitude, new Datum() {
+                Magnitude = PhotometerUtility.MIN_MAG
             }, false);
         }
 
@@ -111,11 +141,6 @@ namespace Astro {
             });
         }
 
-        static public DataPacket HistoricalTemperature(double temperature, HistoricalPatternAsset pattern) {
-            return new DataPacket(DataTypeMask.Historical_Temperature, AssetUtility.IdOf(pattern), new Datum() {
-                Temperature = temperature
-            });
-        }
 
         static public DataPacket Distance(double distance) {
             return new DataPacket(DataTypeMask.Distance, new Datum() {
@@ -123,18 +148,14 @@ namespace Astro {
             });
         }
 
-        static public DataPacket HistoricalDistance(double distance, HistoricalPatternAsset pattern) {
-            return new DataPacket(DataTypeMask.Historical_Distance, AssetUtility.IdOf(pattern), new Datum() {
-                Distance = distance
-            });
-        }
 
         #endregion // Factory
     
         public bool Equals(DataPacket other) {
             return Type == other.Type
                 && HistoricalPatternId == other.HistoricalPatternId
-                && Value.Equals(other.Value);
+                && Value.Equals(other.Value)
+                && IsValid == other.IsValid;
         }
     }
 
@@ -149,6 +170,7 @@ namespace Astro {
         [FieldOffset(0)] public SpectrographMaterialMask Materials;
         [FieldOffset(0)] public double Temperature;
         [FieldOffset(0)] public double Distance;
+        [FieldOffset(0)] public double ColorIndex;
 
         [FieldOffset(0)] private ulong Raw0;
         [FieldOffset(8)] private ulong Raw1;

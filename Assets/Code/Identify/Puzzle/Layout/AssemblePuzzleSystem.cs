@@ -69,6 +69,14 @@ namespace Astro
                             // provided data is not modifiable
                             newCell.DataSlot.Modifiable = false;
                         }
+                        // assign unique id for each slot
+                        StringBuilder sb = new StringBuilder();
+                        sb.Append('R');
+                        sb.Append(r.ToStringLookup());
+                        sb.Append('C');
+                        sb.Append(c.ToStringLookup());
+                        newCell.DataSlot.SlotId = sb.ToString();
+
                         m_CellWorkList.PushBack(newCell);
                     }
                 }
@@ -182,11 +190,11 @@ namespace Astro
             if ((type & DataTypeMask.Historical_ApparentMagnitude) != 0) {
                 return DataTypeLabels.HistoricalApparentMagnitude;
             }
-            if ((type & DataTypeMask.Historical_Temperature) != 0) {
-                return DataTypeLabels.HistoricalTemperature;
+            if ((type & DataTypeMask.BlueMagnitude) != 0) {
+                return DataTypeLabels.BlueMagnitude;
             }
-            if ((type & DataTypeMask.Historical_Distance) != 0) {
-                return DataTypeLabels.HistoricalDistance;
+            if ((type & DataTypeMask.InfraredMagnitude) != 0) {
+                return DataTypeLabels.InfraredMagnitude;
             }
             if ((type & DataTypeMask.Historical_Color) != 0) {
                 return DataTypeLabels.HistoricalColor;

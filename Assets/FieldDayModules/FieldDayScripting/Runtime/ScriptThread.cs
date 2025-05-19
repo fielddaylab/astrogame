@@ -17,6 +17,7 @@ namespace FieldDay.Scripting {
         private readonly ScriptPlugin m_CustomPlugin;
 
         private StringHash32 m_OriginalNodeId;
+        private StringHash32 m_OriginalEvent;
         private StringHash32 m_Target;
         private ScriptNodePriority m_Priority;
         private ScriptThreadFlags m_Flags;
@@ -35,6 +36,10 @@ namespace FieldDay.Scripting {
 
         public StringHash32 InitialNodeId() {
             return m_OriginalNodeId;
+        }
+
+        public StringHash32 InitialTriggerOrFunction() {
+            return m_OriginalEvent;
         }
 
         public StringHash32 Target() {
@@ -63,6 +68,8 @@ namespace FieldDay.Scripting {
             } else if ((node.Flags & ScriptNodeFlags.Function) != 0) {
                 m_Flags |= ScriptThreadFlags.IsFunction;
             }
+
+            m_OriginalEvent = node.TriggerOrFunctionId;
         }
 
         #endregion // Initial State
@@ -191,6 +198,13 @@ namespace FieldDay.Scripting {
                 m_Voiceover = default;
                 m_VoiceoverReleaseTime = 0;
             }
+        }
+
+        /// <summary>
+        /// Returns the current voiceover line.
+        /// </summary>
+        internal VoxRequestHandle GetCurrentVox() {
+            return m_Voiceover;
         }
 
         #endregion // Voiceover

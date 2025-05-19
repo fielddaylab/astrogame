@@ -23,4 +23,12 @@ namespace Astro {
 
 #endif // UNITY_EDITOR
     }
+
+    static public class CutsceneUtility {
+        static public void SyncCamera(CutsceneCamera camera, ViewState view) {
+            camera.Tracker.GetPositionAndRotation(out Vector3 pos, out Quaternion rot);
+            view.Camera.RootTransform.SetPositionAndRotation(pos, rot);
+            view.Camera.EffectsTransform.SetLocalPositionAndRotation(default, default);
+        }
+    }
 }

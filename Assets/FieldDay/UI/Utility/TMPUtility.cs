@@ -1,4 +1,6 @@
+using System;
 using System.Text;
+using TinyIL;
 using TMPro;
 using UnityEngine;
 
@@ -68,6 +70,11 @@ namespace FieldDay.UI {
             group.gameObject.SetActive(true);
             tmp.SetText(text);
             return true;
+        }
+
+        [IntrinsicIL("ldarg.0; ldfld [arg tmp]::m_characterCount; ret;")]
+        static public int CharacterCount(this TMP_Text tmp) {
+            throw new NotImplementedException();
         }
     }
 }

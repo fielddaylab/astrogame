@@ -44,6 +44,7 @@ using FieldDay.Perf;
 using FieldDay.SharedState;
 using FieldDay.Systems;
 using FieldDay.Threading;
+using FieldDay.Localization;
 
 #if USE_SRP
 #endif // USE_SRP
@@ -61,6 +62,9 @@ namespace FieldDay {
 
         [SerializeField, Range(30, 120)]
         private int m_TargetFramerate = 60;
+
+        [SerializeField]
+        private LanguageId m_DefaultLanguage = LanguageId.English;
 
         [SerializeField]
         private Sprite m_DefaultPixelSprite;
@@ -228,6 +232,7 @@ namespace FieldDay {
             s_Instance = this;
             Log.Msg("[GameLoop] Starting...");
             Log.Msg("[GameLoop] Word Size = {0} ({1})", Unsafe.PointerSize, Unsafe.IsPointerSizeCompileTimeConstant ? "compile-time" : "runtime");
+            Log.Msg("[GameLoop] Stopwatch Frequency = {0}hz", System.Diagnostics.Stopwatch.Frequency);
 
             if (ReflectionBootData.ShouldUse()) {
                 ReflectionBootData.Mount(m_ReflectionData);
@@ -249,6 +254,13 @@ namespace FieldDay {
                 Log.Msg("[GameLoop] Creating memory manager...");
                 Game.Memory = new MemoryMgr();
                 Game.Memory.Initialize(m_MemoryConfig);
+
+                Log.Msg("[GameLoop] Creating performance manager...");
+                Game.Perf = new PerformanceMgr();
+
+                Log.Msg("[GameLoop] Creating localization manager...");
+                // TODO: create localization manager
+                Loc.ConfigureDefaultLanguage(m_DefaultLanguage);
 
                 Log.Msg("[GameLoop] Creating asset manager...");
                 Game.Assets = new AssetMgr();
@@ -514,6 +526,10 @@ namespace FieldDay {
             Game.Assets.Shutdown();
             Game.Assets = null;
 
+            Log.Msg("[GameLoop] Shutting down performance manager...");
+            Game.Perf.Shutdown();
+            Game.Perf = null;
+
             Log.Msg("[GameLoop] Shutting down memory manager...");
             Game.Memory.Shutdown();
             Game.Memory = null;
@@ -638,6 +654,7 @@ namespace FieldDay {
             Game.Events.Flush();
             Game.Gui.FlushCommands();
             Game.Audio.LateUpdate(Frame.UnscaledDeltaTime);
+            Game.Memory.Update();
 
             FlushQueue(s_AfterLateUpdateQueue);
             Game.Scenes.Update();
@@ -738,6 +755,7 @@ namespace FieldDay {
 
         static private void HandlePreUpdate() {
             if (s_PrevUpdateFrameIndex != Frame.Index) {
+                s_TimeProfiling.MarkEnd(s_CurrentPhase);
                 ReportPerfTimings(s_TimeProfiling);
                 s_TimeProfiling.Clear();
 
@@ -815,18 +833,10 @@ namespace FieldDay {
             Frame.DeltaTime = Frame.UnscaledDeltaTime * s_TimeScale;
         }
 
-        static private unsafe void ReportPerfTimings(PhaseTiming timing) {
-            // TODO: Implement
-            //using(PooledStringBuilder psb = PooledStringBuilder.Create()) {
-            //    psb.Builder.Append("[GameLoop] PreUpdate ").AppendNoAlloc(timing.Duration[0]).Append("\n FixedUpdate ").AppendNoAlloc(timing.Duration[1])
-            //        .Append("\n Update ").AppendNoAlloc(timing.Duration[2] + timing.Duration[3])
-            //        .Append("\n LateUpdate ").AppendNoAlloc(timing.Duration[4] + timing.Duration[5])
-            //        .Append("\n CanvasPreRender ").AppendNoAlloc(timing.Duration[6])
-            //        .Append("\n CameraPreCull ").AppendNoAlloc(timing.Duration[7]).Append("\n CameraPreRender ").AppendNoAlloc(timing.Duration[8])
-            //        .Append("\n CameraPostRender ").AppendNoAlloc(timing.Duration[9])
-            //        .Append("\n FrameAdvanced ").AppendNoAlloc(timing.Duration[10]);
-            //    Log.Msg(psb.Builder.Flush());
-            //}
+        static private unsafe void ReportPerfTimings(in PhaseTiming timing) {
+            if (!s_DebugPause) {
+                Game.Perf.RecordTiming(timing);
+            }
         }
 
         static private void PotentiallyExpensiveSystemResourceRetrieval() {
@@ -1020,6 +1030,23 @@ namespace FieldDay {
         static public float TimeScale {
             get { return s_TimeScale; }
             set { s_QueuedTimeScale = value; }
+        }
+
+        /// <summary>
+        /// Updates the target framerate.
+        /// </summary>
+        static public void SetTargetFramerate(int targetFramerate) {
+#if UNITY_WEBGL && !UNITY_EDITOR
+            if (targetFramerate == 60) {
+                Application.targetFrameRate = -1;
+            } else {
+                Application.targetFrameRate = targetFramerate;
+            }
+#else
+            Application.targetFrameRate = targetFramerate;
+#endif // UNITY_WEBGL && !UNITY_EDITOR
+
+            s_Instance.m_TargetFramerate = targetFramerate <= 0 ? 60 : targetFramerate;
         }
 
         #endregion // Time Scale

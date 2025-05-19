@@ -1,4 +1,7 @@
+using BeauRoutine;
 using BeauUtil;
+using FieldDay;
+using FieldDay.Scenes;
 using FieldDay.SharedState;
 using System;
 using System.Collections;
@@ -7,12 +10,72 @@ using UnityEngine;
 
 namespace Astro
 {
-    public class SkyGenerationState : SharedStateComponent
+    [PreloadOrder(100)]
+    public class SkyGenerationState : SharedStateComponent, IScenePreload
     {
         public Sprite DefaultStarSprite;
         public Sprite DefaultPlanetSprite;
         public Sprite DefaultGalaxySprite;
         [NonSerialized] public CelestialObjectVisMask VisMask = CelestialObjectVisMask.Visible;
         [NonSerialized] public bool IsDirty = true;
+
+        IEnumerator<WorkSlicer.Result?> IScenePreload.Preload() {
+            Game.Scenes.QueueOnEnable(() => {
+                Game.Scenes.RegisterLoadDependency(Async.Schedule(DoPreload(this), AsyncFlags.MainThreadOnly));
+            });
+            return null;
+        }
+
+        static private IEnumerator DoPreload(SkyGenerationState state) {
+            var layout = Find.GlobalAsset<SkyLayoutAsset>();
+            var dome = Find.State<SkyDome>();
+            var focusPools = Find.State<FocusPools>();
+            var focusState = Find.State<FocusState>();
+            var spaceCamera = Find.State<SpaceCameraState>();
+
+            Vector3 camPos = spaceCamera.Camera.RootTransform.position;
+            Vector3 camUp = spaceCamera.Camera.RootTransform.up;
+
+            spaceCamera.StarRoot.position = camPos;
+
+            int fociiAllocated = 0;
+            foreach (var obj in dome.AboveHorizon) {
+                var newFocus = focusPools.Focii.Alloc(spaceCamera.StarRoot);
+                // TODO: assign relevant 2D representation
+                FocusableUtility.InitFocusable(focusState, newFocus, obj.transform, obj.Resource, DetermineSprite(state, obj.Resource.Category));
+                focusState.ActiveFocii.PushBack(newFocus);
+                newFocus.IsVisibleInCurrentFilter = (newFocus.TargetData.Visibility & state.VisMask) != 0;
+
+                UIFocusPackedData packed;
+                packed.TargetPos = obj.transform.position;
+                packed.TargetVector = Vector3.Normalize(packed.TargetPos - camPos);
+
+                focusState.ActiveFociiPacked[fociiAllocated++] = packed;
+
+                newFocus.Root.SetLocalPositionAndRotation(packed.TargetVector * 20, Quaternion.LookRotation(-packed.TargetVector, camUp));
+                yield return null;
+            }
+
+            spaceCamera.LookUpdatedThisFrame = true;
+        }
+
+        static private Sprite DetermineSprite(SkyGenerationState state, CelestialObjectCategory category) {
+            switch (category) {
+                case CelestialObjectCategory.Star:
+                    return state.DefaultStarSprite;
+                case CelestialObjectCategory.Planet:
+                    return state.DefaultPlanetSprite;
+                case CelestialObjectCategory.Satellite:
+                    return null;
+                case CelestialObjectCategory.Constellation:
+                    return null;
+                case CelestialObjectCategory.Galaxy:
+                    return state.DefaultGalaxySprite;
+                case CelestialObjectCategory.Comet:
+                    return null;
+                default:
+                    return null;
+            }
+        }
     }
 }

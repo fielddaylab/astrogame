@@ -15,6 +15,7 @@ namespace Astro.Audio {
         [AudioEventRef] public StringHash32[] RandomizedOneshots;
         public float OneshotDelay;
         public float OneshotDelayRandom;
+        public float OneshotPlaybackRadius = 20;
 
         [NonSerialized] private AudioHandle m_HumHandle;
 
@@ -35,7 +36,13 @@ namespace Astro.Audio {
             float delay = 0.5f * (OneshotDelay + RNG.Instance.NextFloat(OneshotDelayRandom));
             while(true) {
                 yield return delay;
-                var sfx = Sfx.Play(RNG.Instance.Choose(RandomizedOneshots));
+
+                Vector3 pos = transform.position;
+                Vector2 offset = RNG.Instance.NextVector2(OneshotPlaybackRadius, OneshotPlaybackRadius);
+                pos.x += offset.x;
+                pos.z += offset.y;
+                
+                var sfx = Sfx.PlayDetached(RNG.Instance.Choose(RandomizedOneshots), pos, Quaternion.identity);
                 Sfx.OverrideTag(sfx, "soundscape");
                 delay = (OneshotDelay + RNG.Instance.NextFloat(OneshotDelayRandom));
             }

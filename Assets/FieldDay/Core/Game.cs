@@ -1,3 +1,7 @@
+#if (UNITY_EDITOR && !IGNORE_UNITY_EDITOR) || DEVELOPMENT_BUILD
+#define DEVELOPMENT
+#endif
+
 using FieldDay.Systems;
 using FieldDay.SharedState;
 using FieldDay.Components;
@@ -11,6 +15,7 @@ using FieldDay.HID;
 using FieldDay.Rendering;
 using FieldDay.Animation;
 using FieldDay.Memory;
+using FieldDay.Perf;
 
 [assembly: InternalsVisibleTo("FieldDay.Core.Editor")]
 
@@ -19,6 +24,17 @@ namespace FieldDay {
     /// Maintains references to game engine components.
     /// </summary>
     public class Game {
+
+        /// <summary>
+        /// Is this a development build?
+        /// </summary>
+        public const bool IsDevBuild =
+#if DEVELOPMENT
+            true;
+#else
+            false;
+#endif // DEVELOPMENT
+
         /// <summary>
         /// Audio manager. Maintains audio playback.
         /// </summary>
@@ -78,6 +94,11 @@ namespace FieldDay {
         /// Memory manager. Maintains memory pools.
         /// </summary>
         static public MemoryMgr Memory { get; internal set; }
+
+        /// <summary>
+        /// Performance and profiling manager.
+        /// </summary>
+        static public PerformanceMgr Perf { get; internal set; }
 
         /// <summary>
         /// Event dispatcher. Maintains event dispatch.

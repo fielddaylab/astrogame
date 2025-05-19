@@ -31,7 +31,7 @@ namespace FieldDay.Systems {
         #region Work
 
         public virtual bool HasWork() {
-            return isActiveAndEnabled && m_Components.Count > 0;
+            return m_Components.Count > 0;
         }
 
         public virtual void ProcessWork(float deltaTime) {
@@ -119,7 +119,7 @@ namespace FieldDay.Systems {
         #region Work
 
         public virtual bool HasWork() {
-            return isActiveAndEnabled && m_Components.Count > 0;
+            return m_Components.Count > 0;
         }
 
         public virtual void ProcessWork(float deltaTime) {
@@ -215,7 +215,7 @@ namespace FieldDay.Systems {
         #region Work
 
         public virtual bool HasWork() {
-            return isActiveAndEnabled && m_Components.Count > 0;
+            return m_Components.Count > 0;
         }
 
         public virtual void ProcessWork(float deltaTime) {
@@ -312,7 +312,7 @@ namespace FieldDay.Systems {
         #region Work
 
         public virtual bool HasWork() {
-            return isActiveAndEnabled && m_Components.Count > 0;
+            return m_Components.Count > 0;
         }
 
         public virtual void ProcessWork(float deltaTime) {

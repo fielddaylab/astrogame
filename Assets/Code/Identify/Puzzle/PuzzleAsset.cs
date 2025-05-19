@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using BeauUtil;
 using FieldDay.Assets;
 using UnityEngine;
@@ -30,6 +29,7 @@ namespace Astro {
         public Row[] Rows;  
 
         [Header("Constellation")]
+        [AssetName(typeof(CelestialAsset))]public StringHash32[] ConstellationStars;
         public Edge[] Edges;
 
         [Header("Puzzle Position")]
@@ -76,11 +76,11 @@ namespace Astro {
             if ((puzzle.RequiredProperties & DataTypeMask.Historical_ApparentMagnitude) != 0) {
                 types.Add(DataTypeMask.Historical_ApparentMagnitude);
             }
-            if ((puzzle.RequiredProperties & DataTypeMask.Historical_Temperature) != 0) { 
-                types.Add(DataTypeMask.Historical_Temperature);
+            if ((puzzle.RequiredProperties & DataTypeMask.BlueMagnitude) != 0) { 
+                types.Add(DataTypeMask.BlueMagnitude);
             }
-            if ((puzzle.RequiredProperties & DataTypeMask.Historical_Distance) != 0) {
-                types.Add(DataTypeMask.Historical_Distance);
+            if ((puzzle.RequiredProperties & DataTypeMask.InfraredMagnitude) != 0) {
+                types.Add(DataTypeMask.InfraredMagnitude);
             }
             if ((puzzle.RequiredProperties & DataTypeMask.Historical_Color) != 0) { 
                 types.Add(DataTypeMask.Historical_Color);

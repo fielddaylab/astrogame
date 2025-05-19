@@ -16,7 +16,6 @@ namespace Astro.Reference {
 
         static public void AdjustAllBookmarkPositions(RefGuideRig rig, int currentPage, int maxPages) {
             AdjustBookmarkPositions(rig.TopTabs.Bookmarks, rig.PageThickness, currentPage, maxPages);
-            AdjustBookmarkPositions(rig.RightTabs.Bookmarks, rig.PageThickness, currentPage, maxPages);
         }
 
         static public void AdjustBookmarkPositions(RefGuideBookmark[] bookmarks, float pageThickness, int currentPage, int maxPages) {

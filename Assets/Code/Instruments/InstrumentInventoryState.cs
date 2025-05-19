@@ -8,27 +8,17 @@ using UnityEngine;
 using Leaf.Runtime;
 using FieldDay.Scripting;
 using FieldDay.Scenes;
+using BeauUtil.Debugger;
+using FieldDay.Debugging;
 
 
-namespace Astro
-{
-    public class InstrumentInventoryState : SharedStateComponent, IScenePreload
-    {
+namespace Astro {
+    public class InstrumentInventoryState : SharedStateComponent {
         // General access to instruments
         public RingBuffer<LabInstrument> ActiveInstruments = new RingBuffer<LabInstrument>(8);
 
         // Quicker access structured on instrument data types
         public Dictionary<DataTypeMask, List<LabInstrument>> ActiveInstrumentMap = new Dictionary<DataTypeMask, List<LabInstrument>>();
-
-        public IEnumerator<WorkSlicer.Result?> Preload() {
-            // Load unlocked instruments from player progress
-            var progressState = Find.State<PlayerProgressState>();
-            foreach (var instrumentID in progressState.UnlockedInstruments) {
-                var instrument = ScriptUtility.FindActor(instrumentID).GetComponent<LabInstrument>();
-                InstrumentInventoryUtility.SetInstrumentUnlocked(instrument, true, false, "");
-            }
-            return null;
-        }
     }
 
     public static class InstrumentInventoryUtility
@@ -46,18 +36,22 @@ namespace Astro
         public static void SetInstrumentUnlocked(LabInstrument instrument, bool unlocked, bool registerToProgress, StringHash32 actorId) {
             if (unlocked) {
                 if (registerToProgress) {
-                    var progressState = Find.State<PlayerProgressState>();
-                    progressState.UnlockedInstruments.Add(actorId);
+                    //var progressState = Find.State<PlayerProgressState>();
+                    //progressState.UnlockedInstruments.Add(actorId);
                 }
-                AddToActiveInstruments(instrument);
+                TryAddToActiveInstruments(instrument);
                 instrument.OnUnlock?.Invoke(instrument);
+
+                AstroGame.Events.Queue(GameEvents.InstrumentUnlocked, ScriptUtility.ActorId(instrument));
             }
         }
 
-        private static void AddToActiveInstruments(LabInstrument instrument, InstrumentInventoryState inventory = null) {
+        private static void TryAddToActiveInstruments(LabInstrument instrument, InstrumentInventoryState inventory = null) {
             if (inventory == null) {
                 inventory = Find.State<InstrumentInventoryState>();
             }
+            if (inventory.ActiveInstruments.Contains(instrument)) return; 
+
             inventory.ActiveInstruments.PushBack(instrument);
 
             var currMap = inventory.ActiveInstrumentMap;
@@ -70,6 +64,32 @@ namespace Astro
             }
         }
 
+#if DEVELOPMENT
+
+        [DebugMenuFactory]
+        static private DMInfo CreateDebugMenu() {
+            DMInfo menu = new DMInfo("Instruments", 6);
+            AddInstrumentUnlockButton(menu, "PhotometerInstrument");
+            AddInstrumentUnlockButton(menu, "BlueWavelength");
+            AddInstrumentUnlockButton(menu, "InfraredWavelength");
+            AddInstrumentUnlockButton(menu, "ColorInstrument");
+            AddInstrumentUnlockButton(menu, "TemperatureInstrument");
+            AddInstrumentUnlockButton(menu, "SpectrometerInstrument");
+            AddInstrumentUnlockButton(menu, "HistoricalDataInstrument");
+            AddInstrumentUnlockButton(menu, "HistoricalDataModeToggle");
+            return menu;
+        }
+
+        static private void AddInstrumentUnlockButton(DMInfo info, string instrumentName) {
+            info.AddButton("Unlock " + ReflectionCache.InspectorName(instrumentName), () => {
+                ScriptActor actor = ScriptUtility.FindActor(instrumentName);
+                if (actor != null) {
+                    SetInstrumentUnlocked(actor.GetComponent<LabInstrument>(), true, true, actor.Id);
+                }
+            });
+        }
+
+#endif // DEVELOPMENT
 
     }
 }

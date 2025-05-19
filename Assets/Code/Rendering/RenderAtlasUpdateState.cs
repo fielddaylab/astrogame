@@ -37,7 +37,6 @@ namespace Astro {
 
         void IRegistrationCallbacks.OnRegister() {
             Game.Assets.AddNamed(Atlas.AssetId, Atlas);
-            s_Cache.Add(Atlas.AssetId, this);
             Atlas.OnTextureCreated.Register(OnRenderTextureCreated);
             if (Atlas.Texture != null) {
                 OnRenderTextureCreated();
@@ -67,6 +66,7 @@ namespace Astro {
         static public RenderAtlasUpdateState RetrieveState(RenderAtlas atlas) {
             if (!s_Cache.TryGetValue(atlas.AssetId, out var state)) {
                 state = new RenderAtlasUpdateState(atlas);
+                s_Cache.Add(atlas.AssetId, state);
             }
             state.AcquireRef();
             return state;

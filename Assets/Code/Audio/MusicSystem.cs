@@ -12,7 +12,13 @@ namespace Astro {
         }
 
         public override void ProcessWork(float deltaTime) {
-            m_State.MusicTrack = Sfx.Play(m_State.TrackQueue.PopFront());
+            var nextTrack = m_State.TrackQueue.PopFront();
+            m_State.CurrentTrackId = nextTrack.TrackId;
+            m_State.MusicTrack = Sfx.Play(m_State.CurrentTrackId, new SfxPlayArgs() {
+                Volume = 1,
+                Pitch = 1,
+                Delay = nextTrack.Delay
+            });
             Sfx.OverrideTag(m_State.MusicTrack, m_State.MusicTag);
         }
     }

@@ -10,7 +10,7 @@ namespace Astro
     public class ColorDataDisplaySource : BatchedComponent, IRegistrationCallbacks
     {
         public DataDisplay Display;
-        public ColorPanel[] Panels;
+        public MeshRenderer Panel;
 
         public void OnDeregister()
         {
@@ -24,12 +24,6 @@ namespace Astro
             Display.OnDisplayCleared.Register(
                 () => { ColorDataUtility.OnClear(this); }
                 );
-
-            for (int i = 0; i < Panels.Length; i++) {
-                if (Panels[i].PopulateOnRegister) {
-                    ColorDataUtility.SetPanelMaterials(Panels[i].PanelMesh, Panels[i].ColorId, false);
-                }
-            }
         }
     }
 
@@ -37,21 +31,12 @@ namespace Astro
     {
         public static void OnRequest(ColorDataDisplaySource display, DataPacket packet, DataFormattingFlags flags)
         {
-            for (int i = 0; i < display.Panels.Length; i++) {
-                if (display.Panels[i].ColorId.Equals(packet.Value.AssetId)) {
-                    SetIndicatorMaterials(display.Panels[i].IndicatorMesh, true);
-                }
-                else {
-                    SetIndicatorMaterials(display.Panels[i].IndicatorMesh, false);
-                }
-            }
+            ColorDataUtility.SetPanelMaterials(display.Panel, packet.Value.AssetId, true);
         }
 
         public static void OnClear(ColorDataDisplaySource display)
         {
-            for (int i = 0; i < display.Panels.Length; i++) {
-                SetIndicatorMaterials(display.Panels[i].IndicatorMesh, false);
-            }
+            ColorDataUtility.SetPanelMaterials(display.Panel, default, true);
         }
 
         public static void SetIndicatorMaterials(MeshRenderer mesh, bool active)

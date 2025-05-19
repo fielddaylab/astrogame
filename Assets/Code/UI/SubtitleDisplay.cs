@@ -7,13 +7,26 @@ using FieldDay;
 using FieldDay.UI;
 using FieldDay.Vox;
 using BeauRoutine;
+using BeauUtil;
+using UnityEngine.UI;
 
 namespace Astro {
     public class SubtitleDisplay : SharedRoutinePanel, IRegistrationCallbacks {
+        [Serializable]
+        public struct CharacterColorScheme {
+            public SerializedHash32 Id;
+            public ColorPalette2 Palette;
+        }
+
         #region Inspector
 
         [Header("Display")]
         [SerializeField] private TMP_Text m_Text;
+        [SerializeField] private Graphic m_Background;
+
+        [Header("Data")]
+        [SerializeField] private CharacterColorScheme[] m_Colors;
+        [SerializeField] private ColorPalette2 m_DefaultColors;
 
         #endregion // Inspector
 
@@ -64,6 +77,17 @@ namespace Astro {
 
         private void SyncDisplayedData(SubtitleDisplayData data) {
             m_Text.SetText(data.Subtitle.Data);
+
+            ColorPalette2 palette = m_DefaultColors;
+            for(int i = 0; i < m_Colors.Length; i++) {
+                if (m_Colors[i].Id == data.CharacterId) {
+                    palette = m_Colors[i].Palette;
+                    break;
+                }
+            }
+
+            m_Text.color = palette.Content;
+            m_Background.SetColor(palette.Background);
         }
 
         #region Animation

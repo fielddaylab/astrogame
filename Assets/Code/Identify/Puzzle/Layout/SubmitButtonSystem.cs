@@ -4,6 +4,8 @@ using System;
 using BeauUtil.Debugger;
 using System.Collections;
 using BeauUtil;
+using Astro.Reference;
+using BeauRoutine;
 
 namespace Astro {
     [SysUpdate(GameLoopPhase.Update, 501, AstroGame.SubmissionUpdateMask)] // After RowSelectSystem
@@ -12,6 +14,7 @@ namespace Astro {
     public class SubmitButtonSystem : ComponentSystemBehaviour<SubmitButton, LabInteractable> {
         public override void ProcessWorkForComponent(SubmitButton primary, LabInteractable secondary, float deltaTime) {          
             if (!secondary.InteractReceived) { return; }
+
             if ((primary.ButtonType & SubmitButtonType.SubmitPuzzle) != 0) {
                 if (Find.State<PuzzleState>().ActivePuzzle != null) {
                     TrySubmitPuzzle(primary);
@@ -23,23 +26,33 @@ namespace Astro {
         }
 
         private bool TrySubmitPuzzle(SubmitButton btn) {
-            PlayerPointsState pps = Find.State<PlayerPointsState>();
-            if (!pps.SubmittedPuzzle) {
-                pps.SubmittedPuzzle = true;
-                btn.gameObject.SetActive(false);
+            ReviewState pps = Find.State<ReviewState>();
+            if (pps.CurrentSubmission == ReviewSubmissionType.None) {
+                pps.CurrentSubmission = ReviewSubmissionType.Puzzle;
+                Routine.Start( btn.SetButtonActive(false) );
                 return true;
             }
             return false;
         }
 
         private bool TrySubmitIdentification(SubmitButton btn) {
-            PlayerPointsState pps = Find.State<PlayerPointsState>();
-            if (!pps.SubmittedObject) {
-                pps.SubmittedObject = true;
-                btn.gameObject.SetActive(false);
-                return true;
+            ReviewState pps = Find.State<ReviewState>();
+            RefGuideState rgs = Find.State<RefGuideState>();
+            if (pps.CurrentSubmission != ReviewSubmissionType.None) return false;
+
+            pps.CurrentSubmission = ReviewSubmissionType.Identification;
+
+            StringHash32 classId = null;
+            if(rgs.SelectedRefClassification != null) {
+                classId = rgs.SelectedRefClassification.AssetId;
             }
-            return false;
+            pps.Identification = new ReviewSubmissionClassification() {
+                AssetId = Find.State<FocusState>().CurrentFocus.TargetData.AssetId,
+                Classification = classId,
+                Materials = rgs.SelectedMaterials
+            };
+            Routine.Start( btn.SetButtonActive(false) );
+            return true;
         }
     }
 

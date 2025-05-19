@@ -6,7 +6,7 @@ using FieldDay.Systems;
 
 namespace Astro
 {
-    [SysUpdate(GameLoopPhaseMask.LateUpdate, 0, AstroGame.InstrumentUpdateMask)]
+    [SysUpdate(GameLoopPhaseMask.LateUpdate, 0)]
     public class DataTransferRefreshSystem : SharedStateSystemBehaviour<DataTransferState>
     {
         public override void ProcessWork(float deltaTime)

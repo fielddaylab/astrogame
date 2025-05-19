@@ -1,18 +1,12 @@
-using BeauRoutine;
-using BeauUtil;
-using BeauUtil.Debugger;
 using FieldDay;
-using FieldDay.Audio;
-using FieldDay.Debugging;
+using BeauRoutine;
 using FieldDay.Rendering;
 using FieldDay.Scripting;
 using FieldDay.Systems;
-using System.Collections;
-using UnityEngine;
 
 namespace Astro {
     [SysUpdate(GameLoopPhase.Update, 0, AstroGame.MonitorControlsUpdateMask)]
-    public class NavigationReadoutSystem : SharedStateSystemBehaviour<PlayerPointsState, PuzzleNavigationState, NeutrinoNavigationState> {
+    public class NavigationReadoutSystem : SharedStateSystemBehaviour<ReviewState, NavigationState> {
 
         public const float OnePipThreshold = 0; // 180 degrees
         public const float TwoPipThreshold = 0.708f; // ~90 degrees
@@ -20,24 +14,24 @@ namespace Astro {
         public const float SuccessThreshold = 0.992f; // ~11 degrees
 
         public override bool HasWork() {
-            return base.HasWork() && (m_StateB.NavigationModeActive || m_StateC.NavigationModeActive);
+            return base.HasWork() && (m_StateB.CurrentNavigationMode != NavigationMode.Inactive);
         }
 
         public override void ProcessWork(float deltaTime) {
-            if (m_StateA.ReviewModule.ResultShown) {
+            if (m_StateA.ReviewModule.ResultShown || !m_StateB.ReadoutDirty) {
                 return;
             }
 
-            if (m_StateB.NavigationModeActive && m_StateB.ReadoutDirty) {
+            if (m_StateB.CurrentNavigationMode == NavigationMode.Constellation) {
                 ProcessConstellationNav();
             }
-            if (m_StateC.NavigationModeActive && m_StateC.ReadoutDirty) {
+            if (m_StateB.CurrentNavigationMode == NavigationMode.Neutrino) {
                 ProcessNeutrinoNav();
             }
         }
 
         public void ProcessConstellationNav() {
-            float newDist = m_StateB.CameraDistanceFromPuzzle; 
+            float newDist = m_StateB.CameraDistanceFromTarget; 
             ReviewModule module = m_StateA.ReviewModule;
 
             int prevPips = module.PipsRevealed;
@@ -60,7 +54,7 @@ namespace Astro {
                     PuzzleState puzzleState = Find.State<PuzzleState>();
                     EqCoords target = puzzleState.ActivePuzzle.PuzzleCoordinates;
 
-                    m_StateB.ConstellationSnapRoutine = Routine.Start(PuzzleNavigationUtility.SnapConstellationAlignment(target))
+                    m_StateB.ConstellationSnapRoutine = Routine.Start(NavigationUtility.SnapAlignment(target))
                         .OnComplete(() => { Game.Events.Dispatch(GameEvents.PuzzleNavigationComplete); });
                 }
             }
@@ -83,7 +77,7 @@ namespace Astro {
         }
 
         public void ProcessNeutrinoNav() {
-            float newDist = m_StateC.CameraDistanceFromOrigin;
+            float newDist = m_StateB.CameraDistanceFromTarget;
             ReviewModule module = m_StateA.ReviewModule;
 
             int prevPips = module.PipsRevealed;
@@ -100,13 +94,13 @@ namespace Astro {
             } else if (newDist < SuccessThreshold) {
                 module.Result.SetSharedMaterialAtIndex(1, module.UnlitPipMaterial);
                 ReviewModuleUtility.SetPipReadout(module, 3);
-            } else if (!m_StateC.ResultShown) {
-                m_StateC.ResultShown = true;
+            } else if (!m_StateB.ResultShown) {
+                m_StateB.ResultShown = true;
                 ReviewModuleUtility.ShowResultSprite(true, module);
                 Game.Events.Dispatch(GameEvents.NeutrinoNavigationComplete);
                 ReviewModuleUtility.ResetReview(module);
             }
-            m_StateC.ReadoutDirty = true;
+            m_StateB.ReadoutDirty = true;
 
             // Scripting Events
             int newPips = module.PipsRevealed;

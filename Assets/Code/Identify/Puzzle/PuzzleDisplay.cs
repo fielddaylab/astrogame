@@ -21,7 +21,8 @@ namespace Astro
         public float RowSpacing;
         public float ColSpacing;
         public float BaseCellWidth;
-        public LabInteractable SubmitButton;
+        public float ContentWidth;
+        public SubmitButton SubmitButton;
         //public Collider BackgroundCollider;
     }
 
@@ -31,9 +32,8 @@ namespace Astro
         static private float OFFSCREEN_SPACING = 40;
         static private Vector3 DEFAULT_RENDER_SCALE = new Vector3(0.51f, 0.23f, 1);
 
-        public static void LoadCells(PuzzleDisplay display, RingBuffer<PuzzleCell> cells, PuzzleHeader[] headers, int numCols)
-        {
-            display.SubmitButton.gameObject.SetActive(false);
+        public static void LoadCells(PuzzleDisplay display, RingBuffer<PuzzleCell> cells, PuzzleHeader[] headers, int numCols) {
+            Routine.Start( display.SubmitButton.SetButtonActive(false) );
 
             int numRows = cells.Count / numCols;
             display.Cells = new PuzzleCell[numRows * numCols];
@@ -54,6 +54,14 @@ namespace Astro
             // position and scale headers
             var cumulativePos = new Vector3(-display.BaseCellWidth, 0, 0);
 
+            float totalContentWidth = 0;
+            for (int c = 0; c < display.NumCols; c++) {
+                totalContentWidth += display.BaseCellWidth * colData[c].Bundle.Dims.x;
+            }
+
+            float buffer = Mathf.Max(0, display.ContentWidth - totalContentWidth);
+            float colSpacing = buffer / display.NumCols;
+
             for (int c = 0; c < display.NumCols; c++)
             {
                 var currHeader = display.Headers[c];
@@ -73,9 +81,9 @@ namespace Astro
 
                 // pos
                 // uniform spacing regardless of previous element scaling
-                cumulativePos.x += (display.BaseCellWidth * colData[c].Bundle.Dims.x + display.ColSpacing) / 2.0f;
+                cumulativePos.x += (display.BaseCellWidth * colData[c].Bundle.Dims.x + colSpacing) / 2.0f;
                 currHeader.transform.localPosition = cumulativePos;
-                cumulativePos.x += (display.BaseCellWidth * colData[c].Bundle.Dims.x + display.ColSpacing) / 2.0f;
+                cumulativePos.x += (display.BaseCellWidth * colData[c].Bundle.Dims.x + colSpacing) / 2.0f;
             }
 
             PuzzlePoolUtility.ClearAllocations(pools);
@@ -111,10 +119,10 @@ namespace Astro
 
                     //pos
                     // uniform spacing regardless of previous element scaling
-                    cumulativePos.x += (display.BaseCellWidth * colData[c].Bundle.Dims.x + display.ColSpacing) / 2.0f;
+                    cumulativePos.x += (display.BaseCellWidth * colData[c].Bundle.Dims.x + colSpacing) / 2.0f;
                     currCell.transform.localPosition = cumulativePos;
                     currCell.ContentContainer.transform.localPosition = OFFSCREEN_POS + cumulativePos * OFFSCREEN_SPACING;
-                    cumulativePos.x += (display.BaseCellWidth * colData[c].Bundle.Dims.x + display.ColSpacing) / 2.0f;
+                    cumulativePos.x += (display.BaseCellWidth * colData[c].Bundle.Dims.x + colSpacing) / 2.0f;
                 }
 
                 // generate row lines

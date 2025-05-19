@@ -282,8 +282,10 @@ namespace ScriptableBake {
                 if ((flags & FlattenFlags.DestroyInactive) != 0 && !child.gameObject.activeSelf) {
                     GameObject.DestroyImmediate(child.gameObject);
                 } else {
+                    child.GetPositionAndRotation(out Vector3 p, out Quaternion q);
                     child.SetParent(parent, true);
                     child.SetSiblingIndex(siblingIdx++);
+                    child.SetPositionAndRotation(p, q);
                 }
             }
         }
@@ -306,8 +308,10 @@ namespace ScriptableBake {
                 if ((flags & FlattenFlags.DestroyInactive) != 0 && !child.gameObject.activeSelf) {
                     GameObject.DestroyImmediate(child.gameObject);
                 } else {
+                    child.GetPositionAndRotation(out Vector3 p, out Quaternion q);
                     child.SetParent(parent, true);
                     child.SetSiblingIndex(siblingIndex++);
+                    child.SetPositionAndRotation(p, q);
                     FlattenHierarchyRecursive(child, parent, flags, ref siblingIndex);
                 }
             }
@@ -695,6 +699,28 @@ namespace ScriptableBake {
             }
 
             TAsset[] output = new TAsset[found.Count];
+            found.CopyTo(output);
+            return output;
+        }
+
+        /// <summary>
+        /// Finds all TextAssets with the given extension in the given directories.
+        /// </summary>
+        static public TextAsset[] FindTextAssets(string extension, params string[] directories) {
+            HashSet<TextAsset> found = new HashSet<TextAsset>();
+            foreach (var path in AssetPaths(SearchFilter(typeof(TextAsset)), directories)) {
+                if (!path.EndsWith(extension))
+                    continue;
+
+                foreach (var obj in AssetDatabase.LoadAllAssetsAtPath(path)) {
+                    TextAsset asset = obj as TextAsset;
+                    if (asset) {
+                        found.Add(asset);
+                    }
+                }
+            }
+
+            TextAsset[] output = new TextAsset[found.Count];
             found.CopyTo(output);
             return output;
         }

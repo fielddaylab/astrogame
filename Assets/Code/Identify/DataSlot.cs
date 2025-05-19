@@ -1,18 +1,25 @@
 using System;
 using BeauUtil;
+using FieldDay;
 using FieldDay.Components;
+using FieldDay.Scripting;
+using UnityEngine;
 
 namespace Astro {
-    public sealed class DataSlot : BatchedComponent {
+    public sealed class DataSlot : BatchedComponent, IRegistrationCallbacks {
         public DataSlot SiblingSlot; // Reference to a paired data slot
         public DataTypeMask Type;
         [Required] public DataDisplay[] Displays;
         public bool IsSource;
         public bool IsActive = true;
+        public bool IsHidingData;
 
         [NonSerialized] public bool HasData;
         [NonSerialized] public bool Modifiable = true;
         [NonSerialized] public DataPacket CurrentData;
+
+        public string OverrideSlotId = String.Empty; // Unique id for data slot
+        [NonSerialized] public StringHash32 SlotId = StringHash32.Null; // Unique id for data slot
 
         public readonly CastableEvent<DataPacket> OnDataModified = new CastableEvent<DataPacket>();
         public readonly CastableEvent<DataSlot> OnDataTransferred = new CastableEvent<DataSlot>();
@@ -39,6 +46,17 @@ namespace Astro {
             return base.GetHashCode();
         }
 
+        public void OnRegister()
+        {
+            if (!OverrideSlotId.Equals(String.Empty)) {
+                SlotId = OverrideSlotId;
+            }
+        }
+
+        public void OnDeregister()
+        {
+        }
+
         #endregion // Overrides
     }
 
@@ -46,13 +64,15 @@ namespace Astro {
         static public bool TrySetData(DataSlot slot, DataPacket packet) {
             if ((packet.Type & slot.Type) == 0) {
                 return false;
-            }
+        }
 
             if (!slot.HasData || !slot.CurrentData.Equals(packet)) {
                 slot.HasData = true;
                 slot.CurrentData = packet;
-                foreach (var display in slot.Displays) {
-                    PopulateDisplay(display, packet);
+                if (!slot.IsHidingData) {
+                    foreach (var display in slot.Displays) {
+                        PopulateDisplay(display, packet);
+                    }
                 }
                 slot.OnDataModified.Invoke(packet);
             }
@@ -76,6 +96,28 @@ namespace Astro {
                 return true;
             }
             return false;
+        }
+
+        static public void HideData(DataSlot slot) {
+            if (!slot.IsHidingData) {
+                slot.IsHidingData = true;
+                if (slot.HasData) {
+                    foreach (var display in slot.Displays) {
+                        ClearDisplay(display);
+                    }
+                }
+            }
+        }
+
+        static public void RevealData(DataSlot slot) {
+            if (slot.IsHidingData) {
+                slot.IsHidingData = false;
+                if (slot.HasData) {
+                    foreach (var display in slot.Displays) {
+                        PopulateDisplay(display, slot.CurrentData);
+                    }
+                }
+            }
         }
     }
 }

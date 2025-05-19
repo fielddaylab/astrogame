@@ -6,28 +6,41 @@ using BeauUtil.Debugger;
 using FieldDay;
 using FieldDay.Components;
 using FieldDay.UI;
+using ScriptableBake;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Astro {
-    public sealed class DataDisplay : BatchedComponent {
+    public sealed class DataDisplay : BatchedComponent, IBaked {
         [AutoEnum] public DataFormattingFlags Formatting;
         public string NullText;
 
         [Header("Components")]
         public TMP_Text DefaultOutput;
         public Transform OutputTransform;
-        public RenderAtlasOutput OutputRender;
+        public RenderAtlasOutput OutputAtlas;
 
         public readonly CastableEvent<DataPacket, DataFormattingFlags> OnDisplayRequested = new CastableEvent<DataPacket, DataFormattingFlags>();
         public readonly ActionEvent OnDisplayCleared = new ActionEvent();
+
+#if UNITY_EDITOR
+
+        int IBaked.Order => 100;
+
+        bool IBaked.Bake(BakeFlags flags, BakeContext context) {
+            DataUtility.ClearDisplay(this);
+            return true;
+        }
+
+#endif // UNITY_EDITOR
     }
 
     [Flags]
     public enum DataFormattingFlags : uint {
         RightAscension = 0x01,
         Declination = 0x02,
+        Shorten = 0x04,
 
         [Hidden] FullCoordinate = RightAscension | Declination
     }
@@ -63,8 +76,8 @@ namespace Astro {
                 display.OnDisplayRequested.Invoke(packet, display.Formatting);
             }
 
-            if (display.OutputRender) {
-                display.OutputRender.MarkDirty();
+            if (display.OutputAtlas) {
+                display.OutputAtlas.MarkDirty();
             }
         }
 
@@ -78,6 +91,9 @@ namespace Astro {
             }
 
             display.OnDisplayCleared.Invoke();
+            if (display.OutputAtlas) {
+                display.OutputAtlas.MarkDirty();
+            }
         }
 
         static public void SetDisplayHidden(DataDisplay display, bool hide) {
@@ -90,12 +106,10 @@ namespace Astro {
             } else {
                 throw new NotImplementedException("Hiding non-text data display not yet implemented");
             }
-            if (display.OutputRender) {
-                display.OutputRender.MarkDirty();
-            }
         }
 
         static private bool TryFormatForDefaultOutput(DataPacket packet, DataFormattingFlags flags, StringBuilder sb) {
+            bool shorten = (flags & DataFormattingFlags.Shorten) != 0;
             switch (packet.Type) {
                 case DataTypeMask.Name: {
                     CelestialAsset asset = Find.NamedAsset<CelestialAsset>(packet.Value.AssetId);
@@ -109,7 +123,14 @@ namespace Astro {
                     return true;
                 }
 
+                case DataTypeMask.ColorIndex: {
+                    sb.AppendNoAlloc(packet.Value.ColorIndex, 2);
+                    return true;
+                }
+
                 case DataTypeMask.ApparentMagnitude:
+                case DataTypeMask.BlueMagnitude:
+                case DataTypeMask.InfraredMagnitude:
                 case DataTypeMask.AbsoluteMagnitude: {
                     sb.AppendNoAlloc(packet.Value.Magnitude, 2);
                     return true;
@@ -121,7 +142,12 @@ namespace Astro {
                 }
 
                 case DataTypeMask.Distance: {
-                    sb.AppendNoAlloc(packet.Value.Distance, 2).Append("lightyears");
+                    sb.AppendNoAlloc(packet.Value.Distance, shorten ? 0 : 1);
+                    if (!shorten) {
+                        sb.Append(" lightyears");
+                    } else {
+                        sb.Append(" ly");
+                    }
                     return true;
                 }
 

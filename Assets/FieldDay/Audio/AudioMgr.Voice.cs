@@ -1,3 +1,7 @@
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#define DEVELOPMENT
+#endif // UNITY_EDITOR || DEVELOPMENT_BUILD
+
 #if !UNITY_WEBGL
 #define SUPPORTS_AUDIOEFFECTS
 #endif // !UNITY_WEBGL
@@ -17,6 +21,22 @@ namespace FieldDay.Audio {
         private const float MinLowHighPassCutoff = 17;
         private const float MaxLowHighPassCutoff = 20000;
         private const float LowHighPassCutoffRange = MaxLowHighPassCutoff - MinLowHighPassCutoff;
+
+        private const float MinPitch =
+#if UNITY_WEBGL
+            0.07f;
+#else
+            0;
+#endif // UNITY_WEBGL
+
+        private const float MaxPitch =
+#if UNITY_EDITOR
+            64;
+#elif UNITY_WEBGL
+            8;
+#else
+            16;
+#endif // UNITY_WEBGL
 
         #region Voice Data
 
@@ -38,6 +58,10 @@ namespace FieldDay.Audio {
             public short PositionSyncIndex;
             public short KillTweenIndex;
             public FloatTweenIndices FloatTweens;
+
+#if DEVELOPMENT
+            public string DebugName;
+#endif // DEVELOPMENT
         }
 
         private enum VoiceState : byte {
@@ -331,7 +355,7 @@ namespace FieldDay.Audio {
             AudioVoiceComponents components = voiceData.Components;
 
             components.Source.volume = block.Volume;
-            components.Source.pitch = block.Pitch;
+            components.Source.pitch = Math.Min(MaxPitch, Math.Max(MinPitch, block.Pitch));
             components.Source.panStereo = block.Pan;
             components.Source.mute = block.Mute;
 
@@ -391,6 +415,14 @@ namespace FieldDay.Audio {
 
         internal bool IsVoiceActive(AudioHandle handle) {
             return m_VoiceIdAllocator.IsValid(handle.m_Id);
+        }
+
+        internal AudioSource GetVoiceSource(AudioHandle handle) {
+            var voice = FindVoiceForId(handle.m_Id);
+            if (voice != null) {
+                return voice.Components.Source;
+            }
+            return null;
         }
 
         #endregion // Voice Queries
@@ -486,6 +518,10 @@ namespace FieldDay.Audio {
             voice.PlayStartedTS = -1;
             voice.FrameEnded = Frame.InvalidIndex;
 
+#if DEVELOPMENT
+            voice.DebugName = null;
+#endif // DEVELOPMENT
+
             m_VoiceDataPool.Free(voice);
         }
 
@@ -517,6 +553,7 @@ namespace FieldDay.Audio {
         private AudioVoiceComponents ConstructNewSource(IPool<AudioVoiceComponents> p) {
             GameObject go = new GameObject("unused audio voice");
             go.transform.SetParent(m_AudioSourceRoot.transform);
+            go.hideFlags = HideFlags.DontSave;
 
             AudioSource source = go.AddComponent<AudioSource>();
             source.enabled = false;

@@ -12,22 +12,25 @@ public class NeutrinoHighlightState : SharedStateComponent, IRegistrationCallbac
     [NonSerialized] public bool OpenModeStarted;
     [NonSerialized] public bool OpenModeEnded;
 
-    [NonSerialized] public RingBuffer<RectTransform> ActiveHighlights = new RingBuffer<RectTransform>(8, RingBufferMode.Expand);
+    [NonSerialized] public RingBuffer<Transform> ActiveHighlights = new RingBuffer<Transform>(8, RingBufferMode.Expand);
 
     #region Registration
 
-    public void OnDeregister()
-    {
+    private Action setOpenModeStarted;
+    private Action setOpenModeEnded;
+
+
+    public void OnRegister() {
+        setOpenModeStarted = () => { OpenModeStarted = true; };
+        setOpenModeEnded = () => { OpenModeEnded = true; };
+
+        Game.Events.Register(GameEvents.StartOpenMode, setOpenModeStarted);
+        Game.Events.Register(GameEvents.StopOpenMode, setOpenModeEnded);
     }
 
-    public void OnRegister()
-    {
-        Game.Events.Register(GameEvents.StartOpenMode, () => {
-            OpenModeStarted = true;
-        });
-        Game.Events.Register(GameEvents.StopOpenMode, () => {
-            OpenModeEnded = true;
-        });
+    public void OnDeregister() {
+        Game.Events.Deregister(GameEvents.StartOpenMode, setOpenModeStarted);
+        Game.Events.Deregister(GameEvents.StopOpenMode, setOpenModeEnded);
     }
 
     #endregion // Registration

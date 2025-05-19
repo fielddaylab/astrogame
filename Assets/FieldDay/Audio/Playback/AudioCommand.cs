@@ -32,6 +32,7 @@ namespace FieldDay.Audio {
         SetBusFloatParameter,
         SetBusBoolParameter,
         SetBusConfigVolume,
+        Seek,
     }
 
     #endregion // Enums
@@ -106,6 +107,7 @@ namespace FieldDay.Audio {
         public AudioAssetRef SecondaryAsset;
         public float Volume;
         public float Pitch;
+        public float Delay;
         public StringHash32 Tag;
         public AudioPlaybackFlags Flags;
         public UniqueId16 Handle;
@@ -170,6 +172,14 @@ namespace FieldDay.Audio {
         public float Target;
     }
 
+    /// <summary>
+    /// Data for Seek.
+    /// </summary>
+    internal struct SeekCommandData {
+        public UniqueId16 Handle;
+        public float Position;
+    }
+
     #endregion // Command Data
 
     [StructLayout(LayoutKind.Explicit)]
@@ -182,5 +192,6 @@ namespace FieldDay.Audio {
         [FieldOffset(4)] public FloatParamChangeCommandData FloatParam;
         [FieldOffset(4)] public BoolParamChangeCommandData BoolParam;
         [FieldOffset(4)] public ConfigVolumeChangeCommandData ConfigVolume;
+        [FieldOffset(4)] public SeekCommandData Seek;
     }
 }

@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Linq;
 using BeauUtil;
 using BeauUtil.Debugger;
 using BeauUWT;
@@ -15,34 +14,49 @@ namespace Astro.Audio {
     public sealed class MusicState : SharedStateComponent, IRegistrationCallbacks {
         [NonSerialized] public AudioHandle MusicTrack;
         [NonSerialized] public string MusicTag = "music";
-        [NonSerialized] public RingBuffer<StringHash32> TrackQueue = new RingBuffer<StringHash32>(2, RingBufferMode.Expand);
+        [NonSerialized] public RingBuffer<QueuedTrack> TrackQueue = new RingBuffer<QueuedTrack>(2, RingBufferMode.Expand);
+        [NonSerialized] public StringHash32 CurrentTrackId;
 
         public void OnDeregister() {
             Sfx.Stop(MusicTrack);
             Sfx.StopAllWithTag(MusicTag);
+            CurrentTrackId = default;
          }
 
         public void OnRegister() { }
+
+        public struct QueuedTrack {
+            public StringHash32 TrackId;
+            public float Delay;
+        }
     }
 
 
     static public class MusicUtility {
 
         [LeafMember("QueueMusic")]
-        static private void LeafQueueMusic(StringHash32 track) {
+        static public void QueueMusic(StringHash32 track, float delay = 0) {
             MusicState state = Find.State<MusicState>();
-            state.TrackQueue.PushBack(track);
+            state.TrackQueue.PushBack(new MusicState.QueuedTrack() {
+                TrackId = track,
+                Delay = delay
+            });
         }
 
         [LeafMember("PlayMusic")]
-        static public IEnumerator LeafPlayMusic(StringHash32 track, float fadeInTime = 0) {
+        static public IEnumerator PlayMusic(StringHash32 track, float fadeInTime = 0) {
             MusicState state = Find.State<MusicState>();
+            if (state.CurrentTrackId == track) {
+                yield break;
+            }
+
             if (state.MusicTrack.IsValid) {
                 StopMusic(fadeInTime);
                 yield return fadeInTime;
             }
 
             state.MusicTrack = Sfx.Play(track);
+            state.CurrentTrackId = track;
             Sfx.OverrideTag(state.MusicTrack, state.MusicTag);
             if (fadeInTime > 0) {
                 Sfx.SetVolume(state.MusicTrack, 0);
@@ -51,11 +65,12 @@ namespace Astro.Audio {
         }
 
         [LeafMember("StopMusic")]
-        static private void StopMusic(float fadeOutTime = 0) {
+        static public void StopMusic(float fadeOutTime = 0) {
             MusicState state = Find.State<MusicState>();
             Sfx.StopAllWithTag(state.MusicTag, fadeOutTime);
 
             state.MusicTrack = default;
+            state.CurrentTrackId = default;
         }
     } 
 }

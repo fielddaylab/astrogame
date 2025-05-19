@@ -1,10 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using FieldDay.Systems;
 using FieldDay;
-using BeauUtil;
-using System.Linq;
+using System;
 
 namespace Astro {
     [SysUpdate(GameLoopPhaseMask.Update, 0, AstroGame.MonitorControlsUpdateMask)]
@@ -28,9 +24,9 @@ namespace Astro {
                 foreach (UIFocus focus in m_StateB.ActiveFocii)
                 {
                     // check if focus is relevant to neutrino
-                    if (day.NeutrinoEvent.RelevantObjectIds.Contains(focus.TargetData.AssetId))
-                    {
-                        var newHighlight = m_StateC.NeutrinoHighlights.Alloc(focus.HighlightRect);
+                    if (Array.IndexOf(day.NeutrinoEvent.RelevantObjectIds, focus.TargetData.AssetId) != -1) {
+                        focus.HasHighlight = true;
+                        var newHighlight = m_StateC.NeutrinoHighlights.Alloc(focus.Root);
                         m_StateA.ActiveHighlights.PushBack(newHighlight);
                     }
                 }
@@ -44,6 +40,9 @@ namespace Astro {
 
                 // clear existing highlights
                 foreach (var highlight in m_StateA.ActiveHighlights) {
+                    if (highlight.parent.TryGetComponent(out UIFocus focus)) {
+                        focus.HasHighlight = false;
+                    }
                     m_StateC.NeutrinoHighlights.Free(highlight);
                 }
 

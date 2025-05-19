@@ -183,6 +183,24 @@ namespace FieldDay.Debugging {
         }
 
         /// <summary>
+        /// Sets the given debug flag to its opposite. Returns the new value.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
+        [Il2CppSetOption(Option.NullChecks, false)]
+        static public bool ToggleFlag<T>(T index) where T : unmanaged, Enum {
+#if DEVELOPMENT
+            int type = FlagGroupIndex<T>.Index;
+            int idx = Enums.ToInt(index);
+            bool val = s_FlagGroups[type].Flags.IsSet(idx);
+            s_FlagGroups[type].Flags.Set(idx, !val);
+            return !val;
+#else
+            return false;
+#endif // DEVELOPMENT
+        }
+
+        /// <summary>
         /// Sets the given debug flag. Returns the previous value.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -213,6 +231,20 @@ namespace FieldDay.Debugging {
         static public void ClearFlag(int index) {
 #if DEVELOPMENT
             s_GlobalFlags.Flags.Unset(index);
+#endif // DEVELOPMENT
+        }
+
+        /// <summary>
+        /// Sets the given debug flag to its opposite. Returns the new value.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static public bool ToggleFlag(int index) {
+#if DEVELOPMENT
+            bool val = s_GlobalFlags.Flags.IsSet(index);
+            s_GlobalFlags.Flags.Set(index, !val);
+            return !val;
+#else
+            return false;
 #endif // DEVELOPMENT
         }
 
@@ -333,6 +365,33 @@ namespace FieldDay.Debugging {
 #endif // DEVELOPMENT
 
         #endregion // Flags
+
+        #region Testing
+
+#if DEVELOPMENT
+        static private bool s_IsRunningAutomatedTest;
+#endif // DEVELOPMENT
+
+        /// <summary>
+        /// Returns if time controls are allowed.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static public bool IsAutomatedTestActive() {
+#if DEVELOPMENT
+            return s_IsRunningAutomatedTest;
+#else
+            return false;
+#endif // DEVELOPMENT
+        }
+
+        [Conditional("DEVELOPMENT"), Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
+        static internal void SetAutomatedTestActive(bool active) {
+#if DEVELOPMENT
+            s_IsRunningAutomatedTest = active;
+#endif // DEVELOPMENT
+        }
+
+        #endregion // Testing
 
         #region Object Selection
 

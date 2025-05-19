@@ -1,1 +1,82 @@
 #basePath	Day5
+
+:: Preload
+@function   ScenePreload
+
+$call InitUpdateMasks()
+$call ToggleDeskPicture()
+$call SetInstrumentUnlocked(CoordinateInstrument, true)
+$call SetInstrumentUnlocked(PhotometerInstrument, true)
+$call SetInstrumentUnlocked(BlueWavelength, true)
+$call SetInstrumentUnlocked(InfraredWavelength, true)
+$call SetInstrumentUnlocked(ColorInstrument, true)
+$call SetInstrumentUnlocked(TemperatureInstrument, true)
+$call SetInstrumentUnlocked(SpectrometerInstrument, true)
+$call SetInstrumentUnlocked(HistoricalDataInstrument, true)
+$call SetInstrumentUnlocked(HistoricalDataModeToggle, true)
+$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
+$call StopPuzzleMode()
+$call StopOpenMode()
+
+:: BeginDay
+@trigger    SceneReady
+@boostScore 100
+@who    Astrid
+
+$call QueueMusic("Music.Moonthought", 3)
+$call MoveToView("DocumentPuzzle")
+$call SetInputState(false)
+$call SpawnDocumentToCamera("Day5ElijahPostcard")
+$call SetInputState(true)
+
+:: SpawnPuzzleDocs1
+@trigger    DocumentInspectEnd
+@when   documentId == "Day5ElijahPostcard"
+@once
+
+$call Wait(1)
+$call WaitForMovedToView("Right")
+$call SetInputState(false)
+{@Radio} Star HQ to Station Seven. IceCube is reading a high-energy neutrino emission from the area of the Eridanus Constellation.
+{@Radio} Identification of nearby celestial objects is requested. Uploading area of interest...
+$call StartNeutrinoNavigation()
+$call SetInputState(true)
+
+:: NeutrinoNavigationComplete
+@trigger    NeutrinoNavigationComplete
+@once
+
+$call StopNeutrinoNavigation()
+{@Radio} Neutrino Origin Detected
+$call StartOpenMode()
+
+:: PointsUpdated
+@trigger    PointsUpdated
+@when   sciencePoints > 2
+@once
+
+$call SetInputState(false)
+$call SetRefGuideActive(false)
+
+$call Wait(3)
+
+$call StopOpenMode()
+$call ClearMonitorSelection()
+$call StartPuzzleNavigation()
+
+:: PuzzleNavigationComplete
+@trigger    PuzzleNavigationComplete
+@once
+
+$call StopPuzzleNavigation()
+$call StartPuzzleMode()
+
+:: DracoPuzzleComplete
+@trigger    CorrectPuzzleSubmission
+@when   puzzleName == "Draco"
+@once
+
+$call ClearMonitorSelection()
+$call StopPuzzleMode()
+$call SetInputState(false)
+Trigger the final puzzle now

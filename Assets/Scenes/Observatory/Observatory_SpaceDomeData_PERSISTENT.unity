@@ -96,7 +96,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000016, guid: d1b1f49e96e28754e81ff04174607f74, type: 2}
+  m_LightingDataAsset: {fileID: 112000014, guid: d1b1f49e96e28754e81ff04174607f74, type: 2}
   m_LightingSettings: {fileID: 4890085278179872738, guid: 6f1803a0335cd4f4a9c123fe06a221ef, type: 2}
 --- !u!196 &4
 NavMeshSettings:
@@ -545,6 +545,9 @@ MonoBehaviour:
   HorizonRoot: {fileID: 1064473386}
   Position: {x: -2000, y: 0, z: -2000}
   Radius: 1000
+  HorizonPlane: {fileID: 8542337817028276782}
+  HorizonRing: {fileID: 8493913821649136709}
+  HorizonGlow: {fileID: 1077162440}
 --- !u!114 &4147787590570782413
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -570,6 +573,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ae620349e7bce24688d2ab26f9be5a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Always: 0
   DestroyInactiveChildren: 1
   Recursive: 0
   DestroyGameObject: 0

@@ -31,17 +31,23 @@ namespace FieldDay.Debugging {
         [NonSerialized] private int m_DumpCounter;
 
         private void Awake() {
-            DumpButton.onClick.AddListener(() => {
-                BugReporter.DumpContext();
-                Canvas.enabled = false;
-                m_DumpCounter = 3;
-            });
+            DumpButton.onClick.AddListener(Dump);
         }
 
         private void LateUpdate() {
             if (m_DumpCounter > 0 && --m_DumpCounter == 0) {
                 Canvas.enabled = true;
             }
+
+            if (m_DumpCounter == 0 && (Input.GetKeyDown(KeyCode.Return))) {
+                Dump();
+            }
+        }
+
+        private void Dump() {
+            BugReporter.DumpContext();
+            Canvas.enabled = false;
+            m_DumpCounter = 3;
         }
 
         private void Populate(string exception, string context) {

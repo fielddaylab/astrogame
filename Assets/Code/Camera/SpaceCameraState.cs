@@ -20,7 +20,7 @@ namespace Astro
         public bool EnableSmoothKeyboardControls = true;
         public bool InputEnabled = true;
 
-        public Canvas Canvas;
+        public Transform StarRoot;
 
         [Space(5)]
         [Header("Look")]
@@ -61,20 +61,14 @@ namespace Astro
             Game.Events.Register(GameEvents.StartPuzzleNavigation, SpaceCameraUtility.OnStartPuzzleNav);
             Game.Events.Register(GameEvents.StopPuzzleNavigation, SpaceCameraUtility.OnStopPuzzleNav);
             Game.Events.Register(GameEvents.StopPuzzleMode, SpaceCameraUtility.OnStopPuzzleMode);
-
-            OnLookUpdated.Register(() => { 
-                LookUpdatedThisFrame = true; 
-
-                // Note: This is sometimes helpful for aligning puzzles
-                Quaternion spaceCameraQuat = Camera.RootTransform.rotation;
-                Debug.Log("[SpaceCameraState] Camera RA:" + CoordinateUtility.DDToHms(360 - spaceCameraQuat.eulerAngles.y) + " D:" + CoordinateUtility.DDToHms(360 - spaceCameraQuat.eulerAngles.x));
-    
-            });
         }
 
         public void OnDeregister() {}
-    }
 
+        public enum DebuggingFlags {
+            DisplayLookCoords
+        }
+    }
 
     public static class SpaceCameraUtility {
         public static void OnStartPuzzleNav() {
@@ -84,6 +78,7 @@ namespace Astro
             PuzzleState puzzleState = Find.State<PuzzleState>();
             
             spaceCameraState.Camera.Camera.fieldOfView = spaceCameraState.Camera.OriginalFOV / puzzleState.ActivePuzzle.PuzzleCameraZoom;
+            spaceCameraState.LookUpdatedThisFrame = true;
             spaceCameraState.OnLookUpdated.Invoke(spaceCameraState);
         }
 

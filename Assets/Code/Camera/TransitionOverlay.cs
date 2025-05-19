@@ -1,6 +1,7 @@
 using System.Collections;
 using BeauUtil;
 using FieldDay;
+using FieldDay.Scenes;
 using FieldDay.SharedState;
 using FieldDay.UI;
 using FieldDay.UI.Animation;
@@ -34,13 +35,19 @@ namespace Astro {
             Game.Input.ResumeRaycasts();
         }
 
-        private IEnumerator UnloadHandler(Scene scene, StringHash32 tag) {
+        private IEnumerator UnloadHandler(Scene scene, StringHash32 tag, MainSceneTransitionArgs transition) {
+            if (transition.ShouldSkip) {
+                yield break;
+            }
             DefaultFader.Show(Color.black, 0.5f);
             yield return 0.55f;
         }
 
-        private IEnumerator LoadHandler(Scene scene, StringHash32 tag) {
-            DefaultFader.Hide(0.5f, false);
+        private IEnumerator LoadHandler(Scene scene, StringHash32 tag, MainSceneTransitionArgs transition) {
+            if (transition.ShouldSkip) {
+                yield break;
+            }
+            DefaultFader.Hide(0.5f, 0.04f, false);
             yield return 0.2f;
         }
     }

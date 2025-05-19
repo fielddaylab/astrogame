@@ -13,14 +13,22 @@ namespace Astro
     {
         [NonSerialized] public Transform Target;
         [NonSerialized] public CelestialAsset TargetData;
+        [NonSerialized] public bool IsVisibleInCurrentFilter;
 
-        [NonSerialized] public Renderer TargetRenderer;
+        [NonSerialized] public bool HasHighlight;
 
-        public RectTransform Rect;
-        public RectTransform HighlightRect;
-        public Image Represent2D;
+        public Transform Root;
+        public SpriteRenderer Represent2D;
+        public SphereCollider Clickable;
         public PointerListener Button;
-        [NonSerialized] public Image NeutrinoHighlight;
+
+        private void Awake() {
+            Button.onClick.Register(OnClicked);
+        }
+
+        private void OnClicked() {
+            FocusableUtility.SetCurrentFocus(Find.State<FocusState>(), this);
+        }
     }
 
     public struct UIFocusPackedData {
@@ -32,21 +40,28 @@ namespace Astro
     {
         public static void InitFocusable(FocusState state, UIFocus focus, Transform target, CelestialAsset asset, Sprite represent2D)
         {
+#if UNITY_EDITOR
+            focus.gameObject.name = asset.DisplayName;
+            focus.Button.name = asset.DisplayName + " (Button)";
+#endif // UNITY_EDITOR
+
             focus.Target = target;
             focus.Represent2D.sprite = represent2D;
             if (represent2D == null) {
                 focus.Represent2D.enabled = false;
             }
+
             focus.TargetData = asset;
-            focus.TargetRenderer = target.GetComponent<Renderer>();
 
-            float scaleFactor = Mathf.Pow(0.6f, asset.ApparentMagnitude);
-            focus.Rect.localScale = new Vector3(scaleFactor, scaleFactor, 1);
+            float baseVal = 0.88f;
+            float minVal = 0.05f;
+            float maxVal = 0.32f;
+            float scaleFactor = Mathf.Clamp(Mathf.Pow(baseVal, asset.ApparentMagnitude) - 0.45f, minVal, maxVal);
+            focus.Root.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
 
-            float invScaleFactor = Mathf.Sqrt(1f / scaleFactor);
-            focus.Button.transform.localScale = new Vector3(invScaleFactor, invScaleFactor, 1);
-            focus.Button.onClick.RemoveAllListeners();
-            focus.Button.onClick.AddListener(() => { FocusableUtility.SetCurrentFocus(state, focus); });
+            float clickableRadius = baseVal * Math.Min(1, 1 / scaleFactor);
+
+            focus.Clickable.radius = clickableRadius / scaleFactor;
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Astro
         [SerializeField] private LabInstrument m_Target;
         [SerializeField] private MonoBehaviour[] m_Components;
         [SerializeField] private bool m_InitVal;
-        [SerializeField] private bool m_SetTo;
+        [SerializeField] private bool m_SetTo = true;
 
         public void OnDeregister()
         {

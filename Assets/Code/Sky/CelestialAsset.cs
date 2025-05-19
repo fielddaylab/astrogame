@@ -27,6 +27,8 @@ namespace Astro {
 
         [Header("Magnitude")]
         public float ApparentMagnitude;
+        public float ApparentBlueMagnitude;
+        public float ApparentIRMagnitude;
         public float AbsoluteMagnitude;
         public HistoricalPatternAsset HistoricalBrightness;
 
@@ -38,6 +40,14 @@ namespace Astro {
 
         [Header("Constellation Path")]
         [AssetName(typeof(SkyRegionBounds))] public StringHash32 ConstellationBoundaryId;
+
+#if UNITY_EDITOR
+        private void OnValidate() {
+            if ((Visibility & CelestialObjectVisMask.Visible) != 0) {
+                Visibility |= CelestialObjectVisMask.Blue | CelestialObjectVisMask.Infrared;
+            }
+        }
+#endif // UNITY_EDITOR
 
         #endregion // Inspector
 
@@ -60,6 +70,9 @@ namespace Astro {
                 case DataTypeMask.Color: {
                         return DataPacket.Color(asset.ColorId);
                     }
+                case DataTypeMask.ColorIndex: {
+                    return DataPacket.ColorIndex(asset.ApparentBlueMagnitude - asset.ApparentMagnitude);
+                }
                 case DataTypeMask.ApparentMagnitude: {
                         return DataPacket.ApparentMagnitude(asset.ApparentMagnitude);
                     }
@@ -78,10 +91,13 @@ namespace Astro {
                 case DataTypeMask.Historical_ApparentMagnitude: {
                         return DataPacket.HistoricalApparentMagnitude(asset.HistoricalBrightness);
                     }
-
+                case DataTypeMask.BlueMagnitude: {
+                        return DataPacket.BlueMagnitude(asset.ApparentBlueMagnitude);
+                    }
+                case DataTypeMask.InfraredMagnitude: {
+                        return DataPacket.InfraredMagnitude(asset.ApparentIRMagnitude);
+                    }
                 case DataTypeMask.Historical_Coordinates:
-                case DataTypeMask.Historical_Temperature: 
-                case DataTypeMask.Historical_Distance: 
                 case DataTypeMask.Historical_Color: {
                         Log.Error("[CelestialAsset.MaskAssetToData] celestial asset historical data unimplemented!");
                         throw new ArgumentException("DataMaskType " + type + " not implemented");                    }
@@ -105,7 +121,8 @@ namespace Astro {
     [Flags]
     public enum CelestialObjectVisMask {
         Visible = 0x01,
-        Radio = 0x02
+        Infrared = 0x02,
+        Blue = 0x04,
     }
     public sealed class ConstellationIdAttribute : AssetNameAttribute {
         public ConstellationIdAttribute() : base(typeof(CelestialAsset), true) { }

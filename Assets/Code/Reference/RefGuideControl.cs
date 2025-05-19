@@ -8,6 +8,7 @@ namespace Astro.Reference {
     public sealed class RefGuideControl : BatchedComponent {
         public RefGuideControlType ControlType;
         [NonSerialized] public ReferenceClassification Classification;
+        [NonSerialized] public SpectrographMaterialMask Material;
     }
 
     public enum RefGuideControlType {
@@ -15,6 +16,7 @@ namespace Astro.Reference {
         NextPage,
         ToggleActive,
         Bookmark,
-        Classification
+        Classification,
+        MaterialClassification,
     }
 }

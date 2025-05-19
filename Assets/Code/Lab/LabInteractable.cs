@@ -22,6 +22,12 @@ namespace Astro {
             Cursor = GetComponent<CursorHint>();
         }
 
+        protected override void OnDisable() {
+            base.OnDisable();
+
+            InteractReceived = false;
+        }
+
         //void IRegistrationCallbacks.OnDeregister() {
         //    if (!this) {
         //        Log.Error("Hey WTF I was deleted {0}", m_CachedPath);

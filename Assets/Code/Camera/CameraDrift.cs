@@ -15,5 +15,9 @@ namespace Astro {
                 Mathf.Sin(OffsetY + (Time.time * Mathf.PI * 2 / PeriodY)) * DriftY,
                 0);
         }
+
+        private void OnDisable() {
+            transform.localPosition = default;
+        }
     }
 }

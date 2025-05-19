@@ -1,3 +1,4 @@
+using BeauUtil;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -202,7 +203,7 @@ namespace Astro
 
         #region Sanitization
 
-        static public void Sanitize(ref short h, ref short m, ref float s) {
+        static public void SanitizeHms(ref short h, ref short m, ref float s) {
             if (s < 0) {
                 s += 60;
                 m--;
@@ -220,7 +221,27 @@ namespace Astro
             }
         }
 
-        static public void Sanitize(ref int h, ref int m, ref float s) {
+        static public void SanitizeDms(ref short d, ref short m, ref float s) {
+            if (s < 0) {
+                s += 60;
+                m--;
+            } else if (s >= 60) {
+                s -= 60;
+                m++;
+            }
+
+            if (m < 0) {
+                m += 60;
+                d--;
+            } else if (m >= 60) {
+                m -= 60;
+                d++;
+            }
+
+            d = (short) MathUtils.Wrap(d, -180, 180);
+        }
+
+        static public void SanitizeHms(ref int h, ref int m, ref float s) {
             if (s < 0) {
                 s += 60;
                 m--;
@@ -236,6 +257,26 @@ namespace Astro
                 m -= 60;
                 h++;
             }
+        }
+
+        static public void SanitizeDms(ref int d, ref int m, ref float s) {
+            if (s < 0) {
+                s += 60;
+                m--;
+            } else if (s >= 60) {
+                s -= 60;
+                m++;
+            }
+
+            if (m < 0) {
+                m += 60;
+                d--;
+            } else if (m >= 60) {
+                m -= 60;
+                d++;
+            }
+
+            d = MathUtils.Wrap(d, -180, 180);
         }
 
         #endregion // Sanitization

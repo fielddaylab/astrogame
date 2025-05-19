@@ -1,9 +1,13 @@
 using BeauPools;
+using BeauRoutine;
+using BeauUtil;
 using FieldDay;
 using FieldDay.SharedState;
+using Leaf.Runtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 namespace Astro {
@@ -24,11 +28,17 @@ namespace Astro {
         public bool[,] SelectedCells;
         public DataTypeMask RelevantColFilter;
 
+        // TUTORIAL ISOLATION
+        public bool IsIsolated;
+        public RingBuffer<StringHash32> IsolatedSlots = new RingBuffer<StringHash32>(2, RingBufferMode.Expand);
+
         public PuzzleCellLibrary Library;
 
         [Header("Consts")]
         public Material UnselectedCellMat;
         public Material SelectedCellMat;
+
+        public Routine PuzzleCorrectSubmissionRoutine = new Routine();
 
         public void OnRegister() {
             Game.Events.Register(GameEvents.StartPuzzleMode, PuzzleUtility.ActivatePuzzlePanel);
@@ -98,5 +108,61 @@ namespace Astro {
             display.ClueGroup.gameObject.SetActive(true);
         }
 
+        public static bool IsSlotIsolated(PuzzleState state, StringHash32 slotId)
+        {
+            foreach (var isolated in state.IsolatedSlots) {
+                if (isolated.Equals(slotId)) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        [LeafMember("IsolatePuzzleCell")]
+        public static void LeafIsolatePuzzleCell(int row, int col)
+        {
+            PuzzleState state = Find.State<PuzzleState>();
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append('R');
+            sb.Append(row.ToStringLookup());
+            sb.Append('C');
+            sb.Append(col.ToStringLookup());
+            StringHash32 slotId = sb.ToString();
+
+            state.IsolatedSlots.PushBack(slotId);
+            state.IsIsolated = true;
+        }
+
+        [LeafMember("AddIsolatedSlot")]
+        public static void LeafAddIsolatedSlot(StringHash32 slotId) {
+            PuzzleState state = Find.State<PuzzleState>();
+
+            state.IsolatedSlots.PushBack(slotId);
+            state.IsIsolated = true;
+        }
+
+        [LeafMember("RemoveIsolatedSlot")]
+        public static void LeafRemoveIsolatedSlot(StringHash32 slotId)
+        {
+            PuzzleState state = Find.State<PuzzleState>();
+
+            if (state.IsolatedSlots.Contains(slotId)) {
+                state.IsolatedSlots.Remove(slotId);
+
+                if (state.IsolatedSlots.Count == 0) {
+                    state.IsIsolated = false;
+                }
+            }
+        }
+
+        [LeafMember("ReleaseIsolatedPuzzle")]
+        public static void LeafReleaseIsolatePuzzle()
+        {
+            PuzzleState state = Find.State<PuzzleState>();
+            state.IsIsolated = false;
+            state.IsolatedSlots.Clear();
+        }
     }
 }

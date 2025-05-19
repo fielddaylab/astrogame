@@ -3,31 +3,56 @@ using FieldDay;
 using FieldDay.Scripting;
 using FieldDay.SharedState;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using Astro.Reference;
 
-namespace Astro
-{
-    public class FocusState : SharedStateComponent
-    {
-        [NonSerialized] public RingBuffer<UIFocus> ActiveFocii = new RingBuffer<UIFocus>(8, RingBufferMode.Expand);
+namespace Astro {
+    public class FocusState : SharedStateComponent {
+        [NonSerialized] public RingBuffer<UIFocus> ActiveFocii = new RingBuffer<UIFocus>(64, RingBufferMode.Expand);
+        [NonSerialized] public UIFocusPackedData[] ActiveFociiPacked = new UIFocusPackedData[128];
+        [NonSerialized] public BitSet256 ActiveFociiVisibleBits;
+
         [NonSerialized] public UIFocus CurrentFocus = null;
         [NonSerialized] public bool FocusUpdated = false;
         [NonSerialized] public bool MonitorInputActive = false;
-        public Graphic FocusOutline;
+
+        public SpriteRenderer FocusOutline;
+
+        private Action setMonitorInputActive;
+        private Action setMonitorInputInactive;
+
+        public CastableEvent<UIFocus> OnFocusUpdated = new CastableEvent<UIFocus>();
 
         protected override void OnEnable() {
-            base.OnEnable();
+            setMonitorInputActive = () => { MonitorInputActive = true; };
+            setMonitorInputInactive = () => { MonitorInputActive = false; };
+
             Game.Events.Register(GameEvents.MonitorEmptySpaceClicked, FocusableUtility.ClickEmptySpace);
 
-            Game.Events.Register(GameEvents.StartNeutrinoNavigation, () => { MonitorInputActive = false; });
-            Game.Events.Register(GameEvents.StopNeutrinoNavigation, () => { MonitorInputActive = true; });
+            Game.Events.Register(GameEvents.StartNeutrinoNavigation, setMonitorInputInactive);
+            Game.Events.Register(GameEvents.StopNeutrinoNavigation, setMonitorInputActive);
 
-            Game.Events.Register(GameEvents.StartPuzzleNavigation, () => { MonitorInputActive = false; });
-            Game.Events.Register(GameEvents.StopPuzzleNavigation, () => { MonitorInputActive = true; });
+            Game.Events.Register(GameEvents.StartPuzzleNavigation, setMonitorInputInactive);
+            Game.Events.Register(GameEvents.StopPuzzleNavigation, setMonitorInputActive);
+
+            Game.Events.Register(GameEvents.LockMonitorFocus, setMonitorInputInactive);
+            Game.Events.Register(GameEvents.UnlockMonitorFocus, setMonitorInputActive);
+
+            base.OnEnable();
+        }
+
+        protected override void OnDisable() {
+            base.OnDisable();
+            if (Game.IsShuttingDown) return;
+
+            Game.Events.Deregister(GameEvents.MonitorEmptySpaceClicked, FocusableUtility.ClickEmptySpace);
+            Game.Events.Deregister(GameEvents.StartNeutrinoNavigation, setMonitorInputInactive);
+            Game.Events.Deregister(GameEvents.StopNeutrinoNavigation, setMonitorInputActive);
+            Game.Events.Deregister(GameEvents.StartPuzzleNavigation, setMonitorInputInactive);
+            Game.Events.Deregister(GameEvents.StopPuzzleNavigation, setMonitorInputActive);
+            Game.Events.Deregister(GameEvents.LockMonitorFocus, setMonitorInputInactive);
+            Game.Events.Deregister(GameEvents.UnlockMonitorFocus, setMonitorInputActive);
+
         }
     }
 
@@ -39,15 +64,15 @@ namespace Astro
             } else if (!(focus == null || state.CurrentFocus == null) && state.CurrentFocus.TargetData.DisplayName.Equals(focus.TargetData.DisplayName)) {
                 // already focused on this object
                 return;
-            } else if (PointsUtility.ReviewInProgress()) {
+            } else if (ReviewUtility.ReviewInProgress()) {
                 return;
             } else if (!state.MonitorInputActive) {
                 return;
             }
-
-
             // TODO: anything that needs to happen to previous focus
 
+            state.OnFocusUpdated.Invoke(focus);
+            
             // Set new focus
             state.CurrentFocus = focus;
             state.FocusUpdated = true;
@@ -57,10 +82,12 @@ namespace Astro
 
             ReferenceUtility.TryEnableIDSubmit(focus != null);
 
-            // Scripting
-            if(state.CurrentFocus == null) return;
+            AstroGame.Events.Dispatch(GameEvents.OnStarSelected, EvtArgs.Ref(state.CurrentFocus));
 
-            if (ReferenceUtility.CurrentRefInNeutrinoEvent()) {
+            // Scripting
+            if (state.CurrentFocus == null) return;
+
+            if (IsCurrentFocusInNeutrinoEvent()) {
                 ScriptUtility.Trigger(ScriptEvents.OnNeutrinoStarSelected);
             } else { 
                 using (var table = TempVarTable.Alloc()) {
@@ -70,8 +97,16 @@ namespace Astro
             }
         }
 
-        public static void ClickEmptySpace()
-        {
+        public static bool IsCurrentFocusInNeutrinoEvent() {
+            PlayerProgressState state = Find.State<PlayerProgressState>();
+            StoryAsset story = Find.GlobalAsset<StoryAsset>();
+            DayConfigAsset day = Find.NamedAsset<DayConfigAsset>(story.Days[state.DayIndex]);
+
+            UIFocus focus = Find.State<FocusState>().CurrentFocus;
+            return Array.IndexOf(day.NeutrinoEvent.RelevantObjectIds, focus.TargetData.AssetId) >= 0;
+        }
+
+        public static void ClickEmptySpace() {
             FocusState state = Find.State<FocusState>();
             SetCurrentFocus(state, null);
         }

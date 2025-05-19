@@ -17,12 +17,14 @@ namespace Astro {
         public Transform Movable;
         public Vector3 LocalDisplacement;
         public bool IsToggle;
+        public bool AutoToggle;
 
         [Header("Sounds")]
         [AudioEventRef] public StringHash32 ClickSfx;
         [AudioEventRef] public StringHash32 ToggleSfx;
         [AudioEventRef] public StringHash32 UntoggleSfx;
 
+        [NonSerialized] public Collider Collider;
         [NonSerialized] public LabInteractable CachedInteractable;
         [NonSerialized] public Vector3 OriginalDisplacement;
         [NonSerialized] public State CurrentState = State.Up;
@@ -31,6 +33,7 @@ namespace Astro {
         private void Awake() {
             OriginalDisplacement = Movable.localPosition;
             this.CacheComponent(ref CachedInteractable);
+            this.CacheComponent(ref Collider);
         }
     }
 }

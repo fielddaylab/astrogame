@@ -1,33 +1,31 @@
 using BeauUtil;
+using EasyAssetStreaming;
 using FieldDay;
-using FieldDay.Scripting;
+using FieldDay.Debugging;
 using FieldDay.SharedState;
 using Leaf.Runtime;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace Astro
-{
-    public class DocumentPuzzleState : SharedStateComponent
-    {
+namespace Astro {
+    public class DocumentPuzzleState : SharedStateComponent {
         [NonSerialized] public bool PuzzleActive = false;
         [NonSerialized] public DocumentPuzzleAsset CurrPuzzle = null;
         [NonSerialized] public DocumentRenderer CurrHoverDoc = null;
-    }
 
-    public static partial class DocumentUtility
-    {
-        #region Spawning
+        [SerializeField] private Color32 m_docHighlightColor;
+        [SerializeField] public static Color32 DocHighlightColor;
 
-        private static void SpawnQuestionDocument(StringHash32 id)
-        {
-            SpawnDocument(Find.NamedAsset<DocumentAsset>(id), id);
+        public enum DebuggingFlags {
+            DisplayDocumentHoverInfo
         }
 
-        #endregion // Spawning
+        private void Awake() {
+           DocHighlightColor = m_docHighlightColor; 
+        }
+    }
 
+    public static partial class DocumentUtility {
         #region Leaf
 
         [LeafMember("StartDocumentPuzzle")]
@@ -48,7 +46,10 @@ namespace Astro
             // Set current puzzle
             puzzleState.CurrPuzzle = puzzleAsset;
             if (puzzleAsset) {
-                SpawnQuestionDocument(puzzleState.CurrPuzzle.QuestionAsset.AssetId);
+                StringHash32 questionId = puzzleState.CurrPuzzle.QuestionAsset.AssetId;
+                DocumentBoardState state = Find.State<DocumentBoardState>();
+                ArchiveState archiveState = Find.State<ArchiveState>();
+                SpawnDocumentToCamera(state, archiveState, questionId);
             }
 
             puzzleState.PuzzleActive = true;
@@ -63,22 +64,49 @@ namespace Astro
 
         #endregion // Sequence
 
-        public static void UpdatePuzzleHoverAsset(DocumentPuzzleState state, DocumentRenderer doc)
-        {
+        public static void UpdatePuzzleHoverAsset(DocumentPuzzleState state, DocumentRenderer doc) {
             if (doc == null) {
                 if (state.CurrHoverDoc != null) {
-                    Debug.Log("[PuzzleState] Hover ended");
-                    state.CurrHoverDoc = doc;
+                    if (Game.IsDevBuild){
+                        if (DebugFlags.IsFlagSet(DocumentPuzzleState.DebuggingFlags.DisplayDocumentHoverInfo)) {
+                            Debug.Log("[DocumentUtility > UpdatePuzzleHoverAsset] Hover ended.");
+                        }
+                    }
+                    SetDocumentHighlight(state.CurrHoverDoc, Color.white);
+                    state.CurrHoverDoc = null;
                 }
             }
             else if (state.CurrHoverDoc != null && state.CurrHoverDoc.Interactable.AssetName.Equals(doc.Interactable.AssetName)) {
                 // no change in hover asset
+                if (Game.IsDevBuild){
+                    if (DebugFlags.IsFlagSet(DocumentPuzzleState.DebuggingFlags.DisplayDocumentHoverInfo)) {
+                        Debug.Log("[DocumentUtility > UpdatePuzzleHoverAsset] Hover unchanged: " + doc.name);
+                    }
+                }
                 return;
-            }
-            else {
+            } else {
                 // change in hover asset
-                Debug.Log("[PuzzleState] Hover changed");
+                if (Game.IsDevBuild){
+                    if (DebugFlags.IsFlagSet(DocumentPuzzleState.DebuggingFlags.DisplayDocumentHoverInfo)) {
+                        Debug.Log("[PuzzleState] Hover changed: " + doc.name);
+                    }
+                }
+                SetDocumentHighlight(state.CurrHoverDoc, Color.white);
                 state.CurrHoverDoc = doc;
+                SetDocumentHighlight(state.CurrHoverDoc, DocumentPuzzleState.DocHighlightColor);
+            }
+        }
+
+        public static void SetDocumentHighlight(DocumentRenderer doc, Color color) {
+            if (doc == null) return;
+
+            StreamingQuadTexture[] textures = doc.GetComponentsInChildren<StreamingQuadTexture>(true);
+            foreach (var texture in textures) {
+                texture.Color = color;
+            }
+            ColorGroup[] cgs = doc.GetComponentsInChildren<ColorGroup>(true);
+            foreach (var cg in cgs) {
+                cg.Color = color;
             }
         }
     }

@@ -1,3 +1,7 @@
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#define DEVELOPMENT
+#endif // UNITY_EDITOR || DEVELOPMENT_BUILD
+
 using BeauRoutine;
 using BeauUtil;
 using BeauUtil.Debugger;
@@ -70,6 +74,11 @@ namespace FieldDay.Audio {
 
                     case AudioCommandType.PlayFromHandle: {
                         Cmd_PlayExisting(cmd.Resume.Handle);
+                        break;
+                    }
+
+                    case AudioCommandType.Seek: {
+                        Cmd_Seek(cmd.Seek);
                         break;
                     }
 
@@ -231,6 +240,13 @@ namespace FieldDay.Audio {
             }
         }
 
+        private unsafe void Cmd_Seek(SeekCommandData seekData) {
+            VoiceData voice = FindVoiceForId(seekData.Handle);
+            if (voice != null) {
+                voice.Components.Source.time = seekData.Position;
+            }
+        }
+
         #endregion // Params
 
         #region Playback
@@ -269,7 +285,7 @@ namespace FieldDay.Audio {
         }
 
         private unsafe void PlayClipInternal(PlayCommandData cmd, AudioEvent evt, AudioClip clip) {
-            float delay = 0;
+            float delay = cmd.Delay;
             byte priority = 128;
 
             AudioPropertyBlock evtProperties = AudioPropertyBlock.Default;
@@ -294,7 +310,7 @@ namespace FieldDay.Audio {
                     evtProperties.Pan = -evtProperties.Pan;
                 }
 
-                delay = evt.Delay.Generate();
+                delay += evt.Delay.Generate();
 
                 if (evt.Loop) {
                     cmd.Flags |= AudioPlaybackFlags.Loop;
@@ -384,6 +400,10 @@ namespace FieldDay.Audio {
 
             voice.EventId = evt ? evt.CachedId : default;
             voice.BusIndex = evt ? evt.CachedBusIndex : 0;
+
+#if DEVELOPMENT
+            voice.DebugName = clip.name;
+#endif // DEVELOPMENT
 
             if ((cmd.Flags & AudioPlaybackFlags.UseProvidedSource) == 0) {
                 if (playbackPos) {

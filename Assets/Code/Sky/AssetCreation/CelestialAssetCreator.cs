@@ -11,7 +11,7 @@ namespace Astro
     /// Creates CelestialAssets as defined in an external source.
     /// Intended to be used in the Editor, creating the assets before build time.
     /// </summary>
-    public class CelestialAssetCreator : MonoBehaviour
+    static public class CelestialAssetCreator
     {
         private const string ASSET_DELIM = "::";
         private const string FEATURE_DELIM = "@";

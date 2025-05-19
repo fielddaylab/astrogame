@@ -58,6 +58,8 @@ MonoBehaviour:
     Assemblies:
     - AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
       TypeCount: 2
+    - AssemblyName: FieldDay.Scripting, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      TypeCount: 1
     Types:
     - TypeName: Astro.AstroGame
       Self: 0
@@ -67,10 +69,16 @@ MonoBehaviour:
       Self: 0
       MemberCount: 1
       OverloadCount: 0
+    - TypeName: FieldDay.Scripting.ScriptDebugHooks
+      Self: 0
+      MemberCount: 1
+      OverloadCount: 0
     Members:
     - MemberName: OnBoot
       Type: 8
     - MemberName: Init
+      Type: 8
+    - MemberName: OnBoot
       Type: 8
     OverloadedMethods: []
     TypeReferences: []
@@ -89,25 +97,29 @@ MonoBehaviour:
     LookupInherit: 0
     Assemblies:
     - AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-      TypeCount: 5
+      TypeCount: 6
     - AssemblyName: FieldDay.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
       TypeCount: 1
     - AssemblyName: FieldDay.Scripting, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
       TypeCount: 1
     Types:
-    - TypeName: PuzzleNavigationUtility
-      Self: 0
-      MemberCount: 2
-      OverloadCount: 0
     - TypeName: Astro.AstroGame
       Self: 0
       MemberCount: 1
       OverloadCount: 0
-    - TypeName: Astro.PointsUtility
+    - TypeName: Astro.NavigationUtility
+      Self: 0
+      MemberCount: 2
+      OverloadCount: 0
+    - TypeName: Astro.PointsReviewSystem
+      Self: 0
+      MemberCount: 2
+      OverloadCount: 0
+    - TypeName: Astro.ReviewUtility
       Self: 0
       MemberCount: 1
       OverloadCount: 0
-    - TypeName: Astro.PointsReviewSystem
+    - TypeName: Astro.InstrumentInventoryUtility
       Self: 0
       MemberCount: 1
       OverloadCount: 0
@@ -124,15 +136,19 @@ MonoBehaviour:
       MemberCount: 1
       OverloadCount: 0
     Members:
+    - MemberName: LoadLevel
+      Type: 8
     - MemberName: DebugStartPuzzleNav
       Type: 8
     - MemberName: DebugStopPuzzleNav
       Type: 8
-    - MemberName: LoadLevel
+    - MemberName: SubmitCorrectPuzzleSolution
+      Type: 8
+    - MemberName: SpawnPuzzle
       Type: 8
     - MemberName: PointsMenu
       Type: 8
-    - MemberName: SubmitCorrectPuzzleSolution
+    - MemberName: CreateDebugMenu
       Type: 8
     - MemberName: DebugMenu
       Type: 8
@@ -148,9 +164,13 @@ MonoBehaviour:
     LookupInherit: 0
     Assemblies:
     - AssemblyName: FieldDay.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-      TypeCount: 6
+      TypeCount: 7
     Types:
     - TypeName: FieldDay.Scenes.SceneMgr
+      Self: 0
+      MemberCount: 1
+      OverloadCount: 0
+    - TypeName: FieldDay.Perf.PerformanceMgr
       Self: 0
       MemberCount: 1
       OverloadCount: 0
@@ -176,6 +196,8 @@ MonoBehaviour:
       OverloadCount: 0
     Members:
     - MemberName: CreateDebugMenu
+      Type: 8
+    - MemberName: CreateDebugInfo
       Type: 8
     - MemberName: CreateDebugMenu
       Type: 8

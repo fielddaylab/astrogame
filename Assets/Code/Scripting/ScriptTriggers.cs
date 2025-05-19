@@ -1,31 +1,37 @@
-using System.Collections;
+using Astro.Audio;
 using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay;
-using FieldDay.Assets;
 using FieldDay.Scripting;
 using Leaf.Runtime;
+using UnityEngine;
 
 namespace Astro {
     public static class ScriptTriggers {
         [InvokeOnBoot]
         static public void Init() {
-            PointsUtility.OnPointsUpdated.Register(OnScore);
-            PointsReviewSystem.OnCorrectPuzzleSubmission.Register(OnCorrectPuzzleSubmit);
+            ReviewUtility.OnPointsUpdated.Register(OnScore);
+            ReviewUtility.OnCorrectPuzzleSubmission.Register(OnCorrectPuzzleSubmit);
 
             Game.Events.Register(GameEvents.PuzzleNavigationComplete, OnPuzzleNavComplete);
             Game.Events.Register(GameEvents.NeutrinoNavigationComplete, OnNeutrinoNavComplete);
+
+            Game.Events.Register(GameEvents.ValidOpenIdSubmission, OnValidOpenIdSubmission);
+            Game.Events.Register(GameEvents.InvalidOpenIdSubmission, OnInvalidOpenIdSubmission);
+            Game.Events.Register(GameEvents.IncorrectOpenIdSubmission, OnIncorrectOpenIdSubmission);
+            Game.Events.Register(GameEvents.DuplicateOpenIdSubmission, OnDuplicateOpenIdSubmission);
+            Game.Events.Register(GameEvents.UnacceptedOpenIdSubmission, OnUnacceptedOpenIdSubmission);
         }
 
         static private void OnScore() {
-            using(var table = TempVarTable.Alloc()) {
-                table.Set("sciencePoints", PointsUtility.GetPoints());
+            using (var table = TempVarTable.Alloc()) {
+                table.Set("sciencePoints", ReviewUtility.GetPoints());
                 ScriptUtility.Trigger(ScriptEvents.PointsUpdated, table);
             }
         }
 
         static private void OnCorrectPuzzleSubmit() {
-            using(var table = TempVarTable.Alloc()) {
+            using (var table = TempVarTable.Alloc()) {
                 table.Set("puzzleName", Find.State<PuzzleState>().ActivePuzzle.DisplayName);
                 ScriptUtility.Trigger(ScriptEvents.CorrectPuzzleSubmission, table);
             }
@@ -37,6 +43,26 @@ namespace Astro {
 
         static private void OnNeutrinoNavComplete() {
             ScriptUtility.Trigger(ScriptEvents.NeutrinoNavigationComplete);
+        }
+
+        static private void OnValidOpenIdSubmission() {
+            ScriptUtility.Trigger(ScriptEvents.OnValidOpenIdSubmission);
+        }
+
+        static private void OnIncorrectOpenIdSubmission() {
+            ScriptUtility.Trigger(ScriptEvents.OnIncorrectOpenIdSubmission);
+        }
+
+        static private void OnInvalidOpenIdSubmission() {
+            ScriptUtility.Trigger(ScriptEvents.OnInvalidOpenIdSubmission);
+        }
+
+        static private void OnDuplicateOpenIdSubmission() {
+            ScriptUtility.Trigger(ScriptEvents.OnDuplicateOpenIdSubmission);
+        }
+
+        static private void OnUnacceptedOpenIdSubmission() {
+            ScriptUtility.Trigger(ScriptEvents.OnUnacceptedOpenIdSubmission);
         }
 
         // TODO make this actually process more than one day
@@ -58,7 +84,7 @@ namespace Astro {
             PlayerProgressState state = Find.State<PlayerProgressState>();
             StoryAsset story = Find.GlobalAsset<StoryAsset>();
             for (int i = 0; i < story.Days.Length; i++) {
-                if (story.Days[i] == dayId){
+                if (story.Days[i] == dayId) {
                     state.DayIndex = i;
                     break;
                 }
@@ -67,6 +93,7 @@ namespace Astro {
             var day = Find.NamedAsset<DayConfigAsset>(dayId);
 
             Game.Events.Dispatch(GameEvents.BeforeNextDayLoad);
+            MusicUtility.StopMusic(1);
 
             Log.Msg("[ScriptTriggers] Loading day '{0}'", day.name);
 
@@ -104,7 +131,7 @@ namespace Astro {
             GameLoop.SuspendUpdates(AstroGame.InstrumentUpdateMask);
         }
 
-        
+
         [LeafMember("StartMonitorControls")]
         static private void LeafStartMonitorControls() {
             GameLoop.ResumeUpdates(AstroGame.MonitorControlsUpdateMask);
@@ -116,8 +143,20 @@ namespace Astro {
             GameLoop.SuspendUpdates(AstroGame.MonitorControlsUpdateMask);
         }
 
+        [LeafMember("LockMonitorFocus")]
+        static private void LeafLockMonitorFocus()
+        {
+            Game.Events.Dispatch(GameEvents.LockMonitorFocus);
+        }
+
+        [LeafMember("UnlockMonitorFocus")]
+        static private void LeafUnlockMonitorFocus()
+        {
+            Game.Events.Dispatch(GameEvents.UnlockMonitorFocus);
+        }
+
         [LeafMember("StartOpenMode")]
-        static private void LeafStartOpenMode(){
+        static private void LeafStartOpenMode() {
             Game.Events.Dispatch(GameEvents.StartOpenMode);
 
             GameLoop.ResumeUpdates(AstroGame.MonitorControlsUpdateMask);
@@ -127,7 +166,7 @@ namespace Astro {
         }
 
         [LeafMember("StopOpenMode")]
-        static private void LeafStopOpenMode(){
+        static private void LeafStopOpenMode() {
             Game.Events.Dispatch(GameEvents.StopOpenMode);
 
             GameLoop.SuspendUpdates(AstroGame.MonitorControlsUpdateMask);
@@ -157,8 +196,8 @@ namespace Astro {
             if (!config) return;
             EqCoords target = config.NeutrinoEvent.NeutrinoCoordinates;
 
-            var navState = Find.State<PuzzleNavigationState>();
-            navState.ConstellationSnapRoutine.Replace(PuzzleNavigationUtility.SnapConstellationAlignment(target));
+            var navState = Find.State<NavigationState>();
+            navState.ConstellationSnapRoutine.Replace(NavigationUtility.SnapAlignment(target));
         }
 
         [LeafMember("StartPuzzleNavigation")]
@@ -181,13 +220,39 @@ namespace Astro {
         }
 
         [LeafMember("InitUpdateMasks")]
-        static private void LeafInitUpdateMasks()
-        {
+        static private void LeafInitUpdateMasks() {
             GameLoop.SuspendUpdates(AstroGame.InteractUpdateMask);
             GameLoop.SuspendUpdates(AstroGame.SubmissionUpdateMask);
             GameLoop.SuspendUpdates(AstroGame.DocumentUpdateMask);
             GameLoop.SuspendUpdates(AstroGame.InstrumentUpdateMask);
             GameLoop.SuspendUpdates(AstroGame.MonitorControlsUpdateMask);
+        }
+
+        [LeafMember("ToggleDeskPicture")]
+        static private void LeafToggleDeskPicture() {
+            BackgroundState bgState = Find.State<BackgroundState>();
+            bgState.DeskPicture.SetActive(!bgState.DeskPicture.activeSelf)
+            ;
+        }
+
+        [LeafMember("EnableDocumentClose")]
+        static private void LeafEnableDocumentClose(StringHash32 assetId, bool value, bool updateNow = false) {
+            DocumentAsset docAsset = Find.NamedAsset<DocumentAsset>(assetId);
+            if (docAsset == null) {
+                Debug.LogWarning("[LeafEnableDocumentClose] Failed to find document" + assetId);
+            }
+
+            docAsset.CloseEnabled = value;
+
+            if (updateNow) {
+                DocumentBoardState boardState = Find.State<DocumentBoardState>();
+
+                if (boardState.DocZoomed) {
+                    DocumentUtility.UpdateEnabledDocParts(boardState.DocZoomed, DocumentBoardState.ZoomActiveFunctions);
+                } else {
+                    DocumentUtility.UpdateEnabledDocParts(docAsset.Interactable, DocumentBoardState.BoardActiveFunctions); 
+                }
+            }
         }
     }
 }

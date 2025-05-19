@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Astro {
-    public sealed class DocumentBoardState : SharedStateComponent, IRegistrationCallbacks {
+    public sealed class DocumentBoardState : SharedStateComponent {
         public bool EnableDocumentInteraction;
         [NonSerialized] public DocumentInteractable SelectedDocument;
         [NonSerialized] public Vector3 LastMousePos;
@@ -38,20 +38,22 @@ namespace Astro {
         public Vector3 DocHoverOffset;
         public Vector3 DocZoomOffset;
 
-        public void OnDeregister() {
-        }
+        public static readonly DocPartFunction[] ZoomActiveFunctions = new []{ DocPartFunction.Close, DocPartFunction.Flip };
+        public static readonly DocPartFunction[] BoardActiveFunctions = new []{ DocPartFunction.Move, DocPartFunction.Zoom, DocPartFunction.Flip };
 
-        public void OnRegister() {
+        void OnDrawGizmosSelected() { 
+            var oldMatrix = Gizmos.matrix;
+            Gizmos.color = Color.red;
+            var position = DocumentParent.transform.position;
+            var rotation = DocumentParent.transform.rotation;
+            var scale = (Vector3) DraggableBounds.size;
+            Gizmos.matrix = Matrix4x4.TRS(position, rotation, scale);
+            Gizmos.DrawWireCube(Vector3.zero, Vector3.one);
+            Gizmos.matrix = oldMatrix;
         }
     }
 
     public static partial class DocumentUtility {
-
-        private const string POSTCARD_DIR = "/Postcards/";
-        private const string LOW_RES_ID = "LOW_RES_";
-        private const string DEFAULT_LOW_RES_FILE_TYPE = ".png";
-        private const string DEFAULT_LOW_RES_TEXT = "Scribbles.png";
-
         #region Spawning
 
         public static DocumentRenderer SpawnDocument(DocumentAsset asset, StringHash32 id, DocumentBoardState state = null, bool addToArchive = true) {
@@ -59,83 +61,16 @@ namespace Astro {
                 state = Find.State<DocumentBoardState>();
             }
             DocumentRenderer spawned = GameObject.Instantiate(asset.Prefab, state.DocumentParent);
+            spawned.Interactable.AssetName = id;
+            spawned.name = id.ToDebugString();
 
             state.SpawnedDocuments.Add(spawned);
 
-            // Init text
-            spawned.Title.SetText(asset.TitleText);
-            if (spawned.FrontBodyText) { spawned.FrontBodyText.SetText(asset.FrontBodyText); }
-            if(spawned.BackBodyText) { spawned.BackBodyText.SetText(asset.BackBodyText); }
+            DocumentUtility.DisplayFullDocument(spawned, asset);
 
-            if (spawned.FrontBodyText.text.Length > 0) {
-                spawned.LowResImgFront.Path = Application.streamingAssetsPath + POSTCARD_DIR + DEFAULT_LOW_RES_TEXT;
-                spawned.LowResImgFront.Preload();
-            }
-            if(spawned.BackBodyText != null) {
-                if (spawned.BackBodyText?.text.Length > 0) {
-                    spawned.LowResImgBack.Path = Application.streamingAssetsPath + POSTCARD_DIR + DEFAULT_LOW_RES_TEXT;
-                    spawned.LowResImgBack.Preload();
-                }
-            }
-
-            // Init video
-            if (spawned.Video != null) {
-                spawned.Video.gameObject.SetActive(true);
-
-                spawned.Video.url = default;
-
-                if (asset.VideoName.Length == 0) {
-                    spawned.FrontAnimation.gameObject.SetActive(false);
-                }
-                else {
-                    spawned.BaseVisualAssetName = asset.VideoName;
-                    spawned.BaseVisualAssetFileType = "." + asset.FileType;
-                    spawned.Video.url = Application.streamingAssetsPath + POSTCARD_DIR + spawned.BaseVisualAssetName + spawned.BaseVisualAssetFileType;
-                    spawned.FrontAnimation.gameObject.SetActive(true);
-                    spawned.Video.Play();
-
-                    spawned.LowResImgFront.Path = Application.streamingAssetsPath + POSTCARD_DIR + LOW_RES_ID + spawned.BaseVisualAssetName + DEFAULT_LOW_RES_FILE_TYPE;
-                    spawned.LowResImgFront.Preload();
-                }
-            }
-
-            // Init image
-            if (spawned.FrontStaticImg != null) {
-                spawned.FrontStaticImg.gameObject.SetActive(true);
-
-                spawned.FrontStaticImg.Path = default;
-
-                if (asset.StaticImgName.Length == 0) {
-                    spawned.FrontStaticImg.gameObject.SetActive(false);
-                }
-                else {
-                    spawned.BaseVisualAssetName = asset.StaticImgName;
-                    spawned.BaseVisualAssetFileType = "." + asset.FileType;
-                    spawned.FrontStaticImg.Path = Application.streamingAssetsPath + POSTCARD_DIR + spawned.BaseVisualAssetName + spawned.BaseVisualAssetFileType;
-                    spawned.FrontStaticImg.Preload();
-                    spawned.FrontStaticImg.gameObject.SetActive(true);
-
-                    spawned.LowResImgFront.Path = Application.streamingAssetsPath + POSTCARD_DIR + LOW_RES_ID + spawned.BaseVisualAssetName + spawned.BaseVisualAssetFileType;
-                    spawned.LowResImgFront.Preload();
-                }
-            }
-
-            spawned.transform.localPosition = asset.DefaultPinnedPos;
-            if (spawned.ZoomOffsetOverride == default) {
-                spawned.ZoomOffsetOverride = asset.ZoomOffsetOverride;
-            }
-            else if (asset.ZoomOffsetOverride != default) {
-                spawned.ZoomOffsetOverride = asset.ZoomOffsetOverride;
-            }
-            spawned.Interactable.Renderer = spawned;
-            spawned.Interactable.Parts = spawned.Interactable.GetComponentsInChildren<DocumentPart>(true);
-            spawned.Interactable.AssetName = id;
-
-
+            // add asset to ArchiveState (usually if not being spawned from an Archive)
             if (addToArchive) {
-                // add asset to ArchiveState (usually if not being spawned from an Archive)
                 var archiveState = Find.State<ArchiveState>();
-
                 ArchiveUtility.AddAssetToArchive(archiveState, id, spawned.transform.localPosition);
             }
 
@@ -166,7 +101,9 @@ namespace Astro {
             var spawned = SpawnDocument(asset, id, state);
             // Init pinned position
             spawned.transform.SetParent(state.DocumentParent, false);
-            spawned.transform.localPosition = FindAvailablePos(state, spawned);
+            if (spawned.transform.localPosition == Vector3.zero) {
+                spawned.transform.localPosition = FindAvailablePos(state, spawned);
+            }
             state.OverrideStoredDocPos = spawned.transform.position;
             state.OverrideStoredDoc = true;
             // Spawn below player view
@@ -175,10 +112,6 @@ namespace Astro {
             // Move to zoomed view
             ToggleZoomDoc(spawned.Interactable, state);
             SetDocumentInteractionEnabled(true);
-
-            if(spawned.Video != null){
-                if (spawned.Video.clip != null) { spawned.Video.Play(); }
-            }
         }
 
         public static void SpawnDocument(StringHash32 id) {
@@ -191,13 +124,14 @@ namespace Astro {
             int maxTries = 10;
             for (int i = 0; i < maxTries; i++) {
                 // random point on board
-                float xExtents = state.DraggableBounds.x / 2;
-                float yExtents = state.DraggableBounds.y / 2;
+                float xExtents = state.DraggableBounds.x * 0.6f;
+                float yExtents = state.DraggableBounds.y * 0.6f;
                 var offset = state.DocumentParent.transform.position;
                 Vector3 pos = offset + new Vector3(UnityEngine.Random.Range(-xExtents, xExtents), UnityEngine.Random.Range(-yExtents, yExtents), 0);
+                Vector3 boxPos = pos - new Vector3(0, doc.Size.height / 2, 0);
 
-                Vector3 docExtents = new Vector3(doc.Size.width / 2, doc.Size.height / 2, 1);
-                if (!Physics.CheckBox(pos, docExtents, state.DocumentParent.transform.rotation, LayerMasks.DocumentInteract_Mask)) {
+                Vector3 docExtents = new Vector3(doc.Size.width, doc.Size.height, 5);
+                if (!Physics.CheckBox(boxPos, docExtents, state.DocumentParent.transform.rotation, LayerMasks.DocumentInteract_Mask) || (i == maxTries - 1)) {
                     finalPos = pos - offset;
                     break;
                 }
@@ -206,19 +140,14 @@ namespace Astro {
             return finalPos;
         }
 
-        public static bool OverlapBoxAtPos(DocumentBoardState state, DocumentRenderer doc, out DocumentRenderer hit)
-        {
+        public static bool OverlapBoxAtPos(DocumentBoardState state, DocumentRenderer doc, out DocumentRenderer hit) {
             hit = null;
 
-            var offset = state.DocumentParent.transform.position;
-            var localPos = doc.transform.localPosition;
-            localPos.z = 0;
-            Vector3 pos = offset + localPos;
-
             Vector3 docExtents = new Vector3(doc.Size.width / 2, doc.Size.height / 2, 1);
-            var hits = Physics.OverlapBox(pos, docExtents, state.DocumentParent.transform.rotation, LayerMasks.DocumentInteract_Mask);
-            for (int i = 0; i < hits.Length; i++)
-            {
+            var position = doc.transform.position + new Vector3(0f, doc.Size.y, 0f);
+
+            var hits = Physics.OverlapBox(position, docExtents, doc.transform.rotation, LayerMasks.DocumentInteract_Mask);
+            for (int i = 0; i < hits.Length; i++) {
                 var currPart = hits[i].GetComponent<DocumentPart>();
                 var currRenderer = currPart ? currPart.Document.Renderer : null;
                 if (currRenderer && !currRenderer.Interactable.AssetName.Equals(doc.Interactable.AssetName)) {
@@ -263,6 +192,10 @@ namespace Astro {
                         ToggleZoomDoc(docPart.Document, state);
                         break;
                     }
+                case DocPartFunction.Close: {
+                        ReturnDocToBoard(docPart.Document, state);
+                        break;
+                    }
                 case DocPartFunction.Flip: {
                         FlipDoc(docPart.Document, state);
                         break;
@@ -272,6 +205,7 @@ namespace Astro {
                     }
             }
         }
+
         public static void StartMoveDoc(DocumentInteractable newDoc, CursorHint partHint, DocumentBoardState state = null) {
             if (state == null) {
                 state = Find.State<DocumentBoardState>();
@@ -293,6 +227,10 @@ namespace Astro {
                 state.SelectedDocument = null;
             }
             state.InteractedThisFrame = true;
+
+            //check if we are currently over a puzzle doc
+            DocumentRenderer hoverDoc = Find.State<DocumentPuzzleState>().CurrHoverDoc;
+            if (hoverDoc != null) SetDocumentHighlight(hoverDoc, DocumentPuzzleState.DocHighlightColor);
         }
 
         public static void DeselectDocument(DocumentBoardState state) {
@@ -300,15 +238,13 @@ namespace Astro {
         }
 
         public static void ToggleZoomDoc(DocumentInteractable doc, DocumentBoardState state = null) {
-            if (doc == null) {
-                return;
-            }
-            if (state == null) {
-                state = Find.State<DocumentBoardState>();
-            }
+            if (doc == null) return;
+            if (state == null) state = Find.State<DocumentBoardState>();
+
             if (state.SelectedDocument) {
                 DeselectDocument(state);
             }
+
             if (state.DocZoomed) {
                 // Return doc to board
                 ReturnDocToBoard(doc, state);
@@ -316,51 +252,42 @@ namespace Astro {
                 // Bring doc to camera
                 BringDocToCam(doc, state);
             }
+
             state.InteractedThisFrame = true;
         }
 
-        private static void ReturnDocToBoard(DocumentInteractable doc, DocumentBoardState state)
-        {
-            SetInteractionLayer(state.DocZoomed, LayerMasks.DocumentInteract_Index);
-            state.DocumentRoutine.Replace(MoveDocToPos(doc.transform, state.StoredDocPos))
-                .OnComplete(() =>
-                {
-                    // Replace with low-res assets
-                    // if video, replace with low-res version
-                    if (doc.Renderer.Video?.url.Length > 0)
-                    {
-                        doc.Renderer.FrontAnimation?.gameObject.SetActive(false);
-                        doc.Renderer.LowResImgFront?.gameObject.SetActive(true);
+        public static void UpdateEnabledDocParts(DocumentInteractable doc, DocPartFunction[] mode) {
+            foreach (DocumentPart part in doc.Parts) {
+                if (Array.IndexOf(mode, part.PartType) != -1) {
+                    if (part.PartType == DocPartFunction.Close) {
+                        DocumentAsset docAsset = Find.NamedAsset<DocumentAsset>(doc.AssetName);
+                        if (docAsset.CloseEnabled) {
+                            part.gameObject.SetActive(true);
+                        } else {
+                            part.gameObject.SetActive(false);
+                        }
+                    } else {
+                        part.gameObject.SetActive(true);
                     }
-                    // if image, replace with low-res version
-                    if (doc.Renderer.FrontStaticImg?.Path?.Length > 0)
-                    {
-                        doc.Renderer.FrontStaticImg?.gameObject.SetActive(false);
-                        doc.Renderer.FrontStaticImg?.Unload();
-                        doc.Renderer.LowResImgFront?.gameObject.SetActive(true);
-                        doc.Renderer.LowResImgFront?.Preload();
-                    }
-                    // if front text, hide body text and display default text scribbles
-                    if (doc.Renderer.FrontBodyText?.text.Length > 0)
-                    {
-                        doc.Renderer.FrontBodyText?.gameObject.SetActive(false);
-                        doc.Renderer.LowResImgFront?.gameObject.SetActive(true);
-                        doc.Renderer.LowResImgFront?.Preload();
-                    }
-                    // if back text, hide body text and display default text scribbles
-                    if (doc.Renderer.BackBodyText?.text.Length > 0)
-                    {
-                        doc.Renderer.BackBodyText?.gameObject.SetActive(false);
-                        doc.Renderer.LowResImgBack?.gameObject.SetActive(true);
-                        doc.Renderer.LowResImgBack?.Preload();
-                    }
-                });
-            // stop video
-            if (doc.Renderer.Video && doc.Renderer.Video.isPlaying) {
-                doc.Renderer.Video.Pause();
-                doc.Renderer.Video.frame = (long)doc.Renderer.Video.frameCount - 1;
+                } else {
+                    part.gameObject.SetActive(false);
+                } 
             }
+        }
 
+        private static void ReturnDocToBoard(DocumentInteractable doc, DocumentBoardState state) {
+            SetInteractionLayer(state.DocZoomed, LayerMasks.DocumentInteract_Index);
+
+            UpdateEnabledDocParts(doc, DocumentBoardState.BoardActiveFunctions);
+
+            state.DocumentRoutine.Replace(MoveDocToPos(doc.transform, state.StoredDocPos))
+                .OnComplete(() => {
+                    DocumentRenderer renderer = doc.Renderer;
+                    DocumentAsset asset = Find.NamedAsset<DocumentAsset>(doc.AssetName);
+
+                    DocumentUtility.DisplayLowResDocument(renderer, asset);
+
+                });
 
             state.StoredDocPos = Vector3.zero;
             state.DocZoomed = null;
@@ -382,63 +309,20 @@ namespace Astro {
             Vector3 zoomOffset = doc.Renderer.ZoomOffsetOverride == default ? state.DocZoomOffset : doc.Renderer.ZoomOffsetOverride;
             var viewState = Find.State<ViewState>();
 
-            if (doc.Renderer.Video != null){
-                if (doc.Renderer.Video?.url.Length != 0) {
-                    doc.Renderer.Video.frame = 0;
-                }
-            }
+            DocumentRenderer renderer = doc.Renderer;
+            DocumentAsset asset = Find.NamedAsset<DocumentAsset>(doc.AssetName);
 
-            // Replace with high-res assets
-
-            // if video, replace with high-res version
-            if (doc.Renderer.Video != null){
-                if (doc.Renderer.Video?.url?.Length > 0) {
-                    doc.Renderer.FrontAnimation.gameObject.SetActive(true);
-                    doc.Renderer.LowResImgFront.gameObject.SetActive(false);
-                }
-            }
-
-            // if image, replace with high-res version
-            if (doc.Renderer.FrontStaticImg != null){
-                if (doc.Renderer.FrontStaticImg?.Path?.Length > 0) {
-                    doc.Renderer.FrontStaticImg.gameObject.SetActive(true);
-                    doc.Renderer.FrontStaticImg.Preload();
-                    doc.Renderer.LowResImgFront.gameObject.SetActive(false);
-                    doc.Renderer.LowResImgFront.Unload();
-                }
-            }
-
-            // if front text, hide default text scribbles and enable body text
-            if (doc.Renderer.FrontBodyText?.text.Length > 0) {
-                doc.Renderer.FrontBodyText.gameObject.SetActive(true);
-                doc.Renderer.LowResImgFront.gameObject.SetActive(false);
-                doc.Renderer.LowResImgFront.Unload();
-            }
-
-            // if back text, hide body text and display default text scribbles
-            if (doc.Renderer.BackBodyText != null){
-                if (doc.Renderer.BackBodyText.text.Length > 0) {
-                    doc.Renderer.BackBodyText.gameObject.SetActive(true);
-                    doc.Renderer.LowResImgBack.gameObject.SetActive(false);
-                    doc.Renderer.LowResImgBack.Unload();
-                }
-            }
+            DocumentUtility.DisplayFullDocument(renderer, asset);
+            UpdateEnabledDocParts(doc, DocumentBoardState.ZoomActiveFunctions);
 
             state.DocumentRoutine.Replace(MoveDocToCam(viewState, doc.transform, Game.Rendering.PrimaryCamera.transform, zoomOffset))
-                .OnComplete(() =>
-                {
+                .OnComplete(() => {
                     using (var table = TempVarTable.Alloc()) {
                         table.Set("documentId", doc.AssetName);
                         ScriptUtility.Trigger(ScriptEvents.DocumentInspectStart, table);
                     }
-
-                    // play video
-                    if (doc.Renderer.Video) {
-                        if (doc.Renderer.Video.url.Length != 0) {
-                            doc.Renderer.Video.Play();
-                        }
-                    }
                 });
+
             state.DocZoomed = doc;
             doc.transform.SetParent(Game.Rendering.PrimaryCamera.transform, true);
             SetInteractionLayer(state.DocZoomed, LayerMasks.TopLayer_Index);
@@ -472,18 +356,28 @@ namespace Astro {
             float lift = state.DocZoomed ? 0.5f : -0.5f;
             state.DocumentRoutine.Replace(DocRotateY(doc, lift, angle));
             state.InteractedThisFrame = true;
+
+            using (var table = TempVarTable.Alloc()) {
+                table.Set("documentId", doc.AssetName);
+                ScriptUtility.Trigger(ScriptEvents.DocumentInspectFlip, table);
+            }
         }
 
         #endregion // Interaction
 
         #region Routines
-        public static IEnumerator MoveAboveRelativeToDoc(DocumentInteractable doc, DocumentRenderer relativeTo)
-        {
+        /// <summary>
+        /// Used for moving question docs to a specific position relative to another document
+        /// </summary>
+        /// <param name="doc">the document the player has in hand</param>
+        /// <param name="relativeTo">the document player is currently hovering over</param>
+        public static IEnumerator MoveAboveRelativeToDoc(DocumentInteractable doc, DocumentRenderer relativeTo) {
             // align to bottom-left with out-sticking margin
             var margin = 0.2f;
-            var localOffset = new Vector3(-relativeTo.Size.width / 2 + doc.Renderer.Size.width / 2 - margin, -relativeTo.Size.height + doc.Renderer.Size.height / 2, -0.01f);
+            var localOffset = new Vector3(-relativeTo.Size.width / 2 + doc.Renderer.Size.width / 2 - margin, -relativeTo.Size.height + doc.Renderer.Size.height / 2, -0.25f);
             var globalOffset = relativeTo.transform.TransformVector(localOffset);
-            yield return doc.transform.MoveTo(relativeTo.transform.position + globalOffset, 0.2f).Ease(Curve.CubeIn);
+            Vector3 targetPos = relativeTo.transform.position + globalOffset;
+            yield return doc.transform.MoveTo(targetPos, 0.2f).Ease(Curve.CubeIn);
         }
 
         private static IEnumerator ToggleDocHover(Transform doc, Vector3 hoverOffset) {
@@ -513,12 +407,12 @@ namespace Astro {
         private static IEnumerator DocRotateY(DocumentInteractable doc, float lift, float angle) {
             yield return Routine.Combine(
                 doc.transform.MoveTo(doc.transform.localPosition.z + lift, 0.2f, Axis.Z, Space.Self).Ease(Curve.CubeIn),
-                doc.Paper.MoveTo(doc.Paper.localPosition.y - 0.1f, 0.2f, Axis.Y, Space.Self).Ease(Curve.CubeIn)
+                doc.BodyRoot.MoveTo(doc.BodyRoot.localPosition.y - 0.1f, 0.2f, Axis.Y, Space.Self).Ease(Curve.CubeIn)
             );
-            yield return doc.Paper.RotateTo(doc.Paper.localRotation.y + angle, 0.3f, Axis.Y, Space.Self, AngleMode.Absolute).Ease(Curve.SineInOut);
+            yield return doc.BodyRoot.RotateTo(doc.BodyRoot.localRotation.y + angle, 0.3f, Axis.Y, Space.Self, AngleMode.Absolute).Ease(Curve.SineInOut);
             
             yield return Routine.Combine(
-                doc.Paper.MoveTo(doc.Paper.localPosition.y + 0.1f, 0.2f, Axis.Y, Space.Self).Ease(Curve.CubeIn),
+                doc.BodyRoot.MoveTo(doc.BodyRoot.localPosition.y + 0.1f, 0.2f, Axis.Y, Space.Self).Ease(Curve.CubeIn),
                 doc.transform.MoveTo(doc.transform.localPosition.z - lift, 0.2f, Axis.Z, Space.Self).Ease(Curve.CubeIn)
             );
             yield return null;

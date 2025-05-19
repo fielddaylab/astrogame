@@ -3,16 +3,39 @@
 using Astro;
 using FieldDay;
 using FieldDay.Components;
+using ScriptableBake;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 namespace Astro {
 
-    public class Spectrograph : BatchedComponent {
+    public class Spectrograph : BatchedComponent, IBaked, IRegistrationCallbacks {
         public MeshRenderer Background;
+        [NonSerialized] public float BackgroundWidth;
         [NonSerialized] public SpectrographMaterialMask CurrentElements;
         // TODO: use pools for lines?
         public List<GameObject> Lines;
+
+        public void OnRegister() {
+            if (BackgroundWidth == default) {
+                BackgroundWidth = Background.gameObject.transform.localScale.x;
+            }
+        }
+
+        public void OnDeregister() {
+            
+        }
+
+
+#if UNITY_EDITOR
+        int IBaked.Order => 1000;
+
+        bool IBaked.Bake(BakeFlags flags, BakeContext context) {
+            Background.sharedMaterial = Find.Any<SpectrometerState>().BlankBackground;
+            return true;
+        }
+
+#endif // UNITY_EDITOR
     }
 
     [Flags]
@@ -26,14 +49,15 @@ namespace Astro {
         Magnesium = 0x040,
         Oxygen = 0x080,
         Titanium = 0x100,
+        Lithium = 0x200,
 
-        OType = Hydrogen | Helium,
-        BType = Hydrogen | Helium | Carbon,
-        AType = Hydrogen | Helium | Carbon | Iron | Calcium,
-        FType = Hydrogen | Helium | Carbon | Iron | Calcium | Sodium | Magnesium,
-        GType = Hydrogen | Helium | Carbon | Iron | Calcium | Sodium | Magnesium,
-        KType = Helium | Carbon | Iron | Calcium | Sodium | Magnesium | Oxygen ,
-        MType = Helium | Carbon | Iron | Calcium | Sodium | Magnesium | Oxygen | Titanium
+        OType = Helium,
+        BType = Hydrogen | Helium,
+        AType = Hydrogen | Helium | Iron | Calcium,
+        FType = Hydrogen | Helium | Iron | Calcium | Sodium | Magnesium | Oxygen,
+        GType = Hydrogen | Helium | Iron | Calcium | Sodium | Magnesium | Oxygen,
+        KType = Helium | Iron | Calcium | Sodium | Magnesium | Oxygen ,
+        MType = Helium | Iron | Calcium | Sodium | Magnesium | Oxygen | Titanium
 
     }
 
@@ -55,7 +79,7 @@ namespace Astro {
             EqualizeLineNums(graph, linePos.Count, state);
             for (int i = 0; i < linePos.Count; i++) {
                 graph.Lines[i].SetActive(true);
-                graph.Lines[i].transform.localPosition = new Vector3((2*linePos[i]) - 1f, 0f, -0.01f);
+                graph.Lines[i].transform.localPosition = new Vector3((graph.BackgroundWidth*linePos[i] - graph.BackgroundWidth/2), 0f, -0.01f);
             }
         }
 
@@ -74,9 +98,9 @@ namespace Astro {
 
         private static void UpdateBackground(Spectrograph graph, SpectrometerState state) {
             if (graph.CurrentElements == 0) {
-                graph.Background.material = state.BlankBackground;
+                graph.Background.sharedMaterial = state.BlankBackground;
             } else {
-                graph.Background.material = state.SpectrumBackground;
+                graph.Background.sharedMaterial = state.SpectrumBackground;
             }
         }
     }

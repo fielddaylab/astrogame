@@ -12,10 +12,10 @@ using FieldDay.Audio;
 
 namespace Astro {
     [SysUpdate(GameLoopPhase.Update, 0, AstroGame.SubmissionUpdateMask)]
-    public class PointsReviewSystem : SharedStateSystemBehaviour<PlayerPointsState> {
+    public class PointsReviewSystem : SharedStateSystemBehaviour<ReviewState> {
 
         public override bool HasWork() {
-            return base.HasWork() && (m_State.SubmittedObject || m_State.SubmittedPuzzle);
+            return base.HasWork() && (m_State.CurrentSubmission != 0);
         }
 
         public override void ProcessWork(float deltaTime) {
@@ -28,15 +28,15 @@ namespace Astro {
                 return;
             } 
             if (m_State.ReviewCooldown.Advance(deltaTime)) {
-                ResetReview(m_State.ReviewModule);
+                ReviewModuleUtility.ResetReview( m_State.ReviewModule );
             } 
         }
 
         private void CheckObjectOrPuzzle() {
-            if (m_State.SubmittedObject) {
+            if (m_State.CurrentSubmission == ReviewSubmissionType.Identification) {
                 CheckObjectIdentification();
             } 
-            if (m_State.SubmittedPuzzle) {
+            if (m_State.CurrentSubmission == ReviewSubmissionType.Puzzle) {
                 // if puzzle checking is expensive, could this be amortized over the timer duration?
                 CheckPuzzle();
             }
@@ -51,45 +51,18 @@ namespace Astro {
             } else return;
         }
 
-        private void ResetReview(ReviewModule module) {
-            module.PipsRevealed = 0;
-            foreach (MeshRenderer pip in module.CountdownSprites) {
-                pip.SetSharedMaterialAtIndex(1, module.UnlitPipMaterial);
-            }
-            module.Result.SetSharedMaterialAtIndex(1, module.UnlitPipMaterial);
-            m_State.SubmittedObject = m_State.SubmittedPuzzle = false;
-            m_State.ReviewTimer.Paused = false;
-        }
-
-        private void ShowResultSprite(bool correct, PlayerPointsState state) {
-            ReviewModule module = state.ReviewModule;
-
-            if (correct) {
-                Sfx.PlayDetached("Oneshot.Review.Success", module.SoundAnchor);
-                module.Result.SetSharedMaterialAtIndex(1, module.SuccessMaterial);
-            } else {
-                Sfx.PlayDetached("Oneshot.Review.Failure", module.SoundAnchor);
-                if (ReferenceUtility.AssetSubmissionCompleted()){
-                    module.Result.SetSharedMaterialAtIndex(1, module.LitPipMaterial);
-                } else {
-                    module.Result.SetSharedMaterialAtIndex(1, module.FailureMaterial);
-                }
-            }
-        }
-
         private void CheckPuzzle() {
             PuzzleState puzzle = Find.State<PuzzleState>();
             if (PuzzleUtility.CheckSolutionCorrect(puzzle, out BitSet32 rowsCorrectness)) {
-                OnCorrectPuzzleSubmission.Invoke(puzzle.ActivePuzzle.DisplayName);
-                ShowResultSprite(true, m_State);
-                PointsUtility.AddPoints(1, m_State);
+                ReviewUtility.OnCorrectPuzzleSubmission.Invoke(puzzle.ActivePuzzle.DisplayName);
+                puzzle.PuzzleCorrectSubmissionRoutine.Replace(ReviewUtility.PuzzleCorrectSubmissionRoutine(m_State.ReviewModule, m_State, 2));
 
                 puzzle.ActivePuzzle = null;
 
                 Log.Msg("[PointsReviewSystem] Puzzle CORRECT! :D");
             } else {
                 ScriptUtility.Trigger(ScriptEvents.IncorrectPuzzleSubmission);
-                ShowResultSprite(false, m_State);
+                ReviewUtility.ShowResultSprite(false, m_State);
                 Log.Msg("[SubmitPuzzleSystem] Puzzle INCORRECT! D:");
                 // TODO: show incorrect cells
                 PuzzleUtility.ClearRows(puzzle, rowsCorrectness);
@@ -101,29 +74,51 @@ namespace Astro {
             DMInfo info = new DMInfo("Puzzle");
             info.AddButton("Bypass Puzzle", () => {
                 var puzzle = Find.State<PuzzleState>();
-                OnCorrectPuzzleSubmission.Invoke(puzzle.ActivePuzzle.DisplayName);
+                ReviewUtility.OnCorrectPuzzleSubmission.Invoke(puzzle.ActivePuzzle.DisplayName);
                 puzzle.ActivePuzzle = null;
             });
             return info;
         }
 
-        private void CheckObjectIdentification() {
-            if (ReferenceUtility.CurrentRefMatchesFocus() && ReferenceUtility.CurrentRefInNeutrinoEvent()) {
-                ShowResultSprite(true, m_State);
-                PointsUtility.AddPoints(1, m_State);
-            } else {
-                ShowResultSprite(false, m_State);
+        [DebugMenuFactory]
+        private static DMInfo SpawnPuzzle() {
+            DMInfo info = new DMInfo("Puzzle");
+            info.AddButton("Spawn Puzzle", () => {
+                Game.Events.Dispatch(GameEvents.StartPuzzleMode);
 
-                if(!ReferenceUtility.CurrentRefMatchesFocus() && ReferenceUtility.AssetSubmissionCompleted()){
-                    ScriptUtility.Trigger(ScriptEvents.OnDuplicateOpenIdSubmission);
-                } else if (!ReferenceUtility.CurrentRefMatchesFocus()){
-                    ScriptUtility.Trigger(ScriptEvents.OnIncorrectOpenIdSubmission);
-                } else if (!ReferenceUtility.CurrentRefInNeutrinoEvent()) {
-                    ScriptUtility.Trigger(ScriptEvents.OnInvalidOpenIdSubmission);
+                GameLoop.ResumeUpdates(AstroGame.MonitorControlsUpdateMask);
+                GameLoop.ResumeUpdates(AstroGame.SubmissionUpdateMask);
+                GameLoop.ResumeUpdates(AstroGame.InstrumentUpdateMask);
+            });
+            return info;
+        }
+
+        private void CheckObjectIdentification() {
+            ReviewResult result = ReviewUtility.EvaluateSubmission(m_State.Identification, Find.State<PlayerProgressState>());
+            ReviewUtility.ShowResultSprite(result == ReviewResult.Success, m_State);
+            switch (result) {
+                case ReviewResult.Success: {
+                    ReviewUtility.AddPoints(1);
+                    Game.Events.Dispatch(GameEvents.ValidOpenIdSubmission);
+                    break;
+                }
+                case ReviewResult.Duplicate: {
+                    Game.Events.Dispatch(GameEvents.DuplicateOpenIdSubmission);
+                    break;
+                }
+                case ReviewResult.ClassificationNotFound: {
+                    Game.Events.Dispatch(GameEvents.IncorrectOpenIdSubmission);
+                    break;
+                }
+                case ReviewResult.AssetNotInNeutrinoEvent: {
+                    Game.Events.Dispatch(GameEvents.InvalidOpenIdSubmission);
+                    break;
+                }
+                case ReviewResult.ClassificationNotInAccepted: {
+                    Game.Events.Dispatch(GameEvents.UnacceptedOpenIdSubmission);
+                    break;
                 }
             }
         }
-
-        static public readonly CastableEvent<string> OnCorrectPuzzleSubmission = new CastableEvent<string>();
     }
 }
