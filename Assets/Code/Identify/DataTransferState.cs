@@ -14,8 +14,7 @@ namespace Astro {
         {
         }
 
-        public void OnRegister()
-        {
+        public void OnRegister() {
             Game.Events.Register(GameEvents.MonitorEmptySpaceClicked, () => {
                 var transferState = Find.State<DataTransferState>();
                 DataUtility.AssignSelectedSource(transferState, null); 

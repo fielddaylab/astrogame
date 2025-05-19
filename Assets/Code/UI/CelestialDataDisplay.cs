@@ -12,7 +12,7 @@ using FieldDay.SharedState;
 using System.Text;
 
 namespace Astro {
-    public class CelestialDataDisplay : SharedStateComponent {
+    public class CelestialDataDisplay : SharedStateComponent, IRegistrationCallbacks {
         [HideInInspector] public bool DataPanelActive;
         public Routine AnimRoutine;
 
@@ -51,6 +51,16 @@ namespace Astro {
             DataDisplayPanel.alpha = 0;
             DataPanelActive = false;
         }
+
+        public void OnRegister() {
+            Game.Events.Register(GameEvents.MonitorEmptySpaceClicked, () => {
+                CelestialDataDisplayUtil.OnFocusUpdated(null);
+            });
+        }
+
+        public void OnDeregister() {
+        }
+
     }
 
     public static class CelestialDataDisplayUtil {
