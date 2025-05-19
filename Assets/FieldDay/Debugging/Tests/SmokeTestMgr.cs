@@ -62,6 +62,7 @@ namespace FieldDay.Debugging {
         static private float s_TimeOutAccumulator;
         static private readonly StringBuilder s_LogAccumulator = new StringBuilder(4096);
         static private readonly StringBuilder s_DebugBuilder = new StringBuilder(1024);
+
         static private bool s_CrashHandlerRestoreState;
         static private bool s_DebugDrawRestoreState;
 
@@ -269,14 +270,14 @@ namespace FieldDay.Debugging {
 
         #region Public Api
 
-        [Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD"), Conditional("DEVELOPMENT"), Conditional("FIELD_DAY_TESTS")]
+        [Conditional("FIELD_DAY_TESTS")]
         static public void RegisterResetHandler(Action handler) {
 #if FIELD_DAY_TESTS
             s_Reset += handler;
 #endif // FIELD_DAY_TESTS
         }
 
-        [Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD"), Conditional("DEVELOPMENT"), Conditional("FIELD_DAY_TESTS")]
+        [Conditional("FIELD_DAY_TESTS")]
         static public void DeregisterResetHandler(Action handler) {
 #if FIELD_DAY_TESTS
             s_Reset -= handler;
@@ -286,6 +287,7 @@ namespace FieldDay.Debugging {
         /// <summary>
         /// Schedules a test to execute.
         /// </summary>
+        [Conditional("FIELD_DAY_TESTS")]
         static public void ScheduleTest(SmokeTestData testData) {
 #if FIELD_DAY_TESTS
             if (s_TestState == SmokeTestState.Uninitialized) {
@@ -314,13 +316,11 @@ namespace FieldDay.Debugging {
     /// Interface for a smoke test context.
     /// </summary>
     public interface ISmokeTestContext {
-#if FIELD_DAY_TESTS
         void AttachScreenshot(Texture2D texture);
         void AttachScreenshot(RenderTexture texture);
 
         IEnumerator LoadMainScene(string scenePath);
         IEnumerator LoadMainScene(SceneReference sceneReference);
-#endif // FIELD_DAY_TESTS
     }
 
     //public struct SmokeTestReport {

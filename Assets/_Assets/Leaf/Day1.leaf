@@ -441,6 +441,8 @@ $call ReleaseIsolatedPuzzle()
 :: BlueFilterSelected
 @trigger    OnLabInteraction
 @when   actorId == "BlueFilter", temp:waitingForBlueFilter
+@interrupt
+@cutscene
 
 $set temp:waitingForBlueFilter = false
 $set temp:waitingForBlueLight = true
@@ -450,6 +452,7 @@ $set temp:waitingForBlueLight = true
 @trigger    OnLabInteraction
 @when   actorId != "BlueFilter", cellId != "R1C4", temp:waitingForBlueFilter
 @interrupt
+@cutscene
 
 {@Astrid} I need to select the blue wavelength filter just below the monitor. $[Astrid/L1/l1_a_34]
 
@@ -457,12 +460,14 @@ $set temp:waitingForBlueLight = true
 @trigger OnPuzzleCellSelected
 @when   cellId != "R1C4", temp:waitingForBlueLight
 @interrupt
+@cutscene
 
 {@Astrid} It looks like if I select the blue space on the identification grid then I can load it in from the photometer. $[Astrid/L1/l1_a_37]
 
 :: AtikBlueMagFilled
 @trigger    OnPuzzleCellFilled
 @when   cellId == "R1C4", temp:waitingForBlueLight
+@interrupt
 @cutscene
 @once
 
@@ -478,6 +483,9 @@ $set temp:waitingForFillColor = true
 :: AtikColorCellSelected
 @trigger    OnPuzzleCellSelected
 @when   cellId == "R1C2", temp:waitingForFillColor
+@interrupt
+@cutscene
+@once
 
 $call ReleaseIsolatedPuzzle()
 
@@ -507,15 +515,22 @@ $call AddIsolatedSlot(ApparentMagnitude)
 :: AstridThatsNotThePhotometer
 @trigger OnLabInteraction
 @when actorId != "PhotometerLoadBtn", temp:waitingForSelectAppMag
+@interrupt
+@cutscene
+
 {@Astrid} Hmmm... that's not the photometer. $[Astrid/L1/l1_a_31]
 
 :: AstridThatsNotThePhotometer2
 @trigger OnLabInteraction
 @when actorId != "PhotometerLoadBtn", temp:waitingForFillAppMag
+@interrupt
+@cutscene
+
 {@Astrid} Hmmm... that's not the photometer. $[Astrid/L1/l1_a_31]
 
 :: PuzzleGridReadyForSubmission
 @trigger    OnPuzzleGridFullyPopulated
+@interrupt
 @cutscene
 @once
 
@@ -523,6 +538,7 @@ $call AddIsolatedSlot(ApparentMagnitude)
 
 :: IncorrectPuzzleSubmission
 @trigger    IncorrectPuzzleSubmission
+@interrupt
 @cutscene
 
 {@Astrid} Hmm, looks like that wasn’t correct...$[Astrid/L1/l1_a_42] 
