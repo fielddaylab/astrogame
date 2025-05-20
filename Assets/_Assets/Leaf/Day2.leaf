@@ -96,6 +96,7 @@ $call SetInputState(true)
 @once
 
 $call SetInputState(false)
+$set temp:puzzleComplete = false
 $call Wait(1)
 $call StartDocumentPuzzle("Day2DocumentPuzzle")
 $call SetInputState(true)
@@ -122,8 +123,32 @@ $call SetInputState(true)
 $call SetInputState(false)
 {@Astrid} That's it! Elijah left Aunt Martha's and is back on the road now headed to one of these stations. $[Astrid/L2/l2_a_15]
 $call Wait(1)
-$call MoveToView("Desk")
+$if !temp:puzzleComplete
+    $set temp:puzzleComplete = true
+    $call MoveToView("Desk")
+    $call Wait(1)
+    $goto .StartNeutrinoNav
+$endif
+
+:: CorrectDocumentResponse2
+@trigger    DocumentPuzzlePromptStart
+@when   documentId == "HerculesPostcard"
+@cutscene
+@once
+
+$call SetInputState(false)
+{@Astrid} That's it... Looks like he's working on some project to upgrade all the CERES stations around the Midwest. $[Astrid/L2/l2_a_13]
 $call Wait(1)
+$if !temp:puzzleComplete
+    $set temp:puzzleComplete = true
+    $call MoveToView("Desk")
+    $call Wait(1)
+    $goto .StartNeutrinoNav
+$endif
+
+:: StartNeutrinoNav
+@cutscene
+@once
 
 $call MoveToView("Right")
 {@Radio} CERES HQ to Station Twelve. $[Radio/L2/l2_r_01]
@@ -209,7 +234,7 @@ $call MonitorUI->PlayRadioDownload(2)
 $call Wait(1)
 $call MonitorUI->ShowCERESLogo():wait
 $call SetInstrumentUnlocked(SpectrometerInstrument, true)
-{@Radio} (*clears throat*) Congratulations on being awarded clearance <b>level 2</b>. You are now cleared to use the spectrometer. $[Radio/L2/l2_r_12]
+{@Radio} (*clears throat*) Congratulations on being awarded clearance <b>level two</b>. You are now cleared to use the spectrometer. $[Radio/L2/l2_r_12]
 {@Radio} Please reference your CERES Operator Manual for further information about your equipment. $[Radio/L2/l2_r_13]
 {@Radio} Thanking you for being an important part of the CERES Distributed Network of Citizen Observatories. $[Radio/L2/l2_r_14]
 {@Radio} Together, we will map the stars for a better tomorrow. $[Radio/L2/l2_r_15]

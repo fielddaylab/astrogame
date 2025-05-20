@@ -329,31 +329,31 @@ $call UnlockMonitorFocus()
 
 :: HotColdEncouragement3
 @trigger    OnConstellationNavWarmer
-@when   newPips == 2
+@when   newPips > 0
 @once
 
-{@Astrid} Warrmer...
+{@Astrid} Getting warmer... $[Astrid/L1/a_warmer_01]
 
 :: HotColdEncouragement4
 @trigger    OnConstellationNavWarmer
-@when   newPips == 3
+@when   newPips > 1
 @once
 
-{@Astrid} Warmer.
+{@Astrid} Getting closer... $[Astrid/L1/a_warmer_02]
 
 :: Colder4
 @trigger    OnConstellationNavColder
-@when   newPips == 0
+@when   newPips < 1
 @once
 
-{@Astrid} Colder...
+{@Astrid} Ope. Not over here. $[Astrid/L1/a_colder_01] 
 
 :: Colder5
 @trigger    OnConstellationNavColder
-@when   newPips == 2
+@when   newPips < 2
 @once
 
-{@Astrid} Getting Colder...
+{@Astrid} Ack. Colder... $[Astrid/L1/a_colder_02] 
 
 :: PuzzleNavigationComplete
 @trigger    PuzzleNavigationComplete
@@ -546,7 +546,14 @@ $call AddIsolatedSlot(ApparentMagnitude)
 @interrupt
 @cutscene
 
-{@Astrid} Hmm, looks like that wasn’t correct...$[Astrid/L1/l1_a_42] 
+{@Astrid} Hmm, that doesn’t look right... $[Astrid/L1/a_negative_1] 
+
+:: IncorrectPuzzleSubmission2
+@trigger    IncorrectPuzzleSubmission
+@interrupt
+@cutscene
+
+{@Astrid} I don't think that's right... $[Astrid/L1/a_negative_4] 
 
 :: PerseusPuzzleComplete
 @trigger    CorrectPuzzleSubmission
