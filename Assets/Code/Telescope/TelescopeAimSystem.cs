@@ -15,9 +15,9 @@ namespace Astro
 
             if (m_State.AutoSync)
             {
-                var spaceCam = Find.State<SpaceCameraState>().Camera.RootTransform;
-
                 SpaceCameraState cam = Find.State<SpaceCameraState>();
+                var spaceCam = cam.Camera.RootTransform;
+
                 if (cam.LookUpdatedThisFrame) {
                     TelescopeUtility.UpdateTelescopeRigRotation(m_State, spaceCam);
                 }

@@ -114,7 +114,7 @@ namespace Astro
             cam.Camera.RootTransform.localEulerAngles = angles;
             cam.OnLookUpdated.Invoke(cam);
             cam.LookUpdatedThisFrame = true;
-            TelescopeUtility.UpdateTelescopeRigRotation(Find.State<TelescopeRig>(), cam.Camera.RootTransform);
+            TelescopeUtility.SuppressTelescopeRigAudio(true);
         }
 
         public static void SetCameraInputEnabled(bool enabled) {

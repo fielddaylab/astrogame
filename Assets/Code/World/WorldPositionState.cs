@@ -41,6 +41,7 @@ namespace Astro
                 Shader.SetGlobalMatrix("_SkyboxRotation", skyRotMat);
 
                 WorldPositionUtility.LookAt(camState, StartingLookCoords);
+                TelescopeUtility.SuppressTelescopeRigAudio(false);
             });
             return null;
         }
