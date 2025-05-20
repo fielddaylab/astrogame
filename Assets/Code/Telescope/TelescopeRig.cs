@@ -52,6 +52,24 @@ namespace Astro {
             rig.Shaft.localEulerAngles = localShaft;
         }
 
+        static public void SuppressTelescopeRigAudio(bool syncTelescopeRotation) {
+            TelescopeRigAudio audio = Find.State<TelescopeRigAudio>();
+            TelescopeRig rig = Find.State<TelescopeRig>();
+
+            SpaceCameraState cam = Find.State<SpaceCameraState>();
+            var spaceCam = cam.Camera.RootTransform;
+
+            if (syncTelescopeRotation) {
+                UpdateTelescopeRigRotation(rig, spaceCam);
+            } else {
+                rig.LastAppliedRotation.x = spaceCam.localEulerAngles.y;
+                rig.LastAppliedRotation.y = spaceCam.localEulerAngles.x;
+                cam.LookUpdatedThisFrame = true;
+            }
+
+            audio.LastKnownRotation = rig.LastAppliedRotation;
+        }
+
         static private float CalcDomeRotation(TelescopeRig rig, float baseRot)
         {
             // Since the telescope is offset from the center of the circle,

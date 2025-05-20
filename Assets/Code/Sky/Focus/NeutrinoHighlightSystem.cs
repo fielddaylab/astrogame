@@ -31,6 +31,8 @@ namespace Astro {
                     }
                 }
 
+                Find.State<SpaceCameraState>().LookUpdatedThisFrame = true;
+
             }
             if (m_StateA.OpenModeEnded)
             {
