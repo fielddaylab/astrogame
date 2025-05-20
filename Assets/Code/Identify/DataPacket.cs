@@ -63,7 +63,7 @@ namespace Astro {
         static public DataPacket Color(StringHash32 colorId) {
             return new DataPacket(DataTypeMask.Color, new Datum() {
                 AssetId = colorId
-            });
+            }, !colorId.IsEmpty);
         }
 
         static public DataPacket ColorIndex(double colorIndex) {
