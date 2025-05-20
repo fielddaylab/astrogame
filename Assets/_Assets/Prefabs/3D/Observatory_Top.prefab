@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ae620349e7bce24688d2ab26f9be5a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Always: 0
   DestroyInactiveChildren: 0
   Recursive: 0
   DestroyGameObject: 1
@@ -96,6 +97,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 9214940282692505596}
+  - {fileID: 3498947665627808264}
   m_Father: {fileID: 2836393166430308776}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &1622119583606989286
@@ -149,6 +151,37 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &5698953350976061905
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3498947665627808264}
+  m_Layer: 0
+  m_Name: WindMarker
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3498947665627808264
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5698953350976061905}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0.13444297, w: 0.9909214}
+  m_LocalPosition: {x: -12.974, y: 21.317, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3683244059978207770}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -15.453}
 --- !u!1 &7635428497192887772
 GameObject:
   m_ObjectHideFlags: 0
