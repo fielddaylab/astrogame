@@ -263,6 +263,26 @@ $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 
 {@Astrid} Looks like I have to determine the apparent magnitude of some of the other stars in this cluster. $[Astrid/L1/l1_a_18]
 
+:: FirstPoint
+@trigger    PointsUpdated
+@when   sciencePoints > 0
+@interrupt
+@cutscene
+@once
+$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
+{@Astrid} Okay! Maybe I can determine the apparent magnitude of some other stars in this cluster.  $[Astrid/L1/l1_a_9a]
+$call UnlockMonitorFocus()
+
+:: SecondPoint
+@trigger    PointsUpdated
+@when   sciencePoints > 1
+@interrupt
+@cutscene
+@once
+$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
+{@Astrid} Nice! I'll try another one. $[Astrid/L1/l1_a_9b]
+$call UnlockMonitorFocus()
+
 :: PointsUpdated
 @trigger    PointsUpdated
 @when   sciencePoints > 2
@@ -316,17 +336,6 @@ $call MoveToView("Monitor")
 $call ConsoleCommandLine->PlayPuzzleConsoleText()
 $call SetInputState(true)
 $call StartPuzzleNavigation()
-
-:: FirstPoint
-@trigger    PointsUpdated
-@when   sciencePoints > 0
-@interrupt
-@cutscene
-@once
-
-$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
-{@Astrid} Okay, got it! $[Astrid/L1/l1_a_17]
-$call UnlockMonitorFocus()
 
 :: HotColdEncouragement3
 @trigger    OnConstellationNavWarmer
