@@ -86,7 +86,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: ${{ github.event.repository.name }}-webgl_${{ env.VERSION }}
-        path: build/WebGL/WebGL\
+        path: build/WebGL/WebGL/
         overwrite: true
     
     - name: Upload to web server via rsync
