@@ -287,6 +287,7 @@ namespace FieldDay.Audio {
         private unsafe void PlayClipInternal(PlayCommandData cmd, AudioEvent evt, AudioClip clip) {
             float delay = cmd.Delay;
             byte priority = 128;
+            float pan = cmd.Pan;
 
             AudioPropertyBlock evtProperties = AudioPropertyBlock.Default;
 
@@ -311,6 +312,7 @@ namespace FieldDay.Audio {
                 }
 
                 delay += evt.Delay.Generate();
+                pan += evtProperties.Pan;
 
                 if (evt.Loop) {
                     cmd.Flags |= AudioPlaybackFlags.Loop;
@@ -397,6 +399,7 @@ namespace FieldDay.Audio {
             *voice.EventProperties = evtProperties;
             voice.VoiceProperties->Volume = cmd.Volume;
             voice.VoiceProperties->Pitch = cmd.Pitch;
+            voice.VoiceProperties->Pan = cmd.Pan;
 
             voice.EventId = evt ? evt.CachedId : default;
             voice.BusIndex = evt ? evt.CachedBusIndex : 0;

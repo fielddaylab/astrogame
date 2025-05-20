@@ -108,6 +108,7 @@ namespace FieldDay.Audio {
         public float Volume;
         public float Pitch;
         public float Delay;
+        public float Pan;
         public StringHash32 Tag;
         public AudioPlaybackFlags Flags;
         public UniqueId16 Handle;

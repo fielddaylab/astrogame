@@ -27,7 +27,7 @@ namespace Astro {
                 }
             } else {
                 if (m_StateA.DomeAudioHandle.IsValid) {
-                    Sfx.Stop(m_StateA.DomeAudioHandle, 0.1f);
+                    Sfx.Stop(m_StateA.DomeAudioHandle, 0.15f);
                     m_StateA.DomeAudioHandle = default;
                     //Log.Msg("stopping dome move audio");
                 }
@@ -42,7 +42,7 @@ namespace Astro {
                 }
             } else {
                 if (m_StateA.BaseAudioHandle.IsValid) {
-                    Sfx.Stop(m_StateA.BaseAudioHandle, 0.1f);
+                    Sfx.Stop(m_StateA.BaseAudioHandle, 0.15f);
                     m_StateA.BaseAudioHandle = default;
                     //Log.Msg("stopping telescope move audio");
                 }
