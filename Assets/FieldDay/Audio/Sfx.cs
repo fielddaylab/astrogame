@@ -24,6 +24,7 @@ namespace FieldDay.Audio {
                     Volume = playArgs.Volume,
                     Pitch = playArgs.Pitch,
                     Delay = playArgs.Delay,
+                    Pan = playArgs.Pan,
                     RotationOffset = Quaternion.identity,
                 });
         }
@@ -47,6 +48,7 @@ namespace FieldDay.Audio {
                     Volume = playArgs.Volume,
                     Pitch = playArgs.Pitch,
                     Delay = playArgs.Delay,
+                    Pan = playArgs.Pan,
                     RotationOffset = Quaternion.identity,
                 });
         }
@@ -70,6 +72,7 @@ namespace FieldDay.Audio {
                     Volume = playArgs.Volume,
                     Pitch = playArgs.Pitch,
                     Delay = playArgs.Delay,
+                    Pan = playArgs.Pan,
                     TransformOffset = position.position,
                     TransformOffsetSpace = Space.World,
                     RotationOffset = position.rotation,
@@ -95,6 +98,7 @@ namespace FieldDay.Audio {
                     Volume = playArgs.Volume,
                     Pitch = playArgs.Pitch,
                     Delay = playArgs.Delay,
+                    Pan = playArgs.Pan,
                     TransformOffset = position,
                     TransformOffsetSpace = Space.World,
                     RotationOffset = rotation,
@@ -121,6 +125,7 @@ namespace FieldDay.Audio {
                     Volume = playArgs.Volume,
                     Pitch = playArgs.Pitch,
                     Delay = playArgs.Delay,
+                    Pan = playArgs.Pan,
                     RotationOffset = Quaternion.identity,
                     Flags = AudioPlaybackFlags.UseProvidedSource
                 });
@@ -148,6 +153,7 @@ namespace FieldDay.Audio {
                     Volume = playArgs.Volume,
                     Pitch = playArgs.Pitch,
                     Delay = playArgs.Delay,
+                    Pan = playArgs.Pan,
                     RotationOffset = Quaternion.identity,
                     Flags = AudioPlaybackFlags.UseProvidedSource | AudioPlaybackFlags.SecondaryClipOverride
                 });
@@ -302,6 +308,23 @@ namespace FieldDay.Audio {
             });
         }
 
+        static public void SetPan(AudioHandle handle, float pan, float transitionTime = 0, Curve transitionCurve = Curve.Linear) {
+            if (!handle.IsValid) {
+                return;
+            }
+
+            Game.Audio.QueueAudioCommand(new AudioCommand() {
+                Type = AudioCommandType.SetVoiceFloatParameter,
+                FloatParam = new FloatParamChangeCommandData() {
+                    Handle = handle.m_Id,
+                    Property = AudioFloatPropertyType.Pan,
+                    Target = pan,
+                    Duration = transitionTime,
+                    Easing = transitionCurve,
+                }
+            });
+        }
+
         static public void SetPaused(AudioHandle handle, bool paused) {
             if (!handle.IsValid) {
                 return;
@@ -416,5 +439,6 @@ namespace FieldDay.Audio {
         public float Volume;
         public float Pitch;
         public float Delay;
+        public float Pan;
     }
 }

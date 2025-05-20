@@ -70,7 +70,7 @@ namespace Astro {
             // Photometer packets first
             if ((m_AvailableInstrumentTypes & DataTypeMask.ApparentMagnitude) != 0) {
                 DataPacket newPacket;
-                if (m_StateA.ToConvert != null) {
+                if (m_StateA.ToConvert != null && ((m_StateA.ToConvert.Visibility & CelestialObjectVisMask.Visible) != 0 || m_StateA.ToConvert.ApparentMagnitude != 0)) {
                     newPacket = DataPacket.ApparentMagnitude(m_StateA.ToConvert.ApparentMagnitude);
                 }
                 else {
@@ -80,7 +80,7 @@ namespace Astro {
             }
             if ((m_AvailableInstrumentTypes & DataTypeMask.BlueMagnitude) != 0) {
                 DataPacket newPacket;
-                if (m_StateA.ToConvert != null) {
+                if (m_StateA.ToConvert != null && ((m_StateA.ToConvert.Visibility & CelestialObjectVisMask.Blue) != 0 || m_StateA.ToConvert.ApparentBlueMagnitude != 0)) {
                     newPacket = DataPacket.BlueMagnitude(m_StateA.ToConvert.ApparentBlueMagnitude);
                 } else {
                     newPacket = DataPacket.MinBlueMagnitude();
@@ -89,7 +89,7 @@ namespace Astro {
             }
             if ((m_AvailableInstrumentTypes & DataTypeMask.InfraredMagnitude) != 0) {
                 DataPacket newPacket;
-                if (m_StateA.ToConvert != null) {
+                if (m_StateA.ToConvert != null && (m_StateA.ToConvert.Visibility & CelestialObjectVisMask.Infrared) != 0) {
                     newPacket = DataPacket.InfraredMagnitude(m_StateA.ToConvert.ApparentIRMagnitude);
                 } else {
                     newPacket = DataPacket.MinIRMagnitude();
@@ -98,7 +98,7 @@ namespace Astro {
             }
             if ((m_AvailableInstrumentTypes & DataTypeMask.AbsoluteMagnitude) != 0) {
                 DataPacket newPacket;
-                if (m_StateA.ToConvert != null) {
+                if (m_StateA.ToConvert != null && ((m_StateA.ToConvert.Visibility & CelestialObjectVisMask.Visible) != 0 || m_StateA.ToConvert.AbsoluteMagnitude != 0)) {
                     newPacket = DataPacket.AbsoluteMagnitude(m_StateA.ToConvert.AbsoluteMagnitude);
                 }
                 else {
@@ -119,7 +119,7 @@ namespace Astro {
             }
             if ((m_AvailableInstrumentTypes & DataTypeMask.ColorIndex) != 0) {
                 DataPacket newPacket;
-                if (m_StateA.ToConvert != null) {
+                if (m_StateA.ToConvert != null && !m_StateA.ToConvert.ColorId.IsEmpty) {
                     newPacket = DataPacket.ColorIndex(m_StateA.ToConvert.ApparentBlueMagnitude - m_StateA.ToConvert.ApparentMagnitude);
                 } else {
                     newPacket = DataPacket.Null(DataTypeMask.ColorIndex);
