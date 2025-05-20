@@ -25,7 +25,7 @@ Shader "Astro/Compass Arc"
         Cull Off
         Lighting Off
         ZWrite Off
-		ZTest Always
+		ZTest LEqual
 
         Blend [_SrcBlend] [_DestBlend]
         BlendOp [_BlendOp]
