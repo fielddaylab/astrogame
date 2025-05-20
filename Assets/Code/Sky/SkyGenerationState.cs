@@ -46,6 +46,9 @@ namespace Astro
                 focusState.ActiveFocii.PushBack(newFocus);
                 newFocus.IsVisibleInCurrentFilter = (newFocus.TargetData.Visibility & state.VisMask) != 0;
 
+                newFocus.Represent2D.enabled = false;
+                newFocus.Clickable.enabled = false;
+
                 UIFocusPackedData packed;
                 packed.TargetPos = obj.transform.position;
                 packed.TargetVector = Vector3.Normalize(packed.TargetPos - camPos);
