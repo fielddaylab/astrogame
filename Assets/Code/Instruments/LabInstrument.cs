@@ -7,18 +7,11 @@ using TMPro;
 using UnityEngine;
 
 namespace Astro {
-    public sealed class LabInstrument : BatchedComponent, IRegistrationCallbacks {
+    public sealed class LabInstrument : BatchedComponent {
         public DataSlot[] AutoPopulated;
         
         [NonSerialized] public bool Unlocked;
         public CastableEvent<LabInstrument> OnUnlock = new CastableEvent<LabInstrument>();
-
-        public void OnDeregister() { }
-
-        public void OnRegister() {
-            // TEMP: register instruments on start
-            InstrumentInventoryUtility.RegisterInstrument(this);
-        }
     }
 
     public static class InstrumentUtility
