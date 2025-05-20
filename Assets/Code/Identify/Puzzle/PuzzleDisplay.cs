@@ -103,6 +103,7 @@ namespace Astro
                     currCell.OutlineMeshFilter.transform.localPosition = currCell.OutlineMeshFilter.transform.localPosition + colData[c].Bundle.OutlineOffset;
                     UnityEngine.Object.Destroy(currCell.Collider);
                     currCell.Collider = currCell.MainMesh.gameObject.AddComponent<BoxCollider>();
+                    currCell.Collider.size *= 1.05f;
 
                     // assign the appropriate atlas output
                     if (PuzzlePoolUtility.TryAllocateOnBundleType(pools, colData[c].Bundle.Type, out var id)) {
