@@ -49,7 +49,7 @@ namespace Astro {
                 StringHash32 questionId = puzzleState.CurrPuzzle.QuestionAsset.AssetId;
                 DocumentBoardState state = Find.State<DocumentBoardState>();
                 ArchiveState archiveState = Find.State<ArchiveState>();
-                SpawnDocumentToCamera(state, archiveState, questionId);
+                state.DocumentRoutine.Replace(SpawnDocumentToCamera(state, archiveState, questionId));
             }
 
             puzzleState.PuzzleActive = true;

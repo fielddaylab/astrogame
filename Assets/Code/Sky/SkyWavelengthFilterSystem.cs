@@ -1,4 +1,5 @@
 using BeauPools;
+using BeauRoutine;
 using BeauUtil;
 using FieldDay;
 using FieldDay.Systems;
@@ -27,11 +28,19 @@ namespace Astro
         {
             var focusState = Find.State<FocusState>();
             var spaceCamera = Find.State<SpaceCameraState>();
+            var neutrinoState = Find.State<NeutrinoHighlightState>();
 
             CelestialObjectVisMask visMask = m_State.VisMask;
 
+            bool prevVis;
             foreach(var focus in focusState.ActiveFocii) {
+                prevVis = focus.IsVisibleInCurrentFilter;
                 focus.IsVisibleInCurrentFilter = (focus.TargetData.Visibility & visMask) != 0;
+
+                if (focus.HasHighlight && focus.IsVisibleInCurrentFilter != prevVis) {
+                    focus.Highlight.sprite = focus.IsVisibleInCurrentFilter ? neutrinoState.HighlightVisibleSprite : neutrinoState.HighlightNotVisibleSprite;
+                    focus.Highlight.SetAlpha(focus.IsVisibleInCurrentFilter ? 1 : neutrinoState.HighlightNotVisibleAlpha);
+                }
             }
 
             m_State.IsDirty = false;

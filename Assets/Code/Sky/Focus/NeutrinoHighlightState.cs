@@ -3,11 +3,15 @@ using FieldDay;
 using FieldDay.SharedState;
 using System;
 using BeauUtil;
-using Leaf.Runtime;
 using System.Collections.Generic;
+using Leaf.Runtime;
 
 namespace Astro {
     public class NeutrinoHighlightState : SharedStateComponent, IRegistrationCallbacks {
+        public Sprite HighlightVisibleSprite;
+        public Sprite HighlightNotVisibleSprite;
+        public float HighlightNotVisibleAlpha = 0.4f;
+
         [NonSerialized] public bool OpenModeStarted;
         [NonSerialized] public bool OpenModeEnded;
 
@@ -40,6 +44,7 @@ namespace Astro {
         public void OnDeregister() {
             SubmissionObjects.Clear();
             Game.Events.Deregister(GameEvents.StartOpenMode, setOpenModeStarted);
+            Game.Events.Deregister(GameEvents.UpdateOpenIdSubmission, updateNeutrinoHighlights);
             Game.Events.Deregister(GameEvents.StopOpenMode, setOpenModeEnded);
         }
 
