@@ -29,10 +29,9 @@ namespace Astro {
                 }
 
                 Find.State<SpaceCameraState>().LookUpdatedThisFrame = true;
-
             }
-            if (m_StateA.OpenModeEnded)
-            {
+            
+            if (m_StateA.OpenModeEnded) {
                 if (m_StateD.IsDirty) { return; }
 
                 m_StateA.OpenModeEnded = false;
