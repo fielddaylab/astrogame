@@ -3,7 +3,6 @@ using BeauUtil;
 using FieldDay;
 using FieldDay.Assets;
 using FieldDay.HID;
-using FieldDay.Rendering;
 using FieldDay.Scripting;
 using FieldDay.SharedState;
 using Leaf.Runtime;
@@ -34,6 +33,7 @@ namespace Astro {
         public AssetPack DocumentAssets;
 
         [NonSerialized] public List<DocumentRenderer> SpawnedDocuments = new List<DocumentRenderer>();
+        [NonSerialized] public Dictionary<StringHash32, bool> DocumentCloseEnabledState = new Dictionary<StringHash32, bool>();
 
         [Header("Interact Settings")]
         [Range(0f, 1f)] public float FollowSpeed;
@@ -69,6 +69,7 @@ namespace Astro {
             spawned.name = id.ToDebugString();
 
             state.SpawnedDocuments.Add(spawned);
+            state.DocumentCloseEnabledState.TryAdd(spawned.Interactable.AssetName, true);
 
             if (toBoard && !asset.Prefab.AlwaysHighRes) {
                 DocumentUtility.DisplayLowResDocument(spawned, asset);
@@ -286,11 +287,12 @@ namespace Astro {
         }
 
         public static void UpdateEnabledDocParts(DocumentInteractable doc, DocPartFunction[] mode) {
+            DocumentBoardState state = Find.State<DocumentBoardState>();
+
             foreach (DocumentPart part in doc.Parts) {
                 if (Array.IndexOf(mode, part.PartType) != -1) {
                     if (part.PartType == DocPartFunction.Close) {
-                        DocumentAsset docAsset = Find.NamedAsset<DocumentAsset>(doc.AssetName);
-                        if (docAsset.CloseEnabled) {
+                        if (state.DocumentCloseEnabledState[doc.AssetName]) {
                             part.gameObject.SetActive(true);
                         } else {
                             part.gameObject.SetActive(false);
@@ -300,7 +302,7 @@ namespace Astro {
                     }
                 } else {
                     part.gameObject.SetActive(false);
-                } 
+                }
             }
         }
 

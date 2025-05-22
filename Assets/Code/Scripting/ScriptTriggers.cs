@@ -243,21 +243,22 @@ namespace Astro {
 
         [LeafMember("EnableDocumentClose")]
         static private void LeafEnableDocumentClose(StringHash32 assetId, bool value, bool updateNow = false) {
+            DocumentBoardState boardState = Find.State<DocumentBoardState>();
+
+            boardState.DocumentCloseEnabledState[assetId] = value;
+
+            if (!updateNow) return;
+
             DocumentAsset docAsset = Find.NamedAsset<DocumentAsset>(assetId);
             if (docAsset == null) {
                 Debug.LogWarning("[LeafEnableDocumentClose] Failed to find document" + assetId);
+                return;
             }
 
-            docAsset.CloseEnabled = value;
-
-            if (updateNow) {
-                DocumentBoardState boardState = Find.State<DocumentBoardState>();
-
-                if (boardState.DocZoomed) {
-                    DocumentUtility.UpdateEnabledDocParts(boardState.DocZoomed, DocumentBoardState.ZoomActiveFunctions);
-                } else {
-                    DocumentUtility.UpdateEnabledDocParts(docAsset.Interactable, DocumentBoardState.BoardActiveFunctions); 
-                }
+            if (boardState.DocZoomed) {
+                DocumentUtility.UpdateEnabledDocParts(boardState.DocZoomed, DocumentBoardState.ZoomActiveFunctions);
+            } else {
+                DocumentUtility.UpdateEnabledDocParts(docAsset.Interactable, DocumentBoardState.BoardActiveFunctions); 
             }
         }
     }
