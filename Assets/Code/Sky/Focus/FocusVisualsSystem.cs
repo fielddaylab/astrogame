@@ -6,6 +6,7 @@ using FieldDay;
 using BeauUtil;
 using System;
 using BeauUtil.Debugger;
+using BeauRoutine;
 
 namespace Astro {
     [SysUpdate(GameLoopPhase.LateUpdate, 0)]

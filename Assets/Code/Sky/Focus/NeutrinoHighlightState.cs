@@ -9,6 +9,10 @@ using BeauUtil;
 
 public class NeutrinoHighlightState : SharedStateComponent, IRegistrationCallbacks
 {
+    public Sprite HighlightVisibleSprite;
+    public Sprite HighlightNotVisibleSprite;
+    public float HighlightNotVisibleAlpha = 0.4f;
+
     [NonSerialized] public bool OpenModeStarted;
     [NonSerialized] public bool OpenModeEnded;
 

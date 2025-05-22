@@ -16,6 +16,7 @@ namespace Astro
         [NonSerialized] public bool IsVisibleInCurrentFilter;
 
         [NonSerialized] public bool HasHighlight;
+        [NonSerialized] public SpriteRenderer Highlight;
 
         public Transform Root;
         public SpriteRenderer Represent2D;
