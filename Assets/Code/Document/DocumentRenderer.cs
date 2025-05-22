@@ -30,6 +30,8 @@ namespace Astro {
         [NonSerialized] public string BaseVisualAssetName;
         [NonSerialized] public string BaseVisualAssetFileType;
 
+        public bool AlwaysHighRes = false;
+
         private void Awake() {
             Interactable = GetComponent<DocumentInteractable>();
 
