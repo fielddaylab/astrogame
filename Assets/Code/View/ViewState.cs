@@ -177,6 +177,13 @@ namespace Astro {
             if (oldNode) {
                 oldNode.OnExit.Invoke(oldNode);
             }
+            
+            nextNode.OnTransitionQueued.Invoke(new ViewTransitionArgs() {
+                Start = oldNode,
+                Link = byLink,
+                Target = nextNode
+            });
+
             nextNode.OnLoad.Invoke(nextNode);
 
             yield return cameraTransition;

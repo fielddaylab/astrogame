@@ -165,6 +165,12 @@ namespace Astro {
             SlotHighlightUtility.SetInstrumentButtonsDimmed(Find.State<InstrumentInventoryState>(), true);
         }
 
+        [LeafMember("UpdateOpenIdSubmissions")]
+        static private void LeafUpdateOpenIdSubmissions() {
+            Game.Events.Dispatch(GameEvents.UpdateOpenIdSubmission);
+        }
+
+
         [LeafMember("StopOpenMode")]
         static private void LeafStopOpenMode() {
             Game.Events.Dispatch(GameEvents.StopOpenMode);

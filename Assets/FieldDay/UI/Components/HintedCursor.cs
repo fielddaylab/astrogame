@@ -21,9 +21,13 @@ namespace FieldDay.UI {
 
         [NonSerialized] private Sprite m_DefaultSprite;
         [NonSerialized] private Sprite m_CurrentSprite;
+        [NonSerialized] private Vector2 m_DefaultSpriteSize;
+        [NonSerialized] private Vector2 m_OriginalSizeDelta;
 
         private void Awake() {
             m_DefaultSprite = m_Sprite.sprite;
+            m_DefaultSpriteSize = m_DefaultSprite.rect.size;
+            m_OriginalSizeDelta = m_Position.sizeDelta;
         }
 
         private void OnEnable() {
@@ -98,6 +102,11 @@ namespace FieldDay.UI {
                 pivot.x /= size.x;
                 pivot.y /= size.y;
                 m_Position.pivot = pivot;
+
+                Vector2 newSize;
+                newSize.x = m_OriginalSizeDelta.x * size.x / m_DefaultSpriteSize.x;
+                newSize.y = m_OriginalSizeDelta.y * size.y / m_DefaultSpriteSize.y;
+                m_Position.sizeDelta = newSize;
             }
 
             if (scaleDown) {

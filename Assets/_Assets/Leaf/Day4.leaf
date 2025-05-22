@@ -125,9 +125,37 @@ $call SetInputState(true)
 $call StopNeutrinoNavigation()
 $call StartOpenMode()
 
+
+:: IdentifiedOneBrownDwarf
+@trigger    PointsUpdated
+@when   sciencePoints > 0
+@cutscene
+@once
+
+$call SetInputState(false)
+$call ClearMonitorSelection()
+
+$call Wait(2)
+{@Radio} CERES HQ to Station Twelve. Our neutrino emission reading has expanded please hold while we update your targeting system.
+$call MonitorUI->PlayRadioDownload(2)
+$call AddAssetToSubmissionGroup("Aldebaran")
+$call AddAssetToSubmissionGroup("Elnath")
+$call AddAssetToSubmissionGroup("Alcyone")
+$call AddAssetToSubmissionGroup("Tianguan")
+$call AddAssetToSubmissionGroup("Chamukuy")
+$call AddAssetToSubmissionGroup("Sadr al Tauri")
+$call AddAssetToSubmissionGroup("Ain")
+$call AddAssetToSubmissionGroup("Omicron Tauri")
+$call AddAssetToSubmissionGroup("Atlas")
+$call AddAssetToSubmissionGroup("Hyadum")
+$call AddAssetToSubmissionGroup("Electra")
+$call UpdateOpenIdSubmissions()
+// $call StartOpenMode()
+$call SetInputState(true)
+
 :: PointsUpdated
 @trigger    PointsUpdated
-@when   sciencePoints > 2
+@when   sciencePoints > 6
 @cutscene
 @once
 
