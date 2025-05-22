@@ -47,6 +47,7 @@ namespace Astro
         {
             PlayerProgressState playerState = Find.State<PlayerProgressState>();
             var currList = playerState.DayLayouts[archiveState.CurrArchiveIndex - archiveState.DayOffset];
+            if (!currList.AssetPositions.ContainsKey(assetId)) { return; }
             currList.AssetPositions[assetId] = assetPos;
         }
 
@@ -56,7 +57,9 @@ namespace Astro
             var boardState = Find.State<DocumentBoardState>();
 
             foreach (var doc in boardState.SpawnedDocuments) {
-                ArchiveUtility.SetAssetPosInArchive(archiveState, doc.Interactable.AssetName, doc.transform.localPosition);
+                if (doc.PreserveInArchive) {
+                    ArchiveUtility.SetAssetPosInArchive(archiveState, doc.Interactable.AssetName, doc.transform.localPosition);
+                }
             }
         }
 

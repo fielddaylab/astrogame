@@ -34,11 +34,11 @@ namespace Astro {
 
         public Vector3 DefaultPinnedPos;
         public Vector3 ZoomOffsetOverride;
-        // public bool CloseEnabled = true;
+
+        public bool PreserveInArchive = true;
 
 #if UNITY_EDITOR
-        private void OnValidate()
-        {
+        private void OnValidate() {
             if (UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode) return;
 
             if (Prefab == null) return;
