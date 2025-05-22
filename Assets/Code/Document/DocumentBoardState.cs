@@ -64,6 +64,7 @@ namespace Astro {
             }
             DocumentRenderer spawned = GameObject.Instantiate(asset.Prefab, state.DocumentParent);
             spawned.Interactable.AssetName = id;
+            spawned.PreserveInArchive = asset.PreserveInArchive;
             spawned.name = id.ToDebugString();
 
             state.SpawnedDocuments.Add(spawned);
@@ -88,7 +89,7 @@ namespace Astro {
                     if (toBoard) { spawned.transform.localPosition = asset.DefaultPinnedPos; }
 
                     // add asset to ArchiveState (usually if not being spawned from an Archive)
-                    if (addToArchive)
+                    if (addToArchive && asset.PreserveInArchive)
                     {
                         var archiveState = Find.State<ArchiveState>();
                         ArchiveUtility.AddAssetToArchive(archiveState, id, pinnedPosCopy);
