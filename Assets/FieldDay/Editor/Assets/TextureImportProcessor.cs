@@ -12,7 +12,7 @@ namespace FieldDay.Editor {
                 return;
             }
 
-            Flags flags = ReadFlags(assetPath);
+            Flags flags = ReadFlags(assetPath, importer);
             //Debug.LogFormat("texture '{0}' has flags {1}", assetPath, flags);
 
             if (flags == 0) {
@@ -51,8 +51,12 @@ namespace FieldDay.Editor {
             importer.SetTextureSettings(settings);
         }
 
-        static private Flags ReadFlags(string path) {
+        static private Flags ReadFlags(string path, TextureImporter importer) {
             Flags f = 0;
+            if (importer.textureType == TextureImporterType.Lightmap || importer.textureType == TextureImporterType.DirectionalLightmap) {
+                return Flags.Lightmap;
+            }
+
             bool foundType = false;
             string fileName = Path.GetFileNameWithoutExtension(path);
             if (fileName.Contains("_tex", StringComparison.OrdinalIgnoreCase)) {
@@ -83,7 +87,8 @@ namespace FieldDay.Editor {
         private enum Flags {
             Sprite = 0x01,
             Texture = 0x02,
-            UI = 0x04
+            UI = 0x04,
+            Lightmap = 0x08
         }
     }
 }
