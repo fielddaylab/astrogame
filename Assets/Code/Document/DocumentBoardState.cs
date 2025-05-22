@@ -68,7 +68,12 @@ namespace Astro {
 
             state.SpawnedDocuments.Add(spawned);
 
-            DocumentUtility.DisplayFullDocument(spawned, asset);
+            if (toBoard) {
+                DocumentUtility.DisplayLowResDocument(spawned, asset);
+            }
+            else {
+                DocumentUtility.DisplayFullDocument(spawned, asset);
+            }
 
             spawned.transform.localPosition = asset.DefaultPinnedPos;
             var pinnedPosCopy = pinnedPos = spawned.transform.position;
@@ -95,7 +100,7 @@ namespace Astro {
 
         [LeafMember("SpawnDocument")]
         public static void LeafSpawnDocument(StringHash32 id) {
-            SpawnDocument(Find.NamedAsset<DocumentAsset>(id), id, out Vector3 pinnedPos);
+            SpawnDocument(Find.NamedAsset<DocumentAsset>(id), id, out Vector3 pinnedPos, Find.State<DocumentBoardState>(), true, true);
         }
 
         [LeafMember("SpawnDocumentToCamera")]

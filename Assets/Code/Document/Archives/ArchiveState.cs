@@ -83,7 +83,7 @@ namespace Astro
                 while (boardState.DocumentLoadRoutine.Exists()) { yield return null; }
 
                 // spawn the asset at the position
-                var spawned = DocumentUtility.SpawnDocument(Find.NamedAsset<DocumentAsset>(pair.Key), pair.Key, out Vector3 pinnedPos, boardState, false);
+                var spawned = DocumentUtility.SpawnDocument(Find.NamedAsset<DocumentAsset>(pair.Key), pair.Key, out Vector3 pinnedPos, boardState, false, true);
                 transforms[pairIndex] = spawned.transform;
                 spawned.transform.position = new Vector3(-500, -500, 500); // place somewhere offscreen while loading
                 pairIndex++;
