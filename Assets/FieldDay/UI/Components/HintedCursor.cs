@@ -102,7 +102,11 @@ namespace FieldDay.UI {
                 pivot.x /= size.x;
                 pivot.y /= size.y;
                 m_Position.pivot = pivot;
-                m_Position.sizeDelta = m_OriginalSizeDelta * (size / m_DefaultSpriteSize);
+
+                Vector2 newSize;
+                newSize.x = m_OriginalSizeDelta.x * size.x / m_DefaultSpriteSize.x;
+                newSize.y = m_OriginalSizeDelta.y * size.y / m_DefaultSpriteSize.y;
+                m_Position.sizeDelta = newSize;
             }
 
             if (scaleDown) {
