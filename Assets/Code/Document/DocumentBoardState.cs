@@ -65,6 +65,7 @@ namespace Astro {
             DocumentRenderer spawned = GameObject.Instantiate(asset.Prefab, state.DocumentParent);
             spawned.Interactable.AssetName = id;
             spawned.PreserveInArchive = asset.PreserveInArchive;
+            spawned.TriggersPrompter = asset.TriggersPrompter;
             spawned.name = id.ToDebugString();
 
             state.SpawnedDocuments.Add(spawned);

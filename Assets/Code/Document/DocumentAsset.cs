@@ -37,6 +37,7 @@ namespace Astro {
 
         public bool CloseEnabled = true;
         public bool PreserveInArchive = true;
+        public bool TriggersPrompter = true; // false for questions
 
 #if UNITY_EDITOR
         private void OnValidate()

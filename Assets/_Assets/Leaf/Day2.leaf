@@ -90,9 +90,17 @@ $call SpawnDocumentToCamera("CouplePhoto")
 {@Astrid} Oh! I love this! $[Astrid/L2/l2_a_09]
 $call SetInputState(true)
 
-:: DocumentPuzzleStart
+:: SpawnPuzzleDocs4
 @trigger    DocumentInspectEnd
 @when   documentId == "CouplePhoto"
+@once
+
+{@Astrid} Where is Elijah? Is he okay? $[Astrid/L2/l2_a_3]
+$call SpawnDocumentToCamera("Day2Question")
+
+:: DocumentPuzzleStart
+@trigger    DocumentInspectEnd
+@when   documentId == "Day2Question"
 @once
 
 $call SetInputState(false)
@@ -100,44 +108,50 @@ $set temp:puzzleComplete = false
 $call Wait(1)
 $call StartDocumentPuzzle("Day2DocumentPuzzle")
 $call SetInputState(true)
-{@Astrid} Where is Elijah? Is he okay? $[Astrid/L2/l2_a_3]
+{@Astrid} And what is Elijah working on?
+$call SpawnDocumentToCamera("Day2Question2")
 
 :: IncorrectDocumentResponse1
 @trigger    DocumentPuzzlePromptStart
-@when documentId == "Day2DadIcecubePostcard"
+@when answerId == "Day2DadIcecubePostcard"
 
 {@Astrid} Elijah in Antarctica...? No, that wouldn't make sense. $[Astrid/L2/l2_a_14]
 
 :: IncorrectDocumentResponse2
 @trigger    DocumentPuzzlePromptStart
-@when documentId == "Day2Martha"
+@when answerId == "Day2Martha"
 
 {@Astrid} Could he be working at Aunt Martha's clinic? They would drive each other crazy, that's not it. $[Astrid/L2/l2_a_12]
 
 :: CorrectDocumentResponse
 @trigger    DocumentPuzzlePromptStart
-@when documentId == "MiniLabors"
+@when answerId == "MiniLabors", questionId == "Day2Question"
 @cutscene
-@once
 
 $call SetInputState(false)
 {@Astrid} That's it! Elijah left Aunt Martha's and is back on the road now headed to one of these stations. $[Astrid/L2/l2_a_15]
-$call Wait(1)
-$if !temp:puzzleComplete
-    $set temp:puzzleComplete = true
-    $call MoveToView("Desk")
-    $call Wait(1)
-    $goto .StartNeutrinoNav
+$if IsDocumentPuzzleSolved()
+    $branch .CorrectDocumentResponseSolved
+$else
+    $call SetInputState(true)
 $endif
 
 :: CorrectDocumentResponse2
 @trigger    DocumentPuzzlePromptStart
-@when   documentId == "HerculesPostcard"
+@when   answerId == "HerculesPostcard", questionId == "Day2Question2"
 @cutscene
-@once
 
 $call SetInputState(false)
 {@Astrid} That's it... Looks like he's working on some project to upgrade all the CERES stations around the Midwest. $[Astrid/L2/l2_a_13]
+$if IsDocumentPuzzleSolved()
+    $branch .CorrectDocumentResponseSolved
+$else
+    $call SetInputState(true)
+$endif
+
+:: CorrectDocumentResponseSolved
+@cutscene
+@once
 $call Wait(1)
 $if !temp:puzzleComplete
     $set temp:puzzleComplete = true
