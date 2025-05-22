@@ -68,7 +68,7 @@ namespace Astro {
 
             state.SpawnedDocuments.Add(spawned);
 
-            if (toBoard) {
+            if (toBoard && !asset.Prefab.AlwaysHighRes) {
                 DocumentUtility.DisplayLowResDocument(spawned, asset);
             }
             else {
