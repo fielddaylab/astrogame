@@ -87,10 +87,10 @@ namespace Astro {
                 {
                     psb.Builder.Append("LUMOSITY, ");
                 }
-                if (config.AcceptedIDSubmissions.HasFlag(ClassificationTypeMask.Infrared) && !HasIdentifiedDataType(ClassificationTypeMask.Infrared, asset))
-                {
-                    psb.Builder.Append("SPECTRAL-TYPE, ");
-                }
+                // if (config.AcceptedIDSubmissions.HasFlag(ClassificationTypeMask.Infrared) && !HasIdentifiedDataType(ClassificationTypeMask.Infrared, asset))
+                // {
+                //     psb.Builder.Append("SPECTRAL-TYPE, ");
+                // }
                 Assert.True(psb.Builder.Length >= 2);
 
                 psb.Builder.Length -= 2;
@@ -117,7 +117,7 @@ namespace Astro {
                     DayConfigAsset config = DayConfigUtil.GetConfigForState();
 
                     bool hasIdentifiedNeutrinoType = HasIdentifiedDataType(config.AcceptedIDSubmissions, focus.TargetData);
-                    bool targetInNeutrinoEvent = ArrayUtils.Contains(config.NeutrinoEvent.RelevantObjectIds, focus.TargetData.AssetId);
+                    bool targetInNeutrinoEvent = NeutrinoEventUtil.IsAssetInNeutrinoEvent(focus.TargetData);
                     if (!hasIdentifiedNeutrinoType && targetInNeutrinoEvent) {
                         RevealDataHint(display, focus.TargetData);
                     } else { 
@@ -138,7 +138,7 @@ namespace Astro {
                     DayConfigAsset config = DayConfigUtil.GetConfigForState();
 
                     bool hasIdentifiedNeutrinoType = HasIdentifiedDataType(config.AcceptedIDSubmissions, focus.TargetData);
-                    bool targetInNeutrinoEvent = ArrayUtils.Contains(config.NeutrinoEvent.RelevantObjectIds, focus.TargetData.AssetId);
+                    bool targetInNeutrinoEvent = NeutrinoEventUtil.IsAssetInNeutrinoEvent(focus.TargetData);
                     if (!hasIdentifiedNeutrinoType && targetInNeutrinoEvent) {
                         RevealDataHint(display, focus.TargetData);
                     } else { 
@@ -173,7 +173,7 @@ namespace Astro {
             DayConfigAsset config = DayConfigUtil.GetConfigForState();
 
             bool hasIdentifiedNeutrinoType = HasIdentifiedDataType(config.AcceptedIDSubmissions, focus.TargetData);
-            bool targetInNeutrinoEvent = ArrayUtils.Contains(config.NeutrinoEvent.RelevantObjectIds, focus.TargetData.AssetId);
+            bool targetInNeutrinoEvent = NeutrinoEventUtil.IsAssetInNeutrinoEvent(focus.TargetData);
             if (!hasIdentifiedNeutrinoType && targetInNeutrinoEvent) {
                 RevealDataHint(display, focus.TargetData);
             } else { 
@@ -280,8 +280,8 @@ namespace Astro {
                 return "SPECTRAL-TYPE";
             } else if (type.HasFlag(ClassificationTypeMask.Historical)) {
                 return "LUMOSITY";
-            } else if (type.HasFlag(ClassificationTypeMask.Infrared)) {
-                return "SPECTRAL-TYPE";
+            // } else if (type.HasFlag(ClassificationTypeMask.Infrared)) {
+            //     return "SPECTRAL-TYPE";
             } else {
                 return "UNKOWN";
             }

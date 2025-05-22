@@ -8,6 +8,7 @@ public static class GameEvents {
     public static readonly StringHash32 MonitorEmptySpaceClicked = "input:monitor-empty-space-clicked";
     public static readonly StringHash32 StartOpenMode = "start-open-mode";
     public static readonly StringHash32 ValidOpenIdSubmission = "valid-open-id-submission";
+    public static readonly StringHash32 UpdateOpenIdSubmission = "update-open-id-submission";
     public static readonly StringHash32 InvalidOpenIdSubmission = "invalid-open-id-submission";
     public static readonly StringHash32 DuplicateOpenIdSubmission = "duplicate-open-id-submission";
     public static readonly StringHash32 IncorrectOpenIdSubmission = "incorrect-open-id-submission";

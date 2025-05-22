@@ -21,9 +21,9 @@ namespace Astro {
         ColorMeter = 0x02,
         Spectrometer = 0x04,
         Historical = 0x08,
-        Infrared = 0x10,
+        // Infrared = 0x10,
         Luminosity = 0x20,
 
-        [Hidden] ALL = Photometer | ColorMeter | Spectrometer | Historical | Infrared | Luminosity
+        [Hidden] ALL = Photometer | ColorMeter | Spectrometer | Historical | Luminosity
     }
 }

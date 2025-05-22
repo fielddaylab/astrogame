@@ -76,7 +76,7 @@ namespace Astro {
             ReferenceClassification classification = Find.NamedAsset<ReferenceClassification>(submission.Classification);
 
             // check if this is an accepted submission type
-            if (!ArrayUtils.Contains(config.NeutrinoEvent.RelevantObjectIds, submission.AssetId)) {
+            if (!NeutrinoEventUtil.IsIdInNeutrinoEvent(submission.AssetId)) {
                 return ReviewResult.AssetNotInNeutrinoEvent;
             } else if ((classification.Type & config.AcceptedIDSubmissions) == 0) {
                 return ReviewResult.ClassificationNotInAccepted;
@@ -97,7 +97,7 @@ namespace Astro {
 
         static private ReviewResult EvaluateClassificationMaterialMask(ReviewSubmissionClassification submission, PlayerProgressState progress, CelestialAsset asset, DayConfigAsset config) {
             // check if this is an accepted submission type
-            if (!ArrayUtils.Contains(config.NeutrinoEvent.RelevantObjectIds, submission.AssetId)) {
+            if (!NeutrinoEventUtil.IsIdInNeutrinoEvent(submission.AssetId)) {
                 return ReviewResult.AssetNotInNeutrinoEvent;
             } else if ((ClassificationTypeMask.Spectrometer & config.AcceptedIDSubmissions) == 0) {
                 return ReviewResult.ClassificationNotInAccepted;
