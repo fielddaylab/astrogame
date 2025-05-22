@@ -3,6 +3,7 @@ using BeauUtil;
 using FieldDay;
 using FieldDay.Assets;
 using FieldDay.HID;
+using FieldDay.Rendering;
 using FieldDay.Scripting;
 using FieldDay.SharedState;
 using Leaf.Runtime;
@@ -22,6 +23,7 @@ namespace Astro {
         [NonSerialized] public Vector3 OverrideStoredDocPos;
         [NonSerialized] public DocumentInteractable DocZoomed;
         [NonSerialized] public Routine DocumentRoutine;
+        [NonSerialized] public Routine DocumentLoadRoutine;
 
         public Transform DocumentParent;
         public Rect DraggableBounds;
@@ -56,7 +58,7 @@ namespace Astro {
     public static partial class DocumentUtility {
         #region Spawning
 
-        public static DocumentRenderer SpawnDocument(DocumentAsset asset, StringHash32 id, DocumentBoardState state = null, bool addToArchive = true) {
+        public static DocumentRenderer SpawnDocument(DocumentAsset asset, StringHash32 id, out Vector3 pinnedPos, DocumentBoardState state = null, bool addToArchive = true, bool toBoard = false) {
             if (state == null) {
                 state = Find.State<DocumentBoardState>();
             }
@@ -68,18 +70,32 @@ namespace Astro {
 
             DocumentUtility.DisplayFullDocument(spawned, asset);
 
-            // add asset to ArchiveState (usually if not being spawned from an Archive)
-            if (addToArchive) {
-                var archiveState = Find.State<ArchiveState>();
-                ArchiveUtility.AddAssetToArchive(archiveState, id, spawned.transform.localPosition);
-            }
+            spawned.transform.localPosition = asset.DefaultPinnedPos;
+            var pinnedPosCopy = pinnedPos = spawned.transform.position;
+
+            // place somewhere offscreen
+            spawned.transform.position = new Vector3(-500, -500, 500);
+
+            // load assets
+            state.DocumentLoadRoutine.Replace(AwaitDocLoadComplete(spawned))
+                .OnComplete(() => {
+                    // restore doc position
+                    if (toBoard) { spawned.transform.localPosition = asset.DefaultPinnedPos; }
+
+                    // add asset to ArchiveState (usually if not being spawned from an Archive)
+                    if (addToArchive)
+                    {
+                        var archiveState = Find.State<ArchiveState>();
+                        ArchiveUtility.AddAssetToArchive(archiveState, id, pinnedPosCopy);
+                    }
+                });
 
             return spawned;
         }
 
         [LeafMember("SpawnDocument")]
         public static void LeafSpawnDocument(StringHash32 id) {
-            SpawnDocument(Find.NamedAsset<DocumentAsset>(id), id);
+            SpawnDocument(Find.NamedAsset<DocumentAsset>(id), id, out Vector3 pinnedPos);
         }
 
         [LeafMember("SpawnDocumentToCamera")]
@@ -89,22 +105,28 @@ namespace Astro {
 
             if (state.DocumentRoutine.Exists()) {
                 // wait for previous document routine to complete
-                state.DocumentRoutine.OnComplete(() => { SpawnDocumentToCamera(state, archiveState, id); });
+                state.DocumentRoutine.OnComplete(() => { state.DocumentRoutine.Replace(SpawnDocumentToCamera(state, archiveState, id)); });
             }
             else {
-                SpawnDocumentToCamera(state, archiveState, id);
+                state.DocumentRoutine.Replace(SpawnDocumentToCamera(state, archiveState, id));
             }
         }
 
-        public static void SpawnDocumentToCamera(DocumentBoardState state, ArchiveState archiveState, StringHash32 id) {
+        public static IEnumerator SpawnDocumentToCamera(DocumentBoardState state, ArchiveState archiveState, StringHash32 id) {
             var asset = Find.NamedAsset<DocumentAsset>(id);
-            var spawned = SpawnDocument(asset, id, state);
+            var spawned = SpawnDocument(asset, id, out Vector3 pinnedPos, state, true, false);
+
+            // wait for assets to load
+            while (state.DocumentLoadRoutine.Exists()) {
+                yield return null;
+            }
+
             // Init pinned position
             spawned.transform.SetParent(state.DocumentParent, false);
             if (spawned.transform.localPosition == Vector3.zero) {
                 spawned.transform.localPosition = FindAvailablePos(state, spawned);
             }
-            state.OverrideStoredDocPos = spawned.transform.position;
+            state.OverrideStoredDocPos = pinnedPos;
             state.OverrideStoredDoc = true;
             // Spawn below player view
             spawned.transform.SetParent(Game.Rendering.PrimaryCamera.transform, true);
@@ -115,7 +137,7 @@ namespace Astro {
         }
 
         public static void SpawnDocument(StringHash32 id) {
-            SpawnDocument(Find.NamedAsset<DocumentAsset>(id), id);
+            SpawnDocument(Find.NamedAsset<DocumentAsset>(id), id, out Vector3 pinnedPos);
         }
 
         public static Vector3 FindAvailablePos(DocumentBoardState state, DocumentRenderer doc) {
@@ -313,6 +335,8 @@ namespace Astro {
             DocumentAsset asset = Find.NamedAsset<DocumentAsset>(doc.AssetName);
 
             DocumentUtility.DisplayFullDocument(renderer, asset);
+            renderer.transform.localPosition = asset.DefaultPinnedPos;
+
             UpdateEnabledDocParts(doc, DocumentBoardState.ZoomActiveFunctions);
 
             state.DocumentRoutine.Replace(MoveDocToCam(viewState, doc.transform, Game.Rendering.PrimaryCamera.transform, zoomOffset))
@@ -383,6 +407,14 @@ namespace Astro {
         private static IEnumerator ToggleDocHover(Transform doc, Vector3 hoverOffset) {
             yield return doc.MoveTo(doc.localPosition + hoverOffset, 0.2f, Axis.XYZ, Space.Self).Ease(Curve.CubeIn);
             yield return null;
+        }
+
+        private static IEnumerator AwaitDocLoadComplete(DocumentRenderer doc)
+        {
+            while (!DocumentUtility.IsFullyLoaded(doc))
+            {
+                yield return null;
+            }
         }
 
         private static IEnumerator MoveDocToCam(ViewState viewState, Transform doc, Transform cam, Vector3 offset) {
