@@ -80,16 +80,18 @@ namespace Astro
         {
             Transform[] transforms = new Transform[currLayout.AssetPositions.Count];
 
+            while (boardState.DocumentLoadRoutine.Exists()) { yield return null; }
+
             int pairIndex = 0;
             foreach (KeyValuePair<StringHash32, Vector3> pair in currLayout.AssetPositions)
             {
-                while (boardState.DocumentLoadRoutine.Exists()) { yield return null; }
-
                 // spawn the asset at the position
                 var spawned = DocumentUtility.SpawnDocument(Find.NamedAsset<DocumentAsset>(pair.Key), pair.Key, out Vector3 pinnedPos, boardState, false, true);
                 transforms[pairIndex] = spawned.transform;
                 spawned.transform.position = new Vector3(-500, -500, 500); // place somewhere offscreen while loading
                 pairIndex++;
+
+                while (boardState.DocumentLoadRoutine.Exists()) { yield return null; }
             }
 
             pairIndex = 0;
