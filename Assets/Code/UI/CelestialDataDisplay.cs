@@ -117,7 +117,7 @@ namespace Astro {
                     DayConfigAsset config = DayConfigUtil.GetConfigForState();
 
                     bool hasIdentifiedNeutrinoType = HasIdentifiedDataType(config.AcceptedIDSubmissions, focus.TargetData);
-                    bool targetInNeutrinoEvent = ArrayUtils.Contains(config.NeutrinoEvent.RelevantObjectIds, focus.TargetData.AssetId);
+                    bool targetInNeutrinoEvent = NeutrinoEventUtil.IsAssetInNeutrinoEvent(focus.TargetData);
                     if (!hasIdentifiedNeutrinoType && targetInNeutrinoEvent) {
                         RevealDataHint(display, focus.TargetData);
                     } else { 
@@ -138,7 +138,7 @@ namespace Astro {
                     DayConfigAsset config = DayConfigUtil.GetConfigForState();
 
                     bool hasIdentifiedNeutrinoType = HasIdentifiedDataType(config.AcceptedIDSubmissions, focus.TargetData);
-                    bool targetInNeutrinoEvent = ArrayUtils.Contains(config.NeutrinoEvent.RelevantObjectIds, focus.TargetData.AssetId);
+                    bool targetInNeutrinoEvent = NeutrinoEventUtil.IsAssetInNeutrinoEvent(focus.TargetData);
                     if (!hasIdentifiedNeutrinoType && targetInNeutrinoEvent) {
                         RevealDataHint(display, focus.TargetData);
                     } else { 
@@ -173,7 +173,7 @@ namespace Astro {
             DayConfigAsset config = DayConfigUtil.GetConfigForState();
 
             bool hasIdentifiedNeutrinoType = HasIdentifiedDataType(config.AcceptedIDSubmissions, focus.TargetData);
-            bool targetInNeutrinoEvent = ArrayUtils.Contains(config.NeutrinoEvent.RelevantObjectIds, focus.TargetData.AssetId);
+            bool targetInNeutrinoEvent = NeutrinoEventUtil.IsAssetInNeutrinoEvent(focus.TargetData);
             if (!hasIdentifiedNeutrinoType && targetInNeutrinoEvent) {
                 RevealDataHint(display, focus.TargetData);
             } else { 

@@ -14,12 +14,6 @@ namespace Astro {
         public CelestialAsset[] RelevantObjects;
         [NonSerialized] public StringHash32[] RelevantObjectIds;
 
-        // public void OnDeregister()
-        // {
-        // }
-
-        // public void OnRegister()
-        // {
         private void OnEnable() {
             RelevantObjectIds = new StringHash32[RelevantObjects.Length];
             int index = 0;
@@ -28,6 +22,5 @@ namespace Astro {
                 index++;
             }
         }
-        // }
     }
 }
