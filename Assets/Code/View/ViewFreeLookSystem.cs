@@ -34,7 +34,7 @@ namespace Astro {
             Quaternion currentRot = state.Camera.RootTransform.rotation;
             Quaternion nextRot = currentRot;
 
-            if (Input.mousePresent || Input.touchCount > 0) {
+            if (GameLoop.IsFocused() && (Input.mousePresent || Input.touchCount > 0)) {
                 Vector2 normalizedMouseViewportOffset = Input.mousePosition;
                 normalizedMouseViewportOffset.x /= Screen.width;
                 normalizedMouseViewportOffset.y /= Screen.height;
