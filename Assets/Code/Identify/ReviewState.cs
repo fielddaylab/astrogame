@@ -36,7 +36,7 @@ namespace Astro {
 
     public enum ReviewResult {
         Success = 0,
-
+        SuccessNotInNeutrinoEvent,
         AssetNotInNeutrinoEvent,
         Duplicate,
         ClassificationNotInAccepted,
@@ -75,14 +75,22 @@ namespace Astro {
         static private ReviewResult EvaluateClassificationSubmission(ReviewSubmissionClassification submission, PlayerProgressState progress, CelestialAsset asset, DayConfigAsset config) {
             ReferenceClassification classification = Find.NamedAsset<ReferenceClassification>(submission.Classification);
 
+            PlayerKnowledgeQueryResult query = PlayerKnowledgeUtility.MarkNewClassification(asset, submission.Classification, out PlayerCelestialAssetKnowledge knowledgeRecord);
+
             // check if this is an accepted submission type
             if (!NeutrinoEventUtil.IsIdInNeutrinoEvent(submission.AssetId)) {
-                return ReviewResult.AssetNotInNeutrinoEvent;
+                switch (query) {
+                    case PlayerKnowledgeQueryResult.InvalidData:
+                        return ReviewResult.AssetNotInNeutrinoEvent;
+                    case PlayerKnowledgeQueryResult.Known:
+                        return ReviewResult.Duplicate;
+                    case PlayerKnowledgeQueryResult.NewKnowledge:
+                    default:
+                        return ReviewResult.SuccessNotInNeutrinoEvent;
+                }
             } else if ((classification.Type & config.AcceptedIDSubmissions) == 0) {
                 return ReviewResult.ClassificationNotInAccepted;
             }
-
-            PlayerKnowledgeQueryResult query = PlayerKnowledgeUtility.MarkNewClassification(asset, submission.Classification, out PlayerCelestialAssetKnowledge knowledgeRecord);
 
             switch (query) {
                 case PlayerKnowledgeQueryResult.InvalidData:
@@ -97,8 +105,19 @@ namespace Astro {
 
         static private ReviewResult EvaluateClassificationMaterialMask(ReviewSubmissionClassification submission, PlayerProgressState progress, CelestialAsset asset, DayConfigAsset config) {
             // check if this is an accepted submission type
+
+            PlayerKnowledgeQueryResult query = PlayerKnowledgeUtility.KnowsFlags(asset.AssetId, PlayerCelestialAssetKnowledgeFlags.IdentifiedResources, out PlayerCelestialAssetKnowledge knowledgeRecord);
+
             if (!NeutrinoEventUtil.IsIdInNeutrinoEvent(submission.AssetId)) {
-                return ReviewResult.AssetNotInNeutrinoEvent;
+                switch (query) {
+                    case PlayerKnowledgeQueryResult.InvalidData:
+                        return ReviewResult.AssetNotInNeutrinoEvent;
+                    case PlayerKnowledgeQueryResult.Known:
+                        return ReviewResult.Duplicate;
+                    case PlayerKnowledgeQueryResult.NewKnowledge:
+                    default:
+                        return ReviewResult.SuccessNotInNeutrinoEvent;
+                }
             } else if ((ClassificationTypeMask.Spectrometer & config.AcceptedIDSubmissions) == 0) {
                 return ReviewResult.ClassificationNotInAccepted;
             }
@@ -106,8 +125,6 @@ namespace Astro {
             if (submission.Materials != asset.Spectrograph) {
                 return ReviewResult.ClassificationNotFound;
             }
-
-            PlayerKnowledgeQueryResult query = PlayerKnowledgeUtility.KnowsFlags(asset.AssetId, PlayerCelestialAssetKnowledgeFlags.IdentifiedResources, out PlayerCelestialAssetKnowledge knowledgeRecord);
 
             switch (query) {
                 case PlayerKnowledgeQueryResult.Known:

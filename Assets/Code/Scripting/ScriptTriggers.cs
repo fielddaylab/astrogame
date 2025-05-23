@@ -17,6 +17,7 @@ namespace Astro {
             Game.Events.Register(GameEvents.NeutrinoNavigationComplete, OnNeutrinoNavComplete);
 
             Game.Events.Register(GameEvents.ValidOpenIdSubmission, OnValidOpenIdSubmission);
+            Game.Events.Register(GameEvents.ValidKnowledgeSubmission, OnValidKnowledgeSubmission);
             Game.Events.Register(GameEvents.InvalidOpenIdSubmission, OnInvalidOpenIdSubmission);
             Game.Events.Register(GameEvents.IncorrectOpenIdSubmission, OnIncorrectOpenIdSubmission);
             Game.Events.Register(GameEvents.DuplicateOpenIdSubmission, OnDuplicateOpenIdSubmission);
@@ -47,6 +48,10 @@ namespace Astro {
 
         static private void OnValidOpenIdSubmission() {
             ScriptUtility.Trigger(ScriptEvents.OnValidOpenIdSubmission);
+        }
+
+        static private void OnValidKnowledgeSubmission() {
+            ScriptUtility.Trigger(ScriptEvents.OnValidKnowledgeSubmission);
         }
 
         static private void OnIncorrectOpenIdSubmission() {

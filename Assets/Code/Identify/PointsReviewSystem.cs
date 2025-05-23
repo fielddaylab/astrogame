@@ -9,6 +9,7 @@ using System.Collections;
 using UnityEngine;
 using Astro.Reference;
 using FieldDay.Audio;
+using System;
 
 namespace Astro {
     [SysUpdate(GameLoopPhase.Update, 0, AstroGame.SubmissionUpdateMask)]
@@ -95,11 +96,17 @@ namespace Astro {
 
         private void CheckObjectIdentification() {
             ReviewResult result = ReviewUtility.EvaluateSubmission(m_State.Identification, Find.State<PlayerProgressState>());
-            ReviewUtility.ShowResultSprite(result == ReviewResult.Success, m_State);
+            ReviewResult[] acceptedResults = new ReviewResult[] { ReviewResult.Success, ReviewResult.SuccessNotInNeutrinoEvent, ReviewResult.ClassificationNotInAccepted };
+            ReviewUtility.ShowResultSprite(Array.IndexOf(acceptedResults, result) != -1, m_State);
+
             switch (result) {
                 case ReviewResult.Success: {
                     ReviewUtility.AddPoints(1);
                     Game.Events.Dispatch(GameEvents.ValidOpenIdSubmission);
+                    break;
+                }
+                case ReviewResult.SuccessNotInNeutrinoEvent: {
+                    Game.Events.Dispatch(GameEvents.ValidKnowledgeSubmission);
                     break;
                 }
                 case ReviewResult.Duplicate: {

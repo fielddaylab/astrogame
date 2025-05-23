@@ -11,6 +11,9 @@ $call StopOpenMode()
 $call SetRefGuidePagesLocked(true)
 $call IntroCutscene->PrepareCutscene()
 
+:: ResetSubtitlePosition
+$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
+
 :: OpeningCutscene
 @trigger SceneReady
 @cutscene
@@ -27,8 +30,8 @@ $call TelescopeLook(155, -30)
 @cutscene
 @who    Radio
 
-{@Astrid} Whoa. This place has really changed. Elijah, where are you? $[Astrid/L1/l1_a_01]
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
+{@Astrid} Whoa. This place has really changed. Elijah, where are you? $[Astrid/L1/l1_a_01]
 $call Wait(1)
 
 $call MoveToView("Right")
@@ -75,7 +78,9 @@ $call Wait(1)
 $call WaitForMovedToView("Monitor")
 
 {@Radio} I'll help you get up and running. Start by moving your telescope. $[Radio/L1/l1_r_05]
+$goto .SetupTelescopeTutorial
 
+:: SetupTelescopeTutorial
 $call StartMonitorControls()
 $call SetInputState(true)
 $call HintModals->SlideInFromRight("TelescopeControls", 0.4)
@@ -105,8 +110,11 @@ $call HintModals->Hide("TelescopeControls", 0.2)
 $call MonitorUI->PlayRadioDownload(4.0)
 $call SetInputState(false)
 {@Radio} OK, looks like you received the coordinates. See those dots above your monitor? They will light up as you near the target. $[Radio/L1/l1_r_08]
-$call SetInputState(true)
 
+$goto .SetupNeutrinoNavigation
+
+:: SetupNeutrinoNavigation
+$call SetInputState(true)
 $call StartNeutrinoNavigation()
 $call HintModals->SlideInFromLeft("NeutrinoNav", 0.4)
 
@@ -155,12 +163,14 @@ $call AlignCamToNeutrino()
 $call HintModals->Hide("NeutrinoNav", 0.2)
 $call SetInputState(false)
 $call StartOpenMode()
+
 {@Radio} Nice Job! $[Radio/L1/l1_r_11]
 $call Wait(1)
 {@Radio} So earlier this morning, Ice Cube detected a high energy neutrino coming from one of several possible stars in this location. $[Radio/L1/l1_r_12]
-// {@Radio} You’ll see each of them highlighted on your display.  $[Radio/L1/l1_r_13]
-// {@Radio} Identifying these stars will be a great way for you to get your feet wet and upgrade your access level. $[Radio/L1/l1_r_14]
 {@Radio} Alight. Select a possible neutrino origin on your display. $[Radio/L1/l1_r_15]
+$goto .PostNeutrinoNavigationComplete
+
+:: PostNeutrinoNavigationComplete
 $set temp:waitingForNeutrinoStar = true
 
 $call HintModals->SlideInFromLeft("SelectStar", 0.4)
@@ -172,6 +182,7 @@ $call SetInputState(true)
 @cutscene
 @interrupt
 
+$call ClearMonitorSelection()
 {@Radio} Hmmm. It doesn't look like that is a possible neutrino origin. Look for objects with a blue highlight. $[Radio/L1/l1_r_16]
 
 :: OnRefGuideClosed
@@ -196,9 +207,12 @@ $call MoveToView("Right")
 {@Radio} Do you see your photometer in the equipment stack? That should tell you what the apparent magnitude of the star is. $[Radio/L1/l1_r_20]
 {@Radio} All you need to do is find that number in your reference guide and submit the data. $[Radio/L1/l1_r_21]
 {@Radio} Another coalition astronomer will verify your classification. $[Radio/L1/l1_r_18]
+$goto .PostIntroRefGuideOpened
+
+:: PostIntroRefGuideOpened
 $call SetInputState(true)
 $call Wait(1)
-$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
+$goto .ResetSubtitlePosition
 
 :: OnRefGuideOpened
 @trigger    OnRefGuideOpened
@@ -226,7 +240,6 @@ $endif
 $call LockMonitorFocus()
 {@Radio} Great! See if you can find Elijah’s operator manual. It's a small, spiral bound notebook. $[Radio/L1/l1_r_19]
 $call Wait(1)
-$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 
 :: PlayerLeavesNeutrinoTask
 @trigger    OnLeaveNeutrinoRegion
@@ -245,8 +258,7 @@ $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 
 $call SubtitleController->SetSubtitlePosition(0.5, 1, 0, -140)
 {@Radio} Hmm, that wasn’t correct, remember to look at your photometer, and then line it up with the closest range in your manual. $[Radio/L1/l1_r_22]
-$call Wait(1)
-$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
+$goto .ResetSubtitlePosition
 
 :: FirstDupliacteSubmission
 @trigger    OnDuplicateOpenIdSubmission
@@ -269,9 +281,10 @@ $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 @interrupt
 @cutscene
 @once
+
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 {@Astrid} Okay! Maybe I can determine the apparent magnitude of some other stars in this cluster.  $[Astrid/L1/l1_a_9a]
-$call UnlockMonitorFocus()
+$goto .PostPoint
 
 :: SecondPoint
 @trigger    PointsUpdated
@@ -279,11 +292,15 @@ $call UnlockMonitorFocus()
 @interrupt
 @cutscene
 @once
+
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 {@Astrid} Nice! I'll try another one. $[Astrid/L1/l1_a_9b]
+$goto .PostPoint
+
+:: PostPoint
 $call UnlockMonitorFocus()
 
-:: PointsUpdated
+:: ClearanceUpgrade
 @trigger    PointsUpdated
 @when   sciencePoints > 2
 @boostScore 200
@@ -313,6 +330,8 @@ $call Wait(1)
 {@Radio} Ope, and I need to read this thing.... (*clears throat*) $[Radio/L1/l1_r_29]
 $call SetInstrumentUnlocked(ColorInstrument, true)
 $call SetInstrumentUnlocked(TemperatureInstrument, true)
+$call OpenRefGuidePage("Colormeter")
+
 {@Radio} Congratulations on being awarded clearance <b>level one</b>. You are now cleared to use the color meter.  $[Radio/L1/l1_r_30]
 {@Astrid} Starting at the bottom... clearance level one. $[Astrid/L1/l1_a_10]
 // {@Radio} Please reference your CERES Operator Manual for further information about your equipment. $[Radio/L1/l1_r_31]
@@ -322,18 +341,27 @@ $call SetInstrumentUnlocked(TemperatureInstrument, true)
 {@Astrid} Ugh, riviting... $[Astrid/L1/l1_a_11]
 
 {@Radio} Tuning you to the Ice Cube CERES headquarters for further instruction... $[Radio/L1/l1_r_34]
+
 $call MonitorUI->HideCERESLogo()
 $call Wait(1)
+$call SetRefGuideActive(false)
 
 {@Astrid} (*Sigh*) ...Another birthday without Elijah. Maybe he’s watching the Perseids, wherever he is...  $[Astrid/L1/l1_a_12]
 {@Astrid} I think I saw something about Perseus in that reference guide... $[Astrid/L1/l1_a_13]
+
 $call OpenRefGuidePage("ConstellationPerseus")
+
 {@Astrid} Huh… There’s something about Perseus here… $[Astrid/L1/l1_a_14]
 {@Astrid} Aha! $[Astrid/L1/l1_a_15]
+
 $call Wait(1)
 {@Astrid} Can this telescope can help me find Perseus? I hope I didn't miss the meteor shower. $[Astrid/L1/l1_a_16]
+$goto .PostClearanceUpgrade
+
+:: PostClearanceUpgrade
 $call MoveToView("Monitor")
 $call ConsoleCommandLine->PlayPuzzleConsoleText()
+
 $call SetInputState(true)
 $call StartPuzzleNavigation()
 
@@ -383,7 +411,9 @@ $call StartPuzzleMode()
 // {@Astrid} Do I finally get to do some astronomy? I never thought this would happen. This is wild. $[Astrid/L1/l1_a_23] 
 // {@Astrid} Elijah is so far ahead of me. Well, here goes nothing! Aunt Martha would not be happy about this. $[Astrid/L1/l1_a_24]
 {@Astrid} Okay, you got this Astrid… Start with what I know - the coordinates for Atik.  $[Astrid/L1/l1_a_25]
+$goto .PostPuzzleNavigationComplete
 
+:: PostPuzzleNavigationComplete
 $set temp:waitingForSelectAtik = true
 $call Wait(0.5)
 $call HintModals->SlideInFromRight("FirstPuzzleStar", 0.4)
@@ -406,15 +436,15 @@ $endif
 @cutscene
 @once
 
+$call SubtitleController->SetSubtitlePosition(0.5, 1, 0, -140)
 $call LockMonitorFocus()
 $set temp:waitingForSelectAppMag = true
 $set temp:waitingForSelectAtik = false
 $call HintModals->Hide("FirstPuzzleStar", 0.2)
-$call SubtitleController->SetSubtitlePosition(0.5, 1, 0, -140)
 $call IsolatePuzzleCell(1, 3)
+
 {@Astrid} Okay, apparent magnitude… I can load that from the Photometer. $[Astrid/L1/l1_a_27]
-$call Wait(1)
-$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
+$goto .ResetSubtitlePosition
 
 :: NotAtikAstrid
 @trigger    OnPuzzleCellSelected
@@ -430,6 +460,7 @@ $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 @interrupt
 @once
 
+$set temp:waitingForSelectAppMag = false
 $set temp:waitingForFillAppMag = false
 $set temp:waitingForBlueFilter = true
 $call UnlockMonitorFocus()
@@ -438,6 +469,9 @@ $call SetInstrumentUnlocked(BlueWavelength, true)
 $call SetInputState(false)
 {@Astrid} Let's see... to fill in the rest of this sequence, I also need the blue magnitude. $[Astrid/L1/l1_a_29]
 {@Astrid} I need to select the blue wavelength filter just below the monitor. $[Astrid/L1/l1_a_34]
+$goto .PostAtikAppMagFilled
+
+:: PostAtikAppMagFilled
 $call SetRefGuidePagesLocked(false)
 $call IsolatePuzzleCell(1, 4)
 $call Wait(1)
@@ -460,6 +494,7 @@ $call ReleaseIsolatedPuzzle()
 $set temp:waitingForBlueFilter = false
 $set temp:waitingForBlueLight = true
 $call IsolatePuzzleCell(1, 4)
+
 {@Astrid} Okay! Now I can load this data into the blue magnitude space with my photometer just like before. $[Astrid/L1/l1_a_33]
 
 :: AtikNotBlueFilterSelected
@@ -488,8 +523,12 @@ $call IsolatePuzzleCell(1, 4)
 $set temp:waitingForBlueLight = false
 $call SetInputState(false)
 $call ReleaseIsolatedPuzzle()
+
 {@Astrid} It looks like I have the apparent magnitude of the star... and the blue magnitude. So now I can calculate it’s color index. $[Astrid/L1/l1_a_35] 
 {@Astrid} The hotter the star, the bluer it is. Now I can load the color of the star... I can select the color space for Atik. $[Astrid/L1/l1_a_36]
+$goto .PostAtikBlueMagFilled
+
+:: PostAtikBlueMagFilled
 $call IsolatePuzzleCell(1, 2)
 $call SetInputState(true)
 $set temp:waitingForFillColor = true
@@ -499,9 +538,9 @@ $set temp:waitingForFillColor = true
 @when   cellId == "R1C2", temp:waitingForFillColor
 @interrupt
 @cutscene
-// @once
 
 $call ReleaseIsolatedPuzzle()
+
 {@Astrid} Alright, now I should load the color in from the color indexer. $[Astrid/L1/l1_a_38]
 
 :: WhereIsTheColorIndexer
@@ -521,6 +560,7 @@ $call ReleaseIsolatedPuzzle()
 
 $set temp:waitingForFillColor = false
 $call ReleaseIsolatedPuzzle()
+
 {@Astrid} O-kay! Now it’s just process of elimination. Start with your known info, and work your way through. Maybe the reference guide can help. $[Astrid/L1/l1_a_40]
 
 :: AtikAppMagSelected
@@ -528,16 +568,16 @@ $call ReleaseIsolatedPuzzle()
 @when   cellId == "R1C3", temp:waitingForSelectAppMag
 @cutscene
 @interrupt
-@once
 
 $set temp:waitingForFillAppMag = true
-$set temp:waitingForSelectAppMag = false
 $call AddIsolatedSlot(ApparentMagnitude)
+
 {@Astrid} Now all I have to do is load in data from the photometer.
 
 :: AstridThatsNotThePhotometer
 @trigger    OnLabInteraction
-@when   actorId != "PhotometerLoadBtn", temp:waitingForFillAppMag
+
+@when   actorId != "PhotometerLoadBtn", actorId != "R1C3", temp:waitingForFillAppMag
 @interrupt
 @cutscene
 

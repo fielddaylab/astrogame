@@ -40,7 +40,7 @@ namespace Astro {
                 }
             }
 
-            // TODO: disallow placement on other question documents
+            // disallow placement on other question documents
             if (boardState.DraggablePlacedThisFrame && puzzleState.CurrHoverDoc != null && puzzleState.CurrHoverDoc.TriggersPrompter && boardState.DraggablePlaced.GetComponent<DocumentPrompter>()) {
                 // hovering ended; placement script trigger
                 using (var table = TempVarTable.Alloc()) {

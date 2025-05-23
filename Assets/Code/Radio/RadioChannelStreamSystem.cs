@@ -2,7 +2,9 @@ using System;
 using BeauUtil;
 using BeauUtil.Debugger;
 using EasyAssetStreaming;
+using FieldDay;
 using FieldDay.Audio;
+using FieldDay.Scripting;
 using FieldDay.SharedState;
 using FieldDay.Systems;
 using FieldDay.Vox;
@@ -59,6 +61,19 @@ namespace Astro.Radio {
             if (Sfx.IsActive(m_StateB.StreamAudioHandle)) {
                 Sfx.SetVolume(m_StateB.StreamAudioHandle, m_StateB.NormalizedChannelStrength);
             }
+            else if (m_StateA.WasAnyChannelPlayingLastFrame) {
+                var listenState = Find.State<RadioListenState>();
+
+                if (listenState.CurrListenChannel != null) {
+                    // channel was playing but has since stopped (only applies to one-shots)
+                    using (var table = TempVarTable.Alloc()) {
+                        table.Set("wasPlayerListening", true);
+                        ScriptUtility.Trigger(ScriptEvents.RadioChannelFinished, table);
+                    }
+                }
+            }
+
+            m_StateA.WasAnyChannelPlayingLastFrame = Sfx.IsActive(m_StateB.StreamAudioHandle);
         }
     }
 }
