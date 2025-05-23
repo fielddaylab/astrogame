@@ -95,8 +95,8 @@ $call SetInputState(true)
 @when   documentId == "CouplePhoto"
 @once
 
-{@Astrid} Where is Elijah? Is he okay? $[Astrid/L2/l2_a_3]
 $call SpawnDocumentToCamera("Day2Question")
+{@Astrid} Where is Elijah? Is he okay? $[Astrid/L2/l2_a_3]
 
 :: DocumentPuzzleStart
 @trigger    DocumentInspectEnd
@@ -108,8 +108,8 @@ $set temp:puzzleComplete = false
 $call Wait(1)
 $call StartDocumentPuzzle("Day2DocumentPuzzle")
 $call SetInputState(true)
-{@Astrid} And what is Elijah working on?
 $call SpawnDocumentToCamera("Day2Question2")
+{@Astrid} And what is Elijah working on?
 
 :: IncorrectDocumentResponse1
 @trigger    DocumentPuzzlePromptStart
@@ -179,6 +179,7 @@ $call SetInputState(true)
 
 $call StopNeutrinoNavigation()
 $call StartOpenMode()
+$call SetStickyFirstPage(1)
 {@Radio} We need to know the spectral types of these stars. In order to determine that you’ll need to calculate the <i>temperature</i>. $[Radio/L2/l2_r_04]
 {@Radio} We need both <i>visible</i> and <i>blue wavelength</i> measurements to calculate this. $[Radio/L2/l2_r_09]
 $set temp:waitingForNeutrinoStar = true
@@ -207,6 +208,7 @@ $call SetInputState(true)
 @once
 
 $set temp:waitingForBlueFilter = false
+$call OpenRefGuidePage(SpectralClass)
 {@Radio} Now you just need to use that temperature to look up the spectral type in your reference guide. $[Radio/L2/l2_r_08]
 {@Radio} Look up the spectral type in your manual, and submit the data. $[Radio/L2/l2_r_10]
 
@@ -229,7 +231,7 @@ $call UnlockMonitorFocus()
 
 :: PointsUpdated
 @trigger    PointsUpdated
-@when   sciencePoints > 2
+@when   sciencePoints > 3
 @boostScore 100
 @interrupt
 @cutscene
@@ -247,13 +249,17 @@ $call MonitorUI->PlayRadioDownload(2)
 $call Wait(1)
 $call MonitorUI->ShowCERESLogo():wait
 $call SetInstrumentUnlocked(SpectrometerInstrument, true)
+$call SetStickyFirstPage(-1)
+$call OpenRefGuidePage("Spectrometer")
 {@Radio} (*clears throat*) Congratulations on being awarded clearance <b>level two</b>. You are now cleared to use the spectrometer. $[Radio/L2/l2_r_12]
 {@Radio} Please reference your CERES Operator Manual for further information about your equipment. $[Radio/L2/l2_r_13]
 {@Radio} Thanking you for being an important part of the CERES Distributed Network of Citizen Observatories. $[Radio/L2/l2_r_14]
 {@Radio} Together, we will map the stars for a better tomorrow. $[Radio/L2/l2_r_15]
 $call MonitorUI->HideCERESLogo()
+$call Wait(0.5)
 
 $call OpenRefGuidePage("ConstellationHercules")
+$call Wait(1)
 {@Astrid} Hmmm, Hercules. Just like Elijah's postcard! $[Astrid/L2/l2_a_16]
 {@Astrid} These are the puzzles Elijah had been working on. What is this all for? $[Astrid/L2/l2_a_17]
 // $set temp:waitingForRefGuidePuzzle = true

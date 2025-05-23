@@ -29,6 +29,8 @@ namespace Astro.Reference {
         [NonSerialized] public ReferenceClassification SelectedRefClassification;
         [NonSerialized] public SpectrographMaterialMask SelectedMaterials;
         [NonSerialized] public ReferencePageAsset CurrentPage;
+        // value used to control the first page the player opens to 
+        [NonSerialized] public int StickyFirstPage = -1;
         [NonSerialized] public int CurrentPageNum;
         [NonSerialized] public ReferencePageList PageList;
         [NonSerialized] public bool SubmissionActive = true;
@@ -142,6 +144,7 @@ namespace Astro.Reference {
 
             if (guide.CurrentState == RefGuideInteractionState.Closed) {
                 guide.TransitionRoutine.Replace(guide, TransitionToOpen(guide, rig)).TryManuallyUpdate(0);
+                // check if we are overriding the top page
                 ScriptUtility.Trigger(ScriptEvents.OnRefGuideOpened);
             } else {
                 guide.TransitionRoutine.Replace(guide, TransitionToClose(guide, rig)).TryManuallyUpdate(0);
@@ -184,6 +187,9 @@ namespace Astro.Reference {
             PopulateReferenceColliders(state.CurrentPage, rig);
 
             yield return 0.15f;
+            if (state.StickyFirstPage > -1) {
+                LoadPage(state.StickyFirstPage, state);
+            }
             yield return Tween.ZeroToOne(SetRefGuideCoverAngle, 0.45f).Ease(Curve.Smooth);
             rig.CoverRenderer.enabled = false;
 
@@ -444,6 +450,12 @@ namespace Astro.Reference {
         private static void LeafOpenRefGuidePage(StringHash32 pageId) {
             SetReferenceActive(true);
             LoadPage(pageId);
+        }
+
+        [LeafMember("SetStickyFirstPage")]
+        private static void LeafSetStickyFirstPage(int pageNum) {
+            RefGuideState refGuideState = Find.State<RefGuideState>();
+            refGuideState.StickyFirstPage = pageNum;
         }
 
         #endregion // Leaf

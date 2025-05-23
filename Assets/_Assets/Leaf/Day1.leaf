@@ -313,6 +313,7 @@ $call Wait(1)
 {@Radio} Ope, and I need to read this thing.... (*clears throat*) $[Radio/L1/l1_r_29]
 $call SetInstrumentUnlocked(ColorInstrument, true)
 $call SetInstrumentUnlocked(TemperatureInstrument, true)
+$call OpenRefGuidePage("Photometer")
 {@Radio} Congratulations on being awarded clearance <b>level one</b>. You are now cleared to use the color meter.  $[Radio/L1/l1_r_30]
 {@Astrid} Starting at the bottom... clearance level one. $[Astrid/L1/l1_a_10]
 // {@Radio} Please reference your CERES Operator Manual for further information about your equipment. $[Radio/L1/l1_r_31]
@@ -324,6 +325,7 @@ $call SetInstrumentUnlocked(TemperatureInstrument, true)
 {@Radio} Tuning you to the Ice Cube CERES headquarters for further instruction... $[Radio/L1/l1_r_34]
 $call MonitorUI->HideCERESLogo()
 $call Wait(1)
+$call SetRefGuideActive(false)
 
 {@Astrid} (*Sigh*) ...Another birthday without Elijah. Maybe he’s watching the Perseids, wherever he is...  $[Astrid/L1/l1_a_12]
 {@Astrid} I think I saw something about Perseus in that reference guide... $[Astrid/L1/l1_a_13]
