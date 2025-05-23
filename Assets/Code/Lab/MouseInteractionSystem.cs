@@ -94,8 +94,10 @@ namespace Astro {
             using (var table = TempVarTable.Alloc()) {
                 if (interactable.gameObject.TryGetComponent(out ScriptActor actor)) {
                     table.Set("actorId", actor.Id);
+                } else if (interactable.gameObject.TryGetComponent(out InteractSelectSlot slot)) {
+                    table.Set("actorId", slot.DataSlot.SlotId);
                 } else {
-                    table.Set("actorId", new StringHash32("Unkown"));
+                    table.Set("actorId", new StringHash32("Unknown"));
                 }
                 ScriptUtility.Trigger(ScriptEvents.OnLabInteraction, table);
             }
