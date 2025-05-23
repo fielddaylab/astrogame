@@ -65,6 +65,10 @@ public static class ScriptEvents {
     public static readonly StringHash32 OnLeaveNeutrinoRegion = "OnLeaveNeutrinoRegion";
     public static readonly StringHash32 OnConstellationNavWarmer = "OnConstellationNavWarmer";
     public static readonly StringHash32 OnConstellationNavColder = "OnConstellationNavColder";
+
+    public static readonly StringHash32 RadioChannelListenStart = "RadioChannelListenStart"; // player started listening
+    public static readonly StringHash32 RadioChannelListenEnd = "RadioChannelListenEnd"; // player stopped listening
+    public static readonly StringHash32 RadioChannelFinished = "RadioChannelFinished"; // reached end of radio channel
 }
 
 public static class DataTypeLabels
