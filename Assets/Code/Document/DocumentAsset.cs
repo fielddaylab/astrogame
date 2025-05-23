@@ -36,6 +36,7 @@ namespace Astro {
         public Vector3 ZoomOffsetOverride;
 
         public bool PreserveInArchive = true;
+        public bool TriggersPrompter = true; // false for questions
 
 #if UNITY_EDITOR
         private void OnEnable() {

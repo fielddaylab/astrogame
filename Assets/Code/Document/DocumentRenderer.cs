@@ -27,6 +27,7 @@ namespace Astro {
 
         [HideInInspector] public DocumentInteractable Interactable;
         [HideInInspector] public bool PreserveInArchive;
+        [HideInInspector] public bool TriggersPrompter;
 
         [NonSerialized] public string BaseVisualAssetName;
         [NonSerialized] public string BaseVisualAssetFileType;

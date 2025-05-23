@@ -46,6 +46,7 @@ public static class ScriptEvents {
     public static readonly StringHash32 DocumentInspectFlip = "DocumentInspectFlip";
     public static readonly StringHash32 DocumentInspectEnd = "DocumentInspectEnd";
     public static readonly StringHash32 DocumentPuzzlePromptStart = "DocumentPuzzlePromptStart";
+    public static readonly StringHash32 DocumentPuzzleSolved = "DocumentPuzzleSolved";
     public static readonly StringHash32 CutsceneBegin = "CutsceneBegin";
     public static readonly StringHash32 CutsceneEnd = "CutsceneEnd";
     public static readonly StringHash32 OnTelescopeMoved = "OnTelescopeMoved";

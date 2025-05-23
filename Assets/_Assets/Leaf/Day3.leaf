@@ -63,6 +63,7 @@ $call Wait(1)
 $call StartDocumentPuzzle("Day3DocumentPuzzle")
 $call SetInputState(true)
 {@Astrid} What is Elijah trying to warn people about?
+$call SpawnDocumentToCamera("Day3Question")
 
 :: DocumentInspect1833
 @trigger    DocumentInspectStart
@@ -75,21 +76,20 @@ $call EnableDocumentClose("1833", true, true)
 
 :: IncorrectDocumentResponse
 @trigger    DocumentPuzzlePromptStart
-@when   documentId == "Day3Dad"
+@when   answerId == "Day3Dad"
 @interrupt
 
 {@Astrid} No, Elijah hasn't said anything about another CME. $[Astrid/L3/l3d_a_04] 
 
 :: IncorrectDocumentResponse2
 @trigger    DocumentPuzzlePromptStart
-@when   documentId == "Day3ElijahPostcard"
+@when   answerId == "Day3ElijahPostcard"
 @interrupt
 
 {@Astrid} No, that's not it. Weren't there some notes on that picture he sent? $[Astrid/L3/l3d_a_05]
 
 :: CorrectDocumentResponse
-@trigger    DocumentPuzzlePromptStart
-@when   documentId == "1833"
+@trigger    DocumentPuzzleSolved
 @cutscene
 @once
 
