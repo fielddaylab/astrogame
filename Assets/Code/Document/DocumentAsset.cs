@@ -38,6 +38,27 @@ namespace Astro {
         public bool PreserveInArchive = true;
 
 #if UNITY_EDITOR
+        private void OnEnable() {
+            if (UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode) return;
+            if (Prefab == null) return;
+
+            int numStreamingAssets = 0;
+            foreach (DocumentRenderComponent cmp in Prefab.RenderComponents) {
+                numStreamingAssets += cmp.NumStreamingVisuals;
+            }
+
+            if (TextFields.Length != Prefab.TextRegions.Length) {
+                Array.Resize(ref TextFields, Prefab.TextRegions.Length);
+            }
+            if (StreamingVisuals.Length != numStreamingAssets) {
+                Array.Resize(ref StreamingVisuals, numStreamingAssets);
+            }
+
+            if (Prefab.gameObject.TryGetComponent(out DocumentInteractable interactable)) {
+                Interactable = interactable;
+            }
+        }
+
         private void OnValidate() {
             if (UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode) return;
 
