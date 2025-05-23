@@ -32,7 +32,8 @@ namespace Astro.Radio {
                     ScriptUtility.Trigger(ScriptEvents.RadioChannelListenStart, table);
                 }
             }
-            else if (m_StateC.CurrListenChannel != null) {
+            // otherwise this channel is no longer being listened to
+            else if (m_StateC.CurrListenChannel != null && m_StateC.ListenTime < m_StateC.ListenTimeThreshold) {
                 var channelId = m_StateC.CurrListenChannel.AssetId;
                 m_StateC.CurrListenChannel = null;
 

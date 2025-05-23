@@ -18,7 +18,6 @@ namespace Astro.Radio {
         public float ListenTimeThreshold; // how long before the player is considered "listening"
         public float ListenStrengthThreshold; // how tuned-in the player must be to be considered "listening"
         public RadioChannel CurrListenChannel;
-        public bool ActivelyListening;
         [NonSerialized] public float ListenTime; // how long the player has been listening to the current channel
     }
 }
