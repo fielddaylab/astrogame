@@ -24,6 +24,8 @@ namespace Astro.Radio {
 
         [NonSerialized] public RadioChannel LastKnownChannel;
 
+        [NonSerialized] public bool WasAnyChannelPlayingLastFrame;
+
         // Loading
 
         [NonSerialized] public StringHash32[] ChannelIndexMap;
