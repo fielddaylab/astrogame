@@ -169,6 +169,8 @@ $else
 $endif
 
 :: CorrectDocumentResponseSolved
+@interrupt
+@boostScore 1000
 @cutscene
 @once
 
@@ -208,6 +210,15 @@ $set temp:waitingForNeutrinoStar = true
 {@Radio} We need to know the spectral types of these stars. In order to determine that you’ll need to calculate the <i>temperature</i>. $[Radio/L2/l2_r_04]
 {@Radio} We need both <i>visible</i> and <i>blue wavelength</i> measurements to calculate this. $[Radio/L2/l2_r_09]
 {@Radio} Select a star on your telescope monitor. $[Radio/L2/l2_r_05]
+
+:: OnNonNeutrinoStarSelected
+@trigger    OnStarSelected
+@when   temp:waitingForNeutrinoStar
+@cutscene
+@interrupt
+
+$call ClearMonitorSelection()
+{@Radio} Hmmm. It doesn't look like that is a possible neutrino origin. Look for objects with a blue highlight. $[Radio/L1/l1_r_16]
 
 :: OnStarSelected
 @trigger    OnNeutrinoStarSelected
@@ -255,6 +266,7 @@ $call OpenRefGuidePage(SpectralClass)
 @cutscene
 @once
 
+$set temp:waitingForNeutrinoStar = false
 $call UnlockMonitorFocus()
 
 {@Radio} Nice Job, You're getting the hang of this. $[Radio/L2/l2_r_11]

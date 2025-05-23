@@ -29,6 +29,8 @@ namespace Astro {
 
         protected override void OnEnable() {
             Game.Events.Register(GameEvents.ValidOpenIdSubmission, CelestialDataDisplayUtil.UpdateCurrentDataDisplay);
+            Game.Events.Register(GameEvents.ValidKnowledgeSubmission, CelestialDataDisplayUtil.UpdateCurrentDataDisplay);
+            Game.Events.Register(GameEvents.UnacceptedOpenIdSubmission, CelestialDataDisplayUtil.UpdateCurrentDataDisplay);
             Game.Scenes.QueueOnLoad(() => {
                 Find.State<FocusState>().OnFocusUpdated.Register(CelestialDataDisplayUtil.OnFocusUpdated);
             }); 
