@@ -26,6 +26,7 @@ namespace FieldDay.Scripting {
         public ScriptNodeMemoryScope PersistenceScope;
         public float SelectionWeight = 1;
         [BlockMeta("tag")] public StringHash32 Tag;
+        [BlockMeta("group")] public StringHash32 Group;
 
         public ScriptNode(string fullName, ScriptNodePackage package) : base(fullName, package) {
             FullName = fullName;

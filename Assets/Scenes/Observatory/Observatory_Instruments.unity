@@ -424,7 +424,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   InstrumentGraph: {fileID: 1494009298746040079}
   DistanceDisplay: {fileID: 747739869}
-  ModeKnob: {fileID: 1494009298746040078}
+  ModeSwitch: {fileID: 1494009298746040076}
+  ModeRotDefault: {x: 0, y: 0, z: -0.8910065, w: 0.45399052}
+  ModeRotOn: {x: 0, y: 0, z: -0.70710677, w: 0.70710677}
   PatternMaterials:
   - Pattern: 0
     Material: {fileID: 2100000, guid: 5228e7ffb28c3ea46bffa66d0aa262e9, type: 2}
@@ -1077,6 +1079,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: HistoricalData
       objectReference: {fileID: 0}
+    - target: {fileID: 4416975945182136557, guid: bea00d3125bba324aa6647a0d6889248, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4416975945182136557, guid: bea00d3125bba324aa6647a0d6889248, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5201381544757303796, guid: bea00d3125bba324aa6647a0d6889248, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.228
@@ -1136,9 +1146,9 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5201381544757303796, guid: bea00d3125bba324aa6647a0d6889248, type: 3}
   m_PrefabInstance: {fileID: 1494009298746040074}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1494009298746040078 stripped
+--- !u!4 &1494009298746040076 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 7709353047158037589, guid: bea00d3125bba324aa6647a0d6889248, type: 3}
+  m_CorrespondingSourceObject: {fileID: 4416975945182136557, guid: bea00d3125bba324aa6647a0d6889248, type: 3}
   m_PrefabInstance: {fileID: 1494009298746040074}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &1494009298746040079 stripped
