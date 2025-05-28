@@ -17,6 +17,8 @@ namespace Astro {
         public MeshRenderer DisplayTarget;
         public DataDisplay GraphDisplay;
 
+        [NonSerialized] public MaterialPropertyBlock MaterialProperties;
+
         public void OnDeregister() {
         }
 
@@ -25,6 +27,8 @@ namespace Astro {
                 (packet, flags) => HistoricalDataUtility.OnDisplayRequest(this, packet, flags));
             GraphDisplay.OnDisplayCleared.Register(
                 () => HistoricalDataUtility.OnDisplayClear(this));
+
+            MaterialProperties = new MaterialPropertyBlock();
         }
     }
 
@@ -94,7 +98,8 @@ namespace Astro {
         }
 
         public static void UpdateScale(HistoricalDataGraph graph) {
-            graph.DisplayTarget.transform.SetScale(graph.Scale, Axis.Y);
+            // TODO: update material property
+             //graph.DisplayTarget.transform.SetScale(graph.Scale, Axis.Y);
         }
 
         public static void ToggleInstrumentMode() {
