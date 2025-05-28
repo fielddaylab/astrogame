@@ -10,8 +10,10 @@ namespace Astro {
     public class HistoricalDataState : SharedStateComponent, IRegistrationCallbacks {
         public HistoricalDataGraph InstrumentGraph;
         public DataDisplay DistanceDisplay;
-        public Transform ModeKnob;
-        public List<PatternMaterialPair> PatternMaterials;
+        public Transform ModeSwitch;
+        public Quaternion ModeRotDefault;
+        public Quaternion ModeRotOn;
+        public PatternMaterialPair[] PatternMaterials;
         public Photometer ConnectedPhotometer;
         [NonSerialized] public bool SendingAbsMag;
         [NonSerialized] public Routine KnobRoutine;
@@ -20,7 +22,7 @@ namespace Astro {
         }
 
         public void OnRegister() {
-            HistoricalDataUtility.SetInstrumentMode(false, this);
+            HistoricalDataUtility.SetInstrumentMode(false, this, true, false);
         }
     }
 

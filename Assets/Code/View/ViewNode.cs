@@ -20,6 +20,7 @@ namespace Astro {
         public SerializedHash32[] LinkGroups;
         public ViewLink BackLink;
 
+        public CastableEvent<ViewTransitionArgs> OnTransitionQueued = new CastableEvent<ViewTransitionArgs>(1);
         public CastableEvent<ViewNode> OnLoad = new CastableEvent<ViewNode>();
         public CastableEvent<ViewNode> OnEnter = new CastableEvent<ViewNode>();
         public CastableEvent<ViewNode> OnExit = new CastableEvent<ViewNode>();
@@ -38,6 +39,12 @@ namespace Astro {
             ViewState state = Find.State<ViewState>();
             state.NamedNodes.Add(Id, this);
         }
+    }
+
+    public struct ViewTransitionArgs {
+        public ViewNode Start;
+        public ViewLink Link;
+        public ViewNode Target;
     }
 
     static public partial class ViewNavUtility {

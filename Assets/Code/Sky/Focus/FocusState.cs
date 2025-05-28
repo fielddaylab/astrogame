@@ -103,7 +103,7 @@ namespace Astro {
             DayConfigAsset day = Find.NamedAsset<DayConfigAsset>(story.Days[state.DayIndex]);
 
             UIFocus focus = Find.State<FocusState>().CurrentFocus;
-            return Array.IndexOf(day.NeutrinoEvent.RelevantObjectIds, focus.TargetData.AssetId) >= 0;
+            return NeutrinoEventUtil.IsIdInNeutrinoEvent(focus.TargetData.AssetId);
         }
 
         public static void ClickEmptySpace() {

@@ -4,6 +4,8 @@ using FieldDay;
 using FieldDay.Scripting;
 using FieldDay.Debugging;
 using BeauPools;
+using static UnityEngine.Rendering.DebugUI;
+using BeauUtil;
 
 namespace Astro {
     [SysUpdate(GameLoopPhase.Update, 100, AstroGame.DocumentUpdateMask)] // After MouseInteractionSystem
@@ -38,17 +40,30 @@ namespace Astro {
                 }
             }
 
-            if (boardState.DraggablePlacedThisFrame && puzzleState.CurrHoverDoc != null && boardState.DraggablePlaced.GetComponent<DocumentPrompter>()) {
+            // disallow placement on other question documents
+            if (boardState.DraggablePlacedThisFrame && puzzleState.CurrHoverDoc != null && puzzleState.CurrHoverDoc.TriggersPrompter && boardState.DraggablePlaced.GetComponent<DocumentPrompter>()) {
                 // hovering ended; placement script trigger
                 using (var table = TempVarTable.Alloc()) {
-                    table.Set("documentId", puzzleState.CurrHoverDoc.Interactable.AssetName);
+                    table.Set("questionId", boardState.DraggablePlaced.AssetName);
+                    table.Set("answerId", puzzleState.CurrHoverDoc.Interactable.AssetName);
                     ScriptUtility.Trigger(ScriptEvents.DocumentPuzzlePromptStart, table);
                 }
+
+                DocumentUtility.UpdateDocPuzzleAnswer(puzzleState, boardState.DraggablePlaced.AssetName, puzzleState.CurrHoverDoc.Interactable.AssetName);
 
                 // move question to specific position relative to document
                 boardState.DocumentRoutine.Replace(DocumentUtility.MoveAboveRelativeToDoc(boardState.DraggablePlaced, puzzleState.CurrHoverDoc));
                 // clear document highlight
                 DocumentUtility.SetDocumentHighlight(puzzleState.CurrHoverDoc, Color.white);
+
+                // Check if all puzzle questions are correct
+                if (DocumentUtility.IsDocPuzzleCorrect(puzzleState)) {
+                    ScriptUtility.Trigger(ScriptEvents.DocumentPuzzleSolved);
+                }
+            }
+            else if (boardState.DraggablePlacedThisFrame) {
+                // placed onto nothing
+                DocumentUtility.UpdateDocPuzzleAnswer(puzzleState, boardState.DraggablePlaced.AssetName, StringHash32.Null);
             }
 
         }

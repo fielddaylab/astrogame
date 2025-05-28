@@ -17,6 +17,7 @@ namespace Astro {
             Game.Events.Register(GameEvents.NeutrinoNavigationComplete, OnNeutrinoNavComplete);
 
             Game.Events.Register(GameEvents.ValidOpenIdSubmission, OnValidOpenIdSubmission);
+            Game.Events.Register(GameEvents.ValidKnowledgeSubmission, OnValidKnowledgeSubmission);
             Game.Events.Register(GameEvents.InvalidOpenIdSubmission, OnInvalidOpenIdSubmission);
             Game.Events.Register(GameEvents.IncorrectOpenIdSubmission, OnIncorrectOpenIdSubmission);
             Game.Events.Register(GameEvents.DuplicateOpenIdSubmission, OnDuplicateOpenIdSubmission);
@@ -47,6 +48,10 @@ namespace Astro {
 
         static private void OnValidOpenIdSubmission() {
             ScriptUtility.Trigger(ScriptEvents.OnValidOpenIdSubmission);
+        }
+
+        static private void OnValidKnowledgeSubmission() {
+            ScriptUtility.Trigger(ScriptEvents.OnValidKnowledgeSubmission);
         }
 
         static private void OnIncorrectOpenIdSubmission() {
@@ -165,6 +170,12 @@ namespace Astro {
             SlotHighlightUtility.SetInstrumentButtonsDimmed(Find.State<InstrumentInventoryState>(), true);
         }
 
+        [LeafMember("UpdateOpenIdSubmissions")]
+        static private void LeafUpdateOpenIdSubmissions() {
+            Game.Events.Dispatch(GameEvents.UpdateOpenIdSubmission);
+        }
+
+
         [LeafMember("StopOpenMode")]
         static private void LeafStopOpenMode() {
             Game.Events.Dispatch(GameEvents.StopOpenMode);
@@ -237,21 +248,22 @@ namespace Astro {
 
         [LeafMember("EnableDocumentClose")]
         static private void LeafEnableDocumentClose(StringHash32 assetId, bool value, bool updateNow = false) {
+            DocumentBoardState boardState = Find.State<DocumentBoardState>();
+
+            boardState.DocumentCloseEnabledState[assetId] = value;
+
+            if (!updateNow) return;
+
             DocumentAsset docAsset = Find.NamedAsset<DocumentAsset>(assetId);
             if (docAsset == null) {
                 Debug.LogWarning("[LeafEnableDocumentClose] Failed to find document" + assetId);
+                return;
             }
 
-            docAsset.CloseEnabled = value;
-
-            if (updateNow) {
-                DocumentBoardState boardState = Find.State<DocumentBoardState>();
-
-                if (boardState.DocZoomed) {
-                    DocumentUtility.UpdateEnabledDocParts(boardState.DocZoomed, DocumentBoardState.ZoomActiveFunctions);
-                } else {
-                    DocumentUtility.UpdateEnabledDocParts(docAsset.Interactable, DocumentBoardState.BoardActiveFunctions); 
-                }
+            if (boardState.DocZoomed) {
+                DocumentUtility.UpdateEnabledDocParts(boardState.DocZoomed, DocumentBoardState.ZoomActiveFunctions);
+            } else {
+                DocumentUtility.UpdateEnabledDocParts(docAsset.Interactable, DocumentBoardState.BoardActiveFunctions); 
             }
         }
     }

@@ -9,6 +9,7 @@ using FieldDay.Audio;
 using FieldDay.Scenes;
 using FieldDay.SharedState;
 using FieldDay.Vox;
+using Leaf.Runtime;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -22,6 +23,8 @@ namespace Astro.Radio {
         [NonSerialized] public RingBuffer<RadioVirtualStream> VirtualStreams = new RingBuffer<RadioVirtualStream>(8, RingBufferMode.Expand);
 
         [NonSerialized] public RadioChannel LastKnownChannel;
+
+        [NonSerialized] public bool WasAnyChannelPlayingLastFrame;
 
         // Loading
 
@@ -99,5 +102,21 @@ namespace Astro.Radio {
         }
 
         static private Predicate<RadioVirtualStream, StringHash32> FindVirtualStreamWithId = (t, i) => t.ChannelId == i;
+
+        [LeafMember("SetChannelActive")]
+        private static void LeafSetChannelActive(StringHash32 channelId, bool active) {
+            var streamState = Find.State<RadioStreamsState>();
+            var radioRig = Find.State<RadioRig>();
+            int channelIndex = Array.IndexOf(streamState.ChannelIndexMap, channelId);
+
+            if (active) {
+                streamState.DeactivatedChannels.Unset(channelIndex);
+            }
+            else { 
+                streamState.DeactivatedChannels.Set(channelIndex);
+            }
+            // refresh radio as if just tuning into the current frequency (resets in RadioTuningSystem)
+            radioRig.LastKnownFrequency = -1;
+        }
     }
 }

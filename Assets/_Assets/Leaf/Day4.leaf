@@ -5,9 +5,7 @@
 
 $call InitUpdateMasks()
 $call ToggleDeskPicture()
-$call EnableDocumentClose("Day4Letter", false)
 $call EnableDocumentClose("Day4ElijahPostcard", false)
-$call EnableDocumentClose("DadUrsaPostcard", false)
 $call SetInstrumentUnlocked(CoordinateInstrument, true)
 $call SetInstrumentUnlocked(PhotometerInstrument, true)
 $call SetInstrumentUnlocked(BlueWavelength, true)
@@ -37,13 +35,10 @@ $call SetInputState(true)
 @cutscene
 @once
 
-$call SetInputState(false)
 $call SpawnDocumentToCamera("Day4Letter")
 
 {@Astrid} Jocelyn! She must have gotten my last letter and figured out my new address. $[Astrid/L4/l4d_a_01] 
 {@Astrid} This is great... if only i can solve some of Elijah's riddles I'll be able to get the news out to the world! $[Astrid/L4/l4d_a_02]
-$call EnableDocumentClose("Day4Letter", true, true)
-$call SetInputState(true)
 
 :: Day4ElijahPostcard
 @trigger    DocumentInspectFlip
@@ -57,12 +52,16 @@ $call SetInputState(false)
 {@Astrid} Maybe he shoulda been a painter instead of a rogue astronomer... $[Astrid/L4/l4_a_02b]
 {@Astrid} So World's End  must be what Elijah calls his station! World’s End - like the garden of the golden apples from the Hercules myths. $[Astrid/L4/l4_a_03]
 {@Astrid} It’s not about the world ending. It’s about, searching for the stars. $[Astrid/L4/l4_a_04] 
+$goto .Day4PostcardRead
+
+:: Day4PostcardRead
 $call EnableDocumentClose("Day4ElijahPostcard", true, true)
 $call SetInputState(true)
 
 :: SpawnDoc
 @trigger    DocumentInspectEnd
 @when   documentId == "Day4Letter"
+@interrupt
 @once
 
 $call SetInputState(false)
@@ -72,16 +71,17 @@ $call SetInputState(true)
 :: DadUrsaPostcardComment
 @trigger    DocumentInspectFlip
 @when   documentId == "DadUrsaPostcard"
+@interrupt
 @cutscene
 @once
 
 {@Astrid} Oh Dad... Its our constellations. He always did think of us as the big and little dipper. Ursa Major and Ursa Minor. $[Astrid/L4/l4d_a_03] 
-$call EnableDocumentClose("DadUrsaPostcard", true, true)
 
 :: SpawnPuzzleDocs3
 @trigger    DocumentInspectEnd
 @when   documentId == "DadUrsaPostcard"
 @interrupt
+@boostScore 1000
 @cutscene
 @once
 
@@ -112,7 +112,9 @@ $call Wait(1)
 
 {@Radio} CERES HQ to Station Twelve. IceCube is reading a high-energy neutrino emission from the area of the Taurus Constellation. $[Radio/L4/l4_r_01]
 {@Radio} Identification of nearby celestial objects is requested. Uploading area of interest. $[Radio/L4/l4_r_02]
+$goto .SetupNeutrinoNav
 
+::SetupNeutrinoNav
 $call WaitForMovedToView("Monitor")
 $call MonitorUI->PlayRadioDownload(2)
 $call StartNeutrinoNavigation()
@@ -124,10 +126,41 @@ $call SetInputState(true)
 
 $call StopNeutrinoNavigation()
 $call StartOpenMode()
+$call SetStickyFirstPage(3)
 
-:: PointsUpdated
+:: IdentifiedOneBrownDwarf
 @trigger    PointsUpdated
-@when   sciencePoints > 2
+@when   sciencePoints > 0
+@cutscene
+@once
+
+$call SetInputState(false)
+$call ClearMonitorSelection()
+
+$call Wait(2)
+{@Radio} CERES HQ to Station Twelve. Our neutrino emission reading has expanded please hold while we update your targeting system.
+
+$goto .UpdateSubmissionArea
+
+:: UpdateSubmissionArea
+$call MonitorUI->PlayRadioDownload(2)
+$call AddAssetToSubmissionGroup("Aldebaran")
+$call AddAssetToSubmissionGroup("Elnath")
+$call AddAssetToSubmissionGroup("Alcyone")
+$call AddAssetToSubmissionGroup("Tianguan")
+$call AddAssetToSubmissionGroup("Chamukuy")
+$call AddAssetToSubmissionGroup("Sadr al Tauri")
+$call AddAssetToSubmissionGroup("Ain")
+$call AddAssetToSubmissionGroup("Omicron Tauri")
+$call AddAssetToSubmissionGroup("Atlas")
+$call AddAssetToSubmissionGroup("Hyadum")
+$call AddAssetToSubmissionGroup("Electra")
+$call UpdateOpenIdSubmissions()
+$call SetInputState(true)
+
+:: ClearanceUpgrade
+@trigger    PointsUpdated
+@when   sciencePoints > 6
 @cutscene
 @once
 
@@ -143,10 +176,15 @@ $call MonitorUI->PlayRadioDownload(2)
 $call Wait(1)
 $call MonitorUI->ShowCERESLogo()
 $call SetInstrumentUnlocked(HistoricalDataModeToggle, true)
+$call SetStickyFirstPage(-1)
+
 {@Radio} Congratulations on being awarded clearance level 4. You are now cleared to use the infrared module on your telescope. $[Radio/L4/l4_r_04]
 {@Radio} Please reference your CERES Operator Manual for further information about your equipment. $[Radio/L4/l4_r_05]
 {@Radio} Thanking you for being an important part of the CERES Distributed Network of Citizen Observatories. $[Radio/L4/l4_r_06] 
 {@Radio} Together, we will map the stars for a better tomorrow. $[Radio/L4/l4_r_07]
+$goto .SetupPuzzleNav
+
+::SetupPuzzleNav
 $call MonitorUI->HideCERESLogo()
 $call Wait(1)
 $call StartPuzzleNavigation()
@@ -169,6 +207,7 @@ $call StopPuzzleMode()
 $call SetInputState(false)
 $call EndDay4->BeginCutscene()
 $call Wait(3)
+
 {@Astrid} Whoa. That’s it. It’s the dragon! $[Astrid/L4/l4_a_09]
 {@Astrid} I should’ve guessed. Elijah said “the dragon is coming.” It’s going to be a Draconid meteor storm! $[Astrid/L4/l4_a_10]
 

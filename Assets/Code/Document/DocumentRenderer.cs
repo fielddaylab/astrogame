@@ -1,4 +1,5 @@
 using System;
+using EasyAssetStreaming;
 using FieldDay.Components;
 using TMPro;
 using UnityEngine;
@@ -17,6 +18,7 @@ namespace Astro {
         public GameObject LowResText;
 
         public DocumentRenderComponent[] RenderComponents;
+        [NonSerialized] public StreamingQuadTexture[] StreamingTextures;
 
         public Rect Size;
         [SerializeField] private bool m_ShowSizeRect = false;
@@ -24,21 +26,19 @@ namespace Astro {
         public Vector3 ZoomOffsetOverride;
 
         [HideInInspector] public DocumentInteractable Interactable;
+        [HideInInspector] public bool PreserveInArchive;
+        [HideInInspector] public bool TriggersPrompter;
 
         [NonSerialized] public string BaseVisualAssetName;
         [NonSerialized] public string BaseVisualAssetFileType;
 
+        public bool AlwaysHighRes = false;
+
         private void Awake() {
             Interactable = GetComponent<DocumentInteractable>();
-        }
 
-        void OnDrawGizmos() {
-            if (!m_ShowSizeRect) return; 
-
-            Gizmos.color = new Color(0, 1, 1, 0.25f);
-            Gizmos.DrawCube(new Vector3(Size.x, Size.y, 0f), new Vector3(Size.width, Size.height, 0)); 
+            StreamingTextures = GetComponentsInChildren<StreamingQuadTexture>();
         }
-        
     }
 
 
@@ -70,7 +70,6 @@ namespace Astro {
                 component.SetFullDisplay(asset.StreamingVisuals[i]);
             }
 
-            renderer.transform.localPosition = asset.DefaultPinnedPos;
             if (renderer.ZoomOffsetOverride == default) {
                 renderer.ZoomOffsetOverride = asset.ZoomOffsetOverride;
             }
@@ -96,6 +95,16 @@ namespace Astro {
                 DocumentRenderComponent component = renderer.RenderComponents[i];
                 component.SetLowResDisplay(asset.StreamingVisuals[i]);
             }
+        }
+
+        public static bool IsFullyLoaded(DocumentRenderer renderer)
+        {
+            foreach (var tex in renderer.StreamingTextures)
+            {
+                if (tex.IsLoading()) { return false; }
+            }
+
+            return true;
         }
     }
 }

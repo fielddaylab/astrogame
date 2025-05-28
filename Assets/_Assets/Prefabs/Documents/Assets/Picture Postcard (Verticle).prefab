@@ -694,6 +694,7 @@ MonoBehaviour:
   LowResText: {fileID: 3590854300471738432, guid: 64012d8afc9b4674188f28c5df348be1, type: 3}
   RenderComponents:
   - {fileID: 1479152696029571428}
+  - {fileID: 3440292733928752297}
   Size:
     serializedVersion: 2
     x: 0.01
@@ -703,6 +704,9 @@ MonoBehaviour:
   m_ShowSizeRect: 0
   ZoomOffsetOverride: {x: 0, y: 0.57, z: 1.4}
   Interactable: {fileID: 5048261325816738630}
+  PreserveInArchive: 0
+  TriggersPrompter: 0
+  AlwaysHighRes: 1
 --- !u!1 &7841899603595999871
 GameObject:
   m_ObjectHideFlags: 0
@@ -795,6 +799,8 @@ GameObject:
   - component: {fileID: 5546744980806363701}
   - component: {fileID: 866560237167711520}
   - component: {fileID: 1542286709375785163}
+  - component: {fileID: 8353040150377340948}
+  - component: {fileID: 3440292733928752297}
   m_Layer: 7
   m_Name: Back Surface
   m_TagString: Untagged
@@ -825,7 +831,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8939615069162558731}
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 0}
 --- !u!23 &866560237167711520
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -846,7 +852,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 6ebd6851df55850499a9323bf935c438, type: 2}
+  - {fileID: 2100000, guid: e7dc6722cafd98d46a93aea7f047215f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -901,6 +907,52 @@ MonoBehaviour:
     AdditionalProperties: []
   m_EnableRaycastLayer: 0
   m_DisableRaycastLayer: 7
+--- !u!114 &8353040150377340948
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8939615069162558731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a41ad0b79a5912409f7ea3d6b4ecad6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_MeshFilter: {fileID: 5546744980806363701}
+  m_MeshRenderer: {fileID: 866560237167711520}
+  m_ColorGroup: {fileID: 1542286709375785163}
+  m_Path: Postcards/postcard_paper.png
+  m_Material: {fileID: 2100000, guid: e7dc6722cafd98d46a93aea7f047215f, type: 2}
+  m_Tessellation: 0
+  m_Color:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_Visible: 1
+  m_Size: {x: 1, y: 1}
+  m_Pivot: {x: 0.5, y: 0.5}
+  m_UVRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  m_AutoSize: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!114 &3440292733928752297
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8939615069162558731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fe12fa782f02ab439af5b5c9733745f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PostcardImage: {fileID: 0}
 --- !u!1001 &3680541699227623588
 PrefabInstance:
   m_ObjectHideFlags: 0

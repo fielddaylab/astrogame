@@ -1,3 +1,4 @@
+using BeauRoutine;
 using BeauUtil;
 using FieldDay;
 using FieldDay.SharedState;
@@ -18,6 +19,8 @@ namespace Astro
 
         [NonSerialized] public int DayOffset = 1; // number of days without stacks (e.g. prelude)
         [NonSerialized] public int CurrArchiveIndex = -1;
+
+        public Routine LoadRoutine;
 
         public void OnDeregister()
         {
@@ -44,6 +47,7 @@ namespace Astro
         {
             PlayerProgressState playerState = Find.State<PlayerProgressState>();
             var currList = playerState.DayLayouts[archiveState.CurrArchiveIndex - archiveState.DayOffset];
+            if (!currList.AssetPositions.ContainsKey(assetId)) { return; }
             currList.AssetPositions[assetId] = assetPos;
         }
 
@@ -53,25 +57,48 @@ namespace Astro
             var boardState = Find.State<DocumentBoardState>();
 
             foreach (var doc in boardState.SpawnedDocuments) {
-                ArchiveUtility.SetAssetPosInArchive(archiveState, doc.Interactable.AssetName, doc.transform.localPosition);
+                if (doc.PreserveInArchive) {
+                    ArchiveUtility.SetAssetPosInArchive(archiveState, doc.Interactable.AssetName, doc.transform.localPosition);
+                }
             }
         }
 
         public static void LoadArchive(ArchiveState archiveState, DocumentBoardState boardState, int dayIndex)
         {
             if (dayIndex == archiveState.CurrArchiveIndex) { return; }
+            if (archiveState.LoadRoutine.Exists()) { return; }
 
             HideCurrentArchive(archiveState, boardState);
-
-            // TODO: Expand transition routine
 
             PlayerProgressState playerState = Find.State<PlayerProgressState>();
             var currLayout = playerState.DayLayouts[dayIndex - archiveState.DayOffset];
 
-            foreach (KeyValuePair<StringHash32, Vector3> pair in currLayout.AssetPositions) {
+            archiveState.LoadRoutine.Replace(LoadArchiveRoutine(archiveState, boardState, dayIndex, currLayout));
+        }
+
+        public static IEnumerator LoadArchiveRoutine(ArchiveState archiveState, DocumentBoardState boardState, int dayIndex, ArchiveLayout currLayout)
+        {
+            Transform[] transforms = new Transform[currLayout.AssetPositions.Count];
+
+            while (boardState.DocumentLoadRoutine.Exists()) { yield return null; }
+
+            int pairIndex = 0;
+            foreach (KeyValuePair<StringHash32, Vector3> pair in currLayout.AssetPositions)
+            {
                 // spawn the asset at the position
-                var spawned = DocumentUtility.SpawnDocument(Find.NamedAsset<DocumentAsset>(pair.Key), pair.Key, boardState, false);
-                spawned.transform.localPosition = pair.Value;
+                var spawned = DocumentUtility.SpawnDocument(Find.NamedAsset<DocumentAsset>(pair.Key), pair.Key, out Vector3 pinnedPos, boardState, false, true);
+                transforms[pairIndex] = spawned.transform;
+                spawned.transform.position = new Vector3(-500, -500, 500); // place somewhere offscreen while loading
+                pairIndex++;
+
+                while (boardState.DocumentLoadRoutine.Exists()) { yield return null; }
+            }
+
+            pairIndex = 0;
+            foreach (KeyValuePair<StringHash32, Vector3> pair in currLayout.AssetPositions)
+            {
+                transforms[pairIndex].localPosition = pair.Value;
+                pairIndex++;
             }
 
             archiveState.CurrArchiveIndex = dayIndex;

@@ -8,6 +8,8 @@ public static class GameEvents {
     public static readonly StringHash32 MonitorEmptySpaceClicked = "input:monitor-empty-space-clicked";
     public static readonly StringHash32 StartOpenMode = "start-open-mode";
     public static readonly StringHash32 ValidOpenIdSubmission = "valid-open-id-submission";
+    public static readonly StringHash32 ValidKnowledgeSubmission = "valid-knowledge-submission";
+    public static readonly StringHash32 UpdateOpenIdSubmission = "update-open-id-submission";
     public static readonly StringHash32 InvalidOpenIdSubmission = "invalid-open-id-submission";
     public static readonly StringHash32 DuplicateOpenIdSubmission = "duplicate-open-id-submission";
     public static readonly StringHash32 IncorrectOpenIdSubmission = "incorrect-open-id-submission";
@@ -45,6 +47,7 @@ public static class ScriptEvents {
     public static readonly StringHash32 DocumentInspectFlip = "DocumentInspectFlip";
     public static readonly StringHash32 DocumentInspectEnd = "DocumentInspectEnd";
     public static readonly StringHash32 DocumentPuzzlePromptStart = "DocumentPuzzlePromptStart";
+    public static readonly StringHash32 DocumentPuzzleSolved = "DocumentPuzzleSolved";
     public static readonly StringHash32 CutsceneBegin = "CutsceneBegin";
     public static readonly StringHash32 CutsceneEnd = "CutsceneEnd";
     public static readonly StringHash32 OnTelescopeMoved = "OnTelescopeMoved";
@@ -54,6 +57,7 @@ public static class ScriptEvents {
     public static readonly StringHash32 OnRefGuideOpened = "OnRefGuideOpened";
     public static readonly StringHash32 OnRefGuideClosed = "OnRefGuideClosed";
     public static readonly StringHash32 OnValidOpenIdSubmission = "OnValidOpenIdSubmission";
+    public static readonly StringHash32 OnValidKnowledgeSubmission = "OnValidKnowledgeSubmission";
     public static readonly StringHash32 OnInvalidOpenIdSubmission = "OnInvalidOpenIdSubmission";
     public static readonly StringHash32 OnDuplicateOpenIdSubmission = "OnDuplicateOpenIdSubmission";
     public static readonly StringHash32 OnIncorrectOpenIdSubmission = "OnIncorrectOpenIdSubmission";
@@ -63,6 +67,10 @@ public static class ScriptEvents {
     public static readonly StringHash32 OnLeaveNeutrinoRegion = "OnLeaveNeutrinoRegion";
     public static readonly StringHash32 OnConstellationNavWarmer = "OnConstellationNavWarmer";
     public static readonly StringHash32 OnConstellationNavColder = "OnConstellationNavColder";
+
+    public static readonly StringHash32 RadioChannelListenStart = "RadioChannelListenStart"; // player started listening
+    public static readonly StringHash32 RadioChannelListenEnd = "RadioChannelListenEnd"; // player stopped listening
+    public static readonly StringHash32 RadioChannelFinished = "RadioChannelFinished"; // reached end of radio channel
 }
 
 public static class DataTypeLabels

@@ -2,6 +2,7 @@ using BeauRoutine;
 using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay;
+using FieldDay.Audio;
 using FieldDay.Components;
 using System;
 using System.Collections;
@@ -67,7 +68,12 @@ namespace Astro {
         }
 
         public static Material GetPatternMaterial (HistoricalPatternType type, HistoricalDataState state) {
-            return state.PatternMaterials.Find(pm => (pm.Pattern == type)).Material;
+            foreach(var pattern in state.PatternMaterials) {
+                if (pattern.Pattern == type) {
+                    return pattern.Material;
+                }
+            }
+            return null;
         }
 
         public static void SetParallaxScale(HistoricalDataGraph graph, DataPacket packet, HistoricalDataState hds) {
@@ -93,20 +99,25 @@ namespace Astro {
 
         public static void ToggleInstrumentMode() {
             HistoricalDataState hds = Find.State<HistoricalDataState>();
-            SetInstrumentMode(!hds.SendingAbsMag, hds);
+            SetInstrumentMode(!hds.SendingAbsMag, hds, false, true);
         }
 
-        public static void SetInstrumentMode(bool absMag, HistoricalDataState hds) {
-            hds.SendingAbsMag = absMag;
-            hds.KnobRoutine.Replace(hds, SlideRoutine(hds));
-            PhotometerUtility.TogglePhotometerMode(absMag, hds.ConnectedPhotometer);
+        public static void SetInstrumentMode(bool absMag, HistoricalDataState hds, bool force, bool playSfx) {
+            if (force || absMag != hds.SendingAbsMag) {
+                hds.SendingAbsMag = absMag;
+                hds.KnobRoutine.Replace(hds, SlideRoutine(hds));
+                PhotometerUtility.TogglePhotometerMode(absMag, hds.ConnectedPhotometer);
+                if (playSfx) {
+                    Sfx.PlayDetached("Oneshot.LabButtonC.Click", hds.ModeSwitch);
+                }
+            }
         }
 
         private static IEnumerator SlideRoutine(HistoricalDataState hds) {
             if (hds.SendingAbsMag) {
-                yield return hds.ModeKnob.MoveTo(0.4f, 0.4f, Axis.Y, Space.Self).Ease(Curve.CubeIn);
+                yield return hds.ModeSwitch.RotateQuaternionTo(hds.ModeRotOn, 0.2f, Space.Self).Ease(Curve.BackOut);
             } else {
-                yield return hds.ModeKnob.MoveTo(0f, 0.4f, Axis.Y, Space.Self).Ease(Curve.CubeIn);
+                yield return hds.ModeSwitch.RotateQuaternionTo(hds.ModeRotDefault, 0.2f, Space.Self).Ease(Curve.BackOut);
             }
             yield return null;
         }

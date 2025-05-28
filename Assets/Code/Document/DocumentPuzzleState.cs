@@ -5,6 +5,7 @@ using FieldDay.Debugging;
 using FieldDay.SharedState;
 using Leaf.Runtime;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Astro {
@@ -15,6 +16,8 @@ namespace Astro {
 
         [SerializeField] private Color32 m_docHighlightColor;
         [SerializeField] public static Color32 DocHighlightColor;
+
+        public Dictionary<StringHash32, StringHash32> CurrSolutionPairs = new Dictionary<StringHash32, StringHash32>();
 
         public enum DebuggingFlags {
             DisplayDocumentHoverInfo
@@ -35,7 +38,16 @@ namespace Astro {
 
             var puzzleAsset = Find.NamedAsset<DocumentPuzzleAsset>(id);
 
+            puzzleState.CurrSolutionPairs.Clear();
+
             StartDocumentPuzzle(puzzleState, viewState, puzzleAsset);
+        }
+
+        [LeafMember("IsDocumentPuzzleSolved")]
+        private static bool LeafIsDocumentPuzzleSolved()
+        {
+            var puzzleState = Find.State<DocumentPuzzleState>();
+            return DocumentUtility.IsDocPuzzleCorrect(puzzleState);
         }
 
         #endregion // Leaf
@@ -45,12 +57,6 @@ namespace Astro {
         public static void StartDocumentPuzzle(DocumentPuzzleState puzzleState, ViewState viewState, DocumentPuzzleAsset puzzleAsset) {
             // Set current puzzle
             puzzleState.CurrPuzzle = puzzleAsset;
-            if (puzzleAsset) {
-                StringHash32 questionId = puzzleState.CurrPuzzle.QuestionAsset.AssetId;
-                DocumentBoardState state = Find.State<DocumentBoardState>();
-                ArchiveState archiveState = Find.State<ArchiveState>();
-                SpawnDocumentToCamera(state, archiveState, questionId);
-            }
 
             puzzleState.PuzzleActive = true;
             GameLoop.ResumeUpdates(AstroGame.DocumentUpdateMask);
@@ -95,6 +101,30 @@ namespace Astro {
                 state.CurrHoverDoc = doc;
                 SetDocumentHighlight(state.CurrHoverDoc, DocumentPuzzleState.DocHighlightColor);
             }
+        }
+
+        public static void UpdateDocPuzzleAnswer(DocumentPuzzleState puzzleState, StringHash32 questionId, StringHash32 answerId)
+        {
+            if (!puzzleState.CurrSolutionPairs.ContainsKey(questionId)) {
+                puzzleState.CurrSolutionPairs.Add(questionId, answerId);
+            }
+            else {
+                puzzleState.CurrSolutionPairs[questionId] = answerId;
+            }
+        }
+
+        public static bool IsDocPuzzleCorrect(DocumentPuzzleState puzzleState)
+        {
+            foreach (var pair in puzzleState.CurrPuzzle.SolutionPairs) {
+                if (!puzzleState.CurrSolutionPairs.ContainsKey(pair.Question.AssetId)) {
+                    return false;
+                }
+                else if (!puzzleState.CurrSolutionPairs[pair.Question.AssetId].Equals(pair.Answer.AssetId))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         public static void SetDocumentHighlight(DocumentRenderer doc, Color color) {

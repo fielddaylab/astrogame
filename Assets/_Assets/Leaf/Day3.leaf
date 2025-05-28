@@ -35,33 +35,40 @@ $call SetInputState(true)
 @cutscene
 @once
 
+$call Wait(1)
 {@Astrid} I don’t get it. We need to warn people? About what? $[Astrid/L3/l3_a_01]
 {@Astrid} Ugh. Elijah, I love you, but I could really use less poetry and more information. $[Astrid/L3/l3_a_02]
+$goto .Day3PostcardRead
+
+:: Day3PostcardRead
 $call EnableDocumentClose("Day3ElijahPostcard", true, true)
 
 :: SpawnPuzzleDocs2
 @trigger    DocumentInspectEnd
 @when   documentId == "Day3ElijahPostcard"
 @interrupt
-@cutscene
 @once
 
 $call SetInputState(false)
 $call Wait(1)
 $call SpawnDocumentToCamera("Day3Dad")
-{@Astrid} Dad... I'm so glad to hear more from him than the few little blips on the radio. $[Astrid/L3/l3_a_03]
 $call SetInputState(true)
+
+{@Astrid} Dad... I'm so glad to hear more from him than the few little blips on the radio. $[Astrid/L3/l3_a_03]
 
 :: SpawnPuzzleDocs3
 @trigger    DocumentInspectEnd
 @when   documentId == "Day3Dad"
 @interrupt
+@boostScore 100
 @once
 
 $call SetInputState(false)
 $call Wait(1)
-$call StartDocumentPuzzle("Day3DocumentPuzzle")
 $call SetInputState(true)
+$call SpawnDocumentToCamera("Day3Question")
+$call StartDocumentPuzzle("Day3DocumentPuzzle")
+
 {@Astrid} What is Elijah trying to warn people about?
 
 :: DocumentInspect1833
@@ -71,34 +78,38 @@ $call SetInputState(true)
 @once
 
 {@Astrid} Apparently there was some crazy meteor shower - meteor storm - in 1833. Looks like it came from Leo. $[Astrid/L3/l3d_a_01] 
+$goto .PostInspect1833
+
+:: PostInspect1833
 $call EnableDocumentClose("1833", true, true)
 
 :: IncorrectDocumentResponse
 @trigger    DocumentPuzzlePromptStart
-@when   documentId == "Day3Dad"
+@when   answerId == "Day3Dad"
 @interrupt
 
 {@Astrid} No, Elijah hasn't said anything about another CME. $[Astrid/L3/l3d_a_04] 
 
 :: IncorrectDocumentResponse2
 @trigger    DocumentPuzzlePromptStart
-@when   documentId == "Day3ElijahPostcard"
+@when   answerId == "Day3ElijahPostcard"
 @interrupt
 
 {@Astrid} No, that's not it. Weren't there some notes on that picture he sent? $[Astrid/L3/l3d_a_05]
 
 :: CorrectDocumentResponse
-@trigger    DocumentPuzzlePromptStart
-@when   documentId == "1833"
+@trigger    DocumentPuzzleSolved
+@interrupt
+@boostScore 1000
 @cutscene
 @once
 
 $call SetInputState(false)
+
 {@Astrid} I guess... Elijah thinks this is supposed to happen again? Another Leonid storm? $[Astrid/L3/l3d_a_02] 
 {@Astrid} That won't be till late November. We should have plenty of time to get the word out... why is he so stressed? $[Astrid/L3/l3d_a_03] 
-$call Wait(1)
 
-$call SetInputState(false)
+$call Wait(1)
 $call MoveToView("Right")
 $call Wait(1)
 
@@ -130,6 +141,9 @@ $call Wait(1)
 
 {@Radio} CERES HQ to Station Twelve. IceCube is reading a high-energy neutrino emission from the area of the Orion Constellation. $[Radio/L3/l3_r_01]
 {@Radio} Identification of nearby celestial objects is requested. Uploading area of interest. $[Radio/L3/l3_r_02]
+$goto .SetupNeutrinoNav
+
+:: SetupNeutrinoNav
 $call WaitForMovedToView("Monitor")
 $call SetInputState(true)
 $call MonitorUI->PlayRadioDownload(2)
@@ -141,12 +155,11 @@ $call StartNeutrinoNavigation()
 
 $call StopNeutrinoNavigation()
 $call StartOpenMode()
+$call SetStickyFirstPage(2)
 
-$call OpenRefGuidePage("Elements")
-
-:: PointsUpdated
+:: ClearanceUpgrade
 @trigger    PointsUpdated
-@when   sciencePoints > 2
+@when   sciencePoints > 4
 @cutscene
 @once
 
@@ -163,12 +176,16 @@ $call Wait(1)
 $call MonitorUI->ShowCERESLogo()
 $call SetInstrumentUnlocked(InfraredWavelength, true)
 $call SetInstrumentUnlocked(HistoricalDataInstrument, true)
+$call SetStickyFirstPage(-1)
+$call OpenRefGuidePage("HistoricalData")
+
 {@Radio} Congratulations on being awarded clearance <b>level 3</b>. You are now cleared to use the historical data module. $[Radio/L3/l3_r_04]
 {@Radio} This will allow you to measure parallax over a period of time so that you can determine the distance of the stars. $[Radio/L3/l3_r_05]
 {@Radio} You have also been cleared to use the infrared filter. $[Radio/L3/l3_r_06] 
 {@Radio} Please reference your CERES Operator Manual for further information about your equipment. $[Radio/L3/l3_r_07]
 // {@Radio} Thanking you for being an important part of the CERES Distributed Network of Citizen Observatories. $[Radio/L3/l3_r_08] 
 // {@Radio} Together, we will map the stars for a better tomorrow. $[Radio/L3/l3_r_09]
+
 $call MonitorUI->HideCERESLogo()
 $call Wait(1)
 
@@ -179,11 +196,14 @@ $call Wait(1)
 //TODO
 $call OpenRefGuidePage("ConstellationLeo")
 $call Wait(1)
+
 {@Astrid} Leo... the lion. I think I'm ready to wrestle my way through this one. $[Astrid/L3/l3_a_16] 
 {@Astrid} If I can just figure out this encryption key its going to really... well, I'm not sure. $[Astrid/L3/l3_a_17] 
 {@Astrid} Stop the "end of the world" or something? $[Astrid/L3/l3_a_18] 
 {@Astrid} (*Sigh*) I can't really figure that out right now. Back to astronomy. This is pretty fun no matter what happens. $[Astrid/L3/l3_a_19] 
+$goto .SetupPuzzleNav
 
+:: SetupPuzzleNav
 $call MoveToView("Monitor")
 $call ConsoleCommandLine->PlayPuzzleConsoleText()
 $call Wait(1)
@@ -197,8 +217,9 @@ $call SetInputState(true)
 
 $call StopPuzzleNavigation()
 $call StartPuzzleMode()
-
 $call SetInputState(false)
+$set temp:LeoPuzzleStarted = true
+
 {@Astrid} Elijah had figured out that Zosma isn’t the nearest star... $[Astrid/L3/l3_a_20]
 {@Astrid} Now that I've got that parallax data, I can finish what he started. $[Astrid/L3/l3_a_21]
 {@Astrid} From what I remember, when Earth orbits the Sun, our point of view shifts. $[Astrid/L3/l3_a_22] 
@@ -206,7 +227,9 @@ $call SetInputState(false)
 {@Astrid} That's parallax. The closer the star, the bigger the shift. The farther away it is, the smaller the shift. $[Astrid/L3/l3_a_24]
 {@Astrid} Now that I have this data I can figure out the distance from the stars. $[Astrid/L3/l3_a_25] 
 {@Astrid} We couldn'tve figured this out without years of data that was lost. $[Astrid/L3/l3_a_26] 
-$set temp:LeoPuzzleStarted = true
+$goto .EnablePlayerInput
+
+:: EnablePlayerInput
 $call SetInputState(true)
 
 :: FirstInfrared
@@ -215,13 +238,11 @@ $call SetInputState(true)
 @cutscene
 @once
 
-$call SetInputState(false)
 {@Astrid} Infrared filter, cool. $[Astrid/L3/l3_a_27]
 {@Astrid} I can't see visible light through space dust, but I can see infrared—it cuts right through. $[Astrid/L3/l3_a_28] 
 {@Astrid} Visible light shows the glowing stuff, but infrared is like heat vision. $[Astrid/L3/l3_a_29]
 {@Astrid} Wait… this one’s brightest in infrared? $[Astrid/L3/l3_a_30] 
 {@Astrid} That means I won’t see much in the visible wavelengths, but with the infrared filter, it should stand out. $[Astrid/L3/l3_a_31]
-$call SetInputState(true)
 
 :: LeoPuzzleComplete
 @trigger    CorrectPuzzleSubmission
@@ -236,6 +257,8 @@ $call SetInputState(false)
 {@Elijah} That would mean that least part of the system’s still alive. $[Elijah/L3/l3_e_02]
 {@Elijah} Alright. Stay focused. Keep movin'. $[Elijah/L3/l3_e_03]
 $call Wait(1)
+$goto .EndDay
 
+:: EndDay
 $call StopMusic(1)
 $call LoadNextDay()
