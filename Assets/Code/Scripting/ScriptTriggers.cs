@@ -228,6 +228,8 @@ namespace Astro {
         [LeafMember("ClearMonitorSelection")]
         static private void LeafClearMonitorSelection() {
             Game.Events.Dispatch(GameEvents.MonitorEmptySpaceClicked);
+            GameLoop.ResumeUpdates(AstroGame.InteractUpdateMask);
+            GameLoop.ResumeUpdates(AstroGame.MonitorControlsUpdateMask);
         }
 
         [LeafMember("InitUpdateMasks")]
