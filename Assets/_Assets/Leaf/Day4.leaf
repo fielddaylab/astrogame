@@ -29,9 +29,25 @@ $call SetInputState(false)
 $call SpawnDocumentToCamera("Day4ElijahPostcard")
 $call SetInputState(true)
 
+:: Day4ElijahPostcard
+@trigger    DocumentInspectFlip
+@when   documentId == "Day4ElijahPostcard"
+@cutscene
+@once
+
+$call SetInputState(true)
+$call EnableDocumentClose("Day4ElijahPostcard", true, true)
+
+{@Astrid} Wait.... World’s End is a garden? $[Astrid/L4/l4_a_01]
+{@Astrid} This painting is incredible. Elijah is so talented. $[Astrid/L4/l4_a_02] 
+{@Astrid} Maybe he shoulda been a painter instead of a rogue astronomer... $[Astrid/L4/l4_a_02b]
+{@Astrid} So World's End  must be what Elijah calls his station! World’s End - like the garden of the golden apples from the Hercules myths. $[Astrid/L4/l4_a_03]
+{@Astrid} It’s not about the world ending. It’s about, searching for the stars. $[Astrid/L4/l4_a_04] 
+
 :: SpawnDoc2
 @trigger    DocumentInspectEnd
 @when   documentId == "Day4ElijahPostcard"
+@interrupt
 @cutscene
 @once
 
@@ -40,28 +56,12 @@ $call SpawnDocumentToCamera("Day4Letter")
 {@Astrid} Jocelyn! She must have gotten my last letter and figured out my new address. $[Astrid/L4/l4d_a_01] 
 {@Astrid} This is great... if only i can solve some of Elijah's riddles I'll be able to get the news out to the world! $[Astrid/L4/l4d_a_02]
 
-:: Day4ElijahPostcard
-@trigger    DocumentInspectFlip
-@when   documentId == "Day4ElijahPostcard"
-@cutscene
-@once
-
-$call SetInputState(false)
-{@Astrid} Wait.... World’s End is a garden? $[Astrid/L4/l4_a_01]
-{@Astrid} This painting is incredible. Elijah is so talented. $[Astrid/L4/l4_a_02] 
-{@Astrid} Maybe he shoulda been a painter instead of a rogue astronomer... $[Astrid/L4/l4_a_02b]
-{@Astrid} So World's End  must be what Elijah calls his station! World’s End - like the garden of the golden apples from the Hercules myths. $[Astrid/L4/l4_a_03]
-{@Astrid} It’s not about the world ending. It’s about, searching for the stars. $[Astrid/L4/l4_a_04] 
-$goto .Day4PostcardRead
-
-:: Day4PostcardRead
-$call EnableDocumentClose("Day4ElijahPostcard", true, true)
-$call SetInputState(true)
 
 :: SpawnDoc
 @trigger    DocumentInspectEnd
 @when   documentId == "Day4Letter"
 @interrupt
+@cutscene
 @once
 
 $call SetInputState(false)
@@ -77,7 +77,7 @@ $call SetInputState(true)
 
 {@Astrid} Oh Dad... Its our constellations. He always did think of us as the big and little dipper. Ursa Major and Ursa Minor. $[Astrid/L4/l4d_a_03] 
 
-:: SpawnPuzzleDocs3
+:: EndPostcardPuzzle
 @trigger    DocumentInspectEnd
 @when   documentId == "DadUrsaPostcard"
 @interrupt

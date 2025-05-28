@@ -35,18 +35,15 @@ $call SetInputState(true)
 @cutscene
 @once
 
-$call Wait(1)
+$call EnableDocumentClose("Day3ElijahPostcard", true, true)
 {@Astrid} I don’t get it. We need to warn people? About what? $[Astrid/L3/l3_a_01]
 {@Astrid} Ugh. Elijah, I love you, but I could really use less poetry and more information. $[Astrid/L3/l3_a_02]
-$goto .Day3PostcardRead
-
-:: Day3PostcardRead
-$call EnableDocumentClose("Day3ElijahPostcard", true, true)
 
 :: SpawnPuzzleDocs2
 @trigger    DocumentInspectEnd
 @when   documentId == "Day3ElijahPostcard"
 @interrupt
+@cutscene
 @once
 
 $call SetInputState(false)
@@ -61,6 +58,7 @@ $call SetInputState(true)
 @when   documentId == "Day3Dad"
 @interrupt
 @boostScore 100
+@cutscene
 @once
 
 $call SetInputState(false)

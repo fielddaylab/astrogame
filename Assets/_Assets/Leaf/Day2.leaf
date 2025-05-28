@@ -29,11 +29,10 @@ $call MoveToView("DocumentPuzzle")
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $call SpawnDocumentToCamera("Day2DadIcecubePostcard")
 $call SetInputState(true)
+$call EnableDocumentClose("Day2DadIcecubePostcard", true, true)
 
 {@Astrid} Wow... I wonder if he ever feels weird about the auroras there. I think it might freak me out. $[Astrid/L2/l2_a_02]
 {@Astrid} Dad said he sent this just a few weeks ago. $[Astrid/L2/l2_a_03] 
-
-$call EnableDocumentClose("Day2DadIcecubePostcard", true, true)
 
 :: SpawnPuzzleDocs1
 @trigger    DocumentInspectEnd
@@ -46,13 +45,10 @@ $call SetInputState(false)
 $call Wait(1)
 {@Astrid} Elijah! Finally, some news. $[Astrid/L2/l2_a_04]
 $call SpawnDocumentToCamera("HerculesPostcard")
-
-{@Astrid} I love his postcards. Must be traveling with his art supplies as always. Looks like the Hercules constellation? $[Astrid/L2/l2_a_05]
-$goto .PostSpawnPuzzleDocs1
-
-:: PostSpawnPuzzleDocs1
 $call SetInputState(true)
 $call QueueMusic("Music.StarDome", 3)
+
+{@Astrid} I love his postcards. Must be traveling with his art supplies as always. Looks like the Hercules constellation? $[Astrid/L2/l2_a_05]
 
 :: FlipHercules
 @trigger    DocumentInspectFlip
