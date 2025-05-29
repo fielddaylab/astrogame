@@ -352,8 +352,6 @@ namespace Astro.Reference {
 
             if (region == null) {
                 rgs.SelectedRefClassification = null;
-                HideLastControls(rig);
-
                 DisableHighlights(rig);
                 // rgs.SubmitButton.Root.SetActive(false);
                 Routine.Start( rgs.SubmitButton.SetButtonActive(false) );
@@ -404,7 +402,6 @@ namespace Astro.Reference {
 
             if (region == null) {
                 rgs.SelectedRefClassification = null;
-                HideLastControls(rig);
                 DisableHighlights(rig);
                 // rgs.SubmitButton.Root.SetActive(false);
                 Routine.Start( rgs.SubmitButton.SetButtonActive(false) );
@@ -453,27 +450,14 @@ namespace Astro.Reference {
             RefreshSelectedControls(rig, page);
         }
 
-        private static void HideLastControls(RefGuideRig rig)
-        {
-            for (int i = 0; i < rig.SelectionPool.childCount; i++) {
-                GameObject child = rig.SelectionPool.GetChild(i).gameObject;
-                child.SetActive(false);
-            }
-        }
-
         private static void RefreshSelectedControls(RefGuideRig rig, RefGuideControlPage page)
         {
             var rgs = Find.State<RefGuideState>();
 
-            // Update highlights
-            for (int i = 0; i < rig.SelectionPool.childCount; i++) {
-                GameObject child = rig.SelectionPool.GetChild(i).gameObject;
-                child.SetActive(false);
-            }
+            DisableHighlights(rig);
 
             if (!rgs.SelectedRegionsPerPage.ContainsKey(rgs.CurrentPageNum)) { return; }
 
-            DisableHighlights(rig);
             for (int i = 0; i < page.Regions.Length; i++) {
                 RefGuideControl r = page.Regions[i];
 
