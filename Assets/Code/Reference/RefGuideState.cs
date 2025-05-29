@@ -354,6 +354,7 @@ namespace Astro.Reference {
                 rgs.SelectedRefClassification = null;
                 HideLastControls(rig);
 
+                DisableHighlights(rig);
                 // rgs.SubmitButton.Root.SetActive(false);
                 Routine.Start( rgs.SubmitButton.SetButtonActive(false) );
 
@@ -404,6 +405,7 @@ namespace Astro.Reference {
             if (region == null) {
                 rgs.SelectedRefClassification = null;
                 HideLastControls(rig);
+                DisableHighlights(rig);
                 // rgs.SubmitButton.Root.SetActive(false);
                 Routine.Start( rgs.SubmitButton.SetButtonActive(false) );
 
@@ -471,8 +473,8 @@ namespace Astro.Reference {
 
             if (!rgs.SelectedRegionsPerPage.ContainsKey(rgs.CurrentPageNum)) { return; }
 
-            for (int i = 0; i < page.Regions.Length; i++)
-            {
+            DisableHighlights(rig);
+            for (int i = 0; i < page.Regions.Length; i++) {
                 RefGuideControl r = page.Regions[i];
 
                 if (rgs.SelectedRegionsPerPage[rgs.CurrentPageNum].IndexOf(r.Classification) == -1) continue;
@@ -486,9 +488,26 @@ namespace Astro.Reference {
                 highlight.SetPosition(b.center + (Vector3)off, Axis.XY, Space.Self);
                 highlight.SetScale(b.size, Axis.XY);
                 highlight.gameObject.SetActive(true);
+
+                Transform checkbox = rig.CheckboxPool.GetChild(i);
+
+                Vector3 checkPos = new Vector3(b.center.x + 0.4f * b.size.x, b.center.y, b.center.z);
+                checkbox.SetPosition(checkPos + (Vector3) off, Axis.XY, Space.Self);
+                checkbox.gameObject.SetActive(true);
             }
 
             TryEnableIDSubmit(Find.State<FocusState>().CurrentFocus != null);
+        }
+
+        private static void DisableHighlights(RefGuideRig rig) {
+            for (int i = 0; i < Math.Max(rig.SelectionPool.childCount, rig.CheckboxPool.childCount); i++) {
+                if (i < rig.SelectionPool.childCount) {
+                    rig.SelectionPool.GetChild(i).gameObject.SetActive(false);
+                }
+                if (i < rig.CheckboxPool.childCount) {
+                    rig.CheckboxPool.GetChild(i).gameObject.SetActive(false);
+                }
+            }
         }
 
         public static void TryEnableIDSubmit(bool focusActive) {
