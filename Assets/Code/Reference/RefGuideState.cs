@@ -473,11 +473,13 @@ namespace Astro.Reference {
                 highlight.SetScale(b.size, Axis.XY);
                 highlight.gameObject.SetActive(true);
 
-                Transform checkbox = rig.CheckboxPool.GetChild(i);
+                if (r.ControlType.Equals(RefGuideControlType.MaterialClassification)) {
+                    Transform checkbox = rig.CheckboxPool.GetChild(i);
 
-                Vector3 checkPos = new Vector3(b.center.x + 0.4f * b.size.x, b.center.y, b.center.z);
-                checkbox.SetPosition(checkPos + (Vector3) off, Axis.XY, Space.Self);
-                checkbox.gameObject.SetActive(true);
+                    Vector3 checkPos = new Vector3(b.center.x + 0.4f * b.size.x, b.center.y, b.center.z);
+                    checkbox.SetPosition(checkPos + (Vector3)off, Axis.XY, Space.Self);
+                    checkbox.gameObject.SetActive(true);
+                }
             }
 
             TryEnableIDSubmit(Find.State<FocusState>().CurrentFocus != null);
