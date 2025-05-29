@@ -131,6 +131,10 @@ namespace Astro.Reference {
             }
         }
 
+        static public void ClearControls(RefGuideState rgs) {
+            ToggleControl(null, rgs);
+        }
+
         #endregion // Controls
 
         #region Transitions
@@ -275,7 +279,7 @@ namespace Astro.Reference {
             rgs.SelectedMaterials &= ~rgs.SelectedMaterials;
             PopulateContents(rig.Contents, newPage);
             PopulateReferenceColliders(newPage, rig);
-            ToggleControl(null, rgs);
+            ClearControls(rgs);
             //AdjustAllBookmarkPositions(rig, rgs.CurrentPageNum, rgs.PageList.Pages.Count - 1);
         }
 

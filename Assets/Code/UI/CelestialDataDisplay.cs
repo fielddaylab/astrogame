@@ -85,9 +85,9 @@ namespace Astro {
                 {
                     psb.Builder.Append("ELEMENTS, ");
                 }
-                if (config.AcceptedIDSubmissions.HasFlag(ClassificationTypeMask.Historical) && !HasIdentifiedDataType(ClassificationTypeMask.Historical, asset))
+                if (config.AcceptedIDSubmissions.HasFlag(ClassificationTypeMask.Luminosity) && !HasIdentifiedDataType(ClassificationTypeMask.Luminosity, asset))
                 {
-                    psb.Builder.Append("LUMOSITY, ");
+                    psb.Builder.Append("LUMINOSITY, ");
                 }
                 // if (config.AcceptedIDSubmissions.HasFlag(ClassificationTypeMask.Infrared) && !HasIdentifiedDataType(ClassificationTypeMask.Infrared, asset))
                 // {
@@ -280,8 +280,8 @@ namespace Astro {
                 return "SPECTRAL-TYPE";
             } else if (type.HasFlag(ClassificationTypeMask.Spectrometer)) {
                 return "SPECTRAL-TYPE";
-            } else if (type.HasFlag(ClassificationTypeMask.Historical)) {
-                return "LUMOSITY";
+            } else if (type.HasFlag(ClassificationTypeMask.Luminosity)) {
+                return "LUMINOSITY";
             // } else if (type.HasFlag(ClassificationTypeMask.Infrared)) {
             //     return "SPECTRAL-TYPE";
             } else {
