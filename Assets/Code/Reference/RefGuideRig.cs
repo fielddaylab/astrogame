@@ -48,6 +48,7 @@ namespace Astro.Reference {
         public RefGuideControlPage[] ControlPages;
         public ActiveGroup PageControls;
         public Transform SelectionPool;
+        public Transform CheckboxPool;
 
         IEnumerator<WorkSlicer.Result?> IScenePreload.Preload() {
             ReferenceUtility.SetGuideOpenVisibility(this, false);
