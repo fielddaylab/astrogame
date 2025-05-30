@@ -69,7 +69,12 @@ namespace Astro.Reference {
 
             OwnedNode = ViewNavUtility.GetNodeById("Right");
             OwnedNode.OnExit.Register(() => {
-                if (Find.State<ViewState>().ActiveNode.Id.ToDebugString() != "GuideFocus") {
+                var viewState = Find.State<ViewState>();
+                if (viewState.ActiveNode) {
+                    if (viewState.ActiveNode.Id.Hash() != "GuideFocus") {
+                        ReferenceUtility.SetReferenceActive(false);
+                    }
+                } else {
                     ReferenceUtility.SetReferenceActive(false);
                 }
                 IsAvailableOnNode = false;
