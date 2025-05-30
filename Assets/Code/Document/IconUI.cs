@@ -2,7 +2,7 @@ using UnityEngine;
 using FieldDay.Components;
 
 namespace Astro {
-    public class DocumentUI : BatchedComponent {
+    public class IconUI : BatchedComponent {
         public MeshRenderer Renderer;
         public Collider Collider;
 

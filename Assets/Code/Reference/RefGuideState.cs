@@ -32,6 +32,7 @@ namespace Astro.Reference {
         // value used to control the first page the player opens to 
         [NonSerialized] public int StickyFirstPage = -1;
         [NonSerialized] public int CurrentPageNum;
+        [NonSerialized] public Dictionary<int, List<ReferenceClassification>> SelectedRegionsPerPage = new Dictionary<int, List<ReferenceClassification>>();
         [NonSerialized] public ReferencePageList PageList;
         [NonSerialized] public bool SubmissionActive = true;
 
@@ -68,12 +69,26 @@ namespace Astro.Reference {
 
             OwnedNode = ViewNavUtility.GetNodeById("Right");
             OwnedNode.OnExit.Register(() => {
-                ReferenceUtility.SetReferenceActive(false);
+                if (Find.State<ViewState>().ActiveNode.Id.ToDebugString() != "GuideFocus") {
+                    ReferenceUtility.SetReferenceActive(false);
+                }
                 IsAvailableOnNode = false;
             });
 
             OwnedNode.OnEnter.Register(() => {
+                if (Find.State<RefGuideState>().CurrentState == RefGuideInteractionState.Open) {
+                    // Enable zoom and disable minimize icon
+                    ReferenceUtility.SetControlIconActive(3, true);
+                    ReferenceUtility.SetControlIconActive(4, false);
+                }
                 IsAvailableOnNode = true;
+            });
+
+            OwnedNode = ViewNavUtility.GetNodeById("GuideFocus");
+            OwnedNode.OnEnter.Register(() => {
+                // Disable zoom and enable minimize icon
+                ReferenceUtility.SetControlIconActive(3, false);
+                ReferenceUtility.SetControlIconActive(4, true);
             });
         }
 
@@ -131,6 +146,18 @@ namespace Astro.Reference {
             }
         }
 
+        static public void SetControlIconActive(int index, bool value, RefGuideRig rig = null) {
+            if (rig == null) rig = Find.State<RefGuideRig>();
+            rig.ControlIcons[index].SetActive(value);
+        }
+
+        static public void ClearControls(RefGuideState rgs)
+        {
+            ToggleControl(null, rgs);
+            rgs.SelectedMaterials &= ~rgs.SelectedMaterials;
+            rgs.SelectedRegionsPerPage.Clear();
+        }
+
         #endregion // Controls
 
         #region Transitions
@@ -185,6 +212,8 @@ namespace Astro.Reference {
             yield return Routine.Inline(rig.RootTransform.MoveTo(rig.RootTransform.localPosition.y + 0.1f, 0.3f, Axis.Y, Space.Self).Ease(Curve.BackOut).From());
 
             PopulateReferenceColliders(state.CurrentPage, rig);
+            RefGuideControlPage ctrlPage = Array.Find(rig.ControlPages, p => p.PageId.Equals(state.CurrentPage.AssetId));
+            RefreshSelectedControls(rig, ctrlPage);
 
             yield return 0.15f;
             if (state.StickyFirstPage > -1) {
@@ -199,8 +228,14 @@ namespace Astro.Reference {
 
                 bool isPageTurn = ctrl.ControlType == RefGuideControlType.NextPage || ctrl.ControlType == RefGuideControlType.PrevPage;
                 if (isPageTurn && !Find.State<RefGuideState>().AllowPageChanges) continue;
-                ctrl.gameObject.SetActive(true);
             }
+
+            foreach (GameObject icon in rig.ControlIcons) {
+                icon.gameObject.SetActive(true); 
+            }
+            // Enable zoom and disable minimize icon
+            SetControlIconActive(3, true);
+            SetControlIconActive(4, false);
 
             yield return rig.RootTransform.MoveTo(rig.OpenPosition.position, 0.12f).Ease(Curve.Smooth);
             SetGuideInteraction(rig, RefGuideInteractionState.Open);
@@ -212,8 +247,8 @@ namespace Astro.Reference {
             SetGuideInteraction(rig, RefGuideInteractionState.Transitioning);
             yield return rig.RootTransform.MoveTo(rig.IntermediatePosition.position, 0.12f).Ease(Curve.BackOut);
 
-            foreach (Collider ctrl in rig.OpenControls) {
-                ctrl.gameObject.SetActive(false);
+            foreach (GameObject ctrl in rig.ControlIcons) {
+                ctrl.SetActive(false);
             }
 
             rig.CoverRenderer.enabled = true;
@@ -272,10 +307,11 @@ namespace Astro.Reference {
 
             RefGuideRig rig = Find.State<RefGuideRig>();
             rgs.CurrentPage = newPage;
-            rgs.SelectedMaterials &= ~rgs.SelectedMaterials;
+            // rgs.SelectedMaterials &= ~rgs.SelectedMaterials;
             PopulateContents(rig.Contents, newPage);
             PopulateReferenceColliders(newPage, rig);
-            ToggleControl(null, rgs);
+            RefGuideControlPage ctrlPage = Array.Find(rig.ControlPages, p => p.PageId.Equals(newPage.AssetId));
+            RefreshSelectedControls(rig, ctrlPage);
             //AdjustAllBookmarkPositions(rig, rgs.CurrentPageNum, rgs.PageList.Pages.Count - 1);
         }
 
@@ -313,7 +349,7 @@ namespace Astro.Reference {
                         ctrlPage.Colliders[i].enabled = true;
                         ctrlPage.Regions[i].Classification = page.Classifications[i];
                         if (ctrlPage.Regions[i].ControlType == RefGuideControlType.MaterialClassification) {
-                            ctrlPage.Regions[i].Material = Enum.Parse<SpectrographMaterialMask>(page.Classifications[i].AssetId.ToDebugString());
+                            ctrlPage.Regions[i].Material = Enum.Parse<SpectrographMaterialMask>(ctrlPage.Regions[i].gameObject.name);
                         }
                     }
                 } else {
@@ -342,32 +378,47 @@ namespace Astro.Reference {
 
             if (region == null) {
                 rgs.SelectedRefClassification = null;
-                for (int i = 0; i < rig.SelectionPool.childCount; i++) {
-                    GameObject child = rig.SelectionPool.GetChild(i).gameObject;
-                    child.SetActive(false);
-                }
+                DisableHighlights(rig);
                 // rgs.SubmitButton.Root.SetActive(false);
                 Routine.Start( rgs.SubmitButton.SetButtonActive(false) );
+
+                // update selections per page
+                if (!rgs.SelectedRegionsPerPage.ContainsKey(rgs.CurrentPageNum)) {
+                    rgs.SelectedRegionsPerPage[rgs.CurrentPageNum] = new List<ReferenceClassification>();
+                }
+                else {
+                    rgs.SelectedRegionsPerPage[rgs.CurrentPageNum].Clear();
+                }
                 return;
             }
 
             if (rgs.SelectedRefClassification != region.Classification) {
                 rgs.SelectedRefClassification = region.Classification;
 
-                Collider c = region.GetComponent<Collider>();
-                Bounds b = PhysicsUtils.GetLocalBounds(c);
-                Vector2 off = region.transform.localPosition + region.transform.parent.localPosition;
-
-                Transform highlight = rig.SelectionPool.GetChild(0);
-
-                highlight.SetPosition(b.center + (Vector3) off, Axis.XY, Space.Self);
-                highlight.SetScale(b.size, Axis.XY);
-                highlight.gameObject.SetActive(true);
-            } else {
-                rgs.SelectedRefClassification = null;
-                Transform highlight = rig.SelectionPool.GetChild(0);
-                highlight.gameObject.SetActive(false);
+                // update selections per page
+                if (!rgs.SelectedRegionsPerPage.ContainsKey(rgs.CurrentPageNum)) {
+                    rgs.SelectedRegionsPerPage[rgs.CurrentPageNum] = new List<ReferenceClassification> {
+                        region.Classification
+                    };
+                }
+                else {
+                    rgs.SelectedRegionsPerPage[rgs.CurrentPageNum].Clear();
+                    rgs.SelectedRegionsPerPage[rgs.CurrentPageNum].Add(region.Classification);
+                }
             }
+            else {
+                // update selections per page
+                if (!rgs.SelectedRegionsPerPage.ContainsKey(rgs.CurrentPageNum)) {
+                    rgs.SelectedRegionsPerPage[rgs.CurrentPageNum] = new List<ReferenceClassification>();
+                }
+                else {
+                    rgs.SelectedRegionsPerPage[rgs.CurrentPageNum].Clear();
+                }
+            }
+
+            RefGuideControlPage page = Array.Find(rig.ControlPages, p => Array.IndexOf(p.Regions, region) != -1);
+
+            RefreshSelectedControls(rig, page);
 
             TryEnableIDSubmit(Find.State<FocusState>().CurrentFocus != null);
         }
@@ -377,12 +428,17 @@ namespace Astro.Reference {
 
             if (region == null) {
                 rgs.SelectedRefClassification = null;
-                for (int i = 0; i < rig.SelectionPool.childCount; i++) {
-                    GameObject child = rig.SelectionPool.GetChild(i).gameObject;
-                    child.SetActive(false);
-                }
+                DisableHighlights(rig);
                 // rgs.SubmitButton.Root.SetActive(false);
                 Routine.Start( rgs.SubmitButton.SetButtonActive(false) );
+
+                // update selections per page
+                if (!rgs.SelectedRegionsPerPage.ContainsKey(rgs.CurrentPageNum)) {
+                    rgs.SelectedRegionsPerPage[rgs.CurrentPageNum] = new List<ReferenceClassification>();
+                }
+                else {
+                    rgs.SelectedRegionsPerPage[rgs.CurrentPageNum].Clear();
+                }
                 return;
             }
 
@@ -392,17 +448,46 @@ namespace Astro.Reference {
                 rgs.SelectedMaterials |= region.Material;
             }
 
+            // temporarily clear selections per page
+            if (!rgs.SelectedRegionsPerPage.ContainsKey(rgs.CurrentPageNum)) {
+                rgs.SelectedRegionsPerPage[rgs.CurrentPageNum] = new List<ReferenceClassification>();
+            }
+            else {
+                rgs.SelectedRegionsPerPage[rgs.CurrentPageNum].Clear();
+            }
+
             RefGuideControlPage page = Array.Find(rig.ControlPages, p => Array.IndexOf(p.Regions, region) != -1);
 
-            // Update highlights
-            for (int i = 0; i < rig.SelectionPool.childCount; i++) {
-                GameObject child = rig.SelectionPool.GetChild(i).gameObject;
-                child.SetActive(false);
-            }
-            for (int i = 0; i < page.Regions.Length; i++) {
+            // update selections per page
+            for (int i = 0; i < page.Regions.Length; i++)
+            {
                 RefGuideControl r = page.Regions[i];
 
                 if (!rgs.SelectedMaterials.HasFlag(r.Material)) continue;
+
+                if (!rgs.SelectedRegionsPerPage.ContainsKey(rgs.CurrentPageNum)) {
+                    rgs.SelectedRegionsPerPage[rgs.CurrentPageNum] = new List<ReferenceClassification>();
+                }
+                else {
+                    rgs.SelectedRegionsPerPage[rgs.CurrentPageNum].Add(r.Classification);
+                }
+            }
+
+            RefreshSelectedControls(rig, page);
+        }
+
+        private static void RefreshSelectedControls(RefGuideRig rig, RefGuideControlPage page)
+        {
+            var rgs = Find.State<RefGuideState>();
+
+            DisableHighlights(rig);
+
+            if (!rgs.SelectedRegionsPerPage.ContainsKey(rgs.CurrentPageNum)) { return; }
+
+            for (int i = 0; i < page.Regions.Length; i++) {
+                RefGuideControl r = page.Regions[i];
+
+                if (rgs.SelectedRegionsPerPage[rgs.CurrentPageNum].IndexOf(r.Classification) == -1) continue;
 
                 Collider c = r.GetComponent<Collider>();
                 Bounds b = PhysicsUtils.GetLocalBounds(c);
@@ -410,12 +495,31 @@ namespace Astro.Reference {
 
                 Transform highlight = rig.SelectionPool.GetChild(i);
 
-                highlight.SetPosition(b.center + (Vector3) off, Axis.XY, Space.Self);
+                highlight.SetPosition(b.center + (Vector3)off, Axis.XY, Space.Self);
                 highlight.SetScale(b.size, Axis.XY);
                 highlight.gameObject.SetActive(true);
+
+                if (r.ControlType.Equals(RefGuideControlType.MaterialClassification)) {
+                    Transform checkbox = rig.CheckboxPool.GetChild(i);
+
+                    Vector3 checkPos = new Vector3(b.center.x + 0.4f * b.size.x, b.center.y + 0.0035f, b.center.z);
+                    checkbox.SetPosition(checkPos + (Vector3)off, Axis.XY, Space.Self);
+                    checkbox.gameObject.SetActive(true);
+                }
             }
 
             TryEnableIDSubmit(Find.State<FocusState>().CurrentFocus != null);
+        }
+
+        private static void DisableHighlights(RefGuideRig rig) {
+            for (int i = 0; i < Math.Max(rig.SelectionPool.childCount, rig.CheckboxPool.childCount); i++) {
+                if (i < rig.SelectionPool.childCount) {
+                    rig.SelectionPool.GetChild(i).gameObject.SetActive(false);
+                }
+                if (i < rig.CheckboxPool.childCount) {
+                    rig.CheckboxPool.GetChild(i).gameObject.SetActive(false);
+                }
+            }
         }
 
         public static void TryEnableIDSubmit(bool focusActive) {

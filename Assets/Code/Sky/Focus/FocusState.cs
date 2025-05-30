@@ -84,6 +84,10 @@ namespace Astro {
 
             AstroGame.Events.Dispatch(GameEvents.OnStarSelected, EvtArgs.Ref(state.CurrentFocus));
 
+            // clear reference guide selections
+            var rgs = Find.State<RefGuideState>();
+            ReferenceUtility.ClearControls(rgs);
+
             // Scripting
             if (state.CurrentFocus == null) return;
 
