@@ -118,7 +118,9 @@ namespace Astro
         }
 
         public static void SetCameraInputEnabled(bool enabled) {
-            Find.State<SpaceCameraState>().InputEnabled = enabled;
+            if (Game.SharedState.TryGet(out SpaceCameraState camState)) {
+                camState.InputEnabled = enabled;
+            }
         }
 
         public static float ClampAngle(float lfAngle, float lfMin, float lfMax) {

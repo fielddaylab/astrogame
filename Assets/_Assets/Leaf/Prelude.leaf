@@ -1,58 +1,56 @@
 #basePath Day0
 
 ::OpeningPrelude
-@trigger    SceneReady
+@trigger    BeginPrelude
 @boostScore 100
-@who    Astrid
+@cutscene
 
-$call InitUpdateMasks()
-{@Astrid} Come on, Elijah, where are you? It’s already starting! $[Prelude/Astrid/01]
- 
+$wait 3
+
+{@Astrid}	Come on, Elijah, where are you? It's already starting! $[Prelude/Astrid/01]
+
 $call Wait(1)
 (*phone buzzing sfx*)
  
-{@Elijah} Astrid, I’m sorry I’m late!
+{@Elijah}	Astrid, I’m sorry I’m late!
  
-{@Astrid} I was afraid you were going to miss it. The Perseids aren’t gonna last forever.
- 
- 
-{@Elijah} Just think . . . next year on your birthday we’ll be astronomy majors in college, watching the meteor shower together. 
+{@Astrid}	I was afraid you were going to miss it.
+
+{@Elijah}	Just think... next year on your birthday we'll be in the same place.
+{@Elijah}	It's going to be so cool studying astronomy together.
 
 $call Wait(2)
-Did you read my birthday card? I drew you as Perseus.$[Prelude/Elijah/06]
+{@Elijah} Did you read my birthday card? I drew you as Perseus. $[Prelude/Elijah/06]
 
+{@Astrid}	It's really great Elijah... though I don't think I'm as tough as Perseus. $[Prelude/Astrid/07]
+{@Elijah}	Girl, you're the stuff of Greek myths, ha ha. $[Prelude/Elijah/09]
+{@Astrid}	Dudeeeee.
 
-{@Astrid} Its really great Elijah...though I don't think I'm as tough as Perseus. $[Prelude/Astrid/07]
+{@Astrid}	Okay, let's focus, the Perseids won't wait for us. Where should I be looking? 
+{@Elijah}	Can you find the Perseus constellation? $[Prelude/Elijah/11]
+{@Elijah}	Just look for the place where the meteors seem to be coming from.
+{@Elijah}	If you move your phone across the sky, it’ll tell you if you’re getting warmer or colder.
  
-  
-{@Elijah} . Girl, you're the stuff of Greek myths, ha ha.
- $[Prelude/Elijah/09]
+{@Astrid}	Found it! $[Prelude/Astrid/12]
 
- 
-{@Elijah} Can you find the Perseus constellation? $[Prelude/Elijah/11]
-Just look for the place where the meteors seem to be coming from.
-If you move your phone across the sky, it’ll tell you if you’re getting warmer or colder.
- 
- 
-{@Astrid} Found it! $[Prelude/Astrid/12]
-We’re so lucky to have the sky all mapped out.
-It would take forever to figure all this out from scratch.
- 
-{@Elijah} I don’t know. Sounds sort of fun to me.
+{@Astrid}	Just imagine... In ancient times they had to map all these stars from scratch. And they used them for navigation, to tell their fates...
+{@Astrid}	Must've been a lot of pressure.
+{@Elijah}	I don't know. Sounds sort of fun to me.
  
 $call Wait(2) 
-{@Astrid} Whoa. Elijah, are you seeing this? $[Prelude/Astrid/20]
 
-{@Elijah} Astrid—you’re breaking up— $[Prelude/Elijah/20]
+{@Astrid}	Whoa. Elijah, are you seeing this? $[Prelude/Astrid/20]
+
+{@Elijah}	Astrid—you’re breaking up— $[Prelude/Elijah/20]
  
-{@Astrid} Is that the Northern Lights? $[Prelude/Astrid/21]
-Whoa. It’s so bright!
+{@Astrid}	Is that the Northern Lights? $[Prelude/Astrid/21]
+{@Astrid}	Whoa. It's so bright!
  
-{@Elijah} (*bzzzzzzz krrrrrrr*) —Something’s not right— $[Prelude/Elijah/21]
-(*static noises*) —Readings off the charts— (*brrrrrr kzzzzzz*)
+{@Elijah}	(*bzzzzzzz krrrrrrr*) —Something’s not right— $[Prelude/Elijah/21]
+{@Elijah}	(*static noises*) —Readings off the charts— (*brrrrrr kzzzzzz*)
  
-{@Astrid} Elijah, can you hear me? $[Prelude/Astrid/22]
+{@Astrid}	Elijah, can you hear me? $[Prelude/Astrid/22]
 $call Wait(2) 
-Hello? Elijah? $[Prelude/Astrid/23]
+{@Astrid}	Hello? Elijah? $[Prelude/Astrid/23]
 
 $call LoadNextDay()

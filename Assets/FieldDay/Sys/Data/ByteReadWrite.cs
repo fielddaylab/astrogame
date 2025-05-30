@@ -1,6 +1,8 @@
 using System;
 using System.Runtime.CompilerServices;
+using BeauData;
 using BeauUtil;
+using BeauUtil.Debugger;
 
 namespace FieldDay.Data {
     /// <summary>
@@ -45,6 +47,57 @@ namespace FieldDay.Data {
         }
 
         /// <summary>
+        /// Writes the given array into the buffer.
+        /// </summary>
+        public unsafe void WriteBuffer<T>(T[] array) where T : unmanaged {
+            int size = sizeof(T) * array.Length;
+            if ((Written + size) > Capacity) {
+                throw new InsufficientMemoryException();
+            }
+
+            fixed (T* ptr = array) {
+                Unsafe.FastCopy(ptr, size, Head);
+            }
+
+            Head += size;
+            Written += size;
+        }
+
+        /// <summary>
+        /// Writes the given array into the buffer.
+        /// </summary>
+        public unsafe void WriteBuffer<T>(T* ptr, int count) where T : unmanaged {
+            int size = sizeof(T) * count;
+            if ((Written + size) > Capacity) {
+                throw new InsufficientMemoryException();
+            }
+
+            Unsafe.FastCopy(ptr, size, Head);
+
+            Head += size;
+            Written += size;
+        }
+
+        /// <summary>
+        /// Writes the given array into the buffer.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public unsafe void WriteBuffer<T>(UnsafeSpan<T> array) where T : unmanaged {
+            WriteBuffer(array.Ptr, array.Length);
+        }
+
+        /// <summary>
+        /// Writes the given array into the buffer.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public unsafe void WriteBuffer(in ByteWriter writer) {
+            // TODO: Assert that buffer does not overlap with this buffer
+            Assert.False((Head - Written < (writer.Head - writer.Written + writer.Capacity))
+                && (writer.Head - writer.Written) < (Head - Written + Capacity), "Cannot copy overlapping buffers");
+            WriteBuffer(writer.GetData());
+        }
+
+        /// <summary>
         /// Skips the given number of bytes.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -74,6 +127,7 @@ namespace FieldDay.Data {
         /// <summary>
         /// Resets the buffer to its head.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public unsafe void Reset() {
             Head -= Written;
             Written = 0;
@@ -82,6 +136,7 @@ namespace FieldDay.Data {
         /// <summary>
         /// Returns the current write marker.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public uint GetMarker() {
             return (uint) Written;
         }
@@ -153,6 +208,44 @@ namespace FieldDay.Data {
         }
 
         /// <summary>
+        /// Copies data from the buffer into another buffer.
+        /// </summary>
+        public unsafe void ReadBuffer<T>(T* ptr, int count) where T : unmanaged {
+            int size = count * sizeof(T);
+            if (Remaining < size) {
+                throw new InsufficientMemoryException();
+            }
+
+            Unsafe.FastCopy(Head, size, ptr);
+            Head += size;
+            Remaining -= size;
+        }
+
+        /// <summary>
+        /// Copies data from the buffer into another buffer.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public unsafe void ReadBuffer<T>(UnsafeSpan<T> array) where T : unmanaged {
+            ReadBuffer(array.Ptr, array.Length);
+        }
+
+        /// <summary>
+        /// Copies data from the buffer into an array.
+        /// </summary>
+        public unsafe void ReadBuffer<T>(T[] array) where T : unmanaged {
+            int size = array.Length * sizeof(T);
+            if (Remaining < size) {
+                throw new InsufficientMemoryException();
+            }
+
+            fixed (T* ptr = array) {
+                Unsafe.FastCopy(Head, size, ptr);
+            }
+            Head += size;
+            Remaining -= size;
+        }
+
+        /// <summary>
         /// Skips the given number of bytes.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -172,13 +265,32 @@ namespace FieldDay.Data {
         public unsafe void Pad(int size) {
             Skip(size);
         }
+
+        /// <summary>
+        /// Are we at the end of the buffer.
+        /// </summary>
+        public bool EOF() {
+            return Remaining == 0;
+        }
+    }
+
+    /// <summary>
+    /// Interface for a class that can be read from a ByteReader
+    /// </summary>
+    public interface IByteReadable {
+        void ReadFrom(ref ByteReader reader);
+    }
+
+    /// <summary>
+    /// Interface for a class that can be written to a ByteWriter
+    /// </summary>
+    public interface IByteWritable {
+        void WriteTo(ref ByteWriter writer);
     }
 
     /// <summary>
     /// Interface for a class that can be written to and read from a ByteWriter/Reader
     /// </summary>
-    public interface IByteSerializable {
-        void WriteTo(ref ByteWriter writer);
-        void ReadFrom(ref ByteReader reader);
+    public interface IByteSerializable : IByteReadable, IByteWritable {
     }
 }

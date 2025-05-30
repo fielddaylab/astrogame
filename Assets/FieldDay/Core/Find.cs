@@ -61,6 +61,14 @@ namespace FieldDay {
         }
 
         /// <summary>
+        /// Looks up the gui module of the given type.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static public T GuiModule<T>() where T : class, IGuiModule {
+            return Game.Gui.GetModule<T>();
+        }
+
+        /// <summary>
         /// Looks up the named RectTransform of the given type.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

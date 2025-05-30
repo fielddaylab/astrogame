@@ -24,6 +24,7 @@ namespace Astro {
         public CastableEvent<ViewNode> OnLoad = new CastableEvent<ViewNode>();
         public CastableEvent<ViewNode> OnEnter = new CastableEvent<ViewNode>();
         public CastableEvent<ViewNode> OnExit = new CastableEvent<ViewNode>();
+        public CastableEvent<ViewNode> OnUnload = new CastableEvent<ViewNode>();
 
         void IRegistrationCallbacks.OnDeregister() {
             if (Game.IsShuttingDown) {
@@ -54,12 +55,14 @@ namespace Astro {
             node.Group.SetActive(true, false);
             if (invokeCallbacks) {
                 node.OnEnter.Invoke(node);
+                AstroGame.Events.Dispatch(Events.NodeEntered, EvtArgs.Ref(node));
             }
         }
 
         static public void DeactivateNode(ViewNode node, bool invokeCallbacks) {
             if (invokeCallbacks) {
                 node.OnExit.Invoke(node);
+                AstroGame.Events.Dispatch(Events.NodeExited, EvtArgs.Ref(node));
             }
             node.Group.SetActive(false, false);
         }

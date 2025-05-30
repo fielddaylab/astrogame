@@ -53,7 +53,7 @@ namespace FieldDay.Scripting {
                 ref var req = ref db.CurrentLoadRequest;
                 Log.Msg("[ScriptLoadingSystem] Loading script '{0}'...", req.Asset.name);
                 req.Package = LeafAsset.CompileAsync(req.Asset, ScriptNodePackage.Parser.Instance, out IEnumerator loader);
-                req.ParseHandle = Async.Schedule(loader, AsyncFlags.HighPriority);
+                req.ParseHandle = Async.Schedule(loader, GameLoop.IsLoading ? AsyncFlags.HighPriority : AsyncFlags.LowPriority);
                 req.Package.SetActive(false);
                 req.Package.m_LoadId = req.Handle;
                 db.LoadedHandleMap[req.Handle.Index] = req.Package;

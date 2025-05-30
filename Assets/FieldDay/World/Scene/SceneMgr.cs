@@ -201,6 +201,7 @@ namespace FieldDay.Scenes {
         public readonly ActionEvent OnMainSceneLateEnable = new ActionEvent();
         public readonly ActionEvent OnMainSceneReady = new ActionEvent();
         public readonly ActionEvent OnMainSceneUnloading = new ActionEvent();
+        public readonly ActionEvent OnMainSceneUnloaded = new ActionEvent();
         public readonly CastableEvent<SceneEventArgs> OnSceneUnload = new CastableEvent<SceneEventArgs>();
         public readonly ActionEvent OnAnySceneUnloaded = new ActionEvent();
         public readonly ActionEvent OnAnySceneEnabled = new ActionEvent();
@@ -1307,6 +1308,8 @@ namespace FieldDay.Scenes {
                     while (!counter.IsDone()) {
                         yield return null;
                     }
+
+                    OnMainSceneUnloaded.Invoke();
                 }
 
                 // load main scene and traverse graph

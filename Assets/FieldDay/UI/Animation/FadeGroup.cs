@@ -20,6 +20,9 @@ namespace FieldDay.UI.Animation {
         public Vector2 DefaultOffset;
         public Vector2 ToOffEndOffset;
 
+        [Header("Raycast Adjustments")]
+        public bool SyncBlocksRaycasts;
+
         [NonSerialized] public Transform CachedTransform;
         [NonSerialized] public AnimHandle CurrentHandle;
         [NonSerialized] public bool CurrentState;
@@ -69,6 +72,10 @@ namespace FieldDay.UI.Animation {
             }
             Group.alpha = visible ? 1 : 0;
             Group.gameObject.SetActive(visible);
+
+            if (SyncBlocksRaycasts) {
+                Group.blocksRaycasts = visible;
+            }
         }
 
         #endregion // IGuiPanel
@@ -79,6 +86,9 @@ namespace FieldDay.UI.Animation {
             public override void InitAnimation(FadeGroup target, ref LiteAnimatorState state) {
                 if (!target.Group.gameObject.activeSelf) {
                     target.Group.alpha = 0;
+                    if (target.SyncBlocksRaycasts) {
+                        target.Group.blocksRaycasts = false;
+                    }
                     GuiCommands.SetActive(target.Group.gameObject, true);
                 }
 
@@ -95,7 +105,14 @@ namespace FieldDay.UI.Animation {
                 float percent = 1 - Math.Max(0, state.TimeRemaining / state.Duration);
 
                 target.Group.alpha = Mathf.LerpUnclamped(state.InitParamA.Float, 1, percent);
-                return state.TimeRemaining > 0;
+                if (state.TimeRemaining > 0) {
+                    return true;
+                } else {
+                    if (target.SyncBlocksRaycasts) {
+                        target.Group.blocksRaycasts = true;
+                    }
+                    return false;
+                }
             }
         }
 
@@ -104,6 +121,9 @@ namespace FieldDay.UI.Animation {
                 target.CurrentState = false;
                 state.InitParamA.Float = target.Group.alpha;
                 state.ResetTime(target.ToOffTween.Time * (state.InitParamA.Float));
+                if (target.SyncBlocksRaycasts) {
+                    target.Group.blocksRaycasts = false;
+                }
             }
 
             public override void ResetAnimation(FadeGroup target, ref LiteAnimatorState state) {

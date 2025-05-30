@@ -7,7 +7,7 @@ float WaveStatic(float time, float x)
 {
     return 0.4 * sin(WAVE_INPUT(0, 4, 25))
         + 0.15 * cos(WAVE_INPUT(0.45, -13.3, -64))
-        + 0.1 * sin(WAVE_INPUT(0.879, 1, -71));
+        - 0.1 * sin(WAVE_INPUT(0.979, .2, -.7));
 }
 
 float WaveTexture(float time, float x, sampler2D tex)

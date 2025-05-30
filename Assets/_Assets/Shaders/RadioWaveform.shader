@@ -10,7 +10,6 @@ Shader "Astro/Radio Waveform"
 
 		_LocalTimeScale("Time Scale", float) = 1
 
-		[NoScaleOffset] _DataTex("Graph Data Texture", 2D) = "grey" { }
 		_DataScaleX("Data Scale X", float) = 1
 		_DataScaleY("Data Scale Y", float) = 1
 
@@ -29,7 +28,7 @@ Shader "Astro/Radio Waveform"
             "PreviewType"="Plane"
         }
 
-        Cull Off
+        Cull Back
         Lighting Off
         ZWrite On
 		ZTest LEqual
@@ -46,8 +45,6 @@ Shader "Astro/Radio Waveform"
             
 			#include "UnityCG.cginc"
 			#include "Assets/_Assets/Shaders/WaveformShaderIncludes.cginc"
-			
-			sampler2D _DataTex;
 
 			fixed4 _LineColor;
 			fixed4 _BgColor;
@@ -90,7 +87,7 @@ Shader "Astro/Radio Waveform"
 
 				float waveX = IN.uv.x * _DataScaleX;
 				fixed2 linePos = IN.uv;
-				linePos.y = _LineCenter + _DataScaleY * WaveTexture(time, waveX, _DataTex);
+				linePos.y = _LineCenter + _DataScaleY * WaveStatic(time, waveX);
 				
 				dist = min(dist, SdfCircle(linePos, IN.uv, _LineThickness));
 				return SdfAABlend(_BgColor, _LineColor, dist * 64);

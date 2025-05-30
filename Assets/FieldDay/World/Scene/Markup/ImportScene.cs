@@ -100,9 +100,6 @@ namespace FieldDay.Scenes {
                 Log.Msg("[ImportScene] Found {0} ImportScene objects in scene '{1}'", imports.Count, scene.path);
                 foreach(var import in imports) {
                     bool shouldLoad = !import.Transform && import.Scene.IsValid;
-                    if (shouldLoad) {
-                        shouldLoad = import.Merge || (import.Flags & SceneImportFlags.Persistent) != 0;
-                    }
 
                     if (!shouldLoad) {
                         continue;

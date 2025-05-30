@@ -59,6 +59,8 @@ namespace FieldDay.Scripting {
 
         void IRegistrationCallbacks.OnRegister() {
             Game.Scenes.RegisterLoadDependency(this);
+            BlockMetaCache.Default.Cache(typeof(ScriptNode));
+            BlockMetaCache.Default.Cache(typeof(ScriptNodePackage));
         }
 
         void IRegistrationCallbacks.OnDeregister() {

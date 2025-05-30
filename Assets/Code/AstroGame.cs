@@ -95,7 +95,12 @@ namespace Astro {
             });
 
             Scenes.OnMainSceneReady.Register(() => {
+                Find.GuiModule<LoadingIcon>().Hide();
                 ScriptUtility.Trigger("SceneReady");
+            });
+
+            Scenes.OnMainSceneUnloaded.Register(() => {
+                Find.GuiModule<LoadingIcon>().Show();
             });
         }
     }
