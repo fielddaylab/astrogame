@@ -58,7 +58,9 @@ namespace Astro {
 
         public void OnRegister() {
             Game.Events.Register(GameEvents.MonitorEmptySpaceClicked, () => {
-                CelestialDataDisplayUtil.OnFocusUpdated(null);
+                if (Find.State<FocusState>().MonitorInputActive) {
+                    CelestialDataDisplayUtil.OnFocusUpdated(null);
+                }
             });
         }
 
