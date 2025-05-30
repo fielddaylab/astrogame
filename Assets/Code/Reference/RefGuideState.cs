@@ -69,7 +69,9 @@ namespace Astro.Reference {
 
             OwnedNode = ViewNavUtility.GetNodeById("Right");
             OwnedNode.OnExit.Register(() => {
-                ReferenceUtility.SetReferenceActive(false);
+                if (Find.State<ViewState>().ActiveNode.Id.ToDebugString() != "GuideFocus") {
+                    ReferenceUtility.SetReferenceActive(false);
+                }
                 IsAvailableOnNode = false;
             });
 
@@ -208,7 +210,10 @@ namespace Astro.Reference {
 
                 bool isPageTurn = ctrl.ControlType == RefGuideControlType.NextPage || ctrl.ControlType == RefGuideControlType.PrevPage;
                 if (isPageTurn && !Find.State<RefGuideState>().AllowPageChanges) continue;
-                ctrl.gameObject.SetActive(true);
+            }
+
+            foreach (GameObject icon in rig.ControlIcons) {
+                icon.gameObject.SetActive(true); 
             }
 
             yield return rig.RootTransform.MoveTo(rig.OpenPosition.position, 0.12f).Ease(Curve.Smooth);
@@ -221,8 +226,8 @@ namespace Astro.Reference {
             SetGuideInteraction(rig, RefGuideInteractionState.Transitioning);
             yield return rig.RootTransform.MoveTo(rig.IntermediatePosition.position, 0.12f).Ease(Curve.BackOut);
 
-            foreach (Collider ctrl in rig.OpenControls) {
-                ctrl.gameObject.SetActive(false);
+            foreach (GameObject ctrl in rig.ControlIcons) {
+                ctrl.SetActive(false);
             }
 
             rig.CoverRenderer.enabled = true;

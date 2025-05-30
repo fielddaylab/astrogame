@@ -17,6 +17,7 @@ namespace Astro.Reference {
         [Header("Open State")]
         public MeshRenderer OpenRenderer;
         public GameObject OpenInteractables;
+        public GameObject[] ControlIcons;
         public Collider[] OpenControls;
         public ActiveGroup OpenRenderers;
         public RefGuideContents Contents;
