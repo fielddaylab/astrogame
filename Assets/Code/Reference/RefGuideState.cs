@@ -76,7 +76,19 @@ namespace Astro.Reference {
             });
 
             OwnedNode.OnEnter.Register(() => {
+                if (Find.State<RefGuideState>().CurrentState == RefGuideInteractionState.Open) {
+                    // Enable zoom and disable minimize icon
+                    ReferenceUtility.SetControlIconActive(3, true);
+                    ReferenceUtility.SetControlIconActive(4, false);
+                }
                 IsAvailableOnNode = true;
+            });
+
+            OwnedNode = ViewNavUtility.GetNodeById("GuideFocus");
+            OwnedNode.OnEnter.Register(() => {
+                // Disable zoom and enable minimize icon
+                ReferenceUtility.SetControlIconActive(3, false);
+                ReferenceUtility.SetControlIconActive(4, true);
             });
         }
 
@@ -134,7 +146,13 @@ namespace Astro.Reference {
             }
         }
 
-        static public void ClearControls(RefGuideState rgs) {
+        static public void SetControlIconActive(int index, bool value, RefGuideRig rig = null) {
+            if (rig == null) rig = Find.State<RefGuideRig>();
+            rig.ControlIcons[index].SetActive(value);
+        }
+
+        static public void ClearControls(RefGuideState rgs)
+        {
             ToggleControl(null, rgs);
             rgs.SelectedMaterials &= ~rgs.SelectedMaterials;
             rgs.SelectedRegionsPerPage.Clear();
@@ -215,6 +233,9 @@ namespace Astro.Reference {
             foreach (GameObject icon in rig.ControlIcons) {
                 icon.gameObject.SetActive(true); 
             }
+            // Enable zoom and disable minimize icon
+            SetControlIconActive(3, true);
+            SetControlIconActive(4, false);
 
             yield return rig.RootTransform.MoveTo(rig.OpenPosition.position, 0.12f).Ease(Curve.Smooth);
             SetGuideInteraction(rig, RefGuideInteractionState.Open);
