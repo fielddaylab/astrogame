@@ -91,7 +91,7 @@ $branch .MoveTelescopeReminder
 $call Wait(10)
 $if !temp:introMoveTheTelescope
     {@Radio} See if you can move your telescope. $[Radio/L1/l1_r_06]
-    $goto .MoveTelescopeReminder
+    $branch .MoveTelescopeReminder
 $endif
 // //TODO Shake UI hint
 
