@@ -14,6 +14,9 @@ namespace Astro {
         public bool IsActive = true;
         public bool IsHidingData;
 
+        public int PuzzleRow = -1;
+        public int PuzzleCol = -1;
+
         [NonSerialized] public bool HasData;
         [NonSerialized] public bool Modifiable = true;
         [NonSerialized] public DataPacket CurrentData;

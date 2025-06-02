@@ -73,8 +73,10 @@ namespace Astro
                         StringBuilder sb = new StringBuilder();
                         sb.Append('R');
                         sb.Append(r.ToStringLookup());
+                        newCell.DataSlot.PuzzleRow = r;
                         sb.Append('C');
                         sb.Append(c.ToStringLookup());
+                        newCell.DataSlot.PuzzleCol = c;
                         newCell.DataSlot.SlotId = sb.ToString();
 
                         m_CellWorkList.PushBack(newCell);

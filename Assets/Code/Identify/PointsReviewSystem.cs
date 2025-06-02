@@ -62,10 +62,15 @@ namespace Astro {
 
                 Log.Msg("[PointsReviewSystem] Puzzle CORRECT! :D");
             } else {
-                ScriptUtility.Trigger(ScriptEvents.IncorrectPuzzleSubmission);
+                using (var table = TempVarTable.Alloc()) {
+                    for (int r = 0; r < puzzle.ActivePuzzle.Rows.Length; r++) {
+                        StringHash32 key = "row_" + r;
+                        table.Set(key, rowsCorrectness[r]);
+                    }
+                    ScriptUtility.Trigger(ScriptEvents.IncorrectPuzzleSubmission, table);
+                }
                 ReviewUtility.ShowResultSprite(false, m_State);
                 Log.Msg("[SubmitPuzzleSystem] Puzzle INCORRECT! D:");
-                // TODO: show incorrect cells
                 PuzzleUtility.ClearRows(puzzle, rowsCorrectness);
             }
         }

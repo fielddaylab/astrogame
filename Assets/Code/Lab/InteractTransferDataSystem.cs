@@ -1,17 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using FieldDay.Systems;
 using FieldDay;
 using FieldDay.Scripting;
 
-namespace Astro
-{
+namespace Astro {
     [SysUpdate(GameLoopPhase.Update, 1000, AstroGame.InstrumentUpdateMask)] // After RowSelectSystem
-    public class InteractTransferDataSystem : ComponentSystemBehaviour<InteractTransferData, LabInteractable>
-    {
-        public override void ProcessWorkForComponent(InteractTransferData primary, LabInteractable secondary, float deltaTime)
-        {
+    public class InteractTransferDataSystem : ComponentSystemBehaviour<InteractTransferData, LabInteractable> {
+        public override void ProcessWorkForComponent(InteractTransferData primary, LabInteractable secondary, float deltaTime) {
             if (!secondary.InteractReceived) { return; }
 
             // Transfer data on interact if there is a valid destination
@@ -20,14 +15,34 @@ namespace Astro
                 var targetSlotId = dataState.SelectedTarget.SlotId;
                 if (DataUtility.TryTransferData(dataState.SelectedSource, dataState.SelectedTarget)) {
                     Debug.Log("[InteractTransferSystem] Transfer success");
-                    PuzzleUtility.CheckEnableSubmit(Find.State<PuzzleState>());
-                    DataUtility.ClearSelections(dataState);
+                    var puzzleState = Find.State<PuzzleState>();
+                    PuzzleUtility.CheckEnableSubmit(puzzleState);
 
-                    using (var table = TempVarTable.Alloc())
-                    {
-                        table.Set("cellId", targetSlotId);
-                        ScriptUtility.Trigger(ScriptEvents.OnPuzzleCellFilled, table);
+                    bool isRowComplete = true;
+                    for (int i = 0; i < puzzleState.Display.Cells.Length; i++) {
+                        var currentCell = puzzleState.Display.Cells[i].DataSlot;
+
+                        if (currentCell.PuzzleRow != dataState.SelectedTarget.PuzzleRow) continue;
+
+                        if (!currentCell.HasData) {
+                            isRowComplete = false;
+                            break;
+                        }
                     }
+
+                    if (isRowComplete) {
+                        using (var table = TempVarTable.Alloc()) {
+                            table.Set("rowId", dataState.SelectedTarget.PuzzleRow);
+                            ScriptUtility.Trigger(ScriptEvents.OnPuzzleRowFilled, table);
+                        } 
+                    } else { 
+                        using (var table = TempVarTable.Alloc()) {
+                            table.Set("cellId", targetSlotId);
+                            ScriptUtility.Trigger(ScriptEvents.OnPuzzleCellFilled, table);
+                        }
+                    }
+
+                    DataUtility.ClearSelections(dataState);
 
                     return;
                 }

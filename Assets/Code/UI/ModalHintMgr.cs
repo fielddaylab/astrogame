@@ -7,10 +7,12 @@ using BeauUtil;
 using BeauRoutine;
 
 public class ModalHintMgr : ScriptActorComponent {
-    [SerializeField] public List<ModalHint> HintModals;
+    [HideInInspector] public List<ModalHint> HintModals;
 
     void Start() {
-        foreach (var modal in HintModals) modal.gameObject.SetActive(false);
+        HintModals.AddRange(GetComponentsInChildren<ModalHint>(true));
+        
+        foreach (ModalHint modal in HintModals) modal.gameObject.SetActive(false);
     }
 
     [LeafMember("Show")]
