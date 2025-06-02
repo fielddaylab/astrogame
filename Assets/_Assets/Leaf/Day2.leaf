@@ -100,8 +100,10 @@ $call SpawnDocumentToCamera("CouplePhoto")
 @when   documentId == "CouplePhoto"
 @once
 
-$call SpawnDocumentToCamera("Day2Question")
+{@Astrid} I still have so many questions. I need to sort some things out.
+$call Wait(0.2)
 
+$call SpawnDocumentToCamera("Day2Question")
 {@Astrid} Where is Elijah? Is he okay? $[Astrid/L2/l2_a_3]
 
 :: SpawnPuzzleQuestion2
@@ -116,7 +118,15 @@ $call SetInputState(true)
 $call SpawnDocumentToCamera("Day2Question2")
 $call StartDocumentPuzzle("Day2DocumentPuzzle")
 
-{@Astrid} And what is Elijah working on?
+{@Astrid} And what on earth is he working on now?
+
+:: Day2Question2DocumentInspectEnd
+@trigger    DocumentInspectEnd
+@when   documentId == "Day2Question2"
+@once
+
+$call HintModals->SlideInFromLeft("DocOnboard", 0.4)
+$set temp:DocOnboardHintVisible = true
 
 :: IncorrectDocumentResponse1
 @trigger    DocumentPuzzlePromptStart
@@ -141,11 +151,7 @@ $call StartDocumentPuzzle("Day2DocumentPuzzle")
 $call SetInputState(false)
 {@Astrid} That's it! Elijah left Aunt Martha's and is back on the road now headed to one of these stations. $[Astrid/L2/l2_a_15]
 
-$if IsDocumentPuzzleSolved()
-    $branch .CorrectDocumentResponseSolved
-$else
-    $call SetInputState(true)
-$endif
+$branch .PostCorrectDocumentResponse
 
 :: CorrectDocumentResponse2
 @trigger    DocumentPuzzlePromptStart
@@ -157,6 +163,14 @@ $endif
 
 $call SetInputState(false)
 {@Astrid} That's it... Looks like he's working on some project to upgrade all the CERES stations around the Midwest. $[Astrid/L2/l2_a_13]
+
+$branch .PostCorrectDocumentResponse
+
+:: PostCorrectDocumentResponse
+$if temp:DocOnboardHintVisible
+    $call HintModals->Hide("DocOnboard", 0.2)
+    $set temp:DocOnboardHintVisible = false
+$endif
 
 $if IsDocumentPuzzleSolved()
     $branch .CorrectDocumentResponseSolved
