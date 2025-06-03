@@ -14,6 +14,7 @@ var NativeWebCursorLib = {
     /**
      * Attempts to automatically find the appropriate canvas. 
      */
+    NativeWebCursor_AutoFindCanvas__sig: 'v',
     NativeWebCursor_AutoFindCanvas: function() {
         var allCanvases = document.getElementsByTagName("canvas");
         for(var i = 0; i < allCanvases.length; i++) {
@@ -30,6 +31,7 @@ var NativeWebCursorLib = {
     /**
      * Sets the canvas id to look up.
      */
+    NativeWebCursor_SetCanvasId__sig: 'vi',
     NativeWebCursor_SetCanvasId: function(id) {
         NWCCache.canvasId = UTF8ToString(id);
         NWCCache.canvasOverride = null;
@@ -38,6 +40,7 @@ var NativeWebCursorLib = {
     /**
      * Returns if the cursor is visible.
      */
+    NativeWebCursor_IsVisible__sig: 'i',
     NativeWebCursor_IsVisible: function() {
         /** @type {HTMLCanvasElement} */
         var canvasElement = NWCCache.canvasOverride || document.getElementById(NWCCache.canvasId);
@@ -52,6 +55,7 @@ var NativeWebCursorLib = {
     /**
      * Shows the default cursor.
      */
+    NativeWebCursor_Show__sig: 'v',
     NativeWebCursor_Show: function() {
         /** @type {HTMLCanvasElement} */
         var canvasElement = NWCCache.canvasOverride || document.getElementById(NWCCache.canvasId);
@@ -64,6 +68,7 @@ var NativeWebCursorLib = {
      * Shows a specific type of cursor.
      * @param {string} type
      */
+    NativeWebCursor_ShowType__sig: 'vi',
     NativeWebCursor_ShowType: function(type) {
         /** @type {HTMLCanvasElement} */
         var canvasElement = NWCCache.canvasOverride || document.getElementById(NWCCache.canvasId);
@@ -75,6 +80,7 @@ var NativeWebCursorLib = {
     /**
      * Hides the native cursor.
      */
+    NativeWebCursor_Hide__sig: 'v',
     NativeWebCursor_Hide: function() {
         /** @type {HTMLCanvasElement} */
         var canvasElement = NWCCache.canvasOverride || document.getElementById(NWCCache.canvasId);

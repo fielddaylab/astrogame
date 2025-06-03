@@ -23,6 +23,91 @@ namespace FieldDay.Localization {
         #region File Paths
 
         /// <summary>
+        /// Returns if the given path is localized.
+        /// </summary>
+        static public unsafe bool IsLocalizedPath(string path) {
+            Assert.NotNull(path);
+
+            int pathLen = path.Length;
+            if (pathLen < 3) {
+                return false;
+            }
+
+            fixed (char* buff = path) {
+
+                s_DefaultLang.ToChars(out char checkA, out char checkB);
+
+                int idx = 0;
+
+                if (buff[0] == checkA && buff[1] == checkB && buff[2] == '/') {
+                    return true;
+                }
+
+                for (; idx < pathLen - 2; idx++) {
+                    char c = buff[idx];
+                    if (c == '/' && idx + 3 < pathLen && buff[idx + 3] == '/') {
+                        // two character path
+                        if (buff[idx + 1] == checkA && buff[idx + 2] == checkB) {
+                            return true;
+                        }
+                        idx += 3;
+                    } else if (c == '.') {
+                        if ((idx + 2 == pathLen) || ((idx + 3) < pathLen && buff[idx + 3] == '.')) {
+                            // two character extension
+                            if (buff[idx + 1] == checkA && buff[idx + 2] == checkB) {
+                                return true;
+                            }
+                            idx += 3;
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Returns if the given path is localized.
+        /// </summary>
+        static public unsafe bool IsLocalizedPath(StringBuilder path) {
+            Assert.NotNull(path);
+
+            int pathLen = path.Length;
+            if (pathLen < 3) {
+                return false;
+            }
+
+            s_DefaultLang.ToChars(out char checkA, out char checkB);
+
+            int idx = 0;
+
+            if (path[0] == checkA && path[1] == checkB && path[2] == '/') {
+                return true;
+            }
+
+            for (; idx < pathLen - 2; idx++) {
+                char c = path[idx];
+                if (c == '/' && idx + 3 < pathLen && path[idx + 3] == '/') {
+                    // two character path
+                    if (path[idx + 1] == checkA && path[idx + 2] == checkB) {
+                        return true;
+                    }
+                    idx += 3;
+                } else if (c == '.') {
+                    if ((idx + 2 == pathLen) || ((idx + 3) < pathLen && path[idx + 3] == '.')) {
+                        // two character extension
+                        if (path[idx + 1] == checkA && path[idx + 2] == checkB) {
+                            return true;
+                        }
+                        idx += 3;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Localizes a file path. This replaces instances of
         /// the default language's two-letter code with the current language.
         /// Specifically, the formats /en/, en/, and .en
@@ -92,16 +177,16 @@ namespace FieldDay.Localization {
         /// the default language's two-letter code with the current language.
         /// Specifically, the formats /en/, en/, and .en
         /// </summary>
-        static public unsafe void Path(StringBuilder path) {
+        static public unsafe bool Path(StringBuilder path) {
             Assert.NotNull(path);
 
             if (s_CurrentLang == s_DefaultLang) {
-                return;
+                return false;
             }
 
             int pathLen = path.Length;
             if (pathLen < 3) {
-                return;
+                return false;
             }
 
             s_DefaultLang.ToChars(out char checkA, out char checkB);
@@ -139,6 +224,8 @@ namespace FieldDay.Localization {
                     }
                 }
             }
+
+            return changed;
         }
 
         #endregion // File Paths

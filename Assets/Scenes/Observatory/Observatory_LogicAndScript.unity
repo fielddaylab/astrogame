@@ -189,6 +189,9 @@ MonoBehaviour:
     GameObjects: []
     Behaviours: []
   AllowSlotSelection: 1
+  InputFilter:
+    serializedVersion: 2
+    m_Bits: 8768
   LinkGroups:
   - m_Source: BackToDefault
     m_HashValue: 2065092832
@@ -491,6 +494,9 @@ MonoBehaviour:
     GameObjects: []
     Behaviours: []
   AllowSlotSelection: 0
+  InputFilter:
+    serializedVersion: 2
+    m_Bits: 704
   LinkGroups: []
   BackLink: {fileID: 0}
 --- !u!114 &138682928
@@ -1238,6 +1244,9 @@ MonoBehaviour:
     GameObjects: []
     Behaviours: []
   AllowSlotSelection: 0
+  InputFilter:
+    serializedVersion: 2
+    m_Bits: 8384
   LinkGroups:
   - m_Source: BackToDefault
     m_HashValue: 2065092832
@@ -1333,7 +1342,10 @@ MonoBehaviour:
   Group:
     GameObjects: []
     Behaviours: []
-  AllowSlotSelection: 1
+  AllowSlotSelection: 0
+  InputFilter:
+    serializedVersion: 2
+    m_Bits: 64
   LinkGroups:
   - m_Source: CeilingBack
     m_HashValue: 3630034011
@@ -1680,6 +1692,9 @@ MonoBehaviour:
     GameObjects: []
     Behaviours: []
   AllowSlotSelection: 1
+  InputFilter:
+    serializedVersion: 2
+    m_Bits: 8256
   LinkGroups: []
   BackLink: {fileID: 0}
 --- !u!114 &859857342
@@ -2002,7 +2017,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 34551
+    m_Bits: 42743
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -2517,7 +2532,10 @@ MonoBehaviour:
   Group:
     GameObjects: []
     Behaviours: []
-  AllowSlotSelection: 1
+  AllowSlotSelection: 0
+  InputFilter:
+    serializedVersion: 2
+    m_Bits: 64
   LinkGroups:
   - m_Source: ToLeft
     m_HashValue: 3678459269
@@ -3213,6 +3231,9 @@ MonoBehaviour:
     GameObjects: []
     Behaviours: []
   AllowSlotSelection: 0
+  InputFilter:
+    serializedVersion: 2
+    m_Bits: 64
   LinkGroups:
   - m_Source: ReturnFromMap
     m_HashValue: 886312803
@@ -4100,7 +4121,7 @@ GameObject:
   - component: {fileID: 1998120519}
   - component: {fileID: 1998120522}
   - component: {fileID: 1998120521}
-  - component: {fileID: 1998120520}
+  - component: {fileID: 1998120523}
   m_Layer: 0
   m_Name: GuideFocusView
   m_TagString: Untagged
@@ -4123,18 +4144,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1327480805}
   m_LocalEulerAnglesHint: {x: 1.65, y: 95.4, z: 0.4}
---- !u!114 &1998120520
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1998120518}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 26e9fd1f496f3944ca36ab5059facf49, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1998120521
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4167,9 +4176,30 @@ MonoBehaviour:
   Group:
     GameObjects: []
     Behaviours: []
-  AllowSlotSelection: 1
+  AllowSlotSelection: 0
+  InputFilter:
+    serializedVersion: 2
+    m_Bits: 576
   LinkGroups: []
-  BackLink: {fileID: 919132148232643380}
+  BackLink: {fileID: 1411797769}
+--- !u!114 &1998120523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1998120518}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd4f7a62f5d45454495b9595af62e528, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HorizontalRange: 1
+  VerticalRange: 1
+  DeadZone: 0.35
+  Edge: 0.8
+  LerpStrength: 1
+  CutsceneScale: 1
 --- !u!1 &2033192847
 GameObject:
   m_ObjectHideFlags: 0

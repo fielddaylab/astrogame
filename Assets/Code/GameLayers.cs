@@ -39,6 +39,9 @@ static public class LayerMasks {
     // Layer 12: TelescopeLight
     public const int TelescopeLight_Index = 12;
     public const int TelescopeLight_Mask = 4096;
+    // Layer 13: InstrumentInteract
+    public const int InstrumentInteract_Index = 13;
+    public const int InstrumentInteract_Mask = 8192;
     // Layer 15: TopLayer
     public const int TopLayer_Index = 15;
     public const int TopLayer_Mask = 32768;

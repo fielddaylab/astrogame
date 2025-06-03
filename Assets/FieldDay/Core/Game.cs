@@ -16,6 +16,7 @@ using FieldDay.Rendering;
 using FieldDay.Animation;
 using FieldDay.Memory;
 using FieldDay.Perf;
+using FieldDay.Files;
 
 [assembly: InternalsVisibleTo("FieldDay.Core.Editor")]
 
@@ -99,6 +100,11 @@ namespace FieldDay {
         /// Performance and profiling manager.
         /// </summary>
         static public PerformanceMgr Perf { get; internal set; }
+
+        /// <summary>
+        /// File system manager.
+        /// </summary>
+        static public FileSystem Files { get; internal set; }
 
         /// <summary>
         /// Event dispatcher. Maintains event dispatch.

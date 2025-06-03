@@ -7,7 +7,7 @@ float WaveStatic(float time, float x)
 {
     return 0.4 * sin(WAVE_INPUT(0, 4, 25))
         + 0.15 * cos(WAVE_INPUT(0.45, -13.3, -64))
-        - 0.1 * sin(WAVE_INPUT(0.979, .2, -.7));
+        - 0.1 * sin(WAVE_INPUT(0.979, 0.2, -.7));
 }
 
 float WaveTexture(float time, float x, sampler2D tex)
@@ -30,6 +30,6 @@ float SdfCircle(fixed2 origin, fixed2 pos, float radius)
     return length(pos - origin) - radius;
 }
 
-#define SdfAABlend(a, b, distance) lerp(a, b, clamp(1.0 - (distance), 0.0, 1.0))
+#define SdfAABlend(a, b, distance) lerp(a, b, saturate(1.0 - (distance)))
 
 #endif // ASTRO_WAVEFORM_INCLUDES

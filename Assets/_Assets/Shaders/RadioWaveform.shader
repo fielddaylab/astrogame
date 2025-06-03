@@ -87,7 +87,9 @@ Shader "Astro/Radio Waveform"
 
 				float waveX = IN.uv.x * _DataScaleX;
 				fixed2 linePos = IN.uv;
-				linePos.y = _LineCenter + _DataScaleY * WaveStatic(time, waveX);
+				float offset = WaveStatic(time, waveX);
+				offset *= sin(3.1415 * IN.uv.x);
+				linePos.y = _LineCenter + _DataScaleY * offset;
 				
 				dist = min(dist, SdfCircle(linePos, IN.uv, _LineThickness));
 				return SdfAABlend(_BgColor, _LineColor, dist * 64);

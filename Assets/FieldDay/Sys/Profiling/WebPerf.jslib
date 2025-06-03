@@ -1,4 +1,5 @@
 var WebPerf = {
+    WebPerf_RetrieveGraphicsDeviceID__sig: 'i',
     WebPerf_RetrieveGraphicsDeviceID: function () {
         var gpuInfo = Module.SystemInfo.gpu;
         var angleTest = /ANGLE \(.*?\((0x[\dabcdef]+)\)/i.exec(gpuInfo);
@@ -8,6 +9,7 @@ var WebPerf = {
         return 0;
     },
 
+    WebPerf_IsCrossOriginIsolated__sig: 'i',
     WebPerf_IsCrossOriginIsolated: function() {
         return window.crossOriginIsolated;
     }

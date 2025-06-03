@@ -78,5 +78,14 @@ namespace FieldDay.Vox {
             Assert.NotNullOrDestroyed(emitter);
             return emitter.RequestHandle;
         }
+
+        /// <summary>
+        /// Returns the current request handle for the given emitter.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static public StringHash32 CurrentLineCode(VoxEmitter emitter) {
+            Assert.NotNullOrDestroyed(emitter);
+            return GetLineCode(emitter.RequestHandle);
+        }
     }
 }

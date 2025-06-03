@@ -15,44 +15,7 @@ using UnityEngine.Networking;
 
 namespace Astro {
     static public class VoxWaveformManifestGenerator {
-        static private void OnWizardCreate() {
-            string url = Streaming.ResolveAddressToURL("");
-            UnityWebRequest uwr = UnityWebRequest.Get(url);
-            DownloadHandlerAudioClip downloadHandler = new DownloadHandlerAudioClip(url, AudioType.UNKNOWN);
-            downloadHandler.compressed = false;
-
-            uwr.downloadHandler = downloadHandler;
-
-            uwr.SendWebRequest();
-
-            while(!uwr.isDone) {
-                Thread.Sleep(1);
-            }
-
-            if (uwr.result == UnityWebRequest.Result.Success) {
-                AudioClip clip = downloadHandler.audioClip;
-
-                var chunks = VoxWaveform.GenerateChunks(clip);
-
-                StringBuilder sb = new StringBuilder(1024);
-                sb.Append("Waveform: ").Append("");
-                unsafe {
-                    foreach (var chunk in chunks) {
-                        for (int i = 0; i < VoxWaveform.SamplesPerChunk; i++) {
-                            sb.Append("\n|").Append('-', chunk.Data[i]);
-                        }
-                    }
-                }
-
-                Debug.Log(sb.ToString());
-
-                AudioClip.DestroyImmediate(clip);
-            }
-
-            uwr.Dispose();
-        }
-
-        static private VoxWaveformChunk[] GenerateChunks(string referencePath, FileInfo file, out StringHash32 lineCode) {
+        static private VoxWaveformChunk[] GenerateChunks(string referencePath, FileInfo file, out StringHash32 lineCode, out float duration) {
             string fullPath = file.FullName.Replace('\\', '/');
             string trimmedPath = fullPath.Replace(referencePath, string.Empty);
             if (trimmedPath.StartsWith('/')) {
@@ -61,12 +24,13 @@ namespace Astro {
 
             trimmedPath = Path.ChangeExtension(trimmedPath, null);
 
-            Debug.Log(trimmedPath);
-            lineCode = StringHash32.Fast(trimmedPath);
+            lineCode = new StringHash32(trimmedPath);
+            Debug.Log(trimmedPath + " " + lineCode.ToString());
             AudioClip clip = DownloadClip(file.FullName);
 
             if (clip != null) {
                 var chunks = VoxWaveform.GenerateChunks(clip);
+                duration = clip.length;
 
                 //StringBuilder sb = new StringBuilder(1024);
                 //sb.Append("Waveform: ").Append(file.FullName);
@@ -84,6 +48,7 @@ namespace Astro {
                 return chunks;
             }
 
+            duration = 0;
             return null;
         }
 
@@ -111,12 +76,45 @@ namespace Astro {
             return clip;
         }
 
+        static private unsafe void ExportTexture(StringHash32 lineCode, VoxWaveformChunk[] waveformChunks, float duration) {
+            int fullWidth = (int) (50 * duration);
+            Texture2D texture = new Texture2D(fullWidth, 256);
+            Color32[] textureColors = texture.GetPixels32();
+
+            fixed(VoxWaveformChunk* chunkPtr = waveformChunks) {
+                VoxWaveform waveform;
+                waveform.Chunks = new UnsafeSpan<VoxWaveformChunk>(chunkPtr, waveformChunks.Length);
+
+                for(int i = 0; i < fullWidth; i++) {
+                    float time = i * 0.02f;
+                    float amp = VoxWaveform.ReadAmplitude(waveform, time, duration);
+                    int ampPixels = (int) (256 * amp);
+                    for(int p = 0; p < ampPixels; p++) {
+                        textureColors[i + p * fullWidth] = Color.white;
+                    }
+                    for(int p = ampPixels; p < 256; p++) {
+                        textureColors[i + p * fullWidth] = Color.black;
+                    }
+                }
+            }
+
+            texture.SetPixels32(textureColors);
+            texture.Apply();
+
+            byte[] png = texture.EncodeToPNG();
+            File.WriteAllBytes("Library/VoxWaveformExportCache/" + lineCode.ToString() + ".png", png);
+
+            Texture2D.DestroyImmediate(texture);
+        }
+
         static private unsafe void BuildInDirectory(DirectoryInfo dir) {
             byte[] tocData = new byte[64 * Unsafe.KiB];
-            byte[] sampleData = new byte[64 * Unsafe.KiB];
-            byte[] finalData = new byte[128 * Unsafe.KiB];
+            byte[] sampleData = new byte[256 * Unsafe.KiB];
+            byte[] finalData = new byte[310 * Unsafe.KiB];
 
             string refPath = dir.FullName.Replace('\\', '/');
+
+            Directory.CreateDirectory("Library/VoxWaveformExportCache/");
 
             fixed (byte* tocPtr = tocData) {
                 fixed (byte* samplePtr = sampleData) {
@@ -127,9 +125,11 @@ namespace Astro {
                     int entryCount = 0;
 
                     VoxWaveformTable.TOCEntry toc;
+                    float duration;
                     foreach (var file in dir.EnumerateFiles("*.mp3", SearchOption.AllDirectories)) {
-                        var chunks = GenerateChunks(refPath, file, out toc.LineCode);
+                        var chunks = GenerateChunks(refPath, file, out toc.LineCode, out duration);
                         if (chunks != null && !toc.LineCode.IsEmpty) {
+                            ExportTexture(toc.LineCode, chunks, duration);
                             sampleWriter.WriteBuffer(chunks);
                             toc.Chunks.Offset = (ushort)chunkCount;
                             toc.Chunks.Length = (ushort)chunks.Length;

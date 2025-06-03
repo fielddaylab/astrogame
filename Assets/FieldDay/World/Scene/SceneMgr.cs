@@ -1484,6 +1484,10 @@ namespace FieldDay.Scenes {
                 return false;
             }
 
+            if (Game.Files.AnyHighPriorityRequestsLoading()) {
+                return false;
+            }
+
             return true;
         }
 
@@ -1505,6 +1509,10 @@ namespace FieldDay.Scenes {
             }
 
             if (Streaming.IsLoading()) {
+                return false;
+            }
+
+            if (Game.Files.AnyHighPriorityRequestsLoading()) {
                 return false;
             }
 

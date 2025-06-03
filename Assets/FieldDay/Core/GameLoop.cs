@@ -45,6 +45,7 @@ using FieldDay.SharedState;
 using FieldDay.Systems;
 using FieldDay.Threading;
 using FieldDay.Localization;
+using FieldDay.Files;
 
 #if USE_SRP
 #endif // USE_SRP
@@ -89,6 +90,9 @@ namespace FieldDay {
 
         [SerializeField]
         private GuiMgr.Config m_GuiConfig = new GuiMgr.Config();
+
+        [SerializeField]
+        private FileSystem.Config m_FileSystemConfig = new FileSystem.Config();
 
         [SerializeField]
         private AssetPack[] m_GlobalAssetPacks = Array.Empty<AssetPack>();
@@ -255,6 +259,10 @@ namespace FieldDay {
                 Game.Memory = new MemoryMgr();
                 Game.Memory.Initialize(m_MemoryConfig);
 
+                Log.Msg("[GameLoop] Creating file system...");
+                Game.Files = new FileSystem();
+                Game.Files.Initialize(m_FileSystemConfig);
+
                 Log.Msg("[GameLoop] Creating performance manager...");
                 Game.Perf = new PerformanceMgr();
 
@@ -333,6 +341,7 @@ namespace FieldDay {
                 CrashHandler.Enabled = true;
 #endif // UNITY_EDITOR
 
+                Game.Files.Tick();
                 Game.Gui.FlushCommands();
                 Async.InvokeAsync(Game.Gui.FlushCommands);
             }
@@ -354,6 +363,7 @@ namespace FieldDay {
                 Game.Animation.Initialize();
                 Game.Scenes.Prepare();
                 Game.Systems.ProcessInitQueue();
+                Game.Files.Tick();
                 FlushQueue(s_OnBootQueue);
 
                 FinishCallbackRegistration();
@@ -404,7 +414,7 @@ namespace FieldDay {
                 if (fps <= 0) {
                     fps = -1;
                 }
-                Application.targetFrameRate = fps;
+                SetTargetFramerate(fps);
                 Debug.LogWarningFormat("[GameLoop] 'force-fps' flag found, Application.targetFrameRate set to {0}", fps);
             }
 
@@ -530,6 +540,10 @@ namespace FieldDay {
             Game.Perf.Shutdown();
             Game.Perf = null;
 
+            Log.Msg("[GameLoop] Shutting down file system...");
+            Game.Files.Shutdown();
+            Game.Files = null;
+
             Log.Msg("[GameLoop] Shutting down memory manager...");
             Game.Memory.Shutdown();
             Game.Memory = null;
@@ -617,6 +631,7 @@ namespace FieldDay {
                 Game.Processes.UnscaledUpdate(Frame.UnscaledDeltaTime, s_UpdateMask);
                 Game.Animation.UnscaledUpdateLite(Frame.UnscaledDeltaTime);
                 Game.Components.Unlock();
+                Game.Files.Tick();
                 OnUnscaledUpdate.Invoke(Frame.UnscaledDeltaTime);
             }
 
@@ -624,6 +639,7 @@ namespace FieldDay {
             // flush event queue
             Game.Events.Flush();
             Game.Gui.FlushCommands();
+            Game.Files.Tick();
             Game.Audio.Update(Frame.UnscaledDeltaTime);
         }
 
@@ -653,6 +669,7 @@ namespace FieldDay {
             // flush event queue
             Game.Events.Flush();
             Game.Gui.FlushCommands();
+            Game.Files.Tick();
             Game.Audio.LateUpdate(Frame.UnscaledDeltaTime);
             Game.Memory.Update();
 
@@ -782,6 +799,7 @@ namespace FieldDay {
 
                 OnDebugUpdate.Invoke(Frame.UnscaledDeltaTime);
                 Game.Audio.PreUpdate(Frame.UnscaledDeltaTime);
+                Game.Files.Tick();
 
                 // PRE UPDATE
 

@@ -15,6 +15,7 @@ namespace Astro {
         [Header("Objects To Activate")]
         public ActiveGroup Group;
         public bool AllowSlotSelection = true;
+        public LayerMask InputFilter = InputUtility.DefaultLayerMask;
 
         [Header("Links")]
         public SerializedHash32[] LinkGroups;
@@ -57,6 +58,8 @@ namespace Astro {
                 node.OnEnter.Invoke(node);
                 AstroGame.Events.Dispatch(Events.NodeEntered, EvtArgs.Ref(node));
             }
+
+            InputUtility.SetClickableMaskFilter(Find.State<InputState>(), node.InputFilter);
         }
 
         static public void DeactivateNode(ViewNode node, bool invokeCallbacks) {
@@ -65,6 +68,8 @@ namespace Astro {
                 AstroGame.Events.Dispatch(Events.NodeExited, EvtArgs.Ref(node));
             }
             node.Group.SetActive(false, false);
+
+            InputUtility.SetClickableMaskFilter(Find.State<InputState>(), 0);
         }
 
         /// <summary>
