@@ -634,7 +634,7 @@ $call HintModals->SlideInFromRight("BrightestBlue", 0.4)
 
 :: SecondPuzzleStarSelected
 @trigger   OnStarSelected
-@when   starName == "Algol", !temp:AlgolRowFilled
+@when   starName == "Algol", !temp:AlgolRowFilled, temp:AtikRowFilled
 @boostScore 100
 @interrupt
 @cutscene
@@ -655,7 +655,7 @@ $call UnlockMonitorFocus()
 
 :: NotSecondPuzzleStarSelected
 @trigger   OnStarSelected
-@when   starName != "Algol", !temp:AlgolRowFilled
+@when   starName != "Algol", !temp:AlgolRowFilled, temp:AtikRowFilled
 @interrupt
 @cutscene
 
@@ -669,7 +669,7 @@ $endif
 
 :: AtikSelectedPostFilled
 @trigger   OnStarSelected
-@when   starName == "Atik", temp:AtikRowFilled
+@when   starName == "Atik", temp:AtikRowFilled, temp:AtikRowFilled
 @boostScore 100
 @interrupt
 @cutscene
@@ -682,7 +682,7 @@ $endif
 
 :: AlgolSelectedPostComplete
 @trigger   OnStarSelected
-@when   starName == "Algol", temp:CompletedAlgolRow
+@when   starName == "Algol", temp:CompletedAlgolRow, temp:AtikRowFilled
 @boostScore 100
 @interrupt
 @cutscene
@@ -691,7 +691,7 @@ $endif
 
 :: MenkibSelectedPostComplete
 @trigger   OnStarSelected
-@when   starName == "Menkib", temp:CompletedMenkibRow
+@when   starName == "Menkib", temp:CompletedMenkibRow, temp:AtikRowFilled
 @boostScore 100
 @interrupt
 @cutscene
@@ -700,7 +700,7 @@ $endif
 
 :: MirfakSelectedPostComplete
 @trigger   OnStarSelected
-@when   starName == "Mirfak", temp:CompletedMirfakRow
+@when   starName == "Mirfak", temp:CompletedMirfakRow, temp:AtikRowFilled
 @boostScore 100
 @interrupt
 @cutscene
@@ -709,7 +709,7 @@ $endif
 
 :: AlgolDataFilled
 @trigger    OnPuzzleRowFilled
-@when   rowId == 0
+@when   rowId == 0, temp:AtikRowFilled
 @boostScore 100
 @interrupt
 @cutscene
@@ -728,7 +728,7 @@ $branch .PuzzleTimeoutHint
 
 :: AlgolDataFilled2
 @trigger    OnPuzzleRowFilled
-@when   rowId == 0
+@when   rowId == 0, temp:AtikRowFilled
 @interrupt
 @cutscene
 

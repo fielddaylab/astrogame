@@ -220,6 +220,10 @@ namespace Astro {
         public static void PlayClearancePointAnimation() {
             CelestialDataDisplay display = Find.State<CelestialDataDisplay>();
             PlayerPointsState points = Find.State<PlayerPointsState>();
+            
+            if (display.DataPanelActive) {
+                display.HideCelestialDataDisplay();
+            }
 
             display.AnimRoutine = Routine.Start(display,
                 Sequence.Create(display.RevealClearancePointDisplay())
