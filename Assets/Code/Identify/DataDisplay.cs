@@ -18,7 +18,6 @@ namespace Astro {
 
         [Header("Components")]
         public TMP_Text DefaultOutput;
-        public Transform OutputTransform;
         public RenderAtlasOutput OutputAtlas;
 
         public readonly CastableEvent<DataPacket, DataFormattingFlags> OnDisplayRequested = new CastableEvent<DataPacket, DataFormattingFlags>();
@@ -53,6 +52,7 @@ namespace Astro {
         static public void PopulateDisplay(DataDisplay display, DataPacket packet) {
             bool displayedDefault = false;
             if (display == null) return;
+
             if (display.DefaultOutput) {
                 using(PooledStringBuilder psb = PooledStringBuilder.Create()) {
                     if (packet.IsValid) {

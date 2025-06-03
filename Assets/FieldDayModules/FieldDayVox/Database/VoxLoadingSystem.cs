@@ -108,7 +108,11 @@ namespace FieldDay.Vox {
 
                 db.CurrentLoadLineCode = lineCode;
                 db.CurrentLoadFileId = entry.PathHash;
-                db.CurrentLoad = new UnityWebRequest(uri, UnityWebRequest.kHttpVerbGET, new DownloadHandlerAudioClip(uri, AudioType.UNKNOWN), null);
+
+                DownloadHandlerAudioClip audioHandler = new DownloadHandlerAudioClip(uri, AudioType.UNKNOWN);
+                audioHandler.compressed = false;
+
+                db.CurrentLoad = new UnityWebRequest(uri, UnityWebRequest.kHttpVerbGET, audioHandler, null);
                 db.CurrentLoad.SendWebRequest();
                 didWork = true;
                 isRunningLoad = true;

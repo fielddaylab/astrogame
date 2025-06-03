@@ -28,6 +28,8 @@ namespace Astro {
 
         [NonSerialized] public bool LastKnownActiveState;
 
+        public CastableEvent<ViewLink, bool> OnActiveStateChanged = new CastableEvent<ViewLink, bool>();
+
         void IRegistrationCallbacks.OnDeregister() {
             if (Game.IsShuttingDown) {
                 return;
@@ -105,6 +107,7 @@ namespace Astro {
                 } else {
                     state.ActiveLinks.FastRemove(link);
                 }
+                link.OnActiveStateChanged.Invoke(link, shouldBeActive);
             }
         }
     }

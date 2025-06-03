@@ -21,6 +21,8 @@ namespace Astro {
 
         private PointerEventData copyEventData;
 
+        public LayerMask RequiredMask = LayerMasks.LabInteract_Mask;
+
         public override Camera eventCamera { get { return eventCameraOverride; } }
 
         protected override void Start() {
@@ -33,7 +35,7 @@ namespace Astro {
 
         // Called by Unity when a Raycaster should raycast because it extends BaseRaycaster.
         public override void Raycast(PointerEventData eventData, List<RaycastResult> resultAppendList) {
-            if ((Find.State<InputState>().ClickableLayerMask & LayerMasks.LabInteract_Mask) == 0) {
+            if ((Find.State<InputState>().AppliedLayerMask & RequiredMask) == 0) {
                 return;
             }
 

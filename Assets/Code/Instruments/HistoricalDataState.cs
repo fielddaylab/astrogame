@@ -8,13 +8,16 @@ using UnityEngine.Rendering;
 
 namespace Astro {
     public class HistoricalDataState : SharedStateComponent, IRegistrationCallbacks {
-        public HistoricalDataGraph InstrumentGraph;
         public DataDisplay DistanceDisplay;
+
+        [Header("Mode Toggle")]
         public Transform ModeSwitch;
         public Quaternion ModeRotDefault;
         public Quaternion ModeRotOn;
-        public PatternMaterialPair[] PatternMaterials;
+
+        [Header("External")]
         public Photometer ConnectedPhotometer;
+
         [NonSerialized] public bool SendingAbsMag;
         [NonSerialized] public Routine KnobRoutine;
 
@@ -22,13 +25,7 @@ namespace Astro {
         }
 
         public void OnRegister() {
-            HistoricalDataUtility.SetInstrumentMode(false, this, true, false);
+            ParallaxDataUtility.SetInstrumentMode(false, this, true, false);
         }
-    }
-
-    [Serializable]
-    public struct PatternMaterialPair {
-        public HistoricalPatternType Pattern;
-        public Material Material;
     }
 }

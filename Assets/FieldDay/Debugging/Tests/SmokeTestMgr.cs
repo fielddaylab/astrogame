@@ -1,4 +1,8 @@
-//#define FIELD_DAY_TESTS
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+#define DEVELOPMENT
+#endif // UNITY_EDITOR || DEVELOPMENT_BUILD
+
+#define FIELD_DAY_TESTS
 
 using BeauRoutine;
 using BeauUtil;
@@ -6,13 +10,17 @@ using BeauUtil.Debugger;
 using FieldDay.Audio;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reflection;
 using System.Text;
 using UnityEngine;
 
 namespace FieldDay.Debugging {
     static public class SmokeTestMgr {
 #if FIELD_DAY_TESTS
+        private const int MaxTests = 64;
+
         private enum SmokeTestState {
             Uninitialized,
             Queued,
@@ -55,7 +63,7 @@ namespace FieldDay.Debugging {
         static private readonly string[] CachedSmokeTestStateStrings = ReflectionCache.EnumInfo<SmokeTestState>().InspectorNames;
 
         static private Action s_Reset;
-        static private readonly RingBuffer<SmokeTestData> s_ScheduledTests = new RingBuffer<SmokeTestData>(64, RingBufferMode.Fixed);
+        static private readonly RingBuffer<SmokeTestData> s_ScheduledTests = new RingBuffer<SmokeTestData>(MaxTests, RingBufferMode.Fixed);
         static private Context s_CurrentTestContext;
         static private Routine s_CurrentTestRoutine;
         static private SmokeTestState s_TestState;
@@ -66,6 +74,7 @@ namespace FieldDay.Debugging {
         static private bool s_CrashHandlerRestoreState;
         static private bool s_DebugDrawRestoreState;
 
+        static private readonly RingBuffer<SmokeTestData> s_NamedSmokeTests = new RingBuffer<SmokeTestData>(MaxTests, RingBufferMode.Fixed);
 
         static private void BeginQueue() {
             s_TestState = SmokeTestState.Queued;
@@ -181,8 +190,6 @@ namespace FieldDay.Debugging {
                 s_LogAccumulator.Length = 0;
 
                 Sfx.StopAll();
-                Game.Processes.KillAll();
-                Game.Animation.CancelAll();
 
                 if (s_Reset != null) {
                     s_Reset();
@@ -288,7 +295,7 @@ namespace FieldDay.Debugging {
         /// Schedules a test to execute.
         /// </summary>
         [Conditional("FIELD_DAY_TESTS")]
-        static public void ScheduleTest(SmokeTestData testData) {
+        static public void ScheduleTest(in SmokeTestData testData) {
 #if FIELD_DAY_TESTS
             if (s_TestState == SmokeTestState.Uninitialized) {
                 BeginQueue();
@@ -297,7 +304,56 @@ namespace FieldDay.Debugging {
 #endif // FIELD_DAY_TESTS
         }
 
+        /// <summary>
+        /// Schedules a test to execute.
+        /// </summary>
+        [Conditional("FIELD_DAY_TESTS")]
+        static public void ScheduleTest(string testName) {
+#if FIELD_DAY_TESTS
+            Assert.NotNull(testName);
+            int existingTestIdx = s_NamedSmokeTests.FindIndex((a, b) => a.Name.Equals(b, StringComparison.Ordinal), testName);
+            Assert.True(existingTestIdx >= 0, "Smoke Test with name '{0}' not registered", testName);
+            ScheduleTest(s_NamedSmokeTests[existingTestIdx]);
+#endif // FIELD_DAY_TESTS
+        }
+
+        /// <summary>
+        /// Registers the given smoke test, to be later referenced by name.
+        /// </summary>
+        [Conditional("FIELD_DAY_TESTS")]
+        static public void RegisterTest(in SmokeTestData testData) {
+#if FIELD_DAY_TESTS
+            Assert.NotNull(testData.Name);
+            int existingTestIdx = s_NamedSmokeTests.FindIndex((a, b) => a.Name.Equals(b, StringComparison.Ordinal), testData.Name);
+            Assert.True(existingTestIdx < 0, "Smoke Test with name '{0}' already registered", testData.Name);
+            s_NamedSmokeTests.PushBack(testData);
+#endif // FIELD_DAY_TESTS
+        }
+
         #endregion // Public Api
+
+        #region Menu
+
+#if DEVELOPMENT && FIELD_DAY_TESTS
+
+        [EngineMenuFactory]
+        static private DMInfo CreateDebugMenu() {
+            DMInfo menu = new DMInfo("Smoke Tests", 64);
+            foreach(var testRegistration in Reflect.FindMethods<SmokeTestProviderAttribute>(ReflectionCache.UserAssemblies, System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.NonPublic, false)) {
+                MethodInfo m = testRegistration.Info;
+                if (m.ReturnParameter.ParameterType != typeof(void) || m.GetParameters().Length != 0) {
+                    UnityEngine.Debug.LogErrorFormat("[SmokeTestMgr] Method '{0}::{1}' does not match required signature of 'void func()'", m.DeclaringType.FullName, m.Name);
+                } else {
+                    m.Invoke(null, Array.Empty<object>());
+                }
+            }
+
+            return menu;
+        }
+
+#endif // DEVELOPMENT && FIELD_DAY_TESTS
+
+        #endregion // Menu
     }
 
     /// <summary>
@@ -321,6 +377,13 @@ namespace FieldDay.Debugging {
 
         IEnumerator LoadMainScene(string scenePath);
         IEnumerator LoadMainScene(SceneReference sceneReference);
+    }
+
+    /// <summary>
+    /// Method called to register smoke tests.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Method)]
+    public sealed class SmokeTestProviderAttribute : Attribute {
     }
 
     //public struct SmokeTestReport {

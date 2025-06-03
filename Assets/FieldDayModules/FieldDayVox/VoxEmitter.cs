@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay.Audio;
@@ -65,8 +66,26 @@ namespace FieldDay.Vox {
         /// Stops emitting from the given VoxEmitter.
         /// </summary>
         static public void Stop(VoxEmitter emitter) {
-            Assert.NotNull(emitter);
+            Assert.NotNullOrDestroyed(emitter);
             KillVoxRequest(ref emitter.RequestHandle);
+        }
+
+        /// <summary>
+        /// Returns the current request handle for the given emitter.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static public VoxRequestHandle CurrentRequest(VoxEmitter emitter) {
+            Assert.NotNullOrDestroyed(emitter);
+            return emitter.RequestHandle;
+        }
+
+        /// <summary>
+        /// Returns the current request handle for the given emitter.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static public StringHash32 CurrentLineCode(VoxEmitter emitter) {
+            Assert.NotNullOrDestroyed(emitter);
+            return GetLineCode(emitter.RequestHandle);
         }
     }
 }

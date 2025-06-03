@@ -10,18 +10,12 @@ using UnityEngine;
 
 namespace Astro {
     public sealed class BootSceneCtrl : MonoBehaviour {
-        public Transform Plane;
-        public Transform CameraToRotate;
         public AudioSource AudioSource;
         public SceneReference NextScene;
         public FadeGroup LoadingGroup;
         public FadeGroup PromptGroup;
-        public GuiFader FadeOut;
-
+        
         private void Awake() {
-            Plane.localEulerAngles = new Vector3(RNG.Instance.NextFloat(360), RNG.Instance.NextFloat(360), RNG.Instance.NextFloat(360));
-            FadeOut.Hide(0);
-
             Game.Scenes.QueueOnLoad(() => {
                 NativeInput.OnMouseDown += OnNativeClick;
                 LoadingGroup.Hide();
@@ -38,13 +32,7 @@ namespace Astro {
 
         private IEnumerator FinishedSequence() {
             yield return 0.2f;
-            FadeOut.Show(Color.black, 1);
-            yield return 1;
             Game.Scenes.LoadMainScene(NextScene);
-        }
-
-        private void LateUpdate() {
-            CameraToRotate.Rotate(0, -3 * Time.deltaTime, 0, Space.Self);
         }
     }
 }

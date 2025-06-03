@@ -15,6 +15,7 @@ namespace Astro {
         [Header("Objects To Activate")]
         public ActiveGroup Group;
         public bool AllowSlotSelection = true;
+        public LayerMask InputFilter = InputUtility.DefaultLayerMask;
 
         [Header("Links")]
         public SerializedHash32[] LinkGroups;
@@ -24,6 +25,7 @@ namespace Astro {
         public CastableEvent<ViewNode> OnLoad = new CastableEvent<ViewNode>();
         public CastableEvent<ViewNode> OnEnter = new CastableEvent<ViewNode>();
         public CastableEvent<ViewNode> OnExit = new CastableEvent<ViewNode>();
+        public CastableEvent<ViewNode> OnUnload = new CastableEvent<ViewNode>();
 
         void IRegistrationCallbacks.OnDeregister() {
             if (Game.IsShuttingDown) {
@@ -54,14 +56,20 @@ namespace Astro {
             node.Group.SetActive(true, false);
             if (invokeCallbacks) {
                 node.OnEnter.Invoke(node);
+                AstroGame.Events.Dispatch(Events.NodeEntered, EvtArgs.Ref(node));
             }
+
+            InputUtility.SetClickableMaskFilter(Find.State<InputState>(), node.InputFilter);
         }
 
         static public void DeactivateNode(ViewNode node, bool invokeCallbacks) {
             if (invokeCallbacks) {
                 node.OnExit.Invoke(node);
+                AstroGame.Events.Dispatch(Events.NodeExited, EvtArgs.Ref(node));
             }
             node.Group.SetActive(false, false);
+
+            InputUtility.SetClickableMaskFilter(Find.State<InputState>(), 0);
         }
 
         /// <summary>

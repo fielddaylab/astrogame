@@ -25,7 +25,7 @@ namespace Astro {
 
             float scale = 1;
 
-            if (ScriptUtility.CurrentCutscene.IsRunning() || input.ClickableLayerMask == 0 || Game.Input.AreRaycastsPaused()) {
+            if (ScriptUtility.CurrentCutscene.IsRunning() || input.AppliedLayerMask == 0 || Game.Input.AreRaycastsPaused()) {
                 scale = freeLook.CutsceneScale;
             }
 

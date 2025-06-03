@@ -9,6 +9,7 @@ using BeauUtil;
 using BeauUtil.Debugger;
 using BeauUtil.Tags;
 using BeauUtil.Variants;
+using FieldDay.Debugging;
 using FieldDay.Scenes;
 using FieldDay.SharedState;
 using FieldDay.Vox;
@@ -127,6 +128,15 @@ namespace FieldDay.Scripting {
             });
 
             Game.Scenes.QueueOnEnable(InitialMethodCache);
+
+            SmokeTestMgr.RegisterResetHandler(() => {
+                ScriptUtility.KillAllThreads();
+                CurrentHistoryBuffer.RecentlyViewedNodeIds.Clear();
+                foreach(var buff in CurrentHistoryBuffer.VisitedNodesMap) {
+                    buff.Clear();
+                }
+                SceneLocalTable.Clear();
+            });
         }
         // TODO: Figure out why this needs to be called later in the scene loading process
         // when in WebGL. Also why LoadStaticAsync is broken

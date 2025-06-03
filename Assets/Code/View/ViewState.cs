@@ -36,6 +36,13 @@ namespace Astro {
     }
 
     static public partial class ViewNavUtility {
+        static public class Events {
+            static public readonly StringHash32 NodeLoaded = "view-node:loaded";
+            static public readonly StringHash32 NodeUnloaded = "view-node:unloaded";
+            static public readonly StringHash32 NodeEntered = "view-node:entered";
+            static public readonly StringHash32 NodeExited = "view-node:exited";
+        }
+
         static public bool NoActiveTransitionRoutine(){
             ViewState state = Find.State<ViewState>();
             return !state.ActiveTransitionRoutine.Exists();
@@ -51,6 +58,7 @@ namespace Astro {
                 if (link.Clickable) {
                     link.Clickable.enabled = false;
                 }
+                link.OnActiveStateChanged.Invoke(link, false);
             }
             state.ActiveNodeLinkGroups.Clear();
         }
@@ -146,6 +154,11 @@ namespace Astro {
             state.ActiveNode = null;
 
             oldNode.OnExit.Invoke(oldNode);
+            AstroGame.Events.Dispatch(Events.NodeExited, EvtArgs.Ref(oldNode));
+
+            oldNode.OnUnload.Invoke(oldNode);
+            AstroGame.Events.Dispatch(Events.NodeUnloaded, EvtArgs.Ref(oldNode));
+
             DeactivateNode(oldNode, false);
         }
 
@@ -176,6 +189,7 @@ namespace Astro {
 
             if (oldNode) {
                 oldNode.OnExit.Invoke(oldNode);
+                AstroGame.Events.Dispatch(Events.NodeExited, EvtArgs.Ref(oldNode));
             }
             
             nextNode.OnTransitionQueued.Invoke(new ViewTransitionArgs() {
@@ -185,12 +199,16 @@ namespace Astro {
             });
 
             nextNode.OnLoad.Invoke(nextNode);
+            AstroGame.Events.Dispatch(Events.NodeLoaded, EvtArgs.Ref(nextNode));
 
             yield return cameraTransition;
 
             if (oldNode) {
+                oldNode.OnUnload.Invoke(oldNode);
+                AstroGame.Events.Dispatch(Events.NodeUnloaded, EvtArgs.Ref(oldNode));
                 DeactivateNode(oldNode, false);
             }
+            
             ActivateNode(nextNode, true);
             UpdateActiveLinks(state);
             InputUtility.SetInputEnabled(inputState, cachedState);
@@ -206,12 +224,18 @@ namespace Astro {
 
             if (oldNode) {
                 oldNode.OnExit.Invoke(oldNode);
+                AstroGame.Events.Dispatch(Events.NodeExited, EvtArgs.Ref(oldNode));
             }
+
             nextNode.OnLoad.Invoke(nextNode);
+            AstroGame.Events.Dispatch(Events.NodeLoaded, EvtArgs.Ref(nextNode));
 
             if (oldNode) {
+                oldNode.OnUnload.Invoke(oldNode);
+                AstroGame.Events.Dispatch(Events.NodeUnloaded, EvtArgs.Ref(oldNode));
                 DeactivateNode(oldNode, false);
             }
+
             ActivateNode(nextNode, true);
             UpdateActiveLinks(state);
         }

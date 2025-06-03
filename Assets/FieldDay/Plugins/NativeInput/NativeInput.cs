@@ -193,7 +193,9 @@ namespace NativeUtils
                 handler.OnNativePointerClick(ExecuteEvents.ValidateEventData<PointerEventData>(evtData));
             };
 
-            #endregion // Event System
+        
         }
+
+        #endregion // Event System
     }
 }

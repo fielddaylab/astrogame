@@ -103,6 +103,7 @@ var NativeWebInputLib = {
      * @param {Function} callbackDown
      * @param {Function} callbackUp
      */
+    NativeWebInput_RegisterClick__sig: 'vii',
     NativeWebInput_RegisterClick: function(callbackDown, callbackUp) {
         NWICache.nativeMouseDownCallback = callbackDown;
         NWICache.nativeMouseUpCallback = callbackUp;
@@ -119,7 +120,8 @@ var NativeWebInputLib = {
     /**
      * Deregisters the native click callback.
      */
-    NativeWebInput_DeregisterClick: function() {
+    NativeWebInput_DeregisterClick__sig: 'v',
+    NativeWebInput_DeregisterClick: function () {
         NWICache.nativeMouseDownCallback = null;
         NWICache.nativeMouseUpCallback = null;
 
@@ -136,7 +138,8 @@ var NativeWebInputLib = {
      * Registers the native keyboard callback.
      * @param {Function} callback 
      */
-     NativeWebInput_RegisterKeyboard: function(callback) {
+    NativeWebInput_RegisterKeyboard__sig: 'vi',
+    NativeWebInput_RegisterKeyboard: function(callback) {
         NWICache.nativeKeyboardCallback = callback;
 
         var canvasElement = document.getElementById("#canvas") || document.getElementById("unity-canvas");
@@ -148,7 +151,8 @@ var NativeWebInputLib = {
     /**
      * Deregisters the native keyboard callback. 
      */
-    NativeWebInput_DeregisterKeyboard: function(callback) {
+    NativeWebInput_DeregisterKeyboard__sig: 'v',
+    NativeWebInput_DeregisterKeyboard: function() {
         NWICache.nativeKeyboardCallback = null;
 
         var canvasElement = document.getElementById("#canvas") || document.getElementById("unity-canvas");

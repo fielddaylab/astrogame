@@ -9,9 +9,10 @@ using FieldDay.Vox;
 using BeauRoutine;
 using BeauUtil;
 using UnityEngine.UI;
+using Astro.Audio;
 
 namespace Astro {
-    public class SubtitleDisplay : SharedRoutinePanel, IRegistrationCallbacks {
+    public class SubtitleDisplay : SharedRoutinePanel, IRegistrationCallbacks, IOnGuiUpdate {
         [Serializable]
         public struct CharacterColorScheme {
             public SerializedHash32 Id;
@@ -31,6 +32,9 @@ namespace Astro {
         #endregion // Inspector
 
         [NonSerialized] private SubtitleDisplayData m_CurrentDisplayData;
+        [NonSerialized] private VoxWaveform m_CurrentWaveform;
+        [NonSerialized] private bool m_UpdateRegistered;
+
         private Routine m_BounceAnim;
 
         #region IRegistrationCallbacks
@@ -70,6 +74,7 @@ namespace Astro {
             }
 
             m_CurrentDisplayData = default;
+            m_CurrentWaveform = default;
             Hide(0.5f);
         }
 
@@ -88,6 +93,9 @@ namespace Astro {
 
             m_Text.color = palette.Content;
             m_Background.SetColor(palette.Background);
+
+            VoxWaveformTable table = Find.NamedAsset<VoxWaveformTable>("VoxTable");
+            table.TryFind(VoxUtility.GetLineCode(data.VoxHandle), out m_CurrentWaveform);
         }
 
         #region Animation
@@ -131,8 +139,29 @@ namespace Astro {
             return m_LayoutOffset.Offset0To(new Vector2(0, 0), 0.25f).Ease(Curve.BackOut);
         }
 
+        protected override void OnShow(bool inbInstant) {
+            if (!m_UpdateRegistered) {
+                Game.Gui.RegisterUpdate(this);
+                m_UpdateRegistered = true;
+            }
+        }
+
         protected override void OnHideComplete(bool inbInstant) {
             m_Text.SetText(string.Empty);
+            if (m_UpdateRegistered) {
+                Game.Gui?.DeregisterUpdate(this);
+                m_UpdateRegistered = false;
+            }
+        }
+
+        void IOnGuiUpdate.OnGuiUpdate() {
+            //if (m_CurrentWaveform.Chunks.Length > 0 && VoxUtility.IsPlaying(m_CurrentDisplayData.VoxHandle)) {
+            //    float time = VoxUtility.GetPlaybackPosition(m_CurrentDisplayData.VoxHandle);
+            //    float duration = VoxUtility.GetDuration(m_CurrentDisplayData.VoxHandle);
+            //    float amp = VoxWaveform.ReadAmplitude(m_CurrentWaveform, time, duration);
+            //    Debug.Log(amp);
+            //    m_Text.rectTransform.SetScale(1 + amp, Axis.Y);
+            //}
         }
 
         #endregion // Animation

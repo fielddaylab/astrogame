@@ -1,4 +1,5 @@
 using System;
+using BeauUtil;
 using FieldDay;
 using FieldDay.SharedState;
 using UnityEngine;
@@ -8,7 +9,10 @@ namespace Astro {
     public class InputState : SharedStateComponent, IRegistrationCallbacks {
         public bool InputEnabled = true;
         public PhysicsRaycaster Raycaster;
-        [NonSerialized] public int ClickableLayerMask;
+
+        [NonSerialized] public int DesiredLayerMask;
+        [NonSerialized] public int LayerMaskFilter = Bits.All32;
+        [NonSerialized] public int AppliedLayerMask;
 
         public void OnDeregister() {
         }
@@ -19,6 +23,8 @@ namespace Astro {
     }
 
     public static class InputUtility {
+        public const int DefaultLayerMask = LayerMasks.LabInteract_Mask | LayerMasks.DocumentInteract_Mask | LayerMasks.ReferenceInteract_Mask | LayerMasks.InstrumentInteract_Mask;
+
         public static void SetInputEnabled(InputState state, bool enabled) {
             state.InputEnabled = enabled;
             SpaceCameraUtility.SetCameraInputEnabled(enabled);
@@ -30,13 +36,21 @@ namespace Astro {
         }
 
         public static void SetClickableMaskDefault(InputState state) {
-            state.ClickableLayerMask = LayerMasks.LabInteract_Mask | LayerMasks.DocumentInteract_Mask | LayerMasks.ReferenceInteract_Mask;
-            state.Raycaster.eventMask = state.ClickableLayerMask;
+            state.DesiredLayerMask = DefaultLayerMask;
+            state.AppliedLayerMask = state.DesiredLayerMask & state.LayerMaskFilter;
+            state.Raycaster.eventMask = state.AppliedLayerMask;
         }
 
         public static void SetClickableMaskTopLayer(InputState state) {
-            state.ClickableLayerMask = LayerMasks.TopLayer_Mask;
-            state.Raycaster.eventMask = state.ClickableLayerMask;
+            state.DesiredLayerMask = LayerMasks.TopLayer_Mask;
+            state.AppliedLayerMask = LayerMasks.TopLayer_Mask | (state.DesiredLayerMask & state.LayerMaskFilter);
+            state.Raycaster.eventMask = state.AppliedLayerMask;
+        }
+
+        public static void SetClickableMaskFilter(InputState state, LayerMask filter) {
+            state.LayerMaskFilter = filter;
+            state.AppliedLayerMask = (LayerMasks.TopLayer_Mask & state.DesiredLayerMask) | (state.DesiredLayerMask & state.LayerMaskFilter);
+            state.Raycaster.eventMask = state.AppliedLayerMask;
         }
 
     }

@@ -25,8 +25,10 @@ namespace FieldDay.Scripting {
         public ScriptNodeCooldown RepeatPeriod;
         public ScriptNodeMemoryScope PersistenceScope;
         public float SelectionWeight = 1;
+
         [BlockMeta("tag")] public StringHash32 Tag;
         [BlockMeta("group")] public StringHash32 Group;
+        [BlockMeta("preloadOrder")] public int PreloadOrder;
 
         public ScriptNode(string fullName, ScriptNodePackage package) : base(fullName, package) {
             FullName = fullName;
