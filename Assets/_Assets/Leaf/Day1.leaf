@@ -204,15 +204,17 @@ $set temp:waitingForManualOpen = false
 $call SetInputState(false)
 $call SubtitleController->SetSubtitlePosition(0.5, 1, 0, -140)
 $call MoveToView("Right")
+$call SetGuideHighlight(false)
+
 {@Radio} Do you see your photometer in the equipment stack? That should tell you what the apparent magnitude of the star is. $[Radio/L1/l1_r_20]
 {@Radio} All you need to do is find that number in your reference guide and submit the data. $[Radio/L1/l1_r_21]
 {@Radio} Another coalition astronomer will verify your classification. $[Radio/L1/l1_r_18]
-$goto .PostIntroRefGuideOpened
+$branch .PostIntroRefGuideOpened
 
 :: PostIntroRefGuideOpened
 $call SetInputState(true)
 $call Wait(1)
-$goto .ResetSubtitlePosition
+$branch .ResetSubtitlePosition
 
 :: OnRefGuideOpened
 @trigger    OnRefGuideOpened
@@ -238,8 +240,9 @@ $if temp:guideOpen
 $endif
 
 $call LockMonitorFocus()
+$call SetGuideHighlight(true)
+
 {@Radio} Great! See if you can find Elijah’s operator manual. It's a small, spiral bound notebook. $[Radio/L1/l1_r_19]
-$call Wait(1)
 
 :: PlayerLeavesNeutrinoTask
 @trigger    OnLeaveNeutrinoRegion

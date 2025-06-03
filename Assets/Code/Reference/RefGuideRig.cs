@@ -5,6 +5,7 @@ using FieldDay;
 using FieldDay.Debugging;
 using FieldDay.Scenes;
 using FieldDay.SharedState;
+using Leaf.Runtime;
 using UnityEngine;
 
 namespace Astro.Reference {
@@ -45,11 +46,25 @@ namespace Astro.Reference {
         [Header("Lighting")]
         public Light OpenLight;
 
+        [Header("Materials")]
+        public MeshRenderer BaseMesh;
+        public MeshRenderer CoverMesh;
+
+        [HideInInspector] public Material DefaultBaseMaterial;
+        [HideInInspector] public Material DefaultCoverMaterial;
+
+        public Material HighlightMaterial;
+
         [Header("Selection")]
         public RefGuideControlPage[] ControlPages;
         public ActiveGroup PageControls;
         public Transform SelectionPool;
         public Transform CheckboxPool;
+
+        private void Awake() {
+            DefaultBaseMaterial = BaseMesh.material; 
+            DefaultCoverMaterial = CoverMesh.material; 
+        }
 
         IEnumerator<WorkSlicer.Result?> IScenePreload.Preload() {
             ReferenceUtility.SetGuideOpenVisibility(this, false);
@@ -65,16 +80,33 @@ namespace Astro.Reference {
     }
 
     static public partial class ReferenceUtility {
-        static public void SetGuideOpenVisibility(RefGuideRig rig, bool isOpen) {
-            foreach(var tab in rig.TopTabs.Bookmarks) {
+        [LeafMember("SetGuideHighlight")]
+        static public void LeafSetGuideHighlight(bool value = false) {
+            RefGuideRig rig = Find.State<RefGuideRig>();
+            
+            if (value) {
+                rig.BaseMesh.material = rig.HighlightMaterial;
+                rig.CoverMesh.material = rig.HighlightMaterial;
+            } else {
+                rig.BaseMesh.material = rig.DefaultBaseMaterial;
+                rig.CoverMesh.material = rig.DefaultCoverMaterial;
+            }
+        }
+        
+        static public void SetGuideOpenVisibility(RefGuideRig rig, bool isOpen)
+        {
+            foreach (var tab in rig.TopTabs.Bookmarks)
+            {
                 tab.Contents.SetActive(isOpen);
             }
 
             rig.OpenRenderers.SetActive(isOpen);
             rig.OpenLight.enabled = isOpen;
 
-            if (!isOpen) {
-                for (int i = 0; i < rig.SelectionPool.childCount; i++) {
+            if (!isOpen)
+            {
+                for (int i = 0; i < rig.SelectionPool.childCount; i++)
+                {
                     GameObject child = rig.SelectionPool.GetChild(i).gameObject;
                     child.SetActive(false);
                 }
