@@ -256,6 +256,13 @@ $call SetGuideHighlight(true)
 
 {@Radio} Looks like you’re drifting away from the cluster. $[Radio/L1/l1_r_24]
 
+:: ValidKnowledgeSubmission
+@trigger    OnValidKnowledgeSubmission
+@cutscene
+@interrupt
+
+{@Radio} Thanks for adding that data. Please return to the neutrino zone. $[Radio/L1/l1_r_35]
+
 :: IncorrectSubmission
 @trigger    OnIncorrectOpenIdSubmission
 

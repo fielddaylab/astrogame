@@ -259,6 +259,7 @@ $call SetInputState(true)
 $set temp:waitingForBlueFilter = false
 $call OpenRefGuidePage(SpectralClass)
 
+{@Radio} The temperature is calculated when you have both the visible light and the blue wavelength. $[Radio/L2/l2_r_16]
 {@Radio} Now you just need to use that temperature to look up the spectral type in your reference guide. $[Radio/L2/l2_r_08]
 {@Radio} Look up the spectral type in your manual, and submit the data. $[Radio/L2/l2_r_10]
 
