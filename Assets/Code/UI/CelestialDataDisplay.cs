@@ -31,29 +31,39 @@ namespace Astro {
         [Header("Data Requirement Hint")]
         public GameObject DataRequirmentHint;
         public TextMeshProUGUI HintDisplayText;
+
+        private void Awake() {
+            HideCelestialDataDisplay();
+            HideClearancePointDisplay();
+        }
         
         protected override void OnEnable() {
             Game.Events.Register(GameEvents.ValidOpenIdSubmission, CelestialDataDisplayUtil.PlayClearancePointAnimation);
             Game.Events.Register(GameEvents.ValidKnowledgeSubmission, CelestialDataDisplayUtil.UpdateCurrentDataDisplay);
             Game.Events.Register(GameEvents.UnacceptedOpenIdSubmission, CelestialDataDisplayUtil.UpdateCurrentDataDisplay);
-            Game.Scenes.QueueOnLoad(() => {
+            Game.Scenes.QueueOnLoad(() =>
+            {
                 Find.State<FocusState>().OnFocusUpdated.Register(CelestialDataDisplayUtil.OnFocusUpdated);
 
                 // Set the number of pips in our clearance level display
                 DayConfigAsset config = DayConfigUtil.GetConfigForState();
 
                 int i = 0;
-                foreach (RectTransform transform in PointsRowTransform) {
+                foreach (RectTransform transform in PointsRowTransform)
+                {
                     if (transform == PointsRowTransform) continue;
 
-                    if (i >= config.NumNeutrinoPoints) {
+                    if (i >= config.NumNeutrinoPoints)
+                    {
                         transform.gameObject.SetActive(false);
-                    } else {
+                    }
+                    else
+                    {
                         transform.gameObject.SetActive(true);
                     }
                     i++;
                 }
-                });
+            });
 
             NumRevealedRows = 0;
             base.OnEnable();
@@ -107,13 +117,19 @@ namespace Astro {
             );
         }
 
+        public void HideClearancePointDisplay() {
+            RectTransform PanelRoot = ClearancePointsPanel.GetComponent<RectTransform>();
+            PanelRoot.anchoredPosition = new Vector2(PanelRoot.anchoredPosition.x, 75);
+            ClearancePointsPanel.alpha = 0f;
+        }
+
         public IEnumerator AddPointToClearancePointDisplay(int pointIndex) {
             // Point pips are set up such that they have 2 images
             // Child 0 is the full point pip and Child 1 is the outline
             var PointPip = PointsRowTransform.GetChild(pointIndex);
 
             Image FullPip = PointPip.GetChild(0).GetComponent<Image>();
-            yield return Tween.Value(0f, 1f, (f) => { FullPip.SetAlpha(f); }, Mathf.Lerp, 0.3f); 
+            yield return Tween.Value(0f, 1f, (f) => { FullPip.SetAlpha(f); }, Mathf.Lerp, 0.3f);
         }
 
         private Action clearDataDisplay;
