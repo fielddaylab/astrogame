@@ -12,6 +12,7 @@ using FieldDay.SharedState;
 using System.Text;
 using BeauPools;
 using BeauUtil.Debugger;
+using UnityEngine.UI;
 
 namespace Astro {
     public class CelestialDataDisplay : SharedStateComponent, IRegistrationCallbacks {
@@ -23,26 +24,46 @@ namespace Astro {
         public RectTransform RowGroupTransform;
         [HideInInspector] public int NumRevealedRows;
 
+        [Header("Clearance Points Panel")]
+        public CanvasGroup ClearancePointsPanel;
+        public RectTransform PointsRowTransform;
+
         [Header("Data Requirement Hint")]
         public GameObject DataRequirmentHint;
         public TextMeshProUGUI HintDisplayText;
-
+        
         protected override void OnEnable() {
-            Game.Events.Register(GameEvents.ValidOpenIdSubmission, CelestialDataDisplayUtil.UpdateCurrentDataDisplay);
+            Game.Events.Register(GameEvents.ValidOpenIdSubmission, CelestialDataDisplayUtil.PlayClearancePointAnimation);
             Game.Events.Register(GameEvents.ValidKnowledgeSubmission, CelestialDataDisplayUtil.UpdateCurrentDataDisplay);
             Game.Events.Register(GameEvents.UnacceptedOpenIdSubmission, CelestialDataDisplayUtil.UpdateCurrentDataDisplay);
             Game.Scenes.QueueOnLoad(() => {
                 Find.State<FocusState>().OnFocusUpdated.Register(CelestialDataDisplayUtil.OnFocusUpdated);
-            }); 
+
+                // Set the number of pips in our clearance level display
+                DayConfigAsset config = DayConfigUtil.GetConfigForState();
+
+                int i = 0;
+                foreach (RectTransform transform in PointsRowTransform) {
+                    if (transform == PointsRowTransform) continue;
+
+                    if (i >= config.NumNeutrinoPoints) {
+                        transform.gameObject.SetActive(false);
+                    } else {
+                        transform.gameObject.SetActive(true);
+                    }
+                    i++;
+                }
+                });
 
             NumRevealedRows = 0;
             base.OnEnable();
         }
 
-        public IEnumerator RevealCelestialDataDisplay() {
+        public IEnumerator RevealCelestialDataDisplay()
+        {
             DataDisplayPanel.alpha = 0;
             yield return Tween.Value(0f, 1f, (f) => { DataDisplayPanel.alpha = f; }, Mathf.Lerp, 0.2f);
-            DataPanelActive = true;       
+            DataPanelActive = true;
         }
 
         public IEnumerator FadeOutCelestialDataDisplay() {
@@ -56,15 +77,59 @@ namespace Astro {
             DataPanelActive = false;
         }
 
-        public void OnRegister() {
-            Game.Events.Register(GameEvents.MonitorEmptySpaceClicked, () => {
+        public IEnumerator RevealClearancePointDisplay() {
+            RectTransform PanelRoot = ClearancePointsPanel.GetComponent<RectTransform>();
+
+            float startPosY = 75f;
+            float endPosY = -30f;
+
+            PanelRoot.anchoredPosition = new Vector2(PanelRoot.anchoredPosition.x, startPosY);
+            ClearancePointsPanel.alpha = 0;
+
+            yield return Routine.Combine(
+                Tween.Value(0f, 1f, (f) => { ClearancePointsPanel.alpha = f; }, Mathf.Lerp, 0.2f),
+                Tween.Value(startPosY, endPosY, (f) => { PanelRoot.anchoredPosition = new Vector2(PanelRoot.anchoredPosition.x, f); }, Mathf.Lerp, 0.3f).Ease(Curve.QuadInOut)
+            );
+        }
+
+        public IEnumerator RemoveClearancePointDisplay() {
+            RectTransform PanelRoot = ClearancePointsPanel.GetComponent<RectTransform>();
+
+            float startPosY = -30f;
+            float endPosY = 75;
+
+            PanelRoot.anchoredPosition = new Vector2(PanelRoot.anchoredPosition.x, startPosY);
+            ClearancePointsPanel.alpha = 1f;
+
+            yield return Routine.Combine(
+                Tween.Value(1f, 0f, (f) => { ClearancePointsPanel.alpha = f; }, Mathf.Lerp, 0.2f),
+                Tween.Value(startPosY, endPosY, (f) => { PanelRoot.anchoredPosition = new Vector2(PanelRoot.anchoredPosition.x, f); }, Mathf.Lerp, 0.3f).Ease(Curve.QuadInOut)
+            );
+        }
+
+        public IEnumerator AddPointToClearancePointDisplay(int pointIndex) {
+            // Point pips are set up such that they have 2 images
+            // Child 0 is the full point pip and Child 1 is the outline
+            var PointPip = PointsRowTransform.GetChild(pointIndex);
+
+            Image FullPip = PointPip.GetChild(0).GetComponent<Image>();
+            yield return Tween.Value(0f, 1f, (f) => { FullPip.SetAlpha(f); }, Mathf.Lerp, 0.3f); 
+        }
+
+        private Action clearDataDisplay;
+
+        public void OnRegister() { 
+            clearDataDisplay = () => {
                 if (Find.State<FocusState>().MonitorInputActive) {
                     CelestialDataDisplayUtil.OnFocusUpdated(null);
                 }
-            });
+            };
+
+            Game.Events.Register(GameEvents.MonitorEmptySpaceClicked, clearDataDisplay);
         }
 
         public void OnDeregister() {
+            Game.Events.Deregister(GameEvents.MonitorEmptySpaceClicked, clearDataDisplay);
         }
 
     }
@@ -72,29 +137,19 @@ namespace Astro {
     public static class CelestialDataDisplayUtil {
         private static void RevealDataHint(CelestialDataDisplay display, CelestialAsset asset) {
             DayConfigAsset config = DayConfigUtil.GetConfigForState();
-            using (PooledStringBuilder psb = PooledStringBuilder.Create())
-            {
-
-                if (config.AcceptedIDSubmissions.HasFlag(ClassificationTypeMask.Photometer) && !HasIdentifiedDataType(ClassificationTypeMask.Photometer, asset))
-                {
+            using (PooledStringBuilder psb = PooledStringBuilder.Create()) {
+                if (config.AcceptedIDSubmissions.HasFlag(ClassificationTypeMask.Photometer) && !HasIdentifiedDataType(ClassificationTypeMask.Photometer, asset)) {
                     psb.Builder.Append("BRIGHTNESS, ");
                 }
-                if (config.AcceptedIDSubmissions.HasFlag(ClassificationTypeMask.ColorMeter) && !HasIdentifiedDataType(ClassificationTypeMask.ColorMeter, asset))
-                {
+                if (config.AcceptedIDSubmissions.HasFlag(ClassificationTypeMask.ColorMeter) && !HasIdentifiedDataType(ClassificationTypeMask.ColorMeter, asset)) {
                     psb.Builder.Append("SPECTRAL-TYPE, ");
                 }
-                if (config.AcceptedIDSubmissions.HasFlag(ClassificationTypeMask.Spectrometer) && !HasIdentifiedDataType(ClassificationTypeMask.Spectrometer, asset))
-                {
+                if (config.AcceptedIDSubmissions.HasFlag(ClassificationTypeMask.Spectrometer) && !HasIdentifiedDataType(ClassificationTypeMask.Spectrometer, asset)) {
                     psb.Builder.Append("ELEMENTS, ");
                 }
-                if (config.AcceptedIDSubmissions.HasFlag(ClassificationTypeMask.Luminosity) && !HasIdentifiedDataType(ClassificationTypeMask.Luminosity, asset))
-                {
+                if (config.AcceptedIDSubmissions.HasFlag(ClassificationTypeMask.Luminosity) && !HasIdentifiedDataType(ClassificationTypeMask.Luminosity, asset)) {
                     psb.Builder.Append("LUMINOSITY, ");
                 }
-                // if (config.AcceptedIDSubmissions.HasFlag(ClassificationTypeMask.Infrared) && !HasIdentifiedDataType(ClassificationTypeMask.Infrared, asset))
-                // {
-                //     psb.Builder.Append("SPECTRAL-TYPE, ");
-                // }
                 Assert.True(psb.Builder.Length >= 2);
 
                 psb.Builder.Length -= 2;
@@ -162,15 +217,30 @@ namespace Astro {
             }
         }
 
+        public static void PlayClearancePointAnimation() {
+            CelestialDataDisplay display = Find.State<CelestialDataDisplay>();
+            PlayerPointsState points = Find.State<PlayerPointsState>();
+
+            display.AnimRoutine = Routine.Start(display,
+                Sequence.Create(display.RevealClearancePointDisplay())
+                .Wait(0.2f)
+                .Then(display.AddPointToClearancePointDisplay(points.SciencePoints - 1))
+                .Wait(1.5f)
+                .Then(display.RemoveClearancePointDisplay())
+                .Wait(0.3f)
+                .Then(() => UpdateCurrentDataDisplay())
+            );
+        }
+
         public static void UpdateCurrentDataDisplay() {
             CelestialDataDisplay display = Find.State<CelestialDataDisplay>();
-            var focus = Find.State<FocusState>().CurrentFocus; 
+            var focus = Find.State<FocusState>().CurrentFocus;
 
             if (focus == null) return;
 
             UpdateDataDisplay(display, focus.TargetData);
             if (!display.DataPanelActive) {
-                display.AnimRoutine = Routine.Start( display.RevealCelestialDataDisplay() );
+                display.AnimRoutine = Routine.Start(display.RevealCelestialDataDisplay());
             }
 
             // Check if we need to submit data for neutrino event
@@ -180,7 +250,7 @@ namespace Astro {
             bool targetInNeutrinoEvent = NeutrinoEventUtil.IsAssetInNeutrinoEvent(focus.TargetData);
             if (!hasIdentifiedNeutrinoType && targetInNeutrinoEvent) {
                 RevealDataHint(display, focus.TargetData);
-            } else { 
+            } else {
                 display.DataRequirmentHint.SetActive(false);
             }
         }

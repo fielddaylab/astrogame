@@ -4,7 +4,6 @@ using FieldDay;
 using FieldDay.Assets;
 using Leaf;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Astro {
     [CreateAssetMenu(menuName = "AstroGame/Day Config")] 
@@ -15,6 +14,8 @@ namespace Astro {
 
         public ConsoleTextAsset DayPuzzlePrelude;
         public PuzzleAsset DayPuzzle;
+        [Tooltip("Controls how many points are displayed on the clearance modal")][Range(1,7)]
+        public int NumNeutrinoPoints;
         public NeutrinoConfigAsset NeutrinoEvent;
         public ClassificationTypeMask AcceptedIDSubmissions = ClassificationTypeMask.ALL;
         public RadioChannelSet RadioChannels;

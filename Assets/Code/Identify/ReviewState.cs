@@ -158,7 +158,7 @@ namespace Astro {
             if (state.SciencePoints != newPoints) {
                 state.SciencePoints = newPoints;
                 OnPointsUpdated.Invoke(newPoints);
-                UpdatePointDisplay(Find.State<ReviewState>().ReviewModule, state);
+                // UpdatePointDisplay(Find.State<ReviewState>().ReviewModule, state);
             }
         }
 

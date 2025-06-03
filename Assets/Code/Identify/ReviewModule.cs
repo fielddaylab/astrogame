@@ -34,9 +34,9 @@ namespace Astro {
     }
 
     public static partial class ReviewUtility {
-        public static void UpdatePointDisplay(ReviewModule reviewModule, PlayerPointsState points) {
-            reviewModule.PointsDisplay.SetText(points.SciencePoints.ToStringLookup());
-        }
+        // public static void UpdatePointDisplay(ReviewModule reviewModule, PlayerPointsState points) {
+        //     reviewModule.PointsDisplay.SetText(points.SciencePoints.ToStringLookup());
+        // }
 
         public static IEnumerator PuzzleCorrectSubmissionRoutine(ReviewModule reviewModule, ReviewState reviewState, float duration) {
             ShowResultSprite(true, reviewState);
