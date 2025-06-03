@@ -74,9 +74,20 @@ namespace Astro {
             if (buttonMask == selectedMask) {
                 LabButtonUtility.SetDown(button, playSfx);
                 button.Collider.enabled = false;
+
+                // Update indicators
+                Material[] indicatorMats = button.GetComponent<WavelengthToggleButton>().Indicator.materials;
+                indicatorMats[1] = Find.State<WavelengthToggleState>().LitIndicatorMaterial;
+                button.GetComponent<WavelengthToggleButton>().Indicator.materials = indicatorMats;
+
             } else {
                 LabButtonUtility.SetUp(button, false);
                 button.Collider.enabled = true;
+
+                // Update indicators
+                Material[] indicatorMats = button.GetComponent<WavelengthToggleButton>().Indicator.materials;
+                indicatorMats[1] = Find.State<WavelengthToggleState>().UnlitIndicatorMaterial;
+                button.GetComponent<WavelengthToggleButton>().Indicator.materials = indicatorMats;
             }
         }
     }

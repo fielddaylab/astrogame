@@ -8,5 +8,6 @@ namespace Astro {
     [RequireComponent(typeof(LabButton))]
     public sealed class WavelengthToggleButton : BatchedComponent {
         public CelestialObjectVisMask Mask = CelestialObjectVisMask.Visible;
+        public MeshRenderer Indicator;
     }
 }

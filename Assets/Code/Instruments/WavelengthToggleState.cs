@@ -15,6 +15,9 @@ namespace Astro {
         public Material VisibleMaterial;
         public Material BlueMaterial;
         [FormerlySerializedAs("RadioMaterial")] public Material InfraredMaterial;
+ 
+        public Material LitIndicatorMaterial;
+        public Material UnlitIndicatorMaterial;
 
         [Header("Horizon")]
         public Material HorizonPlaneVisibleMaterial;
