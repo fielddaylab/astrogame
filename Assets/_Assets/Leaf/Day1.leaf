@@ -492,7 +492,7 @@ $set temp:waitingForFillAppMag = true
 $call AddIsolatedSlot(ApparentMagnitude)
 $call HintModals->Hide("AtikCell", 0.2)
 
-{@Astrid} Now all I have to do is load in data from the photometer.
+{@Astrid} Now all I have to do is load in data from the photometer. $[Astrid/L1/l1_a_t23]
 
 
 :: AstridThatsNotThePhotometer
@@ -654,7 +654,8 @@ $set temp:BrightestBlueHintVisible = true
 $set temp:waitingForSelectAlgol = true
 $call HintModals->SlideInFromRight("BrightestBlue", 0.4)
 
-{@Astrid} What else do the clues on the monitor say? It looks like Algol is the brightest star in Blue... which of these stars is the brightest in blue?
+{@Astrid} What else do the clues on the monitor say? It looks like Algol is the brightest star in Blue. $[Astrid/L1/l1_a_t24]
+{@Astrid} Which of these stars is the brightest in blue? $[Astrid/L1/l1_a_t25]
 
 :: SecondPuzzleStarSelected
 @trigger   OnStarSelected

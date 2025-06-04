@@ -146,13 +146,13 @@ $set temp:DocOnboardHintVisible = true
 @trigger    DocumentPuzzlePromptStart
 @when   answerId == "CouplePhoto"
 
-{@Astrid} I wish you were here Elijah.
+{@Astrid} I wish you were here Elijah. $[Astrid/L2/l2_a_t04]
 
 :: IncorrectDocumentResponse4
 @trigger    DocumentPuzzlePromptStart
 @when   answerId == "HerculesPostcard"
 
-{@Astrid} He says he is working on some project to upgrade all the CERES stations around the Midwest...
+{@Astrid} He says he is working on some project to upgrade all the CERES stations around the Midwest... $[Astrid/L2/l2_a_t03]
 
 :: CorrectDocumentResponse
 @trigger    DocumentPuzzlePromptStart
@@ -412,6 +412,7 @@ $set temp:d3PostcardRead = true
 // {@Astrid} I feel pretty safe up here at the edge of nowhere. It would be nice if I wasn't totally alone. $[Astrid/L2/l2_a_41] 
 {@Astrid} Maybe I could write to the newspaper and tell people what’s happening? $[Astrid/L2/l2_a_42]
 {@Astrid} (*sigh*) But I guess I would need to know what is actually happening. $[Astrid/L2/l2_a_43]
+{@Astrid} To whom it may concern, my missing boyfriend says the sky is falling.' Yeah right... $[Astrid/L3/l3_a_43]
 {@Astrid} When and where is this meteor storm coming? $[Astrid/L2/l2_a_44]
 // {@Astrid} Elijah! What have you gotten us into? $[Astrid/L2/l2_a_45]
 $goto .1833Read

@@ -29,6 +29,8 @@ $call SetInputState(false)
 $call SpawnDocumentToCamera("Day4ElijahPostcard")
 $call SetInputState(true)
 
+{@Astrid} Draco! One of my favorite Constellations. $[Astrid/L4/l4d_a_05]
+
 :: Day4ElijahPostcard
 @trigger    DocumentInspectFlip
 @when   documentId == "Day4ElijahPostcard"
@@ -37,12 +39,8 @@ $call SetInputState(true)
 
 $call SetInputState(true)
 $call EnableDocumentClose("Day4ElijahPostcard", true, true)
-
-{@Astrid} Wait.... World’s End is a garden? $[Astrid/L4/l4_a_01]
-{@Astrid} This painting is incredible. Elijah is so talented. $[Astrid/L4/l4_a_02] 
-{@Astrid} Maybe he shoulda been a painter instead of a rogue astronomer... $[Astrid/L4/l4_a_02b]
-{@Astrid} So World's End  must be what Elijah calls his station! World’s End - like the garden of the golden apples from the Hercules myths. $[Astrid/L4/l4_a_03]
-{@Astrid} It’s not about the world ending. It’s about, searching for the stars. $[Astrid/L4/l4_a_04] 
+{@Astrid} He's updated the technology at nine stations… that means he’ll be home soon! $[Astrid/L4/l4d_a_06]
+{@Astrid} But—<i>the blue light</i>—what is he talking about? $[Astrid/L4/l4d_a_07]
 
 :: SpawnDoc2
 @trigger    DocumentInspectEnd
@@ -54,8 +52,7 @@ $call EnableDocumentClose("Day4ElijahPostcard", true, true)
 $call SpawnDocumentToCamera("Day4Letter")
 
 {@Astrid} Jocelyn! She must have gotten my last letter and figured out my new address. $[Astrid/L4/l4d_a_01] 
-{@Astrid} This is great... if only i can solve some of Elijah's riddles I'll be able to get the news out to the world! $[Astrid/L4/l4d_a_02]
-
+{@Astrid} She thinks the story of what we are working on here matters. That people will want to know! $[Astrid/L4/l4d_a_02]
 
 :: SpawnDoc
 @trigger    DocumentInspectEnd
@@ -68,6 +65,8 @@ $call SetInputState(false)
 $call SpawnDocumentToCamera("DadUrsaPostcard")
 $call SetInputState(true)
 
+{@Astrid} Oh Dad... Its our constellations. He always did think of us as the big and little dipper. Ursa Major and Ursa Minor. $[Astrid/L4/l4d_a_03] 
+
 :: DadUrsaPostcardComment
 @trigger    DocumentInspectFlip
 @when   documentId == "DadUrsaPostcard"
@@ -75,15 +74,46 @@ $call SetInputState(true)
 @cutscene
 @once
 
-{@Astrid} Oh Dad... Its our constellations. He always did think of us as the big and little dipper. Ursa Major and Ursa Minor. $[Astrid/L4/l4d_a_03] 
+{@Astrid} I really don't want to wait another year to see Dad.  $[Astrid/L4/l4d_a_04]
 
-:: EndPostcardPuzzle
+:: SpawnPuzzleQuestion
 @trigger    DocumentInspectEnd
 @when   documentId == "DadUrsaPostcard"
 @interrupt
 @boostScore 1000
 @cutscene
 @once
+
+$call SetInputState(false)
+$call Wait(1)
+$call SetInputState(true)
+$call SpawnDocumentToCamera("Day4Question")
+$call StartDocumentPuzzle("Day4DocumentPuzzle")
+
+{@Astrid} How can I figure out when the Meteor storm going to take place? $[Astrid/L4/l4d_a_08]
+
+:: IncorrectDocumentResponse
+@trigger    DocumentPuzzlePromptStart
+@when   answerId == "Day4Letter"
+@interrupt
+
+{@Astrid} Jocelyn said that I can only get the story in the paper and get the word out to everyone if I have more details. $[Astrid/L4/l4d_a_09]
+
+:: IncorrectDocumentResponse2
+@trigger    DocumentPuzzlePromptStart
+@when   answerId == "DadUrsaPostcard"
+@interrupt
+
+{@Astrid} Dad's so far away. I don't think he's going to be able to help out... $[Astrid/L4/l4d_a_10]
+
+:: EndPuzzleSection
+@trigger    DocumentPuzzleSolved
+@interrupt
+@boostScore 1000
+@cutscene
+@once
+
+{@Astrid} That's it... The only thing to do is to keep adding data to CERES and finishing these puzzles.  $[Astrid/L4/l4d_a_11]
 
 $call Wait(1)
 $call SetInputState(false)
@@ -206,10 +236,18 @@ $call ClearMonitorSelection()
 $call StopPuzzleMode()
 $call SetInputState(false)
 $call EndDay4->BeginCutscene()
-$call Wait(3)
+
+$call Wait(2)
 
 {@Astrid} Whoa. That’s it. It’s the dragon! $[Astrid/L4/l4_a_09]
 {@Astrid} I should’ve guessed. Elijah said “the dragon is coming.” It’s going to be a Draconid meteor storm! $[Astrid/L4/l4_a_10]
+
+{@Astrid} Wait.... World’s End is a garden? $[Astrid/L4/l4_a_01]
+{@Astrid} This painting is incredible. Elijah is so talented. $[Astrid/L4/l4_a_02] 
+{@Astrid} Maybe he shoulda been a painter instead of a rogue astronomer... $[Astrid/L4/l4_a_02b]
+{@Astrid} So World's End  must be what Elijah calls his station! World’s End - like the garden of the golden apples from the Hercules myths. $[Astrid/L4/l4_a_03]
+{@Astrid} It’s not about the world ending. It’s about, searching for the stars. $[Astrid/L4/l4_a_04] 
+
 
 :: EndDay
 @trigger    CutsceneEnd
