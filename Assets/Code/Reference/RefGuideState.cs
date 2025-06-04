@@ -249,6 +249,10 @@ namespace Astro.Reference {
 
         static private IEnumerator TransitionToClose(RefGuideState state, RefGuideRig rig) {
             state.CurrentState = RefGuideInteractionState.Transitioning;
+            // clear data
+            state.SelectedMaterials = 0;
+            state.SelectedRefClassification = null;
+            TryEnableIDSubmit(false);
             SetGuideInteraction(rig, RefGuideInteractionState.Transitioning);
             yield return rig.RootTransform.MoveTo(rig.IntermediatePosition.position, 0.12f).Ease(Curve.BackOut);
 
@@ -383,7 +387,7 @@ namespace Astro.Reference {
 
             if (region == null) {
                 rgs.SelectedRefClassification = null;
-                DisableHighlights(rig);
+                DisableHighlights(rig, rgs);
                 // rgs.SubmitButton.Root.SetActive(false);
                 Routine.Start( rgs.SubmitButton.SetButtonActive(false) );
 
@@ -433,7 +437,7 @@ namespace Astro.Reference {
 
             if (region == null) {
                 rgs.SelectedRefClassification = null;
-                DisableHighlights(rig);
+                DisableHighlights(rig, rgs);
                 // rgs.SubmitButton.Root.SetActive(false);
                 Routine.Start( rgs.SubmitButton.SetButtonActive(false) );
 
@@ -485,9 +489,12 @@ namespace Astro.Reference {
         {
             var rgs = Find.State<RefGuideState>();
 
-            DisableHighlights(rig);
+            DisableHighlights(rig, rgs);
 
-            if (!rgs.SelectedRegionsPerPage.ContainsKey(rgs.CurrentPageNum)) { return; }
+            if (!rgs.SelectedRegionsPerPage.ContainsKey(rgs.CurrentPageNum)) {
+                TryEnableIDSubmit(Find.State<FocusState>().CurrentFocus != null);
+                return;
+            }
 
             for (int i = 0; i < page.Regions.Length; i++) {
                 RefGuideControl r = page.Regions[i];
@@ -511,12 +518,27 @@ namespace Astro.Reference {
                     checkbox.SetPosition(checkPos + (Vector3)off, Axis.XY, Space.Self);
                     checkbox.gameObject.SetActive(true);
                 }
+
+                // set selections data
+                if (r.ControlType.Equals(RefGuideControlType.Classification)) {
+                    // Classification
+                    rgs.SelectedRefClassification = r.Classification;
+                }
+                else if (r.ControlType.Equals(RefGuideControlType.MaterialClassification)) {
+                    // Materials
+                    if (rgs.SelectedMaterials.HasFlag(r.Material)) {
+                        rgs.SelectedMaterials &= ~r.Material;
+                    }
+                    else {
+                        rgs.SelectedMaterials |= r.Material;
+                    }
+                }
             }
 
             TryEnableIDSubmit(Find.State<FocusState>().CurrentFocus != null);
         }
 
-        private static void DisableHighlights(RefGuideRig rig) {
+        private static void DisableHighlights(RefGuideRig rig, RefGuideState rgs) {
             for (int i = 0; i < Math.Max(rig.SelectionPool.childCount, rig.CheckboxPool.childCount); i++) {
                 if (i < rig.SelectionPool.childCount) {
                     rig.SelectionPool.GetChild(i).gameObject.SetActive(false);
@@ -525,6 +547,10 @@ namespace Astro.Reference {
                     rig.CheckboxPool.GetChild(i).gameObject.SetActive(false);
                 }
             }
+
+            // clear data
+            rgs.SelectedMaterials = 0;
+            rgs.SelectedRefClassification = null;
         }
 
         public static void TryEnableIDSubmit(bool focusActive) {
