@@ -222,15 +222,6 @@ namespace FieldDay.Scripting {
                     }
                 }
             }
-
-            if (VoxUtility.DB != null) {
-                using (PooledList<KeyValuePair<StringHash32, string>> customLineNames = PooledList<KeyValuePair<StringHash32, string>>.Create()) {
-                    package.GatherAllLinesWithCustomNames(customLineNames);
-                    foreach (var kv in customLineNames) {
-                        VoxUtility.RemoveHumanReadableMapping(kv.Key, kv.Value);
-                    }
-                }
-            }
         }
 
         static internal void HotReload(ScriptDatabase db, ScriptNodePackage package, UniqueId16 loadId, LeafAsset asset, HotReloadAssetRemapArgs<LeafAsset> args, HotReloadOperation operation) {

@@ -211,7 +211,10 @@ namespace FieldDay.Files {
 
         #region Path Resolution
 
-        static private string ResolvePathToUrl(string path, FileLocation location) {
+        /// <summary>
+        /// Resolves a path to a url for the given storage location.
+        /// </summary>
+        static public string ResolvePathToUrl(string path, FileLocation location) {
             s_PathBuilder.Clear();
             Assert.True(path.Length > 0, "Cannot provide empty path");
             bool firstCharIsSlash = path[0] == '/' || path[0] == '\\';

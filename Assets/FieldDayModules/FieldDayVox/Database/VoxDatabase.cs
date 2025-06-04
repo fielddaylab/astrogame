@@ -4,6 +4,7 @@ using BeauPools;
 using BeauRoutine;
 using BeauUtil;
 using BeauUtil.Debugger;
+using BeauUtil.Streaming;
 using FieldDay.Scenes;
 using FieldDay.SharedState;
 using UnityEngine;
@@ -239,6 +240,15 @@ namespace FieldDay.Vox {
             }
         }
 
+        /// <summary>
+        /// Attempts to retrieve path data for the given line code.
+        /// </summary>
+        static public bool TryGetPath(StringHash32 lineCode, out string path) {
+            bool success = TryResolveEntryForLineCode(DB, lineCode, out var entry);
+            path = entry.Path;
+            return success;
+        }
+
         #endregion // Retrieval
 
         #region Emitters
@@ -268,9 +278,14 @@ namespace FieldDay.Vox {
         /// <summary>
         /// Adds a human-readable file name mapping for the given line code.
         /// </summary>
-        static public void AddHumanReadableMapping(StringHash32 lineCode, string fileName) {
-            Assert.False(DB.LineCodeToReadableFileName.ContainsKey(lineCode), "Duplicate line codes");
+        static public bool AddHumanReadableMapping(StringHash32 lineCode, string fileName) {
+            if (DB.LineCodeToReadableFileName.TryGetValue(lineCode, out string existing)) {
+                Assert.True(string.Equals(fileName, existing, StringComparison.Ordinal), "Duplicate line codes");
+                return false;
+            }
+
             DB.LineCodeToReadableFileName.Add(lineCode, fileName);
+            return true;
         }
 
         /// <summary>
@@ -279,6 +294,23 @@ namespace FieldDay.Vox {
         static public void RemoveHumanReadableMapping(StringHash32 lineCode, string fileName) {
             if (DB.LineCodeToReadableFileName.TryGetValue(lineCode, out string existing) && fileName == existing) {
                 DB.LineCodeToReadableFileName.Remove(lineCode);
+            }
+        }
+
+        /// <summary>
+        /// Reads the contents of a mapping file into the readable mapping table.
+        /// </summary>
+        static public void ReadHumanReadableMappingFile(TextAsset asset) {
+            // TODO: find a way to read this without creating a new string for the entire thing
+            string data = asset.text;
+            foreach(var line in StringSlice.EnumeratedSplit(data, StringUtils.DefaultNewLineChars, StringSplitOptions.RemoveEmptyEntries)) {
+                int commaIdx = line.IndexOf(',');
+                Assert.True(commaIdx > 0);
+                StringSlice lineCodeStr = line.Substring(0, commaIdx).Trim();
+                StringSlice fileNameStr = line.Substring(commaIdx + 1).Trim();
+
+                StringHash32 lineCode = StringHash32.Parse(lineCodeStr);
+                AddHumanReadableMapping(lineCode, fileNameStr.ToString());
             }
         }
 

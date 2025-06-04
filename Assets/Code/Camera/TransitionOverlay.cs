@@ -5,6 +5,7 @@ using FieldDay.Scenes;
 using FieldDay.SharedState;
 using FieldDay.UI;
 using FieldDay.UI.Animation;
+using FieldDay.Vox;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -41,6 +42,8 @@ namespace Astro {
             }
             DefaultFader.Show(Color.black, 0.5f);
             yield return 0.55f;
+
+            VoxUtility.UnloadAll();
         }
 
         private IEnumerator LoadHandler(Scene scene, StringHash32 tag, MainSceneTransitionArgs transition) {

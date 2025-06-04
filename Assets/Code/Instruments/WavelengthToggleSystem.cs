@@ -1,5 +1,6 @@
 using FieldDay;
 using FieldDay.Components;
+using FieldDay.Rendering;
 using FieldDay.SharedState;
 using FieldDay.Systems;
 using System;
@@ -71,23 +72,21 @@ namespace Astro {
         }
 
         static private void AdjustToggleState(LabButton button, CelestialObjectVisMask buttonMask, CelestialObjectVisMask selectedMask, bool playSfx) {
+            WavelengthToggleState state = Find.State<WavelengthToggleState>();
+            MeshRenderer toggleIndicator = button.GetComponent<WavelengthToggleButton>().Indicator;
+
             if (buttonMask == selectedMask) {
                 LabButtonUtility.SetDown(button, playSfx);
                 button.Collider.enabled = false;
 
                 // Update indicators
-                Material[] indicatorMats = button.GetComponent<WavelengthToggleButton>().Indicator.materials;
-                indicatorMats[1] = Find.State<WavelengthToggleState>().LitIndicatorMaterial;
-                button.GetComponent<WavelengthToggleButton>().Indicator.materials = indicatorMats;
-
+                toggleIndicator.SetSharedMaterialAtIndex(1, state.LitIndicatorMaterial);
             } else {
                 LabButtonUtility.SetUp(button, false);
                 button.Collider.enabled = true;
 
                 // Update indicators
-                Material[] indicatorMats = button.GetComponent<WavelengthToggleButton>().Indicator.materials;
-                indicatorMats[1] = Find.State<WavelengthToggleState>().UnlitIndicatorMaterial;
-                button.GetComponent<WavelengthToggleButton>().Indicator.materials = indicatorMats;
+                toggleIndicator.SetSharedMaterialAtIndex(1, state.UnlitIndicatorMaterial);
             }
         }
     }

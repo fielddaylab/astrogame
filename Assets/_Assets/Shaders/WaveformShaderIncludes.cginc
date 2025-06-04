@@ -30,6 +30,6 @@ float SdfCircle(fixed2 origin, fixed2 pos, float radius)
     return length(pos - origin) - radius;
 }
 
-#define SdfAABlend(a, b, distance) lerp(a, b, saturate(1.0 - (distance)))
+#define SdfAABlend(colorA, colorB, distance) lerp(colorA, colorB, (colorB).a * saturate(1.0 - (distance)))
 
 #endif // ASTRO_WAVEFORM_INCLUDES

@@ -10,14 +10,21 @@ namespace Astro {
     public sealed class DayConfigAsset : NamedAsset {
         public SceneReference Scene;
         public LeafAsset[] Scripts;
+
+        [Header("Sky")]
         public HmsCoords SkyRotationOffset;
 
+        [Header("Puzzle")]
         public ConsoleTextAsset DayPuzzlePrelude;
         public PuzzleAsset DayPuzzle;
+
+        [Header("Open Identification")]
         [Tooltip("Controls how many points are displayed on the clearance modal")][Range(1,7)]
         public int NumNeutrinoPoints;
         public NeutrinoConfigAsset NeutrinoEvent;
         public ClassificationTypeMask AcceptedIDSubmissions = ClassificationTypeMask.ALL;
+
+        [Header("Misc")]
         public RadioChannelSet RadioChannels;
     }
 

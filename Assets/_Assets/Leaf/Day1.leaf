@@ -85,9 +85,10 @@ $call StartMonitorControls()
 $call SetInputState(true)
 $call HintModals->SlideInFromRight("TelescopeControls", 0.4)
 $set temp:introMoveTheTelescope = false
-$branch .MoveTelescopeReminder
+$start .MoveTelescopeReminder
 
 :: MoveTelescopeReminder
+@who	Radio
 $call Wait(10)
 $if !temp:introMoveTheTelescope
     {@Radio} See if you can move your telescope. $[Radio/L1/l1_r_06]

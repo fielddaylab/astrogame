@@ -195,22 +195,22 @@ namespace Astro
             if (Game.Input.IsKeyPressed(KeyCode.UpArrow) || Game.Input.IsKeyPressed(KeyCode.W))
             {
                 // look up
-                updated |= AdjustVertLook(-m_State.LookIncrement * Frame.DeltaRatio);
+                updated |= AdjustVertLook(-m_State.LookIncrement * Frame.DeltaTime);
             }
             if (Game.Input.IsKeyPressed(KeyCode.DownArrow) || Game.Input.IsKeyPressed(KeyCode.S))
             {
                 // look down
-                updated |= AdjustVertLook(m_State.LookIncrement * Frame.DeltaRatio);
+                updated |= AdjustVertLook(m_State.LookIncrement * Frame.DeltaTime);
             }
             if (Game.Input.IsKeyPressed(KeyCode.LeftArrow) || Game.Input.IsKeyPressed(KeyCode.A))
             {
                 // look left
-                updated |= AdjustHorizLook(-m_State.LookIncrement * Frame.DeltaRatio);
+                updated |= AdjustHorizLook(-m_State.LookIncrement * Frame.DeltaTime);
             }
             if (Game.Input.IsKeyPressed(KeyCode.RightArrow) || Game.Input.IsKeyPressed(KeyCode.D))
             {
                 // look right
-                updated |= AdjustHorizLook(m_State.LookIncrement * Frame.DeltaRatio);
+                updated |= AdjustHorizLook(m_State.LookIncrement * Frame.DeltaTime);
             }
 
             return updated;
@@ -222,22 +222,22 @@ namespace Astro
             if (Game.Input.IsKeyDown(KeyCode.UpArrow) || Game.Input.IsKeyDown(KeyCode.W))
             {
                 // look up
-                updated |= AdjustVertLook(-m_State.SmoothLookIncrement * Frame.DeltaRatio);
+                updated |= AdjustVertLook(-m_State.SmoothLookIncrement * Frame.DeltaTime);
             }
             else if (Game.Input.IsKeyDown(KeyCode.DownArrow) || Game.Input.IsKeyDown(KeyCode.S))
             {
                 // look down
-                updated |= AdjustVertLook(m_State.SmoothLookIncrement * Frame.DeltaRatio);
+                updated |= AdjustVertLook(m_State.SmoothLookIncrement * Frame.DeltaTime);
             }
             if (Game.Input.IsKeyDown(KeyCode.LeftArrow) || Game.Input.IsKeyDown(KeyCode.A))
             {
                 // look left
-                updated |= AdjustHorizLook(-m_State.SmoothLookIncrement * Frame.DeltaRatio);
+                updated |= AdjustHorizLook(-m_State.SmoothLookIncrement * Frame.DeltaTime);
             }
             else if (Game.Input.IsKeyDown(KeyCode.RightArrow) || Game.Input.IsKeyDown(KeyCode.D))
             {
                 // look right
-                updated |= AdjustHorizLook(m_State.SmoothLookIncrement * Frame.DeltaRatio);
+                updated |= AdjustHorizLook(m_State.SmoothLookIncrement * Frame.DeltaTime);
             }
 
             return updated;

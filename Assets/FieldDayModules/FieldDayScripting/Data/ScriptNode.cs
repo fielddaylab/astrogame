@@ -28,7 +28,7 @@ namespace FieldDay.Scripting {
 
         [BlockMeta("tag")] public StringHash32 Tag;
         [BlockMeta("group")] public StringHash32 Group;
-        [BlockMeta("preloadOrder")] public int PreloadOrder;
+        [BlockMeta("voxGroup")] public StringHash32 VoxGroup;
 
         public ScriptNode(string fullName, ScriptNodePackage package) : base(fullName, package) {
             FullName = fullName;
