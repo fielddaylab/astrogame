@@ -71,9 +71,9 @@ $call StartPuzzleNavigation()
 $call StopPuzzleNavigation()
 $call StartPuzzleMode()
 
-:: DracoPuzzleComplete
+:: AndromedaPuzzleComplete
 @trigger    CorrectPuzzleSubmission
-@when   puzzleName == "Draco"
+@when   puzzleName == "Andromeda"
 @once
 
 $call ClearMonitorSelection()
