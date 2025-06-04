@@ -50,7 +50,7 @@ $call StopNeutrinoNavigation()
 {@Radio} Neutrino Origin Detected
 $call StartOpenMode()
 
-:: StartPuzzleNav
+:: FinishOpenID
 @trigger    PointsUpdated
 @when   sciencePoints > 2
 @once
@@ -62,7 +62,12 @@ $call Wait(3)
 
 $call StopOpenMode()
 $call ClearMonitorSelection()
+$goto .StartPuzzleNav
+
+:: StartPuzzleNav
 $call StartPuzzleNavigation()
+$call SetInputState(true)
+
 
 :: PuzzleNavigationComplete
 @trigger    PuzzleNavigationComplete
