@@ -88,7 +88,7 @@ $set temp:introMoveTheTelescope = false
 $start .MoveTelescopeReminder
 
 :: MoveTelescopeReminder
-@who	Radio
+
 $call Wait(10)
 $if !temp:introMoveTheTelescope
     {@Radio} See if you can move your telescope. $[Radio/L1/l1_r_06]
@@ -164,6 +164,7 @@ $call AlignCamToNeutrino()
 $call HintModals->Hide("NeutrinoNav", 0.2)
 $call SetInputState(false)
 $call StartOpenMode()
+$set temp:introMoveTheTelescope = true
 
 {@Radio} Nice Job! $[Radio/L1/l1_r_11]
 $call Wait(1)
@@ -206,16 +207,25 @@ $call SetInputState(false)
 $call SubtitleController->SetSubtitlePosition(0.5, 1, 0, -140)
 $call MoveToView("Right")
 $call SetGuideHighlight(false)
+$set temp:firstSubmission = false
 
 {@Radio} Do you see your photometer in the equipment stack? That should tell you what the apparent magnitude of the star is. $[Radio/L1/l1_r_20]
 {@Radio} All you need to do is find that number in your reference guide and submit the data. $[Radio/L1/l1_r_21]
-{@Radio} Another coalition astronomer will verify your classification. $[Radio/L1/l1_r_18]
-$branch .PostIntroRefGuideOpened
-
-:: PostIntroRefGuideOpened
 $call SetInputState(true)
-$call Wait(1)
-$branch .ResetSubtitlePosition
+{@Radio} Another coalition astronomer will verify your classification. $[Radio/L1/l1_r_18]
+$start .IntroFirstSubmissionTimeout
+
+:: IntroFirstSubmissionTimeout
+@cutscene
+
+$call SetInputState(true)
+$call Wait(20)
+
+$if !temp:firstSubmission
+    {@Radio} Do you see your photometer in the equipment stack? That should tell you what the apparent magnitude of the star is. $[Radio/L1/l1_r_20(1)]
+    {@Radio} All you need to do is find that number in your reference guide and submit the data. $[Radio/L1/l1_r_21(1)]
+    $branch .IntroFirstSubmissionTimeout
+$endif
 
 :: OnRefGuideOpened
 @trigger    OnRefGuideOpened
@@ -293,7 +303,9 @@ $goto .ResetSubtitlePosition
 @cutscene
 @once
 
-$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
+$branch .ResetSubtitlePosition
+$set temp:firstSubmission = true
+
 {@Astrid} Okay! Maybe I can determine the apparent magnitude of some other stars in this cluster.  $[Astrid/L1/l1_a_9a]
 $goto .PostPoint
 
@@ -468,7 +480,7 @@ $goto .ResetSubtitlePosition
 @trigger    OnLabInteraction
 @when   cellId != "R1C3", temp:waitingForSelectAppMag
 
-{@Astrid} First, I need to select a cell on the puzzle grid.
+{@Astrid} First, I need to select a cell on the grid. $[Astrid/L1/l1_a_t01]
 
 :: AtikAppMagSelected
 @trigger    OnPuzzleCellSelected
@@ -503,7 +515,6 @@ $call HintModals->Hide("AtikCell", 0.2)
 $set temp:waitingForSelectAppMag = false
 $set temp:waitingForFillAppMag = false
 $set temp:waitingForBlueFilter = true
-$call UnlockMonitorFocus()
 $call ReleaseIsolatedPuzzle()
 $call SetInstrumentUnlocked(BlueWavelength, true)
 $call SetInputState(false)
@@ -539,8 +550,8 @@ $set temp:waitingForBlueLight = true
 $call HintModals->Hide("BlueFilter", 0.2)
 $call IsolatePuzzleCell(1, 4)
 
-{@Astrid} Ok, with the blue wavelength filter on, my photometer now has a new reading highlighted.
-I can load this data into the blue magnitude space on the puzzle grid
+{@Astrid} Oh, with the blue wavelength filter on, my photometer takes a new reading highlighted. $[Astrid/L1/l1_a_t02] 
+{@Astrid} I can load this data into the blue magnitude space on the puzzle grid. $[Astrid/L1/l1_a_t03]
 
 :: AtikNotBlueFilterSelected
 @trigger    OnLabInteraction
@@ -560,7 +571,7 @@ $if !temp:AtikCell2Hint
     $call HintModals->SlideInFromRight("AtikCell2", 0.4)
     $set temp:AtikCell2Hint = true
 $endif
-{@Astrid} That’s not it. I need the blue magnitude space, next to the data I just submitted.
+{@Astrid} That’s not it. I need the blue magnitude space, next to the data I just submitted. $[Astrid/L1/l1_a_t04]
 
 :: BlueLightCellSelected
 @trigger    OnPuzzleCellSelected
@@ -584,8 +595,9 @@ $call HintModals->Hide("AtikCell2", 0.2)
 $set temp:waitingForBlueLight = false
 $call SetInputState(false)
 
-{@Astrid} It looks like I have the apparent magnitude of the star and the blue magnitude... so now the photometer can calculate the color index of this star.
-{@Astrid} The hotter the star, the bluer it is! Now I can load the color index of Atik in the color space last empty space for this row
+{@Astrid} It looks like I have the visible magnitude of the star and the blue magnitude. $[Astrid/L1/l1_a_t06] 
+{@Astrid} So now the color module can calculate a <b>color index</b>! $[Astrid/L1/l1_a_t07]
+{@Astrid} The hotter the star, the bluer it is. Now I can load the color of the star... and put it in the color space for Atik. $[Astrid/L1/l1_a_36]
 $goto .PostAtikBlueMagFilled
 
 :: PostAtikBlueMagFilled
@@ -611,7 +623,7 @@ $call ReleaseIsolatedPuzzle()
 
 $call ReleaseIsolatedPuzzle()
 
-{@Astrid} Now I just need to select the last empty cell in the second row...
+{@Astrid} Now I can load the color index of Atik in its color space. $[Astrid/L1/l1_a_t08]
 
 :: WhereIsTheColorIndexer
 @trigger    OnLabInteraction
@@ -630,9 +642,10 @@ $call ReleaseIsolatedPuzzle()
 
 $set temp:waitingForFillColor = false
 $call ReleaseIsolatedPuzzle()
+$call UnlockMonitorFocus()
 $set temp:AtikRowFilled = true
 
-{@Astrid} O-kay! Now it’s just process of elimination. I’m pretty sure Atik is the star on the second row of the puzzle grid.
+{@Astrid} O-kay! Now it’s just process of elimination. Atik is here in the second row. $[Astrid/L1/l1_a_t09]
 $goto .HintForSecondRow
 
 :: HintForSecondRow
@@ -641,7 +654,7 @@ $set temp:BrightestBlueHintVisible = true
 $set temp:waitingForSelectAlgol = true
 $call HintModals->SlideInFromRight("BrightestBlue", 0.4)
 
-{@Astrid} What else do Elijah’s notes say? It looks like Algol is the brightest star in Blue... which of these stars is the brightest in blue?
+{@Astrid} What else do the clues on the monitor say? It looks like Algol is the brightest star in Blue... which of these stars is the brightest in blue?
 
 :: SecondPuzzleStarSelected
 @trigger   OnStarSelected
@@ -657,8 +670,8 @@ $if temp:waitingForSelectAlgol
     $call HintModals->SlideInFromRight("CompleteRow", 0.4)
 $endif
 $call LockMonitorFocus()
-{@Astrid} Is this the brightest star in blue? If so, that would make this Algol.
-{@Astrid} If this is Algol, that I should enter the data for this star into the first row of my puzzle grid.
+{@Astrid} Is this the brightest star in blue? If so, that would make this <i>Algol</i>. $[Astrid/L1/l1_a_t16]
+{@Astrid} If this is Algol, then I should this stars data into the first row. $[Astrid/L1/l1_a_t17]
 $branch .PostSecondPuzzleStarSelected
 
 :: PostSecondPuzzleStarSelected
@@ -676,7 +689,8 @@ $if !temp:waitingForSelectAlgol
     $call HintModals->SlideInFromRight("BrightestBlue", 0.4)
     $set temp:BrightestBlueHintVisible = true
 $endif
-{@Astrid} I should compare the blue magnitude of this star to the others in this cluster...
+// {@Astrid} I should compare the blue magnitude of this star to the others in this cluster...
+{@Astrid} I should compare its blue magnitude to the others in this cluster. $[Astrid/L1/l1_a_t10] 
 
 :: AtikSelectedPostFilled
 @trigger   OnStarSelected
@@ -685,7 +699,8 @@ $endif
 @interrupt
 @cutscene
 
-{@Astrid} I’ve already submitted the data for this star. I think this is the second star on my puzzle grid... Atik.
+{@Astrid} I’ve already submitted the data for this star. $[Astrid/L1/l1_a_t11]
+{@Astrid} I think this is the second one, <i>Atik</i>. $[Astrid/L1/l1_a_t13]
 
 $if !temp:readyToSubmit, temp:AlgolRowFilled
     $branch .PuzzleTimeoutHint
@@ -698,7 +713,8 @@ $endif
 @interrupt
 @cutscene
 
-{@Astrid} I’ve already submitted the data for this star. I think this is the first star on my puzzle grid... Algol.
+{@Astrid} I’ve already submitted the data for this star.  $[Astrid/L1/l1_a_t11]
+{@Astrid} I think this is the first star on my grid, <i>Algol</i>. $[Astrid/L1/l1_a_t12]
 
 :: MenkibSelectedPostComplete
 @trigger   OnStarSelected
@@ -707,7 +723,8 @@ $endif
 @interrupt
 @cutscene
 
-{@Astrid} I’ve already submitted the data for this star. I think this is the third star on my puzzle grid... Menkib.
+{@Astrid} I’ve already submitted the data for this star. $[Astrid/L1/l1_a_t11]
+{@Astrid} This should be <i>Menkib</i>. $[Astrid/L1/l1_a_t14]
 
 :: MirfakSelectedPostComplete
 @trigger   OnStarSelected
@@ -716,7 +733,8 @@ $endif
 @interrupt
 @cutscene
 
-{@Astrid} I’ve already submitted the data for this star. I think this is the fourth star on my puzzle grid... Mirfak.
+{@Astrid} I’ve already submitted the data for this star. $[Astrid/L1/l1_a_t11] 
+{@Astrid} I think this one is <i>Mirfak</i>. $[Astrid/L1/l1_a_t15]
 
 :: AlgolDataFilled
 @trigger    OnPuzzleRowFilled
@@ -731,8 +749,8 @@ $call HintModals->Hide("CompleteRow", 0.2)
 $if temp:BrightestBlueHintVisible
     $call HintModals->Hide("BrightestBlue", 0.2)
 $endif
-{@Astrid} Okay, I’ve eliminated two rows of the grid. That just leaves two stars to go.
-{@Astrid} Maybe Elijah left me a clue to help me figure out which star is Menkib and which is Mirfak.
+{@Astrid} Okay, I’ve eliminated two rows of the grid. That just leaves two stars to go. $[Astrid/L1/l1_a_t18]
+{@Astrid} Maybe Elijah left me a clue to help me figure out which star is Menkib and which is Mirfak. $[Astrid/L1/l1_a_t19]
 $call HintModals->SlideInFromRight("ElijahPuzzle", 0.4)
 $set temp:readyToSubmit = false
 $branch .PuzzleTimeoutHint
@@ -754,10 +772,11 @@ $branch .PuzzleTimeoutHint
 :: PuzzleTimeoutHint
 $call Wait(30)
 $if !temp:readyToSubmit, !temp:MenkibRowFilled
-    {@Astrid} Let’s see here, I know Menkib is NOT the brightest in visible. Which of my remaining stars does that match?
+    {@Astrid} Let’s see here, I know Menkib is NOT the brightest in visible. Which of my remaining stars does that match? $[Astrid/L1/l1_a_t20]
     $branch .PuzzleTimeoutHint
 $elseif !temp:readyToSubmit, !temp:MirfakRowFilled
-    {@Astrid} Let’s see, I know Mirfak is cooler than Atik. I should double check if either of these stars are cooler than the star in row two.
+    {@Astrid} Let’s see, I know Mirfak is cooler than Atik... and the hotter the star the bluer it is, just like a flame! $[Astrid/L1/l1_a_t21]
+    {@Astrid} I should double check if either of these stars are cooler than the star in row two. $[Astrid/L1/l1_a_t22]
     $branch .PuzzleTimeoutHint
 $endif
 
