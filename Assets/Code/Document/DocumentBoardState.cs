@@ -124,6 +124,9 @@ namespace Astro {
             var asset = Find.NamedAsset<DocumentAsset>(id);
             var spawned = SpawnDocument(asset, id, out Vector3 pinnedPos, state, true, false);
 
+            // disallow selecting other documents while this loads
+            InputUtility.SetClickableMaskTopLayer(Find.State<InputState>());
+
             // wait for assets to load
             while (state.DocumentLoadRoutine.Exists()) {
                 yield return null;

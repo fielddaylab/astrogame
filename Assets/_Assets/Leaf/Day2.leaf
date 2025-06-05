@@ -69,8 +69,10 @@ $call EnableDocumentClose("HerculesPostcard", true, true)
 @cutscene
 @once
 
+$call SetInputState(false)
 $call Wait(1)
 $call SpawnDocumentToCamera("Day2Martha")
+$call SetInputState(true)
 
 {@Astrid} I feel so guilty for leaving Aunt Martha to run the clinic. She really relied on me. $[Astrid/L2/l2_a_08]
 
@@ -90,8 +92,10 @@ $call SpawnDocumentToCamera("Day2Martha")
 @cutscene
 @once
 
+$call SetInputState(false)
 $call Wait(1)
 $call SpawnDocumentToCamera("CouplePhoto")
+$call SetInputState(true)
 
 {@Astrid} Oh! I love this! $[Astrid/L2/l2_a_09]
 
