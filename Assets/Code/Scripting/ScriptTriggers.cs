@@ -192,6 +192,11 @@ namespace Astro {
             }
             GameLoop.SuspendUpdates(AstroGame.InstrumentUpdateMask);
             SlotHighlightUtility.SetInstrumentButtonsDimmed(Find.State<InstrumentInventoryState>(), false);
+
+            ViewState viewState = Find.State<ViewState>();
+            var targetNode = ViewNavUtility.GetNodeById("Right");
+
+            ViewNavUtility.MoveToNode(viewState, targetNode);
         }
 
         [LeafMember("StartNeutrinoNavigation")]
