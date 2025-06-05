@@ -52,6 +52,7 @@ namespace Astro {
 
             ViewState state = Find.State<ViewState>();
             ViewNavUtility.ClearCurrentNode(state);
+            CutsceneUtility.SyncCamera(Camera, state);
 
             using (var table = TempVarTable.Alloc()) {
                 table.Set("cutsceneId", this.Actor.Id);
@@ -60,7 +61,7 @@ namespace Astro {
         }
 
         private void OnCutsceneEnd() {
-            if (!Director || !Camera || Game.IsShuttingDown || !this.Actor) {
+            if (!Director || !Camera || Game.IsShuttingDown || !this.Actor || GameLoop.IsLoading) {
                 return;
             }
 
