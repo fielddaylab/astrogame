@@ -259,14 +259,15 @@ namespace Astro {
             if (focus == null) return;
 
             UpdateDataDisplay(display, focus.TargetData);
-            if (!display.DataPanelActive) {
+            DayConfigAsset config = DayConfigUtil.GetConfigForState();
+            bool hasIdentifiedNeutrinoType = HasIdentifiedDataType(config.AcceptedIDSubmissions, focus.TargetData);
+
+            if (!display.DataPanelActive && hasIdentifiedNeutrinoType) {
                 display.AnimRoutine = Routine.Start(display.RevealCelestialDataDisplay());
             }
 
             // Check if we need to submit data for neutrino event
-            DayConfigAsset config = DayConfigUtil.GetConfigForState();
 
-            bool hasIdentifiedNeutrinoType = HasIdentifiedDataType(config.AcceptedIDSubmissions, focus.TargetData);
             bool targetInNeutrinoEvent = NeutrinoEventUtil.IsAssetInNeutrinoEvent(focus.TargetData);
             if (!hasIdentifiedNeutrinoType && targetInNeutrinoEvent) {
                 RevealDataHint(display, focus.TargetData);
