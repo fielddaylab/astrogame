@@ -39,7 +39,7 @@ namespace Astro
 
     public static partial class FocusableUtility
     {
-        public static void InitFocusable(FocusState state, UIFocus focus, Transform target, CelestialAsset asset, Sprite represent2D)
+        public static void InitFocusable(FocusState state, UIFocus focus, Transform target, CelestialAsset asset, Sprite represent2D, Vector2 spriteSize)
         {
 #if UNITY_EDITOR
             focus.gameObject.name = asset.DisplayName;
@@ -47,10 +47,11 @@ namespace Astro
 #endif // UNITY_EDITOR
 
             focus.Target = target;
-            focus.Represent2D.sprite = represent2D;
             if (represent2D == null) {
                 focus.Represent2D.enabled = false;
             }
+            focus.Represent2D.sprite = represent2D;
+            focus.Represent2D.size = spriteSize;
 
             focus.TargetData = asset;
 
