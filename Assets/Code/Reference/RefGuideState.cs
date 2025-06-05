@@ -242,8 +242,8 @@ namespace Astro.Reference {
             SetControlIconActive(3, true);
             SetControlIconActive(4, false);
 
-            yield return rig.RootTransform.MoveTo(rig.OpenPosition.position, 0.12f).Ease(Curve.Smooth);
             SetGuideInteraction(rig, RefGuideInteractionState.Open);
+            yield return rig.RootTransform.MoveTo(rig.OpenPosition.position, 0.12f).Ease(Curve.Smooth);
             state.CurrentState = RefGuideInteractionState.Open;
         }
 

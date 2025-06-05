@@ -122,7 +122,20 @@ namespace Astro.Reference {
                 tab.Clickable.enabled = state == RefGuideInteractionState.Open;
             }
 
-            foreach(var control in rig.OpenControls) {
+            foreach (var control in rig.OpenControls) {
+                RefGuideControl ctrl = control.gameObject.GetComponent<RefGuideControl>();
+
+                bool isPageTurn = ctrl.ControlType == RefGuideControlType.NextPage || ctrl.ControlType == RefGuideControlType.PrevPage;
+                if (isPageTurn) {
+                    if (Find.State<RefGuideState>().AllowPageChanges) {
+                        ctrl.gameObject.SetActive(state == RefGuideInteractionState.Open);
+                    }
+                    else {
+                        ctrl.gameObject.SetActive(false);
+                    }
+                    continue;
+                }
+
                 control.enabled = state == RefGuideInteractionState.Open;
             }
 
