@@ -3,7 +3,7 @@ using FieldDay.Systems;
 using UnityEditor;
 
 namespace Astro {
-    [SysUpdate(GameLoopPhase.Update, 2000, AstroGame.SubmissionUpdateMask)] // After InteractSelectSlotSystem
+    [SysUpdate(GameLoopPhase.Update, 2000, AstroGame.PuzzleSubmissionUpdateMask)] // After InteractSelectSlotSystem
     public class SlotEffectSystem : ComponentSystemBehaviour<DataSlot, RelevantSlotHighlight> {
         public override void ProcessWork(float deltaTime) {
             if (Find.State<FocusState>().CurrentFocus == null) return;

@@ -18,11 +18,13 @@ using UnityEngine;
 namespace Astro {
     public sealed class AstroGame : Game {
         
-        public const int SubmissionUpdateMask = 1 << 0;
+        public const int OpenSubmissionUpdateMask = 1 << 0;
         public const int DocumentUpdateMask = 1 << 1;
         public const int InstrumentUpdateMask = 1 << 2;
         public const int MonitorControlsUpdateMask = 1 << 3;
         public const int InteractUpdateMask = 1 << 4;
+        public const int PuzzleSubmissionUpdateMask = 1 << 5;
+        public const int AnySubmissionUpdateMask = 1 << 6;
 
         static public new EventDispatcher<EvtArgs> Events { get; private set; }
 

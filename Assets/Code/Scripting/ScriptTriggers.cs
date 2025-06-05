@@ -123,7 +123,8 @@ namespace Astro {
             Game.Events.Dispatch(GameEvents.StartPuzzleMode);
 
             GameLoop.ResumeUpdates(AstroGame.MonitorControlsUpdateMask);
-            GameLoop.ResumeUpdates(AstroGame.SubmissionUpdateMask);
+            GameLoop.ResumeUpdates(AstroGame.PuzzleSubmissionUpdateMask);
+            GameLoop.ResumeUpdates(AstroGame.AnySubmissionUpdateMask);
             GameLoop.ResumeUpdates(AstroGame.InstrumentUpdateMask);
         }
 
@@ -132,7 +133,10 @@ namespace Astro {
             Game.Events.Dispatch(GameEvents.StopPuzzleMode);
 
             GameLoop.SuspendUpdates(AstroGame.MonitorControlsUpdateMask);
-            GameLoop.SuspendUpdates(AstroGame.SubmissionUpdateMask);
+            GameLoop.SuspendUpdates(AstroGame.PuzzleSubmissionUpdateMask);
+            if (GameLoop.IsSuspended(AstroGame.OpenSubmissionUpdateMask)) {
+                GameLoop.SuspendUpdates(AstroGame.AnySubmissionUpdateMask);
+            }
             GameLoop.SuspendUpdates(AstroGame.InstrumentUpdateMask);
         }
 
@@ -165,7 +169,8 @@ namespace Astro {
             Game.Events.Dispatch(GameEvents.StartOpenMode);
 
             GameLoop.ResumeUpdates(AstroGame.MonitorControlsUpdateMask);
-            GameLoop.ResumeUpdates(AstroGame.SubmissionUpdateMask);
+            GameLoop.ResumeUpdates(AstroGame.OpenSubmissionUpdateMask);
+            GameLoop.ResumeUpdates(AstroGame.AnySubmissionUpdateMask);
             GameLoop.ResumeUpdates(AstroGame.InstrumentUpdateMask);
             SlotHighlightUtility.SetInstrumentButtonsDimmed(Find.State<InstrumentInventoryState>(), true);
         }
@@ -181,7 +186,10 @@ namespace Astro {
             Game.Events.Dispatch(GameEvents.StopOpenMode);
 
             GameLoop.SuspendUpdates(AstroGame.MonitorControlsUpdateMask);
-            GameLoop.SuspendUpdates(AstroGame.SubmissionUpdateMask);
+            GameLoop.SuspendUpdates(AstroGame.OpenSubmissionUpdateMask);
+            if (GameLoop.IsSuspended(AstroGame.PuzzleSubmissionUpdateMask)) {
+                GameLoop.SuspendUpdates(AstroGame.AnySubmissionUpdateMask);
+            }
             GameLoop.SuspendUpdates(AstroGame.InstrumentUpdateMask);
             SlotHighlightUtility.SetInstrumentButtonsDimmed(Find.State<InstrumentInventoryState>(), false);
         }
@@ -235,7 +243,9 @@ namespace Astro {
         [LeafMember("InitUpdateMasks")]
         static private void LeafInitUpdateMasks() {
             GameLoop.SuspendUpdates(AstroGame.InteractUpdateMask);
-            GameLoop.SuspendUpdates(AstroGame.SubmissionUpdateMask);
+            GameLoop.SuspendUpdates(AstroGame.OpenSubmissionUpdateMask);
+            GameLoop.SuspendUpdates(AstroGame.PuzzleSubmissionUpdateMask);
+            GameLoop.SuspendUpdates(AstroGame.AnySubmissionUpdateMask);
             GameLoop.SuspendUpdates(AstroGame.DocumentUpdateMask);
             GameLoop.SuspendUpdates(AstroGame.InstrumentUpdateMask);
             GameLoop.SuspendUpdates(AstroGame.MonitorControlsUpdateMask);

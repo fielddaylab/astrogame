@@ -8,7 +8,7 @@ using FieldDay.Scripting;
 
 namespace Astro
 {
-    [SysUpdate(GameLoopPhase.Update, 500, AstroGame.SubmissionUpdateMask)] // After Interactable Select System
+    [SysUpdate(GameLoopPhase.Update, 500, AstroGame.AnySubmissionUpdateMask)] // After Interactable Select System
     public class InteractSelectSlotSystem : ComponentSystemBehaviour<InteractSelectSlot, LabInteractable> {
 
         public override bool HasWork() {

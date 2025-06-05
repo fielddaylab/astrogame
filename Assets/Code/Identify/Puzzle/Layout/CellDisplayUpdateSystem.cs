@@ -5,7 +5,7 @@ using FieldDay.Systems;
 
 namespace Astro
 {
-    [SysUpdate(GameLoopPhase.Update, 1000, AstroGame.SubmissionUpdateMask)] // After RowSelectSystem
+    [SysUpdate(GameLoopPhase.Update, 1000, AstroGame.PuzzleSubmissionUpdateMask)] // After RowSelectSystem
     public class CellDisplayUpdateSystem : ComponentSystemBehaviour<PuzzleDisplay>
     {
         public override void ProcessWork(float deltaTime)

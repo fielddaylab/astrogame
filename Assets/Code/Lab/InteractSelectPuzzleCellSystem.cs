@@ -8,7 +8,7 @@ using FieldDay.Scripting;
 
 namespace Astro
 {
-    [SysUpdate(GameLoopPhase.Update, 510, AstroGame.SubmissionUpdateMask)] // After InteractSelectPuzzleCellSystem
+    [SysUpdate(GameLoopPhase.Update, 510, AstroGame.PuzzleSubmissionUpdateMask)] // After InteractSelectPuzzleCellSystem
     public class InteractSelectPuzzleCellSystem : ComponentSystemBehaviour<InteractSelectSlot, LabInteractable, InteractSelectPuzzleCell>
     {
         public override bool HasWork()

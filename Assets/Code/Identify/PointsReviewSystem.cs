@@ -12,7 +12,7 @@ using FieldDay.Audio;
 using System;
 
 namespace Astro {
-    [SysUpdate(GameLoopPhase.Update, 0, AstroGame.SubmissionUpdateMask)]
+    [SysUpdate(GameLoopPhase.Update, 0, AstroGame.AnySubmissionUpdateMask)]
     public class PointsReviewSystem : SharedStateSystemBehaviour<ReviewState> {
 
         public override bool HasWork() {
@@ -93,7 +93,7 @@ namespace Astro {
                 Game.Events.Dispatch(GameEvents.StartPuzzleMode);
 
                 GameLoop.ResumeUpdates(AstroGame.MonitorControlsUpdateMask);
-                GameLoop.ResumeUpdates(AstroGame.SubmissionUpdateMask);
+                GameLoop.ResumeUpdates(AstroGame.OpenSubmissionUpdateMask);
                 GameLoop.ResumeUpdates(AstroGame.InstrumentUpdateMask);
             });
             return info;

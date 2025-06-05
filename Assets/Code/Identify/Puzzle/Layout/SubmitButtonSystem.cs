@@ -8,7 +8,7 @@ using Astro.Reference;
 using BeauRoutine;
 
 namespace Astro {
-    [SysUpdate(GameLoopPhase.Update, 501, AstroGame.SubmissionUpdateMask)] // After RowSelectSystem
+    [SysUpdate(GameLoopPhase.Update, 501, AstroGame.AnySubmissionUpdateMask)] // After RowSelectSystem
 
     // TODO: connect/merge with PointsReviewSystem
     public class SubmitButtonSystem : ComponentSystemBehaviour<SubmitButton, LabInteractable> {
