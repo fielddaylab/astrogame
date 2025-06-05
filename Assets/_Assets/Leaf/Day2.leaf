@@ -43,10 +43,10 @@ $call EnableDocumentClose("Day2DadIcecubePostcard", true, true)
 
 $call SetInputState(false)
 $call Wait(1)
-{@Astrid} Elijah! Finally, some news. $[Astrid/L2/l2_a_04]
 $call SpawnDocumentToCamera("HerculesPostcard")
 $call SetInputState(true)
 $call QueueMusic("Music.StarDome", 3)
+{@Astrid} Elijah! Finally, some news. $[Astrid/L2/l2_a_04]
 
 {@Astrid} I love his postcards. Must be traveling with his art supplies as always. Looks like the Hercules constellation? $[Astrid/L2/l2_a_05]
 
@@ -80,7 +80,7 @@ $call SpawnDocumentToCamera("Day2Martha")
 @once
 
 {@Astrid} Hmmm, the Twelve Labor's of Hercules... Didn't Elijah say something about this in his letter? $[Astrid/L2/l2_a_10]
-{@Astrid} I bet he is at one of these stations. Or maybe on his way. I hope he is safe. $[Astrid/L2/l2_a_11]
+// {@Astrid} I bet he is at one of these stations. Or maybe on his way. I hope he is safe. $[Astrid/L2/l2_a_11]
 
 :: SpawnPuzzleDocs3
 @trigger    DocumentInspectEnd
@@ -100,29 +100,31 @@ $call SpawnDocumentToCamera("CouplePhoto")
 @when   documentId == "CouplePhoto"
 @once
 
-{@Astrid} I still have so many questions. I need to sort some things out.
-$call Wait(0.2)
-
-$call SpawnDocumentToCamera("Day2Question")
-{@Astrid} Where is Elijah? Is he okay? $[Astrid/L2/l2_a_3]
-
-:: SpawnPuzzleQuestion2
-@trigger    DocumentInspectEnd
-@when   documentId == "Day2Question"
-@once
-
 $set temp:puzzleComplete = false
 $call SetInputState(false)
-$call Wait(0.5)
-$call SetInputState(true)
-$call SpawnDocumentToCamera("Day2Question2")
-$call StartDocumentPuzzle("Day2DocumentPuzzle")
+$call Wait(1)
 
-{@Astrid} And what on earth is he working on now?
+{@Astrid} I still have so many questions. I need to sort some things out. $[Astrid/L2/l2_a_t01]
+$call Wait(0.5)
+
+$call SpawnDocumentToCamera("Day2Question")
+$call StartDocumentPuzzle("Day2DocumentPuzzle")
+$call SetInputState(true)
+
+{@Astrid} Where is Elijah? Is he okay? $[Astrid/L2/l2_a_3]
+
+// :: SpawnPuzzleQuestion2
+// @trigger    DocumentInspectEnd
+// @when   documentId == "Day2Question"
+// @once
+
+// $call SpawnDocumentToCamera("Day2Question2")
+
+// {@Astrid} And what on earth is he working on now?
 
 :: Day2Question2DocumentInspectEnd
 @trigger    DocumentInspectEnd
-@when   documentId == "Day2Question2"
+@when   documentId == "Day2Question"
 @once
 
 $call HintModals->SlideInFromLeft("DocOnboard", 0.4)
@@ -130,53 +132,44 @@ $set temp:DocOnboardHintVisible = true
 
 :: IncorrectDocumentResponse1
 @trigger    DocumentPuzzlePromptStart
-@when answerId == "Day2DadIcecubePostcard"
+@when   answerId == "Day2DadIcecubePostcard"
 
 {@Astrid} Elijah in Antarctica...? No, that wouldn't make sense. $[Astrid/L2/l2_a_14]
 
 :: IncorrectDocumentResponse2
 @trigger    DocumentPuzzlePromptStart
-@when answerId == "Day2Martha"
+@when   answerId == "Day2Martha"
 
 {@Astrid} Could he be working at Aunt Martha's clinic? They would drive each other crazy, that's not it. $[Astrid/L2/l2_a_12]
 
+:: IncorrectDocumentResponse3
+@trigger    DocumentPuzzlePromptStart
+@when   answerId == "CouplePhoto"
+
+{@Astrid} I wish you were here Elijah. $[Astrid/L2/l2_a_t04]
+
+:: IncorrectDocumentResponse4
+@trigger    DocumentPuzzlePromptStart
+@when   answerId == "HerculesPostcard"
+
+{@Astrid} He says he is working on some project to upgrade all the CERES stations around the Midwest... $[Astrid/L2/l2_a_t03]
+
 :: CorrectDocumentResponse
 @trigger    DocumentPuzzlePromptStart
-@when answerId == "MiniLabors", questionId == "Day2Question"
+@when   answerId == "MiniLabors", questionId == "Day2Question"
 @interrupt
 @boostScore 1000
 @cutscene
 @once
 
 $call SetInputState(false)
-{@Astrid} That's it! Elijah left Aunt Martha's and is back on the road now headed to one of these stations. $[Astrid/L2/l2_a_15]
-
-$branch .PostCorrectDocumentResponse
-
-:: CorrectDocumentResponse2
-@trigger    DocumentPuzzlePromptStart
-@when   answerId == "HerculesPostcard", questionId == "Day2Question2"
-@interrupt
-@boostScore 1000
-@cutscene
-@once
-
-$call SetInputState(false)
-{@Astrid} That's it... Looks like he's working on some project to upgrade all the CERES stations around the Midwest. $[Astrid/L2/l2_a_13]
-
-$branch .PostCorrectDocumentResponse
-
-:: PostCorrectDocumentResponse
 $if temp:DocOnboardHintVisible
     $call HintModals->Hide("DocOnboard", 0.2)
     $set temp:DocOnboardHintVisible = false
 $endif
 
-$if IsDocumentPuzzleSolved()
-    $branch .CorrectDocumentResponseSolved
-$else
-    $call SetInputState(true)
-$endif
+{@Astrid} That's it! Elijah left Aunt Martha's and is back on the road now headed to one of these stations. $[Astrid/L2/l2_a_15]
+$start .CorrectDocumentResponseSolved
 
 :: CorrectDocumentResponseSolved
 @interrupt
@@ -184,7 +177,9 @@ $endif
 @cutscene
 @once
 
+$call SetInputState(true)
 $call Wait(1)
+
 $if !temp:puzzleComplete
     $set temp:puzzleComplete = true
     $call MoveToView("Desk")
@@ -417,6 +412,7 @@ $set temp:d3PostcardRead = true
 // {@Astrid} I feel pretty safe up here at the edge of nowhere. It would be nice if I wasn't totally alone. $[Astrid/L2/l2_a_41] 
 {@Astrid} Maybe I could write to the newspaper and tell people what’s happening? $[Astrid/L2/l2_a_42]
 {@Astrid} (*sigh*) But I guess I would need to know what is actually happening. $[Astrid/L2/l2_a_43]
+{@Astrid} To whom it may concern, my missing boyfriend says the sky is falling.' Yeah right... $[Astrid/L3/l3_a_43]
 {@Astrid} When and where is this meteor storm coming? $[Astrid/L2/l2_a_44]
 // {@Astrid} Elijah! What have you gotten us into? $[Astrid/L2/l2_a_45]
 $goto .1833Read

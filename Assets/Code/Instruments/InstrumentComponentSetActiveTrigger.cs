@@ -34,7 +34,11 @@ namespace Astro
         }
 
         IEnumerator<WorkSlicer.Result?> IScenePreload.Preload() {
-            InitVals();
+            if (m_Target.Unlocked) {
+                SetVals();
+            } else {
+                InitVals();
+            }
             return null;
         }
 
