@@ -32,7 +32,11 @@ namespace Astro {
             Director.time = 0;
             Director.Evaluate();
             Director.gameObject.SetActive(false);
-            CutsceneUtility.SyncCamera(Camera, Find.State<ViewState>());
+
+            ViewState state = Find.State<ViewState>();
+            state.DefaultNode = null;
+            ViewNavUtility.ClearCurrentNode(state);
+            CutsceneUtility.SyncCamera(Camera, state);
         }
 
         [LeafMember("BeginCutscene")]
