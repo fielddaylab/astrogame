@@ -35,7 +35,7 @@ namespace Astro {
                 NavProjectionState navProjState = Find.State<NavProjectionState>();
 
                 navProjState.NavigationCanvas.worldCamera = spaceCamState.Camera.Camera; 
-                navProjState.NavigationCanvas.planeDistance = 700; 
+                navProjState.NavigationCanvas.planeDistance = 0.5f; 
 
                 navProjState.NavigationCanvas.renderMode = RenderMode.ScreenSpaceCamera;
             });
