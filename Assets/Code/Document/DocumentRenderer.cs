@@ -56,7 +56,7 @@ namespace Astro {
                 TMP_Text tmpText = renderer.TextRegions[i].Text;
                 // Remove any low res images
                 for (int j = 0; j < tmpText.transform.childCount; j++) {
-                    if (renderer.TextRegions[j].Text.text.Length > 0) {
+                    if (renderer.TextRegions[i].Text.text.Length > 0) {
                         GameObject.Destroy(tmpText.transform.GetChild(j).gameObject);
                     }
                 }

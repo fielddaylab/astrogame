@@ -63,8 +63,8 @@ $call SetInputState(true)
 
 $call SetInputState(false)
 $call Wait(1)
-$call SetInputState(true)
 $call SpawnDocumentToCamera("Day3Question")
+$call SetInputState(true)
 $call StartDocumentPuzzle("Day3DocumentPuzzle")
 
 {@Astrid} What is Elijah trying to warn people about?
@@ -252,7 +252,7 @@ $call ClearMonitorSelection()
 $call StopPuzzleMode()
 $call SetInputState(false)
 {@Elijah} Well… if Leo’s puzzle opened, that means the historical data made it through. Something’s working. $[Elijah/L3/l3_e_01]
-{@Elijah} That would mean that least part of the system’s still alive. $[Elijah/L3/l3_e_02]
+{@Elijah} That would mean that part of the system’s still alive. $[Elijah/L3/l3_e_02]
 {@Elijah} Alright. Stay focused. Keep movin'. $[Elijah/L3/l3_e_03]
 $call Wait(1)
 $goto .EndDay

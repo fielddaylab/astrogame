@@ -8,12 +8,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Astro
-{
+namespace Astro {
     [PreloadOrder(100)]
-    public class SkyGenerationState : SharedStateComponent, IScenePreload
-    {
+    public class SkyGenerationState : SharedStateComponent, IScenePreload {
         public Sprite DefaultStarSprite;
+        public Sprite DataSubmittedStarSprite;
+        public Sprite DataSubmittedNeutrinoStarSprite;
         public Sprite DefaultPlanetSprite;
         public Sprite DefaultGalaxySprite;
         [NonSerialized] public CelestialObjectVisMask VisMask = CelestialObjectVisMask.Visible;
@@ -27,7 +27,7 @@ namespace Astro
         }
 
         static private IEnumerator DoPreload(SkyGenerationState state) {
-            var layout = Find.GlobalAsset<SkyLayoutAsset>();
+            // var layout = Find.GlobalAsset<SkyLayoutAsset>();
             var dome = Find.State<SkyDome>();
             var focusPools = Find.State<FocusPools>();
             var focusState = Find.State<FocusState>();
@@ -42,7 +42,8 @@ namespace Astro
             foreach (var obj in dome.AboveHorizon) {
                 var newFocus = focusPools.Focii.Alloc(spaceCamera.StarRoot);
                 // TODO: assign relevant 2D representation
-                FocusableUtility.InitFocusable(focusState, newFocus, obj.transform, obj.Resource, DetermineSprite(state, obj.Resource.Category));
+                Sprite sprite = DetermineSprite(state, obj.Resource.Category, obj.Resource, out Vector2 spriteSize);
+                FocusableUtility.InitFocusable(focusState, newFocus, obj.transform, obj.Resource, sprite, spriteSize);
                 focusState.ActiveFocii.PushBack(newFocus);
                 newFocus.IsVisibleInCurrentFilter = (newFocus.TargetData.Visibility & state.VisMask) != 0;
 
@@ -62,10 +63,23 @@ namespace Astro
             spaceCamera.LookUpdatedThisFrame = true;
         }
 
-        static private Sprite DetermineSprite(SkyGenerationState state, CelestialObjectCategory category) {
+        static private Sprite DetermineSprite(SkyGenerationState state, CelestialObjectCategory category, CelestialAsset asset, out Vector2 size) {
+            size = new Vector2(0.32f, 0.32f);
             switch (category) {
                 case CelestialObjectCategory.Star:
-                    return state.DefaultStarSprite;
+                    bool inNeutrinoEvent = NeutrinoEventUtil.IsAssetInNeutrinoEvent(asset);
+                    bool hasDataToDisplay = CelestialDataDisplayUtil.HasIdDataToDisplay(asset);
+
+                    if (inNeutrinoEvent & hasDataToDisplay) {
+                        size = new Vector2(0.64f, 0.64f);
+                        return state.DataSubmittedNeutrinoStarSprite;
+                    } else if (hasDataToDisplay) {
+                        size = new Vector2(0.64f, 0.64f);
+                        return state.DataSubmittedStarSprite;
+                    } else {
+                        size = new Vector2(0.32f, 0.32f);
+                        return state.DefaultStarSprite;
+                    }
                 case CelestialObjectCategory.Planet:
                     return state.DefaultPlanetSprite;
                 case CelestialObjectCategory.Satellite:

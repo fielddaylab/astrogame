@@ -49,16 +49,12 @@ namespace Astro {
                 DayConfigAsset config = DayConfigUtil.GetConfigForState();
 
                 int i = 0;
-                foreach (RectTransform transform in PointsRowTransform)
-                {
+                foreach (RectTransform transform in PointsRowTransform) {
                     if (transform == PointsRowTransform) continue;
 
-                    if (i >= config.NumNeutrinoPoints)
-                    {
+                    if (i >= config.NumNeutrinoPoints) {
                         transform.gameObject.SetActive(false);
-                    }
-                    else
-                    {
+                    } else {
                         transform.gameObject.SetActive(true);
                     }
                     i++;
@@ -69,8 +65,7 @@ namespace Astro {
             base.OnEnable();
         }
 
-        public IEnumerator RevealCelestialDataDisplay()
-        {
+        public IEnumerator RevealCelestialDataDisplay() {
             DataDisplayPanel.alpha = 0;
             yield return Tween.Value(0f, 1f, (f) => { DataDisplayPanel.alpha = f; }, Mathf.Lerp, 0.2f);
             DataPanelActive = true;
@@ -175,6 +170,29 @@ namespace Astro {
             display.DataRequirmentHint.SetActive(true);
         }
 
+        static public void UpdateStarRepresentation(UIFocus focus) {
+            SkyGenerationState state = Find.State<SkyGenerationState>();
+            Sprite update;
+
+            bool inNeutrinoEvent = NeutrinoEventUtil.IsAssetInNeutrinoEvent(focus.TargetData);
+            bool hasDataToDisplay = HasIdDataToDisplay(focus.TargetData);
+
+            if (inNeutrinoEvent & hasDataToDisplay) {
+                update = state.DataSubmittedNeutrinoStarSprite;
+                focus.Represent2D.size = new Vector2(0.64f, 0.64f);
+                focus.Represent2D.sprite = update;
+            } else if (hasDataToDisplay) {
+                update = state.DataSubmittedStarSprite;
+                focus.Represent2D.size = new Vector2(0.64f, 0.64f);
+                focus.Represent2D.sprite = update;
+            } else {
+                update = state.DefaultStarSprite;
+                focus.Represent2D.size = new Vector2(0.32f, 0.32f);
+                focus.Represent2D.sprite = update;
+            }
+
+        }
+
         public static void OnFocusUpdated(UIFocus focus) {
             CelestialDataDisplay display = Find.State<CelestialDataDisplay>();
     
@@ -236,7 +254,7 @@ namespace Astro {
         public static void PlayClearancePointAnimation() {
             CelestialDataDisplay display = Find.State<CelestialDataDisplay>();
             PlayerPointsState points = Find.State<PlayerPointsState>();
-            
+
             if (display.DataPanelActive) {
                 display.HideCelestialDataDisplay();
             }
@@ -257,6 +275,8 @@ namespace Astro {
             var focus = Find.State<FocusState>().CurrentFocus;
 
             if (focus == null) return;
+
+            UpdateStarRepresentation(focus);
 
             UpdateDataDisplay(display, focus.TargetData);
             DayConfigAsset config = DayConfigUtil.GetConfigForState();

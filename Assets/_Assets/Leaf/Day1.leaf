@@ -819,6 +819,9 @@ $set temp:CompletedMirfakbRow = false
 @cutscene
 
 $set temp:readyToSubmit = false
+$if !local:row_1
+    $set temp:AtikRowFilled = false
+$endif
 $if !local:row_2
     $set temp:MenkibRowFilled = false
 $else
