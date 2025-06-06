@@ -66,6 +66,7 @@ $call Wait(1)
 $call SpawnDocumentToCamera("Day3Question")
 $call SetInputState(true)
 $call StartDocumentPuzzle("Day3DocumentPuzzle")
+$set temp:docPuzzleSolved = false
 
 {@Astrid} What is Elijah trying to warn people about?
 
@@ -83,14 +84,14 @@ $call EnableDocumentClose("1833", true, true)
 
 :: IncorrectDocumentResponse
 @trigger    DocumentPuzzlePromptStart
-@when   answerId == "Day3Dad"
+@when   answerId == "Day3Dad", !temp:docPuzzleSolved
 @interrupt
 
 {@Astrid} No, Elijah hasn't said anything about another CME. $[Astrid/L3/l3d_a_04] 
 
 :: IncorrectDocumentResponse2
 @trigger    DocumentPuzzlePromptStart
-@when   answerId == "Day3ElijahPostcard"
+@when   answerId == "Day3ElijahPostcard", !temp:docPuzzleSolved
 @interrupt
 
 {@Astrid} No, that's not it. Weren't there some notes on that picture he sent? $[Astrid/L3/l3d_a_05]
@@ -102,6 +103,7 @@ $call EnableDocumentClose("1833", true, true)
 @cutscene
 @once
 
+$set temp:docPuzzleSolved = true
 $call SetInputState(false)
 
 {@Astrid} I guess... Elijah thinks this is supposed to happen again? Another Leonid storm? $[Astrid/L3/l3d_a_02] 

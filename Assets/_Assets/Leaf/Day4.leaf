@@ -89,19 +89,20 @@ $call Wait(1)
 $call SetInputState(true)
 $call SpawnDocumentToCamera("Day4Question")
 $call StartDocumentPuzzle("Day4DocumentPuzzle")
+$set temp:docPuzzleSolved = false
 
 {@Astrid} How can I figure out when the Meteor storm going to take place? $[Astrid/L4/l4d_a_08]
 
 :: IncorrectDocumentResponse
 @trigger    DocumentPuzzlePromptStart
-@when   answerId == "Day4Letter"
+@when   answerId == "Day4Letter", !temp:docPuzzleSolved
 @interrupt
 
 {@Astrid} Jocelyn said that I can only get the story in the paper and get the word out to everyone if I have more details. $[Astrid/L4/l4d_a_09]
 
 :: IncorrectDocumentResponse2
 @trigger    DocumentPuzzlePromptStart
-@when   answerId == "DadUrsaPostcard"
+@when   answerId == "DadUrsaPostcard", !temp:docPuzzleSolved
 @interrupt
 
 {@Astrid} Dad's so far away. I don't think he's going to be able to help out... $[Astrid/L4/l4d_a_10]
@@ -113,6 +114,7 @@ $call StartDocumentPuzzle("Day4DocumentPuzzle")
 @cutscene
 @once
 
+$set temp:docPuzzleSolved = true
 {@Astrid} That's it... The only thing to do is to keep adding data to CERES and finishing these puzzles.  $[Astrid/L4/l4d_a_11]
 
 $call Wait(1)
