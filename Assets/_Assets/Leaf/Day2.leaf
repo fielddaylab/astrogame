@@ -113,6 +113,7 @@ $call Wait(0.5)
 
 $call SpawnDocumentToCamera("Day2Question")
 $call StartDocumentPuzzle("Day2DocumentPuzzle")
+$set temp:docPuzzleSolved = false
 $call SetInputState(true)
 
 {@Astrid} Where is Elijah? Is he okay? $[Astrid/L2/l2_a_3]
@@ -136,31 +137,31 @@ $set temp:DocOnboardHintVisible = true
 
 :: IncorrectDocumentResponse1
 @trigger    DocumentPuzzlePromptStart
-@when   answerId == "Day2DadIcecubePostcard"
+@when   answerId == "Day2DadIcecubePostcard", !temp:docPuzzleSolved
 
 {@Astrid} Elijah in Antarctica...? No, that wouldn't make sense. $[Astrid/L2/l2_a_14]
 
 :: IncorrectDocumentResponse2
 @trigger    DocumentPuzzlePromptStart
-@when   answerId == "Day2Martha"
+@when   answerId == "Day2Martha", !temp:docPuzzleSolved
 
 {@Astrid} Could he be working at Aunt Martha's clinic? They would drive each other crazy, that's not it. $[Astrid/L2/l2_a_12]
 
 :: IncorrectDocumentResponse3
 @trigger    DocumentPuzzlePromptStart
-@when   answerId == "CouplePhoto"
+@when   answerId == "CouplePhoto", !temp:docPuzzleSolved
 
 {@Astrid} I wish you were here Elijah. $[Astrid/L2/l2_a_t04]
 
 :: IncorrectDocumentResponse4
 @trigger    DocumentPuzzlePromptStart
-@when   answerId == "HerculesPostcard"
+@when   answerId == "HerculesPostcard", !temp:docPuzzleSolved
 
 {@Astrid} He says he is working on some project to upgrade all the CERES stations around the Midwest... $[Astrid/L2/l2_a_t03]
 
 :: CorrectDocumentResponse
 @trigger    DocumentPuzzlePromptStart
-@when   answerId == "MiniLabors", questionId == "Day2Question"
+@when   answerId == "MiniLabors", questionId == "Day2Question", !temp:docPuzzleSolved
 @interrupt
 @boostScore 1000
 @cutscene
@@ -181,6 +182,7 @@ $start .CorrectDocumentResponseSolved
 @cutscene
 @once
 
+$set temp:docPuzzleSolved = true
 $call SetInputState(true)
 $call Wait(1)
 

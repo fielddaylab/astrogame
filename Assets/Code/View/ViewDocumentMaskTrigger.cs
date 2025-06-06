@@ -28,6 +28,7 @@ namespace Astro
 
         private void OnExitAction(ViewNode node)
         {
+            // suspend document update systems
             UpdateMaskTriggerUtility.SuspendUpdateMask(AstroGame.DocumentUpdateMask);
         }
     }
