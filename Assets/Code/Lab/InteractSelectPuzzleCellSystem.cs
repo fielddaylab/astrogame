@@ -13,7 +13,7 @@ namespace Astro
     {
         public override bool HasWork()
         {
-            return base.HasWork() && Find.State<ViewState>().ActiveNode.AllowSlotSelection;
+            return base.HasWork() && (Find.State<ViewState>().ActiveNode?.AllowSlotSelection ?? false);
         }
 
         public override void ProcessWorkForComponent(InteractSelectSlot primary, LabInteractable secondary, InteractSelectPuzzleCell tertiary, float deltaTime)

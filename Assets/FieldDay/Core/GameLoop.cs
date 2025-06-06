@@ -675,6 +675,7 @@ namespace FieldDay {
 
             FlushQueue(s_AfterLateUpdateQueue);
             Game.Scenes.Update();
+            Game.Assets.Update();
             Game.Rendering.PollScreenSettings();
 
             s_ReadyForRender = true;

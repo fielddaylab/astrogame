@@ -13,9 +13,19 @@ namespace FieldDay.Localization {
 
         #region Defaults
 
+        /// <summary>
+        /// Configures the default language.
+        /// </summary>
         static public void ConfigureDefaultLanguage(LanguageId defaultLanguageId) {
             Assert.True(s_DefaultLang.IsEmpty && s_CurrentLang.IsEmpty, "Defaults have already been configured!");
             s_DefaultLang = s_CurrentLang = defaultLanguageId;
+        }
+
+        /// <summary>
+        /// Is the localization system currently running with its default language.
+        /// </summary>
+        static public bool IsDefaultLanguage() {
+            return s_DefaultLang == s_CurrentLang;
         }
 
         #endregion // Defaults

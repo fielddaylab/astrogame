@@ -26,6 +26,10 @@ namespace FieldDay.Localization {
             m_HashValue = new StringHash32(source).HashValue;
         }
 
+        public uint HashValue {
+            get { return m_HashValue; }
+        }
+
         #region Interfaces
 
         public int CompareTo(LocId other) {

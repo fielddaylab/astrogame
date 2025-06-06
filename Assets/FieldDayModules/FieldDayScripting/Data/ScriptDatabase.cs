@@ -47,10 +47,7 @@ namespace FieldDay.Scripting {
         #region ISceneLoadDepencency
 
         public bool IsLoaded(SceneLoadPhase loadPhase) {
-            if ((loadPhase & SceneLoadPhase.BeforeReady) != 0) {
-                return LoadQueue.Count == 0 && !CurrentLoadRequest.ParseHandle.IsRunning();
-            }
-            return !CurrentLoadRequest.ParseHandle.IsRunning();
+            return LoadQueue.Count == 0 && !CurrentLoadRequest.ParseHandle.IsRunning();
         }
 
         #endregion // ISceneLoadDependency

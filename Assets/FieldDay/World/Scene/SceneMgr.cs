@@ -177,6 +177,7 @@ namespace FieldDay.Scenes {
         private Routine m_MainSceneLoadProcess;
         private Routine m_AdditionalSceneLoadProcess;
         private Routine m_MainSceneTransition;
+        private int m_AssetUnloadLock;
 
         // handlers
         private SceneTransitionHandler m_MainTransitionUnload;
@@ -339,6 +340,19 @@ namespace FieldDay.Scenes {
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Returns if any unloads are processing.
+        /// </summary>
+        public bool IsUnloading() {
+            return m_UnloadQueue.Count > 0 || m_CurrentUnloadOperation.Active || IsLoadQueued(SceneType.Main);
+        }
+
+        internal bool IsSafeToUnloadAssets() {
+            return m_AssetUnloadLock == 0 && !IsLoadQueued(SceneType.Main) && m_LoadQueue.Count == 0 && !m_CurrentLoadOperation.Active
+                && m_PreloadQueue.Count == 0 && !m_CurrentPreloadOperation.Active
+                && m_UnloadQueue.Count == 0 && !m_CurrentUnloadOperation.Active;
         }
 
         #endregion // Checks
@@ -913,6 +927,7 @@ namespace FieldDay.Scenes {
                     } else {
                         m_MainSceneLoadProcess = Routine.Start(SceneLoadProcess(args));
                         m_LoadProcessQueue.PopFront();
+                        m_AssetUnloadLock++;
                     }
                 } else {
                     if (!m_AdditionalSceneLoadProcess) {
@@ -920,6 +935,7 @@ namespace FieldDay.Scenes {
                         if (data == null || !data.IsVisited(SceneDataExt.VisitFlags.Unloading)) {
                             m_AdditionalSceneLoadProcess = Routine.Start(SceneLoadProcess(args));
                             m_LoadProcessQueue.PopFront();
+                            m_AssetUnloadLock++;
                         }
                     }
                 }
@@ -1372,6 +1388,7 @@ namespace FieldDay.Scenes {
 
                 Log.Trace("[SceneMgr] Unloading unused assets...");
 
+                m_AssetUnloadLock--;
                 yield return AssetUtility.UnloadUnused();
 
                 Log.Trace("[SceneMgr] Unloading unused streaming assets...");

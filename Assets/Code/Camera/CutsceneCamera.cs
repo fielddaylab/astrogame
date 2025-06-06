@@ -1,6 +1,7 @@
 using FieldDay.Components;
 using ScriptableBake;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Rendering.Universal;
 
 namespace Astro {
@@ -15,6 +16,9 @@ namespace Astro {
             var camera = GetComponentInChildren<Camera>();
             if (camera != null) {
                 Tracker = camera.transform;
+                foreach(var raycaster in camera.GetComponents<BaseRaycaster>()) {
+                    Baking.Destroy(raycaster);
+                }
                 Baking.Destroy(camera.GetComponent<UniversalAdditionalCameraData>());
                 Baking.Destroy(camera);
             }

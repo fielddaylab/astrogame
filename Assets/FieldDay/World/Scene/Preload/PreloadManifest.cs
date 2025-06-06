@@ -28,11 +28,12 @@ namespace FieldDay.Scenes {
 
         static private readonly Comparison<IScenePreload> Sorter = (a, b) => {
             Type typeA = a.GetType(), typeB = b.GetType();
-            int orderComp = OrderAttribute.Get(typeA) - OrderAttribute.Get(typeB);
-            if (orderComp != 0) {
-                return orderComp;
-            }
-            if (typeA == typeB) {
+            int orderA = OrderAttribute.Get(typeA), orderB = OrderAttribute.Get(typeB);
+            if (orderA < orderB) {
+                return -1;
+            } else if (orderA > orderB) {
+                return 1;
+            } else if (typeA == typeB) {
                 return 0; // try to group components of the same type together
             }
             return typeA.GUID.CompareTo(typeB.GUID);

@@ -32,7 +32,15 @@ namespace FieldDay.Assets {
 
         #region Events
 
+        internal void Update() {
+            if (IsSafeToUnloadPackages()) {
+                ProcessQueuedPackageUnloads();
+            }
+        }
+
         internal void Shutdown() {
+            ProcessQueuedPackageUnloads();
+
             for (int i = 0; i < LiteAssetIndex.Count; i++) {
                 if (m_LiteAssetTable[i] != null) {
                     m_LiteAssetTable[i].Clear();
@@ -54,6 +62,17 @@ namespace FieldDay.Assets {
             Array.Clear(m_LiteAssetTable, 0, m_LiteAssetTable.Length);
             Array.Clear(m_NamedAssetTable, 0, m_NamedAssetTable.Length);
             Array.Clear(m_GlobalAssetTable, 0, m_GlobalAssetTable.Length);
+        }
+
+        private bool IsSafeToUnloadPackages() {
+            if (Game.Files.AnyHighPriorityRequestsLoading()) {
+                return false;
+            }
+            if (!Game.Scenes.IsSafeToUnloadAssets()) {
+                return false;
+            }
+
+            return true;
         }
 
         #endregion // Events
@@ -149,6 +168,11 @@ namespace FieldDay.Assets {
                 return;
             }
 
+            if (m_UnloadQueue.FastRemove(package)) {
+                Log.Msg("[AssetMgr] Package '{0}' unload cancelled", AssetUtility.NameOf(package));
+                return;
+            }
+
             Log.Msg("[AssetMgr] Loading package '{0}'...", AssetUtility.NameOf(package));
             package.Mount(this);
             Log.Msg("[AssetMgr] ...finished loading package '{0}'", AssetUtility.NameOf(package));
@@ -162,9 +186,16 @@ namespace FieldDay.Assets {
                 return;
             }
 
-            Log.Msg("[AssetMgr] Unloading package '{0}'...", AssetUtility.NameOf(package));
-            package.Unmount(this);
-            Log.Msg("[AssetMgr] ...finished unloading package '{0}'", AssetUtility.NameOf(package));
+            Log.Msg("[AssetMgr] Package '{0}' queued to unload", AssetUtility.NameOf(package));
+            m_UnloadQueue.PushBack(package);
+        }
+
+        private void ProcessQueuedPackageUnloads() {
+            while(m_UnloadQueue.TryPopFront(out IAssetPackage package)) {
+                Log.Msg("[AssetMgr] Unloading package '{0}'...", AssetUtility.NameOf(package));
+                package.Unmount(this);
+                Log.Msg("[AssetMgr] ...finished unloading package '{0}'", AssetUtility.NameOf(package));
+            }
         }
 
         #endregion // Packages

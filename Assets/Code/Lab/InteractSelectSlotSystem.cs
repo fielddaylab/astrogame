@@ -12,7 +12,7 @@ namespace Astro
     public class InteractSelectSlotSystem : ComponentSystemBehaviour<InteractSelectSlot, LabInteractable> {
 
         public override bool HasWork() {
-            return base.HasWork() && Find.State<ViewState>().ActiveNode.AllowSlotSelection;
+            return base.HasWork() && (Find.State<ViewState>().ActiveNode?.AllowSlotSelection ?? false);
         }
 
         public override void ProcessWorkForComponent(InteractSelectSlot primary, LabInteractable secondary, float deltaTime)

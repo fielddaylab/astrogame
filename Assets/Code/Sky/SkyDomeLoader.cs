@@ -18,7 +18,11 @@ namespace Astro
 
         public IEnumerator<WorkSlicer.Result?> Preload() {
             SkyDome dome = Find.State<SkyDome>();
-            SkyLayoutAsset layout = Find.GlobalAsset<SkyLayoutAsset>();
+
+            SkyLayoutAsset layout;
+            while (!Game.Assets.TryGetGlobal(out layout)) {
+                yield return WorkSlicer.Result.HaltForFrame;
+            }
 
             Scene myScene = gameObject.scene;
             Vector3 center = dome.Position;

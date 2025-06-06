@@ -10,26 +10,25 @@ using BeauRoutine;
 using BeauUtil;
 using UnityEngine.UI;
 using Astro.Audio;
+using BeauUtil.UI;
 
 namespace Astro {
     public class SubtitleDisplay : SharedRoutinePanel, IRegistrationCallbacks, IOnGuiUpdate {
-        [Serializable]
-        public struct CharacterColorScheme {
-            public SerializedHash32 Id;
-            public ColorPalette2 Palette;
-        }
-
         #region Inspector
 
         [Header("Display")]
         [SerializeField] private TMP_Text m_Text;
-        [SerializeField] private Graphic m_Background;
+        [SerializeField] private RoundedRectGraphic m_Background;
 
         [Header("Data")]
-        [SerializeField] private CharacterColorScheme[] m_Colors;
         [SerializeField] private ColorPalette2 m_DefaultColors;
 
         #endregion // Inspector
+
+        [NonSerialized] private TMP_FontAsset m_DefaultFont;
+        [NonSerialized] private float m_DefaultFontSize;
+        [NonSerialized] private float m_DefaultCornerRadius;
+        [NonSerialized] private Vector4 m_DefaultMargin;
 
         [NonSerialized] private SubtitleDisplayData m_CurrentDisplayData;
         [NonSerialized] private VoxWaveform m_CurrentWaveform;
@@ -40,6 +39,11 @@ namespace Astro {
         #region IRegistrationCallbacks
 
         void IRegistrationCallbacks.OnRegister() {
+            m_DefaultFont = m_Text.font;
+            m_DefaultFontSize = m_Text.fontSize;
+            m_DefaultCornerRadius = m_Background.CornerRadius;
+            m_DefaultMargin = m_Text.margin;
+
             SubtitleUtility.OnDisplayRequested.Register(HandleDisplayRequest);
             SubtitleUtility.OnDismissRequested.Register(HandleDismissRequest);
         }
@@ -83,16 +87,35 @@ namespace Astro {
         private void SyncDisplayedData(SubtitleDisplayData data) {
             m_Text.SetText(data.Subtitle.Data);
 
+            SubtitleStyle style;
+
+            Game.Assets.TryGetNamed(data.CharacterId, out style);
+
             ColorPalette2 palette = m_DefaultColors;
-            for(int i = 0; i < m_Colors.Length; i++) {
-                if (m_Colors[i].Id == data.CharacterId) {
-                    palette = m_Colors[i].Palette;
-                    break;
+            TMP_FontAsset font = m_DefaultFont;
+            float fontSize = m_DefaultFontSize;
+            float cornerRadius = m_DefaultCornerRadius;
+            Vector4 margin = m_DefaultMargin;
+
+            if (style != null) {
+                if (style.OverrideColors) {
+                    palette = style.Colors;
                 }
+                if (style.OverrideFont) {
+                    font = style.OverrideFont;
+                }
+
+                fontSize *= style.FontScale;
+                cornerRadius *= style.BackgroundCornerRadiusScale;
+                margin *= style.MarginScale;
             }
 
             m_Text.color = palette.Content;
             m_Background.SetColor(palette.Background);
+            m_Text.font = font;
+            m_Text.fontSize = fontSize;
+            m_Background.CornerRadius = cornerRadius;
+            m_Text.margin = margin;
 
             VoxWaveformTable table = Find.NamedAsset<VoxWaveformTable>("VoxTable");
             table.TryFind(VoxUtility.GetLineCode(data.VoxHandle), out m_CurrentWaveform);
