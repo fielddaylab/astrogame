@@ -260,6 +260,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2100000, guid: 780e7b211485b894abba8842b2173716, type: 2}
     - target: {fileID: 8022031281197494469, guid: 0f590db886bdca74fa1859c5c45ecfdb, type: 3}
+      propertyPath: m_text
+      value: Color Meter
+      objectReference: {fileID: 0}
+    - target: {fileID: 8022031281197494469, guid: 0f590db886bdca74fa1859c5c45ecfdb, type: 3}
       propertyPath: m_fontSizeBase
       value: 0.9
       objectReference: {fileID: 0}
@@ -407,7 +411,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 730602d289f7e5043810d9a2b765bdc0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LinePrefab: {fileID: 3698648620295698421}
+  LinePrefab: {fileID: 6260651666347641758, guid: a898173720079614c9d461715d50fc16, type: 3}
   SpectrumBackground: {fileID: 2100000, guid: ed770837d222f0443a4221f022392637, type: 2}
   BlankBackground: {fileID: 2100000, guid: ffb6277bb8dee9d49a2b57a8120ce865, type: 2}
 --- !u!114 &544859658
@@ -422,32 +426,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 637759eb976159c4db61cd9160fd3ca4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  InstrumentGraph: {fileID: 1494009298746040079}
   DistanceDisplay: {fileID: 747739869}
   ModeSwitch: {fileID: 1494009298746040076}
   ModeRotDefault: {x: 0, y: 0, z: -0.8910065, w: 0.45399052}
   ModeRotOn: {x: 0, y: 0, z: -0.70710677, w: 0.70710677}
-  PatternMaterials:
-  - Pattern: 0
-    Material: {fileID: 2100000, guid: 5228e7ffb28c3ea46bffa66d0aa262e9, type: 2}
-  - Pattern: 1
-    Material: {fileID: 2100000, guid: ad42dc41d802f9b4faa647c828d43c37, type: 2}
-  - Pattern: 2
-    Material: {fileID: 2100000, guid: 15e8e47d00535544ab8dc9644e0f9170, type: 2}
-  - Pattern: 4
-    Material: {fileID: 2100000, guid: afbaf34bf5fcf394b975c1ad71591f94, type: 2}
-  - Pattern: 3
-    Material: {fileID: 2100000, guid: d15e8a9aa89083c4fa3a43f49619d32f, type: 2}
-  - Pattern: 5
-    Material: {fileID: 2100000, guid: 9d7d15085fe14c8489d5dfd2a9c635fa, type: 2}
-  - Pattern: 6
-    Material: {fileID: 2100000, guid: b594a31c62e6681439a24e4e4446ef7e, type: 2}
-  - Pattern: 7
-    Material: {fileID: 2100000, guid: 38a600a0136c30a45b73cd1c3d92975e, type: 2}
-  - Pattern: 8
-    Material: {fileID: 2100000, guid: 108c786054852174f9aa9b66dbb76a4e, type: 2}
-  - Pattern: 9
-    Material: {fileID: 2100000, guid: 44244d08250db1e43a6ab9a2d3f4374b, type: 2}
   ConnectedPhotometer: {fileID: 595604965}
 --- !u!114 &595604965 stripped
 MonoBehaviour:
@@ -1104,14 +1086,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: HistoricalData
       objectReference: {fileID: 0}
-    - target: {fileID: 4416975945182136557, guid: bea00d3125bba324aa6647a0d6889248, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4416975945182136557, guid: bea00d3125bba324aa6647a0d6889248, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5201381544757303796, guid: bea00d3125bba324aa6647a0d6889248, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.228
@@ -1176,17 +1150,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4416975945182136557, guid: bea00d3125bba324aa6647a0d6889248, type: 3}
   m_PrefabInstance: {fileID: 1494009298746040074}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1494009298746040079 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2270680966442517663, guid: bea00d3125bba324aa6647a0d6889248, type: 3}
-  m_PrefabInstance: {fileID: 1494009298746040074}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e40b736d47dec724a8190f23c7d275b9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &3698648620295698420
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1254,11 +1217,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 36543bce9fc63304181344ce88794f53, type: 3}
---- !u!1 &3698648620295698421 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1224426851897032984, guid: 36543bce9fc63304181344ce88794f53, type: 3}
-  m_PrefabInstance: {fileID: 3698648620295698420}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8049625630151161045
 PrefabInstance:
   m_ObjectHideFlags: 0

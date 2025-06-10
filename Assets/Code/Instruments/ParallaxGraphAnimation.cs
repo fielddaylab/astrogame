@@ -14,7 +14,7 @@ namespace Astro {
         [NonSerialized] public float Scale;
 
         public MeshRenderer DisplayTarget;
-        public DataDisplay GraphDisplay;
+        public DataSlot DataTarget;
 
         [NonSerialized] public MaterialPropertyBlock MaterialProperties;
 
@@ -22,10 +22,10 @@ namespace Astro {
         }
 
         public void OnRegister() {
-            GraphDisplay.OnDisplayRequested.Register(
-                (packet, flags) => ParallaxDataUtility.OnDisplayRequest(this, packet, flags));
-            GraphDisplay.OnDisplayCleared.Register(
-                () => ParallaxDataUtility.OnDisplayClear(this));
+            //GraphDisplay.OnDisplayRequested.Register(
+            //    (packet, flags) => ParallaxDataUtility.OnDisplayRequest(this, packet, flags));
+            //GraphDisplay.OnDisplayCleared.Register(
+            //    () => ParallaxDataUtility.OnDisplayClear(this));
 
             MaterialProperties = new MaterialPropertyBlock();
         }

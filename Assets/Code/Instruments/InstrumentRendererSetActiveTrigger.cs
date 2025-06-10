@@ -24,7 +24,12 @@ namespace Astro
         public void OnRegister()
         {
             m_Target.OnUnlock.Register(SetVals);
-            InitVals();
+
+            if (m_Target.Unlocked) {
+                SetVals();
+            } else {
+                InitVals();
+            }
         }
 
         private void InitVals()

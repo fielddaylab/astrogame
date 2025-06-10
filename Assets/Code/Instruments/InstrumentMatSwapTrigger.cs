@@ -22,7 +22,12 @@ namespace Astro {
 
         public void OnRegister() {
             m_Target.OnUnlock.Register(SwapMats);
-            InitMats();
+
+            if (m_Target.Unlocked) {
+                SwapMats();
+            } else {
+                InitMats();
+            }
         }
 
         private void InitMats() {

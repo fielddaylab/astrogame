@@ -20,7 +20,11 @@ namespace Astro {
 
         public void OnRegister() {
             m_Target.OnUnlock.Register(SwapButtons);
-            InitButtons();
+            if (m_Target.Unlocked) {
+                SwapButtons();
+            } else {
+                InitButtons();
+            }
         }
 
         private void InitButtons() {
