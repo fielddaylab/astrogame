@@ -671,8 +671,10 @@ $if temp:waitingForSelectAlgol
     $call HintModals->SlideInFromRight("CompleteRow", 0.4)
 $endif
 $call LockMonitorFocus()
+
 {@Astrid} Is this the brightest star in blue? If so, that would make this <i>Algol</i>. $[Astrid/L1/l1_a_t16]
 {@Astrid} If this is Algol, then I should this stars data into the first row. $[Astrid/L1/l1_a_t17]
+
 $branch .PostSecondPuzzleStarSelected
 
 :: PostSecondPuzzleStarSelected
@@ -740,7 +742,7 @@ $endif
 :: AlgolDataFilled
 @trigger    OnPuzzleRowFilled
 @when   rowId == 0, temp:AtikRowFilled
-@boostScore 100
+@boostScore 1000
 @interrupt
 @cutscene
 @once
@@ -750,8 +752,13 @@ $call HintModals->Hide("CompleteRow", 0.2)
 $if temp:BrightestBlueHintVisible
     $call HintModals->Hide("BrightestBlue", 0.2)
 $endif
+
 {@Astrid} Okay, I’ve eliminated two rows of the grid. That just leaves two stars to go. $[Astrid/L1/l1_a_t18]
 {@Astrid} Maybe Elijah left me a clue to help me figure out which star is Menkib and which is Mirfak. $[Astrid/L1/l1_a_t19]
+$branch .PostAlgolDataFilled
+
+::PostAlgolDataFilled
+$call UnlockMonitorFocus()
 $call HintModals->SlideInFromRight("ElijahPuzzle", 0.4)
 $set temp:readyToSubmit = false
 $branch .PuzzleTimeoutHint
