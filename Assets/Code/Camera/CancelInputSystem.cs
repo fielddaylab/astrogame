@@ -12,18 +12,17 @@ namespace Astro
     /// such as by cancelling focus.
     /// </summary>
     [SysUpdate(GameLoopPhase.Update, 1000, AstroGame.InteractUpdateMask)] // After InteractSelectSlotSystem, before SlotEffectSystem
-    public class CancelInputSystem : SharedStateSystemBehaviour<CancelInputState>
-    {
-        public override void ProcessWork(float deltaTime)
-        {
+    public class CancelInputSystem : SharedStateSystemBehaviour<CancelInputState> {
+        public override void ProcessWork(float deltaTime) {
             base.ProcessWork(deltaTime);
 
             if (Input.GetMouseButtonDown(0)) {
                 m_State.ClickedThisFrame = true;
             }
 
-            if (m_State.ClickedThisFrame && !m_State.SlotClicked) {
-                // clicked on nothing in particular
+            PuzzleState puzzleState = Find.State<PuzzleState>();
+            if (m_State.ClickedThisFrame && !m_State.SlotClicked && !puzzleState.IsIsolated) {
+                // clicked on nothing in particular and we are not in a tutorial state
                 // cancel data slot transfer states
                 DataUtility.ClearSelections(Find.State<DataTransferState>());
             }

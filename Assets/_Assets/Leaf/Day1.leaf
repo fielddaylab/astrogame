@@ -431,8 +431,6 @@ $call StartPuzzleMode()
 {@Astrid} (*Wistful sigh*) Happy birthday to me. $[Astrid/L1/l1_a_20]
 {@Astrid} Whoooaa... what's all this? $[Astrid/L1/l1_a_21]
 {@Astrid} It must be the data from that Perseus page! $[Astrid/L1/l1_a_22]
-// {@Astrid} Do I finally get to do some astronomy? I never thought this would happen. This is wild. $[Astrid/L1/l1_a_23] 
-// {@Astrid} Elijah is so far ahead of me. Well, here goes nothing! Aunt Martha would not be happy about this. $[Astrid/L1/l1_a_24]
 {@Astrid} Okay, you got this Astrid… Start with what I know - the coordinates for Atik.  $[Astrid/L1/l1_a_25]
 $goto .PostPuzzleNavigationComplete
 
@@ -494,7 +492,6 @@ $call HintModals->Hide("AtikCell", 0.2)
 
 {@Astrid} Now all I have to do is load in data from the photometer. $[Astrid/L1/l1_a_t23]
 
-
 :: AstridThatsNotThePhotometer
 @trigger    OnLabInteraction
 
@@ -506,7 +503,7 @@ $call HintModals->Hide("AtikCell", 0.2)
 
 :: AtikAppMagFilled
 @trigger    OnPuzzleCellFilled
-@when   cellId = "R1C3", temp:waitingForFillAppMag
+@when   cellId == "R1C3", temp:waitingForFillAppMag
 @boostScore 100 
 @cutscene
 @interrupt
@@ -518,7 +515,7 @@ $set temp:waitingForBlueFilter = true
 $call ReleaseIsolatedPuzzle()
 $call SetInstrumentUnlocked(BlueWavelength, true)
 $call SetInputState(false)
-$call IsolatePuzzleCell(1, 4)
+$call IsolatePuzzleCell(1, 1)
 {@Astrid} Let's see... to fill in the rest of this sequence, I also need the blue magnitude. $[Astrid/L1/l1_a_29]
 {@Astrid} I need to select the blue wavelength filter just below the monitor. $[Astrid/L1/l1_a_34]
 $call HintModals->SlideInFromLeft("BlueFilter", 0.4)
@@ -529,15 +526,15 @@ $call SetRefGuidePagesLocked(false)
 $call Wait(1)
 $call SetInputState(true)
 
-:: AtikBlueLightSelected
-@trigger    OnPuzzleCellSelected
-@when   cellId == "R1C4", temp:waitingForBlueLight
-@interrupt
-@once
+// :: AtikBlueLightSelected
+// @trigger    OnPuzzleCellSelected
+// @when   cellId == "R1C4", temp:waitingForBlueLight
+// @interrupt
+// @once
 
-$call ReleaseIsolatedPuzzle()
-$call HintModals->Hide("AtikCell2", 0.2)
-{@Astrid} Now to load this data from the photometer...
+// $call ReleaseIsolatedPuzzle()
+// $call HintModals->Hide("AtikCell2", 0.2)
+// {@Astrid} Now to load this data from the photometer...
 
 :: BlueFilterSelected
 @trigger    OnLabInteraction
@@ -548,6 +545,7 @@ $call HintModals->Hide("AtikCell2", 0.2)
 $set temp:waitingForBlueFilter = false
 $set temp:waitingForBlueLight = true
 $call HintModals->Hide("BlueFilter", 0.2)
+$call ReleaseIsolatedPuzzle()
 $call IsolatePuzzleCell(1, 4)
 
 {@Astrid} Oh, with the blue wavelength filter on, my photometer takes a new reading highlighted. $[Astrid/L1/l1_a_t02] 
@@ -568,6 +566,8 @@ $call IsolatePuzzleCell(1, 4)
 @cutscene
 
 $if !temp:AtikCell2Hint
+    $call ReleaseIsolatedPuzzle()
+    $call IsolatePuzzleCell(1, 4)
     $call HintModals->SlideInFromRight("AtikCell2", 0.4)
     $set temp:AtikCell2Hint = true
 $endif
@@ -579,7 +579,7 @@ $endif
 @interrupt
 @cutscene
 
-$call ReleaseIsolatedPuzzle()
+$call AddIsolatedSlot(BlueMagnitude)
 $set temp:AtikCell2Hint = false
 $call HintModals->Hide("AtikCell2", 0.2)
 
@@ -592,6 +592,7 @@ $call HintModals->Hide("AtikCell2", 0.2)
 @cutscene
 @once
 
+$call ReleaseIsolatedPuzzle()
 $set temp:waitingForBlueLight = false
 $call SetInputState(false)
 
@@ -641,9 +642,8 @@ $call ReleaseIsolatedPuzzle()
 @once
 
 $set temp:waitingForFillColor = false
-$call ReleaseIsolatedPuzzle()
-$call UnlockMonitorFocus()
 $set temp:AtikRowFilled = true
+$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 
 {@Astrid} O-kay! Now it’s just process of elimination. Atik is here in the second row. $[Astrid/L1/l1_a_t09]
 $goto .HintForSecondRow
@@ -653,6 +653,8 @@ $set temp:AlgolRowFilled = false
 $set temp:BrightestBlueHintVisible = true
 $set temp:waitingForSelectAlgol = true
 $call HintModals->SlideInFromRight("BrightestBlue", 0.4)
+$call ReleaseIsolatedPuzzle()
+$call UnlockMonitorFocus()
 
 {@Astrid} What else do the clues on the monitor say? It looks like Algol is the brightest star in Blue. $[Astrid/L1/l1_a_t24]
 {@Astrid} Which of these stars is the brightest in blue? $[Astrid/L1/l1_a_t25]

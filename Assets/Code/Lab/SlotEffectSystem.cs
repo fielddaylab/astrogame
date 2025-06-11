@@ -1,6 +1,7 @@
 using FieldDay;
 using FieldDay.Systems;
 using UnityEditor;
+using UnityEngine;
 
 namespace Astro {
     [SysUpdate(GameLoopPhase.Update, 2000, AstroGame.PuzzleSubmissionUpdateMask)] // After InteractSelectSlotSystem
@@ -15,6 +16,7 @@ namespace Astro {
             var highlightState = Find.State<SlotHighlightState>();
 
             foreach(var c in m_Components) {
+                var puzzleState = Find.State<PuzzleState>();
                 DataSlot component = c.Primary;
                 RelevantSlotHighlight highlight = c.Secondary;
 
@@ -25,6 +27,9 @@ namespace Astro {
                         TryHighlightInstrumentButton(transferState, highlightState, highlight, component);
                     }
                 } else { // Puzzle Cell (target) highlights
+                    if (puzzleState.IsolatedSlots.Contains(component.SlotId)) {
+                        Debug.LogFormat("[SlotEffectSystem] this is an isolated cell {0}", component.SlotId.ToDebugString());
+                    }
                     TryHighlightPuzzleCell(transferState, highlightState, highlight, component);
                 }
             }
@@ -39,7 +44,7 @@ namespace Astro {
             bool isHighlightedAvailable = sourceNotNull && targetIsNull && typesMatch && slotIsModifiable;
             bool isHighlightedSelected = slot.Equals(transferState.SelectedTarget);
 
-            if (isHighlightedSelected) {
+            if (isHighlightedSelected && slotIsModifiable) {
                 SlotHighlightUtility.SetSelectedHighlight(highlightState, highlight, true);
                 return true;
             } else if (isHighlightedAvailable) {

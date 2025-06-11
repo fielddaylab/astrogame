@@ -10,16 +10,22 @@ namespace Astro {
 
         public bool SourceUpdated = false;
 
-        public void OnDeregister()
-        {
-        }
+        private Action m_ClearSelectedSource;
 
         public void OnRegister() {
-            Game.Events.Register(GameEvents.MonitorEmptySpaceClicked, () => {
+            m_ClearSelectedSource = () => {
                 var transferState = Find.State<DataTransferState>();
-                DataUtility.AssignSelectedSource(transferState, null); 
-            });
+                var puzzleState = Find.State<PuzzleState>();
+
+                if (!puzzleState.IsIsolated) DataUtility.AssignSelectedSource(transferState, null);
+            };
+            Game.Events.Register(GameEvents.MonitorEmptySpaceClicked, m_ClearSelectedSource);
         }
+
+        public void OnDeregister() {
+            Game.Events.Deregister(GameEvents.MonitorEmptySpaceClicked, m_ClearSelectedSource);
+        }
+
     }
 
     static public partial class DataUtility {
@@ -36,15 +42,13 @@ namespace Astro {
             return false;
         }
 
-        static public void AssignSelectedSource(DataTransferState state, DataSlot source, bool preserveTarget = false)
-        {
+        static public void AssignSelectedSource(DataTransferState state, DataSlot source, bool preserveTarget = false) {
             state.SelectedSource = source;
             if (!preserveTarget) { state.SelectedTarget = null; }
             state.SourceUpdated = true;
         }
 
-        static public void AssignSelectedTarget(DataTransferState state, DataSlot target)
-        {
+        static public void AssignSelectedTarget(DataTransferState state, DataSlot target) {
             state.SelectedTarget = target;
             state.SourceUpdated = true;
         }
