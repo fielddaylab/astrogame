@@ -42,6 +42,9 @@ namespace Astro
 
                 WorldPositionUtility.LookAt(camState, StartingLookCoords);
                 TelescopeUtility.SuppressTelescopeRigAudio(false);
+
+                WavelengthToggleState wavelengthState = Find.State<WavelengthToggleState>();
+                WavelengthToggleUtility.SetMask(wavelengthState, CelestialObjectVisMask.Visible, true);
             });
             return null;
         }

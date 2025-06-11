@@ -31,11 +31,11 @@ namespace Astro {
     }
 
     static public class WavelengthToggleUtility {
-        static public void SetMask(WavelengthToggleState state, CelestialObjectVisMask mask) {
+        static public void SetMask(WavelengthToggleState state, CelestialObjectVisMask mask, bool forceReset = false) {
             var cam = Find.State<SpaceCameraState>();
             var skyGen = Find.State<SkyGenerationState>();
 
-            if (state.CurrentState == mask) {
+            if (state.CurrentState == mask && !forceReset) {
                 return;
             }
 
