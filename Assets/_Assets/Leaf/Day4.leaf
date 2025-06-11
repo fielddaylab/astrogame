@@ -144,7 +144,7 @@ $call Wait(1)
 
 {@Radio} CERES HQ to Station Twelve. IceCube is reading a high-energy neutrino emission from the area of the Taurus Constellation. $[Radio/L4/l4_r_01]
 {@Radio} Identification of nearby celestial objects is requested. Uploading area of interest. $[Radio/L4/l4_r_02]
-$goto .SetupNeutrinoNav
+$branch .SetupNeutrinoNav
 
 ::SetupNeutrinoNav
 $call WaitForMovedToView("Monitor")

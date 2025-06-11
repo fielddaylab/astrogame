@@ -32,13 +32,38 @@ $call SetInputState(true)
 :: SpawnPuzzleDocs1
 @trigger    DocumentInspectEnd
 @when   documentId == "Day5ElijahPostcard"
+@cutscene
+@once
+
+$call Wait(1)
+$call SpawnDocumentToCamera("Day5Martha")
+
+:: SpawnPuzzleDocs2
+@trigger    DocumentInspectEnd
+@when   documentId == "Day5Martha"
+@cutscene
+@once
+
+$call Wait(1)
+$call SpawnDocumentToCamera("NewspaperLetter")
+
+:: StartDay
+@trigger    DocumentInspectEnd
+@when   documentId == "NewspaperLetter"
+@cutscene
 @once
 
 $call Wait(1)
 $call WaitForMovedToView("Right")
 $call SetInputState(false)
+
 {@Radio} Star HQ to Station Seven. IceCube is reading a high-energy neutrino emission from the area of the Eridanus Constellation.
 {@Radio} Identification of nearby celestial objects is requested. Uploading area of interest...
+$branch .SetupNeutrinoNav
+
+:: SetupNeutrinoNav
+$call WaitForMovedToView("Monitor")
+$call MonitorUI->PlayRadioDownload(2)
 $call StartNeutrinoNavigation()
 $call SetInputState(true)
 
