@@ -38,7 +38,6 @@ namespace Astro {
         public bool PreserveInArchive = true;
         public bool TriggersPrompter = true; // false for questions
 
-#if UNITY_EDITOR
         private void OnEnable() {
             if (UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode) return;
             if (Prefab == null) return;
@@ -60,15 +59,16 @@ namespace Astro {
             }
         }
 
+#if UNITY_EDITOR
         private void OnValidate() {
             if (UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode) return;
-
             if (Prefab == null) return;
+
             int numStreamingAssets = 0;
-            foreach (DocumentRenderComponent cmp in Prefab.RenderComponents)
-            {
+            foreach (DocumentRenderComponent cmp in Prefab.RenderComponents) {
                 numStreamingAssets += cmp.NumStreamingVisuals;
             }
+            
             Array.Resize(ref TextFields, Prefab.TextRegions.Length);
             Array.Resize(ref StreamingVisuals, numStreamingAssets);
 

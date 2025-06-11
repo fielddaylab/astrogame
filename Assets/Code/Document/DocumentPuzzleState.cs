@@ -54,7 +54,7 @@ namespace Astro {
 
         #region Sequence
 
-        public static void StartDocumentPuzzle(DocumentPuzzleState puzzleState, ViewState viewState, DocumentPuzzleAsset puzzleAsset) {
+        private static void StartDocumentPuzzle(DocumentPuzzleState puzzleState, ViewState viewState, DocumentPuzzleAsset puzzleAsset) {
             // Set current puzzle
             puzzleState.CurrPuzzle = puzzleAsset;
 

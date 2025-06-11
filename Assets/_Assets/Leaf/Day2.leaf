@@ -177,10 +177,7 @@ $endif
 $start .CorrectDocumentResponseSolved
 
 :: CorrectDocumentResponseSolved
-@interrupt
-@boostScore 1000
 @cutscene
-@once
 
 $set temp:docPuzzleSolved = true
 $call SetInputState(true)

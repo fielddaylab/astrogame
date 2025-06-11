@@ -547,9 +547,14 @@ $set temp:waitingForBlueLight = true
 $call HintModals->Hide("BlueFilter", 0.2)
 $call ReleaseIsolatedPuzzle()
 $call IsolatePuzzleCell(1, 4)
+$call SetInputState(false)
 
 {@Astrid} Oh, with the blue wavelength filter on, my photometer takes a new reading highlighted. $[Astrid/L1/l1_a_t02] 
 {@Astrid} I can load this data into the blue magnitude space on the puzzle grid. $[Astrid/L1/l1_a_t03]
+$branch .PostBlueFilterSelected
+
+:: PostBlueFilterSelected
+$call SetInputState(true)
 
 :: AtikNotBlueFilterSelected
 @trigger    OnLabInteraction
