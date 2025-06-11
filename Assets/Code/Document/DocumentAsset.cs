@@ -39,43 +39,45 @@ namespace Astro {
         public bool TriggersPrompter = true; // false for questions
 
         private void OnEnable() {
-            if (UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode) return;
-            if (Prefab == null) return;
-
-            int numStreamingAssets = 0;
-            foreach (DocumentRenderComponent cmp in Prefab.RenderComponents) {
-                numStreamingAssets += cmp.NumStreamingVisuals;
-            }
-
-            if (TextFields.Length != Prefab.TextRegions.Length) {
-                Array.Resize(ref TextFields, Prefab.TextRegions.Length);
-            }
-            if (StreamingVisuals.Length != numStreamingAssets) {
-                Array.Resize(ref StreamingVisuals, numStreamingAssets);
-            }
-
-            if (Prefab.gameObject.TryGetComponent(out DocumentInteractable interactable)) {
-                Interactable = interactable;
-            }
+            SetupDocumentAsset();
         }
 
 #if UNITY_EDITOR
         private void OnValidate() {
+            SetupDocumentAsset();
+        }
+#endif
+
+        /// <summary>
+        /// Set the number of `TextFields` and `StreamingAssets` based on the number of Regions in the document's Prefab.
+        /// If no prefab is currently defined this function will return immediatley. 
+        /// </summary>
+        private void SetupDocumentAsset() {
+#if UNITY_EDITOR
             if (UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode) return;
+#endif
             if (Prefab == null) return;
 
+            // Calculate the number of streaming assets this document has on its prefab
             int numStreamingAssets = 0;
             foreach (DocumentRenderComponent cmp in Prefab.RenderComponents) {
                 numStreamingAssets += cmp.NumStreamingVisuals;
             }
-            
-            Array.Resize(ref TextFields, Prefab.TextRegions.Length);
-            Array.Resize(ref StreamingVisuals, numStreamingAssets);
 
+            // Ensure that the number of TextFields on this document matches the number of regions on the prefab
+            if (TextFields.Length != Prefab.TextRegions.Length) {
+                Array.Resize(ref TextFields, Prefab.TextRegions.Length);
+            }
+
+            // Ensure that the number of StreamingVisuals on this document matches the number of streaming assets on the prefab
+            if (StreamingVisuals.Length != numStreamingAssets) {
+                Array.Resize(ref StreamingVisuals, numStreamingAssets);
+            }
+
+            // If we have an interactable we can hook that up here
             if (Prefab.gameObject.TryGetComponent(out DocumentInteractable interactable)) {
                 Interactable = interactable;
             }
         }
-#endif
     }
 }
