@@ -1,16 +1,13 @@
-using BeauUtil.UI;
+
+using System;
 using FieldDay;
 using FieldDay.Components;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using BeauUtil.UI;
 using UnityEngine;
-using UnityEngine.UI;
+using BeauRoutine;
 
-namespace Astro
-{
-    public class UIFocus : BatchedComponent
-    {
+namespace Astro {
+    public class UIFocus : BatchedComponent {
         [NonSerialized] public Transform Target;
         [NonSerialized] public CelestialAsset TargetData;
         [NonSerialized] public bool IsVisibleInCurrentFilter;
@@ -20,6 +17,7 @@ namespace Astro
 
         public Transform Root;
         public SpriteRenderer Represent2D;
+        public SpriteRenderer TrackerSprite;
         public SphereCollider Clickable;
         public PointerListener Button;
 
@@ -37,10 +35,8 @@ namespace Astro
         public Vector3 TargetVector;
     }
 
-    public static partial class FocusableUtility
-    {
-        public static void InitFocusable(FocusState state, UIFocus focus, Transform target, CelestialAsset asset, Sprite represent2D, Vector2 spriteSize)
-        {
+    public static partial class FocusableUtility {
+        public static void InitFocusable(FocusState state, UIFocus focus, Transform target, CelestialAsset asset, Sprite represent2D, Sprite trackerSprite = null) {
 #if UNITY_EDITOR
             focus.gameObject.name = asset.DisplayName;
             focus.Button.name = asset.DisplayName + " (Button)";
@@ -51,7 +47,7 @@ namespace Astro
                 focus.Represent2D.enabled = false;
             }
             focus.Represent2D.sprite = represent2D;
-            focus.Represent2D.size = spriteSize;
+            focus.Represent2D.sprite = trackerSprite;
 
             focus.TargetData = asset;
 
@@ -60,6 +56,8 @@ namespace Astro
             float maxVal = 0.32f;
             float scaleFactor = Mathf.Clamp(Mathf.Pow(baseVal, asset.ApparentMagnitude) - 0.45f, minVal, maxVal);
             focus.Root.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
+            Vector3 currTrackerScale = focus.TrackerSprite.GetComponent<Transform>().localScale;
+            focus.TrackerSprite.GetComponent<Transform>().localScale = new Vector3(currTrackerScale.x / scaleFactor, currTrackerScale.y / scaleFactor, 1f);
 
             float clickableRadius = baseVal * Math.Min(1, 1 / scaleFactor);
 

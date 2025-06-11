@@ -179,16 +179,15 @@ namespace Astro {
 
             if (inNeutrinoEvent & hasDataToDisplay) {
                 update = state.DataSubmittedNeutrinoStarSprite;
-                focus.Represent2D.size = new Vector2(0.64f, 0.64f);
-                focus.Represent2D.sprite = update;
+                focus.TrackerSprite.sprite = update;
+                // focus.TrackerSprite.size = new Vector2(0.32f, 0.32f);
             } else if (hasDataToDisplay) {
                 update = state.DataSubmittedStarSprite;
-                focus.Represent2D.size = new Vector2(0.64f, 0.64f);
-                focus.Represent2D.sprite = update;
+                focus.TrackerSprite.sprite = update;
+                // focus.TrackerSprite.size = new Vector2(0.32f, 0.32f);
             } else {
                 update = state.DefaultStarSprite;
-                focus.Represent2D.size = new Vector2(0.32f, 0.32f);
-                focus.Represent2D.sprite = update;
+                focus.TrackerSprite.sprite = null;
             }
 
         }

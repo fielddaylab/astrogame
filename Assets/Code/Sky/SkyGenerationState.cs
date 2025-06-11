@@ -14,6 +14,8 @@ namespace Astro {
         public Sprite DefaultStarSprite;
         public Sprite DataSubmittedStarSprite;
         public Sprite DataSubmittedNeutrinoStarSprite;
+        public Sprite[] GuessTrackerSprites = new Sprite[4];
+        public Sprite[] GuessTrackerSubmittedSprites = new Sprite[4];
         public Sprite DefaultPlanetSprite;
         public Sprite DefaultGalaxySprite;
         [NonSerialized] public CelestialObjectVisMask VisMask = CelestialObjectVisMask.Visible;
@@ -42,8 +44,8 @@ namespace Astro {
             foreach (var obj in dome.AboveHorizon) {
                 var newFocus = focusPools.Focii.Alloc(spaceCamera.StarRoot);
                 // TODO: assign relevant 2D representation
-                Sprite sprite = DetermineSprite(state, obj.Resource.Category, obj.Resource, out Vector2 spriteSize);
-                FocusableUtility.InitFocusable(focusState, newFocus, obj.transform, obj.Resource, sprite, spriteSize);
+                Sprite trackerSprite = DetermineSprite(state, obj.Resource.Category, obj.Resource);
+                FocusableUtility.InitFocusable(focusState, newFocus, obj.transform, obj.Resource, state.DefaultStarSprite, trackerSprite);
                 focusState.ActiveFocii.PushBack(newFocus);
                 newFocus.IsVisibleInCurrentFilter = (newFocus.TargetData.Visibility & state.VisMask) != 0;
 
@@ -63,21 +65,17 @@ namespace Astro {
             spaceCamera.LookUpdatedThisFrame = true;
         }
 
-        static private Sprite DetermineSprite(SkyGenerationState state, CelestialObjectCategory category, CelestialAsset asset, out Vector2 size) {
-            size = new Vector2(0.32f, 0.32f);
+        static private Sprite DetermineSprite(SkyGenerationState state, CelestialObjectCategory category, CelestialAsset asset) {
             switch (category) {
                 case CelestialObjectCategory.Star:
                     bool inNeutrinoEvent = NeutrinoEventUtil.IsAssetInNeutrinoEvent(asset);
                     bool hasDataToDisplay = CelestialDataDisplayUtil.HasIdDataToDisplay(asset);
 
                     if (inNeutrinoEvent & hasDataToDisplay) {
-                        size = new Vector2(0.64f, 0.64f);
                         return state.DataSubmittedNeutrinoStarSprite;
                     } else if (hasDataToDisplay) {
-                        size = new Vector2(0.64f, 0.64f);
                         return state.DataSubmittedStarSprite;
                     } else {
-                        size = new Vector2(0.32f, 0.32f);
                         return state.DefaultStarSprite;
                     }
                 case CelestialObjectCategory.Planet:
