@@ -41,7 +41,7 @@ namespace Astro
                 // TEMPORARY, TODO: streamline this
                 using (PooledStringBuilder psb = PooledStringBuilder.Create()) {
                     for (int i = 0; i < state.QueuedPuzzle.ClueText.Length; i++) {
-                        psb.Builder.Append("- ");
+                        psb.Builder.Append("• ");
                         psb.Builder.Append(state.QueuedPuzzle.ClueText[i]);
                         psb.Builder.Append("\n");
                     }
