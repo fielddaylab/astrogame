@@ -85,6 +85,7 @@ namespace Astro {
             Game.Scenes.LoadMainScene(day.Scene, true);
         }
 
+        [LeafMember("LoadDay")]
         static public void LoadDay(StringHash32 dayId) {
             PlayerProgressState state = Find.State<PlayerProgressState>();
             StoryAsset story = Find.GlobalAsset<StoryAsset>();

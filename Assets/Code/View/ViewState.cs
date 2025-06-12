@@ -87,7 +87,7 @@ namespace Astro {
             if (node == null || state.ActiveNode == node) {
                 return;
             }
-            DocumentUtility.CancelZoom(Find.State<DocumentBoardState>());
+
             state.ActiveTransitionRoutine.Replace(state, TransitionRoutine(state, node, null, default));
         }
 
@@ -98,7 +98,6 @@ namespace Astro {
             if (node == null || state.ActiveNode == node) {
                 return;
             }
-            DocumentUtility.CancelZoom(Find.State<DocumentBoardState>());
             state.ActiveTransitionRoutine.Replace(state, TransitionRoutine(state, node, null, transitionOverride));
         }
 

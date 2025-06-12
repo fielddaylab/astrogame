@@ -5,12 +5,15 @@
 @boostScore 100
 @cutscene
 
-$wait 3
+$wait 1
+$call Perseids_ParticlesA->PlayEffects()
+$wait 2
 
-{@Astrid}	Come on, Elijah, where are you? It's already starting! $[Prelude/Astrid/01]
+{@Astrid}	Come on, Elijah, where are you? It's already starting!
 
-$call Wait(1)
-(*phone buzzing sfx*)
+$wait 1
+$call PhoneAudio->Play();
+$wait 3.1
  
 {@Elijah}	Astrid, I’m sorry I’m late!
  
@@ -20,37 +23,59 @@ $call Wait(1)
 {@Elijah}	It's going to be so cool studying astronomy together.
 
 $call Wait(2)
-{@Elijah} Did you read my birthday card? I drew you as Perseus. $[Prelude/Elijah/06]
+{@Elijah} Did you read my birthday card? I drew you as Perseus.
 
-{@Astrid}	It's really great Elijah... though I don't think I'm as tough as Perseus. $[Prelude/Astrid/07]
-{@Elijah}	Girl, you're the stuff of Greek myths, ha ha. $[Prelude/Elijah/09]
+{@Astrid}	It's really great Elijah... though I don't think I'm as tough as Perseus.
+{@Elijah}	Girl, you're the stuff of Greek myths, ha ha.
+$call Perseids_ParticlesB->PlayEffects()
 {@Astrid}	Dudeeeee.
 
+$call PerseidsClickable->SetActive(true)
+
 {@Astrid}	Okay, let's focus, the Perseids won't wait for us. Where should I be looking? 
-{@Elijah}	Can you find the Perseus constellation? $[Prelude/Elijah/11]
+{@Elijah}	Can you find the Perseus constellation?
 {@Elijah}	Just look for the place where the meteors seem to be coming from.
-{@Elijah}	If you move your phone across the sky, it’ll tell you if you’re getting warmer or colder.
- 
-{@Astrid}	Found it! $[Prelude/Astrid/12]
+
+:: StarClicked
+@trigger	StarClicked
+@when		actorId == "PerseidsClickable"
+@cutscene
+@interrupt
+
+$start .FadeOutStarClick
+
+{@Astrid}	Found it!
+
+$call Aurora->FadeIn()
 
 {@Astrid}	Just imagine... In ancient times they had to map all these stars from scratch. And they used them for navigation, to tell their fates...
 {@Astrid}	Must've been a lot of pressure.
 {@Elijah}	I don't know. Sounds sort of fun to me.
- 
-$call Wait(2) 
 
-{@Astrid}	Whoa. Elijah, are you seeing this? $[Prelude/Astrid/20]
+$call FakeBloomExtra->FadeIn()
+$call FakeBloom->FadeIn()
 
-{@Elijah}	Astrid—you’re breaking up— $[Prelude/Elijah/20]
+$call Wait(3)
+
+{@Astrid}	Whoa. Elijah, are you seeing this?
+
+{@Elijah}	Astrid—you’re breaking up—
  
-{@Astrid}	Is that the Northern Lights? $[Prelude/Astrid/21]
+{@Astrid}	Is that the Northern Lights?
 {@Astrid}	Whoa. It's so bright!
  
-{@Elijah}	(*bzzzzzzz krrrrrrr*) —Something’s not right— $[Prelude/Elijah/21]
+{@Elijah}	(*bzzzzzzz krrrrrrr*) —Something’s not right—
 {@Elijah}	(*static noises*) —Readings off the charts— (*brrrrrr kzzzzzz*)
  
-{@Astrid}	Elijah, can you hear me? $[Prelude/Astrid/22]
+{@Astrid}	Elijah, can you hear me?
 $call Wait(2) 
-{@Astrid}	Hello? Elijah? $[Prelude/Astrid/23]
+{@Astrid}	Hello? Elijah?
 
-$call LoadNextDay()
+$call Wait(4) 
+
+$call LoadDay("Day1")
+
+:: FadeOutStarClick
+$call PerseidsClickable->SetClickable(false)
+$call Wait(2)
+$call PerseidsClickable->SetActive(false)

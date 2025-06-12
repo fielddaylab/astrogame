@@ -4,12 +4,14 @@ using FieldDay;
 using FieldDay.Components;
 using FieldDay.HID;
 using FieldDay.Scenes;
+using FieldDay.Scripting;
+using Leaf.Runtime;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Astro.Title {
-    public sealed class TitleStarButton : BatchedComponent, IScenePreload {
+    public sealed class TitleStarButton : ScriptActorComponent, IScenePreload {
         public Collider Clickable;
         public CursorHint Cursor;
         public ViewLink Link;
@@ -20,15 +22,30 @@ namespace Astro.Title {
         private Routine m_FadeRoutine;
         private Routine m_GlowRoutine;
 
+        [LeafMember("SetClickable")]
+        public void SetClickable(bool clickable) {
+            Clickable.enabled = clickable;
+        }
+
         IEnumerator<WorkSlicer.Result?> IScenePreload.Preload() {
             Cursor.onClick.Register(() => {
-                ViewNavUtility.MoveByLink(Find.State<ViewState>(), Link);
+                using (TempVarTable vars = TempVarTable.Alloc()) {
+                    vars.Set("actorId", ScriptUtility.ActorId(this));
+                    ScriptUtility.Trigger("StarClicked", vars);
+                }
+
+                if (Link) {
+                    ViewNavUtility.MoveByLink(Find.State<ViewState>(), Link);
+                }
             });
 
             Cursor.OnHover.Register(OnHover);
 
             GlowGroup.SetAlpha(0);
-            Link.OnActiveStateChanged.Register(OnActiveStateChanged);
+            if (Link) {
+                Link.OnActiveStateChanged.Register(OnActiveStateChanged);
+            }
+
             return null;
         }
 

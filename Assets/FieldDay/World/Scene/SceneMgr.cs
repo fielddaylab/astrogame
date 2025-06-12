@@ -259,6 +259,13 @@ namespace FieldDay.Scenes {
         }
 
         /// <summary>
+        /// Returns if any scene is currently loading.
+        /// </summary>
+        public bool IsLoadingAnyScene() {
+            return m_MainSceneLoadProcess || m_AdditionalSceneLoadProcess || m_LoadProcessQueue.Count > 0;
+        }
+
+        /// <summary>
         /// Returns if the given scene is loading.
         /// </summary>
         public bool IsLoading(SceneReference scene) {
@@ -751,6 +758,12 @@ namespace FieldDay.Scenes {
         }
 
         private WorkSlicer.Result UpdateStep() {
+#if DEVELOPMENT
+            if (s_DEBUGLoadSlowdown > 0 && RNG.Instance.NextFloat() < s_DEBUGLoadSlowdown) {
+                return WorkSlicer.Result.HaltForFrame;
+            }
+#endif // DEVELOPMENT
+
             if (ProcessUnloadQueue()) {
                 return WorkSlicer.Result.Processed;
             }
@@ -1573,6 +1586,8 @@ namespace FieldDay.Scenes {
 
 #if DEVELOPMENT
 
+        static private float s_DEBUGLoadSlowdown = 0;
+
         [EngineMenuFactory]
         static private DMInfo CreateDebugMenu() {
             DMInfo menu = new DMInfo("Scenes", 16);
@@ -1584,6 +1599,11 @@ namespace FieldDay.Scenes {
                 SceneReference cachedRef = scene;
                 menu.AddButton(scene.Name, () => Game.Scenes.LoadMainScene(cachedRef), loadPredicate);
             }
+
+            menu.AddDivider();
+            menu.AddSlider("Simulate Load Slowdown", () => s_DEBUGLoadSlowdown,
+                (f) => s_DEBUGLoadSlowdown = f, 0, 1, 0.05f);
+
             return menu;
         }
 

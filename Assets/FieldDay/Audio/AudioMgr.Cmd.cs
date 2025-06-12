@@ -82,6 +82,11 @@ namespace FieldDay.Audio {
                         break;
                     }
 
+                    case AudioCommandType.SetMixState: {
+                        Cmd_SetMixState(cmd.SetMixState);
+                        break;
+                    }
+
                     default: {
                         Log.Error("[AudioMgr] Unknown audio command type '{0}'", cmd.Type);
                         break;
@@ -427,5 +432,13 @@ namespace FieldDay.Audio {
         }
 
         #endregion // Playback
+
+        #region Mixes
+
+        private unsafe void Cmd_SetMixState(SetMixStateData mixChange) {
+            SetMixStateTarget(mixChange.MixId, mixChange.Target, mixChange.Duration, mixChange.Proportional, mixChange.UseDefaultEnvelope);
+        }
+
+        #endregion // Mixes
     }
 }

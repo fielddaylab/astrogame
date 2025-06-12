@@ -12,6 +12,7 @@ using BeauPools;
 using BeauRoutine;
 using BeauUtil;
 using BeauUtil.Debugger;
+using FieldDay.Filters;
 using FieldDay.Mathematics;
 using UnityEngine;
 
@@ -26,18 +27,20 @@ namespace FieldDay.Audio {
             public float ConfigVolume;
 
             public int InstanceCount;
-            public AudioPropertyBlock LastKnownProperties;
 
             public UniqueId16 Handle;
             public FloatTweenIndices FloatTweens;
             public StringHash32 Name;
+
+            public StringHash32 DuckingMix;
+            public SignalEnvelope DuckingEnvelope;
         }
 
         #endregion // Bus Data
 
         #region Bus Creation
 
-        private void CreateBus(StringHash32 id, AudioPropertyBlock busProperties, StringHash32 parentId) {
+        private void CreateBus(StringHash32 id, AudioPropertyBlock busProperties, StringHash32 parentId, StringHash32 duckingMix, in SignalEnvelope duckingEnvelope) {
             if (m_BusCount >= MaxBuses) {
                 throw new InvalidOperationException("Maximum number of audio buses created");
             }
@@ -46,6 +49,8 @@ namespace FieldDay.Audio {
             m_BusNameToIndex.Add(id.HashValue, idx);
             m_BusData[idx].Name = id;
             m_BusData[idx].BusProperties = busProperties;
+            m_BusData[idx].DuckingMix = duckingMix;
+            m_BusData[idx].DuckingEnvelope = duckingEnvelope;
 
             if (!parentId.IsEmpty) {
                 m_BusData[idx].ParentIndex = FindBusIndexForId(parentId);
@@ -72,7 +77,7 @@ namespace FieldDay.Audio {
         private int FindBusIndexForId(StringHash32 id) {
             if (!m_BusNameToIndex.TryGetValue(id.HashValue, out int index)) {
                 Log.Error("[AudioMgr] No bus with id '{0}'", id.ToDebugString());
-                return 0;
+                return -1;
             }
 
             return index;
@@ -82,7 +87,7 @@ namespace FieldDay.Audio {
 
         #region Bindings
 
-        private void ProcessLateBindings() {
+        private unsafe void ProcessLateBindings() {
             // create buses
             if (m_BusLateBindQueue.Count > 0) {
                 ProcessBusDependencies();
@@ -90,6 +95,10 @@ namespace FieldDay.Audio {
 
             while (m_EventLateBindQueue.TryPopFront(out AudioEvent evt)) {
                 evt.CachedBusIndex = FindBusIndexForId(evt.Bus);
+            }
+
+            while(m_MixStateLateBindQueue.TryPopFront(out AudioMixState mix)) {
+                GenerateMixStateData(mix);
             }
         }
 
@@ -116,7 +125,7 @@ namespace FieldDay.Audio {
             for(int i = 0; i < busCount; i++) {
                 var output = outputNodes[i];
                 AudioBus bus = m_BusLateBindQueue[output.OriginalIndex];
-                CreateBus(bus.AssetId, bus.Properties, bus.ParentId);
+                CreateBus(bus.AssetId, bus.Properties, bus.ParentId, bus.DuckingMix, bus.DuckingEnvelope);
             }
 
             m_BusLateBindQueue.Clear();
@@ -124,18 +133,38 @@ namespace FieldDay.Audio {
 
         #endregion // Bindings
 
+#if UNITY_EDITOR
+
+        static internal void ReloadAudioMixState(AudioMixState mix) {
+            if (!mix.Linked) {
+                return;
+            }
+
+            AudioMgr mgr = Game.Audio;
+            mgr.GenerateMixStateData(mix);
+
+            for(int i = mgr.m_ActiveMixStates.Count; i-- > 0;) {
+                ref MixData mixData = ref mgr.m_ActiveMixStates[i];
+                if (mixData.Id == mix.CachedId) {
+                    mixData.Block = mix.MixBlock;
+                }
+            }
+        }
+
+#endif // UNITY_EDITOR
+
         private unsafe void UpdateBuses() {
             AudioPropertyBlock block;
-            for(int i = 0; i < m_BusCount; i++) {
+            for (int i = 0; i < m_BusCount; i++) {
                 ref BusData bus = ref m_BusData[i];
-                block = bus.ParentIndex < 0 ? AudioPropertyBlock.Default : m_BusData[bus.ParentIndex].LastKnownProperties;
+                block = bus.ParentIndex < 0 ? AudioPropertyBlock.Default : m_WorkingBusProperties[bus.ParentIndex];
                 AudioPropertyBlock.Combine(block, bus.BusProperties, ref block);
                 AudioPropertyBlock.Combine(block, *bus.ScriptProperties, ref block);
 #if DEVELOPMENT
                 AudioPropertyBlock.Combine(block, m_DebugBusProperties[i], ref block);
 #endif // DEVELOPMENT
                 block.Volume *= bus.ConfigVolume;
-                bus.LastKnownProperties = block;
+                m_WorkingBusProperties[i] = block;
             }
         }
 
@@ -148,8 +177,21 @@ namespace FieldDay.Audio {
                 while(busIndex >= 0) {
                     ref BusData bus = ref m_BusData[busIndex];
                     bus.InstanceCount += increment;
+                    ProcessDucking(ref bus, isPlaying);
                     busIndex = bus.ParentIndex;
                 }
+            }
+        }
+
+        private void ProcessDucking(ref BusData bus, bool isPlaying) {
+            if (bus.DuckingMix.IsEmpty || bus.InstanceCount != (isPlaying ? 1 : 0)) {
+                return;
+            }
+
+            if (isPlaying) {
+                SetMixStateTarget(bus.DuckingMix, 1, bus.DuckingEnvelope.Attack, false, false);
+            } else {
+                SetMixStateTarget(bus.DuckingMix, 0, bus.DuckingEnvelope.Decay, false, false);
             }
         }
     }

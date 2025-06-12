@@ -1,6 +1,7 @@
 using System;
 using BeauUtil;
 using FieldDay.Assets;
+using FieldDay.Filters;
 using UnityEngine;
 
 namespace FieldDay.Audio {
@@ -13,6 +14,10 @@ namespace FieldDay.Audio {
 
         [Inline(InlineAttribute.DisplayType.HeaderLabel)]
         public AudioPropertyBlock Properties = AudioPropertyBlock.Default;
+
+        [Header("Ducking")]
+        [AudioMixStateRef] public StringHash32 DuckingMix;
+        public SignalEnvelope DuckingEnvelope = new SignalEnvelope(1, 1);
 
         #region Lookup
 

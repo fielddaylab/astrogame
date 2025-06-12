@@ -33,6 +33,7 @@ namespace FieldDay.Audio {
         SetBusBoolParameter,
         SetBusConfigVolume,
         Seek,
+        SetMixState,
     }
 
     #endregion // Enums
@@ -181,6 +182,17 @@ namespace FieldDay.Audio {
         public float Position;
     }
 
+    /// <summary>
+    /// Data for SetMixState.
+    /// </summary>
+    internal struct SetMixStateData {
+        public StringHash32 MixId;
+        public float Target;
+        public float Duration;
+        public bool Proportional;
+        public bool UseDefaultEnvelope;
+    }
+
     #endregion // Command Data
 
     [StructLayout(LayoutKind.Explicit)]
@@ -194,5 +206,6 @@ namespace FieldDay.Audio {
         [FieldOffset(4)] public BoolParamChangeCommandData BoolParam;
         [FieldOffset(4)] public ConfigVolumeChangeCommandData ConfigVolume;
         [FieldOffset(4)] public SeekCommandData Seek;
+        [FieldOffset(4)] public SetMixStateData SetMixState;
     }
 }

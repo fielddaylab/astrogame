@@ -1,6 +1,7 @@
 using System.Collections;
 using BeauUtil;
 using FieldDay;
+using FieldDay.Audio;
 using FieldDay.Scenes;
 using FieldDay.SharedState;
 using FieldDay.UI;
@@ -18,6 +19,7 @@ namespace Astro {
             
             if (!GameLoop.IsBooted() && SceneManager.GetActiveScene().buildIndex != 0) {
                 DefaultFader.Show(Color.black, 0);
+                Sfx.SetMixState("SceneTransition_FadeOut", 1);
             } else {
                 DefaultFader.Hide(0, false);
             }
@@ -41,6 +43,7 @@ namespace Astro {
                 yield break;
             }
             DefaultFader.Show(Color.black, 0.5f);
+            Sfx.SetMixState("SceneTransition_FadeOut", 1, 0.55f);
             yield return 0.55f;
 
             VoxUtility.UnloadAll();
@@ -51,6 +54,7 @@ namespace Astro {
                 yield break;
             }
             DefaultFader.Hide(0.5f, 0.04f, false);
+            Sfx.SetMixState("SceneTransition_FadeOut", 0, 0.4f);
             yield return 0.2f;
         }
     }
