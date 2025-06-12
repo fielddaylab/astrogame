@@ -28,6 +28,16 @@ public class SatelliteDecoderDial : BatchedComponent, IRegistrationCallbacks
         'U', 'V', 'W', 'X', 'Y', 'Z',
     };
 
+    public void OnRegister()
+    {
+        DecoderUtility.UpdateDecoderDialVals(this);
+    }
+
+    public void OnDeregister()
+    {
+
+    }
+
 #if UNITY_EDITOR
     [ContextMenu("Arrange Dial Texts")]
     private void MenuArrangeDialTexts()
@@ -42,16 +52,6 @@ public class SatelliteDecoderDial : BatchedComponent, IRegistrationCallbacks
             // rotation
             TextDisplays[i].transform.localRotation = Quaternion.Euler(i * step, -90, 0);
         }
-    }
-
-    public void OnRegister()
-    {
-        DecoderUtility.UpdateDecoderDialVals(this);
-    }
-
-    public void OnDeregister()
-    {
-
     }
 #endif
 }
