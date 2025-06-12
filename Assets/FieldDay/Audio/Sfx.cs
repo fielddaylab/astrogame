@@ -1,5 +1,6 @@
 using BeauRoutine;
 using BeauUtil;
+using FieldDay.Filters;
 using UnityEngine;
 
 namespace FieldDay.Audio {
@@ -261,6 +262,46 @@ namespace FieldDay.Audio {
         }
 
         #endregion // Queries
+
+        #region Mixes
+
+        static public void SetMixState(StringHash32 mixStateId, float mixValue, float transitionTime = 0) {
+            Game.Audio.QueueAudioCommand(new AudioCommand() {
+                Type = AudioCommandType.SetMixState,
+                SetMixState = new SetMixStateData() {
+                    MixId = mixStateId,
+                    Target = mixValue,
+                    Duration = transitionTime,
+                    Proportional = true
+                }
+            });
+        }
+
+        static public void SetMixStateEnabled(StringHash32 mixStateId, bool enabled, bool instant = false) {
+            Game.Audio.QueueAudioCommand(new AudioCommand() {
+                Type = AudioCommandType.SetMixState,
+                SetMixState = new SetMixStateData() {
+                    MixId = mixStateId,
+                    Target = enabled ? 1 : 0,
+                    Duration = 0,
+                    UseDefaultEnvelope = !instant,
+                }
+            });
+        }
+
+        static public void SetMixStateEnabled(StringHash32 mixStateId, bool enabled, in SignalEnvelope envelope) {
+            Game.Audio.QueueAudioCommand(new AudioCommand() {
+                Type = AudioCommandType.SetMixState,
+                SetMixState = new SetMixStateData() {
+                    MixId = mixStateId,
+                    Target = enabled ? 1 : 0,
+                    Duration = enabled ? envelope.Attack : envelope.Decay,
+                    Proportional = false
+                }
+            });
+        }
+
+        #endregion // Mixes
 
         #region Properties
 

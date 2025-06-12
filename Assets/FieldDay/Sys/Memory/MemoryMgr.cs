@@ -8,12 +8,15 @@
 
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Runtime;
 using System.Runtime.CompilerServices;
+using System.Text;
 using BeauPools;
 using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay.Debugging;
+using UnityEditor;
 using UnityEngine;
 
 namespace FieldDay.Memory {
@@ -229,8 +232,29 @@ namespace FieldDay.Memory {
             info.AddButton("Force GC Collect (Manual)", () => GC.Collect());
             info.AddButton("Add Memory Pressure (128KiB)", () => GenerateMemoryPressure(Unsafe.KiB * 128));
             info.AddButton("Add Memory Pressure (1MiB)", () => GenerateMemoryPressure(Unsafe.MiB));
+            info.AddDivider();
+            info.AddButton("Dump Hash Table Stats", () => StringHashing.DumpReverseLookupStats());
+            info.AddButton("Dump Hash Table Strings", () => DumpHashTableStrings());
 
             return info;
+        }
+
+        static private void DumpHashTableStrings() {
+#if UNITY_EDITOR
+            using(FileStream fileStream = File.Open("Temp/StringHashingDump.txt", FileMode.Create)) {
+                using(StreamWriter writer = new StreamWriter(fileStream)) {
+                    StringHashing.DumpReverseLookupTables(writer);
+                    writer.Flush();
+                }
+                EditorUtility.OpenWithDefaultApp("Temp/StringHashingDump.txt");
+            }
+#else
+            using(StringWriter writer = new StringWriter()) {
+                StringHashing.DumpReverseLookupTables(writer);
+                writer.Flush();
+                Console.Write(writer.GetStringBuilder().ToString());
+            }
+#endif // UNITY_EDITOR 
         }
 
         [MethodImpl(MethodImplOptions.NoOptimization)]
@@ -244,9 +268,9 @@ namespace FieldDay.Memory {
         }
 
 #endif // DEVELOPMENT
-        
-        #endregion // Debugging
-    }
+
+#endregion // Debugging
+        }
 
     [Serializable]
     public struct MemoryPoolConfiguration {

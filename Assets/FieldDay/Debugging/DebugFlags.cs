@@ -89,6 +89,7 @@ namespace FieldDay.Debugging {
         }
 
         private const int MaxFlagGroups = 128;
+        private const int MaxToggleGroups = 16;
 
         static private FlagGroup64 s_GlobalFlags;
         static private FlagGroup64[] s_FlagGroups = new FlagGroup64[MaxFlagGroups];
@@ -99,8 +100,31 @@ namespace FieldDay.Debugging {
             return Interlocked.Increment(ref s_FlagGroupCount) - 1;
         }
 
-        static private class FlagGroupIndex<T> where T : unmanaged, Enum {
+        static private class EnumFlagGroup<T> where T : unmanaged, Enum {
             static internal int Index = GetNextGroupIndex();
+            static internal BitSet64[] ToggleGroups = new BitSet64[MaxToggleGroups];
+            static internal int ToggleGroupCount;
+
+            static internal void AddToggleGroup(BitSet64 group) {
+                for(int i = 0; i < ToggleGroupCount; i++) {
+                    if ((ToggleGroups[i] & group) == group) {
+                        ToggleGroups[i] = group;
+                        break;
+                    }
+                }
+
+                Assert.True(ToggleGroupCount < MaxToggleGroups, "Too many toggle groups for enum '{0}' - max allowed {1}", typeof(T).FullName, MaxToggleGroups);
+                ToggleGroups[ToggleGroupCount++] = group;
+            }
+
+            static internal void SetToggleGroupAware(ref BitSet64 value, int index) {
+                for(int i = 0; i < ToggleGroupCount; i++) {
+                    if (ToggleGroups[i].IsSet(index)) {
+                        value &= ~ToggleGroups[i];
+                    }
+                }
+                value.Set(index);
+            }
         }
 #endif // DEVELOPMENT
 
@@ -114,7 +138,7 @@ namespace FieldDay.Debugging {
         [Il2CppSetOption(Option.NullChecks, false)]
         static public bool IsFlagSet<T>(T index) where T : unmanaged, Enum {
 #if DEVELOPMENT
-            return s_FlagGroups[FlagGroupIndex<T>.Index].Flags.IsSet(Enums.ToInt(index));
+            return s_FlagGroups[EnumFlagGroup<T>.Index].Flags.IsSet(Enums.ToInt(index));
 #else
             return false;
 #endif // DEVELOPMENT
@@ -144,10 +168,14 @@ namespace FieldDay.Debugging {
         [Il2CppSetOption(Option.NullChecks, false)]
         static public bool SetFlag<T>(T index, bool value) where T : unmanaged, Enum {
 #if DEVELOPMENT
-            int type = FlagGroupIndex<T>.Index;
+            int type = EnumFlagGroup<T>.Index;
             int idx = Enums.ToInt(index);
             bool val = s_FlagGroups[type].Flags.IsSet(idx);
-            s_FlagGroups[type].Flags.Set(idx, value);
+            if (value) {
+                EnumFlagGroup<T>.SetToggleGroupAware(ref s_FlagGroups[type].Flags, idx);
+            } else {
+                s_FlagGroups[type].Flags.Unset(idx);
+            }
             return val;
 #else
             return false;
@@ -162,9 +190,9 @@ namespace FieldDay.Debugging {
         [Il2CppSetOption(Option.NullChecks, false)]
         static public void SetFlag<T>(T index) where T : unmanaged, Enum {
 #if DEVELOPMENT
-            int type = FlagGroupIndex<T>.Index;
+            int type = EnumFlagGroup<T>.Index;
             int idx = Enums.ToInt(index);
-            s_FlagGroups[type].Flags.Set(idx);
+            EnumFlagGroup<T>.SetToggleGroupAware(ref s_FlagGroups[type].Flags, idx);
 #endif // DEVELOPMENT
         }
 
@@ -176,7 +204,7 @@ namespace FieldDay.Debugging {
         [Il2CppSetOption(Option.NullChecks, false)]
         static public void ClearFlag<T>(T index) where T : unmanaged, Enum {
 #if DEVELOPMENT
-            int type = FlagGroupIndex<T>.Index;
+            int type = EnumFlagGroup<T>.Index;
             int idx = Enums.ToInt(index);
             s_FlagGroups[type].Flags.Unset(idx);
 #endif // DEVELOPMENT
@@ -190,10 +218,14 @@ namespace FieldDay.Debugging {
         [Il2CppSetOption(Option.NullChecks, false)]
         static public bool ToggleFlag<T>(T index) where T : unmanaged, Enum {
 #if DEVELOPMENT
-            int type = FlagGroupIndex<T>.Index;
+            int type = EnumFlagGroup<T>.Index;
             int idx = Enums.ToInt(index);
             bool val = s_FlagGroups[type].Flags.IsSet(idx);
-            s_FlagGroups[type].Flags.Set(idx, !val);
+            if (!val) {
+                EnumFlagGroup<T>.SetToggleGroupAware(ref s_FlagGroups[type].Flags, idx);
+            } else {
+                s_FlagGroups[type].Flags.Unset(idx);
+            }
             return !val;
 #else
             return false;
@@ -248,6 +280,20 @@ namespace FieldDay.Debugging {
 #endif // DEVELOPMENT
         }
 
+        /// <summary>
+        /// Sets a mututally exclusive set of debug flags.
+        /// </summary>
+        [Conditional("DEVELOPMENT"), Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
+        static public void AddToggleGroup<T>(params T[] values) where T : unmanaged, Enum {
+#if DEVELOPMENT
+            BitSet64 bits = default;
+            foreach(var value in values) {
+                bits.Set(Enums.ToInt(value));
+            }
+            EnumFlagGroup<T>.AddToggleGroup(bits);
+#endif // DEVELOPMENT
+        }
+
         #endregion // Setting
 
         #region Queue
@@ -260,7 +306,7 @@ namespace FieldDay.Debugging {
         [Il2CppSetOption(Option.NullChecks, false)]
         static public void SetFlagSingleFrame<T>(T index) where T : unmanaged, Enum {
 #if DEVELOPMENT
-            int type = FlagGroupIndex<T>.Index;
+            int type = EnumFlagGroup<T>.Index;
             int idx = Enums.ToInt(index);
             s_FlagGroups[type].Flags.Set(idx);
             s_FlagGroups[type].QueuedDisable.Set(idx);
@@ -275,7 +321,7 @@ namespace FieldDay.Debugging {
         [Il2CppSetOption(Option.NullChecks, false)]
         static public void QueueFlagSingleFrame<T>(T index) where T : unmanaged, Enum {
 #if DEVELOPMENT
-            int type = FlagGroupIndex<T>.Index;
+            int type = EnumFlagGroup<T>.Index;
             int idx = Enums.ToInt(index);
             s_FlagGroups[type].QueuedSingleFrame.Set(idx);
             s_FlagGroups[type].QueuedDisable.Unset(idx);
@@ -290,7 +336,7 @@ namespace FieldDay.Debugging {
         [Il2CppSetOption(Option.NullChecks, false)]
         static public void ClearFlagNextFrame<T>(T index) where T : unmanaged, Enum {
 #if DEVELOPMENT
-            int type = FlagGroupIndex<T>.Index;
+            int type = EnumFlagGroup<T>.Index;
             int idx = Enums.ToInt(index);
             s_FlagGroups[type].QueuedSingleFrame.Unset(idx);
             s_FlagGroups[type].QueuedDisable.Set(idx);

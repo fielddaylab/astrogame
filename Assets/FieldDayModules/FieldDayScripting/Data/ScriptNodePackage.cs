@@ -108,7 +108,10 @@ namespace FieldDay.Scripting {
             static public readonly Parser Instance = new Parser();
 
             public override LeafCompilerFlags CompilerFlags {
-                get { return base.CompilerFlags | LeafCompilerFlags.Preserve_CustomLineNameStrings; }
+                get {
+                    return base.CompilerFlags | LeafCompilerFlags.Preserve_CustomLineNameStrings
+                        | LeafCompilerFlags.Default_Development | LeafCompilerFlags.Dump_Disassembly;
+                }
             }
 
             public override ScriptNodePackage CreatePackage(string inFileName) {

@@ -2,6 +2,10 @@
 #define DEVELOPMENT
 #endif // UNITY_EDITOR || DEVELOPMENT_BUILD
 
+#if !UNITY_WEBGL
+#define SUPPORTS_AUDIOEFFECTS
+#endif // !UNITY_WEBGL
+
 using System;
 using System.Collections.Generic;
 using BeauPools;
@@ -55,6 +59,8 @@ namespace FieldDay.Audio {
         private BusData[] m_BusData;
         private int m_BusCount;
 
+        private AudioPropertyBlock[] m_WorkingBusProperties;
+
         private AudioListener m_ListenerReference;
 
 #if DEVELOPMENT
@@ -62,9 +68,11 @@ namespace FieldDay.Audio {
 #endif // DEVELOPMENT
 
         private RingBuffer<VoiceData> m_ActiveVoices = new RingBuffer<VoiceData>(MaxVoices);
+        private RingBuffer<MixData> m_ActiveMixStates = new RingBuffer<MixData>(16, RingBufferMode.Expand);
         private RingBuffer<AudioClip> m_PreloadQueue = new RingBuffer<AudioClip>(32, RingBufferMode.Expand);
-        private RingBuffer<AudioEvent> m_EventLateBindQueue = new RingBuffer<AudioEvent>(128, RingBufferMode.Expand);
+        private RingBuffer<AudioEvent> m_EventLateBindQueue = new RingBuffer<AudioEvent>(64, RingBufferMode.Expand);
         private RingBuffer<AudioBus> m_BusLateBindQueue = new RingBuffer<AudioBus>(MaxBuses);
+        private RingBuffer<AudioMixState> m_MixStateLateBindQueue = new RingBuffer<AudioMixState>(32, RingBufferMode.Expand);
 
         private readonly Dictionary<uint, int> m_BusNameToIndex = new Dictionary<uint, int>(MaxBuses);
 
@@ -88,12 +96,16 @@ namespace FieldDay.Audio {
                 bus.ScriptProperties = m_TargetablePropertyBlocks.Alloc();
 
                 *bus.ScriptProperties = AudioPropertyBlock.Default;
-                bus.LastKnownProperties = AudioPropertyBlock.Default;
 
                 bus.ConfigVolume = 1;
 
                 bus.Handle = m_VoiceIdAllocator.Alloc();
                 bus.FloatTweens.Reset();
+            }
+
+            m_WorkingBusProperties = new AudioPropertyBlock[MaxBuses];
+            for (int i = 0; i < MaxBuses; i++) {
+                m_WorkingBusProperties[i] = AudioPropertyBlock.Default;
             }
 
 #if DEVELOPMENT
@@ -133,9 +145,10 @@ namespace FieldDay.Audio {
 
             Game.Assets.SetNamedAssetLoadCallbacks<AudioEvent>(OnAudioEventLoaded, OnAudioEventUnloaded);
             Game.Assets.SetNamedAssetLoadCallbacks<AudioBus>(OnAudioBusLoaded, OnAudioBusUnloaded);
+            Game.Assets.SetNamedAssetLoadCallbacks<AudioMixState>(OnAudioMixerStateLoaded, OnAudioMixerStateUnloaded);
 
             m_BusNameToIndex.Add(0, 0);
-            CreateBus(AudioBus.Master, AudioPropertyBlock.Default, default);
+            CreateBus(AudioBus.Master, AudioPropertyBlock.Default, default, default, default);
         }
 
         #region Events
@@ -173,6 +186,7 @@ namespace FieldDay.Audio {
                 SyncEmitterLocations();
                 UpdateTweens(deltaTime);
                 UpdateBuses();
+                UpdateMixers(deltaTime);
                 UpdateVoices(deltaTime, Time.realtimeSinceStartupAsDouble);
 
                 switch (Frame.Index % 60) {
@@ -200,6 +214,7 @@ namespace FieldDay.Audio {
                         psb.Builder.Append("Voice Count: ").AppendNoAlloc(m_ActiveVoices.Count)
                             .Append("\n   Active Tweens: ").AppendNoAlloc(m_FloatTweenList.Length)
                             .Append("\n   Active Position Trackers: ").AppendNoAlloc(m_PositionSyncList.Length)
+                            .Append("\n   Active Mixers: ").AppendNoAlloc(m_ActiveMixStates.Count)
                             .Append("\n   Clip Preload Queue: ").AppendNoAlloc(m_PreloadQueue.Count);
 
                         DebugDraw.AddLogText(psb, ColorBank.Aqua);
@@ -235,6 +250,18 @@ namespace FieldDay.Audio {
                         }
 
                         DebugDraw.AddViewportText(new Vector2(0, 1), new Vector2(8, -8), psb, ColorBank.Teal, 0, TextAnchor.UpperLeft, DebugTextStyle.BackgroundDark); ;
+                    }
+                }
+
+                if (DebugFlags.IsFlagSet(DebuggingFlags.DisplayMixerList)) {
+                    using (PooledStringBuilder psb = PooledStringBuilder.Create()) {
+                        psb.Builder.Append("Mixer Count: ").AppendNoAlloc(m_ActiveMixStates.Count);
+                        foreach (var mix in m_ActiveMixStates) {
+                            psb.Builder.Append("\n   ").Append(mix.Id.ToDebugString());
+                            psb.Builder.Append(" (").AppendNoAlloc(mix.Mix, 2).Append("/").AppendNoAlloc(mix.TargetMix, 2).Append(")");
+                        }
+
+                        DebugDraw.AddViewportText(new Vector2(0, 1), new Vector2(8, -8), psb, ColorBank.Teal, 0, TextAnchor.UpperLeft, DebugTextStyle.BackgroundDark);
                     }
                 }
 #endif // DEVELOPMENT
@@ -284,6 +311,20 @@ namespace FieldDay.Audio {
 
         private void OnAudioEventUnloaded(AudioEvent evt) {
             // nothing
+        }
+
+        private void OnAudioMixerStateLoaded(AudioMixState mix) {
+            if (!mix.Linked) {
+                m_MixStateLateBindQueue.PushBack(mix);
+            }
+        }
+
+        private void OnAudioMixerStateUnloaded(AudioMixState mix) {
+            for(int i = m_ActiveMixStates.Count; i-- > 0;) {
+                if (m_ActiveMixStates[i].Id == mix.CachedId) {
+                    m_ActiveMixStates.FastRemoveAt(i);
+                }
+            }
         }
 
         private void OnAudioBusLoaded(AudioBus bus) {
@@ -422,7 +463,8 @@ namespace FieldDay.Audio {
         private enum DebuggingFlags {
             TraceExecution,
             DisplayStats,
-            DisplayVoiceList
+            DisplayVoiceList,
+            DisplayMixerList
         }
 
 #if DEVELOPMENT
@@ -434,6 +476,9 @@ namespace FieldDay.Audio {
             info.AddDivider();
             DebugFlags.Menu.AddFlagToggle(info, "Display Stats", DebuggingFlags.DisplayStats);
             DebugFlags.Menu.AddFlagToggle(info, "Display Voices", DebuggingFlags.DisplayVoiceList);
+            DebugFlags.Menu.AddFlagToggle(info, "Display Mixers", DebuggingFlags.DisplayMixerList);
+
+            DebugFlags.AddToggleGroup(DebuggingFlags.DisplayVoiceList, DebuggingFlags.DisplayMixerList);
 
             return info;
         }

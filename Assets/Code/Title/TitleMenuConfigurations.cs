@@ -37,6 +37,10 @@ namespace Astro.Title {
         private void OnNodeEntered(ViewNode node) {
             StringHash32 nodeId = node.Id;
 
+            if (nodeId == "NewCutscene") {
+                return;
+            }
+
             if (nodeId == "Title") {
                 TitleGroup.Show();
             } else if (nodeId == "New") {
