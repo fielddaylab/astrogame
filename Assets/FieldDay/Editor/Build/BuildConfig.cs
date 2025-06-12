@@ -5,7 +5,7 @@ namespace FieldDay.Editor {
     /// <summary>
     /// Build configuration.
     /// </summary>
-    [CreateAssetMenu(menuName = "Field Day/Build System/Build Configuration")]
+    [CreateAssetMenu(menuName = "Field Day/Build Configuration", order = -260)]
     public class BuildConfig : ScriptableObject {
         public string[] BranchNamePatterns;
         public bool DevelopmentBuild;

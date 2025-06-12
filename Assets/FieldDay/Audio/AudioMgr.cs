@@ -209,64 +209,89 @@ namespace FieldDay.Audio {
                 }
 
 #if DEVELOPMENT
-                if (DebugFlags.IsFlagSet(DebuggingFlags.DisplayStats)) {
-                    using(PooledStringBuilder psb = PooledStringBuilder.Create()) {
-                        psb.Builder.Append("Voice Count: ").AppendNoAlloc(m_ActiveVoices.Count)
-                            .Append("\n   Active Tweens: ").AppendNoAlloc(m_FloatTweenList.Length)
-                            .Append("\n   Active Position Trackers: ").AppendNoAlloc(m_PositionSyncList.Length)
-                            .Append("\n   Active Mixers: ").AppendNoAlloc(m_ActiveMixStates.Count)
-                            .Append("\n   Clip Preload Queue: ").AppendNoAlloc(m_PreloadQueue.Count);
-
-                        DebugDraw.AddLogText(psb, ColorBank.Aqua);
-                    }
-                }
-
-                if (DebugFlags.IsFlagSet(DebuggingFlags.DisplayVoiceList)) {
-                    using (PooledStringBuilder psb = PooledStringBuilder.Create()) {
-                        psb.Builder.Append("Voice Count: ").AppendNoAlloc(m_ActiveVoices.Count);
-                        foreach(var voice in m_ActiveVoices) {
-                            psb.Builder.Append("\n   ").Append(voice.DebugName);
-                            AudioSource src = voice.Components.Source;
-                            psb.Builder.Append(" (").AppendNoAlloc(src.time, 2).Append('/')
-                                .AppendNoAlloc(src.clip.length, 2);
-                            if (src.loop) {
-                                psb.Builder.Append('L');
-                            }
-                            psb.Builder.Append(") ");
-                            switch(voice.State) {
-                                case VoiceState.Paused: {
-                                    psb.Builder.Append("[PAUSED]");
-                                    break;
-                                }
-                                case VoiceState.PlayRequested: {
-                                    psb.Builder.Append("[QUEUED]");
-                                    break;
-                                }
-                                case VoiceState.Stopped: {
-                                    psb.Builder.Append("[DONE]");
-                                    break;
-                                }
-                            }
-                        }
-
-                        DebugDraw.AddViewportText(new Vector2(0, 1), new Vector2(8, -8), psb, ColorBank.Teal, 0, TextAnchor.UpperLeft, DebugTextStyle.BackgroundDark); ;
-                    }
-                }
-
-                if (DebugFlags.IsFlagSet(DebuggingFlags.DisplayMixerList)) {
-                    using (PooledStringBuilder psb = PooledStringBuilder.Create()) {
-                        psb.Builder.Append("Mixer Count: ").AppendNoAlloc(m_ActiveMixStates.Count);
-                        foreach (var mix in m_ActiveMixStates) {
-                            psb.Builder.Append("\n   ").Append(mix.Id.ToDebugString());
-                            psb.Builder.Append(" (").AppendNoAlloc(mix.Mix, 2).Append("/").AppendNoAlloc(mix.TargetMix, 2).Append(")");
-                        }
-
-                        DebugDraw.AddViewportText(new Vector2(0, 1), new Vector2(8, -8), psb, ColorBank.Teal, 0, TextAnchor.UpperLeft, DebugTextStyle.BackgroundDark);
-                    }
-                }
+                LateDebugUpdate();
 #endif // DEVELOPMENT
             }
         }
+
+#if DEVELOPMENT
+        private unsafe void LateDebugUpdate() {
+            if (DebugFlags.IsFlagSet(DebuggingFlags.DisplayStats)) {
+                using (PooledStringBuilder psb = PooledStringBuilder.Create()) {
+                    psb.Builder.Append("Voice Count: ").AppendNoAlloc(m_ActiveVoices.Count)
+                        .Append("\n   Active Tweens: ").AppendNoAlloc(m_FloatTweenList.Length)
+                        .Append("\n   Active Position Trackers: ").AppendNoAlloc(m_PositionSyncList.Length)
+                        .Append("\n   Active Mixers: ").AppendNoAlloc(m_ActiveMixStates.Count)
+                        .Append("\n   Clip Preload Queue: ").AppendNoAlloc(m_PreloadQueue.Count);
+
+                    DebugDraw.AddLogText(psb, ColorBank.Aqua);
+                }
+            }
+
+            if (DebugFlags.IsFlagSet(DebuggingFlags.DisplayVoiceList)) {
+                using (PooledStringBuilder psb = PooledStringBuilder.Create()) {
+                    psb.Builder.Append("Voice Count: ").AppendNoAlloc(m_ActiveVoices.Count);
+                    foreach (var voice in m_ActiveVoices) {
+                        psb.Builder.Append("\n   ").Append(voice.DebugName);
+                        AudioSource src = voice.Components.Source;
+                        psb.Builder.Append(" (").AppendNoAlloc(src.time, 2).Append('/')
+                            .AppendNoAlloc(src.clip.length, 2);
+                        if (src.loop) {
+                            psb.Builder.Append('L');
+                        }
+                        psb.Builder.Append(") ");
+                        switch (voice.State) {
+                            case VoiceState.Paused: {
+                                    psb.Builder.Append("[PAUSED]");
+                                    break;
+                                }
+                            case VoiceState.PlayRequested: {
+                                    psb.Builder.Append("[QUEUED]");
+                                    break;
+                                }
+                            case VoiceState.Stopped: {
+                                    psb.Builder.Append("[DONE]");
+                                    break;
+                                }
+                        }
+                    }
+
+                    DebugDraw.AddViewportText(new Vector2(0, 1), new Vector2(8, -8), psb, ColorBank.Teal, 0, TextAnchor.UpperLeft, DebugTextStyle.BackgroundDark); ;
+                }
+            }
+
+            if (DebugFlags.IsFlagSet(DebuggingFlags.DisplayBusList)) {
+                using (PooledStringBuilder psb = PooledStringBuilder.Create()) {
+                    psb.Builder.Append("Bus Count: ").AppendNoAlloc(m_BusCount);
+                    for(int i = 0; i < m_BusCount; i++) {
+                        BusData bus = m_BusData[i];
+                        AudioPropertyBlock busProps = bus.BusProperties;
+                        AudioPropertyBlock scriptProps = *bus.ScriptProperties;
+                        AudioPropertyBlock lastProps = m_WorkingBusProperties[i];
+                        psb.Builder.Append("\n   ").Append(bus.Name.ToDebugString());
+                        psb.Builder.Append("\n      Volume: ").AppendNoAlloc(busProps.Volume, 2)
+                            .Append(" / ").AppendNoAlloc(scriptProps.Volume, 2).Append(" / ").AppendNoAlloc(lastProps.Volume, 2);
+                        psb.Builder.Append("\n      Pitch: ").AppendNoAlloc(busProps.Pitch, 2)
+                            .Append(" / ").AppendNoAlloc(scriptProps.Pitch, 2).Append(" / ").AppendNoAlloc(lastProps.Pitch, 2);
+                    }
+
+                    DebugDraw.AddViewportText(new Vector2(0, 1), new Vector2(8, -8), psb, ColorBank.Teal, 0, TextAnchor.UpperLeft, DebugTextStyle.BackgroundDark); ;
+                }
+            }
+
+            if (DebugFlags.IsFlagSet(DebuggingFlags.DisplayMixerList)) {
+                using (PooledStringBuilder psb = PooledStringBuilder.Create()) {
+                    psb.Builder.Append("Mixer Count: ").AppendNoAlloc(m_ActiveMixStates.Count);
+                    foreach (var mix in m_ActiveMixStates) {
+                        psb.Builder.Append("\n   ").Append(mix.Id.ToDebugString());
+                        psb.Builder.Append(" (").AppendNoAlloc(mix.Mix, 2).Append("/").AppendNoAlloc(mix.TargetMix, 2).Append(")");
+                    }
+
+                    DebugDraw.AddViewportText(new Vector2(0, 1), new Vector2(8, -8), psb, ColorBank.Teal, 0, TextAnchor.UpperLeft, DebugTextStyle.BackgroundDark);
+                }
+            }
+        }
+#endif // DEVELOPMENT
 
         internal void Shutdown() {
             Unsafe.TryDestroyArena(ref m_Arena);
@@ -464,6 +489,7 @@ namespace FieldDay.Audio {
             TraceExecution,
             DisplayStats,
             DisplayVoiceList,
+            DisplayBusList,
             DisplayMixerList
         }
 
@@ -476,9 +502,10 @@ namespace FieldDay.Audio {
             info.AddDivider();
             DebugFlags.Menu.AddFlagToggle(info, "Display Stats", DebuggingFlags.DisplayStats);
             DebugFlags.Menu.AddFlagToggle(info, "Display Voices", DebuggingFlags.DisplayVoiceList);
+            DebugFlags.Menu.AddFlagToggle(info, "Display Buses", DebuggingFlags.DisplayBusList);
             DebugFlags.Menu.AddFlagToggle(info, "Display Mixers", DebuggingFlags.DisplayMixerList);
 
-            DebugFlags.AddToggleGroup(DebuggingFlags.DisplayVoiceList, DebuggingFlags.DisplayMixerList);
+            DebugFlags.AddToggleGroup(DebuggingFlags.DisplayVoiceList, DebuggingFlags.DisplayMixerList, DebuggingFlags.DisplayBusList);
 
             return info;
         }

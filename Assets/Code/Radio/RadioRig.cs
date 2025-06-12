@@ -12,10 +12,14 @@ namespace Astro.Radio {
     public sealed class RadioRig : SharedStateComponent, IRegistrationCallbacks {
         [Header("Controls")]
         public DialAdjustableInstrument Dial;
+        public LabButton Power;
         
         [Header("Audio Sources")]
         public AudioSource StreamEmitter;
         public AudioSource StaticEmitter;
+
+        [Header("Mixes")]
+        [AudioMixStateRef] public StringHash32 MixId;
 
         [NonSerialized] public AudioHandle StaticAudioHandle;
         [NonSerialized] public AudioHandle StreamAudioHandle;

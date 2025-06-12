@@ -107,7 +107,7 @@ namespace Astro {
             Texture2D.DestroyImmediate(texture);
         }
 
-        static private unsafe void BuildInDirectory(DirectoryInfo dir) {
+        static private unsafe void BuildInDirectory(DirectoryInfo dir, bool generateTextures) {
             byte[] tocData = new byte[64 * Unsafe.KiB];
             byte[] sampleData = new byte[256 * Unsafe.KiB];
             byte[] finalData = new byte[310 * Unsafe.KiB];
@@ -127,9 +127,12 @@ namespace Astro {
                     VoxWaveformTable.TOCEntry toc;
                     float duration;
                     foreach (var file in dir.EnumerateFiles("*.mp3", SearchOption.AllDirectories)) {
+                        EditorUtility.DisplayProgressBar("Generating waveforms...", file.Name, 0);
                         var chunks = GenerateChunks(refPath, file, out toc.LineCode, out duration);
                         if (chunks != null && !toc.LineCode.IsEmpty) {
-                            ExportTexture(toc.LineCode, chunks, duration);
+                            if (generateTextures) {
+                                ExportTexture(toc.LineCode, chunks, duration);
+                            }
                             sampleWriter.WriteBuffer(chunks);
                             toc.Chunks.Offset = (ushort)chunkCount;
                             toc.Chunks.Length = (ushort)chunks.Length;
@@ -158,12 +161,19 @@ namespace Astro {
 
         [MenuItem("Astro/Build Vox Waveform Manifests")]
         static private void BuildManifests() {
-            foreach(var dirPath in Directory.EnumerateDirectories(Path.Combine(Application.streamingAssetsPath, "vox"))) {
-                BuildInDirectory(new DirectoryInfo(dirPath));
-            }
+            bool generateTextures = EditorUtility.DisplayDialog("Generate Preview Textures", "Do you want to generate preview textures?", "Yeah", "no");
 
-            foreach (var dirPath in Directory.EnumerateDirectories(Path.Combine(Application.streamingAssetsPath, "radio"))) {
-                BuildInDirectory(new DirectoryInfo(dirPath));
+            try {
+                foreach (var dirPath in Directory.EnumerateDirectories(Path.Combine(Application.streamingAssetsPath, "vox"))) {
+                    BuildInDirectory(new DirectoryInfo(dirPath), generateTextures);
+                }
+
+                foreach (var dirPath in Directory.EnumerateDirectories(Path.Combine(Application.streamingAssetsPath, "radio"))) {
+                    BuildInDirectory(new DirectoryInfo(dirPath), generateTextures);
+                }
+            }
+            finally {
+                EditorUtility.ClearProgressBar();
             }
         }
     }

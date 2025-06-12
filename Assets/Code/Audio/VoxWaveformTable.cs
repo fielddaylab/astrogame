@@ -24,11 +24,18 @@ namespace Astro.Audio {
 
         private Dictionary<StringHash32, OffsetLengthU16> m_TOC;
         private UnsafeSpan<VoxWaveformChunk> m_ChunkBuffer;
+        [NonSerialized] private VoxWaveformTable m_CachedFallback;
 
         public bool TryFind(StringHash32 lineCode, out VoxWaveform waveform) {
             if (m_TOC.TryGetValue(lineCode, out var span)) {
                 waveform.Chunks = m_ChunkBuffer.Slice(span.Offset, span.Length);
                 return true;
+            } else if (!m_FallbackId.IsEmpty) {
+                Assert.True(m_FallbackId != AssetId, "Potential infinite loop");
+                if (ReferenceEquals(m_CachedFallback, null)) {
+                    m_CachedFallback = Find.NamedAsset<VoxWaveformTable>(m_FallbackId);
+                }
+                return m_CachedFallback.TryFind(lineCode, out waveform);
             } else {
                 waveform.Chunks = default;
                 return false;
@@ -81,6 +88,7 @@ namespace Astro.Audio {
 
         unsafe void IRegistrationCallbacks.OnDeregister() {
             Unsafe.Free(m_ChunkBuffer.Ptr);
+            m_CachedFallback = null;
         }
 
         #endregion // IRegistrationCallbacks
@@ -88,6 +96,23 @@ namespace Astro.Audio {
         static private void HandleResult(FileLoadRequest request, FileLoadResult result, object context) {
             ByteReader reader = result.CreateByteReader();
             ((IByteReadable) context).ReadFrom(ref reader);
+        }
+
+        static public StringHash32 GenerateKey(string streamPath) {
+            StringSlice waveformKeySlice = streamPath;
+            int sharedIdx = waveformKeySlice.IndexOf("shared/");
+            if (sharedIdx >= 0) {
+                waveformKeySlice = waveformKeySlice.Substring(sharedIdx + 7);
+            }
+            int enIdx = waveformKeySlice.IndexOf("en/");
+            if (enIdx >= 0) {
+                waveformKeySlice = waveformKeySlice.Substring(enIdx + 3);
+            }
+            int extIdx = waveformKeySlice.LastIndexOf('.');
+            if (extIdx >= 0) {
+                waveformKeySlice = waveformKeySlice.Substring(0, extIdx);
+            }
+            return StringHash32.Fast(waveformKeySlice);
         }
     }
 }

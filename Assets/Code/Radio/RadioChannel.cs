@@ -1,7 +1,9 @@
 using BeauUtil;
 using EasyAssetStreaming;
+using FieldDay;
 using FieldDay.Assets;
 using FieldDay.Audio;
+using System;
 using UnityEngine;
 
 namespace Astro.Radio {
@@ -17,6 +19,8 @@ namespace Astro.Radio {
         [StreamingAudioPath] public string AudioStream;
         public AudioClip AudioClip;
         [AudioEventRef] public StringHash32 EventOverride;
+        
+        [NonSerialized] public StringHash32 WaveformKey;
     }
 
     public enum RadioChannelMode {

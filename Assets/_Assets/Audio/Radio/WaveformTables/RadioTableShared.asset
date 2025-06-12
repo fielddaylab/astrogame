@@ -9,21 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 775a14201ccf1af44a3e0dde030f1f16, type: 3}
-  m_Name: VO
+  m_Script: {fileID: 11500000, guid: 115ec6f1389663e4fab8df039b764c34, type: 3}
+  m_Name: RadioTableShared
   m_EditorClassIdentifier: 
-  ParentId:
+  m_EntryCapacity: 512
+  m_MaxChunksKb: 256
+  m_FallbackId:
     m_HashValue: 0
-  Properties:
-    Volume: 1
-    Pitch: 1
-    Pan: 0
-    LoPass: 0
-    HiPass: 0
-    Pause: 0
-    Mute: 0
-  DuckingMix:
-    m_HashValue: 3828654327
-  DuckingEnvelope:
-    Attack: 0.5
-    Decay: 0.75
+  m_Path: radio/shared/VoxManifest.bytes

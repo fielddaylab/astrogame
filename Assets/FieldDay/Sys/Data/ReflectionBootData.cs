@@ -16,7 +16,7 @@ using UnityEditor;
 #endif // UNITY_EDITOR
 
 namespace FieldDay.Data {
-    [CreateAssetMenu(menuName = "Field Day/Core/Reflection Boot Data")]
+    [CreateAssetMenu(menuName = "Field Day/Reflection Boot Data", order = -240)]
     public sealed class ReflectionBootData : ScriptableObject, IBaked {
         public const BindingFlags DefaultFlags = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
 

@@ -12,7 +12,7 @@ namespace FieldDay.Assets {
     /// <summary>
     /// Default asset package.
     /// </summary>
-    [CreateAssetMenu(menuName = "Field Day/Assets/Asset Pack")]
+    [CreateAssetMenu(menuName = "Field Day/Asset Pack", order = -300)]
     public sealed class AssetPack : ScriptableObject, IAssetPackage {
         [SerializeField] private GlobalAsset[] m_GlobalAssets = Array.Empty<GlobalAsset>();
         [SerializeField] private NamedAsset[] m_NamedAssets = Array.Empty<NamedAsset>();

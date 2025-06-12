@@ -62,6 +62,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _NoiseTexture:
+        m_Texture: {fileID: 2800000, guid: c6e188d2df1ab484790d20f1d899544e, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -72,6 +76,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _VoiceTexture:
+        m_Texture: {fileID: 2800000, guid: d37c45a70decff64ebcfb0b3479b0e20, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -98,8 +106,8 @@ Material:
     - _ClearCoatSmoothness: 0
     - _Cull: 2
     - _Cutoff: 0.5
-    - _DataScaleX: 2.5
-    - _DataScaleY: 0.07
+    - _DataScaleX: 3
+    - _DataScaleY: 0.38092393
     - _DestBlend: 10
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
@@ -112,9 +120,10 @@ Material:
     - _LineCenter: 0.5
     - _LineScale: 0.2
     - _LineThickness: 0.03
-    - _LocalTimeScale: 0
+    - _LocalTimeScale: 12
     - _Metallic: 1
     - _OcclusionStrength: 1
+    - _OscillationScale: 40
     - _Parallax: 0.005
     - _QueueOffset: 0
     - _ReceiveShadows: 1
@@ -130,6 +139,7 @@ Material:
     - _TimeScale: 1
     - _VertResolution: 64
     - _VirtualResolution: 64
+    - _VoiceLerp: 1
     - _WidthAspect: 4.648
     - _WorkflowMode: 1
     - _ZWrite: 0
@@ -138,9 +148,11 @@ Material:
     - _BgColor: {r: 0, g: 0, b: 0, a: 1}
     - _Color: {r: 1, g: 0.94259137, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _LineColor: {r: 0.99607843, g: 0.80392164, b: 0, a: 1}
+    - _LineColor: {r: 1, g: 0.8627451, b: 0.29803923, a: 1}
+    - _NoiseColor: {r: 0.99607843, g: 0.8039216, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _VirtualResolution: {r: 596, g: 128, b: 0, a: 0}
+    - _VoiceColor: {r: 0.23113209, g: 0.51651096, b: 1, a: 1}
   m_BuildTextureStacks: []
 --- !u!114 &5103461794622226052
 MonoBehaviour:

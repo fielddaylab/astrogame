@@ -8,7 +8,7 @@ namespace FieldDay.Audio {
     /// <summary>
     /// Audio event information.
     /// </summary>
-    [CreateAssetMenu(menuName = "Field Day/Audio/Audio Event")]
+    [CreateAssetMenu(menuName = "Field Day/Audio Event", order = -280)]
     public sealed class AudioEvent : NamedAsset, IRegistrationCallbacks {
         public AudioClip[] Samples = Array.Empty<AudioClip>();
         public bool PreloadSamples = true;
