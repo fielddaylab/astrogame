@@ -18,5 +18,6 @@ namespace Astro.Reference {
         Bookmark,
         Classification,
         MaterialClassification,
+        Zoom
     }
 }

@@ -37,6 +37,7 @@ namespace Astro.Reference {
         public Transform ClosedPosition;
         public Transform OpenPosition;
         public Transform IntermediatePosition;
+        public Transform ZoomPosition;
 
         [Header("Animation Params")]
         public float CoverClosedAngle;
@@ -118,8 +119,9 @@ namespace Astro.Reference {
         static public void SetGuideInteraction(RefGuideRig rig, RefGuideInteractionState state) {
             rig.ClosedToggle.enabled = state == RefGuideInteractionState.Closed;
 
-            foreach(var tab in rig.TopTabs.Bookmarks) {
-                tab.Clickable.enabled = state == RefGuideInteractionState.Open;
+            bool openOrZoomed = state == RefGuideInteractionState.Open || state == RefGuideInteractionState.Zoomed;
+            foreach (var tab in rig.TopTabs.Bookmarks) {
+                tab.Clickable.enabled = openOrZoomed;
             }
 
             foreach (var control in rig.OpenControls) {
@@ -128,7 +130,7 @@ namespace Astro.Reference {
                 bool isPageTurn = ctrl.ControlType == RefGuideControlType.NextPage || ctrl.ControlType == RefGuideControlType.PrevPage;
                 if (isPageTurn) {
                     if (Find.State<RefGuideState>().AllowPageChanges) {
-                        ctrl.gameObject.SetActive(state == RefGuideInteractionState.Open);
+                        ctrl.gameObject.SetActive(openOrZoomed);
                     }
                     else {
                         ctrl.gameObject.SetActive(false);
@@ -136,10 +138,10 @@ namespace Astro.Reference {
                     continue;
                 }
 
-                control.enabled = state == RefGuideInteractionState.Open;
+                control.enabled = openOrZoomed;
             }
 
-            if (state != RefGuideInteractionState.Open) {
+            if (!openOrZoomed) {
                 foreach(var page in rig.ControlPages) {
                     foreach(var c in page.Colliders) {
                         c.enabled = false;
@@ -147,7 +149,7 @@ namespace Astro.Reference {
                 }
             }
 
-            rig.OpenInteractables.SetActive(state == RefGuideInteractionState.Open);
+            rig.OpenInteractables.SetActive(openOrZoomed);
         }
     }
 }

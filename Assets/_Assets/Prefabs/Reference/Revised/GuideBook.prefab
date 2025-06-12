@@ -239,10 +239,10 @@ GameObject:
   m_Component:
   - component: {fileID: 3290187816800421280}
   - component: {fileID: 6151640608286336436}
-  - component: {fileID: 9098036465468309082}
   - component: {fileID: 2672611251310455101}
   - component: {fileID: 4560181110844788419}
   - component: {fileID: 1877904246579235526}
+  - component: {fileID: 6642940254595412693}
   m_Layer: 9
   m_Name: Focus
   m_TagString: Untagged
@@ -287,33 +287,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.23514163, y: 0.27515107, z: 0.17735358}
   m_Center: {x: 1.3801404, y: 0.94830495, z: -0.08999997}
---- !u!114 &9098036465468309082
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 310231768147537400}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f288be468b89eec4c9a8f9281ece7b1d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TargetNode: {fileID: 0}
-  TargetNodeId:
-    m_Source: GuideFocus
-    m_HashValue: 4230864589
-  Transition:
-    Time: 0.25
-    Curve: 4
-  TransitionControlPoint: {fileID: 0}
-  Clickable: {fileID: 6151640608286336436}
-  ObjectGroup:
-    GameObjects: []
-    Behaviours: []
-  GroupId:
-    m_Source: 
-    m_HashValue: 0
 --- !u!114 &2672611251310455101
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -360,6 +333,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsDraggable: 0
+--- !u!114 &6642940254595412693
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 310231768147537400}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 590f68db6c69c93428ee3a3367a887df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ControlType: 6
 --- !u!1 &356195987101580995
 GameObject:
   m_ObjectHideFlags: 0
@@ -4997,6 +4983,7 @@ MonoBehaviour:
   ClosedPosition: {fileID: 0}
   OpenPosition: {fileID: 0}
   IntermediatePosition: {fileID: 0}
+  ZoomPosition: {fileID: 0}
   CoverClosedAngle: -170
   CoverOpenAngle: -360
   CoverRingRadius: 0.072

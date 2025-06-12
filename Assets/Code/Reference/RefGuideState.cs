@@ -104,6 +104,7 @@ namespace Astro.Reference {
         Closed,
         Open,
         Transitioning,
+        Zoomed
     }
 
     public static partial class ReferenceUtility {
@@ -146,6 +147,11 @@ namespace Astro.Reference {
 
                 case RefGuideControlType.ToggleActive: {
                     ToggleReferenceActive();
+                    break;
+                }
+
+                case RefGuideControlType.Zoom: {
+                        ToggleReferenceZoom();
                     break;
                 }
             }
@@ -206,6 +212,48 @@ namespace Astro.Reference {
             }
         }
 
+        static private void ToggleReferenceZoom() {
+            RefGuideState guide = Find.State<RefGuideState>();
+            RefGuideRig rig = Find.State<RefGuideRig>();
+            if (guide.CurrentState == RefGuideInteractionState.Transitioning) {
+                return;
+            }
+            if (guide.CurrentState == RefGuideInteractionState.Zoomed) {
+                guide.TransitionRoutine.Replace(guide, TransitionFromZoomed(guide, rig)).TryManuallyUpdate(0);
+            } else {
+                guide.TransitionRoutine.Replace(guide, TransitionToZoomed(guide, rig)).TryManuallyUpdate(0);
+            }
+        }
+
+        static private IEnumerator TransitionToZoomed(RefGuideState state, RefGuideRig rig) {
+            state.CurrentState = RefGuideInteractionState.Transitioning;
+            SetGuideInteraction(rig, RefGuideInteractionState.Transitioning);
+
+            rig.ZoomPosition.GetPositionAndRotation(out var p, out var r);
+
+            yield return Routine.Combine(rig.RootTransform.MoveTo(p, 0.4f).Ease(Curve.CubeInOut), rig.RootTransform.RotateQuaternionTo(r, 0.4f).Ease(Curve.CubeInOut));
+            //yield return null;
+            SetControlIconActive(3, true);
+            SetControlIconActive(4, false);
+
+            rig.transform.SetParent(Game.Rendering.PrimaryCamera.transform, true);
+            SetGuideInteraction(rig, RefGuideInteractionState.Zoomed);
+            state.CurrentState = RefGuideInteractionState.Zoomed;
+        }
+
+        static private IEnumerator TransitionFromZoomed(RefGuideState state, RefGuideRig rig) {
+            state.CurrentState = RefGuideInteractionState.Transitioning;
+            SetGuideInteraction(rig, RefGuideInteractionState.Transitioning);
+            rig.transform.SetParent(null, true);
+
+            rig.OpenPosition.GetPositionAndRotation(out var p, out var r);
+
+            yield return Routine.Combine(rig.RootTransform.MoveTo(p, 0.4f).Ease(Curve.CubeInOut), rig.RootTransform.RotateQuaternionTo(r, 0.4f).Ease(Curve.CubeInOut));
+            SetGuideInteraction(rig, RefGuideInteractionState.Open);
+            state.CurrentState = RefGuideInteractionState.Open;
+
+        }
+
         static private IEnumerator TransitionToOpen(RefGuideState state, RefGuideRig rig) {
             state.CurrentState = RefGuideInteractionState.Transitioning;
             SetGuideInteraction(rig, RefGuideInteractionState.Transitioning);
@@ -250,6 +298,7 @@ namespace Astro.Reference {
         static private IEnumerator TransitionToClose(RefGuideState state, RefGuideRig rig) {
             state.CurrentState = RefGuideInteractionState.Transitioning;
             // clear data
+            rig.transform.SetParent(null, true);
             state.SelectedMaterials = 0;
             state.SelectedRefClassification = null;
             TryEnableIDSubmit(false);
