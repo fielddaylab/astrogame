@@ -201,6 +201,9 @@ namespace Astro {
 
         [LeafMember("StartNeutrinoNavigation")]
         static private void LeafStartNeutrinoNavigation() {
+            // whenever we start neutrino nav we should insure there is nothing highlighted and no data displayed
+            LeafClearMonitorSelection();
+
             Game.Events.Dispatch(GameEvents.StartNeutrinoNavigation);
 
             GameLoop.ResumeUpdates(AstroGame.MonitorControlsUpdateMask);

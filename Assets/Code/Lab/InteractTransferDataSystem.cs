@@ -31,6 +31,8 @@ namespace Astro {
                     }
 
                     if (isRowComplete) {
+                        FocusableUtility.UpdateFocusTrackerSprite(Find.State<FocusState>().CurrentFocus, FocusState.GuessTrackerSprites[dataState.SelectedTarget.PuzzleRow]);
+                         
                         using (var table = TempVarTable.Alloc()) {
                             table.Set("rowId", dataState.SelectedTarget.PuzzleRow);
                             ScriptUtility.Trigger(ScriptEvents.OnPuzzleRowFilled, table);

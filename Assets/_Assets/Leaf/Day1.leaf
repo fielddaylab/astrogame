@@ -334,9 +334,8 @@ $call UnlockMonitorFocus()
 $call SetInputState(false)
 $call SetRefGuideActive(false)
 
-$call Wait(3)
+$call Wait(4)
 $call StopOpenMode()
-$call ClearMonitorSelection()
 {@Radio} You’ve identified the necessary data to earn a higher access level.  $[Radio/L1/l1_r_27]
 // {@Dad} You’ll need to tune to the right frequency on your radio to unlock your equipment. $[Day1/Dad/l1_d_s34]
 
@@ -348,6 +347,7 @@ $call ClearMonitorSelection()
 
 //TODO Seperate Node Here
 $call MonitorUI->PlayRadioDownload(2)
+$call ClearMonitorSelection()
 $call MonitorUI->ShowCERESLogo()
 $call Wait(1)
 {@Radio} Ope, and I need to read this thing.... (*clears throat*) $[Radio/L1/l1_r_29]
@@ -819,6 +819,7 @@ $call HintModals->Hide("ElijahPuzzle", 0.2)
 @trigger    OnPuzzleGridFullyPopulated
 @interrupt
 @cutscene
+@boostScore 2000
 @once
 
 $call HintModals->Hide("ElijahPuzzle", 0.2)

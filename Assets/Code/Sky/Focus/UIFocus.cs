@@ -35,7 +35,7 @@ namespace Astro {
         public Vector3 TargetVector;
     }
 
-    public static partial class FocusableUtility {
+    public static partial class FocusableUtility { 
         public static void InitFocusable(FocusState state, UIFocus focus, Transform target, CelestialAsset asset, Sprite represent2D, Sprite trackerSprite = null) {
 #if UNITY_EDITOR
             focus.gameObject.name = asset.DisplayName;
@@ -62,6 +62,19 @@ namespace Astro {
             float clickableRadius = baseVal * Math.Min(1, 1 / scaleFactor);
 
             focus.Clickable.radius = clickableRadius / scaleFactor;
+        }
+
+        public static void UpdateFocusAppearance(UIFocus focus, Sprite represent2D, Vector3 scale = default){
+            focus.Represent2D.sprite = represent2D;
+            if (scale == default) return;
+
+            focus.Root.localScale = scale;
+            Vector3 currTrackerScale = focus.TrackerSprite.GetComponent<Transform>().localScale;
+            focus.TrackerSprite.GetComponent<Transform>().localScale = new Vector3(currTrackerScale.x / scale.x, currTrackerScale.y / scale.y, 1f);
+        }
+
+        public static void UpdateFocusTrackerSprite(UIFocus focus, Sprite trackerSprite){
+            focus.TrackerSprite.sprite = trackerSprite; 
         }
     }
 }

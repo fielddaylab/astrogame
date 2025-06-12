@@ -54,7 +54,13 @@ namespace Astro {
 
         private void CheckPuzzle() {
             PuzzleState puzzle = Find.State<PuzzleState>();
-            if (PuzzleUtility.CheckSolutionCorrect(puzzle, out BitSet32 rowsCorrectness)) {
+            if (PuzzleUtility.CheckSolutionCorrect(puzzle, out BitSet32 rowsCorrectness)) { 
+                // update puzzle star appeances
+                foreach (var row in puzzle.ActivePuzzle.Rows) {
+                    UIFocus currentFocus = FocusableUtility.GetFocusByData(row.Object);
+                    FocusableUtility.UpdateFocusTrackerSprite(currentFocus, FocusState.DataSubmittedStarSprite);
+                }
+
                 ReviewUtility.OnCorrectPuzzleSubmission.Invoke(puzzle.ActivePuzzle.DisplayName);
                 puzzle.PuzzleCorrectSubmissionRoutine.Replace(ReviewUtility.PuzzleCorrectSubmissionRoutine(m_State.ReviewModule, m_State, 2));
 
@@ -64,6 +70,15 @@ namespace Astro {
             } else {
                 using (var table = TempVarTable.Alloc()) {
                     for (int r = 0; r < puzzle.ActivePuzzle.Rows.Length; r++) {
+                        StringHash32 assetId = puzzle.ActivePuzzle.Rows[r].Object;
+                        UIFocus focus = FocusableUtility.GetFocusByData(assetId);
+
+                        if (rowsCorrectness[r]) {
+                            FocusableUtility.UpdateFocusTrackerSprite(focus, FocusState.GuessTrackerSubmittedSprites[r]);
+                        } else {
+                            FocusableUtility.UpdateFocusTrackerSprite(focus, null);
+                        }
+
                         StringHash32 key = "row_" + r;
                         table.Set(key, rowsCorrectness[r]);
                     }
@@ -93,6 +108,7 @@ namespace Astro {
                 Game.Events.Dispatch(GameEvents.StartPuzzleMode);
 
                 GameLoop.ResumeUpdates(AstroGame.MonitorControlsUpdateMask);
+                GameLoop.ResumeUpdates(AstroGame.PuzzleSubmissionUpdateMask);
                 GameLoop.ResumeUpdates(AstroGame.OpenSubmissionUpdateMask);
                 GameLoop.ResumeUpdates(AstroGame.InstrumentUpdateMask);
             });

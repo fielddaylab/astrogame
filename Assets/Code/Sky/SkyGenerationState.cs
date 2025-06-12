@@ -12,10 +12,6 @@ namespace Astro {
     [PreloadOrder(100)]
     public class SkyGenerationState : SharedStateComponent, IScenePreload {
         public Sprite DefaultStarSprite;
-        public Sprite DataSubmittedStarSprite;
-        public Sprite DataSubmittedNeutrinoStarSprite;
-        public Sprite[] GuessTrackerSprites = new Sprite[4];
-        public Sprite[] GuessTrackerSubmittedSprites = new Sprite[4];
         public Sprite DefaultPlanetSprite;
         public Sprite DefaultGalaxySprite;
         [NonSerialized] public CelestialObjectVisMask VisMask = CelestialObjectVisMask.Visible;
@@ -72,9 +68,9 @@ namespace Astro {
                     bool hasDataToDisplay = CelestialDataDisplayUtil.HasIdDataToDisplay(asset);
 
                     if (inNeutrinoEvent & hasDataToDisplay) {
-                        return state.DataSubmittedNeutrinoStarSprite;
+                        return FocusState.DataSubmittedNeutrinoStarSprite;
                     } else if (hasDataToDisplay) {
-                        return state.DataSubmittedStarSprite;
+                        return FocusState.DataSubmittedStarSprite;
                     } else {
                         return state.DefaultStarSprite;
                     }

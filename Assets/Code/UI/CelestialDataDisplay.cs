@@ -171,25 +171,18 @@ namespace Astro {
         }
 
         static public void UpdateStarRepresentation(UIFocus focus) {
-            SkyGenerationState state = Find.State<SkyGenerationState>();
-            Sprite update;
-
             bool inNeutrinoEvent = NeutrinoEventUtil.IsAssetInNeutrinoEvent(focus.TargetData);
             bool hasDataToDisplay = HasIdDataToDisplay(focus.TargetData);
 
+            Sprite update;
             if (inNeutrinoEvent & hasDataToDisplay) {
-                update = state.DataSubmittedNeutrinoStarSprite;
-                focus.TrackerSprite.sprite = update;
-                // focus.TrackerSprite.size = new Vector2(0.32f, 0.32f);
+                update = FocusState.DataSubmittedNeutrinoStarSprite;
             } else if (hasDataToDisplay) {
-                update = state.DataSubmittedStarSprite;
-                focus.TrackerSprite.sprite = update;
-                // focus.TrackerSprite.size = new Vector2(0.32f, 0.32f);
+                update = FocusState.DataSubmittedStarSprite;
             } else {
-                update = state.DefaultStarSprite;
-                focus.TrackerSprite.sprite = null;
+                update = null;
             }
-
+            FocusableUtility.UpdateFocusTrackerSprite(focus, update);
         }
 
         public static void OnFocusUpdated(UIFocus focus) {
@@ -258,6 +251,7 @@ namespace Astro {
                 display.HideCelestialDataDisplay();
             }
 
+            Game.Events.Dispatch(GameEvents.LockMonitorFocus);
             display.AnimRoutine = Routine.Start(display,
                 Sequence.Create(display.RevealClearancePointDisplay())
                 .Wait(0.2f)
@@ -266,7 +260,11 @@ namespace Astro {
                 .Then(display.RemoveClearancePointDisplay())
                 .Wait(0.3f)
                 .Then(() => UpdateCurrentDataDisplay())
+                .Wait(0.1f)
+                .Then(() => OnFocusUpdated(Find.State<FocusState>().CurrentFocus))
+                .Wait(0.1f)
             );
+            display.AnimRoutine.OnComplete(() => Game.Events.Dispatch(GameEvents.UnlockMonitorFocus));
         }
 
         public static void UpdateCurrentDataDisplay() {
@@ -278,15 +276,15 @@ namespace Astro {
             UpdateStarRepresentation(focus);
 
             UpdateDataDisplay(display, focus.TargetData);
+
             DayConfigAsset config = DayConfigUtil.GetConfigForState();
             bool hasIdentifiedNeutrinoType = HasIdentifiedDataType(config.AcceptedIDSubmissions, focus.TargetData);
 
-            if (!display.DataPanelActive && hasIdentifiedNeutrinoType) {
+            if (!display.DataPanelActive) {
                 display.AnimRoutine = Routine.Start(display.RevealCelestialDataDisplay());
             }
 
             // Check if we need to submit data for neutrino event
-
             bool targetInNeutrinoEvent = NeutrinoEventUtil.IsAssetInNeutrinoEvent(focus.TargetData);
             if (!hasIdentifiedNeutrinoType && targetInNeutrinoEvent) {
                 RevealDataHint(display, focus.TargetData);
