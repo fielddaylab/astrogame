@@ -301,6 +301,19 @@ namespace FieldDay.Audio {
             });
         }
 
+        static public void SetMixStateTarget(StringHash32 mixStateId, float value) {
+            Game.Audio.QueueAudioCommand(new AudioCommand() {
+                Type = AudioCommandType.SetMixState,
+                SetMixState = new SetMixStateData() {
+                    MixId = mixStateId,
+                    Target = value,
+                    Duration = 0,
+                    UseDefaultEnvelope = true,
+                    Proportional = false,
+                }
+            });
+        }
+
         #endregion // Mixes
 
         #region Properties

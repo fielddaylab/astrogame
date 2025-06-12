@@ -8,7 +8,7 @@ namespace FieldDay.Audio {
     /// <summary>
     /// Audio bus information.
     /// </summary>
-    [CreateAssetMenu(menuName = "Field Day/Audio/Audio Bus")]
+    [CreateAssetMenu(menuName = "Field Day/Audio Bus", order = -279)]
     public sealed class AudioBus : NamedAsset {
         [AudioBusId] public StringHash32 ParentId;
 

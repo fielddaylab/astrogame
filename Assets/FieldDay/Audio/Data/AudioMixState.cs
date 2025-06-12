@@ -9,7 +9,7 @@ namespace FieldDay.Audio {
     /// <summary>
     /// Audio mix information.
     /// </summary>
-    [CreateAssetMenu(menuName = "Field Day/Audio/Audio Mix State")]
+    [CreateAssetMenu(menuName = "Field Day/Audio Mix State", order = -277)]
     public sealed class AudioMixState : NamedAsset, IRegistrationCallbacks {
         [Serializable]
         internal struct BusMix {

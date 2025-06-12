@@ -60,8 +60,7 @@ namespace Astro.Radio {
 
             if (Sfx.IsActive(m_StateB.StreamAudioHandle)) {
                 Sfx.SetVolume(m_StateB.StreamAudioHandle, m_StateB.NormalizedChannelStrength);
-            }
-            else if (m_StateA.WasAnyChannelPlayingLastFrame) {
+            } else if (m_StateA.WasAnyChannelPlayingLastFrame) {
                 var listenState = Find.State<RadioListenState>();
 
                 if (listenState.CurrListenChannel != null) {

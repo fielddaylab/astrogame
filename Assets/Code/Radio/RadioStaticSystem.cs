@@ -14,7 +14,7 @@ namespace Astro.Radio {
     public sealed class RadioStaticSystem : SharedStateSystemBehaviour<RadioRig> {
         const float FadeInDuration = 1;
         const float FadeOutDuration = 2;
-        const float WaitDuration = 2;
+        const float WaitDuration = 1;
 
         public override void ProcessWork(float deltaTime) {
             switch (m_State.StaticMode) {
@@ -48,6 +48,9 @@ namespace Astro.Radio {
                 //    DebugDraw.AddLogText(psb, Color.green);
                 //}
             }
+
+            float duckingMix = Math.Max(m_State.StaticVolume / 2, m_State.NormalizedChannelStrength);
+            Sfx.SetMixStateTarget(m_State.MixId, duckingMix);
         }
 
         static private void UpdateOff(RadioRig state) {

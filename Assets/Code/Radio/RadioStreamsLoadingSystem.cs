@@ -1,3 +1,4 @@
+using Astro.Audio;
 using BeauUtil;
 using BeauUtil.Debugger;
 using EasyAssetStreaming;
@@ -36,8 +37,10 @@ namespace Astro.Radio {
             if (m_State.LoadQueue.TryPeekFront(out RadioChannel channel)) {
                 if (channel.AudioClip != null) {
                     Game.Audio.QueuePreload(channel.AudioClip);
+                    channel.WaveformKey = channel.AudioClip.name;
                     m_State.LoadQueue.PopFront();
                 } else if (!string.IsNullOrEmpty(channel.AudioStream)) {
+                    channel.WaveformKey = VoxWaveformTable.GenerateKey(channel.AudioStream);
                     BeginRequest(channel);
                 } else {
                     Assert.True(channel.Mode == RadioChannelMode.Scripted, "Non-scripted audio channel '{0}' does not have audio!", channel.name);

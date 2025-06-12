@@ -87,5 +87,13 @@ namespace FieldDay.Vox {
             Assert.NotNullOrDestroyed(emitter);
             return GetLineCode(emitter.RequestHandle);
         }
+
+        /// <summary>
+        /// Retrieves the playback position of the clip being played by the given emitter.
+        /// </summary>
+        static public float CurrentPlaybackPosition(VoxEmitter emitter) {
+            Assert.NotNullOrDestroyed(emitter);
+            return emitter.Player.time;
+        }
     }
 }

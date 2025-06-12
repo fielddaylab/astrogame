@@ -1247,6 +1247,7 @@ GameObject:
   - component: {fileID: 4111966688559501168}
   - component: {fileID: 6308422913694125531}
   - component: {fileID: 3981865722813540923}
+  - component: {fileID: 4106632626490325905}
   m_Layer: 0
   m_Name: Radio
   m_TagString: Untagged
@@ -1324,8 +1325,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Dial: {fileID: 4117750139922670441}
+  Power: {fileID: 0}
   StreamEmitter: {fileID: 6788618275836854612}
   StaticEmitter: {fileID: 654519670812344457}
+  MixId:
+    m_HashValue: 3082021645
 --- !u!114 &8378457690339946792
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1389,6 +1393,32 @@ MonoBehaviour:
   ListenTimeThreshold: 3
   ListenStrengthThreshold: 0.5
   CurrListenChannel: {fileID: 0}
+--- !u!114 &4106632626490325905
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5977188236420505457}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25b922b55778bd6449dbea7acd8a6f4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WaveformMaterial: {fileID: 2100000, guid: 3dc7d4f88933df144a0cfdbed06d6ab1, type: 2}
+  NoiseColor:
+    serializedVersion: 2
+    rgba: 4278242814
+  NoiseScale: 0.4
+  ChannelColor:
+    serializedVersion: 2
+    rgba: 4278242814
+  ChannelScale: 2
+  VoiceScale: 2
+  Voices:
+  - {fileID: 1616034812932198654}
+  - {fileID: 5391238426237505078}
+  - {fileID: 443561275770772983}
 --- !u!1 &6049459236354813290
 GameObject:
   m_ObjectHideFlags: 0

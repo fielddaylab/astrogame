@@ -8,9 +8,16 @@ Shader "Astro/Radio Waveform"
 		_LineThickness ("Line Thickness", float) = 0.1
 		_LineCenter("Line Center", float) = 0.5
 
+        _NoiseTexture("Noise Texture", 2D) = "white"
+        _VoiceTexture("Voice Texture", 2D) = "white"
+
+        _VoiceLerp("Voice Lerp", float) = 0
+
 		_LocalTimeScale("Time Scale", float) = 1
 
 		_DataScaleX("Data Scale X", float) = 1
+        _OscillationScale("Oscillation Scale", float) = 16
+
 		_DataScaleY("Data Scale Y", float) = 1
 
         [Enum(UnityEngine.Rendering.BlendMode)] _SrcBlend("Source Blend Mode", Int) = 5
@@ -51,11 +58,17 @@ Shader "Astro/Radio Waveform"
 
 			float _LocalTimeScale;
 
+            sampler2D _NoiseTexture;
+            sampler2D _VoiceTexture;
+
 			float _LineCenter;
 			float _LineThickness;
 
 			float _DataScaleY;
 			float _DataScaleX;
+
+            float _OscillationScale;
+            float _VoiceLerp;
 
 			struct VertIn {
 				float4 vertex   : POSITION;
@@ -87,12 +100,17 @@ Shader "Astro/Radio Waveform"
 
 				float waveX = IN.uv.x * _DataScaleX;
 				fixed2 linePos = IN.uv;
-				float offset = WaveStatic(time, waveX);
-				offset *= sin(3.1415 * IN.uv.x);
+
+                float noise = WaveTextureHalf(time * 16, waveX, 0, _NoiseTexture);
+                float voice = WaveTextureHalf(time, waveX, 0, _VoiceTexture);
+
+				float offset = lerp(noise, voice, _VoiceLerp) * 0.5;
+                offset *= sin((waveX + time) * 3.1415 * _OscillationScale);
+				offset *= 0.3 + 0.7 * sin(3.1415 * IN.uv.x);
 				linePos.y = _LineCenter + _DataScaleY * offset;
 				
 				dist = min(dist, SdfCircle(linePos, IN.uv, _LineThickness));
-				return SdfAABlend(_BgColor, _LineColor, dist * 64);
+				return SdfAABlend(_BgColor, _LineColor, dist * 32);
             }
         ENDCG
         }

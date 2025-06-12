@@ -1,15 +1,8 @@
 using TMPro;
 using UnityEngine;
-using System;
-using System.Collections;
 
 using FieldDay;
-using FieldDay.UI;
-using FieldDay.Vox;
-using BeauRoutine;
 using BeauUtil;
-using UnityEngine.UI;
-using Astro.Audio;
 using FieldDay.Assets;
 
 namespace Astro {
@@ -19,6 +12,7 @@ namespace Astro {
         public bool OverrideColors;
         [ShowIfField("OverrideColors")]
         public ColorPalette2 Colors = new ColorPalette2(Color.white, Color.black);
+        public Color32 WaveformColor;
 
         [Header("Text")]
         public TMP_FontAsset OverrideFont;

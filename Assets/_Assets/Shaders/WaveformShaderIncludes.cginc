@@ -5,14 +5,20 @@
 
 float WaveStatic(float time, float x)
 {
-    return 0.4 * sin(WAVE_INPUT(0, 4, 25))
-        + 0.15 * cos(WAVE_INPUT(0.45, -13.3, -64))
-        - 0.1 * sin(WAVE_INPUT(0.979, 0.2, -.7));
+    return 0.4 * sin(WAVE_INPUT(0, 4.1561, 25))
+        - 0.15 * cos(WAVE_INPUT(0.45, -1.133, -64))
+        + 0.1 * sin(WAVE_INPUT(0.979, 0.2, -.7))
+        + 0.14 * cos(WAVE_INPUT(0.213, 16, 3.145));
 }
 
-float WaveTexture(float time, float x, sampler2D tex)
+float WaveTexture(float time, float x, float y, sampler2D tex)
 {
-    return 2 * tex2D(tex, float2(x + time, 0.5)).r - 1;
+    return 2 * tex2D(tex, float2(x, y + time)).r - 1;
+}
+
+float WaveTextureHalf(float time, float x, float y, sampler2D tex)
+{
+    return tex2D(tex, float2(x, y + time)).r;
 }
 
 float SdfConstantY(float originY, float y, float thickness)
