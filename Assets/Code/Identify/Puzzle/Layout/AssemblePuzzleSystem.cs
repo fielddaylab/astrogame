@@ -1,23 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using FieldDay.Systems;
-using FieldDay;
 using BeauUtil;
-using TMPro;
-using System.Text;
 using BeauPools;
+using FieldDay;
 using FieldDay.UI;
+using FieldDay.Systems;
+using System.Text;
+using System.Collections.Generic;
 
-namespace Astro
-{
+namespace Astro {
     [SysUpdate(GameLoopPhase.Update, 0, AstroGame.OpenSubmissionUpdateMask)]
-    public class AssemblePuzzleSystem : ComponentSystemBehaviour<PuzzleDisplay>
-    {
+    public class AssemblePuzzleSystem : ComponentSystemBehaviour<PuzzleDisplay> {
         private readonly RingBuffer<PuzzleCell> m_CellWorkList = new RingBuffer<PuzzleCell>(12, RingBufferMode.Expand);
 
-        public override void ProcessWork(float deltaTime)
-        {
+        public override void ProcessWork(float deltaTime) {
             // Only assemble the puzzle if new one is queued or TODO reset clicked
             var state = Find.State<PuzzleState>();
             if (state.QueuedPuzzle == null) { return; }
@@ -27,12 +22,10 @@ namespace Astro
 
             m_CellWorkList.Clear();
 
-            foreach (var display in m_Components)
-            {
+            foreach (var display in m_Components) {
                 // generate header labels
                 PuzzleHeader[] headers = new PuzzleHeader[numCols];
-                for (int c = 0; c < numCols; c++)
-                {
+                for (int c = 0; c < numCols; c++) {
                     var newHeader = pools.Headers.Alloc(display.transform.position);
                     newHeader.Text.SetText(GenerateHeaderText(types[c]));
                     headers[c] = newHeader;
@@ -41,7 +34,7 @@ namespace Astro
                 // TEMPORARY, TODO: streamline this
                 using (PooledStringBuilder psb = PooledStringBuilder.Create()) {
                     for (int i = 0; i < state.QueuedPuzzle.ClueText.Length; i++) {
-                        psb.Builder.Append("• ");
+                        psb.Builder.Append("<sprite name=\"hint-bullet\">");
                         psb.Builder.Append(state.QueuedPuzzle.ClueText[i]);
                         psb.Builder.Append("\n");
                     }
@@ -104,64 +97,33 @@ namespace Astro
         /// <summary>
         /// TODO: merge this with AssetPacketConversionSystem
         /// </summary>
-        private DataPacket GenerateProvidedPacket(DataTypeMask type, CelestialAsset asset)
-        {
-            if ((type & DataTypeMask.Name) != 0)
-            {
+        private DataPacket GenerateProvidedPacket(DataTypeMask type, CelestialAsset asset) {
+            if ((type & DataTypeMask.Name) != 0) {
                 return DataPacket.Name(asset);
             }
-            if ((type & DataTypeMask.Coordinates) != 0)
-            {
+            if ((type & DataTypeMask.Coordinates) != 0) {
                 return DataPacket.Coordinates(asset.Coords);
             }
-            /* TODO: special handling for color
-            if ((type & DataTypeMask.Color) != 0) {
-                return DataPacket.Color(asset.ColorId);
-            }
-            */
-            if ((type & DataTypeMask.ApparentMagnitude) != 0)
-            {
+            if ((type & DataTypeMask.ApparentMagnitude) != 0) {
                 return DataPacket.ApparentMagnitude(asset.ApparentMagnitude);
             }
-            if ((type & DataTypeMask.AbsoluteMagnitude) != 0)
-            {
+            if ((type & DataTypeMask.AbsoluteMagnitude) != 0) {
                 return DataPacket.AbsoluteMagnitude(asset.AbsoluteMagnitude);
             }
-            if ((type & DataTypeMask.MaterialSpectrum) != 0)
-            {
+            if ((type & DataTypeMask.MaterialSpectrum) != 0) {
                 return DataPacket.Spectrograph(asset.Spectrograph);
             }
-            if ((type & DataTypeMask.Temperature) != 0)
-            {
+            if ((type & DataTypeMask.Temperature) != 0) {
                 return DataPacket.Temperature(asset.Temperature);
             }
-            if ((type & DataTypeMask.Distance) != 0)
-            {
+            if ((type & DataTypeMask.Distance) != 0) {
                 return DataPacket.Distance(asset.Distance);
             }
-            /* TODO: historical data handling
-            if ((type & DataTypeMask.Historical_Coordinates) != 0) {
-                return DataPacket.HistoricalCoordinates(asset.Coords, );
-            }
-            if ((type & DataTypeMask.Historical_ApparentMagnitude) != 0) {
-                return DataPacket.HistoricalApparentMagnitude(asset.ApparentMagnitude, );
-            }
-            if ((type & DataTypeMask.Historical_Temperature) != 0) {
-                return DataPacket.HistoricalTemperature(asset.Temperature, );
-            }
-            if ((type & DataTypeMask.Historical_Distance) != 0) {
-                return DataPacket.HistoricalDistance(asset.Distance, );
-            }
-            if ((type & DataTypeMask.Historical_Color) != 0) {
-                return DataPacket.HistoricalColor(asset.Color, );
-            }
-            */
 
             return new DataPacket();
         }
 
-        private string GenerateHeaderText(DataTypeMask type)
-        {
+        private string GenerateHeaderText(DataTypeMask type) {
             if ((type & DataTypeMask.Name) != 0) {
                 return DataTypeLabels.Name;
             }
