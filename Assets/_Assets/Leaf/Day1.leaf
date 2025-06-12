@@ -334,9 +334,8 @@ $call UnlockMonitorFocus()
 $call SetInputState(false)
 $call SetRefGuideActive(false)
 
-$call Wait(3)
+$call Wait(4)
 $call StopOpenMode()
-$call ClearMonitorSelection()
 {@Radio} You’ve identified the necessary data to earn a higher access level.  $[Radio/L1/l1_r_27]
 // {@Dad} You’ll need to tune to the right frequency on your radio to unlock your equipment. $[Day1/Dad/l1_d_s34]
 
@@ -348,6 +347,7 @@ $call ClearMonitorSelection()
 
 //TODO Seperate Node Here
 $call MonitorUI->PlayRadioDownload(2)
+$call ClearMonitorSelection()
 $call MonitorUI->ShowCERESLogo()
 $call Wait(1)
 {@Radio} Ope, and I need to read this thing.... (*clears throat*) $[Radio/L1/l1_r_29]
@@ -676,6 +676,7 @@ $if temp:waitingForSelectAlgol
     $call HintModals->Hide("BrightestBlue", 0.2)
     $set temp:BrightestBlueHintVisible = false
     $call HintModals->SlideInFromRight("CompleteRow", 0.4)
+    $set temp:CompleteRowHintVisible = true
 $endif
 $call LockMonitorFocus()
 
@@ -696,6 +697,7 @@ $call UnlockMonitorFocus()
 $if !temp:waitingForSelectAlgol 
     $set temp:waitingForSelectAlgol = true
     $call HintModals->Hide("CompleteRow", 0.2)
+    $set temp:CompleteRowHintVisible = false
     $call HintModals->SlideInFromRight("BrightestBlue", 0.4)
     $set temp:BrightestBlueHintVisible = true
 $endif
@@ -754,8 +756,13 @@ $endif
 @cutscene
 @once
 
+$if temp:MirfakRowFilled, temp:MenkibRowFilled
+    $goto .PuzzleGridReadyForSubmissionFirstTime
+$endif
+
 $set temp:AlgolRowFilled = true
 $call HintModals->Hide("CompleteRow", 0.2)
+$set temp:CompleteRowHintVisible = false
 $if temp:BrightestBlueHintVisible
     $call HintModals->Hide("BrightestBlue", 0.2)
 $endif
@@ -778,6 +785,7 @@ $branch .PuzzleTimeoutHint
 
 $set temp:AlgolRowFilled = true
 $call HintModals->Hide("CompleteRow", 0.2)
+$set temp:CompleteRowHintVisible = false
 $if temp:BrightestBlueHintVisible
     $call HintModals->Hide("BrightestBlue", 0.2)
 $endif
@@ -813,15 +821,33 @@ $set temp:MenkibRowFilled = true
 @trigger    OnPuzzleGridFullyPopulated
 @interrupt
 
+$if temp:CompleteRowHintVisible
+    $call HintModals->Hide("CompleteRow", 0.2)
+    $set temp:CompleteRowHintVisible = false
+$endif
+$if temp:BrightestBlueHintVisible
+    $call HintModals->Hide("BrightestBlue", 0.2)
+    $set temp:BrightestBlueHintVisible = false
+$endif
 $call HintModals->Hide("ElijahPuzzle", 0.2)
 
 :: PuzzleGridReadyForSubmissionFirstTime
 @trigger    OnPuzzleGridFullyPopulated
 @interrupt
 @cutscene
+@boostScore 2000
 @once
 
+$if temp:CompleteRowHintVisible
+    $call HintModals->Hide("CompleteRow", 0.2)
+    $set temp:CompleteRowHintVisible = false
+$endif
+$if temp:BrightestBlueHintVisible
+    $call HintModals->Hide("BrightestBlue", 0.2)
+    $set temp:BrightestBlueHintVisible = false
+$endif
 $call HintModals->Hide("ElijahPuzzle", 0.2)
+
 $set temp:CompletedMenkibRow = false
 $set temp:CompletedAlgolRow = false
 $set temp:CompletedMirfakbRow = false

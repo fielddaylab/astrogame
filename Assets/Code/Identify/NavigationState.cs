@@ -131,18 +131,36 @@ namespace Astro {
         }
 
         [DebugMenuFactory]
-        private static DMInfo DebugStartPuzzleNav() {
+        private static DMInfo DebugNeutrinoNav() {
             DMInfo info = new DMInfo("Events");
-            info.AddButton("Start Navigation Mode", () => {
-                Game.Events.Dispatch(GameEvents.StartPuzzleNavigation);
+            info.AddButton("Start Neutrino Navigation", () => {
+                Game.Events.Dispatch(GameEvents.StartNeutrinoNavigation);
+            });
+            info.AddButton("Stop Neutrino Navigation", () => {
+                Game.Events.Dispatch(GameEvents.StopNeutrinoNavigation);
             });
             return info;
         }
 
         [DebugMenuFactory]
-        private static DMInfo DebugStopPuzzleNav() {
+        private static DMInfo DebugOpenId() {
             DMInfo info = new DMInfo("Events");
-            info.AddButton("Stop Navigation Mode", () => {
+            info.AddButton("Start OpenId", () => {
+                Game.Events.Dispatch(GameEvents.StartOpenMode);
+            });
+            info.AddButton("Stop OpenId", () => {
+                Game.Events.Dispatch(GameEvents.StopOpenMode);
+            });
+            return info;
+        }
+
+        [DebugMenuFactory]
+        private static DMInfo DebugPuzzleNav() {
+            DMInfo info = new DMInfo("Events");
+            info.AddButton("Start Puzzle Navigation", () => {
+                Game.Events.Dispatch(GameEvents.StartPuzzleNavigation);
+            });
+            info.AddButton("Stop Puzzle Navigation", () => {
                 Game.Events.Dispatch(GameEvents.StopPuzzleNavigation);
             });
             return info;

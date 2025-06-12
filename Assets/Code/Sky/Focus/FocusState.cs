@@ -16,6 +16,18 @@ namespace Astro {
         [NonSerialized] public bool FocusUpdated = false;
         [NonSerialized] public bool MonitorInputActive = false;
 
+        [SerializeField] private Sprite m_DefaultStarSprite;
+        [SerializeField] private Sprite m_DataSubmittedStarSprite;
+        [SerializeField] private Sprite m_DataSubmittedNeutrinoStarSprite;
+        [SerializeField] private Sprite[] m_GuessTrackerSubmittedSprites = new Sprite[4];
+        [SerializeField] private Sprite[] m_GuessTrackerSprites = new Sprite[4];
+
+        [NonSerialized] static public Sprite DefaultStarSprite;
+        [NonSerialized] static public Sprite DataSubmittedStarSprite;
+        [NonSerialized] static public Sprite DataSubmittedNeutrinoStarSprite;
+        [NonSerialized] static public Sprite[] GuessTrackerSprites = new Sprite[4];
+        [NonSerialized] static public Sprite[] GuessTrackerSubmittedSprites = new Sprite[4];
+
         public SpriteRenderer FocusOutline;
 
         private Action setMonitorInputActive;
@@ -26,6 +38,12 @@ namespace Astro {
         protected override void OnEnable() {
             setMonitorInputActive = () => { MonitorInputActive = true; };
             setMonitorInputInactive = () => { MonitorInputActive = false; };
+
+            DefaultStarSprite = m_DefaultStarSprite;
+            DataSubmittedStarSprite = m_DataSubmittedStarSprite;
+            DataSubmittedNeutrinoStarSprite = m_DataSubmittedNeutrinoStarSprite;
+            GuessTrackerSprites = m_GuessTrackerSprites;
+            GuessTrackerSubmittedSprites = m_GuessTrackerSubmittedSprites;
 
             Game.Events.Register(GameEvents.MonitorEmptySpaceClicked, FocusableUtility.ClickEmptySpace);
 
@@ -113,6 +131,22 @@ namespace Astro {
         public static void ClickEmptySpace() {
             FocusState state = Find.State<FocusState>();
             SetCurrentFocus(state, null);
+        }
+
+        public static UIFocus GetFocusByData(StringHash32 celestialAssetId, FocusState focusState = null) {
+            if (focusState == null) focusState = Find.State<FocusState>();
+
+            UIFocus returnFocus = null;
+            CelestialAsset asset = Find.NamedAsset<CelestialAsset>(celestialAssetId);
+
+            foreach (UIFocus focus in focusState.ActiveFocii) {
+                if (focus.TargetData == asset) {
+                    returnFocus = focus;
+                    break;
+                }
+            }
+
+            return returnFocus;
         }
     }
 

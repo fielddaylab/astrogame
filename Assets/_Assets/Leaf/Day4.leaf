@@ -199,13 +199,14 @@ $call SetInputState(true)
 $call SetInputState(false)
 $call SetRefGuideActive(false)
 
-$call Wait(3)
+$call Wait(4)
 
 $call StopOpenMode()
 $call ClearMonitorSelection()
 
 $call MonitorUI->PlayRadioDownload(2)
 $call Wait(1)
+$call ClearMonitorSelection()
 $call MonitorUI->ShowCERESLogo()
 $call SetInstrumentUnlocked(HistoricalDataModeToggle, true)
 $call SetStickyFirstPage(-1)

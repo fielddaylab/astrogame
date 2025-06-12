@@ -209,7 +209,8 @@ Transform:
   m_LocalPosition: {x: -4.573, y: 11.406329, z: -6.51}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 3856267258950867244}
   m_Father: {fileID: 7186115532149751378}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &6707049204405467737
@@ -2093,4 +2094,38 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 2836243822368550947, guid: 7cc852bca9df94c40bbcc407a574677e, type: 3}
   m_PrefabInstance: {fileID: 1168142501751040462}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &9037192509524784255
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 890782847197678832}
+    m_Modifications:
+    - target: {fileID: 354738869553149200, guid: f95e19576c7d7b54bab4dc5f119877f0, type: 3}
+      propertyPath: m_Name
+      value: SatelliteDecoder
+      objectReference: {fileID: 0}
+    - target: {fileID: 5255340197565427027, guid: f95e19576c7d7b54bab4dc5f119877f0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -0.011
+      objectReference: {fileID: 0}
+    - target: {fileID: 5255340197565427027, guid: f95e19576c7d7b54bab4dc5f119877f0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0.36
+      objectReference: {fileID: 0}
+    - target: {fileID: 5255340197565427027, guid: f95e19576c7d7b54bab4dc5f119877f0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 1.713
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f95e19576c7d7b54bab4dc5f119877f0, type: 3}
+--- !u!4 &3856267258950867244 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5255340197565427027, guid: f95e19576c7d7b54bab4dc5f119877f0, type: 3}
+  m_PrefabInstance: {fileID: 9037192509524784255}
   m_PrefabAsset: {fileID: 0}
