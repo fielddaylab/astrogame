@@ -56,6 +56,19 @@ public class ModalHintMgr : ScriptActorComponent {
 
     }
 
+    [LeafMember("Wiggle")]
+    private IEnumerator LeafWiggle(StringHash32 Id, int wiggleFreq = 2, float wiggleOffset = 5f, float totalDuration = 0.3f) {
+        ModalHint modal = HintModals.Find(m => m.Id == Id);
+
+        float duration = totalDuration / wiggleFreq;
+
+        yield return Routine.Combine(
+            modal.Rect.AnchorPosTo(modal.Rect.anchoredPosition.x - wiggleOffset, totalDuration, Axis.X).Wave(Wave.Function.SinFade, wiggleFreq * 2).RevertOnCancel(),
+            Tween.Color(Color.black, Color.white, (c) => { modal.Panel.color = c; }, totalDuration).Ease(Curve.QuadIn).Yoyo().RevertOnCancel()
+        );
+
+    }
+
     [LeafMember("Hide")]
     private IEnumerator LeafHideModal(StringHash32 Id, float fadeDuration = 0f) {
         ModalHint modal = HintModals.Find(m => m.Id == Id);

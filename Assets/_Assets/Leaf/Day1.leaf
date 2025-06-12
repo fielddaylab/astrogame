@@ -89,8 +89,9 @@ $start .MoveTelescopeReminder
 
 :: MoveTelescopeReminder
 
-$call Wait(10)
+$call Wait(2)
 $if !temp:introMoveTheTelescope
+    $call HintModals->Wiggle("TelescopeControls")
     {@Radio} See if you can move your telescope. $[Radio/L1/l1_r_06]
     $branch .MoveTelescopeReminder
 $endif
@@ -478,6 +479,7 @@ $goto .ResetSubtitlePosition
 @trigger    OnLabInteraction
 @when   cellId != "R1C3", temp:waitingForSelectAppMag
 
+$call HintModals->Wiggle("AtikCell")
 {@Astrid} First, I need to select a cell on the grid. $[Astrid/L1/l1_a_t01]
 
 :: AtikAppMagSelected

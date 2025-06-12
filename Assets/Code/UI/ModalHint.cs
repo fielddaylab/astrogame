@@ -1,5 +1,5 @@
 using BeauUtil;
-using FieldDay;
+using BeauUtil.UI;
 using FieldDay.Components;
 using UnityEngine;
 
@@ -11,9 +11,11 @@ public class ModalHint : BatchedComponent {
 
     [HideInInspector] public CanvasGroup Modal;
     [HideInInspector] public RectTransform Rect;
+    [HideInInspector] public RoundedRectGraphic Panel;
 
     public void Awake() { 
         Rect = GetComponent<RectTransform>();
-        Modal = GetComponent<CanvasGroup>(); 
+        Modal = GetComponent<CanvasGroup>();
+        Panel = GetComponentInChildren<RoundedRectGraphic>();
     }
 }
