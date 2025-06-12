@@ -676,6 +676,7 @@ $if temp:waitingForSelectAlgol
     $call HintModals->Hide("BrightestBlue", 0.2)
     $set temp:BrightestBlueHintVisible = false
     $call HintModals->SlideInFromRight("CompleteRow", 0.4)
+    $set temp:CompleteRowHintVisible = true
 $endif
 $call LockMonitorFocus()
 
@@ -696,6 +697,7 @@ $call UnlockMonitorFocus()
 $if !temp:waitingForSelectAlgol 
     $set temp:waitingForSelectAlgol = true
     $call HintModals->Hide("CompleteRow", 0.2)
+    $set temp:CompleteRowHintVisible = false
     $call HintModals->SlideInFromRight("BrightestBlue", 0.4)
     $set temp:BrightestBlueHintVisible = true
 $endif
@@ -754,8 +756,13 @@ $endif
 @cutscene
 @once
 
+$if temp:MirfakRowFilled, temp:MenkibRowFilled
+    $goto .PuzzleGridReadyForSubmissionFirstTime
+$endif
+
 $set temp:AlgolRowFilled = true
 $call HintModals->Hide("CompleteRow", 0.2)
+$set temp:CompleteRowHintVisible = false
 $if temp:BrightestBlueHintVisible
     $call HintModals->Hide("BrightestBlue", 0.2)
 $endif
@@ -778,6 +785,7 @@ $branch .PuzzleTimeoutHint
 
 $set temp:AlgolRowFilled = true
 $call HintModals->Hide("CompleteRow", 0.2)
+$set temp:CompleteRowHintVisible = false
 $if temp:BrightestBlueHintVisible
     $call HintModals->Hide("BrightestBlue", 0.2)
 $endif
@@ -813,6 +821,14 @@ $set temp:MenkibRowFilled = true
 @trigger    OnPuzzleGridFullyPopulated
 @interrupt
 
+$if temp:CompleteRowHintVisible
+    $call HintModals->Hide("CompleteRow", 0.2)
+    $set temp:CompleteRowHintVisible = false
+$endif
+$if temp:BrightestBlueHintVisible
+    $call HintModals->Hide("BrightestBlue", 0.2)
+    $set temp:BrightestBlueHintVisible = false
+$endif
 $call HintModals->Hide("ElijahPuzzle", 0.2)
 
 :: PuzzleGridReadyForSubmissionFirstTime
@@ -822,7 +838,16 @@ $call HintModals->Hide("ElijahPuzzle", 0.2)
 @boostScore 2000
 @once
 
+$if temp:CompleteRowHintVisible
+    $call HintModals->Hide("CompleteRow", 0.2)
+    $set temp:CompleteRowHintVisible = false
+$endif
+$if temp:BrightestBlueHintVisible
+    $call HintModals->Hide("BrightestBlue", 0.2)
+    $set temp:BrightestBlueHintVisible = false
+$endif
 $call HintModals->Hide("ElijahPuzzle", 0.2)
+
 $set temp:CompletedMenkibRow = false
 $set temp:CompletedAlgolRow = false
 $set temp:CompletedMirfakbRow = false
