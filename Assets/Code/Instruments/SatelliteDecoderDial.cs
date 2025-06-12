@@ -13,6 +13,7 @@ public class SatelliteDecoderDial : BatchedComponent, IRegistrationCallbacks
     public Transform Spinner;
     public TextMeshPro[] TextDisplays;
     [SerializeField] private float SpacingRadius;
+    [SerializeField] private float YOffset;
 
     [HideInInspector] public int CurrValIndex = 0;
     [HideInInspector] public int CurrDisplayIndex = 0;
@@ -27,6 +28,16 @@ public class SatelliteDecoderDial : BatchedComponent, IRegistrationCallbacks
         'U', 'V', 'W', 'X', 'Y', 'Z',
     };
 
+    public void OnRegister()
+    {
+        DecoderUtility.UpdateDecoderDialVals(this);
+    }
+
+    public void OnDeregister()
+    {
+
+    }
+
 #if UNITY_EDITOR
     [ContextMenu("Arrange Dial Texts")]
     private void MenuArrangeDialTexts()
@@ -36,21 +47,11 @@ public class SatelliteDecoderDial : BatchedComponent, IRegistrationCallbacks
         {
             // position
             TextDisplays[i].transform.position = Spinner.transform.position;
-            TextDisplays[i].transform.localPosition += new Vector3(Mathf.Cos(Mathf.Deg2Rad * i * step) * SpacingRadius, Mathf.Sin(Mathf.Deg2Rad * i * step) * SpacingRadius, 0);
+            TextDisplays[i].transform.localPosition += new Vector3(Mathf.Cos(Mathf.Deg2Rad * i * step) * SpacingRadius, Mathf.Sin(Mathf.Deg2Rad * i * step) * SpacingRadius + YOffset, 0);
 
             // rotation
             TextDisplays[i].transform.localRotation = Quaternion.Euler(i * step, -90, 0);
         }
-    }
-
-    public void OnRegister()
-    {
-        DecoderUtility.UpdateDecoderDialVals(this);
-    }
-
-    public void OnDeregister()
-    {
-
     }
 #endif
 }

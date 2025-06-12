@@ -36,7 +36,7 @@ public static class DecoderUtility
 
         // update target rotation
         // TODO: make a routine
-        dial.Spinner.Rotate(Vector3.up, dial.FacetAngle * -vector, Space.Self);
+        dial.Spinner.Rotate(Vector3.forward, dial.FacetAngle * -vector, Space.Self);
     }
 
     private static int ClampedValIndex(int unclampedVal, int numVals)
