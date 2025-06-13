@@ -109,4 +109,27 @@ $call StartPuzzleMode()
 $call ClearMonitorSelection()
 $call StopPuzzleMode()
 $call SetInputState(false)
-Trigger the final puzzle now
+
+{@Astrid} That was the last piece of the puzzle! If only I had a way to connect to the satellite...
+$call ScriptFader->FadeOut()
+$call Wait(2)
+$call ScriptFader->FadeIn()
+{@Astrid} A special delivery from Elijah?
+{@Astrid} It's a Satellite Decoder!
+$call MoveToView("Right")
+$call Wait(0.5)
+$call ScriptFader->FadeOut()
+$call Wait(2)
+$call SatelliteDecoder->SetDecoderActive(true)
+$call ScriptFader->FadeIn()
+
+{@Astrid} This is it! Now that I have the decoder, I can finally attempt to connect to the satellite.
+{@Astrid} Each of the puzzles I completed seems to correspond to one letter of the passcode.
+$call SetInputState(true)
+
+:: SuccessfulDecode
+@trigger OnDecoderSuccess
+@once
+
+{@Astrid} I did it! I'm a genius.
+$call SetInputState(false)

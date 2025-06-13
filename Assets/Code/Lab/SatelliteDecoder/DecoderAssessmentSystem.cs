@@ -1,5 +1,6 @@
 using BeauUtil.Debugger;
 using FieldDay;
+using FieldDay.Scripting;
 using FieldDay.Systems;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using UnityEngine;
 
 namespace Astro
 {
-    [SysUpdate(GameLoopPhase.Update, 100, AstroGame.InteractUpdateMask)] // after DecoderDialInteractionSystem
+    [SysUpdate(GameLoopPhase.Update, 500, AstroGame.InteractUpdateMask)] // after DecoderDialInteractionSystem
     public class DecoderAssessmentSystem : SharedStateSystemBehaviour<SatelliteDecoderState>
     {
         public override bool HasWork()
@@ -22,10 +23,7 @@ namespace Astro
             base.ProcessWork(deltaTime);
 
             if (DecoderUtility.AssessSequence(m_State.Dials, m_State.Solution)) {
-                Debug.Log("[DecoderAssessmentSystem] Decode successful!");
-            }
-            else {
-                Debug.Log("[DecoderAssessmentSystem] Decode unsuccessful.");
+                ScriptUtility.Trigger(ScriptEvents.OnDecoderSuccess);
             }
         }
     }
