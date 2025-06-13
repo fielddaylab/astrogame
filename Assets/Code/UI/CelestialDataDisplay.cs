@@ -67,13 +67,13 @@ namespace Astro {
 
         public IEnumerator RevealCelestialDataDisplay() {
             DataDisplayPanel.alpha = 0;
-            yield return Tween.Value(0f, 1f, (f) => { DataDisplayPanel.alpha = f; }, Mathf.Lerp, 0.2f);
+            yield return Tween.Value(0f, 1f, (f) => { DataDisplayPanel.alpha = f; }, Mathf.Lerp, 0.2f).ForceOnCancel();
             DataPanelActive = true;
         }
 
         public IEnumerator FadeOutCelestialDataDisplay() {
             DataDisplayPanel.alpha = 1;
-            yield return Tween.Value(1f, 0f, (f) => { DataDisplayPanel.alpha = f; }, Mathf.Lerp, 0.1f);
+            yield return Tween.Value(1f, 0f, (f) => { DataDisplayPanel.alpha = f; }, Mathf.Lerp, 0.1f).ForceOnCancel();
             DataPanelActive = false;
         }
 
@@ -260,7 +260,7 @@ namespace Astro {
                 .Then(display.RemoveClearancePointDisplay())
                 .Wait(0.3f)
                 .Then(() => UpdateCurrentDataDisplay())
-                .Wait(0.1f)
+                .Wait(1f)
                 .Then(() => OnFocusUpdated(Find.State<FocusState>().CurrentFocus))
                 .Wait(0.1f)
             );

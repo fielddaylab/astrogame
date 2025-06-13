@@ -20,7 +20,7 @@ public class ModalHintMgr : ScriptActorComponent {
         ModalHint modal = HintModals.Find(m => m.Id == Id);
 
         modal.gameObject.SetActive(true);
-        yield return Tween.Value(0f, 1f, (f) => { modal.Modal.alpha = f; }, Mathf.Lerp, fadeDuration);
+        yield return Tween.Value(0f, 1f, (f) => { modal.Modal.alpha = f; }, Mathf.Lerp, fadeDuration).ForceOnCancel();
     }
 
     [LeafMember("SlideInFromRight")]
@@ -34,8 +34,8 @@ public class ModalHintMgr : ScriptActorComponent {
         float startPosX = modal.Rect.sizeDelta.x + 20f; // 20 here provides a little right padding
         modal.Rect.anchoredPosition = new Vector2(startPosX, PosY);
         yield return Routine.Combine(
-            Tween.Value(0f, 1f, (f) => { modal.Modal.alpha = f; }, Mathf.Lerp, duration),
-            Tween.Value(startPosX, endPosX, (f) => { modal.Rect.anchoredPosition = new Vector2(f, PosY); }, Mathf.Lerp, duration)
+            Tween.Value(0f, 1f, (f) => { modal.Modal.alpha = f; }, Mathf.Lerp, duration).ForceOnCancel(),
+            Tween.Value(startPosX, endPosX, (f) => { modal.Rect.anchoredPosition = new Vector2(f, PosY); }, Mathf.Lerp, duration).ForceOnCancel()
         );
 
     }
@@ -50,8 +50,8 @@ public class ModalHintMgr : ScriptActorComponent {
         float startPosX = 0 - modal.Rect.sizeDelta.x - 20f; // 20 here provides a little right padding
         modal.Rect.anchoredPosition = new Vector2(startPosX, PosY);
         yield return Routine.Combine(
-            Tween.Value(0f, 1f, (f) => { modal.Modal.alpha = f; }, Mathf.Lerp, duration),
-            Tween.Value(startPosX, endPosX, (f) => { modal.Rect.anchoredPosition = new Vector2(f, PosY); }, Mathf.Lerp, duration)
+            Tween.Value(0f, 1f, (f) => { modal.Modal.alpha = f; }, Mathf.Lerp, duration).ForceOnCancel(),
+            Tween.Value(startPosX, endPosX, (f) => { modal.Rect.anchoredPosition = new Vector2(f, PosY); }, Mathf.Lerp, duration).ForceOnCancel()
         );
 
     }
@@ -73,7 +73,7 @@ public class ModalHintMgr : ScriptActorComponent {
     private IEnumerator LeafHideModal(StringHash32 Id, float fadeDuration = 0f) {
         ModalHint modal = HintModals.Find(m => m.Id == Id);
 
-        yield return Tween.Value(1f, 0f, (f) => { modal.Modal.alpha = f; }, Mathf.Lerp, fadeDuration);
+        yield return Tween.Value(1f, 0f, (f) => { modal.Modal.alpha = f; }, Mathf.Lerp, fadeDuration).ForceOnCancel();
         modal.gameObject.SetActive(false);
     }
 
