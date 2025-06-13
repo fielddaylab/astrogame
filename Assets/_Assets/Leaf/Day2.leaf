@@ -14,6 +14,7 @@ $call SetInstrumentUnlocked(TemperatureInstrument, true)
 $call SpawnDocument("MiniLabors")
 $call StopPuzzleMode()
 $call StopOpenMode()
+$call SetRefPaceActive(14, false)
 
 :: BeginDay
 @trigger    SceneReady

@@ -34,6 +34,7 @@ namespace Astro.Reference {
         [NonSerialized] public int CurrentPageNum;
         [NonSerialized] public Dictionary<int, List<ReferenceClassification>> SelectedRegionsPerPage = new Dictionary<int, List<ReferenceClassification>>();
         [NonSerialized] public ReferencePageList PageList;
+        [NonSerialized] public BitSet32 ActivePages = new BitSet32();
         [NonSerialized] public bool SubmissionActive = true;
 
         [NonSerialized] public bool AllowPageChanges = true;
@@ -63,6 +64,11 @@ namespace Astro.Reference {
 
         IEnumerator<WorkSlicer.Result?> IScenePreload.Preload() {
             PageList = Find.GlobalAsset<ReferencePageList>();
+            // All pages start enabled
+            for (int i = 0; i < PageList.Pages.Count; i++) {
+                ActivePages[i] = true;
+            } 
+
             ReferenceUtility.LoadPage(0, this);
 
             yield return null;
@@ -376,12 +382,20 @@ namespace Astro.Reference {
         public static void LoadNextPage(RefGuideState rgs) {
             int totalPages = rgs.PageList.Pages.Count;
             int pageIdx = (rgs.CurrentPageNum + 1) % totalPages;
+            // Keep incrementing till we find an active page
+            while (!rgs.ActivePages[pageIdx]) {
+                pageIdx = (pageIdx + 1) % totalPages;
+            }
             LoadPage(pageIdx, rgs);
         }
 
         public static void LoadPreviousPage(RefGuideState rgs) {
             int totalPages = rgs.PageList.Pages.Count;
             int pageIdx = (rgs.CurrentPageNum - 1 + totalPages) % totalPages;
+            // Keep decrementing till we find an active page
+            while (!rgs.ActivePages[pageIdx]) {
+                pageIdx = (pageIdx - 1 + totalPages) % totalPages;
+            }
             LoadPage(pageIdx, rgs);
         }
 
@@ -618,6 +632,12 @@ namespace Astro.Reference {
         [LeafMember("SetRefGuideActive")]
         private static void LeafSetRefGuideActive(bool active) {
             SetReferenceActive(active);
+        }
+
+        [LeafMember("SetRefPaceActive")]
+        private static void LeafSetRefGuideActive(int pageNum, bool active) {
+            RefGuideState state = Find.State<RefGuideState>();
+            state.ActivePages[pageNum] = active;
         }
 
         [LeafMember("SetRefGuidePagesLocked")]
