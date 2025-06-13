@@ -1,3 +1,4 @@
+using BeauRoutine;
 using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay;
@@ -13,12 +14,16 @@ namespace Astro {
         //public DataDisplay SharedDisplay;
         public DataSlot ApparentSlot;
         public DataSlot AbsoluteSlot;
-        public GameObject AbsoluteIndicator;
 
         public DataSlot BlueSlot;
         public DataSlot IRSlot;
 
         public InteractTransferData TransferPort;
+
+        [Header("Panel")]
+        public Transform FlipPanel;
+        public GameObject ApparentButton;
+        public GameObject AbsoluteButton;
 
         [Header("Lights")]
         public MeshRenderer VisibleLight;
@@ -31,6 +36,8 @@ namespace Astro {
         public DataSlot[] DependentSlots;
 
         [NonSerialized] public bool IsAbsoluteModeOn;
+
+        [NonSerialized] public Routine FlipRoutine;
 
         public void OnDeregister() {
             AstroGame.Events.DeregisterAllForContext(this);
@@ -58,20 +65,23 @@ namespace Astro {
 
     public static partial class PhotometerUtility {
         public static void TogglePhotometerMode(bool absoluteOn, Photometer photometer){
-            photometer.IsAbsoluteModeOn = absoluteOn;
-
-            photometer.AbsoluteIndicator.SetActive(absoluteOn);
-            photometer.ApparentSlot.gameObject.SetActive(!absoluteOn);
-            photometer.AbsoluteSlot.gameObject.SetActive(absoluteOn);
+            bool wasDifferent = Ref.Replace(ref photometer.IsAbsoluteModeOn, absoluteOn);
 
             photometer.ApparentSlot.IsActive = !absoluteOn;
             photometer.AbsoluteSlot.IsActive = absoluteOn;
 
-            if (absoluteOn && photometer.TransferPort.DataSlot == photometer.ApparentSlot) {
-                DataUtility.Rewire(photometer.TransferPort, photometer.AbsoluteSlot);
-            } else if (!absoluteOn && photometer.TransferPort == photometer.AbsoluteSlot) {
-                DataUtility.Rewire(photometer.TransferPort, photometer.ApparentSlot);
+            photometer.ApparentButton.layer = absoluteOn ? LayerMasks.IgnoreRaycast_Index : LayerMasks.InstrumentInteract_Index;
+            photometer.AbsoluteButton.layer = !absoluteOn ? LayerMasks.IgnoreRaycast_Index : LayerMasks.InstrumentInteract_Index;
+
+            if (wasDifferent) {
+                photometer.FlipRoutine.Replace(photometer, photometer.FlipPanel.RotateTo(absoluteOn ? 0 : -180, 0.35f, Axis.Z, Space.Self).Ease(Curve.CubeInOut));
             }
+
+            //if (absoluteOn && photometer.TransferPort.DataSlot == photometer.ApparentSlot) {
+                //DataUtility.Rewire(photometer.TransferPort, photometer.AbsoluteSlot);
+            //} else if (!absoluteOn && photometer.TransferPort == photometer.AbsoluteSlot) {
+            //    DataUtility.Rewire(photometer.TransferPort, photometer.ApparentSlot);
+            //}
         }
 
         public static void HandleFilterChanged(Photometer photometer, CelestialObjectVisMask visibility, UIFocus focus) {
@@ -93,7 +103,7 @@ namespace Astro {
                     break;
                 }
                 case CelestialObjectVisMask.Visible: {
-                    DataUtility.Rewire(photometer.TransferPort, photometer.IsAbsoluteModeOn ? photometer.AbsoluteSlot : photometer.ApparentSlot);
+                    DataUtility.Rewire(photometer.TransferPort, photometer.ApparentSlot);
                     if (AttemptRevealSlot(focus, visibility, PlayerCelestialAssetKnowledgeFlags.HasReadVisibleAppMag, photometer.ApparentSlot, out knownFlags)) {
                         DataUtility.RevealData(photometer.AbsoluteSlot);
                         AttemptRevealDependentSlots(photometer, knownFlags);
