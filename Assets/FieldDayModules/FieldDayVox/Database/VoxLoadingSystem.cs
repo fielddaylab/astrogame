@@ -44,14 +44,16 @@ namespace FieldDay.Vox {
                     return false;
                 }
 
-                AssetUtility.ManualUnload(data.Clip);
+                if ((data.Flags & VoxFileFlags.IsFallbackClip) == 0) {
+                    AssetUtility.ManualUnload(data.Clip);
+                }
                 db.LoadedFileDataMap.Remove(entry.PathHash);
                 Log.Msg("[VoxLoadingSystem] Clip '{0}' unloaded", entry.Path);
                 return true;
             }
 
             while(db.FileUnloadQueue.TryPopFront(out VoxFileData directUnload)) {
-                if (directUnload.Clip != null) {
+                if ((directUnload.Flags & VoxFileFlags.IsFallbackClip) == 0 && directUnload.Clip != null) {
                     string clipName = directUnload.Clip.name;
                     AssetUtility.ManualUnload(directUnload.Clip);
                     Log.Msg("[VoxLoadingSystem] Clip '{0}' unloaded directly", clipName);
@@ -80,7 +82,8 @@ namespace FieldDay.Vox {
                     } else {
                         Log.Error("[VoxLoadingSystem] Could not load clip '{0}' due to error {1} - '{2}'", db.CurrentLoad.url, db.CurrentLoad.result, db.CurrentLoad.error);
                         db.LoadedFileDataMap.Add(db.CurrentLoadFileId, new VoxFileData() {
-                            Clip = null
+                            Clip = db.FallbackClips != null && db.FallbackClips.Length > 0 ? RNG.Instance.Choose(db.FallbackClips) : null,
+                            Flags = VoxFileFlags.IsFallbackClip
                         });
                     }
 

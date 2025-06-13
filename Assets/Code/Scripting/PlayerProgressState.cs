@@ -119,6 +119,13 @@ namespace Astro {
             PlayerProgressState state = Find.State<PlayerProgressState>();
             state.Knowledge[assetId] = record;
         }
+
+        static public void ResetAll() {
+            PlayerProgressState state = Find.State<PlayerProgressState>();
+            state.DayIndex = 0;
+            state.DayLayouts.Clear();
+            state.Knowledge.Clear();
+        }
     }
 
     public enum PlayerKnowledgeQueryResult {

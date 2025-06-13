@@ -51,6 +51,23 @@ namespace FieldDay.Assets {
         }
 
         /// <summary>
+        /// Manually destroys the given asset.
+        /// Use carefully! In builds you won't get this asset back.
+        /// </summary>
+        static public void DestroyAsset<T>(ref T asset) where T : UnityEngine.Object {
+            if (!ReferenceEquals(asset, null)) {
+                Assert.True(IsPersistent(asset), "Asset is not persistent");
+                Debug.LogWarningFormat("[AssetUtility] Manually destroying asset '{0}'!", asset.name);
+#if !UNITY_EDITOR
+                UnityEngine.Object.DestroyImmediate(asset, true);
+                asset = null;
+#else
+                Resources.UnloadAsset(asset);
+#endif // UNITY_EDITOR
+            }
+        }
+
+        /// <summary>
         /// Unloads unused assets.
         /// Returns the async operation if asynchronous.
         /// </summary>

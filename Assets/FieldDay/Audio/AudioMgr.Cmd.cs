@@ -413,7 +413,7 @@ namespace FieldDay.Audio {
             voice.DebugName = clip.name;
 #endif // DEVELOPMENT
 
-            if ((cmd.Flags & AudioPlaybackFlags.UseProvidedSource) == 0) {
+            if ((cmd.Flags & AudioPlaybackFlags.UseProvidedSource) == 0 && emitterConfig.Mode != AudioEmitterMode.Fixed) {
                 if (playbackPos) {
                     PositionSyncData posSync;
                     posSync.EmitterPosition = voiceComponents.transform;
