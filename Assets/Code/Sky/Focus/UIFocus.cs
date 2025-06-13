@@ -51,15 +51,12 @@ namespace Astro {
 
             focus.TargetData = asset;
 
-            float baseVal = 0.88f;
-            float minVal = 0.05f;
-            float maxVal = 0.32f;
-            float scaleFactor = Mathf.Clamp(Mathf.Pow(baseVal, asset.ApparentMagnitude) - 0.45f, minVal, maxVal);
+            float scaleFactor = Mathf.Clamp(Mathf.Pow(state.BaseScale, asset.ApparentMagnitude) - 0.45f, state.MinScale, state.MaxScale);
             focus.Root.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
-            Vector3 currTrackerScale = focus.TrackerSprite.GetComponent<Transform>().localScale;
-            focus.TrackerSprite.GetComponent<Transform>().localScale = new Vector3(currTrackerScale.x / scaleFactor, currTrackerScale.y / scaleFactor, 1f);
+            Vector3 scaleDefault = Find.State<FocusState>().DefaultTrackerPipScale;
+            focus.TrackerSprite.GetComponent<Transform>().localScale = new Vector3(scaleDefault.x / scaleFactor, scaleDefault.y / scaleFactor, scaleDefault.z);
 
-            float clickableRadius = baseVal * Math.Min(1, 1 / scaleFactor);
+            float clickableRadius = state.BaseScale * Math.Min(1, 1 / scaleFactor);
 
             focus.Clickable.radius = clickableRadius / scaleFactor;
         }
@@ -71,6 +68,42 @@ namespace Astro {
             focus.Root.localScale = scale;
             Vector3 currTrackerScale = focus.TrackerSprite.GetComponent<Transform>().localScale;
             focus.TrackerSprite.GetComponent<Transform>().localScale = new Vector3(currTrackerScale.x / scale.x, currTrackerScale.y / scale.y, 1f);
+        }
+
+        public static void UpdateFocusFilterAppearance(UIFocus focus, CelestialObjectVisMask visMask = CelestialObjectVisMask.Visible){
+            CelestialAsset asset = focus.TargetData;
+
+            Sprite represent2D = FocusState.DefaultStarSprite;
+            float visibleLight = asset.ApparentMagnitude;
+
+            switch (visMask) {
+                case CelestialObjectVisMask.Blue:
+                    represent2D = FocusState.BlueTintStarSprite;
+                    visibleLight = asset.ApparentBlueMagnitude;
+                    break;
+                case CelestialObjectVisMask.Infrared:
+                    represent2D = FocusState.IRTintStarSprite;
+                    visibleLight = asset.ApparentIRMagnitude;
+                    break;
+                default:
+                    break;
+            }
+
+            // Update our apperance based on the current filter
+            focus.Represent2D.sprite = represent2D;
+            focus.Represent2D.size = new Vector2(0.32f, 0.32f);
+
+            FocusState state = Find.State<FocusState>();
+
+            // Update our scale based on the visible magnitude for our current filter
+            float scaleFactor = Mathf.Clamp(Mathf.Pow(state.BaseScale, visibleLight) - 0.45f, state.MinScale, state.MaxScale);
+            focus.Root.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
+            Vector3 scaleDefault = Find.State<FocusState>().DefaultTrackerPipScale;
+            focus.TrackerSprite.GetComponent<Transform>().localScale = new Vector3(scaleDefault.x / scaleFactor, scaleDefault.y / scaleFactor, scaleDefault.z);
+
+            float clickableRadius = state.BaseScale * Math.Min(1, 1 / scaleFactor);
+
+            focus.Clickable.radius = clickableRadius / scaleFactor;
         }
 
         public static void UpdateFocusTrackerSprite(UIFocus focus, Sprite trackerSprite){

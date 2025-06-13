@@ -23,15 +23,15 @@ namespace Astro {
                 // allocate new highlights and assign to relevant focii
                 foreach (UIFocus focus in m_StateB.ActiveFocii) {
                     // check if focus is relevant to neutrino
-                    if (NeutrinoEventUtil.IsAssetInNeutrinoEvent(focus.TargetData)) {
-                        focus.HasHighlight = true;
-                        var newHighlight = m_StateC.NeutrinoHighlights.Alloc(focus.Root);
-                        focus.Highlight = newHighlight.GetComponent<SpriteRenderer>();
+                    if (!NeutrinoEventUtil.IsAssetInNeutrinoEvent(focus.TargetData)) continue;
+                    
+                    focus.HasHighlight = true;
+                    var newHighlight = m_StateC.NeutrinoHighlights.Alloc(focus.Root);
+                    focus.Highlight = newHighlight.GetComponent<SpriteRenderer>();
 
-                        focus.Highlight.sprite = focus.IsVisibleInCurrentFilter ? m_StateA.HighlightVisibleSprite : m_StateA.HighlightNotVisibleSprite;
-                        focus.Highlight.SetAlpha(focus.IsVisibleInCurrentFilter ? 1 : m_StateA.HighlightNotVisibleAlpha);
-                        m_StateA.ActiveHighlights.PushBack(newHighlight);
-                    }
+                    focus.Highlight.sprite = focus.IsVisibleInCurrentFilter ? m_StateA.HighlightVisibleSprite : m_StateA.HighlightNotVisibleSprite;
+                    focus.Highlight.SetAlpha(focus.IsVisibleInCurrentFilter ? 1 : m_StateA.HighlightNotVisibleAlpha);
+                    m_StateA.ActiveHighlights.PushBack(newHighlight);
                 }
 
                 Find.State<SpaceCameraState>().LookUpdatedThisFrame = true;

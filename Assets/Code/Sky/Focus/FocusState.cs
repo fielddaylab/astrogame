@@ -16,19 +16,30 @@ namespace Astro {
         [NonSerialized] public bool FocusUpdated = false;
         [NonSerialized] public bool MonitorInputActive = false;
 
+        [Header("Focus Sprites")]
         [SerializeField] private Sprite m_DefaultStarSprite;
+        [SerializeField] private Sprite m_BlueTintStarSprite;
+        [SerializeField] private Sprite m_IRTintStarSprite;
         [SerializeField] private Sprite m_DataSubmittedStarSprite;
         [SerializeField] private Sprite m_DataSubmittedNeutrinoStarSprite;
         [SerializeField] private Sprite[] m_GuessTrackerSubmittedSprites = new Sprite[4];
         [SerializeField] private Sprite[] m_GuessTrackerSprites = new Sprite[4];
 
         [NonSerialized] static public Sprite DefaultStarSprite;
+        [NonSerialized] static public Sprite BlueTintStarSprite;
+        [NonSerialized] static public Sprite IRTintStarSprite;
         [NonSerialized] static public Sprite DataSubmittedStarSprite;
         [NonSerialized] static public Sprite DataSubmittedNeutrinoStarSprite;
         [NonSerialized] static public Sprite[] GuessTrackerSprites = new Sprite[4];
         [NonSerialized] static public Sprite[] GuessTrackerSubmittedSprites = new Sprite[4];
 
         public SpriteRenderer FocusOutline;
+
+        [Header("Focus Scale")]
+        public Vector3 DefaultTrackerPipScale = new Vector3(0.88f, 0.88f, 1f);
+        public float BaseScale = 0.88f;
+        public float MinScale = 0.15f;
+        public float MaxScale = 0.32f;
 
         private Action setMonitorInputActive;
         private Action setMonitorInputInactive;
@@ -44,6 +55,8 @@ namespace Astro {
             DataSubmittedNeutrinoStarSprite = m_DataSubmittedNeutrinoStarSprite;
             GuessTrackerSprites = m_GuessTrackerSprites;
             GuessTrackerSubmittedSprites = m_GuessTrackerSubmittedSprites;
+            BlueTintStarSprite = m_BlueTintStarSprite;
+            IRTintStarSprite = m_IRTintStarSprite;
 
             Game.Events.Register(GameEvents.MonitorEmptySpaceClicked, FocusableUtility.ClickEmptySpace);
 

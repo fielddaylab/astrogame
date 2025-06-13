@@ -1,31 +1,21 @@
-using BeauPools;
 using BeauRoutine;
-using BeauUtil;
 using FieldDay;
 using FieldDay.Systems;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
-namespace Astro
-{
-    public class SkyWavelengthFilterSystem : SharedStateSystemBehaviour<SkyGenerationState>
-    {
-        public override bool HasWork()
-        {
+namespace Astro {
+    public class SkyWavelengthFilterSystem : SharedStateSystemBehaviour<SkyGenerationState> {
+        public override bool HasWork() {
             bool hasWork = base.HasWork();
             if (m_State) {
                 hasWork = hasWork && m_State.IsDirty;
-            }
-            else { 
+            } else { 
                 return false; 
             }
 
             return hasWork;
         }
 
-        public override void ProcessWork(float deltaTime)
-        {
+        public override void ProcessWork(float deltaTime) {
             var focusState = Find.State<FocusState>();
             var spaceCamera = Find.State<SpaceCameraState>();
             var neutrinoState = Find.State<NeutrinoHighlightState>();
@@ -33,9 +23,11 @@ namespace Astro
             CelestialObjectVisMask visMask = m_State.VisMask;
 
             bool prevVis;
-            foreach(var focus in focusState.ActiveFocii) {
+            foreach (var focus in focusState.ActiveFocii) {
                 prevVis = focus.IsVisibleInCurrentFilter;
                 focus.IsVisibleInCurrentFilter = (focus.TargetData.Visibility & visMask) != 0;
+
+                FocusableUtility.UpdateFocusFilterAppearance(focus, visMask);
 
                 if (focus.HasHighlight && focus.IsVisibleInCurrentFilter != prevVis) {
                     focus.Highlight.sprite = focus.IsVisibleInCurrentFilter ? neutrinoState.HighlightVisibleSprite : neutrinoState.HighlightNotVisibleSprite;
@@ -46,7 +38,6 @@ namespace Astro
             m_State.IsDirty = false;
             spaceCamera.LookUpdatedThisFrame = true;
         }
-
         
     }
 }
