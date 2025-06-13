@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace Astro
 {
-    [SysUpdate(GameLoopPhase.Update, 0, AstroGame.InteractUpdateMask)]
+    [SysUpdate(GameLoopPhase.Update, 100, AstroGame.InteractUpdateMask)] // After MouseInteractionSystem
     public class DecoderDialInteractionSystem : ComponentSystemBehaviour<SatelliteDecoderDialButton, LabInteractable>
     {
         public override void ProcessWork(float deltaTime)
@@ -34,8 +34,6 @@ namespace Astro
 
     public static partial class DecoderUtility
     {
-        private static Vector3 DialRotationConstant = new Vector3(0f, -90, -90);
-
         public static void AdjustDecoderDial(SatelliteDecoderDial dial, int vector)
         {
             // update current index
