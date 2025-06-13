@@ -3,7 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SatelliteDecoder : BatchedComponent
+namespace Astro
 {
+    public class SatelliteDecoder : BatchedComponent
+    {
 
+    }
 }
