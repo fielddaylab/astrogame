@@ -41,6 +41,12 @@ namespace Astro {
             state.Raycaster.eventMask = state.AppliedLayerMask;
         }
 
+        public static void SetClickableMaskCustom(InputState state, LayerMask mask) {
+            state.DesiredLayerMask = mask;
+            state.AppliedLayerMask = state.DesiredLayerMask & state.LayerMaskFilter;
+            state.Raycaster.eventMask = state.AppliedLayerMask;
+        }
+
         public static void SetClickableMaskTopLayer(InputState state) {
             state.DesiredLayerMask = LayerMasks.TopLayer_Mask;
             state.AppliedLayerMask = LayerMasks.TopLayer_Mask | (state.DesiredLayerMask & state.LayerMaskFilter);

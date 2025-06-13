@@ -220,14 +220,16 @@ namespace Astro.Reference {
 
         static private void ToggleReferenceZoom() {
             RefGuideState guide = Find.State<RefGuideState>();
-            RefGuideRig rig = Find.State<RefGuideRig>();
+            RefGuideRig rig = Find.State<RefGuideRig>();           
             if (guide.CurrentState == RefGuideInteractionState.Transitioning) {
                 return;
             }
             if (guide.CurrentState == RefGuideInteractionState.Zoomed) {
                 guide.TransitionRoutine.Replace(guide, TransitionFromZoomed(guide, rig)).TryManuallyUpdate(0);
+                InputUtility.SetClickableMaskDefault(Find.State<InputState>());
             } else {
                 guide.TransitionRoutine.Replace(guide, TransitionToZoomed(guide, rig)).TryManuallyUpdate(0);
+                InputUtility.SetClickableMaskCustom(Find.State<InputState>(), LayerMasks.ReferenceInteract_Mask);
             }
         }
 
