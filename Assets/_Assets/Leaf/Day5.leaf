@@ -17,6 +17,11 @@ $call SetInstrumentUnlocked(HistoricalDataModeToggle, true)
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $call StopPuzzleMode()
 $call StopOpenMode()
+$call SetRefPaceActive(14, false)
+$call SetRefPaceActive(16, false)
+$call SetRefPaceActive(18, false)
+$call SetRefPaceActive(20, false)
+$call SetRefPaceActive(23, false)
 
 :: BeginDay
 @trigger    SceneReady
@@ -109,6 +114,9 @@ $call StartPuzzleMode()
 $call ClearMonitorSelection()
 $call StopPuzzleMode()
 $call SetInputState(false)
+$call SetRefPaceActive(22, false)
+$call SetRefPaceActive(23, true)
+$call OpenRefGuideToPage(23)
 
 {@Astrid} That was the last piece of the puzzle! If only I had a way to connect to the satellite...
 $call ScriptFader->FadeOut()

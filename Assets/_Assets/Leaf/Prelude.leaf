@@ -36,6 +36,16 @@ $call PerseidsClickable->SetActive(true)
 {@Astrid}	Okay, let's focus, the Perseids won't wait for us. Where should I be looking? $[Astrid/Pre/l0_a_05]
 {@Elijah}	Can you find the Perseus constellation? $[Elijah/Pre/l0_e_06]
 {@Elijah}	Just look for the place where the meteors seem to be coming from. $[Elijah/Pre/l0_e_07]
+$set temp:preludeSkySelection = false
+$start .InstructionReminder
+
+:: InstructionReminder
+$call Wait(8)
+$if !temp:preludeSkySelection
+    {@Elijah}	Can you find the Perseus constellation? $[Elijah/Pre/l0_e_06]
+    {@Elijah}	Just look for the place where the meteors seem to be coming from. $[Elijah/Pre/l0_e_07]
+    $branch .InstructionReminder
+$endif
 
 :: StarClicked
 @trigger	StarClicked
@@ -45,6 +55,7 @@ $call PerseidsClickable->SetActive(true)
 
 $start .FadeOutStarClick
 
+$set temp:preludeSkySelection = true
 {@Astrid}	Found it! $[Astrid/Pre/l0_a_06]
 
 $call Aurora->FadeIn()

@@ -658,6 +658,12 @@ namespace Astro.Reference {
             LoadPage(pageId);
         }
 
+        [LeafMember("OpenRefGuideToPage")]
+        private static void LeafOpenRefGuidePage(int pageNum) {
+            SetReferenceActive(true);
+            LoadPage(pageNum);
+        }
+
         [LeafMember("SetStickyFirstPage")]
         private static void LeafSetStickyFirstPage(int pageNum) {
             RefGuideState refGuideState = Find.State<RefGuideState>();

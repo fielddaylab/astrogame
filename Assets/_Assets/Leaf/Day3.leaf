@@ -16,6 +16,11 @@ $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $call SpawnDocument("1833")
 $call StopPuzzleMode()
 $call StopOpenMode()
+$call SetRefPaceActive(14, false)
+$call SetRefPaceActive(16, false)
+$call SetRefPaceActive(19, false)
+$call SetRefPaceActive(21, false)
+$call SetRefPaceActive(23, false)
 
 :: BeginDay
 @trigger    SceneReady
@@ -254,12 +259,16 @@ $call SetInputState(true)
 $call ClearMonitorSelection()
 $call StopPuzzleMode()
 $call SetInputState(false)
+$call SetRefPaceActive(18, false)
+$call SetRefPaceActive(19, true)
+$call OpenRefGuideToPage(19)
+
 {@Elijah} Well… if Leo’s puzzle opened, that means the historical data made it through. Something’s working. $[Elijah/L3/l3_e_01]
 {@Elijah} That would mean that part of the system’s still alive. $[Elijah/L3/l3_e_02]
 {@Elijah} Alright. Stay focused. Keep movin'. $[Elijah/L3/l3_e_03]
-$call Wait(1)
 $goto .EndDay
 
 :: EndDay
+$call Wait(1)
 $call StopMusic(1)
 $call LoadNextDay()

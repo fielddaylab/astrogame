@@ -15,6 +15,10 @@ $call SpawnDocument("MiniLabors")
 $call StopPuzzleMode()
 $call StopOpenMode()
 $call SetRefPaceActive(14, false)
+$call SetRefPaceActive(17, false)
+$call SetRefPaceActive(19, false)
+$call SetRefPaceActive(21, false)
+$call SetRefPaceActive(23, false)
 
 :: BeginDay
 @trigger    SceneReady
@@ -256,7 +260,7 @@ $call SetInputState(true)
 @once
 
 $set temp:waitingForBlueFilter = false
-$call OpenRefGuidePage(SpectralClass)
+$call OpenRefGuidePage("SpectralClass")
 
 {@Radio} The temperature is calculated when you have both the visible light and the blue wavelength. $[Radio/L2/l2_r_16]
 {@Radio} Now you just need to use that temperature to look up the spectral type in your reference guide. $[Radio/L2/l2_r_08]
@@ -362,6 +366,10 @@ $call SetInputState(true)
 $call ClearMonitorSelection()
 $call StopPuzzleMode()
 $call SetInputState(false)
+
+$call SetRefPaceActive(16, false)
+$call SetRefPaceActive(17, true)
+$call OpenRefGuideToPage(17)
 
 {@Elijah} If you’re hearing this, it means you’ve solved Hercules—and that part of the satellite could come back online soon. $[Elijah/L2/l2_e_01] 
 {@Elijah} That would be huge. With historical data restored, the other astronomers can finally start seeing the bigger picture. $[Elijah/L2/l2_e_02]

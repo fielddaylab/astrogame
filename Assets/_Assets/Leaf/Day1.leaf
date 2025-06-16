@@ -10,6 +10,10 @@ $call StopPuzzleMode()
 $call StopOpenMode()
 $call SetRefGuidePagesLocked(true)
 $call SetRefPaceActive(15, false)
+$call SetRefPaceActive(17, false)
+$call SetRefPaceActive(19, false)
+$call SetRefPaceActive(21, false)
+$call SetRefPaceActive(23, false)
 $call IntroCutscene->PrepareCutscene()
 
 :: ResetSubtitlePosition
@@ -89,14 +93,12 @@ $set temp:introMoveTheTelescope = false
 $start .MoveTelescopeReminder
 
 :: MoveTelescopeReminder
-
-$call Wait(2)
+$call Wait(10)
 $if !temp:introMoveTheTelescope
     $call HintModals->Wiggle("TelescopeControls")
     {@Radio} See if you can move your telescope. $[Radio/L1/l1_r_06]
     $branch .MoveTelescopeReminder
 $endif
-// //TODO Shake UI hint
 
 :: MoveYourTelescope
 @trigger    OnTelescopeMoved
@@ -896,6 +898,9 @@ $call StopPuzzleMode()
 $call SetInputState(false)
 
 $call Wait(2)
+$call SetRefPaceActive(14, false)
+$call SetRefPaceActive(15, true)
+$call OpenRefGuideToPage(15)
 $call ClearMonitorSelection()
 {@Elijah} If you’re hearing this… it means you didn’t give up. Good. Remember—Perseus didn’t wait for the gods to fix things. $[Elijah/L1/l1_e_01a]
 {@Elijah} He just did what had to be done. The satellite’s still up there, and maybe—just maybe—someone still believes it matters. $[Elijah/L1/l1_e_02]

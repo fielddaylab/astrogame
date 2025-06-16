@@ -17,6 +17,11 @@ $call SetInstrumentUnlocked(HistoricalDataInstrument, true)
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $call StopPuzzleMode()
 $call StopOpenMode()
+$call SetRefPaceActive(14, false)
+$call SetRefPaceActive(16, false)
+$call SetRefPaceActive(18, false)
+$call SetRefPaceActive(21, false)
+$call SetRefPaceActive(23, false)
 
 :: BeginDay
 @trigger    SceneReady
@@ -234,6 +239,13 @@ $call StartPuzzleMode()
 @trigger    CorrectPuzzleSubmission
 @when   puzzleName == "Draco"
 @once
+
+$call SetRefPaceActive(20, false)
+$call SetRefPaceActive(21, true)
+$call OpenRefGuideToPage(21)
+$call Wait(2)
+$call SetRefGuideActive(false)
+$call Wait(1)
 
 $call ClearMonitorSelection()
 $call StopPuzzleMode()
