@@ -9,32 +9,33 @@ $wait 1
 $call Perseids_ParticlesA->PlayEffects()
 $wait 2
 
-{@Astrid}	Come on, Elijah, where are you? It's already starting!
+{@Astrid}	Come on, Elijah, where are you? It's already starting! $[Astrid/Pre/l0_a_01]
 
 $wait 1
+$call MovePhoneToUpper->PlayTween()
 $call PhoneAudio->Play();
 $wait 3.1
  
-{@Elijah}	Astrid, I’m sorry I’m late!
+{@Elijah}	Astrid, I’m sorry I’m late! $[Elijah/Pre/l0_e_01]
  
-{@Astrid}	I was afraid you were going to miss it.
+{@Astrid}	I was afraid you were going to miss it. $[Astrid/Pre/l0_a_02]
 
-{@Elijah}	Just think... next year on your birthday we'll be in the same place.
-{@Elijah}	It's going to be so cool studying astronomy together.
+{@Elijah}	Just think... next year on your birthday we'll be in the same place. $[Elijah/Pre/l0_e_02]
+{@Elijah}	It's going to be so cool studying astronomy together. $[Elijah/Pre/l0_e_03]
 
 $call Wait(2)
-{@Elijah} Did you read my birthday card? I drew you as Perseus.
+{@Elijah} Did you read my birthday card? I drew you as Perseus. $[Elijah/Pre/l0_e_04]
 
-{@Astrid}	It's really great Elijah... though I don't think I'm as tough as Perseus.
-{@Elijah}	Girl, you're the stuff of Greek myths, ha ha.
+{@Astrid}	It's really great Elijah... though I don't think I'm as tough as Perseus. $[Astrid/Pre/l0_a_03]
+{@Elijah}	Girl, you're the stuff of Greek myths, ha ha. $[Elijah/Pre/l0_e_05]
 $call Perseids_ParticlesB->PlayEffects()
-{@Astrid}	Dudeeeee.
+{@Astrid}	Dudeeeee. $[Astrid/Pre/l0_a_04]
 
 $call PerseidsClickable->SetActive(true)
 
-{@Astrid}	Okay, let's focus, the Perseids won't wait for us. Where should I be looking? 
-{@Elijah}	Can you find the Perseus constellation?
-{@Elijah}	Just look for the place where the meteors seem to be coming from.
+{@Astrid}	Okay, let's focus, the Perseids won't wait for us. Where should I be looking? $[Astrid/Pre/l0_a_05]
+{@Elijah}	Can you find the Perseus constellation? $[Elijah/Pre/l0_e_06]
+{@Elijah}	Just look for the place where the meteors seem to be coming from. $[Elijah/Pre/l0_e_07]
 
 :: StarClicked
 @trigger	StarClicked
@@ -44,32 +45,32 @@ $call PerseidsClickable->SetActive(true)
 
 $start .FadeOutStarClick
 
-{@Astrid}	Found it!
+{@Astrid}	Found it! $[Astrid/Pre/l0_a_06]
 
 $call Aurora->FadeIn()
 
-{@Astrid}	Just imagine... In ancient times they had to map all these stars from scratch. And they used them for navigation, to tell their fates...
-{@Astrid}	Must've been a lot of pressure.
-{@Elijah}	I don't know. Sounds sort of fun to me.
+{@Astrid}	Just imagine... In ancient times they had to map all these stars from scratch. And they used them for navigation, to tell their fates... $[Astrid/Pre/l0_a_07]
+{@Astrid}	Must've been a lot of pressure. $[Astrid/Pre/l0_a_08]
+{@Elijah}	I don't know. Sounds sort of fun to me. $[Elijah/Pre/l0_e_08]
 
 $call FakeBloomExtra->FadeIn()
 $call FakeBloom->FadeIn()
 
 $call Wait(3)
 
-{@Astrid}	Whoa. Elijah, are you seeing this?
+{@Astrid}	Whoa. Elijah, are you seeing this? $[Astrid/Pre/l0_a_09]
 
-{@Elijah}	Astrid—you’re breaking up—
+{@Elijah}	Astrid—you’re breaking up— $[Elijah/Pre/l0_e_09]
  
-{@Astrid}	Is that the Northern Lights?
-{@Astrid}	Whoa. It's so bright!
+{@Astrid}	Is that the Northern Lights? $[Astrid/Pre/l0_a_10]
+{@Astrid}	Whoa. It's so bright! $[Astrid/Pre/l0_a_11]
  
-{@Elijah}	(*bzzzzzzz krrrrrrr*) —Something’s not right—
-{@Elijah}	(*static noises*) —Readings off the charts— (*brrrrrr kzzzzzz*)
+{@Elijah}	(*bzzzzzzz krrrrrrr*) —Something’s not right— $[Elijah/Pre/l0_e_10]
+{@Elijah}	(*static noises*) —Readings off the charts— (*brrrrrr kzzzzzz*) $[Elijah/Pre/l0_e_11]
  
-{@Astrid}	Elijah, can you hear me?
+{@Astrid}	Elijah, can you hear me? $[Astrid/Pre/l0_a_12]
 $call Wait(2) 
-{@Astrid}	Hello? Elijah?
+{@Astrid}	Hello? Elijah? $[Astrid/Pre/l0_a_13]
 
 $call Wait(4) 
 

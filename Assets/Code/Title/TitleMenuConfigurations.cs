@@ -9,6 +9,7 @@ namespace Astro.Title {
     public sealed class TitleMenuConfigurations : SharedStateComponent, IRegistrationCallbacks, IScenePreload {
         public FadeGroup TitleGroup;
         public FadeGroup NewGroup;
+        public FadeGroup ContinueGroup;
         public FadeGroup InProgressGroup;
         public FadeGroup BackGroup;
 
@@ -30,14 +31,15 @@ namespace Astro.Title {
         private void OnNodeExited(ViewNode node) {
             TitleGroup.Hide();
             NewGroup.Hide();
+            ContinueGroup.Hide();
             InProgressGroup.Hide();
             BackGroup.Hide();
         }
 
         private void OnNodeEntered(ViewNode node) {
             StringHash32 nodeId = node.Id;
-
-            if (nodeId == "NewCutscene") {
+            
+            if (nodeId == "NewCutscene" || nodeId == "ContinueForward") {
                 return;
             }
 
@@ -45,6 +47,8 @@ namespace Astro.Title {
                 TitleGroup.Show();
             } else if (nodeId == "New") {
                 NewGroup.Show();
+            } else if (nodeId == "Continue") {
+                ContinueGroup.Show();
             } else {
                 InProgressGroup.Show();
             }

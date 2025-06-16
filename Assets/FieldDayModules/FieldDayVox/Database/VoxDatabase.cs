@@ -18,6 +18,8 @@ namespace FieldDay.Vox {
         internal string LanguagePath = "en/";
         internal string FileExtension = ".mp3";
 
+        internal AudioClip[] FallbackClips;
+
         #endregion // Config
 
         #region State
@@ -85,6 +87,11 @@ namespace FieldDay.Vox {
 
     public struct VoxFileData {
         public AudioClip Clip;
+        public VoxFileFlags Flags;
+    }
+
+    public enum VoxFileFlags : uint {
+        IsFallbackClip = 0x01
     }
 
     internal struct VoxFileEntry {
@@ -133,6 +140,20 @@ namespace FieldDay.Vox {
             }
         }
 
+        /// <summary>
+        /// Configures a fallback audio clip that will play if a voiceover file fails to load.
+        /// </summary>
+        static public void ConfigureFallbackClip(AudioClip fallback) {
+            DB.FallbackClips = new AudioClip[] { fallback };
+        }
+
+        /// <summary>
+        /// Configures a set of fallback audio clips that will play if a voiceover file fails to load.
+        /// </summary>
+        static public void ConfigureFallbackClips(AudioClip[] fallbacks) {
+            DB.FallbackClips = fallbacks;
+        }
+
         #endregion // Configuration
 
         #region Loading
@@ -175,7 +196,9 @@ namespace FieldDay.Vox {
 
             // queues up each loaded file to be manually unloaded
             foreach(var data in db.LoadedFileDataMap.Values) {
-                db.FileUnloadQueue.PushBack(data);
+                if ((data.Flags & VoxFileFlags.IsFallbackClip) == 0) {
+                    db.FileUnloadQueue.PushBack(data);
+                }
             }
 
             db.FileEntryMap.Clear();

@@ -19,6 +19,7 @@ namespace Astro.Title {
         public FadeGroup CloseFade;
 
         public IEnumerator<WorkSlicer.Result?> Preload() {
+            PlayerKnowledgeUtility.ResetAll();
             BeginButton.onClick.AddListener(OnClickBegin);
             return null;
         }
