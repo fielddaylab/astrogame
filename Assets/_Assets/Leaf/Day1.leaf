@@ -210,7 +210,6 @@ $set temp:guideOpen = false
 @once
 
 $set temp:waitingForManualOpen = false
-$call SetInputState(false)
 $call SubtitleController->SetSubtitlePosition(0.5, 1, 0, -140)
 $call MoveToView("Right")
 $call SetGuideHighlight(false)
@@ -218,7 +217,6 @@ $set temp:firstSubmission = false
 
 {@Radio} Do you see your photometer in the equipment stack? That should tell you what the apparent magnitude of the star is. $[Radio/L1/l1_r_20]
 {@Radio} All you need to do is find that number in your reference guide and submit the data. $[Radio/L1/l1_r_21]
-$call SetInputState(true)
 {@Radio} Another coalition astronomer will verify your classification. $[Radio/L1/l1_r_18]
 $start .IntroFirstSubmissionTimeout
 
@@ -307,6 +305,7 @@ $goto .ResetSubtitlePosition
 @trigger    PointsUpdated
 @when   sciencePoints > 0
 @interrupt
+@boostScore 400
 @cutscene
 @once
 
@@ -385,7 +384,7 @@ $call OpenRefGuidePage("ConstellationPerseus")
 {@Astrid} Aha! $[Astrid/L1/l1_a_15]
 
 $call Wait(1)
-{@Astrid} Can this telescope can help me find Perseus? I hope I didn't miss the meteor shower. $[Astrid/L1/l1_a_16]
+// {@Astrid} Can this telescope can help me find Perseus? I hope I didn't miss the meteor shower. $[Astrid/L1/l1_a_16]
 $goto .PostClearanceUpgrade
 
 :: PostClearanceUpgrade
@@ -522,7 +521,6 @@ $set temp:waitingForFillAppMag = false
 $set temp:waitingForBlueFilter = true
 $call ReleaseIsolatedPuzzle()
 $call SetInstrumentUnlocked(BlueWavelength, true)
-$call SetInputState(false)
 $call IsolatePuzzleCell(1, 1)
 {@Astrid} Let's see... to fill in the rest of this sequence, I also need the blue magnitude. $[Astrid/L1/l1_a_29]
 {@Astrid} I need to select the blue wavelength filter just below the monitor. $[Astrid/L1/l1_a_34]
@@ -532,21 +530,11 @@ $goto .PostAtikAppMagFilled
 :: PostAtikAppMagFilled
 $call SetRefGuidePagesLocked(false)
 $call Wait(1)
-$call SetInputState(true)
-
-// :: AtikBlueLightSelected
-// @trigger    OnPuzzleCellSelected
-// @when   cellId == "R1C4", temp:waitingForBlueLight
-// @interrupt
-// @once
-
-// $call ReleaseIsolatedPuzzle()
-// $call HintModals->Hide("AtikCell2", 0.2)
-// {@Astrid} Now to load this data from the photometer...
 
 :: BlueFilterSelected
 @trigger    OnLabInteraction
 @when   actorId == "BlueFilter", temp:waitingForBlueFilter
+@boostScore 300 
 @interrupt
 @cutscene
 
@@ -555,14 +543,9 @@ $set temp:waitingForBlueLight = true
 $call HintModals->Hide("BlueFilter", 0.2)
 $call ReleaseIsolatedPuzzle()
 $call IsolatePuzzleCell(1, 4)
-$call SetInputState(false)
 
 {@Astrid} Oh, with the blue wavelength filter on, my photometer takes a new reading highlighted. $[Astrid/L1/l1_a_t02] 
 {@Astrid} I can load this data into the blue magnitude space on the puzzle grid. $[Astrid/L1/l1_a_t03]
-$branch .PostBlueFilterSelected
-
-:: PostBlueFilterSelected
-$call SetInputState(true)
 
 :: AtikNotBlueFilterSelected
 @trigger    OnLabInteraction
@@ -774,15 +757,15 @@ $set temp:CompleteRowHintVisible = false
 $if temp:BrightestBlueHintVisible
     $call HintModals->Hide("BrightestBlue", 0.2)
 $endif
+$call UnlockMonitorFocus()
+$set temp:readyToSubmit = false
 
 {@Astrid} Okay, I’ve eliminated two rows of the grid. That just leaves two stars to go. $[Astrid/L1/l1_a_t18]
 {@Astrid} Maybe Elijah left me a clue to help me figure out which star is Menkib and which is Mirfak. $[Astrid/L1/l1_a_t19]
 $branch .PostAlgolDataFilled
 
 ::PostAlgolDataFilled
-$call UnlockMonitorFocus()
 $call HintModals->SlideInFromRight("ElijahPuzzle", 0.4)
-$set temp:readyToSubmit = false
 $branch .PuzzleTimeoutHint
 
 :: AlgolDataFilled2

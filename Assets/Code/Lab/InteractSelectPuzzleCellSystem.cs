@@ -16,13 +16,11 @@ namespace Astro
             return base.HasWork() && (Find.State<ViewState>().ActiveNode?.AllowSlotSelection ?? false);
         }
 
-        public override void ProcessWorkForComponent(InteractSelectSlot primary, LabInteractable secondary, InteractSelectPuzzleCell tertiary, float deltaTime)
-        {
+        public override void ProcessWorkForComponent(InteractSelectSlot primary, LabInteractable secondary, InteractSelectPuzzleCell tertiary, float deltaTime) {
             if (!secondary.InteractReceived) { return; }
             if (!primary.DataSlot.IsActive || primary.DataSlot.IsHidingData) { return; }
 
-            using (var table = TempVarTable.Alloc())
-            {
+            using (var table = TempVarTable.Alloc()) {
                 table.Set("cellId", primary.DataSlot.SlotId);
                 ScriptUtility.Trigger(ScriptEvents.OnPuzzleCellSelected, table);
             }
