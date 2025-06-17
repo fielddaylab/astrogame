@@ -240,9 +240,8 @@ namespace Astro.Reference {
             rig.ZoomPosition.GetPositionAndRotation(out var p, out var r);
 
             yield return Routine.Combine(rig.RootTransform.MoveTo(p, 0.4f).Ease(Curve.CubeInOut), rig.RootTransform.RotateQuaternionTo(r, 0.4f).Ease(Curve.CubeInOut));
-            //yield return null;
-            SetControlIconActive(3, true);
-            SetControlIconActive(4, false);
+            SetControlIconActive(3, false);
+            SetControlIconActive(4, true);
 
             rig.transform.SetParent(Game.Rendering.PrimaryCamera.transform, true);
             SetGuideInteraction(rig, RefGuideInteractionState.Zoomed);
@@ -257,6 +256,9 @@ namespace Astro.Reference {
             rig.OpenPosition.GetPositionAndRotation(out var p, out var r);
 
             yield return Routine.Combine(rig.RootTransform.MoveTo(p, 0.4f).Ease(Curve.CubeInOut), rig.RootTransform.RotateQuaternionTo(r, 0.4f).Ease(Curve.CubeInOut));
+            SetControlIconActive(3, true);
+            SetControlIconActive(4, false);
+
             SetGuideInteraction(rig, RefGuideInteractionState.Open);
             state.CurrentState = RefGuideInteractionState.Open;
 
