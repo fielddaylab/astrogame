@@ -16,34 +16,34 @@ $call MovePhoneToUpper->PlayTween()
 $call PhoneAudio->Play();
 $wait 3.1
  
-{@Elijah}	Astrid, I’m sorry I’m late! $[Elijah/Pre/l0_e_01]
+{@Elijah}	Astrid, I’m so sorry I’m late! $[Elijah/Pre/p_e_01]
  
 {@Astrid}	I was afraid you were going to miss it. $[Astrid/Pre/l0_a_02]
 
-{@Elijah}	Just think... next year on your birthday we'll be in the same place. $[Elijah/Pre/l0_e_02]
-{@Elijah}	It's going to be so cool studying astronomy together. $[Elijah/Pre/l0_e_03]
+{@Elijah}	Just think, next year, we'll be in the same place! It's going to be so cool studying astronomy together. $[Elijah/Pre/p_e_02]
 
-$call Wait(2)
-{@Elijah} Did you read my birthday card? I drew you as Perseus. $[Elijah/Pre/l0_e_04]
+$call Wait(1)
+{@Elijah}   Did you read my birthday card? I drew you as Perseus. $[Elijah/Pre/p_e_03]
 
 {@Astrid}	It's really great Elijah... though I don't think I'm as tough as Perseus. $[Astrid/Pre/l0_a_03]
-{@Elijah}	Girl, you're the stuff of Greek myths, ha ha. $[Elijah/Pre/l0_e_05]
+{@Elijah}	Girl, you're the stuff of Greek myths. $[Elijah/Pre/p_e_04]
 $call Perseids_ParticlesB->PlayEffects()
 {@Astrid}	Dudeeeee. $[Astrid/Pre/l0_a_04]
+{@Elijah}   (*chuckle*) sorry. $[Elijah/Pre/p_e_05]
 
 $call PerseidsClickable->SetActive(true)
 
 {@Astrid}	Okay, let's focus, the Perseids won't wait for us. Where should I be looking? $[Astrid/Pre/l0_a_05]
-{@Elijah}	Can you find the Perseus constellation? $[Elijah/Pre/l0_e_06]
-{@Elijah}	Just look for the place where the meteors seem to be coming from. $[Elijah/Pre/l0_e_07]
+{@Elijah}	Can you find the Perseus constellation? $[Elijah/Pre/p_e_06]
+{@Elijah}	Look for the place where the meteors look like they're coming from. $[Elijah/Pre/p_e_07]
 $set temp:preludeSkySelection = false
 $start .InstructionReminder
 
 :: InstructionReminder
 $call Wait(8)
 $if !temp:preludeSkySelection
-    {@Elijah}	Can you find the Perseus constellation? $[Elijah/Pre/l0_e_06]
-    {@Elijah}	Just look for the place where the meteors seem to be coming from. $[Elijah/Pre/l0_e_07]
+    {@Elijah}	Can you find the Perseus constellation? $[Elijah/Pre/p_e_06(1)]
+    {@Elijah}	Look for the place where the meteors look like they're coming from. $[Elijah/Pre/p_e_07(1)]
     $branch .InstructionReminder
 $endif
 
@@ -62,7 +62,7 @@ $call Aurora->FadeIn()
 
 {@Astrid}	Just imagine... In ancient times they had to map all these stars from scratch. And they used them for navigation, to tell their fates... $[Astrid/Pre/l0_a_07]
 {@Astrid}	Must've been a lot of pressure. $[Astrid/Pre/l0_a_08]
-{@Elijah}	I don't know. Sounds sort of fun to me. $[Elijah/Pre/l0_e_08]
+{@Elijah}	I don't know... sounds sort of fun to me. $[Elijah/Pre/p_e_08]
 
 $call FakeBloomExtra->FadeIn()
 $call FakeBloom->FadeIn()
@@ -71,13 +71,13 @@ $call Wait(3)
 
 {@Astrid}	Whoa. Elijah, are you seeing this? $[Astrid/Pre/l0_a_09]
 
-{@Elijah}	Astrid—you’re breaking up— $[Elijah/Pre/l0_e_09]
+{@Elijah}	Astrid—you’re breaking up— $[Elijah/Pre/p_e_09]
  
 {@Astrid}	Is that the Northern Lights? $[Astrid/Pre/l0_a_10]
 {@Astrid}	Whoa. It's so bright! $[Astrid/Pre/l0_a_11]
  
-{@Elijah}	(*bzzzzzzz krrrrrrr*) —Something’s not right— $[Elijah/Pre/l0_e_10]
-{@Elijah}	(*static noises*) —Readings off the charts— (*brrrrrr kzzzzzz*) $[Elijah/Pre/l0_e_11]
+{@Elijah}	(*bzzzzzzz krrrrrrr*) —Something’s not right— $[Elijah/Pre/p_e_10]
+{@Elijah}	(*static noises*) —Readings off the charts— (*brrrrrr kzzzzzz*) $[Elijah/Pre/p_e_11]
  
 {@Astrid}	Elijah, can you hear me? $[Astrid/Pre/l0_a_12]
 $call Wait(2) 
