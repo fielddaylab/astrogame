@@ -92,12 +92,14 @@ $call Wait(4)
 
 $call StopOpenMode()
 $call ClearMonitorSelection()
-$goto .StartPuzzleNav
+$goto .SetupPuzzleNav
 
-:: StartPuzzleNav
+:: SetupPuzzleNav
+$call MoveToView("Monitor")
+$call ConsoleCommandLine->PlayConsoleText("Day5ConsoleText")
+$call Wait(1)
 $call StartPuzzleNavigation()
 $call SetInputState(true)
-
 
 :: PuzzleNavigationComplete
 @trigger    PuzzleNavigationComplete

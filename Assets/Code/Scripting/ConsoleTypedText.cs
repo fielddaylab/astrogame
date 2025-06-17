@@ -29,9 +29,10 @@ namespace Astro {
             m_Routine.Replace(this, HideRoutine());
         }
 
-        [LeafMember("PlayPuzzleConsoleText")]
-        public IEnumerator Play() {
-            return PlayAsset(DayConfigUtil.GetConfigForState().DayPuzzlePrelude);
+        [LeafMember("PlayConsoleText")]
+        public IEnumerator Play(StringHash32 textAsset) {
+            ConsoleTextAsset asset = Find.NamedAsset<ConsoleTextAsset>(textAsset); 
+            return PlayAsset(asset);
         }
 
         public IEnumerator PlayAsset(ConsoleTextAsset textAsset) {

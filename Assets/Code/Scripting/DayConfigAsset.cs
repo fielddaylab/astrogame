@@ -1,9 +1,10 @@
-using Astro.Radio;
+using Leaf;
 using BeauUtil;
 using FieldDay;
 using FieldDay.Assets;
-using Leaf;
+using Astro.Radio;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace Astro {
     [CreateAssetMenu(menuName = "AstroGame/Day Config")] 
@@ -15,8 +16,10 @@ namespace Astro {
         public HmsCoords SkyRotationOffset;
 
         [Header("Puzzle")]
-        public ConsoleTextAsset DayPuzzlePrelude;
         public PuzzleAsset DayPuzzle;
+
+        [Header("Console")]
+        public List<ConsoleTextAsset> ConsoleTextAssets;
 
         [Header("Open Identification")]
         [Tooltip("Controls how many points are displayed on the clearance modal")][Range(1,7)]

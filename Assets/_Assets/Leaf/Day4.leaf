@@ -222,8 +222,9 @@ $call SetStickyFirstPage(-1)
 {@Radio} Together, we will map the stars for a better tomorrow. $[Radio/L4/l4_r_07]
 $goto .SetupPuzzleNav
 
-::SetupPuzzleNav
-$call MonitorUI->HideCERESLogo()
+:: SetupPuzzleNav
+$call MoveToView("Monitor")
+$call ConsoleCommandLine->PlayConsoleText("Day4ConsoleText")
 $call Wait(1)
 $call StartPuzzleNavigation()
 $call SetInputState(true)

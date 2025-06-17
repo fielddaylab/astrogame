@@ -43,7 +43,10 @@ $call MoveToView("Right")
 {@Radio} CERES HQ to Station Twelve. Elijah, do you copy? Please log in and provide status report. $[Radio/L1/l1_r_01]
 {@Astrid} Oh, a radio signal! How do I work this thing? Hello? This is Astrid... Elijah's friend. $[Astrid/L1/l1_a_02]
 {@Radio} Station Twelve, please log in and report. $[Radio/L1/l1_r_02]
-{@Astrid} Log in? How exactly am I supposed to do that? $[Astrid/L1/l1_a_03]
+// {@Astrid} Log in? How exactly am I supposed to do that? $[Astrid/L1/l1_a_03]
+$call Wait(0.5)
+$call ConsoleCommandLine->PlayConsoleText("AstridLogin")
+$call Wait(1)
 
 {@Dad} I told you, he's not there... Astrid? Is that you? $[Dad/L1/l1_d_1]
 
@@ -387,7 +390,7 @@ $goto .PostClearanceUpgrade
 
 :: PostClearanceUpgrade
 $call MoveToView("Monitor")
-$call ConsoleCommandLine->PlayPuzzleConsoleText()
+$call ConsoleCommandLine->PlayConsoleText("Day1ConsoleText")
 
 $call SetInputState(true)
 $call StartPuzzleNavigation()

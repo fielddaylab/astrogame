@@ -211,7 +211,7 @@ $goto .SetupPuzzleNav
 
 :: SetupPuzzleNav
 $call MoveToView("Monitor")
-$call ConsoleCommandLine->PlayPuzzleConsoleText()
+$call ConsoleCommandLine->PlayConsoleText("Day3ConsoleText")
 $call Wait(1)
 $call StartPuzzleNavigation()
 $call SetInputState(true)
