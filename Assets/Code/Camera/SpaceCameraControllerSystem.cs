@@ -1,22 +1,16 @@
+using System;
 using BeauPools;
 using BeauUtil;
 using FieldDay;
-using FieldDay.Components;
 using FieldDay.Debugging;
 using FieldDay.Scripting;
 using FieldDay.Systems;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace Astro
-{
+namespace Astro {
     [SysUpdate(GameLoopPhase.Update, 0, AstroGame.MonitorControlsUpdateMask)]
-    public class SpaceCameraControllerSystem : SharedStateSystemBehaviour<SpaceCameraState>
-    {
-        public override void ProcessWork(float deltaTime)
-        {
+    public class SpaceCameraControllerSystem : SharedStateSystemBehaviour<SpaceCameraState> {
+        public override void ProcessWork(float deltaTime) {
             base.ProcessWork(deltaTime);
 
             UpdateFlags updated = ProcessInputs();
@@ -100,8 +94,7 @@ namespace Astro
             return updated;
         }
 
-        private bool ProcessMouseAutoLook()
-        {
+        private bool ProcessMouseAutoLook() {
             bool updated = false;
             var cursorPos = m_State.Camera.Camera.ScreenToViewportPoint(Input.mousePosition);
 

@@ -18,8 +18,8 @@ namespace Astro {
         [Header("Puzzle")]
         public PuzzleAsset DayPuzzle;
 
-        [Header("Console")]
-        public List<ConsoleTextAsset> ConsoleTextAssets;
+        // [Header("Console")]
+        // public List<ConsoleTextAsset> ConsoleTextAssets;
 
         [Header("Open Identification")]
         [Tooltip("Controls how many points are displayed on the clearance modal")][Range(1,7)]

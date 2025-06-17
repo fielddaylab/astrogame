@@ -241,21 +241,17 @@ $call ClearMonitorSelection()
 @interrupt
 @once
 
-$call SetInputState(false)
+$call LockMonitorFocus()
 $set temp:waitingForBlueFilter = true
 
 {@Radio} Great. Now you’ll need to capture the same data in the blue wavelength. $[Radio/L2/l2_r_06]
 {@Radio} Select the blue wavelength filter. $[Radio/L2/l2_r_07]
-$goto .PostOnStarSelected
-
-:: PostOnStarSelected
-$call LockMonitorFocus()
-$call SetInputState(true)
 
 :: BlueFilterSelected
 @trigger OnLabInteraction
 @when actorId == "BlueFilter", temp:waitingForBlueFilter
 @interrupt
+@boostScore 200
 @cutscene
 @once
 
@@ -278,6 +274,7 @@ $call OpenRefGuidePage("SpectralClass")
 @trigger    PointsUpdated
 @when   sciencePoints > 0
 @interrupt
+@boostScore 300
 @cutscene
 @once
 
@@ -324,18 +321,6 @@ $call Wait(1)
 {@Astrid} Hmmm, Hercules. Just like Elijah's postcard! $[Astrid/L2/l2_a_16]
 {@Astrid} These are the puzzles Elijah had been working on. What is this all for? $[Astrid/L2/l2_a_17]
 $goto .SetupPuzzleNav
-// $set temp:waitingForRefGuidePuzzle = true
-
-//TODO
-// :: HerculesPuzzleRef
-// @trigger    OnRefGuideOpened
-// @when   temp:waitingForRefGuidePuzzle
-// @boostScore 300
-// @interrupt
-// @cutscene
-// @once
-
-// $set temp:waitingForRefGuidePuzzle = false
 
 :: SetupPuzzleNav
 $call MoveToView("Monitor")
