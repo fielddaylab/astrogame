@@ -1,15 +1,11 @@
 using BeauRoutine;
 using BeauUtil;
 using FieldDay.Components;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Astro
-{
-    public class PuzzleDisplay : BatchedComponent
-    {
+namespace Astro {
+    public class PuzzleDisplay : BatchedComponent {
         public PuzzleCell[] Cells;
         public PuzzleHeader[] Headers;
         public PuzzleHeader Clues;
@@ -26,8 +22,7 @@ namespace Astro
         //public Collider BackgroundCollider;
     }
 
-    public static partial class PuzzleUtility
-    {
+    public static partial class PuzzleUtility {
         static private Vector3 OFFSCREEN_POS = new Vector3(0, -200, 0);
         static private float OFFSCREEN_SPACING = 40;
         static private Vector3 DEFAULT_RENDER_SCALE = new Vector3(0.51f, 0.23f, 1);
@@ -47,8 +42,8 @@ namespace Astro
                 }
             }
         }
-        public static void LayoutCells(PuzzleDisplay display, PuzzleState state, PuzzlePools pools, List<DataTypeMask> types)
-        {
+
+        public static void LayoutCells(PuzzleDisplay display, PuzzleState state, PuzzlePools pools, List<DataTypeMask> types) {
             var colData = LookupColData(state.Library, types);
 
             // position and scale headers

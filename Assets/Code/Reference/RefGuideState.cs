@@ -456,7 +456,9 @@ namespace Astro.Reference {
                 rgs.SelectedRefClassification = null;
                 DisableHighlights(rig, rgs);
                 // rgs.SubmitButton.Root.SetActive(false);
-                Routine.Start( rgs.SubmitButton.SetButtonActive(false) );
+                if (!PuzzleUtility.CheckFullyPopulated()) {
+                    Routine.Start( rgs.SubmitButton.SetButtonActive(false) );
+                }
 
                 // update selections per page
                 if (!rgs.SelectedRegionsPerPage.ContainsKey(rgs.CurrentPageNum)) {

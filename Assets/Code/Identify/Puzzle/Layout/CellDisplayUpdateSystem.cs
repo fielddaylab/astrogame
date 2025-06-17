@@ -38,7 +38,10 @@ namespace Astro
                 Routine.Start( state.Display.SubmitButton.SetButtonActive(true) );
             } 
         }
-        public static bool CheckFullyPopulated(PuzzleState state) {
+
+        public static bool CheckFullyPopulated(PuzzleState state = null) {
+            if (state == null) state = Find.State<PuzzleState>();
+
             for (int i = 0; i < state.Display.Cells.Length; i++) {
                 if (!state.Display.Cells[i].DataSlot.HasData) return false;
             }
