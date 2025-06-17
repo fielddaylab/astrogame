@@ -5,6 +5,8 @@
 @boostScore 100
 @cutscene
 
+$set temp:preludeSkySelection = false
+
 $wait 1
 $call Perseids_ParticlesA->PlayEffects()
 $wait 2
@@ -36,12 +38,14 @@ $call PerseidsClickable->SetActive(true)
 {@Astrid}	Okay, let's focus, the Perseids won't wait for us. Where should I be looking? $[Astrid/Pre/l0_a_05]
 {@Elijah}	Can you find the Perseus constellation? $[Elijah/Pre/p_e_06]
 {@Elijah}	Look for the place where the meteors look like they're coming from. $[Elijah/Pre/p_e_07]
-$set temp:preludeSkySelection = false
+$call   HintModals->SlideInFromLeft("Prelude", 0.4)
+
 $start .InstructionReminder
 
 :: InstructionReminder
 $call Wait(8)
 $if !temp:preludeSkySelection
+    $call   HintModals->Wiggle("Prelude")
     {@Elijah}	Can you find the Perseus constellation? $[Elijah/Pre/p_e_06(1)]
     {@Elijah}	Look for the place where the meteors look like they're coming from. $[Elijah/Pre/p_e_07(1)]
     $branch .InstructionReminder
@@ -56,6 +60,7 @@ $endif
 $start .FadeOutStarClick
 
 $set temp:preludeSkySelection = true
+$call   HintModals->Hide("Prelude", 0.2)
 {@Astrid}	Found it! $[Astrid/Pre/l0_a_06]
 
 $call Aurora->FadeIn()
