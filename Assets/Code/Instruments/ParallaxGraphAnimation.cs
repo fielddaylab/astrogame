@@ -1,6 +1,8 @@
 using BeauRoutine;
+using BeauRoutine.Splines;
 using BeauUtil;
 using BeauUtil.Debugger;
+using EasyAssetStreaming;
 using FieldDay;
 using FieldDay.Audio;
 using FieldDay.Components;
@@ -13,35 +15,96 @@ namespace Astro {
     public class ParallaxGraphAnimation : BatchedComponent, IRegistrationCallbacks {
         [NonSerialized] public float Scale;
 
-        public MeshRenderer DisplayTarget;
-        public DataSlot DataTarget;
+        //public MeshRenderer DisplayTarget;
 
-        [NonSerialized] public MaterialPropertyBlock MaterialProperties;
+        [Header("Inspector")]
+        public DataSlot LinkedDistance;
+        public GameObject AnimRoot;
+        public Transform SunSprite;
+        public Transform EarthSprite;
+        public Transform StarImageSprite;
+        public Transform RealStarSprite;
+        public Transform Ruler;
+        public MultiSpline Spline;
+
+        [Header("Orbit Settings")]
+        public bool OrbitInX;
+        public float OrbitRadius;
+        public Timer OrbitTimer;
+        public float ParallaxMultiplier;
+
+        [NonSerialized] public float ParallaxFactor;
+        [NonSerialized] public Vector3 EarthInitPos;
+        [NonSerialized] public Vector3 StarInitPos;
+        [NonSerialized] public StreamingQuadTexture EarthTex;
+        [NonSerialized] public DataDisplay DistanceDisplay;
 
         public void OnDeregister() {
         }
 
         public void OnRegister() {
-            //GraphDisplay.OnDisplayRequested.Register(
-            //    (packet, flags) => ParallaxDataUtility.OnDisplayRequest(this, packet, flags));
-            //GraphDisplay.OnDisplayCleared.Register(
-            //    () => ParallaxDataUtility.OnDisplayClear(this));
+            EarthInitPos = EarthSprite.localPosition;
+            StarInitPos = StarImageSprite.localPosition;
+            Spline.SetVertex(0, EarthSprite.position);
+            Spline.SetVertex(1, StarImageSprite.position);
+            EarthTex = EarthSprite.GetComponent<StreamingQuadTexture>();
 
-            MaterialProperties = new MaterialPropertyBlock();
+            DistanceDisplay = LinkedDistance.Displays[0];
+            DistanceDisplay.OnDisplayRequested.Register(
+                (packet, flags) => ParallaxDataUtility.OnDisplayRequest(this, packet, flags));
+            DistanceDisplay.OnDisplayCleared.Register(
+                () => ParallaxDataUtility.OnDisplayClear(this));
         }
     }
 
     public static class ParallaxDataUtility {
+        public static readonly Vector3 LINE_Z_OFFSET = new Vector3(0, 0, 0.4f);
 
-        public static void OnDisplayRequest(ParallaxGraphAnimation graph, DataPacket packet, DataFormattingFlags flags) {
+        public static void OnDisplayRequest(ParallaxGraphAnimation anim, DataPacket packet, DataFormattingFlags flags) {
+            if ((packet.Type & DataTypeMask.Distance) != 0) {
+                SetParallaxFactor((float)packet.Value.Distance, anim);
+            } else {
+                ResetAnimation(anim);
+            }
         }
-        
-        public static void OnDisplayClear(ParallaxGraphAnimation graph) {
-            ClearPattern(graph);
+        public static void SetParallaxFactor(float distance, ParallaxGraphAnimation anim) {
+            ResetAnimation(anim);
+            if (distance <= 0) {
+                return;
+            }
+            anim.ParallaxFactor = -anim.ParallaxMultiplier / distance;
+            anim.Ruler.localScale = anim.OrbitInX ?
+                new Vector3(2, -2 * anim.ParallaxFactor * anim.OrbitRadius, 1) :
+                new Vector3(-2 * anim.ParallaxFactor * anim.OrbitRadius, 2, 1);
+            // middle school algebra don't fail me now
+            if (anim.OrbitInX) {
+                float d = (anim.StarInitPos.y * distance) / (distance + anim.ParallaxMultiplier);
+                anim.RealStarSprite.localPosition = new Vector3(0, d, 0);
+            } else {
+                float d = (anim.StarInitPos.x * distance) / (distance + anim.ParallaxMultiplier);
+                anim.RealStarSprite.localPosition = new Vector3(d, 0, 0);
+            }
+            anim.Ruler.gameObject.SetActive(true);
+            anim.Spline.gameObject.SetActive(true);
+            anim.RealStarSprite.gameObject.SetActive(true);
         }
 
-        public static void ClearPattern(ParallaxGraphAnimation graph) {
-            
+        public static void ResetAnimation(ParallaxGraphAnimation anim) {
+            anim.StarImageSprite.localPosition = anim.StarInitPos;
+            anim.EarthSprite.localPosition = anim.EarthInitPos;
+            UpdateSpline(anim);
+            anim.Ruler.gameObject.SetActive(false);
+            anim.Spline.gameObject.SetActive(false);
+            anim.RealStarSprite.gameObject.SetActive(false);
+        }
+
+        public static void UpdateSpline(ParallaxGraphAnimation anim) {
+            anim.Spline.SetVertex(0, anim.EarthSprite.localPosition + LINE_Z_OFFSET);
+            anim.Spline.SetVertex(1, anim.StarImageSprite.localPosition + LINE_Z_OFFSET);
+        }
+
+        public static void OnDisplayClear(ParallaxGraphAnimation anim) {
+            ResetAnimation(anim);
         }
 
         public static void ToggleInstrumentMode() {
