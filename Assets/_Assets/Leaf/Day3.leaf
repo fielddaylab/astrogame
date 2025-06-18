@@ -223,24 +223,35 @@ $call SetInputState(true)
 
 $call StopPuzzleNavigation()
 $call StartPuzzleMode()
-$call SetInputState(false)
 $set temp:LeoPuzzleStarted = true
 
 {@Astrid} Elijah had figured out that Zosma isn’t the nearest star... $[Astrid/L3/l3_a_20]
 {@Astrid} Now that I've got that parallax data, I can finish what he started. $[Astrid/L3/l3_a_21]
+
+:: EnablePlayerInput
+$call SetInputState(true)
+
+:: FirstParalax
+@trigger    OnStarSelected
+@when   temp:LeoPuzzleStarted
+@boostScore 200
+@interrupt
+@cutscene
+@once
+
+$call OpenRefGuidePage("HistoricalData")
+
 {@Astrid} From what I remember, when Earth orbits the Sun, our point of view shifts. $[Astrid/L3/l3_a_22] 
 {@Astrid} And when we look at a nearby star from two different positions months apart, it seems to move slightly against the background stars. $[Astrid/L3/l3_a_23]
 {@Astrid} That's parallax. The closer the star, the bigger the shift. The farther away it is, the smaller the shift. $[Astrid/L3/l3_a_24]
 {@Astrid} Now that I have this data I can figure out the distance from the stars. $[Astrid/L3/l3_a_25] 
 {@Astrid} We couldn'tve figured this out without years of data that was lost. $[Astrid/L3/l3_a_26] 
-$goto .EnablePlayerInput
-
-:: EnablePlayerInput
-$call SetInputState(true)
 
 :: FirstInfrared
 @trigger OnLabInteraction
-@when   actorId == "InfraredFilter"
+@when   actorId == "InfraredFilter", temp:LeoPuzzleStarted
+@boostScore 100
+@interrupt
 @cutscene
 @once
 

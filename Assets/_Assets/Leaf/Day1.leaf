@@ -116,13 +116,10 @@ $call HintModals->Hide("TelescopeControls", 0.2)
 
 {@Radio} Your equipment seems to be working. Let’s test it out and look for the constellation Ursa Major. Sending coordinates now... $[Radio/L1/l1_r_07]
 $call MonitorUI->PlayRadioDownload(4.0)
-$call SetInputState(false)
 {@Radio} OK, looks like you received the coordinates. See those dots above your monitor? They will light up as you near the target. $[Radio/L1/l1_r_08]
-
-$goto .SetupNeutrinoNavigation
+$branch .SetupNeutrinoNavigation
 
 :: SetupNeutrinoNavigation
-$call SetInputState(true)
 $call StartNeutrinoNavigation()
 $call HintModals->SlideInFromLeft("NeutrinoNav", 0.4)
 
