@@ -41,7 +41,7 @@ namespace Astro {
         public Vector3 DocZoomOffset;
 
         public static readonly DocPartFunction[] ZoomActiveFunctions = new []{ DocPartFunction.Close, DocPartFunction.Flip };
-        public static readonly DocPartFunction[] BoardActiveFunctions = new []{ DocPartFunction.Move, DocPartFunction.Zoom, DocPartFunction.Flip };
+        public static readonly DocPartFunction[] BoardActiveFunctions = new []{ DocPartFunction.Move, DocPartFunction.Zoom };
 
         void OnDrawGizmosSelected() { 
             var oldMatrix = Gizmos.matrix;
