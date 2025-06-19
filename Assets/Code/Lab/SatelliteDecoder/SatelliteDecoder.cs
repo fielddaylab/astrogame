@@ -1,6 +1,7 @@
 using FieldDay.Components;
 using FieldDay.Scripting;
 using Leaf.Runtime;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,11 +13,16 @@ namespace Astro
         [SerializeField] private GameObject BlankPanel; 
         [SerializeField] private GameObject ActivatedPanel;
 
-        [LeafMember("SetDecoderActive")]
-        public void LeafSetDecoderActive(bool active)
+        public void SetDecoderActive(bool active)
         {
             BlankPanel.SetActive(!active);
             ActivatedPanel.SetActive(active);
+        }
+
+        [LeafMember("SetDecoderActive")]
+        public void LeafSetDecoderActive(bool active)
+        {
+            SetDecoderActive(active);
         }
 
         [LeafMember("SwapPanel")]
