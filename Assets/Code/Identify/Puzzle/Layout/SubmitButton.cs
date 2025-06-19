@@ -19,6 +19,10 @@ namespace Astro {
         public Material InactiveButtonMaterial;
         public Material ActiveButtonMaterial;
 
+        [Header("Loading Colliders")]
+        public GameObject MonitorLoadingCollider;
+        public GameObject PuzzleLoadingCollider;
+
         private LabButton labButton;
 
         private Action m_SetButtonToPuzzle;  
