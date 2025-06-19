@@ -18,13 +18,6 @@ namespace Astro
             ArchiveState archiveState = Find.State<ArchiveState>();
 
             archiveState.CurrArchiveIndex = playerState.DayIndex;
-            int neededLength = 1 + archiveState.CurrArchiveIndex - archiveState.DayOffset;
-            while (playerState.DayLayouts.Count < neededLength) {
-                playerState.DayLayouts.Add(new ArchiveLayout());
-            }
-            while(playerState.DayLayouts.Count > neededLength) {
-                playerState.DayLayouts.RemoveAt(playerState.DayLayouts.Count - 1);
-            }
 
             // create archive stacks according to day (skip intro day)
             for (int i = archiveState.DayOffset; i <= archiveState.CurrArchiveIndex; i++)
