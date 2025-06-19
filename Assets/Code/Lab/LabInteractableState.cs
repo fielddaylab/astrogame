@@ -1,9 +1,10 @@
+using FieldDay;
+using FieldDay.HID;
+using FieldDay.SharedState;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using FieldDay;
-using FieldDay.SharedState;
-using System;
 
 namespace Astro
 {
@@ -13,5 +14,21 @@ namespace Astro
         [NonSerialized] public Vector2 StartMousePos;
         [NonSerialized] public Vector2 CurrMousePos;
         [NonSerialized] public int BlockInteractions;
+    }
+
+    static public class LabInteractableUtility {
+        static public bool ReleaseCurrentInteractable() {
+            LabInteractableState state = Find.State<LabInteractableState>();
+            if (state.CurrInteractable) {
+                CursorHint.Unlock(state.CurrInteractable.Cursor);
+                state.CurrInteractable.IsDragging = false;
+                state.CurrInteractable.InteractEnded = true;
+                state.CurrInteractable = null;
+                state.StartMousePos = state.CurrMousePos = Vector2.zero;
+                return true;
+            }
+
+            return false;
+        }
     }
 }

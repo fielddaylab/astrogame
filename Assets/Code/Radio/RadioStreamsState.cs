@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using BeauUtil;
 using BeauUtil.Debugger;
 using EasyAssetStreaming;
@@ -10,8 +8,11 @@ using FieldDay.Scenes;
 using FieldDay.SharedState;
 using FieldDay.Vox;
 using Leaf.Runtime;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using static BeauUtil.ColorGroup;
 
 namespace Astro.Radio {
     public sealed class RadioStreamsState : SharedStateComponent, IScenePreload, ISceneLoadDependency, IRegistrationCallbacks {
@@ -104,17 +105,19 @@ namespace Astro.Radio {
         static private Predicate<RadioVirtualStream, StringHash32> FindVirtualStreamWithId = (t, i) => t.ChannelId == i;
 
         [LeafMember("SetChannelActive")]
-        private static void LeafSetChannelActive(StringHash32 channelId, bool active) {
+        public static void SetChannelActive(StringHash32 channelId, bool active) {
             var streamState = Find.State<RadioStreamsState>();
             var radioRig = Find.State<RadioRig>();
+
             int channelIndex = Array.IndexOf(streamState.ChannelIndexMap, channelId);
+            Assert.True(channelIndex >= 0, "No channel with id '{0}' found in channl set", channelId);
 
             if (active) {
                 streamState.DeactivatedChannels.Unset(channelIndex);
-            }
-            else { 
+            } else {
                 streamState.DeactivatedChannels.Set(channelIndex);
             }
+
             // refresh radio as if just tuning into the current frequency (resets in RadioTuningSystem)
             radioRig.LastKnownFrequency = -1;
         }

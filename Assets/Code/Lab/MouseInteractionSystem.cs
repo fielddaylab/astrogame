@@ -61,13 +61,7 @@ namespace Astro {
 
             // mouse up
             if (isCurrentlyDragging && Game.Input.IsMouseUp(FieldDay.HID.MouseButton.Left)) {
-                if (m_StateA.CurrInteractable) {
-                    CursorHint.Unlock(m_StateA.CurrInteractable.Cursor);
-                    m_StateA.CurrInteractable.IsDragging = false;
-                    m_StateA.CurrInteractable.InteractEnded = true;
-                    m_StateA.CurrInteractable = null;
-                    m_StateA.StartMousePos = m_StateA.CurrMousePos = Vector2.zero;
-                }
+                LabInteractableUtility.ReleaseCurrentInteractable();
             }
         }
 

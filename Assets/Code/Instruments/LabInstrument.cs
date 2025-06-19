@@ -14,7 +14,7 @@ namespace Astro {
         public CastableEvent<LabInstrument> OnUnlock = new CastableEvent<LabInstrument>();
     }
 
-    public static class InstrumentUtility
+    public static partial class InstrumentUtility
     {
         public static DataTypeMask GenerateTypeMask(LabInstrument instrument)
         {

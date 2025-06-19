@@ -7,7 +7,7 @@ using FieldDay.HID;
 
 namespace Astro
 {
-    [SysUpdate(GameLoopPhase.Update, 10, AstroGame.InstrumentUpdateMask)] // After MouseInteractionSystem
+    [SysUpdate(GameLoopPhase.Update, 10)] // After MouseInteractionSystem
     public class InteractAdjustDialSystem : ComponentSystemBehaviour<InteractAdjustDial, LabInteractable>
     {
         public override void ProcessWorkForComponent(InteractAdjustDial primary, LabInteractable secondary, float deltaTime)
@@ -15,7 +15,6 @@ namespace Astro
             if (secondary.InteractEnded)
             {
                 primary.BaseVal = primary.CurrConstrainedVal;
-                primary.PassThroughOffset = 0;
             }
 
             if (!secondary.IsDragging) { return; }
@@ -23,7 +22,11 @@ namespace Astro
             var interactState = Find.State<LabInteractableState>();
             var delta = interactState.CurrMousePos - interactState.StartMousePos;
 
-            DialUtility.TryAdjustDial(primary, delta.x);
+            if (primary.CanAdjust == null || primary.CanAdjust.Invoke(primary, delta)) {
+                DialUtility.TryAdjustDial(primary, delta.x);
+            } else {
+                LabInteractableUtility.ReleaseCurrentInteractable();
+            }
         }
     }
 }
