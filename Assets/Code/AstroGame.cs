@@ -81,8 +81,6 @@ namespace Astro {
         {
             menu.AddButton("Begin Decode (Day 5)", () => {
                 ScriptUtility.KillAllThreads();
- //               ScriptTriggers.LoadDay(dayId);
- //               MusicUtility.StopMusic();
 
                 ScriptUtility.Trigger(ScriptEvents.BeginDecoderSequence);
 
