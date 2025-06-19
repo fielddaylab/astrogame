@@ -14,6 +14,7 @@ $call SetRefPaceActive(17, false)
 $call SetRefPaceActive(19, false)
 $call SetRefPaceActive(21, false)
 $call SetRefPaceActive(23, false)
+$call SetChannelActive(Unlocks_Active, false)
 $call IntroCutscene->PrepareCutscene()
 
 :: ResetSubtitlePosition
@@ -340,19 +341,32 @@ $call SetRefGuideActive(false)
 $call Wait(4)
 $call StopOpenMode()
 {@Radio} You’ve identified the necessary data to earn a higher access level.  $[Radio/L1/l1_r_27]
-// {@Dad} You’ll need to tune to the right frequency on your radio to unlock your equipment. $[Day1/Dad/l1_d_s34]
+{@Dad} You’ll need to tune to the right frequency on your radio to unlock your equipment. $[Day1/Dad/l1_d_s34]
 
-// $call HintModals->SlideInFromRight("RadioControls", 0.4) 
+$call SetChannelActive(Unlocks_Active, true)
+$call SetChannelActive(Unlocks_Inactive, false)
+$call HintModals->SlideInFromRight("RadioControls", 0.4)
+$call SetInputState(true)
 
-// $call Wait(1)
+:: ClearanceUpgradeTrigger
+@trigger    RadioChannelListenStart
+@when       channelId == "Unlocks_Active"
+@interrupt
+@cutscene
+@once
 
-// $call HintModals->Hide("RadioControls", 0.2)
-
-//TODO Seperate Node Here
+$call SetInputState(false)
+$call SetRadioDialLocked(true)
+$call SnapRadioToChannel()
+$call HintModals->Hide("RadioControls", 0.2)
 $call MonitorUI->PlayRadioDownload(2)
 $call ClearMonitorSelection()
+$call SetChannelActive(Unlocks_Active, false)
+$call SetChannelActive(Unlocks_Inactive, true)
+$call SetRadioDialLocked(false)
 $call MonitorUI->ShowCERESLogo()
 $call Wait(1)
+
 {@Radio} Ope, and I need to read this thing.... (*clears throat*) $[Radio/L1/l1_r_29]
 $call SetInstrumentUnlocked(ColorInstrument, true)
 $call SetInstrumentUnlocked(TemperatureInstrument, true)

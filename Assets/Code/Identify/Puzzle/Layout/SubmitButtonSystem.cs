@@ -29,6 +29,7 @@ namespace Astro {
             ReviewState pps = Find.State<ReviewState>();
             if (pps.CurrentSubmission == ReviewSubmissionType.None) {
                 pps.CurrentSubmission = ReviewSubmissionType.Puzzle;
+                btn.PuzzleLoadingCollider.SetActive(true);
                 Routine.Start( btn.SetButtonActive(false) );
                 return true;
             }
@@ -51,6 +52,7 @@ namespace Astro {
                 Classification = classId,
                 Materials = rgs.SelectedMaterials
             };
+            btn.MonitorLoadingCollider.SetActive(true);
             Routine.Start( btn.SetButtonActive(false) );
             return true;
         }

@@ -105,6 +105,10 @@ namespace Astro {
             module.Result.SetSharedMaterialAtIndex(1, module.UnlitPipMaterial);
 
             ReviewState review = Find.State<ReviewState>();
+            SubmitButton button = Find.State<PuzzleState>().Display.SubmitButton;
+            button.MonitorLoadingCollider.SetActive(false);
+            button.PuzzleLoadingCollider.SetActive(false);
+            
             review.CurrentSubmission = ReviewSubmissionType.None;
             review.ReviewTimer.Paused = false;
         }

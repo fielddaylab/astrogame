@@ -7,7 +7,7 @@ using Astro;
 using BeauUtil;
 using BeauRoutine;
 
-[SysUpdate(GameLoopPhase.Update, 50, AstroGame.InstrumentUpdateMask)] // After InteractAdjustDialSystem
+[SysUpdate(GameLoopPhase.Update, 50)] // After InteractAdjustDialSystem
 public class DialRotationSystem : ComponentSystemBehaviour<InteractAdjustDial>
 {
     public override void ProcessWorkForComponent(InteractAdjustDial primary, float deltaTime)
@@ -15,14 +15,7 @@ public class DialRotationSystem : ComponentSystemBehaviour<InteractAdjustDial>
         base.ProcessWorkForComponent(primary, deltaTime);
 
         float rotationAmt = 0;
-        if (primary.PassThrough && primary.RawValDelta != 0)
-        {
-            rotationAmt = primary.RotateSpeed * primary.RawValDelta;
-        }
-        else if (!primary.PassThrough && primary.ConstrainedValDelta != 0)
-        {
-            rotationAmt = primary.RotateSpeed * primary.ConstrainedValDelta;
-        }
+        rotationAmt = primary.RotateSpeed * primary.ConstrainedValDelta;
 
         if (rotationAmt != 0) {
             Vector3 axis = default;
