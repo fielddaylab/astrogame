@@ -62,8 +62,15 @@ MonoBehaviour:
   YOffset: 0
   CurrValIndex: 0
   CurrDisplayIndex: 0
-  CurrTargetRotation: 0
+  CurrTargetRotation: {x: 0, y: 0, z: 0, w: 0}
   Values: 4100420043004400450046004700480049004a004b004c004d004e004f0050005100520053005400550056005700580059005a00
+  RotationTime: 0
+  InLongSpin: 0
+  RotateDuration: 0
+  HoldTriggerTime: 0
+  HoldTriggerTimer: 0
+  HoldCooldownTime: 0
+  HoldCooldownTimer: 0
 --- !u!1 &5396811500210217293
 GameObject:
   m_ObjectHideFlags: 0
@@ -287,6 +294,10 @@ PrefabInstance:
     - target: {fileID: 498487975014411328, guid: 3558b7278c57e5440b28b6eef26d6ee2, type: 3}
       propertyPath: Vector
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5835631119556422033, guid: 3558b7278c57e5440b28b6eef26d6ee2, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.369
       objectReference: {fileID: 0}
     - target: {fileID: 5835631119556422033, guid: 3558b7278c57e5440b28b6eef26d6ee2, type: 3}
       propertyPath: m_LocalRotation.w
@@ -937,7 +948,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5835631119556422033, guid: 3558b7278c57e5440b28b6eef26d6ee2, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.339
+      value: -0.3765
       objectReference: {fileID: 0}
     - target: {fileID: 5835631119556422033, guid: 3558b7278c57e5440b28b6eef26d6ee2, type: 3}
       propertyPath: m_LocalPosition.z
