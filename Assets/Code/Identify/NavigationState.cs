@@ -9,6 +9,7 @@ using BeauUtil.Debugger;
 using System.Collections;
 using BeauPools;
 using BeauUtil.UI;
+using FieldDay.Scripting;
 
 namespace Astro {
     public enum NavigationMode {
@@ -58,7 +59,8 @@ namespace Astro {
             navState.CurrentNavigationMode = NavigationMode.Constellation;
             navState.CameraDistanceFromTarget = -1;
 
-            ViewNavUtility.LeafMoveToNode("Monitor");
+
+            ScriptUtility.Invoke("MovePlayerToMonitor");
 
             WavelengthToggleState wavelengthState = Find.State<WavelengthToggleState>();
             wavelengthState.AllowChanges = false;
@@ -80,7 +82,8 @@ namespace Astro {
             navState.ReadoutDirty = false;
             ReviewModuleUtility.ResetReview();
 
-            ViewNavUtility.LeafMoveToNode("Right");
+            ScriptUtility.Invoke("MovePlayerToInstruments");
+            //ViewNavUtility.LeafMoveToNode("Right");
 
             WavelengthToggleState wavelengthState = Find.State<WavelengthToggleState>();
             wavelengthState.AllowChanges = true;
@@ -95,7 +98,8 @@ namespace Astro {
             navState.CameraDistanceFromTarget = -1;
             navState.ResultShown = false;
 
-            ViewNavUtility.LeafMoveToNode("Monitor");
+            ScriptUtility.Invoke("MovePlayerToMonitor");
+            //ViewNavUtility.LeafMoveToNode("Monitor");
             state.LookUpdatedThisFrame = true;
             state.OnLookUpdated.Invoke(state);
 
@@ -116,7 +120,7 @@ namespace Astro {
             state.LookUpdatedThisFrame = true;
             state.OnLookUpdated.Invoke(state);
 
-            ViewNavUtility.LeafMoveToNode("Right");
+            ScriptUtility.Invoke("MovePlayerToInstruments");
 
             WavelengthToggleState wavelengthState = Find.State<WavelengthToggleState>();
             wavelengthState.AllowChanges = true;

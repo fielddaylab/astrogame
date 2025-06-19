@@ -17,11 +17,11 @@ $call SetInstrumentUnlocked(HistoricalDataModeToggle, true)
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $call StopPuzzleMode()
 $call StopOpenMode()
-$call SetRefPaceActive(14, false)
-$call SetRefPaceActive(16, false)
-$call SetRefPaceActive(18, false)
-$call SetRefPaceActive(20, false)
-$call SetRefPaceActive(23, false)
+$call SetRefPageActive(14, false)
+$call SetRefPageActive(16, false)
+$call SetRefPageActive(18, false)
+$call SetRefPageActive(20, false)
+$call SetRefPageActive(23, false)
 
 :: BeginDay
 @trigger    SceneReady
@@ -95,7 +95,7 @@ $call ClearMonitorSelection()
 $goto .SetupPuzzleNav
 
 :: SetupPuzzleNav
-$call MoveToView("Monitor")
+$branch Observatory.PathToMonitor
 $call ConsoleCommandLine->PlayConsoleText("Day5ConsoleText")
 $call Wait(1)
 $call StartPuzzleNavigation()
@@ -121,8 +121,8 @@ $branch .SatelliteDecodeBegin
 :: SatelliteDecodeBegin
 @trigger    BeginDecoderSequence
 $call SetInputState(false)
-$call SetRefPaceActive(22, false)
-$call SetRefPaceActive(23, true)
+$call SetRefPageActive(22, false)
+$call SetRefPageActive(23, true)
 $call OpenRefGuideToPage(23)
 
 {@Astrid} That was the last piece of the puzzle! If only I had a way to connect to the satellite...

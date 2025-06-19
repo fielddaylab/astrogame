@@ -19,7 +19,7 @@ namespace Astro {
                 m_State.LookUpdatedThisFrame = true;
                 m_State.OnLookUpdated.Invoke(m_State);
 
-                if ((updated & UpdateFlags.Rotation) != 0) {
+                if (m_State.ShouldDispatchMoveEvents && (updated & UpdateFlags.Rotation) != 0) {
                     ScriptUtility.Trigger(ScriptEvents.OnTelescopeMoved);
                 }
             }

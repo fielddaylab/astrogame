@@ -22,6 +22,7 @@ namespace FieldDay.Scripting {
                 //}
             }
 
+            ScriptUtility.Runtime.SignalMap.Flush();
             // TODO: process queue?
         }
     }

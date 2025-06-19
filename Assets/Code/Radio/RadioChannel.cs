@@ -14,6 +14,7 @@ namespace Astro.Radio {
         [Header("Location")]
         [Range(100, 865)] public int Frequency = 500;
         [Range(0, 50)] public int TuningRange = 20;
+        public bool StartInactive;
 
         [Header("Audio")]
         [StreamingAudioPath] public string AudioStream;

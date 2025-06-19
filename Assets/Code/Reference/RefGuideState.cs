@@ -640,7 +640,7 @@ namespace Astro.Reference {
             SetReferenceActive(active);
         }
 
-        [LeafMember("SetRefPaceActive")]
+        [LeafMember("SetRefPageActive")]
         private static void LeafSetRefGuideActive(int pageNum, bool active) {
             RefGuideState state = Find.State<RefGuideState>();
             state.ActivePages[pageNum] = active;

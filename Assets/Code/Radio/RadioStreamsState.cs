@@ -59,8 +59,10 @@ namespace Astro.Radio {
 
             ChannelIndexMap = ArrayUtils.MapFrom(channels.Channels, (a) => a.AssetId);
 
+            int idx = 0;
             foreach(var channel in channels.Channels) {
                 LoadQueue.PushBack(channel);
+                DeactivatedChannels.Set(idx++, channel.StartInactive);
             }
 
             return null;

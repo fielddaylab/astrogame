@@ -3,8 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using BeauRoutine;
 using BeauUtil;
+using BeauUtil.Variants;
 using FieldDay;
 using FieldDay.Components;
+using FieldDay.Scripting;
 using FieldDay.SharedState;
 using Leaf.Runtime;
 using UnityEngine;
@@ -25,13 +27,17 @@ namespace Astro {
 
         public Routine ActiveTransitionRoutine;
 
+        public readonly VariantTable ExposedVars = new VariantTable("view");
+
         void IRegistrationCallbacks.OnDeregister() {
+            ScriptUtility.UnbindTable("view");
         }
 
         void IRegistrationCallbacks.OnRegister() {
             Game.Scenes.QueueOnLoad(this, () => {
                 ViewNavUtility.SnapToNode(this, DefaultNode);
             });
+            ScriptUtility.BindTable("view", ExposedVars);
         }
     }
 
@@ -41,11 +47,6 @@ namespace Astro {
             static public readonly StringHash32 NodeUnloaded = "view-node:unloaded";
             static public readonly StringHash32 NodeEntered = "view-node:entered";
             static public readonly StringHash32 NodeExited = "view-node:exited";
-        }
-
-        static public bool NoActiveTransitionRoutine(){
-            ViewState state = Find.State<ViewState>();
-            return !state.ActiveTransitionRoutine.Exists();
         }
 
         /// <summary>
@@ -102,7 +103,7 @@ namespace Astro {
         }
 
         [LeafMember("MoveToView")]
-        static public void LeafMoveToNode(string targetId){
+        static private void LeafMoveToNode(StringHash32 targetId){
             ViewState state = Find.State<ViewState>();
             var targetNode = GetNodeById(targetId);
 
@@ -110,12 +111,12 @@ namespace Astro {
         }
 
         [LeafMember("WaitForMovedToView")]
-        static public IEnumerator LeafWaitUntilMovedToNode(string targetId){
+        static private IEnumerator LeafWaitUntilMovedToNode(StringHash32 targetId){
             ViewState state = Find.State<ViewState>();
             var targetNode = GetNodeById(targetId);
 
             MoveToNode(state, targetNode);
-            yield return Routine.WaitCondition(NoActiveTransitionRoutine);
+            return state.ActiveTransitionRoutine.Wait();
         }
 
         /// <summary>
@@ -151,6 +152,7 @@ namespace Astro {
 
             ViewNode oldNode = state.ActiveNode;
             state.ActiveNode = null;
+            state.ExposedVars.Set("current", Variant.Null);
 
             oldNode.OnExit.Invoke(oldNode);
             AstroGame.Events.Dispatch(Events.NodeExited, EvtArgs.Ref(oldNode));
@@ -164,9 +166,11 @@ namespace Astro {
         static private IEnumerator TransitionRoutine(ViewState state, ViewNode nextNode, ViewLink byLink, TweenSettings transitionOverride) {
             Transform controlPoint = null;
             TweenSettings tween = transitionOverride.Time > 0 ? transitionOverride : state.DefaultTransition;
+
             var inputState = Find.State<InputState>();
             bool cachedState = inputState.InputEnabled;
             InputUtility.SetInputEnabled(inputState, false);
+            
             if (byLink) {
                 controlPoint = byLink.TransitionControlPoint;
                 if (byLink.Transition.Time > 0) {
@@ -185,6 +189,7 @@ namespace Astro {
 
             ViewNode oldNode = state.ActiveNode;
             state.ActiveNode = nextNode;
+            state.ExposedVars.Set("current", nextNode.Id);
 
             if (oldNode) {
                 oldNode.OnExit.Invoke(oldNode);
@@ -218,6 +223,7 @@ namespace Astro {
 
             ViewNode oldNode = state.ActiveNode;
             state.ActiveNode = nextNode;
+            state.ExposedVars.Set("current", nextNode.Id);
 
             CameraRigUtility.MoveToPose(state.Camera, nextNode.Camera, 0);
 

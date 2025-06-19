@@ -573,53 +573,6 @@ MonoBehaviour:
   PeriodY: 19
   OffsetX: 5
   OffsetY: 29
---- !u!1 &145249732
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 145249733}
-  - component: {fileID: 145249734}
-  m_Layer: 0
-  m_Name: WindGrass
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &145249733
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 145249732}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1787179320}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &145249734
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 145249732}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97867da4d605a384f8dd11a0a7559820, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  EventId:
-    m_HashValue: 560484501
-  StopFadeDuration: 0
 --- !u!1 &167517242
 GameObject:
   m_ObjectHideFlags: 0
@@ -954,7 +907,7 @@ MonoBehaviour:
     m_Source: Elijah
     m_HashValue: 1050499150
   DefaultPlaybackEvent:
-    m_HashValue: 2040915811
+    m_HashValue: 191877105
   Player: {fileID: 906114580}
 --- !u!82 &906114580
 AudioSource:
@@ -1552,6 +1505,58 @@ MonoBehaviour:
   - m_Source: Main
     m_HashValue: 1366325544
   BackLink: {fileID: 225888124}
+--- !u!1 &1473349410
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1473349411}
+  - component: {fileID: 1473349412}
+  m_Layer: 0
+  m_Name: Ambience
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1473349411
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1473349410}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1787179320}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1473349412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1473349410}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aea703a6babb4cf41948021a55fd676b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BaseLayer:
+    m_HashValue: 560484501
+  TransitionDuration: 1
+  CityLayer:
+    m_HashValue: 550033244
+  ContinueRandom:
+  - m_HashValue: 2015618134
+  - m_HashValue: 2550905871
 --- !u!1 &1473377517
 GameObject:
   m_ObjectHideFlags: 0
@@ -1841,7 +1846,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 145249733}
+  - {fileID: 1473349411}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1885631345
@@ -1876,6 +1881,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Packs:
   - {fileID: 11400000, guid: 367bbc9b58ab1cb48bb42b3ff3cc0ce2, type: 2}
+  - {fileID: 11400000, guid: beade59cc552e4043ab7960a054a2267, type: 2}
 --- !u!4 &1885631347
 Transform:
   m_ObjectHideFlags: 0

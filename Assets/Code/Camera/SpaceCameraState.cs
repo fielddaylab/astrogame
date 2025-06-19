@@ -47,6 +47,7 @@ namespace Astro {
         [NonSerialized] public Vector3 PrevMousePos;
 
         [NonSerialized] public ulong StateHash;
+        [NonSerialized] public bool ShouldDispatchMoveEvents = false;
 
         [NonSerialized] public bool ZoomInputLocked = false;
         [NonSerialized] public bool CameraRotationInputLocked = false;
@@ -136,6 +137,12 @@ namespace Astro {
             }
 
             return Mathf.Clamp(lfAngle, lfMin, lfMax);
+        }
+
+        [LeafMember("TelescopeSetMoveEventActive")]
+        private static void LeafWatchTelescopeForMovement(bool watch) {
+            SpaceCameraState cam = Find.State<SpaceCameraState>();
+            cam.ShouldDispatchMoveEvents = watch;
         }
     }
 }

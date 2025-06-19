@@ -16,11 +16,11 @@ $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $call SpawnDocument("1833")
 $call StopPuzzleMode()
 $call StopOpenMode()
-$call SetRefPaceActive(14, false)
-$call SetRefPaceActive(16, false)
-$call SetRefPaceActive(19, false)
-$call SetRefPaceActive(21, false)
-$call SetRefPaceActive(23, false)
+$call SetRefPageActive(14, false)
+$call SetRefPageActive(16, false)
+$call SetRefPageActive(19, false)
+$call SetRefPageActive(21, false)
+$call SetRefPageActive(23, false)
 
 :: BeginDay
 @trigger    SceneReady
@@ -210,7 +210,7 @@ $call Wait(1)
 $goto .SetupPuzzleNav
 
 :: SetupPuzzleNav
-$call MoveToView("Monitor")
+$branch Observatory.PathToMonitor
 $call ConsoleCommandLine->PlayConsoleText("Day3ConsoleText")
 $call Wait(1)
 $call StartPuzzleNavigation()
@@ -270,8 +270,8 @@ $call OpenRefGuidePage("HistoricalData")
 $call ClearMonitorSelection()
 $call StopPuzzleMode()
 $call SetInputState(false)
-$call SetRefPaceActive(18, false)
-$call SetRefPaceActive(19, true)
+$call SetRefPageActive(18, false)
+$call SetRefPageActive(19, true)
 $call OpenRefGuideToPage(19)
 
 {@Elijah} Well… if Leo’s puzzle opened, that means the historical data made it through. Something’s working. $[Elijah/L3/l3_e_01]

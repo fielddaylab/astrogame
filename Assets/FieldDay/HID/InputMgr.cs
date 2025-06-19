@@ -46,7 +46,7 @@ namespace FieldDay.HID {
         private bool m_DebugEventPauseOverride;
 #endif // DEVELOPMENT
 
-#endregion // State
+        #endregion // State
 
         internal InputMgr() { }
 
@@ -94,7 +94,7 @@ namespace FieldDay.HID {
             }
 
             long timeSince = m_ClickTimestampBuffer[0].Ticks - m_ClickTimestampBuffer[1].Ticks;
-            long bufferTicks = (long) (buffer * Stopwatch.Frequency);
+            long bufferTicks = (long)(buffer * Stopwatch.Frequency);
             return m_ClickTimestampBuffer[0].FrameIndex == Frame.Index && timeSince <= bufferTicks;
         }
 
@@ -115,7 +115,7 @@ namespace FieldDay.HID {
         /// Returns if a mouse button is down this frame.
         /// </summary>
         public bool IsMouseDown(MouseButton mouseButton) {
-            return m_DevicePauseCounter == 0 && !m_InputConsumed && Input.GetMouseButton((int) mouseButton);
+            return m_DevicePauseCounter == 0 && !m_InputConsumed && Input.GetMouseButton((int)mouseButton);
         }
 
         /// <summary>
@@ -129,7 +129,7 @@ namespace FieldDay.HID {
         /// Returns if a mouse button was pressed this frame.
         /// </summary>
         public bool IsMousePressed(MouseButton mouseButton) {
-            return m_DevicePauseCounter == 0 && !m_InputConsumed && Input.GetMouseButtonDown((int) mouseButton);
+            return m_DevicePauseCounter == 0 && !m_InputConsumed && Input.GetMouseButtonDown((int)mouseButton);
         }
 
         /// <summary>
@@ -176,7 +176,7 @@ namespace FieldDay.HID {
         /// were pressed this frame.
         /// </summary>
         public bool IsKeyComboPressed(ModifierKeyCode modifier, KeyCode keyCode) {
-            return m_DevicePauseCounter == 0 && !m_InputConsumed && keyCode > 0 && Input.GetKeyDown(keyCode) && (modifier == 0 || Input.GetKey((KeyCode) modifier));
+            return m_DevicePauseCounter == 0 && !m_InputConsumed && keyCode > 0 && Input.GetKeyDown(keyCode) && (modifier == 0 || Input.GetKey((KeyCode)modifier));
         }
 
         #endregion // Keys
@@ -231,6 +231,10 @@ namespace FieldDay.HID {
 
             if (!m_ExposedInputModule) {
                 Log.Warn("[InputMgr] Could not find ExposedInputInputModule");
+            }
+            if (!m_DefaultInputModule) {
+                Log.Warn("[InputMgr] Could not find any input module");
+                m_DefaultInputModule = null;
             }
 
             GameLoop.OnGuiEvent.Register(OnGui);
@@ -290,7 +294,6 @@ namespace FieldDay.HID {
         /// Pauses all raycasting.
         /// </summary>
         public void PauseRaycasts() {
-            if (AreRaycastsPaused()) return;
             if (m_EventPauseCounter++ == 0) {
 #if DEVELOPMENT
                 if (m_DebugEventPauseOverride) {
@@ -298,7 +301,7 @@ namespace FieldDay.HID {
                 }
 #endif // DEVELOPMENT
                 m_EventSystem.SetSelectedGameObject(null);
-                m_DefaultInputModule.DeactivateModule();
+                m_DefaultInputModule?.DeactivateModule();
                 NativeInput.SetEventSystemEnabled(false);
             }
         }
@@ -308,7 +311,7 @@ namespace FieldDay.HID {
         /// </summary>
         public void ResumeRaycasts() {
             if (m_EventPauseCounter > 0 && m_EventPauseCounter-- == 1) {
-                m_DefaultInputModule.ActivateModule();
+                m_DefaultInputModule?.ActivateModule();
                 NativeInput.SetEventSystemEnabled(true);
             }
         }
@@ -319,12 +322,12 @@ namespace FieldDay.HID {
                 m_DebugEventPauseOverride = debugPaused;
 
                 if (debugPaused) {
-                    m_DefaultInputModule.ActivateModule();
+                    m_DefaultInputModule?.ActivateModule();
                     NativeInput.SetEventSystemEnabled(true);
                 } else {
                     if (m_EventPauseCounter > 0) {
                         m_EventSystem.SetSelectedGameObject(null);
-                        m_DefaultInputModule.DeactivateModule();
+                        m_DefaultInputModule?.DeactivateModule();
                         NativeInput.SetEventSystemEnabled(false);
                     }
                 }
@@ -377,17 +380,17 @@ namespace FieldDay.HID {
         LCtrl = KeyCode.LeftControl,
         RightControl = KeyCode.RightControl,
         RCtrl = KeyCode.RightControl,
-        
+
         LeftShift = KeyCode.LeftShift,
         LShfit = KeyCode.LeftShift,
         RightShift = KeyCode.RightShift,
         RShift = KeyCode.RightShift,
-        
+
         LeftAlt = KeyCode.LeftAlt,
         LAlt = KeyCode.LeftAlt,
         RightAlt = KeyCode.RightAlt,
         RAlt = KeyCode.RightAlt,
-        
+
         LeftMeta = KeyCode.LeftMeta,
         LMeta = KeyCode.LeftMeta,
         RightMeta = KeyCode.RightMeta,

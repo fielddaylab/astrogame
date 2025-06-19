@@ -9,11 +9,13 @@ $call SetInputState(false)
 $call StopPuzzleMode()
 $call StopOpenMode()
 $call SetRefGuidePagesLocked(true)
-$call SetRefPaceActive(15, false)
-$call SetRefPaceActive(17, false)
-$call SetRefPaceActive(19, false)
-$call SetRefPaceActive(21, false)
-$call SetRefPaceActive(23, false)
+
+$call SetRefPageActive(15, false)
+$call SetRefPageActive(17, false)
+$call SetRefPageActive(19, false)
+$call SetRefPageActive(21, false)
+$call SetRefPageActive(23, false)
+
 $call SetChannelActive(Unlocks_Active, false)
 $call IntroCutscene->PrepareCutscene()
 
@@ -92,6 +94,7 @@ $goto .SetupTelescopeTutorial
 :: SetupTelescopeTutorial
 $call StartMonitorControls()
 $call SetInputState(true)
+$call TelescopeSetMoveEventActive(true)
 $call HintModals->SlideInFromRight("TelescopeControls", 0.4)
 $set temp:introMoveTheTelescope = false
 $start .MoveTelescopeReminder
@@ -112,6 +115,7 @@ $endif
 @cutscene
 @once
 
+$call TelescopeSetMoveEventActive(false)
 $set temp:introMoveTheTelescope = true
 $call HintModals->Hide("TelescopeControls", 0.2)
 
@@ -378,7 +382,7 @@ $call OpenRefGuidePage("Colormeter")
 {@Radio} Thanking you for being an important part of the CERES Distributed Network of Citizen Observatories. $[Radio/L1/l1_r_32]
 {@Radio} Together, we will map the stars for a better tomorrow. $[Radio/L1/l1_r_33]
 
-{@Astrid} Ugh, riviting... $[Astrid/L1/l1_a_11]
+{@Astrid} Ugh, riveting... $[Astrid/L1/l1_a_11]
 
 {@Radio} Tuning you to the Ice Cube CERES headquarters for further instruction... $[Radio/L1/l1_r_34]
 
@@ -399,7 +403,7 @@ $call Wait(1)
 $goto .PostClearanceUpgrade
 
 :: PostClearanceUpgrade
-$call MoveToView("Monitor")
+$branch Observatory.PathToMonitor
 $call ConsoleCommandLine->PlayConsoleText("Day1ConsoleText")
 
 $call SetInputState(true)
@@ -564,7 +568,7 @@ $call IsolatePuzzleCell(1, 4)
 @interrupt
 @cutscene
 
-{@Astrid} The blue wavelength filter is there on the moniter. $[Astrid/L1/l1_a_30]
+{@Astrid} The blue wavelength filter is there on the monitor. $[Astrid/L1/l1_a_30]
 
 :: NotBlueLightAstrid
 @trigger OnPuzzleCellSelected
@@ -895,8 +899,8 @@ $call StopPuzzleMode()
 $call SetInputState(false)
 
 $call Wait(2)
-$call SetRefPaceActive(14, false)
-$call SetRefPaceActive(15, true)
+$call SetRefPageActive(14, false)
+$call SetRefPageActive(15, true)
 $call OpenRefGuideToPage(15)
 $call ClearMonitorSelection()
 {@Elijah} If you’re hearing this… it means you didn’t give up. Good. Remember—Perseus didn’t wait for the gods to fix things. $[Elijah/L1/l1_e_01a]

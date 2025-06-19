@@ -2,6 +2,7 @@ using System;
 using BeauUtil;
 using FieldDay;
 using FieldDay.SharedState;
+using FieldDay.UI;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -26,39 +27,48 @@ namespace Astro {
         public const int DefaultLayerMask = LayerMasks.LabInteract_Mask | LayerMasks.DocumentInteract_Mask | LayerMasks.ReferenceInteract_Mask | LayerMasks.InstrumentInteract_Mask;
 
         public static void SetInputEnabled(InputState state, bool enabled) {
-            state.InputEnabled = enabled;
+            bool changed = Ref.Replace(ref state.InputEnabled, enabled);
             SpaceCameraUtility.SetCameraInputEnabled(enabled);
-            if (enabled) {
-                Game.Input.ResumeRaycasts();
-            } else {
-                Game.Input.PauseRaycasts();
+            if (changed) {
+                if (enabled) {
+                    Game.Input.ResumeRaycasts();
+                } else {
+                    Game.Input.PauseRaycasts();
+                }
             }
         }
 
         public static void SetClickableMaskDefault(InputState state) {
             state.DesiredLayerMask = DefaultLayerMask;
-            state.AppliedLayerMask = state.DesiredLayerMask & state.LayerMaskFilter;
+            state.AppliedLayerMask = CalculateFinalMask(state.DesiredLayerMask, state.LayerMaskFilter);
             state.Raycaster.eventMask = state.AppliedLayerMask;
         }
 
         public static void SetClickableMaskCustom(InputState state, LayerMask mask) {
             state.DesiredLayerMask = mask;
-            state.AppliedLayerMask = state.DesiredLayerMask & state.LayerMaskFilter;
+            state.AppliedLayerMask = CalculateFinalMask(state.DesiredLayerMask, state.LayerMaskFilter);
             state.Raycaster.eventMask = state.AppliedLayerMask;
         }
 
         public static void SetClickableMaskTopLayer(InputState state) {
             state.DesiredLayerMask = LayerMasks.TopLayer_Mask;
-            state.AppliedLayerMask = LayerMasks.TopLayer_Mask | (state.DesiredLayerMask & state.LayerMaskFilter);
+            state.AppliedLayerMask = CalculateFinalMask(state.DesiredLayerMask, state.LayerMaskFilter);
             state.Raycaster.eventMask = state.AppliedLayerMask;
         }
 
         public static void SetClickableMaskFilter(InputState state, LayerMask filter) {
             state.LayerMaskFilter = filter;
-            state.AppliedLayerMask = (LayerMasks.TopLayer_Mask & state.DesiredLayerMask) | (state.DesiredLayerMask & state.LayerMaskFilter);
+            state.AppliedLayerMask = CalculateFinalMask(state.DesiredLayerMask, state.LayerMaskFilter);
             state.Raycaster.eventMask = state.AppliedLayerMask;
         }
 
+        static private int CalculateFinalMask(int desiredMask, int filter) {
+            return (LayerMasks.TopLayer_Mask & desiredMask) | (desiredMask & filter);
+        }
+
+        public static bool IsClickable(InputState state, GameObject gameObject) {
+            return RaycastUtility.IsInteractableByRaycaster(gameObject, state.Raycaster);
+        }
     }
 
 }

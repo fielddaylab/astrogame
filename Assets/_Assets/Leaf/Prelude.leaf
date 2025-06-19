@@ -73,14 +73,17 @@ $call FakeBloomExtra->FadeIn()
 $call FakeBloom->FadeIn()
 
 $call Wait(3)
+$call Signal("FadeOutCityAmb")
 
 {@Astrid}	Whoa. Elijah, are you seeing this? $[Astrid/Pre/p_a_09]
 
 {@Elijah}	Astrid—you’re breaking up— $[Elijah/Pre/p_e_09]
  
 {@Astrid}	Is that the Northern Lights? $[Astrid/Pre/p_a_10]
+
 {@Astrid}	Whoa. It's so bright! $[Astrid/Pre/p_a_11]
  
+$call CityFlicker->PlayTimeline()
 {@Elijah}	(*bzzzzzzz krrrrrrr*) —Something’s not right— $[Elijah/Pre/p_e_10]
 {@Elijah}	(*static noises*) —Readings off the charts— (*brrrrrr kzzzzzz*) $[Elijah/Pre/p_e_11]
  

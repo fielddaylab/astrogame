@@ -95,6 +95,9 @@ namespace FieldDay {
         private FileSystem.Config m_FileSystemConfig = new FileSystem.Config();
 
         [SerializeField]
+        private RenderMgr.Config m_RenderConfig = new RenderMgr.Config();
+
+        [SerializeField]
         private AssetPack[] m_GlobalAssetPacks = Array.Empty<AssetPack>();
 
         #endregion // Inspector
@@ -293,7 +296,7 @@ namespace FieldDay {
 
                 Log.Msg("[GameLoop] Creating rendering manager...");
                 Game.Rendering = new RenderMgr();
-                Game.Rendering.Initialize();
+                Game.Rendering.Initialize(m_RenderConfig);
 
                 Log.Msg("[GameLoop] Creating input manager...");
                 Game.Input = new InputMgr();

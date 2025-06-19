@@ -31,6 +31,9 @@ namespace FieldDay.Scripting {
         // Actor Tracking
         internal readonly ScriptActorMap<ScriptActor> Actors = new ScriptActorMap<ScriptActor>(16);
 
+        // Signals
+        internal readonly EventDispatcher<Variant> SignalMap = new EventDispatcher<Variant>(8, 8, 4);
+
         // Plugin
         internal ScriptPlugin Plugin;
         internal MethodCache<LeafMember> MethodCache;
@@ -120,6 +123,9 @@ namespace FieldDay.Scripting {
 
             Game.Scenes.OnMainSceneLateEnable.Register(() => {
                 SceneLocalTable.Clear();
+            });
+            Game.Scenes.OnMainSceneUnloaded.Register(() => {
+                SignalMap.CleanupDeadReferences();
             });
 
             Game.Scenes.QueueOnEnable(InitialMethodCache);
@@ -393,10 +399,12 @@ namespace FieldDay.Scripting {
 
         #region Functions
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public void Invoke(StringHash32 functionId, VariantTable vars = null) {
             Invoke(functionId, default, null, vars);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public void Invoke(StringHash32 functionId, ILeafActor actor, VariantTable vars = null) {
             Invoke(functionId, actor?.Id ?? StringHash32.Null, actor, vars);
         }
@@ -423,10 +431,12 @@ namespace FieldDay.Scripting {
 
         #region Trigger
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public LeafThreadHandle Trigger(StringHash32 triggerId, VariantTable vars = null) {
             return Trigger(triggerId, default, null, vars);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public LeafThreadHandle Trigger(StringHash32 triggerId, ILeafActor actor, VariantTable vars = null) {
             return Trigger(triggerId, actor?.Id ?? StringHash32.Null, actor, vars);
         }
@@ -454,6 +464,24 @@ namespace FieldDay.Scripting {
         }
 
         #endregion // Trigger
+
+        #region Spawn
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static public LeafThreadHandle SpawnThread(StringHash32 nodeId, VariantTable vars = null) {
+            return SpawnThread(nodeId, null, vars);
+        }
+
+        static public LeafThreadHandle SpawnThread(StringHash32 nodeId, ILeafActor actor, VariantTable vars = null) {
+            if (ScriptDBUtility.TryLookupExposedNode(DB, nodeId, out ScriptNode node)) {
+                return Runtime.Plugin.Run(node, actor?.Id ?? StringHash32.Null, actor, vars, "Spawn Directly", true);
+            }
+
+            Log.Warn("[ScriptUtility] No exposed node with id '{0}' found", nodeId.ToDebugString());
+            return default;
+        }
+
+        #endregion // Spawn
 
         #region Vox
 
@@ -593,5 +621,34 @@ namespace FieldDay.Scripting {
         }
 
         #endregion // Cutscenes
+
+        #region Signals
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static public void RegisterForSignal(StringHash32 signalId, Action action, UnityEngine.Object context = null) {
+            Runtime.SignalMap.Register(signalId, action, context);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static public void DeregisterFromSignal(StringHash32 signalId, Action action) {
+            Runtime.SignalMap.Deregister(signalId, action);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static public void RegisterForSignal(StringHash32 signalId, Action<Variant> action, UnityEngine.Object context = null) {
+            Runtime.SignalMap.Register(signalId, action, context);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static public void DeregisterFromSignal(StringHash32 signalId, Action<Variant> action) {
+            Runtime.SignalMap.Deregister(signalId, action);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static public void DeregisterAllSignalsForContext(UnityEngine.Object context) {
+            Runtime.SignalMap.DeregisterAllForContext(context);
+        }
+
+        #endregion // Signals
     }
 }

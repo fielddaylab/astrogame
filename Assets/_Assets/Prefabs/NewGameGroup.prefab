@@ -1650,6 +1650,8 @@ GameObject:
   - component: {fileID: 3904107399539452958}
   - component: {fileID: 7624581490424705850}
   - component: {fileID: 5807708828216133798}
+  - component: {fileID: 2120591978544632598}
+  - component: {fileID: 855575587767241884}
   m_Layer: 0
   m_Name: NewGameGroup
   m_TagString: Untagged
@@ -1693,7 +1695,10 @@ MonoBehaviour:
     m_HashValue: 2334404017
   Group:
     GameObjects:
-    - {fileID: 2543615580253569476}
+    - {fileID: 8017848504017004266}
+    - {fileID: 8807498586329541501}
+    - {fileID: 5232751128307941210}
+    - {fileID: 3577989938717437010}
     Behaviours: []
 --- !u!114 &7624581490424705850
 MonoBehaviour:
@@ -1722,7 +1727,7 @@ PlayableDirector:
   m_Enabled: 1
   serializedVersion: 3
   m_PlayableAsset: {fileID: 11400000, guid: d09a4a1e14e499642909f92c0ac7b003, type: 2}
-  m_InitialState: 1
+  m_InitialState: 0
   m_WrapMode: 2
   m_DirectorUpdateMode: 1
   m_InitialTime: 0
@@ -1747,7 +1752,7 @@ PlayableDirector:
     value: {fileID: 7030096373243787271}
   - key: {fileID: 7477193995693552502, guid: d09a4a1e14e499642909f92c0ac7b003, type: 2}
     value: {fileID: 2120552959722052023}
-  - key: {fileID: -5620141410495403960, guid: d09a4a1e14e499642909f92c0ac7b003, type: 2}
+  - key: {fileID: 0}
     value: {fileID: 0}
   - key: {fileID: 6273400324555621540, guid: d09a4a1e14e499642909f92c0ac7b003, type: 2}
     value: {fileID: 2860616868524482100}
@@ -1755,6 +1760,37 @@ PlayableDirector:
     value: {fileID: 3297309771101674962}
   m_ExposedReferences:
     m_References: []
+--- !u!114 &2120591978544632598
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2543615580253569476}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 808d7706b9890e74cb5c1f86dc9f8b53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Id:
+    m_Source: CityFlicker
+    m_HashValue: 4009086818
+  m_ClassName:
+    m_Source: 
+    m_HashValue: 0
+--- !u!114 &855575587767241884
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2543615580253569476}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23b490638fb1dbc40a76013060931b0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Director: {fileID: 5807708828216133798}
 --- !u!1 &2958831191092334386
 GameObject:
   m_ObjectHideFlags: 0
@@ -3150,7 +3186,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1225591551173960148}
-  - component: {fileID: 5882965406905233964}
   m_Layer: 0
   m_Name: City
   m_TagString: Untagged
@@ -3185,49 +3220,6 @@ Transform:
   - {fileID: 2195116192572597896}
   m_Father: {fileID: 3975718186892072350}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!320 &5882965406905233964
-PlayableDirector:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5232751128307941210}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_PlayableAsset: {fileID: 11400000, guid: d09a4a1e14e499642909f92c0ac7b003, type: 2}
-  m_InitialState: 1
-  m_WrapMode: 2
-  m_DirectorUpdateMode: 1
-  m_InitialTime: 0
-  m_SceneBindings:
-  - key: {fileID: 9087357922686809751, guid: d09a4a1e14e499642909f92c0ac7b003, type: 2}
-    value: {fileID: 2441303979523410670}
-  - key: {fileID: -3424456290016311315, guid: d09a4a1e14e499642909f92c0ac7b003, type: 2}
-    value: {fileID: 929657889706801848}
-  - key: {fileID: -1670984469491747992, guid: d09a4a1e14e499642909f92c0ac7b003, type: 2}
-    value: {fileID: 9069695918612191181}
-  - key: {fileID: -4892795946981901448, guid: d09a4a1e14e499642909f92c0ac7b003, type: 2}
-    value: {fileID: 4835643039842294872}
-  - key: {fileID: -3481637467570775929, guid: d09a4a1e14e499642909f92c0ac7b003, type: 2}
-    value: {fileID: 9183780195138582962}
-  - key: {fileID: 1160105162393599869, guid: d09a4a1e14e499642909f92c0ac7b003, type: 2}
-    value: {fileID: 2033639341927268087}
-  - key: {fileID: -756871471584711292, guid: d09a4a1e14e499642909f92c0ac7b003, type: 2}
-    value: {fileID: 8928476655490287722}
-  - key: {fileID: 7477193995693552502, guid: d09a4a1e14e499642909f92c0ac7b003, type: 2}
-    value: {fileID: 3114121132664757656}
-  - key: {fileID: 1567024451782897027, guid: d09a4a1e14e499642909f92c0ac7b003, type: 2}
-    value: {fileID: 7030096373243787271}
-  - key: {fileID: -9045695415321228019, guid: d09a4a1e14e499642909f92c0ac7b003, type: 2}
-    value: {fileID: 2120552959722052023}
-  - key: {fileID: 6273400324555621540, guid: d09a4a1e14e499642909f92c0ac7b003, type: 2}
-    value: {fileID: 2860616868524482100}
-  - key: {fileID: -6427130499573999569, guid: d09a4a1e14e499642909f92c0ac7b003, type: 2}
-    value: {fileID: 3297309771101674962}
-  - key: {fileID: -5620141410495403960, guid: d09a4a1e14e499642909f92c0ac7b003, type: 2}
-    value: {fileID: 0}
-  m_ExposedReferences:
-    m_References: []
 --- !u!1 &5275797501635695197
 GameObject:
   m_ObjectHideFlags: 0
@@ -6358,5 +6350,10 @@ PrefabInstance:
 --- !u!4 &7209926653565533264 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 849dce893c39d2e4699374c7388ef380, type: 3}
+  m_PrefabInstance: {fileID: 7170987804046498747}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8017848504017004266 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 849dce893c39d2e4699374c7388ef380, type: 3}
   m_PrefabInstance: {fileID: 7170987804046498747}
   m_PrefabAsset: {fileID: 0}

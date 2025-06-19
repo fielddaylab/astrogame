@@ -241,6 +241,13 @@ namespace FieldDay.Scripting {
         static private readonly WeightedSet<ScriptNode> s_WeightedWorkList = new WeightedSet<ScriptNode>(16);
 
         /// <summary>
+        /// Finds a node with the given id, searching through all exposed nodes.
+        /// </summary>
+        static public bool TryLookupExposedNode(ScriptDatabase db, StringHash32 nodeId, out ScriptNode node) {
+            return db.LoadedExposedNodes.TryGetValue(nodeId, out node);
+        }
+
+        /// <summary>
         /// Finds a node with the given id, searching from an existing node's scope first,
         /// if provided, and then to any nodes marked with `@exposed`
         /// </summary>

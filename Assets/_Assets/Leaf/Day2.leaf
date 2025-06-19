@@ -14,11 +14,11 @@ $call SetInstrumentUnlocked(TemperatureInstrument, true)
 $call SpawnDocument("MiniLabors")
 $call StopPuzzleMode()
 $call StopOpenMode()
-$call SetRefPaceActive(14, false)
-$call SetRefPaceActive(17, false)
-$call SetRefPaceActive(19, false)
-$call SetRefPaceActive(21, false)
-$call SetRefPaceActive(23, false)
+$call SetRefPageActive(14, false)
+$call SetRefPageActive(17, false)
+$call SetRefPageActive(19, false)
+$call SetRefPageActive(21, false)
+$call SetRefPageActive(23, false)
 
 :: BeginDay
 @trigger    SceneReady
@@ -268,7 +268,7 @@ $call OpenRefGuidePage("SpectralClass")
 @interrupt
 @cutscene
 
-{@Astrid} The blue wavelength filter is there on the moniter. $[Astrid/L1/l1_a_30]
+{@Astrid} The blue wavelength filter is there on the monitor. $[Astrid/L1/l1_a_30]
 
 :: PointsUpdated
 @trigger    PointsUpdated
@@ -323,7 +323,7 @@ $call Wait(1)
 $goto .SetupPuzzleNav
 
 :: SetupPuzzleNav
-$call MoveToView("Monitor")
+$branch Observatory.PathToMonitor
 $call ConsoleCommandLine->PlayConsoleText("Day2ConsoleText")
 $call Wait(2)
 $call StartPuzzleNavigation()
@@ -352,8 +352,8 @@ $call ClearMonitorSelection()
 $call StopPuzzleMode()
 $call SetInputState(false)
 
-$call SetRefPaceActive(16, false)
-$call SetRefPaceActive(17, true)
+$call SetRefPageActive(16, false)
+$call SetRefPageActive(17, true)
 $call OpenRefGuideToPage(17)
 
 {@Elijah} If you’re hearing this, it means you’ve solved Hercules—and that part of the satellite could come back online soon. $[Elijah/L2/l2_e_01] 
@@ -362,7 +362,7 @@ $call OpenRefGuideToPage(17)
 
 $call Wait(2)
 
-{@Dad} Astrid... What are you up to? Elijahs puzzles are a wild goose chase. I don't want you getting your hopes up. $[Dad/L2/l2_d_1]
+{@Dad} Astrid... What are you up to? Elijah's puzzles are a wild goose chase. I don't want you getting your hopes up. $[Dad/L2/l2_d_1]
 
 {@Astrid} But dad, I think I'm getting close here... $[Astrid/L2/l2_a_19]
 {@Astrid} That satellite was built to withstand a CME. If we could decrypt what's stored on it... it would change everything! $[Astrid/L2/l2_a_20]
@@ -378,7 +378,7 @@ $call Wait(2)
 
 {@Monitor} Station Twelve, this is a warning. You have been flagged non-compliant. You will lose access to this frequency upon any further violation. $[Monitor/L2/l2_m_1]
 {@Monitor} I advise that you review communication protocols if you want to avoid termination. $[Monitor/L2/l2_m_2] 
-{@Monitor} Remember, your commnication is a privilege, <b>not a right</b>. $[Monitor/L2/l2_m_3] 
+{@Monitor} Remember, your communication is a privilege, <b>not a right</b>. $[Monitor/L2/l2_m_3] 
 
 {@Dad} Astrid, please. Focus on the task at hand. I don't want to... $[Dad/L2/l2_d_5]
 // {@Dad} Please tune radio to 375 mhz. $[Dad/L2/l2_d_6]

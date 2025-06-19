@@ -10,6 +10,7 @@
 #define USING_URP
 #endif // UNITY_2019_1_OR_NEWER
 
+using System;
 using System.Collections.Generic;
 using BeauUtil;
 using BeauUtil.Debugger;
@@ -127,6 +128,11 @@ namespace FieldDay.Rendering {
 
 #endif // DEVELOPMENT
 
+        [Serializable]
+        public struct Config {
+            public Camera FallbackCamera;
+        }
+
         public struct CameraChangeData {
             public Camera Previous;
             public Camera New;
@@ -170,7 +176,7 @@ namespace FieldDay.Rendering {
 
         #region Events
 
-        internal void Initialize() {
+        internal void Initialize(Config config) {
             GameLoop.OnCanvasPreRender.Register(OnCanvasPreUpdate);
             GameLoop.OnApplicationPreRender.Register(OnApplicationPreRender);
             GameLoop.OnFrameAdvance.Register(OnApplicationPostRender);
@@ -182,6 +188,11 @@ namespace FieldDay.Rendering {
             CameraHelper.AddOnPreCull(this);
             CameraHelper.AddOnPreRender(this);
             CameraHelper.AddOnPostRender(this);
+
+            m_FallbackCamera = config.FallbackCamera;
+            if (m_FallbackCamera) {
+                m_FallbackCamera.gameObject.SetActive(m_UsingFallback);
+            }
         }
 
         internal void LateInitialize() {
@@ -350,8 +361,6 @@ namespace FieldDay.Rendering {
             OnGuiCameraChanged(Game.Gui.PrimaryCamera);
             go.SetActive(m_UsingFallback);
         }
-
-        // TODO: SetCustomFallbackCamera
 
         /// <summary>
         /// Marks the "fallback camera" state as dirty.

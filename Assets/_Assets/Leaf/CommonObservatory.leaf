@@ -1,0 +1,42 @@
+#basePath	Observatory
+
+:: PathToDesk
+@exposed
+$call InputPushPause()
+$if view:current == "Map"
+    $call WaitForMovedToView("Desk")
+$elseif view:current == "Ceiling"
+    $call WaitForMovedToView("Desk")
+$elseif view:current == "GuideFocus"
+    $call WaitForMovedToView("Right")
+    $call WaitForMovedToView("Desk")
+$endif
+$call InputPopPause()
+
+:: PathToCeiling
+@exposed
+$if view:current != "Ceiling"
+    $branch .PathToDesk
+    $call MoveToView("Ceiling")
+$endif
+
+:: PathToDocuments
+@exposed
+$branch .PathToDesk
+$call MoveToView("Left")
+
+:: PathToMonitor
+@function   MovePlayerToMonitor
+@exposed
+$call InputPushPause()
+$branch .PathToDesk
+$call MoveToView("Monitor")
+$call InputPopPause()
+
+:: PathToInstruments
+@function   MovePlayerToInstruments
+@exposed
+$if view:current != "GuideFocus"
+    $branch .PathToDesk
+$endif
+$call MoveToView("Right")
