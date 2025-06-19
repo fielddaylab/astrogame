@@ -73,6 +73,7 @@ namespace Astro {
             AddInstrumentUnlockButton(menu, "SpectrometerInstrument");
             AddInstrumentUnlockButton(menu, "HistoricalDataInstrument");
             AddInstrumentUnlockButton(menu, "HistoricalDataModeToggle");
+            AddDecoderUnlockButton(menu, "SatelliteDecoder");
             return menu;
         }
 
@@ -81,6 +82,16 @@ namespace Astro {
                 ScriptActor actor = ScriptUtility.FindActor(instrumentName);
                 if (actor != null) {
                     SetInstrumentUnlocked(actor.GetComponent<LabInstrument>(), true, actor.Id);
+                }
+            });
+        }
+
+        static private void AddDecoderUnlockButton(DMInfo info, string decoderName)
+        {
+            info.AddButton("Unlock " + decoderName, () => {
+                ScriptActor actor = ScriptUtility.FindActor(decoderName);
+                if (actor != null) {
+                    actor.GetComponent<SatelliteDecoder>().SetDecoderActive(true);
                 }
             });
         }

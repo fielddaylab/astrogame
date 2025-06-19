@@ -44,6 +44,10 @@ namespace Astro {
                 RegisterDayLoadButton(info, dayId);
             }
 
+            info.AddDivider();
+
+            RegisterDecoderLoadButton(info, "Day5");
+
 #if DEVELOPMENT
             if (story.DEBUG_SandboxDay) {
                 info.AddDivider();
@@ -65,6 +69,22 @@ namespace Astro {
                 ScriptUtility.KillAllThreads();
                 ScriptTriggers.LoadDay(dayId);
                 MusicUtility.StopMusic();
+
+#if DEVELOPMENT
+                Find.State<PlayerProgressState>().LoadDebugScene = false;
+#endif // DEVELOPMENT
+            });
+        }
+
+
+        static private void RegisterDecoderLoadButton(DMInfo menu, StringHash32 dayId)
+        {
+            menu.AddButton("Begin Decode (Day 5)", () => {
+                ScriptUtility.KillAllThreads();
+ //               ScriptTriggers.LoadDay(dayId);
+ //               MusicUtility.StopMusic();
+
+                ScriptUtility.Trigger(ScriptEvents.BeginDecoderSequence);
 
 #if DEVELOPMENT
                 Find.State<PlayerProgressState>().LoadDebugScene = false;

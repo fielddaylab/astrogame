@@ -115,6 +115,11 @@ $call StartPuzzleMode()
 
 $call ClearMonitorSelection()
 $call StopPuzzleMode()
+
+$branch .SatelliteDecodeBegin
+
+:: SatelliteDecodeBegin
+@trigger    BeginDecoderSequence
 $call SetInputState(false)
 $call SetRefPaceActive(22, false)
 $call SetRefPaceActive(23, true)
