@@ -19,6 +19,7 @@ namespace Astro {
         public string LowResAssetPath;
     }
 
+    [System.Serializable]
     [CreateAssetMenu(menuName = "AstroGame/Document Asset")]
     public sealed class DocumentAsset : NamedAsset {
         public DocumentCategory Category;
@@ -33,10 +34,15 @@ namespace Astro {
         public StreamingDocumentVisual[] StreamingVisuals;
 
         public Vector3 DefaultPinnedPos;
+        [HideInInspector] public Vector3 LastKnownPos;
         public Vector3 ZoomOffsetOverride;
 
         public bool PreserveInArchive = true;
         public bool TriggersPrompter = true; // false for questions
+
+        public bool DifInitPos = false;
+        public Vector3 InitPos;
+
 
         private void OnEnable() {
             SetupDocumentAsset();

@@ -255,7 +255,7 @@ namespace FieldDay.Scripting {
                 VoxRequest req = default;
                 req.CharacterId = charId;
                 req.LineCode = line.LineCode;
-                req.Subtitle = new SubtitleEntry(tagStr.RichText);
+                req.Subtitle = new SubtitleEntry(tagStr.RichTextString);
                 req.UnloadAfterPlayback = (thread.PeekNode().Flags & ScriptNodeFlags.Once) != 0;
                 req.StartPlayback = false;
                 req.Priority = ScriptUtility.ScriptPriorityToVoxPriority(thread.Priority());
@@ -287,7 +287,7 @@ namespace FieldDay.Scripting {
                 fakeSubtitleData = new SubtitleDisplayData() {
                     CharacterId = charId,
                     Priority = ScriptUtility.ScriptPriorityToVoxPriority(thread.Priority()),
-                    Subtitle = new SubtitleEntry(tagStr.RichText),
+                    Subtitle = new SubtitleEntry(tagStr.RichTextString),
                     VoxHandle = VoxRequestHandle.Dummy
                 };
             } else {

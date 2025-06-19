@@ -1,4 +1,5 @@
 using BeauRoutine;
+using BeauUtil;
 using FieldDay;
 using FieldDay.Components;
 using System;
@@ -10,26 +11,24 @@ namespace Astro
 {
     public class InteractAdjustDial : BatchedComponent, IRegistrationCallbacks
     {
+        public delegate bool CanAdjustPredicate(InteractAdjustDial dial, Vector2 delta);
+
         [Header("Parameters")]
         public float BaseVal; // the value the current drag adjusts around
         public float InputSensitivity = 1; // how sensitive the dial is to input
         public float RotateSpeed = 1; // how quickly the dial rotates according to input
-        public bool PassThrough = false; // true if dial can rotate indefinitely despite being bounded in value,
-                                         // false if dial rotation can be determined by dial value
         public Axis PivotAxis;
+
         [NonSerialized] public float CurrRawVal; // the current raw value on the dial
         [NonSerialized] public float CurrConstrainedVal; // the current constrained value on the dial
-        [NonSerialized] public float RawValDelta = 0;
         [NonSerialized] public float ConstrainedValDelta = 0;
-
-        [NonSerialized] public float PassThroughOffset = 0;
 
         [NonSerialized] public bool ValChanged = false;
 
-
-
         [Header("Objects")]
         public Transform DialRoot;
+
+        public CanAdjustPredicate CanAdjust;
 
         public void OnDeregister()
         {
@@ -50,7 +49,8 @@ namespace Astro
             var preConstrainedVal = dial.CurrConstrainedVal;
             var preRawVal = dial.CurrRawVal;
 
-            var postRawVal = dial.BaseVal + dial.PassThroughOffset + delta * dial.InputSensitivity;
+            var postRawVal = dial.BaseVal + delta * dial.InputSensitivity;
+
             dial.CurrConstrainedVal = Math.Clamp(postRawVal, 0, 1);
             var rawValDelta = postRawVal - preRawVal;
 
@@ -68,11 +68,15 @@ namespace Astro
             */
 
             dial.CurrRawVal = postRawVal;
-
-            dial.RawValDelta = rawValDelta;
             dial.ConstrainedValDelta = dial.CurrConstrainedVal - preConstrainedVal;
 
             dial.ValChanged = true;
+        }
+
+        public static void TrySetDial(InteractAdjustDial dial, float value) {
+            var valDelta = value - dial.CurrConstrainedVal;
+            var inputDelta = valDelta / dial.InputSensitivity;
+            TryAdjustDial(dial, inputDelta);
         }
     }
 }

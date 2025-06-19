@@ -14,8 +14,6 @@ namespace Astro {
         /// A dictonary mapping CelestialAssets to PlayerCelestialAssetKnowledge
         /// </summary>
         public Dictionary<StringHash32, PlayerCelestialAssetKnowledge> Knowledge = MapUtils.Create<StringHash32, PlayerCelestialAssetKnowledge>(64);
-
-        [NonSerialized] public List<ArchiveLayout> DayLayouts = new List<ArchiveLayout>();
         //[NonSerialized] public List<StringHash32> UnlockedInstruments = new List<StringHash32>();
 
 #if DEVELOPMENT
@@ -123,7 +121,6 @@ namespace Astro {
         static public void ResetAll() {
             PlayerProgressState state = Find.State<PlayerProgressState>();
             state.DayIndex = 0;
-            state.DayLayouts.Clear();
             state.Knowledge.Clear();
         }
     }

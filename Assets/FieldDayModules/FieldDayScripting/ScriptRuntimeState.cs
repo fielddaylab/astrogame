@@ -40,11 +40,11 @@ namespace FieldDay.Scripting {
         internal TagStringEventHandler TagEventHandler;
         internal HashSet<StringHash32> SkippableTagEvents;
         internal HashSet<StringHash32> TextOutputTagEvents;
+        internal TagStringParser TagParser;
 
         // Pools
         internal IPool<ScriptThread> ThreadPool;
         internal IPool<VariantTable> TablePool;
-        internal IPool<TagStringParser> ParserPool;
 
         // Variable Resolvers
         internal CustomVariantResolver Resolver;
@@ -100,15 +100,10 @@ namespace FieldDay.Scripting {
             TablePool.Config.RegisterOnAlloc((p, t) => t.Name = "temp");
             TablePool.Config.RegisterOnFree((p, t) => t.Reset());
             TablePool.Prewarm();
-            
-            ParserPool = new FixedPool<TagStringParser>(4, (p) => {
-                var parser = new TagStringParser();
-                parser.Delimiters = TagStringParser.CurlyBraceDelimiters;
-                parser.EventProcessor = TagParserConfig;
-                parser.ReplaceProcessor = TagParserConfig;
-                return parser;
-            });
-            ParserPool.Prewarm();
+
+            TagParser = new TagStringParser(TagStringParser.CurlyBraceDelimiters);
+            TagParser.EventProcessor = TagParserConfig;
+            TagParser.ReplaceProcessor = TagParserConfig;
 
             CurrentHistoryBuffer = new ScriptHistoryData(64);
 
@@ -257,10 +252,9 @@ namespace FieldDay.Scripting {
         /// <summary>
         /// Parses the given string into the given TagString.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public void ParseTag(ref TagString tagString, StringSlice line, object context = null) {
-            TagStringParser parser = Runtime.ParserPool.Alloc();
-            parser.Parse(ref tagString, line, context);
-            Runtime.ParserPool.Free(parser);
+            Runtime.TagParser.Parse(ref tagString, line, context);
         }
 
         /// <summary>
