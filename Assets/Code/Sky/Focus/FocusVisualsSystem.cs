@@ -12,15 +12,14 @@ namespace Astro {
     [SysUpdate(GameLoopPhase.LateUpdate, 0)]
     public class FocusVisualsSystem : SharedStateSystemBehaviour<FocusState, SpaceCameraState> {
         public override void ProcessWork(float deltaTime) {
-            if (m_StateB.LookUpdatedThisFrame) {
+            if (!m_StateB.LookUpdatedThisFrame) return;
 
-                CameraParams parms = CalculateParams(m_StateB);
+            CameraParams parms = CalculateParams(m_StateB);
 
-                UpdateFociiPositions(parms, m_StateA, m_StateB);
+            UpdateFociiPositions(parms, m_StateA, m_StateB);
 
-                if (m_StateA.CurrentFocus) {
-                    FocusVisualsUtility.AlignFocusOutlineToTarget(m_StateB, m_StateA, parms.Billboard);
-                }
+            if (m_StateA.CurrentFocus) {
+                FocusVisualsUtility.AlignFocusOutlineToTarget(m_StateB, m_StateA, parms.Billboard);
             }
         }
 

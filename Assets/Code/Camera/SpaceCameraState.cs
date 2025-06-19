@@ -1,16 +1,13 @@
+using System;
 using BeauUtil;
+using BeauRoutine;
+using Leaf.Runtime;
 using FieldDay;
 using FieldDay.SharedState;
-using Leaf.Runtime;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace Astro
-{
-    public class SpaceCameraState : SharedStateComponent, IRegistrationCallbacks
-    {
+namespace Astro {
+    public class SpaceCameraState : SharedStateComponent, IRegistrationCallbacks {
         // TODO: assign Camera a better way
         public CameraRig Camera;
         public Skybox Skybox;
@@ -77,9 +74,16 @@ namespace Astro
 
             PuzzleState puzzleState = Find.State<PuzzleState>();
             
-            spaceCameraState.Camera.Camera.fieldOfView = spaceCameraState.Camera.OriginalFOV / puzzleState.ActivePuzzle.PuzzleCameraZoom;
-            spaceCameraState.LookUpdatedThisFrame = true;
-            spaceCameraState.OnLookUpdated.Invoke(spaceCameraState);
+            float newFOV = spaceCameraState.Camera.OriginalFOV / puzzleState.ActivePuzzle.PuzzleCameraZoom;
+            Camera spaceCamera = spaceCameraState.Camera.Camera;
+
+            Routine.Start(spaceCameraState, 
+                Tween.Float(spaceCamera.fieldOfView, newFOV, (f) => {
+                    spaceCamera.fieldOfView = f;                    
+                    spaceCameraState.LookUpdatedThisFrame = true;
+                    spaceCameraState.OnLookUpdated.Invoke(spaceCameraState);
+                }, 1f)
+            );
         }
 
         public static void OnStopPuzzleNav() {
