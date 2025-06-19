@@ -58,7 +58,7 @@ namespace Astro {
     public static partial class DocumentUtility {
         #region Spawning
 
-        public static DocumentRenderer SpawnDocument(DocumentAsset asset, StringHash32 id, out Vector3 pinnedPos, DocumentBoardState state = null, bool addToArchive = true, bool toBoard = false) {
+        public static DocumentRenderer SpawnDocument(DocumentAsset asset, StringHash32 id, out Vector3 pinnedPos, DocumentBoardState state = null, bool addToArchive = true, bool toBoard = false, int archiveIndex = -1) {
             if (state == null) {
                 state = Find.State<DocumentBoardState>();
             }
@@ -78,7 +78,19 @@ namespace Astro {
                 DocumentUtility.DisplayFullDocument(spawned, asset);
             }
 
-            spawned.transform.localPosition = asset.DefaultPinnedPos;
+            PlayerProgressState progressState = Find.State<PlayerProgressState>();
+            ArchiveState archiveState = Find.State<ArchiveState>();
+
+            var localPos = asset.DefaultPinnedPos;
+            bool fromArchive = archiveIndex != -1;
+            bool fromCurrDayArchive = progressState.DayIndex == archiveIndex + archiveState.DayOffset;
+
+            // override with init position if doc has different init position and it's being spawned to the current day
+            if (asset.DifInitPos && (!fromArchive || (fromArchive && fromCurrDayArchive))) {
+                localPos = asset.InitPos;
+            }
+
+            spawned.transform.localPosition = localPos;
             var pinnedPosCopy = pinnedPos = spawned.transform.position;
 
             // place somewhere offscreen
@@ -88,14 +100,7 @@ namespace Astro {
             state.DocumentLoadRoutine.Replace(AwaitDocLoadComplete(spawned))
                 .OnComplete(() => {
                     // restore doc position
-                    if (toBoard) { spawned.transform.localPosition = asset.DefaultPinnedPos; }
-
-                    // add asset to ArchiveState (usually if not being spawned from an Archive)
-                    if (addToArchive && asset.PreserveInArchive)
-                    {
-                        var archiveState = Find.State<ArchiveState>();
-                        ArchiveUtility.AddAssetToArchive(archiveState, id, pinnedPosCopy);
-                    }
+                    if (toBoard && !fromArchive) { spawned.transform.localPosition = localPos; }
                 });
 
             return spawned;
@@ -347,7 +352,6 @@ namespace Astro {
             DocumentAsset asset = Find.NamedAsset<DocumentAsset>(doc.AssetName);
 
             DocumentUtility.DisplayFullDocument(renderer, asset);
-            renderer.transform.localPosition = asset.DefaultPinnedPos;
 
             UpdateEnabledDocParts(doc, DocumentBoardState.ZoomActiveFunctions);
 

@@ -4,13 +4,11 @@ using FieldDay;
 using FieldDay.SharedState;
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using Unity.IO.Archive;
 using UnityEngine;
 
 namespace Astro
 {
-    public class ArchiveState : SharedStateComponent, IRegistrationCallbacks, ISharedState
+    public class ArchiveState : SharedStateComponent, ISharedState
     {
         public GameObject ArchivePrefab;
         public Mesh[] StackMeshes;
@@ -21,48 +19,9 @@ namespace Astro
         [NonSerialized] public int CurrArchiveIndex = -1;
 
         public Routine LoadRoutine;
-
-        public void OnDeregister()
-        {
-            Game.Events.Deregister(GameEvents.BeforeNextDayLoad, ArchiveUtility.SaveCurrentLayout);
-        }
-
-        public void OnRegister()
-        {
-            Game.Events.Register(GameEvents.BeforeNextDayLoad, ArchiveUtility.SaveCurrentLayout);
-        }
     }
 
     public static class ArchiveUtility { 
-    
-        public static void AddAssetToArchive(ArchiveState archiveState, StringHash32 assetId, Vector3 assetPos)
-        {
-            PlayerProgressState playerState = Find.State<PlayerProgressState>();
-            var currList = playerState.DayLayouts[archiveState.CurrArchiveIndex - archiveState.DayOffset];
-            currList.AssetPositions.Add(assetId, assetPos);
-            playerState.DayLayouts[playerState.DayIndex - archiveState.DayOffset] = currList;
-        }
-
-        public static void SetAssetPosInArchive(ArchiveState archiveState, StringHash32 assetId, Vector3 assetPos)
-        {
-            PlayerProgressState playerState = Find.State<PlayerProgressState>();
-            var currList = playerState.DayLayouts[archiveState.CurrArchiveIndex - archiveState.DayOffset];
-            if (!currList.AssetPositions.ContainsKey(assetId)) { return; }
-            currList.AssetPositions[assetId] = assetPos;
-        }
-
-        public static void SaveCurrentLayout()
-        {
-            var archiveState = Find.State<ArchiveState>();
-            var boardState = Find.State<DocumentBoardState>();
-
-            foreach (var doc in boardState.SpawnedDocuments) {
-                if (doc.PreserveInArchive) {
-                    ArchiveUtility.SetAssetPosInArchive(archiveState, doc.Interactable.AssetName, doc.transform.localPosition);
-                }
-            }
-        }
-
         public static void LoadArchive(ArchiveState archiveState, DocumentBoardState boardState, int dayIndex)
         {
             if (dayIndex == archiveState.CurrArchiveIndex) { return; }
@@ -71,34 +30,50 @@ namespace Astro
             HideCurrentArchive(archiveState, boardState);
 
             PlayerProgressState playerState = Find.State<PlayerProgressState>();
-            var currLayout = playerState.DayLayouts[dayIndex - archiveState.DayOffset];
+            StoryAsset story = Find.GlobalAsset<StoryAsset>();
 
-            archiveState.LoadRoutine.Replace(LoadArchiveRoutine(archiveState, boardState, dayIndex, currLayout));
+            var archiveIndex = dayIndex; // - archiveState.DayOffset;
+            DayConfigAsset day = Find.NamedAsset<DayConfigAsset>(story.Days[archiveIndex]);
+            var currLayout = day.DocLayout[0];
+
+            archiveState.LoadRoutine.Replace(LoadArchiveRoutine(archiveState, boardState, dayIndex, currLayout, archiveIndex));
         }
 
-        public static IEnumerator LoadArchiveRoutine(ArchiveState archiveState, DocumentBoardState boardState, int dayIndex, ArchiveLayout currLayout)
+        public static IEnumerator LoadArchiveRoutine(ArchiveState archiveState, DocumentBoardState boardState, int dayIndex, ArchiveLayout currLayout, int archiveIndex)
         {
-            Transform[] transforms = new Transform[currLayout.AssetPositions.Count];
+            Transform[] transforms = new Transform[currLayout.Documents.Count];
 
             while (boardState.DocumentLoadRoutine.Exists()) { yield return null; }
 
-            int pairIndex = 0;
-            foreach (KeyValuePair<StringHash32, Vector3> pair in currLayout.AssetPositions)
+            int docIndex = 0;
+            foreach (var doc in currLayout.Documents)
             {
                 // spawn the asset at the position
-                var spawned = DocumentUtility.SpawnDocument(Find.NamedAsset<DocumentAsset>(pair.Key), pair.Key, out Vector3 pinnedPos, boardState, false, true);
-                transforms[pairIndex] = spawned.transform;
+                var spawned = DocumentUtility.SpawnDocument(doc, doc.AssetId, out Vector3 pinnedPos, boardState, false, true, archiveIndex);
+                transforms[docIndex] = spawned.transform;
                 spawned.transform.position = new Vector3(-500, -500, 500); // place somewhere offscreen while loading
-                pairIndex++;
+                docIndex++;
 
                 while (boardState.DocumentLoadRoutine.Exists()) { yield return null; }
             }
 
-            pairIndex = 0;
-            foreach (KeyValuePair<StringHash32, Vector3> pair in currLayout.AssetPositions)
+            PlayerProgressState progressState = Find.State<PlayerProgressState>();
+
+            docIndex = 0;
+            foreach (var doc in currLayout.Documents)
             {
-                transforms[pairIndex].localPosition = pair.Value;
-                pairIndex++;
+
+                var localPos = doc.DefaultPinnedPos;
+                bool fromArchive = archiveIndex != -1;
+                bool fromCurrDayArchive = progressState.DayIndex == archiveIndex; // + archiveState.DayOffset;
+
+                // override with init position if doc has different init position and it's being spawned to the current day
+                if (doc.DifInitPos && (!fromArchive || (fromArchive && fromCurrDayArchive))) {
+                    localPos = doc.InitPos;
+                }
+
+                transforms[docIndex].localPosition = localPos;
+                docIndex++;
             }
 
             archiveState.CurrArchiveIndex = dayIndex;
@@ -109,7 +84,7 @@ namespace Astro
             if (archiveState.CurrArchiveIndex == -1) return;
 
             // save current layout
-            SaveCurrentLayout();
+            // SaveCurrentLayout();
 
             // TODO: Collapse transition routine
 

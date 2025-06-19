@@ -6,8 +6,10 @@ using UnityEngine;
 
 namespace Astro
 {
+    [Serializable]
     public class ArchiveLayout
     {
-        [NonSerialized] public Dictionary<StringHash32, Vector3> AssetPositions = new Dictionary<StringHash32, Vector3>();
+        public List<DocumentAsset> Documents;
+        // [NonSerialized] public Dictionary<StringHash32, Vector3> AssetPositions = new Dictionary<StringHash32, Vector3>();
     }
 }
