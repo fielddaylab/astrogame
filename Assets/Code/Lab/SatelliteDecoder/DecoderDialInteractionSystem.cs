@@ -84,6 +84,17 @@ namespace Astro
 
             dial.RotationTime = 0;
             dial.InLongSpin = false;
+
+            int prevDisplayIndex = ClampedDisplayIndex(dial.CurrDisplayIndex - 1, dial.TextDisplays.Length);
+            int nextDisplayIndex = ClampedDisplayIndex(dial.CurrDisplayIndex + 1, dial.TextDisplays.Length);
+            for (int i = 0; i < dial.TextDisplays.Length; i++) {
+                if (i == prevDisplayIndex || i == dial.CurrDisplayIndex || i == nextDisplayIndex) {
+                    dial.TextDisplays[i].gameObject.SetActive(true);
+                }
+                else {
+                    dial.TextDisplays[i].gameObject.SetActive(false);
+                }
+            }
         }
 
         private static IEnumerator SpinnerCountTimeRoutine(SatelliteDecoderDial dial)
@@ -120,7 +131,7 @@ namespace Astro
         /// </summary>
         /// <param name="displayIndex">Index of the text display</param>
         /// <param name="valIndex">Index of the value to be shown in the text display</param>
-        public static void UpdateDecoderDialVals(SatelliteDecoderDial dial)
+        public static void UpdateDecoderDialVals(SatelliteDecoderDial dial, bool selectiveHiding = false)
         {
             // set current index
             dial.TextDisplays[dial.CurrDisplayIndex].SetText(dial.Values[dial.CurrValIndex].ToString());
@@ -134,6 +145,22 @@ namespace Astro
             int nextValIndex = ClampedValIndex(dial.CurrValIndex + 1, dial.Values.Length);
             int nextDisplayIndex = ClampedDisplayIndex(dial.CurrDisplayIndex + 1, dial.TextDisplays.Length);
             dial.TextDisplays[nextDisplayIndex].SetText(dial.Values[nextValIndex].ToString());
+
+            if (selectiveHiding) {
+                for (int i = 0; i < dial.TextDisplays.Length; i++) {
+                    if (i == prevDisplayIndex || i == dial.CurrDisplayIndex || i == nextDisplayIndex) {
+                        dial.TextDisplays[i].gameObject.SetActive(true);
+                    }
+                    else {
+                        dial.TextDisplays[i].gameObject.SetActive(false);
+                    }
+                }
+            }
+            else {
+                for (int i = 0; i < dial.TextDisplays.Length; i++) {
+                    dial.TextDisplays[i].gameObject.SetActive(true);
+                }
+            }
         }
     }
 }

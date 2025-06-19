@@ -53,7 +53,7 @@ namespace Astro
             HoldCooldownTime = 0.12f; // must be less than rotate duration!
             HoldTriggerTime = 0.2f;
             CurrTargetRotation = Spinner.localRotation;
-            DecoderUtility.UpdateDecoderDialVals(this);
+            DecoderUtility.UpdateDecoderDialVals(this, true);
         }
 
         public void OnDeregister()
