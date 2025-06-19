@@ -27,10 +27,15 @@ namespace Astro {
             } else if (!m_State.ReviewTimer.Paused) {
                 TryProgressPips(m_State.ReviewTimer.GetProgress(), m_State.ReviewModule);
                 return;
-            } 
+            }
+            CelestialDataDisplay display = Find.State<CelestialDataDisplay>();
             if (m_State.ReviewCooldown.Advance(deltaTime)) {
-                ReviewModuleUtility.ResetReview( m_State.ReviewModule );
-            } 
+                if(!display.AnimRoutine.Exists()){
+                    ReviewModuleUtility.ResetReview( m_State.ReviewModule );
+                } else {
+                    display.AnimRoutine.OnComplete(() => ReviewModuleUtility.ResetReview(m_State.ReviewModule));
+                }
+            }        
         }
 
         private void CheckObjectOrPuzzle() {

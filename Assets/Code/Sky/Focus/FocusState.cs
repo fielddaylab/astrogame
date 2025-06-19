@@ -47,8 +47,10 @@ namespace Astro {
         public CastableEvent<UIFocus> OnFocusUpdated = new CastableEvent<UIFocus>();
 
         protected override void OnEnable() {
-            setMonitorInputActive = () => { MonitorInputActive = true; };
-            setMonitorInputInactive = () => { MonitorInputActive = false; };
+            setMonitorInputActive = () => {
+                MonitorInputActive = true; };
+            setMonitorInputInactive = () => {
+                MonitorInputActive = false; };
 
             DefaultStarSprite = m_DefaultStarSprite;
             DataSubmittedStarSprite = m_DataSubmittedStarSprite;

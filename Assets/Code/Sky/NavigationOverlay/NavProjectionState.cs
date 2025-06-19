@@ -259,8 +259,9 @@ namespace Astro {
                 connectionRect.localEulerAngles = new Vector3(0, 0, angle);
             }
 
-            // Okay now put the camera back
+            // Okay now put that camera back where it came from, or so help me.
             WorldPositionUtility.ForceLocalRotation(spaceCam, spaceCameraOriginalRot);
+            spaceCamera.fieldOfView = stashedFOV;
             navState.Initialized = true;
         }
 
