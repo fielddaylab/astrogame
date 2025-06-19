@@ -1,5 +1,6 @@
 using BeauRoutine;
 using FieldDay;
+using FieldDay.Audio;
 using FieldDay.Components;
 using System.Collections;
 using System.Collections.Generic;
@@ -20,7 +21,7 @@ namespace Astro
 
         [HideInInspector] public int CurrValIndex = 0;
         [HideInInspector] public int CurrDisplayIndex = 0;
-        [HideInInspector] public float CurrTargetRotation = 0;
+        [HideInInspector] public Quaternion CurrTargetRotation;
 
         [HideInInspector]
         public char[] Values = new char[]
@@ -32,8 +33,26 @@ namespace Astro
         'U', 'V', 'W', 'X', 'Y', 'Z',
         };
 
+        public Routine RotateRoutine;
+        public Routine CountTimeRoutine;
+        public AudioHandle RotateAudioHandle;
+        public float RotationTime = 0; // keeps track of how long dial's been spinning for audio purposes
+        public bool InLongSpin = false;
+
+        [HideInInspector] public float RotateDuration;
+
+        [HideInInspector] public float HoldTriggerTime;
+        [HideInInspector] public float HoldTriggerTimer = 0;
+
+        [HideInInspector] public float HoldCooldownTime;
+        [HideInInspector] public float HoldCooldownTimer = 0;
+
         public void OnRegister()
         {
+            RotateDuration = 0.15f;
+            HoldCooldownTime = 0.12f; // must be less than rotate duration!
+            HoldTriggerTime = 0.2f;
+            CurrTargetRotation = Spinner.localRotation;
             DecoderUtility.UpdateDecoderDialVals(this);
         }
 
