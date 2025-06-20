@@ -1,5 +1,8 @@
+using System.Collections;
 using BeauUtil;
+using BeauUtil.Debugger;
 using BeauUtil.Variants;
+using FieldDay.Scenes;
 using Leaf.Runtime;
 
 namespace FieldDay.Scripting {
@@ -50,5 +53,18 @@ namespace FieldDay.Scripting {
         }
 
         #endregion // Input
+
+        #region Scene Loading
+
+        [LeafMember("TransitionToScene")]
+        static internal void LeafLoadScene([BindThread] ScriptThread thread, string sceneName, StringHash32 transitionType = default) {
+            SceneReference sceneRef = SceneUtility.GetSceneByName(sceneName);
+            Assert.True(sceneRef.IsValid, "No scene with name '{0}'", sceneName);
+            Game.Scenes.LoadMainScene(sceneRef, true, new MainSceneTransitionArgs() {
+                TransitionType = transitionType
+            });
+        }
+
+        #endregion // Scene Loading
     }
 }
