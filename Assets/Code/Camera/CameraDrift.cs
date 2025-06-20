@@ -1,3 +1,4 @@
+using FieldDay;
 using UnityEngine;
 
 namespace Astro {
@@ -11,10 +12,12 @@ namespace Astro {
         public float OffsetY;
 
         private void Update() {
+        if (Find.State<UserSettingsState>().CameraDriftEnabled) {
             transform.localPosition = new Vector3(
                 Mathf.Cos(OffsetX + (Time.time * Mathf.PI * 2 / PeriodX)) * DriftX * Scale,
                 Mathf.Sin(OffsetY + (Time.time * Mathf.PI * 2 / PeriodY)) * DriftY * Scale,
                 0);
+            }
         }
 
         private void OnDisable() {

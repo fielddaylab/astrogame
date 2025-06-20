@@ -47,7 +47,7 @@ namespace Astro {
 
         [LeafMember("ExitCutscene")]
         public void ExitCutscene() {
-            Director.Stop();
+            Director.Stop();          
         }
 
         private void OnCutsceneBegin() {

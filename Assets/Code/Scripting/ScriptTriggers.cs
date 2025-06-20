@@ -122,7 +122,6 @@ namespace Astro {
         [LeafMember("StartPuzzleMode")]
         static private void LeafStartPuzzleMode() {
             Game.Events.Dispatch(GameEvents.StartPuzzleMode);
-
             GameLoop.ResumeUpdates(AstroGame.MonitorControlsUpdateMask);
             GameLoop.ResumeUpdates(AstroGame.PuzzleSubmissionUpdateMask);
             GameLoop.ResumeUpdates(AstroGame.AnySubmissionUpdateMask);
@@ -140,7 +139,6 @@ namespace Astro {
             }
             GameLoop.SuspendUpdates(AstroGame.InstrumentUpdateMask);
         }
-
 
         [LeafMember("StartMonitorControls")]
         static private void LeafStartMonitorControls() {
@@ -180,7 +178,6 @@ namespace Astro {
         static private void LeafUpdateOpenIdSubmissions() {
             Game.Events.Dispatch(GameEvents.UpdateOpenIdSubmission);
         }
-
 
         [LeafMember("StopOpenMode")]
         static private void LeafStopOpenMode() {

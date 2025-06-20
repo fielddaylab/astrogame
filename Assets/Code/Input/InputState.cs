@@ -30,7 +30,7 @@ namespace Astro {
     }
 
     public static class InputUtility {
-        public const int DefaultLayerMask = LayerMasks.LabInteract_Mask | LayerMasks.DocumentInteract_Mask | LayerMasks.ReferenceInteract_Mask | LayerMasks.InstrumentInteract_Mask;
+        public const int DefaultLayerMask = LayerMasks.LabInteract_Mask | LayerMasks.DocumentInteract_Mask | LayerMasks.ReferenceInteract_Mask | LayerMasks.UI_Mask | LayerMasks.InstrumentInteract_Mask;
 
         [DebugMenuFactory]
         private static DMInfo DebugNeutrinoNav() {
@@ -52,10 +52,12 @@ namespace Astro {
 
             if (enabled) {
                 // Log.Msg("[InputState > SetInputEnabled] ResumeRaycasts");
-                Game.Input.ResumeRaycasts();
+                //Game.Input.ResumeRaycasts();
+                SetClickableMaskDefault(state);
             } else {
                 // Log.Msg("[InputState > SetInputEnabled] PauseRaycasts");
-                Game.Input.PauseRaycasts();
+                SetClickableMaskCustom(state, LayerMasks.UI_Mask);
+                //Game.Input.PauseRaycasts();
             }
         }
 

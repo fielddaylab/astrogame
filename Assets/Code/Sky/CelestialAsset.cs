@@ -17,20 +17,20 @@ namespace Astro {
 
         [Header("Categorization")]
         public CelestialObjectCategory Category;
-        [ClassificationId] public StringHash32[] ClassIds;
-        [ReferenceEntryId] public StringHash32 ReferenceId;
-        [ConstellationId] public StringHash32 ConstellationId;
+        [ClassificationId] public StringHash32[] ClassIds; // deprecated
+        [ReferenceEntryId] public StringHash32 ReferenceId; // deprecated
+        [ConstellationId] public StringHash32 ConstellationId; // deprecated
 
         [Header("Temperature and Color")]
         public uint Temperature;
-        [ColorId] public StringHash32 ColorId;
+        [ColorId] public StringHash32 ColorId; // deprecated
 
         [Header("Magnitude")]
-        public float ApparentMagnitude;
+        public float ApparentMagnitude; // visible
         public float ApparentBlueMagnitude;
         public float ApparentIRMagnitude;
-        public float AbsoluteMagnitude;
-        public HistoricalPatternAsset HistoricalBrightness;
+        public float AbsoluteMagnitude; // visible 
+        public HistoricalPatternAsset HistoricalBrightness; // deprecated
 
         [Header("Materials")]
         public SpectrographMaterialMask Spectrograph;

@@ -27,6 +27,9 @@ public static class GameEvents {
     public static readonly StringHash32 UnlockMonitorFocus = "unlock-monitor-focus";
     public static readonly StringHash32 BeforeNextDayLoad = "before-next-day-load";
 
+    public static readonly StringHash32 GamePaused = "game-paused";
+    public static readonly StringHash32 GameResumed = "game-resumed";
+
     public static readonly StringHash32 MonitorSwitchedFilter = "monitor-switched-filter";
     public static readonly StringHash32 OnStarSelected = "monitor-star-selected";
     public static readonly StringHash32 InstrumentUnlocked = "instrument-unlocked";
