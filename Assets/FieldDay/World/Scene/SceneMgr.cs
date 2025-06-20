@@ -832,7 +832,7 @@ namespace FieldDay.Scenes {
         }
 
         static private bool IsDoneLoading(AsyncOperation operation, in LoadSceneArgs args, out Scene scene) {
-            if (Scenes.Editor.AreDelayedSceneProcessorsRunning()) {
+            if (SceneUtility.Editor.AreDelayedSceneProcessorsRunning()) {
                 scene = default;
                 return false;
             }
@@ -1290,7 +1290,7 @@ namespace FieldDay.Scenes {
                     yield break;
                 }
 
-                while (Scenes.Editor.AreDelayedSceneProcessorsRunning()) {
+                while (SceneUtility.Editor.AreDelayedSceneProcessorsRunning()) {
                     yield return null;
                 }
 
@@ -1301,7 +1301,7 @@ namespace FieldDay.Scenes {
                 if (args.Type == SceneType.Main) {
                     m_MainSceneTransition.Stop();
 
-                    Game.Events.Dispatch(Scenes.Events.PreUnload);
+                    Game.Events.Dispatch(SceneUtility.Events.PreUnload);
                     OnMainSceneUnloading.Invoke();
 
                     if (m_MainTransitionUnload != null) {
@@ -1451,7 +1451,7 @@ namespace FieldDay.Scenes {
 
                 if (args.Type == SceneType.Main) {
                     OnMainSceneLateEnable.Invoke();
-                    Game.Events.Dispatch(Scenes.Events.Ready);
+                    Game.Events.Dispatch(SceneUtility.Events.Ready);
                 }
 
                 // one more check for dependencies
@@ -1488,7 +1488,7 @@ namespace FieldDay.Scenes {
                     }
                 }
 
-                Game.Events.Dispatch(Scenes.Events.Ready);
+                Game.Events.Dispatch(SceneUtility.Events.Ready);
             }
         }
 
@@ -1631,7 +1631,7 @@ namespace FieldDay.Scenes {
     /// <summary>
     /// Scene utility methods.
     /// </summary>
-    static public class Scenes {
+    static public class SceneUtility {
         static public class Events {
             static public readonly StringHash32 LateEnable = "SceneMgr::LateEnable";
             static public readonly StringHash32 Ready = "SceneMgr::Ready";
@@ -1650,6 +1650,13 @@ namespace FieldDay.Scenes {
         /// </summary>
         static public string ActiveSceneName() {
             return SceneManager.GetActiveScene().name;
+        }
+
+        /// <summary>
+        /// Returns a reference to the scene with the given name.
+        /// </summary>
+        static public SceneReference GetSceneByName(string sceneName) {
+            return SceneHelper.FindSceneByName(sceneName, SceneCategories.AllBuild);
         }
 
         /// <summary>
