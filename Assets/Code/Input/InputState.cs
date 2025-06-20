@@ -45,16 +45,16 @@ namespace Astro {
         }
 
         public static void SetInputEnabled(InputState state, bool enabled) {
-            Log.Msg("[InputState] called SetInputEnabled({0})", enabled);
+            // Log.Msg("[InputState] called SetInputEnabled({0})", enabled);
             bool changed = Ref.Replace(ref state.InputEnabled, enabled);
             SpaceCameraUtility.SetCameraInputEnabled(enabled);
             if (!changed) return;
 
             if (enabled) {
-                Log.Msg("[InputState > SetInputEnabled] ResumeRaycasts");
+                // Log.Msg("[InputState > SetInputEnabled] ResumeRaycasts");
                 Game.Input.ResumeRaycasts();
             } else {
-                Log.Msg("[InputState > SetInputEnabled] PauseRaycasts");
+                // Log.Msg("[InputState > SetInputEnabled] PauseRaycasts");
                 Game.Input.PauseRaycasts();
             }
         }
