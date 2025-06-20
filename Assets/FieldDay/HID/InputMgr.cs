@@ -294,22 +294,26 @@ namespace FieldDay.HID {
         /// Pauses all raycasting.
         /// </summary>
         public void PauseRaycasts() {
-            if (m_EventPauseCounter++ != 0) return;
+            if (m_EventPauseCounter++ == 0)
+            {
 #if DEVELOPMENT
-            if (m_DebugEventPauseOverride) {
-                return;
-            }
+                if (m_DebugEventPauseOverride)
+                {
+                    return;
+                }
 #endif // DEVELOPMENT
-            m_EventSystem.SetSelectedGameObject(null);
-            m_DefaultInputModule?.DeactivateModule();
-            NativeInput.SetEventSystemEnabled(false);
+                m_EventSystem.SetSelectedGameObject(null);
+                m_DefaultInputModule?.DeactivateModule();
+                NativeInput.SetEventSystemEnabled(false);
+            }
         }
 
         /// <summary>
         /// Resumes all raycasting.
         /// </summary>
         public void ResumeRaycasts() {
-            if (m_EventPauseCounter > 0 && m_EventPauseCounter-- == 1) {
+            Assert.True(m_EventPauseCounter > 0, "Unbalanced Pause Resume Raycasts.");
+            if (m_EventPauseCounter-- == 1) {
                 m_DefaultInputModule?.ActivateModule();
                 NativeInput.SetEventSystemEnabled(true);
             }
@@ -354,7 +358,8 @@ namespace FieldDay.HID {
         /// Resumes all devices.
         /// </summary>
         public void ResumeDevices() {
-            if (m_DevicePauseCounter > 0 && m_DevicePauseCounter-- == 1) {
+            Assert.True(m_DevicePauseCounter > 0, "Unbalanced Pause Resume Devices.");
+            if (m_DevicePauseCounter-- == 1) {
                 // TODO: resume devices
             }
         }

@@ -2,6 +2,7 @@ using System;
 using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay;
+using FieldDay.Debugging;
 using FieldDay.SharedState;
 using FieldDay.UI;
 using UnityEngine;
@@ -31,8 +32,20 @@ namespace Astro {
     public static class InputUtility {
         public const int DefaultLayerMask = LayerMasks.LabInteract_Mask | LayerMasks.DocumentInteract_Mask | LayerMasks.ReferenceInteract_Mask | LayerMasks.InstrumentInteract_Mask;
 
+        [DebugMenuFactory]
+        private static DMInfo DebugNeutrinoNav() {
+            DMInfo info = new DMInfo("Events");
+            info.AddButton("Set Input Enabled", () => {
+                SetInputEnabled(Find.State<InputState>(), true);
+            });
+            info.AddButton("Set Input Disabled", () => {
+                SetInputEnabled(Find.State<InputState>(), false);
+            });
+            return info;
+        }
+
         public static void SetInputEnabled(InputState state, bool enabled) {
-            Log.Msg("[InputState] called SetInputEnabled()");
+            Log.Msg("[InputState] called SetInputEnabled({0})", enabled);
             bool changed = Ref.Replace(ref state.InputEnabled, enabled);
             SpaceCameraUtility.SetCameraInputEnabled(enabled);
             if (!changed) return;
