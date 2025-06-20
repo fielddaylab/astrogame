@@ -294,16 +294,15 @@ namespace FieldDay.HID {
         /// Pauses all raycasting.
         /// </summary>
         public void PauseRaycasts() {
-            if (m_EventPauseCounter++ == 0) {
+            if (m_EventPauseCounter++ != 0) return;
 #if DEVELOPMENT
-                if (m_DebugEventPauseOverride) {
-                    return;
-                }
-#endif // DEVELOPMENT
-                m_EventSystem.SetSelectedGameObject(null);
-                m_DefaultInputModule?.DeactivateModule();
-                NativeInput.SetEventSystemEnabled(false);
+            if (m_DebugEventPauseOverride) {
+                return;
             }
+#endif // DEVELOPMENT
+            m_EventSystem.SetSelectedGameObject(null);
+            m_DefaultInputModule?.DeactivateModule();
+            NativeInput.SetEventSystemEnabled(false);
         }
 
         /// <summary>

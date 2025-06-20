@@ -16,6 +16,10 @@ namespace Astro {
         [NonSerialized] public int AppliedLayerMask;
 
         public void OnDeregister() {
+            // Handles cases where we might be in the middle of a transition that we are going to stop early
+            if (!InputEnabled) {
+                InputUtility.SetInputEnabled(this, true);
+            }
         }
 
         public void OnRegister() {
@@ -29,12 +33,12 @@ namespace Astro {
         public static void SetInputEnabled(InputState state, bool enabled) {
             bool changed = Ref.Replace(ref state.InputEnabled, enabled);
             SpaceCameraUtility.SetCameraInputEnabled(enabled);
-            if (changed) {
-                if (enabled) {
-                    Game.Input.ResumeRaycasts();
-                } else {
-                    Game.Input.PauseRaycasts();
-                }
+            if (!changed) return;
+
+            if (enabled) {
+                Game.Input.ResumeRaycasts();
+            } else {
+                Game.Input.PauseRaycasts();
             }
         }
 
