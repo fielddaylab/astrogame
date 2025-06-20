@@ -16,6 +16,8 @@ $call SetRefPageActive(19, false)
 $call SetRefPageActive(21, false)
 $call SetRefPageActive(23, false)
 
+$call SetRadioFrequency(137, true)
+
 $call SetChannelActive(Unlocks_Active, false)
 $call IntroCutscene->PrepareCutscene()
 
@@ -344,13 +346,25 @@ $call SetRefGuideActive(false)
 
 $call Wait(4)
 $call StopOpenMode()
+$set temp:radioChannelTuned = false
 {@Radio} You’ve identified the necessary data to earn a higher access level.  $[Radio/L1/l1_r_27]
-{@Dad} You’ll need to tune to the right frequency on your radio to unlock your equipment. $[Day1/Dad/l1_d_s34]
 
 $call SetChannelActive(Unlocks_Active, true)
 $call SetChannelActive(Unlocks_Inactive, false)
 $call HintModals->SlideInFromRight("RadioControls", 0.4)
 $call SetInputState(true)
+
+$start .UpgradeReminder
+
+:: UpgradeReminder
+$call SetInputState(true)
+$call Wait(10)
+$if !temp:radioChannelTuned
+    $call HintModals->Wiggle("RadioControls")
+    {@Astrid} I should tune to 375 mHz on the Radio to upgrade my rig.
+    $branch .UpgradeReminder
+$endif
+
 
 :: ClearanceUpgradeTrigger
 @trigger    RadioChannelListenStart
@@ -359,6 +373,7 @@ $call SetInputState(true)
 @cutscene
 @once
 
+$set temp:radioChannelTuned = true
 $call SetInputState(false)
 $call SetRadioDialLocked(true)
 $call SnapRadioToChannel()
@@ -385,6 +400,7 @@ $call OpenRefGuidePage("Colormeter")
 {@Astrid} Ugh, riveting... $[Astrid/L1/l1_a_11]
 
 {@Radio} Tuning you to the Ice Cube CERES headquarters for further instruction... $[Radio/L1/l1_r_34]
+$call SetRadioFrequency(137)
 
 $call MonitorUI->HideCERESLogo()
 $call Wait(1)

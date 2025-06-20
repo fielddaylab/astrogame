@@ -35,6 +35,7 @@ namespace Astro.Radio {
         [NonSerialized] public float StaticVolume;
 
         [NonSerialized] public bool IsLocked;
+        [NonSerialized] public bool InstantaneousTune;
 
         void IRegistrationCallbacks.OnDeregister() {
             Sfx.Stop(StaticAudioHandle);
@@ -67,8 +68,9 @@ namespace Astro.Radio {
         }
 
         [LeafMember("SetRadioFrequency")]
-        static public void SnapRadioFrequency(int frequency) {
+        static public void SnapRadioFrequency(int frequency, bool instantaneous = false) {
             var state = Find.State<RadioRig>();
+            state.InstantaneousTune = instantaneous;
             InstrumentUtility.TrySetValue(state.Dial, frequency);
         }
 

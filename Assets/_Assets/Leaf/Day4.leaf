@@ -22,6 +22,8 @@ $call SetRefPageActive(16, false)
 $call SetRefPageActive(18, false)
 $call SetRefPageActive(21, false)
 $call SetRefPageActive(23, false)
+$call SetChannelActive(Unlocks_Active, false)
+$call SetRadioFrequency(137, true)
 
 :: BeginDay
 @trigger    SceneReady
@@ -194,6 +196,7 @@ $call AddAssetToSubmissionGroup("Hyadum")
 $call AddAssetToSubmissionGroup("Electra")
 $call UpdateOpenIdSubmissions()
 $call SetInputState(true)
+$call SetRadioFrequency(137)
 
 :: ClearanceUpgrade
 @trigger    PointsUpdated
@@ -203,13 +206,40 @@ $call SetInputState(true)
 
 $call SetInputState(false)
 $call SetRefGuideActive(false)
-
 $call Wait(4)
 
 $call StopOpenMode()
-$call ClearMonitorSelection()
+$call SetInputState(true)
+$call SetChannelActive(Unlocks_Active, true)
+$call SetChannelActive(Unlocks_Inactive, false)
+$set temp:radioChannelTuned = false
 
+{@Astrid} It looks like I'm ready for the next level!
+
+$start .UpgradeReminder
+
+:: UpgradeReminder
+$call Wait(10)
+$if !temp:radioChannelTuned
+    {@Astrid} I should tune to 375 mHz on the Radio to upgrade my rig.
+    $branch .UpgradeReminder
+$endif
+
+:: ClearanceUpgradeTrigger
+@trigger    RadioChannelListenStart
+@when       channelId == "Unlocks_Active"
+@interrupt
+@cutscene
+@once
+
+$call SetRadioDialLocked(true)
+$call SnapRadioToChannel()
+$call SetChannelActive(Unlocks_Active, false)
+$call SetChannelActive(Unlocks_Inactive, true)
+$set temp:radioChannelTuned = true
+$call SetInputState(false)
 $call MonitorUI->PlayRadioDownload(2)
+
 $call Wait(1)
 $call ClearMonitorSelection()
 $call MonitorUI->ShowCERESLogo()
@@ -220,6 +250,11 @@ $call SetStickyFirstPage(-1)
 {@Radio} Please reference your CERES Operator Manual for further information about your equipment. $[Radio/L4/l4_r_05]
 {@Radio} Thanking you for being an important part of the CERES Distributed Network of Citizen Observatories. $[Radio/L4/l4_r_06] 
 {@Radio} Together, we will map the stars for a better tomorrow. $[Radio/L4/l4_r_07]
+
+$call SetRadioFrequency(137)
+$call MonitorUI->HideCERESLogo()
+$call OpenRefGuidePage("ConstellationDraco")
+$call Wait(1)
 $goto .SetupPuzzleNav
 
 :: SetupPuzzleNav

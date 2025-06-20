@@ -22,6 +22,7 @@ $call SetRefPageActive(16, false)
 $call SetRefPageActive(18, false)
 $call SetRefPageActive(20, false)
 $call SetRefPageActive(23, false)
+$call SetRadioFrequency(137, true)
 
 :: BeginDay
 @trigger    SceneReady
@@ -92,6 +93,9 @@ $call Wait(4)
 
 $call StopOpenMode()
 $call ClearMonitorSelection()
+
+$call OpenRefGuidePage("ConstellationAndromeda")
+$call Wait(1)
 $goto .SetupPuzzleNav
 
 :: SetupPuzzleNav
