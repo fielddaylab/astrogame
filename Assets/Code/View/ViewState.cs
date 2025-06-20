@@ -28,6 +28,7 @@ namespace Astro {
         public Routine ActiveTransitionRoutine;
 
         public readonly VariantTable ExposedVars = new VariantTable("view");
+        public bool transitionInputStateCache;
 
         void IRegistrationCallbacks.OnDeregister() {
             ScriptUtility.UnbindTable("view");
@@ -90,6 +91,7 @@ namespace Astro {
             }
 
             state.ActiveTransitionRoutine.Replace(state, TransitionRoutine(state, node, null, default));
+            state.ActiveTransitionRoutine.OnStop(() => { OnStopTransitionRoutine(state.transitionInputStateCache); });
         }
 
         /// <summary>
@@ -136,6 +138,7 @@ namespace Astro {
         /// </summary>
         static public void MoveByLink(ViewState state, ViewLink link) {
             state.ActiveTransitionRoutine.Replace(state, TransitionRoutine(state, link.TargetNode, link, default));
+            state.ActiveTransitionRoutine.OnStop(() => { OnStopTransitionRoutine(state.transitionInputStateCache); });
         }
 
         /// <summary>
@@ -167,8 +170,8 @@ namespace Astro {
             Transform controlPoint = null;
             TweenSettings tween = transitionOverride.Time > 0 ? transitionOverride : state.DefaultTransition;
 
-            var inputState = Find.State<InputState>();
-            bool cachedState = inputState.InputEnabled;
+            InputState inputState = Find.State<InputState>();
+            state.transitionInputStateCache = inputState.InputEnabled;
             InputUtility.SetInputEnabled(inputState, false);
             
             if (byLink) {
@@ -215,7 +218,12 @@ namespace Astro {
             
             ActivateNode(nextNode, true);
             UpdateActiveLinks(state);
-            InputUtility.SetInputEnabled(inputState, cachedState);
+            InputUtility.SetInputEnabled(inputState, state.transitionInputStateCache);
+        }
+        
+        private static void OnStopTransitionRoutine(bool cachedState, InputState input = null) {
+            input = Find.State<InputState>();
+            InputUtility.SetInputEnabled(input, cachedState);
         }
 
         static private void InstantTransition(ViewState state, ViewNode nextNode) {
