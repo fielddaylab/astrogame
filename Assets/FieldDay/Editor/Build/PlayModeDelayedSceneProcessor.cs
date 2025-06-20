@@ -30,7 +30,7 @@ namespace FieldDay.Editor {
             if (!s_Queued) {
                 s_Queued = true;
                 Debug.Log("[PlayModeDelayedSceneProcessor] Queue started");
-                Scenes.SceneUtility.Editor.SetDelayedSceneProcessorsRunning(true);
+                Scenes.SceneUtils.Editor.SetDelayedSceneProcessorsRunning(true);
                 EditorApplication.delayCall += TryFlushQueue;
             }
         }
@@ -101,7 +101,7 @@ namespace FieldDay.Editor {
 
             if (s_Entries.Count == 0 && !s_Queued) {
                 s_IgnoreScenes.Clear();
-                Scenes.SceneUtility.Editor.SetDelayedSceneProcessorsRunning(false);
+                Scenes.SceneUtils.Editor.SetDelayedSceneProcessorsRunning(false);
                 Debug.Log("[PlayModeDelayedSceneProcessor] ...Queue finished!");
             } else {
                 Debug.Log("[PlayModeDelayedSceneProcessor] ...Queue interrupted");

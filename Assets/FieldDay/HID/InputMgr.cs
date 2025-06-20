@@ -294,11 +294,9 @@ namespace FieldDay.HID {
         /// Pauses all raycasting.
         /// </summary>
         public void PauseRaycasts() {
-            if (m_EventPauseCounter++ == 0)
-            {
+            if (m_EventPauseCounter++ == 0) {
 #if DEVELOPMENT
-                if (m_DebugEventPauseOverride)
-                {
+                if (m_DebugEventPauseOverride) {
                     return;
                 }
 #endif // DEVELOPMENT

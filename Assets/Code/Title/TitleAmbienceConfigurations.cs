@@ -66,6 +66,7 @@ namespace Astro.Title {
                 Sfx.StopAllWithTag("NewGameGroup");
                 Sfx.Stop(CityHandle, TransitionDuration);
                 ContinueGameRoutine.Stop();
+                Sfx.SetVolume(BaseHandle, 1, TransitionDuration);
                 CityHandle = default;
             } else if (nodeId == "New") {
                 CityHandle = Sfx.Play(CityLayer, new SfxPlayArgs() {
@@ -76,7 +77,10 @@ namespace Astro.Title {
                 });
                 Sfx.SetVolume(CityHandle, 1, TransitionDuration);
             } else if (nodeId == "Continue") {
+                Sfx.SetVolume(BaseHandle, 0.6f, TransitionDuration);
                 ContinueGameRoutine.Replace(this, ContinueGameRandomOneshots());
+            } else if (nodeId == "FreePlay") {
+                Sfx.SetVolume(BaseHandle, 0.2f, TransitionDuration);
             }
         }
     }

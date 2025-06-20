@@ -28,7 +28,8 @@ namespace Astro {
         public Routine ActiveTransitionRoutine;
 
         public readonly VariantTable ExposedVars = new VariantTable("view");
-        public bool transitionInputStateCache;
+
+        [NonSerialized] public bool transitionInputStateCache;
 
         void IRegistrationCallbacks.OnDeregister() {
             ScriptUtility.UnbindTable("view");

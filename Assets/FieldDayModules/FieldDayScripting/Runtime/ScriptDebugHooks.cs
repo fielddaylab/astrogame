@@ -8,6 +8,7 @@ using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay.Debugging;
 using FieldDay.HID;
+using FieldDay.Scenes;
 using FieldDay.Vox;
 using UnityEngine;
 
@@ -35,8 +36,11 @@ namespace FieldDay.Scripting {
             SmokeTestMgr.RegisterResetHandler(() => {
                 ScriptUtility.KillAllThreads();
             });
-        }
 
+            SceneMgr.RegisterDebugLoadCallback(() => {
+                ScriptUtility.KillAllThreads();
+            });
+        }
 
         static private void DebugUpdate() {
             using(PooledStringBuilder psb = PooledStringBuilder.Create()) {

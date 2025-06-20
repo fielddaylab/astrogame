@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace Astro {
     public class CameraDrift : MonoBehaviour {
+        public float Scale = 1;
         public float DriftX;
         public float DriftY;
         public float PeriodX;
@@ -11,8 +12,8 @@ namespace Astro {
 
         private void Update() {
             transform.localPosition = new Vector3(
-                Mathf.Cos(OffsetX + (Time.time * Mathf.PI * 2 / PeriodX)) * DriftX,
-                Mathf.Sin(OffsetY + (Time.time * Mathf.PI * 2 / PeriodY)) * DriftY,
+                Mathf.Cos(OffsetX + (Time.time * Mathf.PI * 2 / PeriodX)) * DriftX * Scale,
+                Mathf.Sin(OffsetY + (Time.time * Mathf.PI * 2 / PeriodY)) * DriftY * Scale,
                 0);
         }
 

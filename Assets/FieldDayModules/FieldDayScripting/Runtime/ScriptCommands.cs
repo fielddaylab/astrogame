@@ -58,7 +58,7 @@ namespace FieldDay.Scripting {
 
         [LeafMember("TransitionToScene")]
         static internal void LeafLoadScene([BindThread] ScriptThread thread, string sceneName, StringHash32 transitionType = default) {
-            SceneReference sceneRef = SceneUtility.GetSceneByName(sceneName);
+            SceneReference sceneRef = SceneUtils.GetSceneByName(sceneName);
             Assert.True(sceneRef.IsValid, "No scene with name '{0}'", sceneName);
             Game.Scenes.LoadMainScene(sceneRef, true, new MainSceneTransitionArgs() {
                 TransitionType = transitionType

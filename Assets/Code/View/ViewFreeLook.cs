@@ -16,6 +16,7 @@ namespace Astro {
         public float LerpStrength = 10;
 
         [Header("Scaling")]
+        public float DefaultScale = 1;
         public float CutsceneScale = 1;
     }
 }

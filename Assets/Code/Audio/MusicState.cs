@@ -1,13 +1,14 @@
-using System;
-using System.Collections;
 using BeauUtil;
 using BeauUtil.Debugger;
 using BeauUWT;
 using EasyAssetStreaming;
 using FieldDay;
 using FieldDay.Audio;
+using FieldDay.Scenes;
 using FieldDay.SharedState;
 using Leaf.Runtime;
+using System;
+using System.Collections;
 using UnityEngine;
 
 namespace Astro.Audio {
@@ -21,9 +22,19 @@ namespace Astro.Audio {
             Sfx.Stop(MusicTrack);
             Sfx.StopAllWithTag(MusicTag);
             CurrentTrackId = default;
-         }
 
-        public void OnRegister() { }
+            SceneMgr.DeregisterDebugLoadCallback(OnSceneDebugLoad);
+        }
+
+        public void OnRegister() {
+            SceneMgr.RegisterDebugLoadCallback(OnSceneDebugLoad);
+        }
+
+        private void OnSceneDebugLoad() {
+            Sfx.Stop(MusicTrack);
+            Sfx.StopAllWithTag(MusicTag);
+            CurrentTrackId = default;
+        }
 
         public struct QueuedTrack {
             public StringHash32 TrackId;

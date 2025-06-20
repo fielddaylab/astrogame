@@ -27,6 +27,8 @@ using UnityEngine.Rendering.Universal;
 
 namespace FieldDay.Rendering {
     public sealed class RenderMgr : ICameraPreRenderCallback, ICameraPreCullCallback, ICameraPostRenderCallback {
+        #region Types
+
 #if DEVELOPMENT
 
         private struct CameraRestoreData {
@@ -138,6 +140,14 @@ namespace FieldDay.Rendering {
             public Camera New;
         }
 
+        private enum LightProbesState {
+            Clean,
+            Dirty,
+            Tetrahedralizing
+        }
+
+        #endregion // Types
+
         private bool m_LastKnownFullscreen;
         private Resolution m_LastKnownResolution;
 
@@ -154,6 +164,9 @@ namespace FieldDay.Rendering {
         private bool m_ShouldCheckFallback = true;
         private bool m_UsingFallback = false;
         private ushort m_LastLetterboxFrameRendered = Frame.InvalidIndex;
+
+        private LightProbesState m_LightProbesState;
+        private long m_LightProbesKickTS;
 
 #if DEVELOPMENT
 
@@ -193,6 +206,9 @@ namespace FieldDay.Rendering {
             if (m_FallbackCamera) {
                 m_FallbackCamera.gameObject.SetActive(m_UsingFallback);
             }
+
+            LightProbes.needsRetetrahedralization += OnLightProbesDirty;
+            LightProbes.tetrahedralizationCompleted += OnLightProbesFinishedCompute;
         }
 
         internal void LateInitialize() {
@@ -235,6 +251,9 @@ namespace FieldDay.Rendering {
 
             OnResolutionChanged.Clear();
             OnFullscreenChanged.Clear();
+
+            LightProbes.needsRetetrahedralization -= OnLightProbesDirty;
+            LightProbes.tetrahedralizationCompleted -= OnLightProbesFinishedCompute;
         }
 
         #endregion // Events
@@ -372,7 +391,44 @@ namespace FieldDay.Rendering {
 
         #endregion // Fallback
 
+        #region Lighting
+
+        /// <summary>
+        /// Tetrahedralizes light probes, if they need updating.
+        /// </summary>
+        public void TetrahedralizeLightProbes() {
+            if (m_LightProbesState == LightProbesState.Dirty) {
+                m_LightProbesState = LightProbesState.Tetrahedralizing;
+                m_LightProbesKickTS = Frame.Timestamp();
+                LightProbes.TetrahedralizeAsync();
+            }
+        }
+
+        /// <summary>
+        /// Returns if light probes are dirty or currently re-tetrahedralizing.
+        /// </summary>
+        public bool AreLightProbesDirty() {
+            return m_LightProbesState != LightProbesState.Clean;
+        }
+
+        #endregion // Lighting
+
         #region Handlers
+
+        private void OnLightProbesDirty() {
+            if (m_LightProbesState != LightProbesState.Dirty) {
+                m_LightProbesState = LightProbesState.Dirty;
+                Log.Msg("[RenderMgr] Light probes need retetrahedralizing");
+            }
+        }
+
+        private void OnLightProbesFinishedCompute() {
+            if (m_LightProbesState == LightProbesState.Tetrahedralizing) {
+                long ts = Frame.Timestamp() - m_LightProbesKickTS;
+                m_LightProbesState = LightProbesState.Clean;
+                Log.Msg("[RenderMgr] Light probes finished retetrahedralizing ({0}ms)", Profiling.TicksToMillisecs(ts));
+            }
+        }
 
         private void OnGuiCameraChanged(Camera uiCam) {
 #if USING_URP

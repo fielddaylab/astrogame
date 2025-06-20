@@ -1,9 +1,12 @@
+using BeauRoutine;
 using BeauUtil;
 using FieldDay;
 using FieldDay.Scenes;
 using FieldDay.SharedState;
 using FieldDay.UI.Animation;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Astro.Title {
     public sealed class TitleMenuConfigurations : SharedStateComponent, IRegistrationCallbacks, IScenePreload {
@@ -13,7 +16,15 @@ namespace Astro.Title {
         public FadeGroup InProgressGroup;
         public FadeGroup BackGroup;
 
+        [Header("Loading")]
+        public SceneReference UnloadScene;
+
         IEnumerator<WorkSlicer.Result?> IScenePreload.Preload() {
+            Game.Scenes.UnloadScene(UnloadScene);
+            yield return null;
+
+            GameLoop.ResumeUpdates(Bits.All32);
+
             TitleGroup.SetVisibleNow(false);
             yield return null;
             NewGroup.SetVisibleNow(false);
@@ -26,6 +37,21 @@ namespace Astro.Title {
             AstroGame.Events.Register<ViewNode>(ViewNavUtility.Events.NodeExited, OnNodeExited)
                 .Register<ViewNode>(ViewNavUtility.Events.NodeLoaded, OnNodeLoading)
                 .Register<ViewNode>(ViewNavUtility.Events.NodeEntered, OnNodeEntered);
+
+            ViewState viewState = Find.State<ViewState>();
+            ViewNavUtility.SnapToNode(viewState, ViewNavUtility.GetNodeById("Boot"));
+            Game.Scenes.QueueOnEnable(HandleInitialMenuState);
+        }
+
+        private void HandleInitialMenuState() {
+            ViewState viewState = Find.State<ViewState>();
+            if (Game.Scenes.GetPreviousMainSceneIndex() > 1) {
+                ViewNavUtility.SnapToNode(viewState, ViewNavUtility.GetNodeById("Title"));
+            } else {
+                Game.Scenes.QueueOnLoad(() => {
+                    ViewNavUtility.MoveToNode(viewState, ViewNavUtility.GetNodeById("Title"), new TweenSettings(2, Curve.Smooth));
+                });
+            }
         }
 
         private void OnNodeExited(ViewNode node) {
@@ -39,7 +65,7 @@ namespace Astro.Title {
         private void OnNodeEntered(ViewNode node) {
             StringHash32 nodeId = node.Id;
             
-            if (nodeId == "NewCutscene" || nodeId == "ContinueForward") {
+            if (nodeId == "NewCutscene" || nodeId == "ContinueForward" || nodeId == "Boot") {
                 return;
             }
 

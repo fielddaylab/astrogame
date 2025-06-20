@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 105690764}
   - component: {fileID: 105690763}
   - component: {fileID: 105690766}
+  - component: {fileID: 105690767}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -259,6 +260,81 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!114 &105690767
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 105690762}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79f7361c92bab3549b90a3f29592d8ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Viewport:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+--- !u!1001 &396444253
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 7992141204308019540, guid: f0ae1cb7e712368438837c5e446a48d7, type: 3}
+      propertyPath: m_Name
+      value: TitleSkyboxRotation
+      objectReference: {fileID: 0}
+    - target: {fileID: 8996056650926447653, guid: f0ae1cb7e712368438837c5e446a48d7, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8996056650926447653, guid: f0ae1cb7e712368438837c5e446a48d7, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8996056650926447653, guid: f0ae1cb7e712368438837c5e446a48d7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8996056650926447653, guid: f0ae1cb7e712368438837c5e446a48d7, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8996056650926447653, guid: f0ae1cb7e712368438837c5e446a48d7, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8996056650926447653, guid: f0ae1cb7e712368438837c5e446a48d7, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8996056650926447653, guid: f0ae1cb7e712368438837c5e446a48d7, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8996056650926447653, guid: f0ae1cb7e712368438837c5e446a48d7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8996056650926447653, guid: f0ae1cb7e712368438837c5e446a48d7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8996056650926447653, guid: f0ae1cb7e712368438837c5e446a48d7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f0ae1cb7e712368438837c5e446a48d7, type: 3}
 --- !u!1 &567047439
 GameObject:
   m_ObjectHideFlags: 0
@@ -1267,3 +1343,4 @@ SceneRoots:
   - {fileID: 822975933}
   - {fileID: 1943881452}
   - {fileID: 2021196622}
+  - {fileID: 396444253}

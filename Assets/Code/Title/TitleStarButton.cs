@@ -55,7 +55,11 @@ namespace Astro.Title {
 
         private void OnActiveStateChanged() {
             Billboarder.enabled = Link.LastKnownActiveState;
-            m_FadeRoutine.Replace(this, Tween.Float(FadeGroup.GetAlpha(), Link.LastKnownActiveState ? 1 : 0, FadeGroup.SetAlpha, 0.5f));
+            if (Game.Scenes.IsMainLoading()) {
+                FadeGroup.SetAlpha(Link.LastKnownActiveState ? 1 : 0);
+            } else {
+                m_FadeRoutine.Replace(this, Tween.Float(FadeGroup.GetAlpha(), Link.LastKnownActiveState ? 1 : 0, FadeGroup.SetAlpha, 0.5f));
+            }
         }
     }
 }

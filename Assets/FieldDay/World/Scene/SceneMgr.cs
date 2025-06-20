@@ -15,6 +15,7 @@ using System.Runtime.CompilerServices;
 using EasyAssetStreaming;
 using FieldDay.Debugging;
 using FieldDay.Threading;
+using System.Diagnostics;
 
 #if UNITY_EDITOR
 using UnityEditor.SceneManagement;
@@ -153,6 +154,7 @@ namespace FieldDay.Scenes {
         private SceneDataExt m_MainScene;
         private readonly RingBuffer<SceneDataExt> m_AuxScenes = new RingBuffer<SceneDataExt>(16, RingBufferMode.Expand);
         private readonly RingBuffer<SceneDataExt> m_PersistentScenes = new RingBuffer<SceneDataExt>(16, RingBufferMode.Expand);
+        private readonly RingBuffer<int> m_MainSceneIndexHistory = new RingBuffer<int>(4, RingBufferMode.Overwrite);
 
         // queues
         private readonly RingBuffer<LoadProcessArgs> m_LoadProcessQueue = new RingBuffer<LoadProcessArgs>();
@@ -206,6 +208,10 @@ namespace FieldDay.Scenes {
         public readonly CastableEvent<SceneEventArgs> OnSceneUnload = new CastableEvent<SceneEventArgs>();
         public readonly ActionEvent OnAnySceneUnloaded = new ActionEvent();
         public readonly ActionEvent OnAnySceneEnabled = new ActionEvent();
+
+#if DEVELOPMENT
+        private readonly ActionEvent m_OnDebugSceneLoad = new ActionEvent();
+#endif // DEVELOPMENT
 
         #endregion // Exposed Events
 
@@ -360,6 +366,13 @@ namespace FieldDay.Scenes {
             return m_AssetUnloadLock == 0 && !IsLoadQueued(SceneType.Main) && m_LoadQueue.Count == 0 && !m_CurrentLoadOperation.Active
                 && m_PreloadQueue.Count == 0 && !m_CurrentPreloadOperation.Active
                 && m_UnloadQueue.Count == 0 && !m_CurrentUnloadOperation.Active;
+        }
+
+        /// <summary>
+        /// Returns the previous main scene index.
+        /// </summary>
+        public int GetPreviousMainSceneIndex() {
+            return m_MainSceneIndexHistory.Count > 1 ? m_MainSceneIndexHistory[m_MainSceneIndexHistory.Count - 2] : -1;
         }
 
         #endregion // Checks
@@ -813,13 +826,20 @@ namespace FieldDay.Scenes {
             m_MainSceneLoadProcess.Stop();
             m_AdditionalSceneLoadProcess.Stop();
 
+            OnPrepareScene.Clear();
             OnScenePreload.Clear();
             OnSceneReady.Clear();
-            OnSceneUnload.Clear();
-            OnAnySceneEnabled.Clear();
-            OnAnySceneUnloaded.Clear();
+            OnMainSceneLateEnable.Clear();
             OnMainSceneReady.Clear();
-            OnPrepareScene.Clear();
+            OnMainSceneUnloading.Clear();
+            OnMainSceneUnloaded.Clear();
+            OnSceneUnload.Clear();
+            OnAnySceneUnloaded.Clear();
+            OnAnySceneEnabled.Clear();
+
+#if DEVELOPMENT
+            m_OnDebugSceneLoad.Clear();
+#endif // DEVELOPMENT
         }
 
         #endregion // Events
@@ -832,7 +852,7 @@ namespace FieldDay.Scenes {
         }
 
         static private bool IsDoneLoading(AsyncOperation operation, in LoadSceneArgs args, out Scene scene) {
-            if (SceneUtility.Editor.AreDelayedSceneProcessorsRunning()) {
+            if (SceneUtils.Editor.AreDelayedSceneProcessorsRunning()) {
                 scene = default;
                 return false;
             }
@@ -1010,6 +1030,7 @@ namespace FieldDay.Scenes {
                 case SceneType.Main: {
                         m_MainScene = data;
                         SceneManager.SetActiveScene(scene);
+                        m_MainSceneIndexHistory.PushBack(scene.buildIndex);
                         break;
                     }
 
@@ -1290,7 +1311,7 @@ namespace FieldDay.Scenes {
                     yield break;
                 }
 
-                while (SceneUtility.Editor.AreDelayedSceneProcessorsRunning()) {
+                while (SceneUtils.Editor.AreDelayedSceneProcessorsRunning()) {
                     yield return null;
                 }
 
@@ -1301,7 +1322,7 @@ namespace FieldDay.Scenes {
                 if (args.Type == SceneType.Main) {
                     m_MainSceneTransition.Stop();
 
-                    Game.Events.Dispatch(SceneUtility.Events.PreUnload);
+                    Game.Events.Dispatch(SceneUtils.Events.PreUnload);
                     OnMainSceneUnloading.Invoke();
 
                     if (m_MainTransitionUnload != null) {
@@ -1407,6 +1428,7 @@ namespace FieldDay.Scenes {
                 Log.Trace("[SceneMgr] Unloading unused streaming assets...");
 
                 Streaming.UnloadUnusedAsync();
+                Game.Rendering.TetrahedralizeLightProbes();
 
                 if (args.Type == SceneType.Main) {
 
@@ -1416,6 +1438,10 @@ namespace FieldDay.Scenes {
                     }
 
                     while (Streaming.IsUnloading()) {
+                        yield return null;
+                    }
+
+                    while(Game.Rendering.AreLightProbesDirty()) {
                         yield return null;
                     }
                 }
@@ -1451,7 +1477,7 @@ namespace FieldDay.Scenes {
 
                 if (args.Type == SceneType.Main) {
                     OnMainSceneLateEnable.Invoke();
-                    Game.Events.Dispatch(SceneUtility.Events.Ready);
+                    Game.Events.Dispatch(SceneUtils.Events.Ready);
                 }
 
                 // one more check for dependencies
@@ -1488,7 +1514,7 @@ namespace FieldDay.Scenes {
                     }
                 }
 
-                Game.Events.Dispatch(SceneUtility.Events.Ready);
+                Game.Events.Dispatch(SceneUtils.Events.Ready);
             }
         }
 
@@ -1592,12 +1618,12 @@ namespace FieldDay.Scenes {
         static private DMInfo CreateDebugMenu() {
             DMInfo menu = new DMInfo("Scenes", 16);
             DMPredicate loadPredicate = () => !Game.Scenes.IsMainLoading();
-            menu.AddButton("Reload Current Scene", () => Game.Scenes.ReloadMainScene(), loadPredicate);
+            menu.AddButton("Reload Current Scene", () => { Game.Scenes.ReloadMainScene(); InvokeDebugSceneLoad(); }, loadPredicate);
             menu.AddDivider();
 
             foreach(var scene in SceneHelper.AllBuildScenes()) {
                 SceneReference cachedRef = scene;
-                menu.AddButton(scene.Name, () => Game.Scenes.LoadMainScene(cachedRef), loadPredicate);
+                menu.AddButton(scene.Name, () => { Game.Scenes.LoadMainScene(cachedRef); InvokeDebugSceneLoad(); }, loadPredicate);
             }
 
             menu.AddDivider();
@@ -1607,7 +1633,25 @@ namespace FieldDay.Scenes {
             return menu;
         }
 
+        static private void InvokeDebugSceneLoad() {
+            Game.Scenes.m_OnDebugSceneLoad.Invoke();
+        }
+
 #endif // DEVELOPMENT
+
+        [Conditional("DEVELOPMENT")]
+        static public void RegisterDebugLoadCallback(Action action) {
+#if DEVELOPMENT
+            Game.Scenes.m_OnDebugSceneLoad.Register(action);
+#endif // DEVELOPMENT
+        }
+
+        [Conditional("DEVELOPMENT")]
+        static public void DeregisterDebugLoadCallback(Action action) {
+#if DEVELOPMENT
+            Game.Scenes.m_OnDebugSceneLoad.Deregister(action);
+#endif // DEVELOPMENT
+        }
 
         #endregion // Debug
     }
@@ -1631,7 +1675,7 @@ namespace FieldDay.Scenes {
     /// <summary>
     /// Scene utility methods.
     /// </summary>
-    static public class SceneUtility {
+    static public class SceneUtils {
         static public class Events {
             static public readonly StringHash32 LateEnable = "SceneMgr::LateEnable";
             static public readonly StringHash32 Ready = "SceneMgr::Ready";

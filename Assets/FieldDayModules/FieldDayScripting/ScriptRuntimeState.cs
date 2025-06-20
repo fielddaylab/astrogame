@@ -494,22 +494,6 @@ namespace FieldDay.Scripting {
         #region Stopping
 
         /// <summary>
-        /// Kills all running threads associated with the given actor.
-        /// </summary>
-        static public int KillThreads(ILeafActor actor) {
-            int killed = 0;
-            var table = Runtime.ActiveThreads;
-            for(int i = table.Count - 1; i >= 0; i--) {
-                var thread = table[i].GetThread();
-                if (thread != null && thread.Actor == actor) {
-                    table[i].Kill();
-                    killed++;
-                }
-            }
-            return killed;
-        }
-
-        /// <summary>
         /// Kills all running threads.
         /// </summary>
         static public int KillAllThreads() {
@@ -539,6 +523,49 @@ namespace FieldDay.Scripting {
                 }
             }
             return killed;
+        }
+
+        /// <summary>
+        /// Kills all running threads associated with the given actor.
+        /// </summary>
+        static public int KillAllThreadsForActor(ILeafActor actor) {
+            int killed = 0;
+            var table = Runtime.ActiveThreads;
+            for (int i = table.Count - 1; i >= 0; i--) {
+                var thread = table[i].GetThread();
+                if (thread != null && thread.Actor == actor) {
+                    table[i].Kill();
+                    killed++;
+                }
+            }
+            return killed;
+        }
+
+        /// <summary>
+        /// Kills all running threads associated with the given target.
+        /// </summary>
+        static public int KillAllThreadsForTarget(StringHash32 targetId) {
+            int killed = 0;
+            var table = Runtime.ActiveThreads;
+            for (int i = table.Count - 1; i >= 0; i--) {
+                var thread = (ScriptThread)table[i].GetThread();
+                if (thread != null && thread.Target() == targetId) {
+                    table[i].Kill();
+                    killed++;
+                }
+            }
+            return killed;
+        }
+
+        /// <summary>
+        /// Kills the currently running thread for the given target.
+        /// </summary>
+        static public bool KillPrimaryThreadForTarget(StringHash32 targetId) {
+            if (Runtime.ActorThreadMap.Threads.TryGetValue(targetId, out var handle) && handle.IsRunning()) {
+                handle.Kill();
+                return true;
+            }
+            return false;
         }
 
         #endregion // Stopping
