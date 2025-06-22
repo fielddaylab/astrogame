@@ -218,6 +218,7 @@ MonoBehaviour:
   DeadZone: 0.35
   Edge: 0.8
   LerpStrength: 1
+  DefaultScale: 1
   CutsceneScale: 1
 --- !u!114 &46605143
 MonoBehaviour:
@@ -411,6 +412,7 @@ MonoBehaviour:
   DeadZone: 0.2
   Edge: 0.8
   LerpStrength: 10
+  DefaultScale: 1
   CutsceneScale: 1
 --- !u!114 &138682929
 MonoBehaviour:
@@ -437,7 +439,6 @@ GameObject:
   - component: {fileID: 238910214}
   - component: {fileID: 238910212}
   - component: {fileID: 238910211}
-  - component: {fileID: 238910225}
   m_Layer: 0
   m_Name: State (Input)
   m_TagString: Untagged
@@ -511,18 +512,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SourceUpdated: 0
---- !u!114 &238910225
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 238910209}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4c120d6d2c6ca94b9e38d63087e2a3c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &332231193
 GameObject:
   m_ObjectHideFlags: 0
@@ -715,7 +704,6 @@ MonoBehaviour:
     Time: 0.3
     Curve: 1
   DefaultNode: {fileID: 1084366959}
-  transitionInputStateCache: 0
 --- !u!4 &437814476
 Transform:
   m_ObjectHideFlags: 0
@@ -972,6 +960,7 @@ MonoBehaviour:
   DeadZone: 0.35
   Edge: 0.8
   LerpStrength: 1
+  DefaultScale: 1
   CutsceneScale: 1
 --- !u!114 &617791589
 MonoBehaviour:
@@ -1090,6 +1079,7 @@ MonoBehaviour:
   DeadZone: 0.35
   Edge: 0.8
   LerpStrength: 1.2
+  DefaultScale: 1
   CutsceneScale: 0.4
 --- !u!114 &651789102
 MonoBehaviour:
@@ -1303,6 +1293,7 @@ MonoBehaviour:
   DeadZone: 0.65
   Edge: 0.85
   LerpStrength: 1
+  DefaultScale: 1
   CutsceneScale: 0.25
 --- !u!114 &859857343
 MonoBehaviour:
@@ -1675,6 +1666,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90eb8994f6f0fe1459576688de5ffb40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Scale: 1
   DriftX: 0.02
   DriftY: 0.02
   PeriodX: 17
@@ -1926,6 +1918,7 @@ MonoBehaviour:
   DeadZone: 0.2
   Edge: 0.8
   LerpStrength: 0.7
+  DefaultScale: 1
   CutsceneScale: 0.1
 --- !u!114 &1084366962
 MonoBehaviour:
@@ -2253,6 +2246,7 @@ MonoBehaviour:
   DeadZone: 0.35
   Edge: 0.8
   LerpStrength: 1.2
+  DefaultScale: 1
   CutsceneScale: 1
 --- !u!114 &1300604706
 MonoBehaviour:
@@ -2978,6 +2972,7 @@ MonoBehaviour:
   DeadZone: 0.35
   Edge: 0.8
   LerpStrength: 1
+  DefaultScale: 1
   CutsceneScale: 1
 --- !u!114 &1998120524
 MonoBehaviour:
