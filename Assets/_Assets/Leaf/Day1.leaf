@@ -639,8 +639,8 @@ $set temp:waitingForFillColor = true
 @interrupt
 @cutscene
 
-$call ReleaseIsolatedPuzzle()
 
+$call AddIsolatedSlot(Color)
 {@Astrid} Alright, now I should load the color in from the color indexer. $[Astrid/L1/l1_a_38]
 
 :: AtikColorInstrumentSelected
@@ -649,8 +649,7 @@ $call ReleaseIsolatedPuzzle()
 @interrupt
 @cutscene
 
-$call ReleaseIsolatedPuzzle()
-
+$call AddIsolatedSlot(Color)
 {@Astrid} Now I can load the color index of Atik in its color space. $[Astrid/L1/l1_a_t08]
 
 :: WhereIsTheColorIndexer
@@ -670,6 +669,7 @@ $call ReleaseIsolatedPuzzle()
 
 $set temp:waitingForFillColor = false
 $set temp:AtikRowFilled = true
+$call ReleaseIsolatedPuzzle()
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 
 {@Astrid} O-kay! Now it’s just process of elimination. Atik is here in the second row. $[Astrid/L1/l1_a_t09]
@@ -680,7 +680,6 @@ $set temp:AlgolRowFilled = false
 $set temp:BrightestBlueHintVisible = true
 $set temp:waitingForSelectAlgol = true
 $call HintModals->SlideInFromRight("BrightestBlue", 0.4)
-$call ReleaseIsolatedPuzzle()
 $call UnlockMonitorFocus()
 
 {@Astrid} What else do the clues on the monitor say? It looks like Algol is the brightest star in Blue. $[Astrid/L1/l1_a_t24]
