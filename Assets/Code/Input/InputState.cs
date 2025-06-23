@@ -51,11 +51,11 @@ namespace Astro {
             if (!changed) return;
 
             if (enabled) {
-                // Log.Msg("[InputState > SetInputEnabled] ResumeRaycasts");
+                Log.Msg("[InputState > SetInputEnabled] ResumeRaycasts");
                 //Game.Input.ResumeRaycasts();
                 SetClickableMaskDefault(state);
             } else {
-                // Log.Msg("[InputState > SetInputEnabled] PauseRaycasts");
+                Log.Msg("[InputState > SetInputEnabled] PauseRaycasts");
                 SetClickableMaskCustom(state, LayerMasks.UI_Mask);
                 //Game.Input.PauseRaycasts();
             }
