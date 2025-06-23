@@ -256,6 +256,11 @@ namespace Astro.Reference {
             rig.OpenPosition.GetPositionAndRotation(out var p, out var r);
 
             yield return Routine.Combine(rig.RootTransform.MoveTo(p, 0.4f).Ease(Curve.CubeInOut), rig.RootTransform.RotateQuaternionTo(r, 0.4f).Ease(Curve.CubeInOut));
+            
+            PopulateReferenceColliders(state.CurrentPage, rig);
+            RefGuideControlPage ctrlPage = Array.Find(rig.ControlPages, p => p.PageId.Equals(state.CurrentPage.AssetId));
+            RefreshSelectedControls(rig, ctrlPage);
+
             SetControlIconActive(3, true);
             SetControlIconActive(4, false);
 
