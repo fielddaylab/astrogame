@@ -129,8 +129,7 @@ namespace Astro {
             var asset = Find.NamedAsset<DocumentAsset>(id);
             var spawned = SpawnDocument(asset, id, out Vector3 pinnedPos, state, true, false);
 
-            // disallow selecting other documents while this loads
-            InputUtility.SetClickableMaskTopLayer(Find.State<InputState>());
+            // InputUtility.SetClickableMaskTopLayer(Find.State<InputState>());
 
             // wait for assets to load
             while (state.DocumentLoadRoutine.Exists()) {
@@ -366,6 +365,7 @@ namespace Astro {
             state.DocZoomed = doc;
             doc.transform.SetParent(Game.Rendering.PrimaryCamera.transform, true);
             SetInteractionLayer(state.DocZoomed, LayerMasks.TopLayer_Index);
+            // disallow selecting other documents while this loads
             InputUtility.SetClickableMaskTopLayer(Find.State<InputState>());
         }
 

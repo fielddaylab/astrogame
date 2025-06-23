@@ -31,7 +31,7 @@ $call SetRadioFrequency(137, true)
 @who    Astrid
 
 $call QueueMusic("Music.Moonthought", 3)
-$call MoveToView("DocumentPuzzle")
+$call WaitForMovedToView("DocumentPuzzle")
 $call SetInputState(false)
 $call SpawnDocumentToCamera("Day4ElijahPostcard")
 $call SetInputState(true)

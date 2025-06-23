@@ -1,10 +1,7 @@
 #basePath	DaySandbox
 
-:: BeginDay
-@trigger    SceneReady
-@boostScore 100
-@who    Astrid
-
+:: Preload
+@function ScenePreload
 $call InitUpdateMasks()
 $call SetInstrumentUnlocked(CoordinateInstrument, true)
 $call SetInstrumentUnlocked(PhotometerInstrument, true)
@@ -15,12 +12,21 @@ $call SetInstrumentUnlocked(TemperatureInstrument, true)
 $call SetInstrumentUnlocked(SpectrometerInstrument, true)
 $call SetInstrumentUnlocked(HistoricalDataInstrument, true)
 $call SetInstrumentUnlocked(HistoricalDataModeToggle, true)
+
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
+$call SetRadioFrequency(137, true)
+$call SetChannelActive(Unlocks_Active, false)
 
 $call StopPuzzleMode()
 $call StopOpenMode()
 
+:: BeginDay
+@trigger    SceneReady
+@boostScore 100
+@who    Astrid
+
 $call StartNeutrinoNavigation()
+$call Wait(0.5)
 $call SetInputState(true)
 
 :: NeutrinoNavigationComplete

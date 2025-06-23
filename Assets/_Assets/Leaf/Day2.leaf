@@ -21,6 +21,7 @@ $call SetRefPageActive(21, false)
 $call SetRefPageActive(23, false)
 $call SetChannelActive(Unlocks_Active, false)
 $call SetRadioFrequency(137, true)
+$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 
 :: BeginDay
 @trigger    SceneReady
@@ -29,12 +30,11 @@ $call SetRadioFrequency(137, true)
 @who    Astrid
 
 $call SetInputState(false)
-$call MoveToView("DocumentPuzzle")
+$call WaitForMovedToView("DocumentPuzzle")
 
 {@Astrid} Looks like I got some mail... I guess the postal service is working again. $[Astrid/L2/l2_a_01]
 
 $call SetInputState(true)
-$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $call SpawnDocumentToCamera("Day2DadIcecubePostcard")
 $call EnableDocumentClose("Day2DadIcecubePostcard", true, true)
 
