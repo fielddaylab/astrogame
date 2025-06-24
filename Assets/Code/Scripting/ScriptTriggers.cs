@@ -236,7 +236,7 @@ namespace Astro {
         static private void LeafStopPuzzleNavigation() {
             Game.Events.Dispatch(GameEvents.StopPuzzleNavigation);
 
-            GameLoop.SuspendUpdates(AstroGame.MonitorControlsUpdateMask);
+            // GameLoop.SuspendUpdates(AstroGame.MonitorControlsUpdateMask);
         }
 
         [LeafMember("ClearMonitorSelection")]

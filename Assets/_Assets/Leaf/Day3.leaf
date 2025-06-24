@@ -251,9 +251,18 @@ $call SetInputState(true)
 @cutscene
 @once
 
+$call SetInputState(false)
 $call StopPuzzleNavigation()
-$call StartPuzzleMode()
+$call WaitForMovedToView("Right")
+$call SetRefGuideActive(false)
+$call ClearMonitorSelection()
+// Dont remove this wait
+// We need it because something is messing with the input here 😭
+$call Wait(1)
 $set temp:LeoPuzzleStarted = true
+
+$call StartPuzzleMode()
+$call SetInputState(true)
 
 {@Astrid} Elijah had figured out that Zosma isn’t the nearest star... $[Astrid/L3/l3_a_20]
 {@Astrid} Now that I've got that parallax data, I can finish what he started. $[Astrid/L3/l3_a_21]

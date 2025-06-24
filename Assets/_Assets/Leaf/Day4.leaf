@@ -269,7 +269,14 @@ $call SetInputState(true)
 @once
 
 $call StopPuzzleNavigation()
+$call WaitForMovedToView("Right")
+$call SetRefGuideActive(false)
+$call ClearMonitorSelection()
+// Dont remove this wait
+// We need it because something is messing with the input here 😭
+$call Wait(1)
 $call StartPuzzleMode()
+$call SetInputState(true)
 
 :: DracoPuzzleComplete
 @trigger    CorrectPuzzleSubmission
