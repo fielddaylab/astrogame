@@ -68,7 +68,11 @@ namespace Astro {
                     }
 
                     if (packedEnabled.IsSet(packedIdx)) {
-                        focus.Represent2D.enabled = false;
+                        // Check here to see if the star we are disabling is our current focus.
+                        FocusState state = Find.State<FocusState>();
+                        if (state.CurrentFocus == focus) FocusableUtility.SetCurrentFocus(state, null);
+
+                        // focus.Represent2D.enabled = false;
                         focus.Clickable.enabled = false;
                         packedEnabled.Unset(packedIdx);
                     }

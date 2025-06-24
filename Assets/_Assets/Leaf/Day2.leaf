@@ -200,7 +200,7 @@ $endif
 :: StartNeutrinoNav
 @cutscene
 
-$call MoveToView("Right")
+$call WaitForMovedToView("Right")
 {@Radio} CERES HQ to Station Twelve. $[Radio/L2/l2_r_01]
 {@Radio} IceCube is reading a high-energy neutrino emission from the area of the Hydra Constellation. $[Radio/L2/l2_r_02]
 {@Radio} Identification of nearby celestial objects is requested. Uploading area of interest. $[Radio/L2/l2_r_03]
