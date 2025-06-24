@@ -25,7 +25,7 @@ namespace Astro {
         public Transform StarImageSprite;
         public Transform RealStarSprite;
         public Transform Ruler;
-        public MultiSpline Spline;
+        public LineRenderer Line;
 
         [Header("Orbit Settings")]
         public bool OrbitInX;
@@ -45,15 +45,15 @@ namespace Astro {
         public void OnRegister() {
             EarthInitPos = EarthSprite.localPosition;
             StarInitPos = StarImageSprite.localPosition;
-            Spline.SetVertex(0, EarthSprite.position);
-            Spline.SetVertex(1, StarImageSprite.position);
+            Line.SetPosition(0, EarthSprite.position);
+            Line.SetPosition(1, StarImageSprite.position);
             EarthTex = EarthSprite.GetComponent<StreamingQuadTexture>();
 
             DistanceDisplay = LinkedDistance.Displays[0];
-            DistanceDisplay.OnDisplayRequested.Register(
-                (packet, flags) => ParallaxDataUtility.OnDisplayRequest(this, packet, flags));
+            DistanceDisplay.OnDisplayRequested.Register( 
+                (packet, flags) => ParallaxDataUtility.OnDisplayRequest(this, packet, flags), this);
             DistanceDisplay.OnDisplayCleared.Register(
-                () => ParallaxDataUtility.OnDisplayClear(this));
+                () => ParallaxDataUtility.OnDisplayClear(this), this);
         }
     }
 
@@ -85,7 +85,7 @@ namespace Astro {
                 anim.RealStarSprite.localPosition = new Vector3(d, 0, 0);
             }
             anim.Ruler.gameObject.SetActive(true);
-            anim.Spline.gameObject.SetActive(true);
+            anim.Line.gameObject.SetActive(true);
             anim.RealStarSprite.gameObject.SetActive(true);
         }
 
@@ -94,13 +94,13 @@ namespace Astro {
             anim.EarthSprite.localPosition = anim.EarthInitPos;
             UpdateSpline(anim);
             anim.Ruler.gameObject.SetActive(false);
-            anim.Spline.gameObject.SetActive(false);
+            anim.Line.gameObject.SetActive(false);
             anim.RealStarSprite.gameObject.SetActive(false);
         }
 
         public static void UpdateSpline(ParallaxGraphAnimation anim) {
-            anim.Spline.SetVertex(0, anim.EarthSprite.localPosition + LINE_Z_OFFSET);
-            anim.Spline.SetVertex(1, anim.StarImageSprite.localPosition + LINE_Z_OFFSET);
+            anim.Line.SetPosition(0, anim.EarthSprite.localPosition + LINE_Z_OFFSET);
+            anim.Line.SetPosition(1, anim.StarImageSprite.localPosition + LINE_Z_OFFSET);
         }
 
         public static void OnDisplayClear(ParallaxGraphAnimation anim) {

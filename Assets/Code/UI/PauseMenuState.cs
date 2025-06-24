@@ -1,4 +1,5 @@
 using BeauRoutine;
+using BeauUtil;
 using FieldDay;
 using FieldDay.Audio;
 using FieldDay.Scripting;
@@ -73,14 +74,14 @@ namespace Astro {
             InputState input = Find.State<InputState>();
             if (paused) {
                 state.CurrentUpdateMask = GameLoop.UpdateMask;
-                GameLoop.SuspendUpdates(0b11111111);
-                PauseCutscenes();
+                GameLoop.SuspendUpdates(Bits.All32);
+                //PauseCutscenes();
                 InputUtility.SetClickableMaskCustom(input, LayerMasks.UI_Mask);
                 Game.Events.Dispatch(GameEvents.GamePaused);
             } else {
                 InputUtility.SetClickableMaskDefault(input);
                 GameLoop.ResumeUpdates(state.CurrentUpdateMask);
-                ResumeCutscenes();
+                //ResumeCutscenes();
                 Game.Events.Dispatch(GameEvents.GameResumed);
             }
         }
