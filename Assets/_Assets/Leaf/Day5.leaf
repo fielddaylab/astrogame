@@ -23,6 +23,7 @@ $call SetRefPageActive(18, false)
 $call SetRefPageActive(20, false)
 $call SetRefPageActive(23, false)
 $call SetRadioFrequency(137, true)
+$call MonitorPower->Deactivate()
 
 :: BeginDay
 @trigger    SceneReady

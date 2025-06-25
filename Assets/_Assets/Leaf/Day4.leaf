@@ -24,6 +24,7 @@ $call SetRefPageActive(21, false)
 $call SetRefPageActive(23, false)
 $call SetChannelActive(Unlocks_Active, false)
 $call SetRadioFrequency(137, true)
+$call MonitorPower->Deactivate()
 
 :: BeginDay
 @trigger    SceneReady

@@ -32,24 +32,36 @@ $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $call PlayMusic("Music.Gently-Falling", 1)
 $call IntroCutscene->BeginCutscene()
 $call MonitorUI->PowerOff()
-$call Wait(2)
+$wait 2
 $call TelescopeLook(155, -30)
 
 :: ArrivalAtTheShed
 @trigger    CutsceneEnd
-@when cutsceneId == "IntroCutscene"
+@when   cutsceneId == "IntroCutscene"
 @cutscene
-@who    Radio
 
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
-$call SetInputState(true)
+$set temp:powerButtonHint = false
 $set temp:pressedPowerButton = false
+
+$call IntroSfx->Play()
+$wait 0.1
+$call IntroSfx2->Play()
+$wait 3
+$call SetInputState(true)
 
 {@Astrid} Whoa. This place has really changed. Elijah, where are you? $[Astrid/L1/l1_a_01]
 $start .PowerButtonHint
 
 :: PowerButtonHint
-$call Wait(10)
+$call Wait(5)
+$if !temp:powerButtonHint, !temp:pressedPowerButton
+    $call HintModals->SlideInFromRight("MonitorPower", 0.4)
+    $set temp:powerButtonHint = true
+$else
+    $call HintModals->Wiggle("MonitorPower")
+$endif
+
 $if !temp:pressedPowerButton
     {@Astrid} Might as well get Elijah’s system up and running, maybe I can find some information about where he went...
     $branch .PowerButtonHint
@@ -62,21 +74,44 @@ $endif
 @interrupt
 
 $set temp:pressedPowerButton = true
+$set temp:introRadioHint = false
+$set temp:introRadioChannelTuned = false
+$wait 0.1
+$call MonitorPower->Deactivate()
+$if temp:powerButtonHint
+    $set temp:powerButtonHint = false
+    $call HintModals->Hide("MonitorPower", 0.2)
+$endif
 {@Astrid} There we go!
 $call MonitorUI->ShowCERESLogo()
 $call MonitorUI->CERESLogoToCorner(0.5)
 $call ConsoleCommandLine->PlayConsoleText("SystemBoot")
-$call Wait(1)
+$wait 1
 $call MonitorUI->ShowElement("CommError")
-$call Wait(1)
+$wait 1
 $call MonitorUI->ShowElement("CommErrorMsg1")
-$call Wait(0.25)
+$wait 0.25
 $call MonitorUI->HideElement("CommErrorMsg1")
-$call Wait(0.25)
+$wait 0.25
 $call MonitorUI->ShowElement("CommErrorMsg2")
 $call SetChannelActive(IceCube_Intro, true)
-$call Wait(0.5)
+$wait 0.5
+
 {@Astrid} Hmmm, radio huh?
+$start .TuneRadioHint
+
+:: TuneRadioHint
+$call Wait(5)
+$if !temp:introRadioHint, !temp:introRadioChannelTuned
+    $call HintModals->SlideInFromRight("IntroRadioControls", 0.4)
+    $set temp:introRadioHint = true
+$else
+    $call HintModals->Wiggle("IntroRadioControls")
+$endif
+$if !temp:introRadioChannelTuned
+    {@Astrid} Ok... I need to tune the radio to 137 mega hertz...
+    $branch .TuneRadioHint
+$endif
 
 :: TuneToIceCubeIntro
 @trigger    RadioChannelListenStart
@@ -85,28 +120,33 @@ $call Wait(0.5)
 @cutscene
 @once
 
+$set temp:introRadioChannelTuned = true
 $call SetInputState(false)
 $call SetRadioDialLocked(true)
 $call SnapRadioToChannel()
+$if temp:introRadioHint
+    $set temp:introRadioHint = false
+    $call HintModals->Hide("IntroRadioControls", 0.2)
+$endif
 $call MonitorUI->HideElement("CommError")
 $call MonitorUI->HideElement("CommErrorMsg2")
-$call SetChannelActive(IceCube, true)
-$call Wait(1)
-$call MonitorUI->ShowElement("LinkEstablished")
-$call Wait(0.5)
+$wait 1
 $call MonitorUI->CERESLogoToCenter(0.5)
-$call Wait(1)
+$wait 1
+$call MonitorUI->ShowElement("LinkEstablished")
+$wait 1
 $call MonitorUI->HideElement("LinkEstablished")
 $call SetChannelActive(IceCube_Intro, false)
+$call SetChannelActive(IceCube, true)
 
 $call WaitForMovedToView("Right")
-{@Radio} CERES HQ to Station Twelve. Elijah, do you copy? Please log in and provide status report. $[Radio/L1/l1_r_01]
+// {@Radio} CERES HQ to Station Twelve. Elijah, do you copy? Please log in and provide status report. $[Radio/L1/l1_r_01]
 {@Astrid} Oh, a radio signal! How do I work this thing? Hello? This is Astrid... Elijah's friend. $[Astrid/L1/l1_a_02]
 {@Radio} Station Twelve, please log in and report. $[Radio/L1/l1_r_02]
 // {@Astrid} Log in? How exactly am I supposed to do that? $[Astrid/L1/l1_a_03]
-$call Wait(0.5)
+$wait 0.5
 $call ConsoleCommandLine->PlayConsoleText("AstridLogin")
-$call Wait(1)
+$wait 1
 
 {@Dad} I told you, he's not there... Astrid? Is that you? $[Dad/L1/l1_d_1]
 
@@ -139,7 +179,7 @@ $call Wait(1)
 
 $call SetInstrumentUnlocked(CoordinateInstrument, true)
 $call SetInstrumentUnlocked(PhotometerInstrument, true)
-$call Wait(1)
+$wait 1
 
 {@Radio} Station Twelve, this is CERES HQ. You have been granted entry level access. $[Radio/L1/l1_r_03]
 {@Radio} Training begins immediately. Please follow all directives. $[Radio/L1/l1_r_04]
@@ -147,7 +187,6 @@ $call Wait(1)
 {@Astrid} Um, okay... Gosh, there’s a lot of buttons here... $[Astrid/L1/l1_a_09]
 
 $call MonitorUI->HideCERESLogo()
-$call MonitorUI->HideElement("LinkEstablished")
 $call MonitorUI->PowerOn()
 $call WaitForMovedToView("Monitor")
 
@@ -163,7 +202,7 @@ $set temp:introMoveTheTelescope = false
 $start .MoveTelescopeReminder
 
 :: MoveTelescopeReminder
-$call Wait(10)
+$wait 10
 $if !temp:introMoveTheTelescope
     $call HintModals->Wiggle("TelescopeControls")
     {@Radio} See if you can move your telescope. $[Radio/L1/l1_r_06]
@@ -239,7 +278,7 @@ $call StartOpenMode()
 $set temp:introMoveTheTelescope = true
 
 {@Radio} Nice job! $[Radio/L1/l1_r_11]
-$call Wait(1)
+$wait 1
 {@Radio} So earlier this morning, Ice Cube detected a high energy neutrino coming from one of several possible stars in this location. $[Radio/L1/l1_r_12]
 {@Radio} All right. Select a possible neutrino origin on your display. $[Radio/L1/l1_r_15]
 $goto .PostNeutrinoNavigationComplete
