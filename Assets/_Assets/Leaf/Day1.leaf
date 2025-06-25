@@ -3,22 +3,22 @@
 :: Preload
 @function   ScenePreload
 $call InitUpdateMasks()
-$call SetInstrumentUnlocked(CoordinateInstrument, true)
-$call SetInstrumentUnlocked(PhotometerInstrument, true)
 $call SetInputState(false)
 $call StopPuzzleMode()
 $call StopOpenMode()
+$call SetInstrumentUnlocked(CoordinateInstrument, false)
+$call SetInstrumentUnlocked(PhotometerInstrument, false)
 $call SetRefGuidePagesLocked(true)
-
 $call SetRefPageActive(15, false)
 $call SetRefPageActive(17, false)
 $call SetRefPageActive(19, false)
 $call SetRefPageActive(21, false)
 $call SetRefPageActive(23, false)
 
-$call SetRadioFrequency(137, true)
+$call SetRadioFrequency(100, true)
 
 $call SetChannelActive(Unlocks_Active, false)
+$call SetChannelActive(IceCube, false)
 $call IntroCutscene->PrepareCutscene()
 
 :: ResetSubtitlePosition
@@ -31,6 +31,7 @@ $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 
 $call PlayMusic("Music.Gently-Falling", 1)
 $call IntroCutscene->BeginCutscene()
+$call MonitorUI->PowerOff()
 $call Wait(2)
 $call TelescopeLook(155, -30)
 
@@ -41,10 +42,64 @@ $call TelescopeLook(155, -30)
 @who    Radio
 
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
-{@Astrid} Whoa. This place has really changed. Elijah, where are you? $[Astrid/L1/l1_a_01]
-$call Wait(1)
+$call SetInputState(true)
+$set temp:pressedPowerButton = false
 
-$call MoveToView("Right")
+{@Astrid} Whoa. This place has really changed. Elijah, where are you? $[Astrid/L1/l1_a_01]
+$start .PowerButtonHint
+
+:: PowerButtonHint
+$call Wait(10)
+$if !temp:pressedPowerButton
+    {@Astrid} Might as well get Elijah’s system up and running, maybe I can find some information about where he went...
+    $branch .PowerButtonHint
+$endif
+
+:: PressedPowerButton
+@trigger OnLabInteraction
+@when   actorId == "MonitorPower", !temp:pressedPowerButton
+@boostScore 100
+@interrupt
+
+$set temp:pressedPowerButton = true
+{@Astrid} There we go!
+$call MonitorUI->ShowCERESLogo()
+$call MonitorUI->CERESLogoToCorner(0.5)
+$call ConsoleCommandLine->PlayConsoleText("SystemBoot")
+$call Wait(1)
+$call MonitorUI->ShowElement("CommError")
+$call Wait(1)
+$call MonitorUI->ShowElement("CommErrorMsg1")
+$call Wait(0.25)
+$call MonitorUI->HideElement("CommErrorMsg1")
+$call Wait(0.25)
+$call MonitorUI->ShowElement("CommErrorMsg2")
+$call SetChannelActive(IceCube_Intro, true)
+$call Wait(0.5)
+{@Astrid} Hmmm, radio huh?
+
+:: TuneToIceCubeIntro
+@trigger    RadioChannelListenStart
+@when       channelId == "IceCube_Intro"
+@interrupt
+@cutscene
+@once
+
+$call SetInputState(false)
+$call SetRadioDialLocked(true)
+$call SnapRadioToChannel()
+$call MonitorUI->HideElement("CommError")
+$call MonitorUI->HideElement("CommErrorMsg2")
+$call SetChannelActive(IceCube, true)
+$call Wait(1)
+$call MonitorUI->ShowElement("LinkEstablished")
+$call Wait(0.5)
+$call MonitorUI->CERESLogoToCenter(0.5)
+$call Wait(1)
+$call MonitorUI->HideElement("LinkEstablished")
+$call SetChannelActive(IceCube_Intro, false)
+
+$call WaitForMovedToView("Right")
 {@Radio} CERES HQ to Station Twelve. Elijah, do you copy? Please log in and provide status report. $[Radio/L1/l1_r_01]
 {@Astrid} Oh, a radio signal! How do I work this thing? Hello? This is Astrid... Elijah's friend. $[Astrid/L1/l1_a_02]
 {@Radio} Station Twelve, please log in and report. $[Radio/L1/l1_r_02]
@@ -82,12 +137,18 @@ $call Wait(1)
 
 {@Dad} Sorry, uh…“Station Twelve,” this channel doesn’t allow for… personal communications. I’ll grant you entry-level access so you can help us. I should sign off now. More later. $[Dad/L1/l1_d_10]
 
+$call SetInstrumentUnlocked(CoordinateInstrument, true)
+$call SetInstrumentUnlocked(PhotometerInstrument, true)
 $call Wait(1)
 
 {@Radio} Station Twelve, this is CERES HQ. You have been granted entry level access. $[Radio/L1/l1_r_03]
 {@Radio} Training begins immediately. Please follow all directives. $[Radio/L1/l1_r_04]
 
 {@Astrid} Um, okay... Gosh, there’s a lot of buttons here... $[Astrid/L1/l1_a_09]
+
+$call MonitorUI->HideCERESLogo()
+$call MonitorUI->HideElement("LinkEstablished")
+$call MonitorUI->PowerOn()
 $call WaitForMovedToView("Monitor")
 
 {@Radio} I'll help you get up and running. Start by moving your telescope. $[Radio/L1/l1_r_05]
@@ -315,6 +376,7 @@ $goto .ResetSubtitlePosition
 
 $branch .ResetSubtitlePosition
 $set temp:firstSubmission = true
+$call SetRadioDialLocked(false)
 
 {@Astrid} Okay! Maybe I can determine the apparent magnitude of some other stars in this cluster.  $[Astrid/L1/l1_a_9a]
 $goto .PostPoint
@@ -364,7 +426,6 @@ $if !temp:radioChannelTuned
     {@Astrid} I should tune to 375 mHz on the Radio to upgrade my rig.
     $branch .UpgradeReminder
 $endif
-
 
 :: ClearanceUpgradeTrigger
 @trigger    RadioChannelListenStart
