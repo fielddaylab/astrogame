@@ -77,6 +77,7 @@ $call Signal("WalkForward")
 
 $call FakeBloomExtra->FadeIn()
 $call FakeBloom->FadeIn()
+$call Signal("FadeOutHorizon")
 
 {@Elijah}	Astrid—you’re breaking up— $[Elijah/Pre/p_e_09]
  
@@ -92,7 +93,11 @@ $call CityFlicker->PlayTimeline()
 $call Wait(2) 
 {@Astrid}	Hello? Elijah? $[Astrid/Pre/p_a_13]
 
-$call Wait(4) 
+$call Wait(4)
+
+$call Signal("DisconnectView")
+
+$call Wait(5)
 
 $call LoadDay("Day1")
 

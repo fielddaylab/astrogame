@@ -14,11 +14,15 @@ using UnityEngine;
 namespace Astro.Title {
     public sealed class TitleMusic : SharedStateComponent, IRegistrationCallbacks {
         [AudioEventRef] public StringHash32 MusicEvent;
+        [AudioEventRef] public StringHash32 TensionSfx;
+
         public float FadeInDuration = 1;
+        [NonSerialized] public AudioHandle TensionHandle;
 
         void IRegistrationCallbacks.OnRegister() {
             AstroGame.Events.Register<ViewNode>(ViewNavUtility.Events.NodeEntered, OnNodeLoaded);
             ScriptUtility.RegisterForSignal("KillMusic", OnKillMusicSignal);
+            ScriptUtility.RegisterForSignal("BeginTension", OnBeginTension);
         }
 
         void IRegistrationCallbacks.OnDeregister() {
@@ -36,6 +40,12 @@ namespace Astro.Title {
 
         private void OnKillMusicSignal() {
             MusicUtility.StopMusic(0.05f);
+            Sfx.Stop(TensionHandle, 0.05f);
+            Sfx.Play("Prelude.Panic");
+        }
+
+        private void OnBeginTension() {
+            TensionHandle = Sfx.Play("Prelude.RisingTension");
         }
     }
 }
