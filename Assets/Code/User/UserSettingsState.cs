@@ -5,6 +5,7 @@ using System;
 
 namespace Astro {
     public class UserSettingsState : SharedStateComponent {
+        [NonSerialized] public string PlayerCode = null;
         [NonSerialized] public float MasterVolume;
         [NonSerialized] public bool CameraDriftEnabled = true;
         [NonSerialized] public bool HighQualityMode;

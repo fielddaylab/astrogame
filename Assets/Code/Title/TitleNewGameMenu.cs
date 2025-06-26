@@ -5,6 +5,7 @@ using BeauRoutine;
 using BeauUtil;
 using BeauUtil.UI;
 using FieldDay;
+using FieldDay.HID;
 using FieldDay.Scenes;
 using FieldDay.Scripting;
 using FieldDay.UI;
@@ -14,6 +15,7 @@ using UnityEngine.UI;
 
 namespace Astro.Title {
     public sealed class TitleNewGameMenu : MonoBehaviour, IScenePreload {
+        public CursorHint ParentCursor;
         public PointerListener BeginButton;
         public FadeGroup MenuFade;
         public FadeGroup CloseFade;
@@ -21,7 +23,12 @@ namespace Astro.Title {
         public IEnumerator<WorkSlicer.Result?> Preload() {
             PlayerKnowledgeUtility.ResetAll();
             BeginButton.onClick.AddListener(OnClickBegin);
+            ParentCursor.onClick.AddListener(OnEnterNewGameMenu);
             return null;
+        }
+
+        private void OnEnterNewGameMenu() {
+            // OGD.Player.NewId(HandleNewPlayerId, HandleNewPlayerIdError);
         }
 
         private void OnClickBegin() {
