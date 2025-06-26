@@ -104,6 +104,8 @@ namespace Astro {
             PlayerProgressState progress = new PlayerProgressState();
             SharedState.Register(progress);
 
+            SaveBuffer = new SaveMgr();
+
             Rendering.EnableAspectClamping(4, 3);
 
             //GameLoop.OnDebugUpdate.Register(() => {

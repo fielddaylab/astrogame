@@ -10,34 +10,76 @@ using FieldDay.Scenes;
 using FieldDay.Scripting;
 using FieldDay.UI;
 using FieldDay.UI.Animation;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Astro.Title {
     public sealed class TitleNewGameMenu : MonoBehaviour, IScenePreload {
         public CursorHint ParentCursor;
-        public PointerListener BeginButton;
+        [SerializeField] private TMP_InputField m_PlayerCodeInput;
+        [SerializeField] private Button m_BeginButton;
+        public PointerListener BeginButtonListener;
         public FadeGroup MenuFade;
         public FadeGroup CloseFade;
 
         public IEnumerator<WorkSlicer.Result?> Preload() {
             PlayerKnowledgeUtility.ResetAll();
-            BeginButton.onClick.AddListener(OnClickBegin);
+            BeginButtonListener.onClick.AddListener(OnClickBegin);
             ParentCursor.onClick.AddListener(OnEnterNewGameMenu);
             return null;
         }
 
         private void OnEnterNewGameMenu() {
-            // OGD.Player.NewId(HandleNewPlayerId, HandleNewPlayerIdError);
+            OGD.Player.NewId(HandleNewPlayerId, HandleNewPlayerIdError);
         }
 
-        private void OnClickBegin() {
+        #region OGD
+
+        private void HandleNewPlayerId(string id)
+        {
+            m_PlayerCodeInput.SetTextWithoutNotify(id);
+            m_BeginButton.interactable = true;
+            HandlePlayerCodeUpdated(id);
+        }
+
+        private void HandleNewPlayerIdError(OGD.Core.Error err)
+        {
+            OGD.Player.NewId(HandleNewPlayerId, HandleNewPlayerIdError);
+        }
+
+        private void HandlePlayerCodeUpdated(string text)
+        {
+            m_BeginButton.interactable = text.Length > 1;
+        }
+
+        private void HandleClaimNewIdSuccess()
+        {
+            NewGameBegin();
+        }
+
+        private void HandleClaimNewIdError(OGD.Core.Error err)
+        {
+            Debug.LogError(err.ToString());
+        }
+
+        #endregion // OGD
+
+        private void OnClickBegin()
+        {
+            AstroGame.SaveBuffer.Clear();
+            OGD.Player.ClaimId(m_PlayerCodeInput.text, null, HandleClaimNewIdSuccess, HandleClaimNewIdError);
+        }
+
+        private void NewGameBegin()
+        {
             Find.State<ViewState>().ActiveNode.BackLink = null;
 
             MenuFade.Hide();
             CloseFade.Hide();
 
-            foreach(var comp in Find.Components<DisableDuringPrologue>()) {
+            foreach (var comp in Find.Components<DisableDuringPrologue>())
+            {
                 GuiCommands.SetActive(comp.gameObject, false);
             }
 

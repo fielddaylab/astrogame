@@ -9,7 +9,7 @@ using UnityEngine;
 namespace Astro.Save {
     public class SaveMgr {
         // v2: adding tutorial flags
-        public const int SaveVersion = 2;
+        public const int SaveVersion = 1;
 
         private struct ChunkRecord {
             public StringHash32 Id;
