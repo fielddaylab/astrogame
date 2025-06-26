@@ -40,3 +40,9 @@ $if view:current != "GuideFocus"
     $branch .PathToDesk
 $endif
 $call MoveToView("Right")
+
+:: ResetSubtitlePosition
+$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
+
+:: AnchorNextSubtitleToTop
+$call SubtitleController->SetSubtitlePosition(0.5, 1, 0, -140)
