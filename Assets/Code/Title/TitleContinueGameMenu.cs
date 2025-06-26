@@ -9,6 +9,7 @@ using FieldDay.HID;
 using FieldDay.Scenes;
 using FieldDay.UI.Animation;
 using TMPro;
+using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -52,6 +53,10 @@ namespace Astro.Title {
 
         private void BeginContinueGame(PointerEventData pointerData)
         {
+            if (AstroGame.SaveBuffer.HasSave) {
+                AstroGame.SaveBuffer.HandleChunks();
+            }
+
             Find.State<ViewState>().ActiveNode.BackLink = null;
 
             MenuFade.Hide();
@@ -59,11 +64,8 @@ namespace Astro.Title {
 
             Game.Input.PauseRaycasts();
 
-            StringHash32 dayId = "Day1";
-            if (PointerListener.TryGetUserData(pointerData, out string day))
-            {
-                dayId = day;
-            }
+            var progressState = Find.State<PlayerProgressState>();
+            StringHash32 dayId = "Day" + (progressState.DayIndex + 1);
 
             Routine.Start(this, ContinueGameSequence(dayId)).ExecuteWhileDisabled();
         }

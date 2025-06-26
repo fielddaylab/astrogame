@@ -24,8 +24,6 @@ namespace Astro.Save {
     }
 
     static public class SaveUtility {
-        [ConfigVar("Ticks Before Committing Save", 1, 50)] static public int TicksBeforeCommittingSave = 20;
-
         static public void Save(SaveSlot slot) {
             var save = Game.SharedState.Get<SaveLoadState>();
             if (save.Operation) {
@@ -82,8 +80,6 @@ namespace Astro.Save {
                 if (!string.IsNullOrEmpty(AstroGame.SaveBuffer.SaveCode)) {
                     yield return WriteToRemoteSave();
                 }
-            } else {
-                Find.State<SaveLoadState>().TicksToCommit = TicksBeforeCommittingSave;
             }
         }
 

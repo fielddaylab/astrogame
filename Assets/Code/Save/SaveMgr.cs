@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay;
+using FieldDay.Data;
 using FieldDay.Debugging;
 using UnityEngine;
 
 namespace Astro.Save {
     public class SaveMgr {
-        // v2: adding tutorial flags
         public const int SaveVersion = 1;
 
         private struct ChunkRecord {
@@ -218,14 +218,14 @@ namespace Astro.Save {
                 chunk.Writer(chunk.Context, ref chunkWriter, consts, ref m_CurrentScratch);
 
                 byte* chunkDataStart = writer.Head;
-                // int compressedSize;
+                int compressedSize;
                 int uncompressedSize = chunkWriter.Written;
 
                 // TODO: compress here if desired
-                // bool compressed = UnsafeExt.Compress(m_ChunkBuffer, chunkWriter.Written, chunkDataStart, writer.Capacity - writer.Written, &compressedSize);
+                bool compressed = Compress(m_ChunkBuffer, chunkWriter.Written, chunkDataStart, writer.Capacity - writer.Written, &compressedSize);
 
-                writer.Head += uncompressedSize;
-                writer.Written += uncompressedSize;
+                writer.Head += compressedSize;
+                writer.Written += compressedSize;
 
                 chunkHeader.ChunkLength = (uint) uncompressedSize;
                 chunkHeader.ChunkLengthUncompressed = (uint) chunkWriter.Written;
@@ -263,6 +263,13 @@ namespace Astro.Save {
                 PlayerPrefs.SetString("LatestPlayerCode", header.PlayerCode);
                 PlayerPrefs.Save();
             }
+        }
+
+        static unsafe public bool Compress(byte* src, int srcSize, byte* dest, int destSize, int* compressedSize)
+        {
+            Unsafe.Copy(src, srcSize, dest, destSize);
+            *compressedSize = srcSize;
+            return false;
         }
 
         public void Clear() {

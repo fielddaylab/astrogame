@@ -100,11 +100,12 @@ namespace Astro {
         static private void OnPreBoot() {
             Events = new EventDispatcher<EvtArgs>();
             SetEventDispatcher(Events);
-            
+
+            SaveBuffer = new SaveMgr();
+
             PlayerProgressState progress = new PlayerProgressState();
             SharedState.Register(progress);
 
-            SaveBuffer = new SaveMgr();
 
             Rendering.EnableAspectClamping(4, 3);
 

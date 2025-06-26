@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Astro.Save;
 using BeauPools;
 using BeauRoutine;
 using BeauUtil;
@@ -85,6 +86,8 @@ namespace Astro.Title {
             {
                 GuiCommands.SetActive(comp.gameObject, false);
             }
+
+            SaveUtility.Save(SaveSlot.Main);
 
             Routine.Start(this, NewGameBeginSequence()).ExecuteWhileDisabled();
         }
