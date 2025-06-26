@@ -23,7 +23,6 @@ using System.IO;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
-using static FieldDay.Perf.PerformanceMgr;
 
 namespace FieldDay.Files {
     public sealed class FileSystem {
@@ -124,7 +123,7 @@ namespace FieldDay.Files {
             Assert.False(groupId.IsEmpty, "Group must not be empty");
             m_HighPriorityRequests.RemoveWhere(FindRequestByGroup, groupId);
             m_LowPriorityRequests.RemoveWhere(FindRequestByGroup, groupId);
-            m_RetryRequestQueue.RemoveWhere(FindRetryRequestByName, groupId);
+            m_RetryRequestQueue.RemoveWhere(FindRetryRequestByGroup, groupId);
 
             for (int i = m_InFlightRequests.Count; i-- > 0;) {
                 ref InFlightFileRequest activeRequest = ref m_InFlightRequests[i];
@@ -491,7 +490,7 @@ namespace FieldDay.Files {
         static public uint CalculatePathHash(string path, FileLocation location) {
             Assert.NotNull(path);
             uint pathHash = StringHash32.Fast(path).HashValue;
-            pathHash = (pathHash & 0xFF000000) | (pathHash << 2) | (uint) location;
+            pathHash = (pathHash & 0xFF000000) ^ (pathHash << 2) | (uint) location;
             return pathHash;
         }
 
@@ -501,7 +500,7 @@ namespace FieldDay.Files {
         static public uint CalculatePathHash(StringBuilder path, FileLocation location) {
             Assert.NotNull(path);
             uint pathHash = StringHash32.Fast(path, 0, path.Length).HashValue;
-            pathHash = (pathHash & 0xFF000000) | (pathHash << 2) | (uint)location;
+            pathHash = (pathHash & 0xFF000000) ^ (pathHash << 2) | (uint)location;
             return pathHash;
         }
 
