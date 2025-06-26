@@ -1,13 +1,27 @@
 using FieldDay;
 using FieldDay.Audio;
+using FieldDay.Rendering;
 using FieldDay.SharedState;
 using System;
+using UnityEngine;
 
 namespace Astro {
-    public class UserSettingsState : SharedStateComponent {
+    public class UserSettingsState : SharedStateComponent, IRegistrationCallbacks {
+        [NonSerialized] public string PlayerCode = null;
         [NonSerialized] public float MasterVolume;
         [NonSerialized] public bool CameraDriftEnabled = true;
         [NonSerialized] public bool HighQualityMode;
+        [NonSerialized] public bool FullscreenEnabled;
+
+        public void OnDeregister()
+        {
+
+        }
+
+        public void OnRegister()
+        {
+            PlayerCode = PlayerPrefs.GetString("LatestPlayerCode", null);
+        }
     }
 
     public static class SettingsUtility {
@@ -16,6 +30,11 @@ namespace Astro {
         }
         public static void SetCameraDrift(UserSettingsState state, bool drift) {
             state.CameraDriftEnabled = drift;
+        }
+
+        public static void SetFullscreen(UserSettingsState state, bool fullscreen) {
+            state.FullscreenEnabled = fullscreen;
+            ScreenUtility.SetFullscreen(fullscreen);
         }
 
         public static void SetMasterVolume(UserSettingsState state, float set) {

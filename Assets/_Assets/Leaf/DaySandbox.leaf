@@ -12,10 +12,9 @@ $call SetInstrumentUnlocked(TemperatureInstrument, true)
 $call SetInstrumentUnlocked(SpectrometerInstrument, true)
 $call SetInstrumentUnlocked(HistoricalDataInstrument, true)
 $call SetInstrumentUnlocked(HistoricalDataModeToggle, true)
-
-$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $call SetRadioFrequency(137, true)
 $call SetChannelActive(Unlocks_Active, false)
+$start Observatory.ResetSubtitlePosition
 
 $call StopPuzzleMode()
 $call StopOpenMode()

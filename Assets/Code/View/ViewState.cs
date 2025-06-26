@@ -137,8 +137,8 @@ namespace Astro {
         /// <summary>
         /// Moves the view over a link.
         /// </summary>
-        static public void MoveByLink(ViewState state, ViewLink link) {
-            state.ActiveTransitionRoutine.Replace(state, TransitionRoutine(state, link.TargetNode, link, default));
+        static public void MoveByLink(ViewState state, ViewLink link, bool ignoreTriggers = false) {
+            state.ActiveTransitionRoutine.Replace(state, TransitionRoutine(state, link.TargetNode, link, default, ignoreTriggers));
             state.ActiveTransitionRoutine.OnStop(() => { OnStopTransitionRoutine(state.transitionInputStateCache); });
         }
 
@@ -167,7 +167,7 @@ namespace Astro {
             DeactivateNode(oldNode, false);
         }
 
-        static private IEnumerator TransitionRoutine(ViewState state, ViewNode nextNode, ViewLink byLink, TweenSettings transitionOverride) {
+        static private IEnumerator TransitionRoutine(ViewState state, ViewNode nextNode, ViewLink byLink, TweenSettings transitionOverride, bool ignoreTriggers = false) {
             Transform controlPoint = null;
             TweenSettings tween = transitionOverride.Time > 0 ? transitionOverride : state.DefaultTransition;
 
@@ -217,7 +217,7 @@ namespace Astro {
                 DeactivateNode(oldNode, false);
             }
             
-            ActivateNode(nextNode, true);
+            ActivateNode(nextNode, !ignoreTriggers);
             UpdateActiveLinks(state);
             InputUtility.SetInputEnabled(inputState, state.transitionInputStateCache);
         }

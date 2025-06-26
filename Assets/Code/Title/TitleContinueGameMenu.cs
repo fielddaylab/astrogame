@@ -1,33 +1,69 @@
 using System.Collections;
 using System.Collections.Generic;
-using BeauPools;
+using Astro.Save;
 using BeauRoutine;
 using BeauUtil;
 using BeauUtil.UI;
 using FieldDay;
+using FieldDay.HID;
 using FieldDay.Scenes;
-using FieldDay.Scripting;
-using FieldDay.UI;
 using FieldDay.UI.Animation;
+using TMPro;
+using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace Astro.Title {
     public sealed class TitleContinueGameMenu : MonoBehaviour, IScenePreload {
-        public PointerListener[] Buttons;
+        public CursorHint ParentCursor;
+        [SerializeField] private TMP_InputField m_PlayerCodeInput;
+        public Button ContinueButton;
+        public PointerListener ContinueButtonListener;
         public FadeGroup MenuFade;
         public FadeGroup CloseFade;
+        public FadeGroup GlobalFade;
+
+        public TitleNewGameMenu NewGameMenu;
+        public TitleStarButton NewGameTitleStarButton;
+        public TitleStarButton ContinueGameTitleStarButton;
 
         public IEnumerator<WorkSlicer.Result?> Preload() {
-            for(int i = 0; i < Buttons.Length; i++) {
-                Buttons[i].UserData = "Day" + (i + 1).ToStringLookup();
-                Buttons[i].onClick.AddListener(OnClickContinue);
-            }
+            ContinueButtonListener.onClick.AddListener(OnClickContinue);
+            ParentCursor.onClick.AddListener(OnEnterContinueGameMenu);
+            m_PlayerCodeInput.onValueChanged.AddListener(HandlePlayerCodeUpdated);
             return null;
         }
 
+        private void OnEnterContinueGameMenu()
+        {
+            m_PlayerCodeInput.SetTextWithoutNotify(Game.SharedState.Get<UserSettingsState>().PlayerCode);
+        }
+
         private void OnClickContinue(PointerEventData pointerData) {
+            Future f = SaveUtility.LoadFromServer(m_PlayerCodeInput.text);
+            f.OnComplete(() => { BeginContinueGame(pointerData); });
+            f.OnFail(HandleLoadError);
+        }
+
+        private void HandleLoadError()
+        {
+            Debug.LogError("load from server failed");
+        }
+
+        private void HandlePlayerCodeUpdated(string text)
+        {
+            ContinueButton.interactable = text.Length > 1;
+        }
+
+        private void BeginContinueGame(PointerEventData pointerData)
+        {
+            if (AstroGame.SaveBuffer.HasSave) {
+                AstroGame.SaveBuffer.HandleChunks();
+            }
+
+            var progressState = Find.State<PlayerProgressState>();
+
             Find.State<ViewState>().ActiveNode.BackLink = null;
 
             MenuFade.Hide();
@@ -35,12 +71,36 @@ namespace Astro.Title {
 
             Game.Input.PauseRaycasts();
 
-            StringHash32 dayId = "Day1";
-            if (PointerListener.TryGetUserData(pointerData, out string day)) {
-                dayId = day;
+            if (progressState.CompletedPrelude)
+            {
+                StringHash32 dayId = "Day" + (progressState.DayIndex + 1);
+
+                Routine.Start(this, ContinueGameSequence(dayId)).ExecuteWhileDisabled();
+            }
+            else {
+                // move to prelude scene
+                Routine.Start(this, ContinueToPreludeSequence()).ExecuteWhileDisabled();
+            }
+        }
+
+        private IEnumerator ContinueToPreludeSequence()
+        {
+            var viewState = Find.State<ViewState>();
+
+            GlobalFade.Show();
+
+            while (GlobalFade.IsTransitioning()) {
+                yield return null;
             }
 
-            Routine.Start(this, ContinueGameSequence(dayId)).ExecuteWhileDisabled();
+            ViewNavUtility.MoveByLink(viewState, NewGameTitleStarButton.Link, true);
+            NewGameMenu.NewGameBegin();
+
+            while (viewState.ActiveTransitionRoutine.Exists()) {
+                yield return null;
+            }
+
+            GlobalFade.Hide();
         }
 
         private IEnumerator ContinueGameSequence(StringHash32 dayId) {
