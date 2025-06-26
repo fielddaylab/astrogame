@@ -14,6 +14,7 @@ $call SetInstrumentUnlocked(HistoricalDataInstrument, true)
 $call SetInstrumentUnlocked(HistoricalDataModeToggle, true)
 $call SetRadioFrequency(137, true)
 $call SetChannelActive(Unlocks_Active, false)
+$call MonitorPower->Deactivate()
 $start Observatory.ResetSubtitlePosition
 
 $call StopPuzzleMode()

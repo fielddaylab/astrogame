@@ -21,6 +21,7 @@ $call SetChannelActive(Unlocks_Active, false)
 $call SetChannelActive(IceCube, false)
 $call IntroCutscene->PrepareCutscene()
 $start Observatory.ResetSubtitlePosition
+$call SpawnDocument("ElijahIntro")
 
 :: OpeningCutscene
 @trigger SceneReady
@@ -40,10 +41,7 @@ $call TelescopeLook(155, -30)
 
 $set temp:powerButtonHint = false
 $set temp:pressedPowerButton = false
-$wait 0.1
-
-{@Astrid} Whoa. This place has really changed. Elijah, where are you? $[Astrid/L1/l1_a_01]
-$call Wait(1)
+$wait 1
 
 $call IntroSfx->Play()
 $wait 0.1
