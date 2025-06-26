@@ -5,28 +5,30 @@ using UnityEngine.UI;
 
 namespace Astro {
     public class SettingsMenu : BatchedComponent, IRegistrationCallbacks {
-        public Button ToggleCameraDriftButton;
-        public Image ToggleCameraDriftCheck;
+        public Toggle DriftToggle;
+        public Toggle FullscreenToggle;
         public Slider VolumeSlider;
 
-        //private bool CameraDriftEnabled;
-
         public void OnDeregister() {
-            ToggleCameraDriftButton.onClick.RemoveAllListeners();
+            DriftToggle.onValueChanged.RemoveAllListeners();
             VolumeSlider.onValueChanged.RemoveAllListeners();
         }
 
         public void OnRegister() {
-            //CameraDriftEnabled = Find.State<UserSettingsState>().CameraDriftEnabled;
-            ToggleCameraDriftCheck.gameObject.SetActive(Find.State<UserSettingsState>().CameraDriftEnabled);
-            ToggleCameraDriftButton.onClick.AddListener(UpdateCameraDrift);
+            UpdateCameraDrift(DriftToggle.isOn);
+            UpdateFullscreen(FullscreenToggle.isOn);
+            DriftToggle.onValueChanged.AddListener(UpdateCameraDrift);
+            FullscreenToggle.onValueChanged.AddListener(UpdateFullscreen);
             VolumeSlider.onValueChanged.AddListener(UpdateVolume);
         }
 
-        private void UpdateCameraDrift() {
+        private void UpdateCameraDrift(bool toggle) {
             UserSettingsState settings = Find.State<UserSettingsState>();
-            SettingsUtility.SetCameraDrift(settings, !settings.CameraDriftEnabled);
-            ToggleCameraDriftCheck.gameObject.SetActive(settings.CameraDriftEnabled);
+            SettingsUtility.SetCameraDrift(settings, toggle);
+        }
+
+        private void UpdateFullscreen(bool toggle) {
+            SettingsUtility.SetFullscreen(Find.State<UserSettingsState>(), toggle);
         }
 
         private void UpdateVolume(float volume) {
