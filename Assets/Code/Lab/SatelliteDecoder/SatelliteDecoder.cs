@@ -1,5 +1,9 @@
+using BeauPools;
+using BeauUtil;
+using FieldDay;
 using FieldDay.Components;
 using FieldDay.Scripting;
+using FieldDay.UI;
 using Leaf.Runtime;
 using System;
 using System.Collections;
@@ -13,10 +17,25 @@ namespace Astro
         [SerializeField] private GameObject BlankPanel; 
         [SerializeField] private GameObject ActivatedPanel;
 
-        public void SetDecoderActive(bool active)
-        {
+        public void SetDecoderActive(bool active) {
             BlankPanel.SetActive(!active);
             ActivatedPanel.SetActive(active);
+            if (active) {
+                DisplayDecoderClues();
+            } else {
+                Find.State<PuzzleState>().Display.Clues.Text.SetTextAndActive("");
+            }
+        }
+
+        private void DisplayDecoderClues() {
+            using (PooledStringBuilder psb = PooledStringBuilder.Create()) {
+                foreach (string clue in Find.GlobalAsset<FinalPuzzleCluesAsset>().Clues) {
+                    psb.Builder.Append("<sprite name=\"hint-bullet\">");
+                    psb.Builder.Append(clue);
+                    psb.Builder.Append("\n");
+                    Find.State<PuzzleState>().Display.Clues.Text.SetTextAndActive(psb.Builder);
+                }
+            }
         }
 
         [LeafMember("SetDecoderActive")]
