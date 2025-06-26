@@ -328,13 +328,6 @@ namespace Astro.Save {
 
             SaveStateChunkConsts consts;
 
-            byte gridWidth = reader.Read<byte>(),
-                gridHeight = reader.Read<byte>();
-
-            byte dataX = reader.Read<byte>(),
-                dataY = reader.Read<byte>(),
-                dataW = reader.Read<byte>(),
-                dataH = reader.Read<byte>();
             reader.Skip(1);
 
             consts.Version = header.Version;

@@ -2,13 +2,24 @@ using FieldDay;
 using FieldDay.Audio;
 using FieldDay.SharedState;
 using System;
+using UnityEngine;
 
 namespace Astro {
-    public class UserSettingsState : SharedStateComponent {
+    public class UserSettingsState : SharedStateComponent, IRegistrationCallbacks {
         [NonSerialized] public string PlayerCode = null;
         [NonSerialized] public float MasterVolume;
         [NonSerialized] public bool CameraDriftEnabled = true;
         [NonSerialized] public bool HighQualityMode;
+
+        public void OnDeregister()
+        {
+
+        }
+
+        public void OnRegister()
+        {
+            PlayerCode = PlayerPrefs.GetString("LatestPlayerCode", null);
+        }
     }
 
     public static class SettingsUtility {

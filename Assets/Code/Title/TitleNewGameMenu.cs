@@ -11,6 +11,7 @@ using FieldDay.Scripting;
 using FieldDay.UI;
 using FieldDay.UI.Animation;
 using TMPro;
+using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -55,6 +56,8 @@ namespace Astro.Title {
 
         private void HandleClaimNewIdSuccess()
         {
+            Game.SharedState.Get<UserSettingsState>().PlayerCode = m_PlayerCodeInput.text;
+
             NewGameBegin();
         }
 
