@@ -17,6 +17,7 @@ namespace Astro {
         [NonSerialized] public bool MonitorInputActive = false;
 
         [Header("Focus Sprites")]
+        // Could have realistically made this a global asset but yolo
         [SerializeField] private Sprite m_DefaultStarSprite;
         [SerializeField] private Sprite m_BlueTintStarSprite;
         [SerializeField] private Sprite m_IRTintStarSprite;

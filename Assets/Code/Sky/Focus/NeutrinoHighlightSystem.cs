@@ -29,8 +29,8 @@ namespace Astro {
                     var newHighlight = m_StateC.NeutrinoHighlights.Alloc(focus.Root);
                     focus.Highlight = newHighlight.GetComponent<SpriteRenderer>();
 
-                    focus.Highlight.sprite = focus.IsVisibleInCurrentFilter ? m_StateA.HighlightVisibleSprite : m_StateA.HighlightNotVisibleSprite;
-                    focus.Highlight.SetAlpha(focus.IsVisibleInCurrentFilter ? 1 : m_StateA.HighlightNotVisibleAlpha);
+                    focus.Highlight.sprite = focus.IsVisibleInCurrentFilter ? NeutrinoHighlightState.HighlightVisibleSprite : NeutrinoHighlightState.HighlightNotVisibleSprite;
+                    focus.Highlight.SetAlpha(focus.IsVisibleInCurrentFilter ? 1 : NeutrinoHighlightState.HighlightNotVisibleAlpha);
                     m_StateA.ActiveHighlights.PushBack(newHighlight);
                 }
 

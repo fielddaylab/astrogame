@@ -22,17 +22,8 @@ namespace Astro {
 
             CelestialObjectVisMask visMask = m_State.VisMask;
 
-            bool prevVis;
             foreach (var focus in focusState.ActiveFocii) {
-                prevVis = focus.IsVisibleInCurrentFilter;
-                focus.IsVisibleInCurrentFilter = (focus.TargetData.Visibility & visMask) != 0;
-
                 FocusableUtility.UpdateFocusFilterAppearance(focus, visMask);
-
-                if (focus.HasHighlight && focus.IsVisibleInCurrentFilter != prevVis) {
-                    focus.Highlight.sprite = focus.IsVisibleInCurrentFilter ? neutrinoState.HighlightVisibleSprite : neutrinoState.HighlightNotVisibleSprite;
-                    focus.Highlight.SetAlpha(focus.IsVisibleInCurrentFilter ? 1 : neutrinoState.HighlightNotVisibleAlpha);
-                }
             }
 
             m_State.IsDirty = false;

@@ -71,8 +71,38 @@ namespace Astro {
         }
 
         public static void UpdateFocusFilterAppearance(UIFocus focus, CelestialObjectVisMask visMask = CelestialObjectVisMask.Visible){
+            FocusState state = Find.State<FocusState>();
             CelestialAsset asset = focus.TargetData;
 
+            bool prevVis = focus.IsVisibleInCurrentFilter;
+            focus.IsVisibleInCurrentFilter = (focus.TargetData.Visibility & visMask) != 0;
+
+            // Update our neutrino highlight if this is a neutrino star 
+            if (focus.HasHighlight && focus.IsVisibleInCurrentFilter != prevVis) {
+                focus.Highlight.sprite = focus.IsVisibleInCurrentFilter ? NeutrinoHighlightState.HighlightVisibleSprite : NeutrinoHighlightState.HighlightNotVisibleSprite;
+                focus.Highlight.SetAlpha(focus.IsVisibleInCurrentFilter ? 1 : NeutrinoHighlightState.HighlightNotVisibleAlpha);
+            }
+
+            // Are we visible in the new filter?
+            if (!focus.IsVisibleInCurrentFilter) {
+                // Update our apperance based on the current filter
+                focus.Represent2D.sprite = null;
+                focus.Represent2D.enabled = false;
+                
+                // Update our scale based on the base highlight size
+                float highlightScaleFactor = state.BaseScale - 0.45f;
+                Vector3 highlightScaleDefault = Find.State<FocusState>().DefaultTrackerPipScale;
+
+                focus.Root.localScale = new Vector3(highlightScaleFactor, highlightScaleFactor, highlightScaleFactor);
+                focus.TrackerSprite.GetComponent<Transform>().localScale = new Vector3(
+                    highlightScaleDefault.x / highlightScaleFactor,
+                    highlightScaleDefault.y / highlightScaleFactor,
+                    highlightScaleDefault.z
+                );
+                return;
+            }
+            
+            // We are visible in the new filter and need to update accordingly
             Sprite represent2D = FocusState.DefaultStarSprite;
             float visibleLight = asset.ApparentMagnitude;
 
@@ -93,16 +123,14 @@ namespace Astro {
             focus.Represent2D.sprite = represent2D;
             focus.Represent2D.size = new Vector2(0.32f, 0.32f);
 
-            FocusState state = Find.State<FocusState>();
-
             // Update our scale based on the visible magnitude for our current filter
             float scaleFactor = Mathf.Clamp(Mathf.Pow(state.BaseScale, visibleLight) - 0.45f, state.MinScale, state.MaxScale);
             focus.Root.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
             Vector3 scaleDefault = Find.State<FocusState>().DefaultTrackerPipScale;
             focus.TrackerSprite.GetComponent<Transform>().localScale = new Vector3(scaleDefault.x / scaleFactor, scaleDefault.y / scaleFactor, scaleDefault.z);
 
+            // Update clicable region of our asset to match the new scale
             float clickableRadius = state.BaseScale * Math.Min(1, 1 / scaleFactor);
-
             focus.Clickable.radius = clickableRadius / scaleFactor;
         }
 
