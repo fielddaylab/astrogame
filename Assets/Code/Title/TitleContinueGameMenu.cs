@@ -94,11 +94,12 @@ namespace Astro.Title {
             }
 
             ViewNavUtility.MoveByLink(viewState, NewGameTitleStarButton.Link, true);
-            NewGameMenu.NewGameBegin();
 
             while (viewState.ActiveTransitionRoutine.Exists()) {
                 yield return null;
             }
+
+            NewGameMenu.NewGameBegin();
 
             GlobalFade.Hide();
         }
