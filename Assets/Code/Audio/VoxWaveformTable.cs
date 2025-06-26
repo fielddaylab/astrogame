@@ -83,6 +83,9 @@ namespace Astro.Audio {
             readRequest.Flags = 0;
             readRequest.Callback = HandleResult;
             readRequest.CallbackContext = this;
+            readRequest.Group = default;
+            readRequest.Name = default;
+            readRequest.PathKey = default;
             Game.Files.RequestFile(readRequest, FileLoadPriority.High);
         }
 

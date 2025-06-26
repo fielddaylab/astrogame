@@ -34,6 +34,8 @@ public static class GameEvents {
     public static readonly StringHash32 OnStarSelected = "monitor-star-selected";
     public static readonly StringHash32 InstrumentUnlocked = "instrument-unlocked";
 
+    public static readonly StringHash32 TitleGameStarting = "title-game-starting";
+
     public static readonly StringHash32 TryCreateNewName = "try-create-new-name";
     public static readonly StringHash32 TitleErrorReceived = "title-error-received";
 

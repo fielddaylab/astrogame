@@ -26,6 +26,10 @@ namespace Astro.Title {
         }
 
         private void OnNodeUnload() {
+            if (Find.State<TitleState>().LockNodeChanges) {
+                return;
+            }
+
             Group.SetActive(false);
         }
     }

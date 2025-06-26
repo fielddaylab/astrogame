@@ -9,7 +9,8 @@
         "BeauUtil.Parse",
         "BeauPools",
         "FieldDay.Vox",
-        "BeauData"
+        "BeauData",
+        "Unity.Timeline"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -18,6 +19,12 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.timeline",
+            "expression": "1.7.6",
+            "define": "USING_TIMELINE"
+        }
+    ],
     "noEngineReferences": false
 }

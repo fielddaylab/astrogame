@@ -302,6 +302,7 @@ GameObject:
   - component: {fileID: 52218588}
   - component: {fileID: 52218587}
   - component: {fileID: 52218589}
+  - component: {fileID: 52218590}
   m_Layer: 0
   m_Name: State
   m_TagString: Untagged
@@ -355,6 +356,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   InputEnabled: 1
   Raycaster: {fileID: 105690770}
+--- !u!114 &52218590
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 52218586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd57c140cb3f1334284a7274713d5941, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LockNodeChanges: 0
 --- !u!1 &105690762
 GameObject:
   m_ObjectHideFlags: 0
@@ -765,6 +779,97 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: -58.592, y: 13.7, z: 0}
+--- !u!1 &548575015
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 548575016}
+  - component: {fileID: 548575019}
+  - component: {fileID: 548575018}
+  - component: {fileID: 548575017}
+  m_Layer: 0
+  m_Name: NewForward
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &548575016
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 548575015}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.91, y: 14.05, z: -1.65}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1910443892}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &548575017
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 548575015}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c6164c59e693534f83a47adaff587b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FieldOfView: 50
+--- !u!114 &548575018
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 548575015}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd4f7a62f5d45454495b9595af62e528, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HorizontalRange: 4
+  VerticalRange: 4
+  DeadZone: 0.4
+  Edge: 0.8
+  LerpStrength: 0.5
+  DefaultScale: 1
+  CutsceneScale: 1
+--- !u!114 &548575019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 548575015}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6e923510a6189b46a0b7694318261aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Id:
+    m_Source: NewForward
+    m_HashValue: 3400504670
+  Camera: {fileID: 548575017}
+  Group:
+    GameObjects: []
+    Behaviours: []
+  AllowSlotSelection: 0
+  InputFilter:
+    serializedVersion: 2
+    m_Bits: 0
+  LinkGroups: []
+  BackLink: {fileID: 0}
 --- !u!1 &622260635
 GameObject:
   m_ObjectHideFlags: 0
@@ -1903,6 +2008,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1787179320}
+  - component: {fileID: 1787179321}
   m_Layer: 0
   m_Name: Audio
   m_TagString: Untagged
@@ -1926,6 +2032,21 @@ Transform:
   - {fileID: 1473349411}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1787179321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1787179319}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf9aab3ebc86a5044bc5854732ab0691, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MusicEvent:
+    m_HashValue: 2248686856
+  FadeInDuration: 1
 --- !u!1 &1885631345
 GameObject:
   m_ObjectHideFlags: 0
@@ -2040,6 +2161,7 @@ Transform:
   - {fileID: 1582848963}
   - {fileID: 1490941773}
   - {fileID: 1370253201}
+  - {fileID: 548575016}
   - {fileID: 1473377518}
   - {fileID: 2081416949}
   - {fileID: 622260636}

@@ -28,12 +28,12 @@ namespace FieldDay.Scripting {
 
         [LeafMember("Signal")]
         static internal void LeafDispatchSignal(StringHash32 eventId, Variant argument = default) {
-            ScriptUtility.Runtime.SignalMap.Dispatch(eventId, argument);
+            ScriptUtility.DispatchSignal(eventId, argument);
         }
 
         [LeafMember("QueueSignal")]
         static internal void LeafQueueSignal(StringHash32 eventId, Variant argument = default) {
-            ScriptUtility.Runtime.SignalMap.Queue(eventId, argument);
+            ScriptUtility.QueueSignal(eventId, argument);
         }
 
         #endregion // Signals

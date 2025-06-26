@@ -1652,6 +1652,8 @@ GameObject:
   - component: {fileID: 5807708828216133798}
   - component: {fileID: 2120591978544632598}
   - component: {fileID: 855575587767241884}
+  - component: {fileID: 4635021978329474886}
+  - component: {fileID: 6591253597430115313}
   m_Layer: 0
   m_Name: NewGameGroup
   m_TagString: Untagged
@@ -1791,6 +1793,33 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Director: {fileID: 5807708828216133798}
+--- !u!114 &4635021978329474886
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2543615580253569476}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1cb933ae8424b04fa6d0a5accf67868, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6591253597430115313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2543615580253569476}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d39aff8e9b3540249b453c54db85e715, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Horizon: {fileID: 8684120769263573818}
+  Delay: 2
+  Duration: 6
 --- !u!1 &2958831191092334386
 GameObject:
   m_ObjectHideFlags: 0
@@ -5632,7 +5661,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 5ec6481b323bf0e4097f9d90db2d1037, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5653,8 +5682,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: b2f78d70feba70147a231ee16ea24dc3, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Sprite: {fileID: 21300000, guid: b686bd452b3b8d14f8efa8085baaeb19, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.23137255}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

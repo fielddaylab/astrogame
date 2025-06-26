@@ -1,6 +1,7 @@
 using System;
 using BeauRoutine.Extensions;
 using BeauUtil;
+using EasyAssetStreaming;
 using FieldDay.Assets;
 using UnityEngine;
 
@@ -11,6 +12,7 @@ namespace FieldDay.Audio {
     [CreateAssetMenu(menuName = "Field Day/Audio Event", order = -280)]
     public sealed class AudioEvent : NamedAsset, IRegistrationCallbacks {
         public AudioClip[] Samples = Array.Empty<AudioClip>();
+        [StreamingAudioPath] public string Stream;
         public bool PreloadSamples = true;
 
         [Header("Playback Parameters")]
@@ -31,6 +33,7 @@ namespace FieldDay.Audio {
 
         [NonSerialized] internal StringHash32 CachedId;
         [NonSerialized] internal int CachedBusIndex = -1;
+        [NonSerialized] internal uint CachedStreamedClipKey;
         [NonSerialized] internal AudioEmitterProfile CachedEmitterProfile;
         [NonSerialized] internal RandomDeck<AudioClip> SampleSelector;
         

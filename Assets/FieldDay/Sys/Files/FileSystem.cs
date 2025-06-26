@@ -12,12 +12,15 @@
 #define FILE_SYSTEM_DEFAULT
 #endif // UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN || UNITY_WSA
 
-using System;
-using System.IO;
-using System.Text;
+using BeauPools;
 using BeauUtil;
 using BeauUtil.Debugger;
+using FieldDay.Debugging;
 using FieldDay.Localization;
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -28,23 +31,43 @@ namespace FieldDay.Files {
         [Serializable]
         public struct Config {
             public int MaxInFlightRequests;
+            public int MaxRetryCount;
+            public float RetryDelay;
         }
 
         private struct InFlightFileRequest {
             public FileLoadRequest Request;
             public FileLoadPriority Priority;
             public UnityWebRequest UWR;
+            public int RetryCount;
+        }
+
+        private struct RetryFileRequest {
+            public long SendTimestamp;
+            public FileLoadRequest Request;
+            public FileLoadPriority Priority;
+            public int RetryCount;
         }
 
         #endregion // Types
+
+        #region Consts
+
+        #endregion // Consts
 
         #region States
 
         private readonly RingBuffer<FileLoadRequest> m_HighPriorityRequests = new RingBuffer<FileLoadRequest>(8, RingBufferMode.Expand);
         private readonly RingBuffer<FileLoadRequest> m_LowPriorityRequests = new RingBuffer<FileLoadRequest>(8, RingBufferMode.Expand);
 
+        private readonly RingBuffer<RetryFileRequest> m_RetryRequestQueue = new RingBuffer<RetryFileRequest>(8, RingBufferMode.Expand);
+        private readonly RingBuffer<RetryFileRequest> m_RetryExhaustedQueue = new RingBuffer<RetryFileRequest>(8, RingBufferMode.Expand);
+
         private RingBuffer<InFlightFileRequest> m_InFlightRequests;
         private RingBuffer<UnityWebRequest> m_WebRequestsPendingDisposal;
+
+        private int m_MaxRetries;
+        private long m_RetryDelay;
 
         static private string s_StreamingPath;
         static private string s_PersistentPath;
@@ -77,10 +100,13 @@ namespace FieldDay.Files {
 
         #region Requests
 
-        public void RequestFile(in FileLoadRequest request, FileLoadPriority priority = FileLoadPriority.High) {
+        public void RequestFile(in FileLoadRequest request, FileLoadPriority priority) {
             Assert.NotNull(request.Callback, "Callback must be specified");
             Assert.True(!string.IsNullOrEmpty(request.Path), "Path must be specified");
             switch (priority) {
+                case FileLoadPriority.Urgent:
+                    m_HighPriorityRequests.PushFront(request);
+                    break;
                 case FileLoadPriority.High:
                     m_HighPriorityRequests.PushBack(request);
                     break;
@@ -93,6 +119,63 @@ namespace FieldDay.Files {
             }
         }
 
+        public void CancelRequestsInGroup(StringHash32 groupId) {
+            Assert.False(groupId.IsEmpty, "Group must not be empty");
+            m_HighPriorityRequests.RemoveWhere(FindRequestByGroup, groupId);
+            m_LowPriorityRequests.RemoveWhere(FindRequestByGroup, groupId);
+            m_RetryRequestQueue.RemoveWhere(FindRetryRequestByGroup, groupId);
+
+            for (int i = m_InFlightRequests.Count; i-- > 0;) {
+                ref InFlightFileRequest activeRequest = ref m_InFlightRequests[i];
+                if (activeRequest.Request.Group == groupId) {
+                    activeRequest.UWR.Abort();
+                    activeRequest.UWR.Dispose();
+                    m_InFlightRequests.FastRemoveAt(i);
+                }
+            }
+        }
+
+        public void CancelRequestsWithId(StringHash32 identifier) {
+            Assert.False(identifier.IsEmpty, "Identifier must not be empty");
+            m_HighPriorityRequests.RemoveWhere(FindRequestByName, identifier);
+            m_LowPriorityRequests.RemoveWhere(FindRequestByName, identifier);
+            m_RetryRequestQueue.RemoveWhere(FindRetryRequestByName, identifier);
+
+            for (int i = m_InFlightRequests.Count; i-- > 0;) {
+                ref InFlightFileRequest activeRequest = ref m_InFlightRequests[i];
+                if (activeRequest.Request.Name == identifier) {
+                    activeRequest.UWR.Abort();
+                    activeRequest.UWR.Dispose();
+                    m_InFlightRequests.FastRemoveAt(i);
+                }
+            }
+        }
+
+        public void CancelRequestsWithKey(uint key) {
+            Assert.False(key == 0, "Identifier must not be empty");
+            m_HighPriorityRequests.RemoveWhere(FindRequestByKey, key);
+            m_LowPriorityRequests.RemoveWhere(FindRequestByKey, key);
+            m_RetryRequestQueue.RemoveWhere(FindRetryRequestByKey, key);
+
+            for (int i = m_InFlightRequests.Count; i-- > 0;) {
+                ref InFlightFileRequest activeRequest = ref m_InFlightRequests[i];
+                if (activeRequest.Request.PathKey == key) {
+                    activeRequest.UWR.Abort();
+                    activeRequest.UWR.Dispose();
+                    m_InFlightRequests.FastRemoveAt(i);
+                }
+            }
+        }
+
+        static private Predicate<RetryFileRequest, StringHash32> FindRetryRequestByGroup = (a, b) => a.Request.Group == b;
+        static private Predicate<RetryFileRequest, StringHash32> FindRetryRequestByName = (a, b) => a.Request.Name == b;
+        static private Predicate<RetryFileRequest, uint> FindRetryRequestByKey = (a, b) => a.Request.PathKey == b;
+
+        static private Predicate<FileLoadRequest, StringHash32> FindRequestByGroup = (a, b) => a.Group == b;
+        static private Predicate<FileLoadRequest, StringHash32> FindRequestByName = (a, b) => a.Name == b;
+        static private Predicate<FileLoadRequest, uint> FindRequestByKey = (a, b) => a.PathKey == b;
+
+
         #endregion // Requests
 
         #region Events
@@ -104,6 +187,9 @@ namespace FieldDay.Files {
             s_StreamingPath = SanitizeDirectoryPath(Application.streamingAssetsPath);
             s_PersistentPath = SanitizeDirectoryPath(Application.persistentDataPath);
             s_TempCachePath = SanitizeDirectoryPath(Application.temporaryCachePath);
+
+            m_MaxRetries = Math.Max(0, config.MaxRetryCount);
+            m_RetryDelay = (long) (Stopwatch.Frequency * config.RetryDelay);
         }
 
         internal void Shutdown() {
@@ -122,6 +208,12 @@ namespace FieldDay.Files {
             KillWebRequestsPendingDisposal();
             ProcessInFlightRequests();
             SendNewRequests();
+
+#if DEVELOPMENT
+            if (GameLoop.IsPhase(GameLoopPhase.DebugUpdate)) {
+                DebugRender();
+            }
+#endif // DEVELOPMENT
         }
 
         #endregion // Events
@@ -129,13 +221,61 @@ namespace FieldDay.Files {
         #region Queue Processing
 
         private void ProcessInFlightRequests() {
+            long ts = Frame.Timestamp();
+
             for (int i = m_InFlightRequests.Count - 1; i >= 0; i--) {
                 ref InFlightFileRequest req = ref m_InFlightRequests[i];
                 if (req.UWR.isDone) {
-                    CompleteRequest(ref req);
+                    Log.Msg("[FileSystem] Request for '{0}' done", req.UWR.url);
+                    if (!HandleError(ref req, ts)) {
+                        CompleteRequest(ref req);
+                    }
                     m_InFlightRequests.FastRemoveAt(i);
                 }
             }
+        }
+
+        private bool HandleError(ref InFlightFileRequest request, long timestamp) {
+            if (request.UWR.result == UnityWebRequest.Result.Success) {
+                return false;
+            }
+
+            bool notFound;
+            long responseCode = request.UWR.responseCode;
+            if (responseCode >= 400 && responseCode < 500) {
+                notFound = true;
+                Log.Error("[FileSystem] Received response code {0}, not attempting any retry", responseCode);
+            } else {
+                notFound = false;
+            }
+
+            if (notFound) {
+                return false;
+            }
+
+            bool hasRetriesRemaining = request.RetryCount < m_MaxRetries;
+            bool canRetry = hasRetriesRemaining || (request.Request.Flags & FileLoadFlags.InfiniteRetries) != 0;
+
+            RetryFileRequest retryRequest;
+            retryRequest.Request = request.Request;
+            retryRequest.Priority = request.Priority;
+            retryRequest.RetryCount = request.RetryCount + 1;
+            retryRequest.SendTimestamp = timestamp + m_RetryDelay;
+
+            if (canRetry) {
+                m_RetryRequestQueue.PushBack(retryRequest);
+                Log.Warn("[FileSystem] Request failed, pushing to retry queue");
+                return true;
+            }
+
+            if ((request.Request.Flags & FileLoadFlags.PushToExhaustedQueueOnFailure) != 0) {
+                retryRequest.SendTimestamp = 0;
+                m_RetryExhaustedQueue.PushBack(retryRequest);
+                Log.Warn("[FileSystem] Request failed too many times, pushing to exhausted queue");
+                return true;
+            }
+
+            return false;
         }
 
         private void CompleteRequest(ref InFlightFileRequest request) {
@@ -156,17 +296,28 @@ namespace FieldDay.Files {
             int requestSlotsRemaining = m_InFlightRequests.Capacity - m_InFlightRequests.Count;
             int highPrioritySlots = Math.Min(requestSlotsRemaining, m_HighPriorityRequests.Count);
             int lowPrioritySlots = Math.Min(requestSlotsRemaining - highPrioritySlots, m_LowPriorityRequests.Count);
+            int retrySlots = Math.Min(requestSlotsRemaining - highPrioritySlots - lowPrioritySlots, m_RetryRequestQueue.Count);
 
             while(highPrioritySlots-- > 0) {
-                KickRequest(m_HighPriorityRequests.PopFront(), FileLoadPriority.High);
+                KickRequest(m_HighPriorityRequests.PopFront(), FileLoadPriority.High, 0);
             }
 
             while(lowPrioritySlots-- > 0) {
-                KickRequest(m_LowPriorityRequests.PopFront(), FileLoadPriority.Low);
+                KickRequest(m_LowPriorityRequests.PopFront(), FileLoadPriority.Low, 0);
+            }
+
+            long now = Frame.Timestamp();
+            while (retrySlots-- > 0) {
+                RetryFileRequest retryRequest = m_RetryRequestQueue.PeekFront();
+                if (now < retryRequest.SendTimestamp) {
+                    break;
+                }
+                m_RetryRequestQueue.PopFront();
+                KickRequest(retryRequest.Request, retryRequest.Priority, retryRequest.RetryCount + 1);
             }
         }
 
-        private void KickRequest(in FileLoadRequest request, FileLoadPriority priority) {
+        private void KickRequest(in FileLoadRequest request, FileLoadPriority priority, int retryCount) {
             string resolvedPath = ResolvePathToUrl(request.Path, request.Location);
 
             UnityWebRequest uwr = UnityWebRequest.Get(new Uri(resolvedPath));
@@ -183,8 +334,12 @@ namespace FieldDay.Files {
                 }
                 case FileBufferMode.AudioClip: {
                     DownloadHandlerAudioClip audio = new DownloadHandlerAudioClip(resolvedPath, AudioType.UNKNOWN);
-                    audio.compressed = (request.Flags & FileLoadFlags.Audio_Compressed) != 0;
-                    audio.streamAudio = (request.Flags & FileLoadFlags.Audio_Streaming) != 0;
+                    if ((request.Flags & FileLoadFlags.Audio_Compressed) != 0) {
+                        audio.compressed = true;
+                    }
+                    if ((request.Flags & FileLoadFlags.Audio_Streaming) != 0) {
+                        audio.streamAudio = true;
+                    }
                     uwr.downloadHandler = audio;
                     break;
                 }
@@ -196,8 +351,11 @@ namespace FieldDay.Files {
             inFlightRequest.Request = request;
             inFlightRequest.Priority = priority;
             inFlightRequest.UWR = uwr;
+            inFlightRequest.RetryCount = retryCount;
 
             m_InFlightRequests.PushBack(inFlightRequest);
+
+            Log.Msg("[FileSystem] Kicking request for '{0}'", resolvedPath);
         }
 
         private void KillWebRequestsPendingDisposal() {
@@ -326,6 +484,65 @@ namespace FieldDay.Files {
             return path;
         }
 
+        /// <summary>
+        /// Calculates a hash of the given path and file location.
+        /// </summary>
+        static public uint CalculatePathHash(string path, FileLocation location) {
+            Assert.NotNull(path);
+            uint pathHash = StringHash32.Fast(path).HashValue;
+            pathHash = (pathHash & 0xFF000000) ^ (pathHash << 2) | (uint) location;
+            return pathHash;
+        }
+
+        /// <summary>
+        /// Calculates a hash of the given path and file location.
+        /// </summary>
+        static public uint CalculatePathHash(StringBuilder path, FileLocation location) {
+            Assert.NotNull(path);
+            uint pathHash = StringHash32.Fast(path, 0, path.Length).HashValue;
+            pathHash = (pathHash & 0xFF000000) ^ (pathHash << 2) | (uint)location;
+            return pathHash;
+        }
+
         #endregion // Utilities
+
+        #region Debug
+
+        private enum DebuggingFlags {
+            DisplayStats,
+            DisplayQueues
+        }
+
+#if DEVELOPMENT
+
+        private void DebugRender() {
+            if (DebugFlags.IsFlagSet(DebuggingFlags.DisplayStats)) {
+                using(PooledStringBuilder psb = PooledStringBuilder.Create()) {
+                    int totalRequests = m_HighPriorityRequests.Count + m_LowPriorityRequests.Count + m_InFlightRequests.Count + m_RetryRequestQueue.Count;
+                    psb.Builder.Append("Total File Requests: ").AppendNoAlloc(totalRequests)
+                        .Append("\n   Running: ").AppendNoAlloc(m_InFlightRequests.Count)
+                        .Append("\n   Queued (High Priority): ").AppendNoAlloc(m_HighPriorityRequests.Count)
+                        .Append("\n   Queued (Low Priority): ").AppendNoAlloc(m_LowPriorityRequests.Count)
+                        .Append("\n   Queued (Retry): ").AppendNoAlloc(m_RetryRequestQueue.Count)
+                        .Append("\n   Retries Exhausted Queue: ").AppendNoAlloc(m_RetryExhaustedQueue.Count);
+
+                    DebugDraw.AddLogText(psb, ColorBank.LimeGreen);
+                }
+            }
+        }
+
+        [EngineMenuFactory]
+        static private DMInfo CreateFileDebugMenu() {
+            DMInfo info = new DMInfo("Filesystem", 16);
+            DebugFlags.Menu.AddFlagToggle(info, "Display Stats", DebuggingFlags.DisplayStats);
+            DebugFlags.Menu.AddFlagToggle(info, "Display Queues", DebuggingFlags.DisplayQueues);
+
+            return info;
+        }
+
+#endif // DEVELOPMENT
+
+        #endregion // Debug
+
     }
 }

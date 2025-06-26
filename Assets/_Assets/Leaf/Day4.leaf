@@ -31,7 +31,7 @@ $call MonitorPower->Deactivate()
 @boostScore 100
 @who    Astrid
 
-$call QueueMusic("Music.Moonthought", 3)
+$call PlayMusic("Music.Moonthought", 3)
 $call WaitForMovedToView("DocumentPuzzle")
 $call SetInputState(false)
 $call SpawnDocumentToCamera("Day4ElijahPostcard")

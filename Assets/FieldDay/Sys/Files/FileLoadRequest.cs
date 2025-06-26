@@ -1,9 +1,9 @@
 using System;
-using System.Text;
 using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay.Data;
 using Unity.Collections.LowLevel.Unsafe;
+using UnityEngine;
 using UnityEngine.Networking;
 
 namespace FieldDay.Files {
@@ -12,7 +12,12 @@ namespace FieldDay.Files {
         public FileBufferMode Mode;
         public FileLoadFlags Flags;
 
+        public StringHash32 Name;
+        public StringHash32 Group;
+
         public string Path;
+        public uint PathKey;
+
         public FileReadHandler Callback;
         public object CallbackContext;
     }
@@ -36,7 +41,10 @@ namespace FieldDay.Files {
     public enum FileLoadFlags : ushort {
         Audio_Compressed = 0x001,
         Audio_Streaming = 0x002,
-        Texture_MarkNonReadable = 0x004
+        Texture_MarkNonReadable = 0x004,
+
+        InfiniteRetries = 0x008,
+        PushToExhaustedQueueOnFailure = 0x010
     }
 
     public readonly struct FileLoadResult {
@@ -90,6 +98,24 @@ namespace FieldDay.Files {
         }
 
         /// <summary>
+        /// Interprets the downloaded data as an AudioClip.
+        /// </summary>
+        public AudioClip ReadAudioClip() {
+            Assert.True(Succeeded());
+            DownloadHandlerAudioClip clipHandler = (DownloadHandlerAudioClip) Handler;
+            return clipHandler.audioClip;
+        }
+
+        /// <summary>
+        /// Interprets the downloaded data as a Texture2D.
+        /// </summary>
+        public Texture2D ReadTexture() {
+            Assert.True(Succeeded());
+            DownloadHandlerTexture textureHandler = (DownloadHandlerTexture) Handler;
+            return textureHandler.texture;
+        }
+
+        /// <summary>
         /// Returns the length of the downloaded data.
         /// </summary>
         public ulong ResponseLength() {
@@ -110,6 +136,7 @@ namespace FieldDay.Files {
 
     public enum FileLoadPriority : byte {
         Low,
-        High
+        High,
+        Urgent
     }
 }
