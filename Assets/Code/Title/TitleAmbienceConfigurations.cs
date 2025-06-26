@@ -25,29 +25,22 @@ namespace Astro.Title {
         [NonSerialized] public AudioHandle CityHandle;
         [NonSerialized] public Routine ContinueGameRoutine;
 
-        void IRegistrationCallbacks.OnDeregister() {
-            Game.Events.DeregisterAllForContext(this);
-            ScriptUtility.DeregisterAllSignalsForContext(this);
-        }
-
         void IRegistrationCallbacks.OnRegister() {
             
+        }
+
+        void IRegistrationCallbacks.OnDeregister() {
+            Game.Events.DeregisterAllForContext(this);
         }
 
         IEnumerator<WorkSlicer.Result?> IScenePreload.Preload() {
             AstroGame.Events.Register<ViewNode>(ViewNavUtility.Events.NodeLoaded, OnNodeLoading);
             Game.Scenes.QueueOnLoad(OnSceneEnabled);
-            ScriptUtility.RegisterForSignal("FadeOutCityAmb", OnFadeOutCitySignal);
             return null;
         }
 
         private void OnSceneEnabled() {
             BaseHandle = Sfx.Play(BaseLayer);
-        }
-
-        private void OnFadeOutCitySignal() {
-            Sfx.Stop(CityHandle, 4);
-            Sfx.SetVolume(BaseHandle, 0.5f, 4);
         }
 
         private IEnumerator ContinueGameRandomOneshots() {

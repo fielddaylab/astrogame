@@ -108,7 +108,7 @@ namespace FieldDay.Audio {
         private unsafe void Cmd_StopWithHandle(UniqueId16 handle, float delay, Curve curve) {
             VoiceData voice = FindVoiceForId(handle, out int idx);
             if (idx >= 0) {
-                if (delay <= 0) {
+                if (delay <= 0 || voice.State == VoiceState.PlayRequested) {
                     KillVoice(voice);
                     m_ActiveVoices.FastRemoveAt(idx);
                 } else {
@@ -142,7 +142,7 @@ namespace FieldDay.Audio {
             for (int i = m_ActiveVoices.Count - 1; i >= 0; i--) {
                 VoiceData voice = m_ActiveVoices[i];
                 if (voice.Tag == tag) {
-                    if (delay <= 0) {
+                    if (delay <= 0 || voice.State == VoiceState.PlayRequested) {
                         KillVoice(voice);
                         m_ActiveVoices.FastRemoveAt(i);
                     } else {
@@ -284,7 +284,7 @@ namespace FieldDay.Audio {
             VoiceData voice = FindVoiceForId(id);
             if (voice != null && voice.KillTweenIndex < 0) {
                 if (voice.State == VoiceState.Idle) {
-                    voice.State = VoiceState.Playing;
+                    voice.State = VoiceState.PlayRequested;
                 }
             }
         }

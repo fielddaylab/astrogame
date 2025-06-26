@@ -3,6 +3,7 @@ using BeauUtil;
 using FieldDay;
 using FieldDay.Scenes;
 using FieldDay.SharedState;
+using FieldDay.UI;
 using FieldDay.UI.Animation;
 using System.Collections.Generic;
 using UnityEngine;
@@ -64,8 +65,12 @@ namespace Astro.Title {
 
         private void OnNodeEntered(ViewNode node) {
             StringHash32 nodeId = node.Id;
-            
-            if (nodeId == "NewCutscene" || nodeId == "ContinueForward" || nodeId == "Boot") {
+
+            if (Find.State<TitleState>().LockNodeChanges) {
+                return;
+            }
+
+            if (nodeId == "Boot") {
                 return;
             }
 

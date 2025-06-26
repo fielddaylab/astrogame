@@ -55,6 +55,7 @@ namespace FieldDay.Audio {
 
         private IPool<AudioVoiceComponents> m_VoiceComponentPool;
         private IPool<VoiceData> m_VoiceDataPool;
+        private IPool<StreamedClip> m_StreamedClipPool;
 
         private BusData[] m_BusData;
         private int m_BusCount;
@@ -131,6 +132,8 @@ namespace FieldDay.Audio {
                 a.PlayingHandle = default;
             });
             m_VoiceComponentPool.Prewarm(MaxVoices);
+
+            m_StreamedClipPool = new FixedPool<StreamedClip>(32, Pool.DefaultConstructor<StreamedClip>());
 
             if (config.DefaultEmitterProfile) {
                 m_DefaultEmitterConfig = config.DefaultEmitterProfile.Config;

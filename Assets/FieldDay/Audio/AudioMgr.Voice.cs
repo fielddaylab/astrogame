@@ -58,6 +58,7 @@ namespace FieldDay.Audio {
             public short PositionSyncIndex;
             public short KillTweenIndex;
             public FloatTweenIndices FloatTweens;
+            public StreamedClip StreamingEntry;
 
 #if DEVELOPMENT
             public string DebugName;
@@ -453,7 +454,7 @@ namespace FieldDay.Audio {
         }
 
         static private unsafe int CalculateKillPriorityScore(VoiceData voice, double currentTime) {
-            int score = (int) (voice.LastKnownProperties.Volume * 100);
+            int score = 101 - (int) (voice.LastKnownProperties.Volume * 100);
 
             switch (voice.State) {
                 case VoiceState.Playing:
@@ -512,6 +513,11 @@ namespace FieldDay.Audio {
 
             m_TargetablePropertyBlocks.TryFree(ref voice.EventProperties);
             m_TargetablePropertyBlocks.TryFree(ref voice.VoiceProperties);
+
+            if (voice.StreamingEntry != null) {
+                voice.StreamingEntry.RefCount--;
+                voice.StreamingEntry = null;
+            }
 
             voice.Components = null;
             voice.Handle = default;

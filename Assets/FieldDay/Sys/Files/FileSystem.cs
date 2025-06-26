@@ -93,6 +93,39 @@ namespace FieldDay.Files {
             }
         }
 
+        public void CancelRequestsInGroup(StringHash32 groupId) {
+            Assert.False(groupId.IsEmpty, "Group must not be empty");
+            m_HighPriorityRequests.RemoveWhere(FindRequestByGroup, groupId);
+            m_LowPriorityRequests.RemoveWhere(FindRequestByGroup, groupId);
+
+            for(int i = m_InFlightRequests.Count; i-- > 0;) {
+                ref InFlightFileRequest activeRequest = ref m_InFlightRequests[i];
+                if (activeRequest.Request.Group == groupId) {
+                    activeRequest.UWR.Abort();
+                    activeRequest.UWR.Dispose();
+                    m_InFlightRequests.FastRemoveAt(i);
+                }
+            }
+        }
+
+        public void CancelRequestsWithId(StringHash32 identifier) {
+            Assert.False(identifier.IsEmpty, "Identifier must not be empty");
+            m_HighPriorityRequests.RemoveWhere(FindRequestByIdentifier, identifier);
+            m_LowPriorityRequests.RemoveWhere(FindRequestByIdentifier, identifier);
+
+            for (int i = m_InFlightRequests.Count; i-- > 0;) {
+                ref InFlightFileRequest activeRequest = ref m_InFlightRequests[i];
+                if (activeRequest.Request.Identifier == identifier) {
+                    activeRequest.UWR.Abort();
+                    activeRequest.UWR.Dispose();
+                    m_InFlightRequests.FastRemoveAt(i);
+                }
+            }
+        }
+
+        static private Predicate<FileLoadRequest, StringHash32> FindRequestByGroup = (a, b) => a.Group == b;
+        static private Predicate<FileLoadRequest, StringHash32> FindRequestByIdentifier = (a, b) => a.Identifier == b;
+
         #endregion // Requests
 
         #region Events
@@ -132,6 +165,7 @@ namespace FieldDay.Files {
             for (int i = m_InFlightRequests.Count - 1; i >= 0; i--) {
                 ref InFlightFileRequest req = ref m_InFlightRequests[i];
                 if (req.UWR.isDone) {
+                    Log.Msg("[FileSystem] Request for '{0}' done", req.UWR.url);
                     CompleteRequest(ref req);
                     m_InFlightRequests.FastRemoveAt(i);
                 }
@@ -183,8 +217,12 @@ namespace FieldDay.Files {
                 }
                 case FileBufferMode.AudioClip: {
                     DownloadHandlerAudioClip audio = new DownloadHandlerAudioClip(resolvedPath, AudioType.UNKNOWN);
-                    audio.compressed = (request.Flags & FileLoadFlags.Audio_Compressed) != 0;
-                    audio.streamAudio = (request.Flags & FileLoadFlags.Audio_Streaming) != 0;
+                    if ((request.Flags & FileLoadFlags.Audio_Compressed) != 0) {
+                        audio.compressed = true;
+                    }
+                    if ((request.Flags & FileLoadFlags.Audio_Streaming) != 0) {
+                        audio.streamAudio = true;
+                    }
                     uwr.downloadHandler = audio;
                     break;
                 }
@@ -198,6 +236,8 @@ namespace FieldDay.Files {
             inFlightRequest.UWR = uwr;
 
             m_InFlightRequests.PushBack(inFlightRequest);
+
+            Log.Msg("[FileSystem] Kicking request for '{0}'", resolvedPath);
         }
 
         private void KillWebRequestsPendingDisposal() {

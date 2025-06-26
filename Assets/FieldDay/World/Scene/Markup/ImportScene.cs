@@ -79,7 +79,7 @@ namespace FieldDay.Scenes {
 
 #if UNITY_EDITOR
 
-        [MenuItem("Field Day/Load All Scene Layers")]
+        [MenuItem("Field Day/Load All Scene Layers", priority = -100)]
         static public void EditorLoadInActiveScene() {
             EditorLoadInScene(SceneManager.GetActiveScene());
         }

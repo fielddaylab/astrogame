@@ -4,6 +4,7 @@ using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay.Data;
 using Unity.Collections.LowLevel.Unsafe;
+using UnityEngine;
 using UnityEngine.Networking;
 
 namespace FieldDay.Files {
@@ -11,6 +12,8 @@ namespace FieldDay.Files {
         public FileLocation Location;
         public FileBufferMode Mode;
         public FileLoadFlags Flags;
+        public StringHash32 Identifier;
+        public StringHash32 Group;
 
         public string Path;
         public FileReadHandler Callback;
@@ -87,6 +90,24 @@ namespace FieldDay.Files {
         public unsafe string ReadText() {
             Assert.True(Succeeded());
             return Handler.text;
+        }
+
+        /// <summary>
+        /// Interprets the downloaded data as an AudioClip.
+        /// </summary>
+        public AudioClip ReadAudioClip() {
+            Assert.True(Succeeded());
+            DownloadHandlerAudioClip clipHandler = (DownloadHandlerAudioClip) Handler;
+            return clipHandler.audioClip;
+        }
+
+        /// <summary>
+        /// Interprets the downloaded data as a Texture2D.
+        /// </summary>
+        public Texture2D ReadTexture() {
+            Assert.True(Succeeded());
+            DownloadHandlerTexture textureHandler = (DownloadHandlerTexture) Handler;
+            return textureHandler.texture;
         }
 
         /// <summary>

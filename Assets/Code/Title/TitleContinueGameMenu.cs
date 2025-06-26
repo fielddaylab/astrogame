@@ -46,6 +46,7 @@ namespace Astro.Title {
         private IEnumerator ContinueGameSequence(StringHash32 dayId) {
             yield return 1;
             ViewNavUtility.MoveToNode(Find.State<ViewState>(), ViewNavUtility.GetNodeById("ContinueForward"), new TweenSettings(5, Curve.Smooth));
+            Game.Events.Dispatch(GameEvents.TitleGameStarting);
             // TODO: start playing walking sounds
             yield return 2;
             ScriptTriggers.LoadDay(dayId);

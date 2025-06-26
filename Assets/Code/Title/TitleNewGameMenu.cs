@@ -44,6 +44,7 @@ namespace Astro.Title {
             }
             Find.GuiModule<LoadingIcon>().Hide();
 
+            Game.Events.Dispatch(GameEvents.TitleGameStarting);
             ScriptUtility.Trigger("BeginPrelude");
 
             Routine.StartDelay(() => {

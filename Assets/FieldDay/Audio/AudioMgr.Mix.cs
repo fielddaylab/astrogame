@@ -49,7 +49,7 @@ namespace FieldDay.Audio {
         }
 
         private void UpdateMixers(float deltaTime) {
-            for(int i = m_ActiveMixStates.Count; i-- > 0;) {
+            for (int i = m_ActiveMixStates.Count; i-- > 0;) {
                 ref MixData mixData = ref m_ActiveMixStates[i];
                 float val = mixData.Mix;
                 float delta = mixData.TargetMix - val;
@@ -65,7 +65,7 @@ namespace FieldDay.Audio {
         }
 
         private unsafe void ApplyMixToBuses(in AudioMixBlock block, float mix) {
-            for(int i = 0; i < m_BusCount; i++) {
+            for (int i = 0; i < m_BusCount; i++) {
                 ref AudioPropertyBlock busBlock = ref m_WorkingBusProperties[i];
                 busBlock.Volume *= AudioMixBlock.MixMultiplier(block.Volume[i], mix);
                 busBlock.Pitch *= AudioMixBlock.MixMultiplier(block.Pitch[i], mix);
@@ -77,7 +77,7 @@ namespace FieldDay.Audio {
             }
         }
 
-#endregion // Updates
+        #endregion // Updates
 
         private void SetMixStateTarget(StringHash32 mixId, float mixValue, float transitionDuration, bool proportionalTransition, bool useDefaultEnvelope) {
             if (mixId.IsEmpty) {
@@ -87,9 +87,9 @@ namespace FieldDay.Audio {
             mixValue = Mathf.Clamp01(mixValue);
 
             AudioMixState mixAsset = Find.NamedAsset<AudioMixState>(mixId);
-            
+
             int mixIndex = -1;
-            for(int i = m_ActiveMixStates.Count; i-- > 0;) {
+            for (int i = m_ActiveMixStates.Count; i-- > 0;) {
                 if (m_ActiveMixStates[i].Id == mixId) {
                     mixIndex = i;
                     break;

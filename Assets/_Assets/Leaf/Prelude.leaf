@@ -15,7 +15,7 @@ $wait 2
 
 $wait 1
 $call MovePhoneToUpper->PlayTween()
-$call PhoneAudio->Play();
+$call PhoneAudio->Play()
 $wait 3.1
  
 {@Elijah}	Astrid, I’m so sorry I’m late! $[Elijah/Pre/p_e_01]
@@ -63,19 +63,20 @@ $set temp:preludeSkySelection = true
 $call   HintModals->Hide("Prelude", 0.2)
 {@Astrid}	Found it! $[Astrid/Pre/p_a_06]
 
-$call Aurora->FadeIn()
-
 {@Astrid}	Just imagine... In ancient times they had to map all these stars from scratch. And they used them for navigation, to tell their fates... $[Astrid/Pre/p_a_07]
 {@Astrid}	Must've been a lot of pressure. $[Astrid/Pre/p_a_08]
 {@Elijah}	I don't know... sounds sort of fun to me. $[Elijah/Pre/p_e_08]
 
-$call FakeBloomExtra->FadeIn()
-$call FakeBloom->FadeIn()
-
-$call Wait(3)
+$call Aurora->FadeIn()
 $call Signal("FadeOutCityAmb")
 
+$call Wait(3)
+$call Signal("WalkForward")
+
 {@Astrid}	Whoa. Elijah, are you seeing this? $[Astrid/Pre/p_a_09]
+
+$call FakeBloomExtra->FadeIn()
+$call FakeBloom->FadeIn()
 
 {@Elijah}	Astrid—you’re breaking up— $[Elijah/Pre/p_e_09]
  

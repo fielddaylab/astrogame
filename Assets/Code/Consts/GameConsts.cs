@@ -33,6 +33,8 @@ public static class GameEvents {
     public static readonly StringHash32 MonitorSwitchedFilter = "monitor-switched-filter";
     public static readonly StringHash32 OnStarSelected = "monitor-star-selected";
     public static readonly StringHash32 InstrumentUnlocked = "instrument-unlocked";
+
+    public static readonly StringHash32 TitleGameStarting = "title-game-starting";
 }
 
 public static class ScriptEvents {

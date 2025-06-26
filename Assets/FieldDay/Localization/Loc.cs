@@ -1,6 +1,8 @@
+using System.Runtime.CompilerServices;
 using System.Text;
 using BeauUtil;
 using BeauUtil.Debugger;
+using UnityEditor.ShortcutManagement;
 
 namespace FieldDay.Localization {
     static public class Loc {
@@ -122,27 +124,29 @@ namespace FieldDay.Localization {
         /// the default language's two-letter code with the current language.
         /// Specifically, the formats /en/, en/, and .en
         /// </summary>
-        static public unsafe string Path(string path) {
+        static public unsafe string Path(string path, out bool changed) {
             Assert.NotNull(path);
-            
+
             if (s_CurrentLang == s_DefaultLang) {
+                changed = false;
                 return path;
             }
 
             int pathLen = path.Length;
             if (pathLen < 3) {
+                changed = false;
                 return path;
             }
 
             char* buff = stackalloc char[pathLen];
-            fixed(char* p = path) {
+            fixed (char* p = path) {
                 Unsafe.FastCopyArray(p, pathLen, buff);
             }
 
             s_DefaultLang.ToChars(out char checkA, out char checkB);
             s_CurrentLang.ToChars(out char newA, out char newB);
 
-            bool changed = false;
+            changed = false;
             int idx = 0;
 
             if (buff[0] == checkA && buff[1] == checkB && buff[2] == '/') {
@@ -180,6 +184,16 @@ namespace FieldDay.Localization {
             }
 
             return path;
+        }
+
+        /// <summary>
+        /// Localizes a file path. This replaces instances of
+        /// the default language's two-letter code with the current language.
+        /// Specifically, the formats /en/, en/, and .en
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static public unsafe string Path(string path) {
+            return Path(path, out bool _);
         }
 
         /// <summary>

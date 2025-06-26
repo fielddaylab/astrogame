@@ -32,7 +32,6 @@ namespace Astro.Radio {
         [NonSerialized] public StringHash32[] ChannelIndexMap;
         [NonSerialized] public RingBuffer<RadioChannel> LoadQueue = new RingBuffer<RadioChannel>(8, RingBufferMode.Expand);
         [NonSerialized] public Dictionary<StringHash32, AudioClip> DownloadedAudioClips = MapUtils.Create<StringHash32, AudioClip>(8);
-        [NonSerialized] public UnityWebRequest CurrentLoadRequest;
 
         bool ISceneLoadDependency.IsLoaded(SceneLoadPhase loadPhase) {
             return loadPhase != SceneLoadPhase.BeforeReady || LoadQueue.Count == 0;
@@ -43,7 +42,7 @@ namespace Astro.Radio {
                 AssetUtility.ManualUnload(asset);
             }
             DownloadedAudioClips.Clear();
-            CurrentLoadRequest?.Dispose();
+            Game.Files.CancelRequestsInGroup("RadioStream");
 
             Game.Scenes.DeregisterLoadDependency(this);
         }

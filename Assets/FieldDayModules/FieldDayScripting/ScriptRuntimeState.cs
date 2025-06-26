@@ -676,6 +676,17 @@ namespace FieldDay.Scripting {
             Runtime.SignalMap.DeregisterAllForContext(context);
         }
 
+        [LeafMember]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static public void DispatchSignal(StringHash32 eventId, Variant argument = default) {
+            Runtime.SignalMap.Dispatch(eventId, argument);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static public void QueueSignal(StringHash32 eventId, Variant argument = default) {
+            Runtime.SignalMap.Queue(eventId, argument);
+        }
+
         #endregion // Signals
     }
 }
