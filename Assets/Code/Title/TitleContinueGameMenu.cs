@@ -22,6 +22,11 @@ namespace Astro.Title {
         public PointerListener ContinueButtonListener;
         public FadeGroup MenuFade;
         public FadeGroup CloseFade;
+        public FadeGroup GlobalFade;
+
+        public TitleNewGameMenu NewGameMenu;
+        public TitleStarButton NewGameTitleStarButton;
+        public TitleStarButton ContinueGameTitleStarButton;
 
         public IEnumerator<WorkSlicer.Result?> Preload() {
             ContinueButtonListener.onClick.AddListener(OnClickContinue);
@@ -57,6 +62,8 @@ namespace Astro.Title {
                 AstroGame.SaveBuffer.HandleChunks();
             }
 
+            var progressState = Find.State<PlayerProgressState>();
+
             Find.State<ViewState>().ActiveNode.BackLink = null;
 
             MenuFade.Hide();
@@ -64,10 +71,36 @@ namespace Astro.Title {
 
             Game.Input.PauseRaycasts();
 
-            var progressState = Find.State<PlayerProgressState>();
-            StringHash32 dayId = "Day" + (progressState.DayIndex + 1);
+            if (progressState.CompletedPrelude)
+            {
+                StringHash32 dayId = "Day" + (progressState.DayIndex + 1);
 
-            Routine.Start(this, ContinueGameSequence(dayId)).ExecuteWhileDisabled();
+                Routine.Start(this, ContinueGameSequence(dayId)).ExecuteWhileDisabled();
+            }
+            else {
+                // move to prelude scene
+                Routine.Start(this, ContinueToPreludeSequence()).ExecuteWhileDisabled();
+            }
+        }
+
+        private IEnumerator ContinueToPreludeSequence()
+        {
+            var viewState = Find.State<ViewState>();
+
+            GlobalFade.Show();
+
+            while (GlobalFade.IsTransitioning()) {
+                yield return null;
+            }
+
+            ViewNavUtility.MoveByLink(viewState, NewGameTitleStarButton.Link, true);
+            NewGameMenu.NewGameBegin();
+
+            while (viewState.ActiveTransitionRoutine.Exists()) {
+                yield return null;
+            }
+
+            GlobalFade.Hide();
         }
 
         private IEnumerator ContinueGameSequence(StringHash32 dayId) {

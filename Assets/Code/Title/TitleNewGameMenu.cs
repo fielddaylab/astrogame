@@ -75,7 +75,7 @@ namespace Astro.Title {
             OGD.Player.ClaimId(m_PlayerCodeInput.text, null, HandleClaimNewIdSuccess, HandleClaimNewIdError);
         }
 
-        private void NewGameBegin()
+        public void NewGameBegin()
         {
             Find.State<ViewState>().ActiveNode.BackLink = null;
 

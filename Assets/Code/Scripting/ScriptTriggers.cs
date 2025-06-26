@@ -106,6 +106,9 @@ namespace Astro {
 
             Log.Msg("[ScriptTriggers] Loading day '{0}'", day.name);
 
+            state.CompletedPrelude = true;
+            SaveUtility.Save(SaveSlot.Main);
+
             Game.Scenes.LoadMainScene(day.Scene, true);
         }
 

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 namespace Astro {
     public sealed class PlayerProgressState : ISharedState, ISaveStateChunkObject, IRegistrationCallbacks {
         public int DayIndex = 0;
+        public bool CompletedPrelude = false;
 
         /// <summary>
         /// A dictonary mapping CelestialAssets to PlayerCelestialAssetKnowledge
@@ -28,11 +29,14 @@ namespace Astro {
         {
             int dayIndex = reader.Read<byte>();
             DayIndex = dayIndex;
+            bool completedPrelude = reader.Read<bool>();
+            CompletedPrelude = completedPrelude;
         }
 
         public void Write(object self, ref Save.ByteWriter writer, SaveStateChunkConsts consts, ref SaveScratchpad scratch)
         {
             writer.Write((byte)DayIndex);
+            writer.Write((bool)CompletedPrelude);
         }
 
         #endregion // Save

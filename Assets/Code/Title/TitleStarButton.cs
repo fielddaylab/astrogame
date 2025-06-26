@@ -5,6 +5,7 @@ using FieldDay.Components;
 using FieldDay.HID;
 using FieldDay.Scenes;
 using FieldDay.Scripting;
+using FieldDay.UI.Animation;
 using Leaf.Runtime;
 using System;
 using System.Collections.Generic;
@@ -43,17 +44,22 @@ namespace Astro.Title {
 
             GlowGroup.SetAlpha(0);
             if (Link) {
-                Link.OnActiveStateChanged.Register(OnActiveStateChanged);
+                RegisterViewLink();
             }
 
             return null;
+        }
+
+        public void RegisterViewLink()
+        {
+            Link.OnActiveStateChanged.Register(OnActiveStateChanged);
         }
 
         private void OnHover(CursorHint hint, bool hovering) {
             m_GlowRoutine.Replace(this, Tween.Float(GlowGroup.GetAlpha(), hovering ? 1 : 0, GlowGroup.SetAlpha, 0.2f));
         }
 
-        private void OnActiveStateChanged() {
+        public void OnActiveStateChanged() {
             Billboarder.enabled = Link.LastKnownActiveState;
             if (Game.Scenes.IsMainLoading()) {
                 FadeGroup.SetAlpha(Link.LastKnownActiveState ? 1 : 0);
