@@ -147,10 +147,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9149487259808116491}
-  - component: {fileID: 4174967572784958235}
   - component: {fileID: 8208132224743243253}
+  - component: {fileID: 1923432038919270391}
   m_Layer: 5
-  m_Name: Checkbox
+  m_Name: ToggleDrift
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -178,7 +178,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 64, y: 64}
   m_Pivot: {x: 0, y: 0.5}
---- !u!114 &4174967572784958235
+--- !u!114 &8208132224743243253
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -187,7 +187,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 1722723163092804505}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: 5a59a59fc4e9a014c8fbb22f00e5eeff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AlwaysFireClickEvents: 0
+  CursorType:
+    m_HashValue: 4083764610
+  Tooltip: 
+--- !u!114 &1923432038919270391
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1722723163092804505}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
@@ -218,26 +234,14 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 7893007565354047402}
-  m_OnClick:
+  m_TargetGraphic: {fileID: 1767286677834241853}
+  toggleTransition: 1
+  graphic: {fileID: 3628049076546649681}
+  m_Group: {fileID: 0}
+  onValueChanged:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &8208132224743243253
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1722723163092804505}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a59a59fc4e9a014c8fbb22f00e5eeff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_AlwaysFireClickEvents: 0
-  CursorType:
-    m_HashValue: 4083764610
-  Tooltip: 
+  m_IsOn: 1
 --- !u!1 &1949699768940805797
 GameObject:
   m_ObjectHideFlags: 0
@@ -594,9 +598,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1462325934375463027}
-  - component: {fileID: 1157317541290728847}
+  - component: {fileID: 2444148978614483389}
   m_Layer: 5
-  m_Name: Checkbox
+  m_Name: ToggleFullscreen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -624,7 +628,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 64, y: 64}
   m_Pivot: {x: 0, y: 0.5}
---- !u!114 &1157317541290728847
+--- !u!114 &2444148978614483389
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -633,7 +637,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3937806013086139189}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: 14e34c70a77d99d4fb9bdc88b2e5d0e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
@@ -664,10 +668,14 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 3655965386464510475}
-  m_OnClick:
+  m_TargetGraphic: {fileID: 2882698965224537531}
+  toggleTransition: 1
+  graphic: {fileID: 8993986838184989185}
+  m_Group: {fileID: 0}
+  onValueChanged:
     m_PersistentCalls:
       m_Calls: []
+  m_IsOn: 0
 --- !u!1 &4172719804915391795
 GameObject:
   m_ObjectHideFlags: 0
@@ -1087,7 +1095,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Enable Soup
+  m_text: Enable Fullscreen
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 21e0edec71a075a40aebc4ee60ecdb7f, type: 2}
   m_sharedMaterial: {fileID: 7837488172199179429, guid: 21e0edec71a075a40aebc4ee60ecdb7f, type: 2}
@@ -1234,8 +1242,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90b1b99e810c5884ebbee9563c48abba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ToggleCameraDriftButton: {fileID: 4174967572784958235}
-  ToggleCameraDriftCheck: {fileID: 3628049076546649681}
+  DriftToggle: {fileID: 1923432038919270391}
+  FullscreenToggle: {fileID: 2444148978614483389}
   VolumeSlider: {fileID: 4029769627537186111}
 --- !u!1 &5837289895525640516
 GameObject:
@@ -1317,7 +1325,7 @@ GameObject:
   - component: {fileID: 2599121519556185565}
   - component: {fileID: 4954885665327391916}
   m_Layer: 5
-  m_Name: CheckboxSetting
+  m_Name: Toggle1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1543,12 +1551,12 @@ GameObject:
   - component: {fileID: 1051675728998589932}
   - component: {fileID: 103864674357438887}
   m_Layer: 5
-  m_Name: CheckboxSetting
+  m_Name: Toggle2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1051675728998589932
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1565,9 +1573,9 @@ RectTransform:
   - {fileID: 8738101882701247698}
   m_Father: {fileID: 418383148604817085}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 332, y: -190}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 600, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &103864674357438887

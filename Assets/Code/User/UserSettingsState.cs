@@ -1,5 +1,6 @@
 using FieldDay;
 using FieldDay.Audio;
+using FieldDay.Rendering;
 using FieldDay.SharedState;
 using System;
 using UnityEngine;
@@ -10,6 +11,7 @@ namespace Astro {
         [NonSerialized] public float MasterVolume;
         [NonSerialized] public bool CameraDriftEnabled = true;
         [NonSerialized] public bool HighQualityMode;
+        [NonSerialized] public bool FullscreenEnabled;
 
         public void OnDeregister()
         {
@@ -28,6 +30,11 @@ namespace Astro {
         }
         public static void SetCameraDrift(UserSettingsState state, bool drift) {
             state.CameraDriftEnabled = drift;
+        }
+
+        public static void SetFullscreen(UserSettingsState state, bool fullscreen) {
+            state.FullscreenEnabled = fullscreen;
+            ScreenUtility.SetFullscreen(fullscreen);
         }
 
         public static void SetMasterVolume(UserSettingsState state, float set) {
