@@ -97,7 +97,7 @@ MonoBehaviour:
     LookupInherit: 0
     Assemblies:
     - AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-      TypeCount: 6
+      TypeCount: 8
     - AssemblyName: FieldDay.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
       TypeCount: 1
     - AssemblyName: FieldDay.Scripting, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
@@ -119,11 +119,19 @@ MonoBehaviour:
       Self: 0
       MemberCount: 1
       OverloadCount: 0
+    - TypeName: Astro.InputUtility
+      Self: 0
+      MemberCount: 1
+      OverloadCount: 0
     - TypeName: Astro.InstrumentInventoryUtility
       Self: 0
       MemberCount: 1
       OverloadCount: 0
     - TypeName: Astro.RenderAtlasUpdateSystem
+      Self: 0
+      MemberCount: 1
+      OverloadCount: 0
+    - TypeName: Astro.Save.SaveUtility
       Self: 0
       MemberCount: 1
       OverloadCount: 0
@@ -150,9 +158,13 @@ MonoBehaviour:
       Type: 8
     - MemberName: PointsMenu
       Type: 8
+    - MemberName: DebugNeutrinoNav
+      Type: 8
     - MemberName: CreateDebugMenu
       Type: 8
     - MemberName: DebugMenu
+      Type: 8
+    - MemberName: SaveDebugMenu
       Type: 8
     - MemberName: DebugMenuFactory
       Type: 8
@@ -166,7 +178,7 @@ MonoBehaviour:
     LookupInherit: 0
     Assemblies:
     - AssemblyName: FieldDay.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-      TypeCount: 8
+      TypeCount: 9
     Types:
     - TypeName: FieldDay.Scenes.SceneMgr
       Self: 0
@@ -177,6 +189,10 @@ MonoBehaviour:
       MemberCount: 1
       OverloadCount: 0
     - TypeName: FieldDay.Memory.MemoryMgr
+      Self: 0
+      MemberCount: 1
+      OverloadCount: 0
+    - TypeName: FieldDay.Files.FileSystem
       Self: 0
       MemberCount: 1
       OverloadCount: 0
@@ -206,6 +222,8 @@ MonoBehaviour:
     - MemberName: CreateDebugInfo
       Type: 8
     - MemberName: CreateDebugMenu
+      Type: 8
+    - MemberName: CreateFileDebugMenu
       Type: 8
     - MemberName: CreateRenderDebugMenu
       Type: 8
