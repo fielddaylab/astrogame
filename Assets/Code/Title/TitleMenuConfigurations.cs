@@ -15,6 +15,7 @@ namespace Astro.Title {
         public FadeGroup ContinueGroup;
         public FadeGroup InProgressGroup;
         public FadeGroup BackGroup;
+        public FadeGroup OptionsGroup;
 
         [Header("Loading")]
         public SceneReference UnloadScene;
@@ -30,6 +31,8 @@ namespace Astro.Title {
             NewGroup.SetVisibleNow(false);
             yield return null;
             InProgressGroup.SetVisibleNow(false);
+            yield return null;
+            OptionsGroup.SetVisibleNow(false);
             yield return null;
             BackGroup.SetVisibleNow(false);
             yield return null;
@@ -59,6 +62,7 @@ namespace Astro.Title {
             NewGroup.Hide();
             ContinueGroup.Hide();
             InProgressGroup.Hide();
+            OptionsGroup.Hide();
             BackGroup.Hide();
         }
 
@@ -75,6 +79,8 @@ namespace Astro.Title {
                 NewGroup.Show();
             } else if (nodeId == "Continue") {
                 ContinueGroup.Show();
+            } else if (nodeId == "Options") {
+                OptionsGroup.Show();
             } else {
                 InProgressGroup.Show();
             }

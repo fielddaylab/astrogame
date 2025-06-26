@@ -21,8 +21,8 @@ $call SetRefPageActive(21, false)
 $call SetRefPageActive(23, false)
 $call SetChannelActive(Unlocks_Active, false)
 $call SetRadioFrequency(137, true)
-$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $call MonitorPower->Deactivate()
+$start Observatory.ResetSubtitlePosition
 
 :: BeginDay
 @trigger    SceneReady

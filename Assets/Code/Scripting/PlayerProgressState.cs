@@ -1,3 +1,4 @@
+using Astro.Save;
 using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay;
@@ -7,8 +8,9 @@ using System;
 using System.Collections.Generic;
 
 namespace Astro {
-    public sealed class PlayerProgressState : ISharedState {
+    public sealed class PlayerProgressState : ISharedState, ISaveStateChunkObject, IRegistrationCallbacks {
         public int DayIndex = 0;
+        public bool CompletedPrelude = false;
 
         /// <summary>
         /// A dictonary mapping CelestialAssets to PlayerCelestialAssetKnowledge
@@ -19,18 +21,47 @@ namespace Astro {
 #if DEVELOPMENT
         [NonSerialized] public bool LoadDebugScene;
 #endif // DEVELOPMENT
+
+
+        #region Save
+
+        public void Read(object self, ref Save.ByteReader reader, SaveStateChunkConsts consts, ref SaveScratchpad scratch)
+        {
+            int dayIndex = reader.Read<byte>();
+            DayIndex = dayIndex;
+            bool completedPrelude = reader.Read<bool>();
+            CompletedPrelude = completedPrelude;
+        }
+
+        public void Write(object self, ref Save.ByteWriter writer, SaveStateChunkConsts consts, ref SaveScratchpad scratch)
+        {
+            writer.Write((byte)DayIndex);
+            writer.Write((bool)CompletedPrelude);
+        }
+
+        #endregion // Save
+
+        public void OnRegister()
+        {
+            AstroGame.SaveBuffer.RegisterHandler("PlayerProgressState", this);
+        }
+
+        public void OnDeregister()
+        {
+            AstroGame.SaveBuffer.DeregisterHandler("PlayerProgressState");
+        }
     }
 
     public struct PlayerCelestialAssetKnowledge : IByteSerializable {
         public BitSet32 Classifications;
         public PlayerCelestialAssetKnowledgeFlags Flags;
 
-        public void ReadFrom(ref ByteReader reader) {
+        public void ReadFrom(ref FieldDay.Data.ByteReader reader) {
             reader.Read(ref Classifications);
             reader.Read(ref Flags);
         }
 
-        public void WriteTo(ref ByteWriter writer) {
+        public void WriteTo(ref FieldDay.Data.ByteWriter writer) {
             writer.Write(Classifications);
             writer.Write(Flags);
         }

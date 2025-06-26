@@ -1,4 +1,5 @@
 using Astro.Audio;
+using Astro.Save;
 using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay;
@@ -82,6 +83,8 @@ namespace Astro {
             DayConfigAsset day = Find.NamedAsset<DayConfigAsset>(story.Days[state.DayIndex]);
             Log.Msg("[ScriptTriggers] Loading day '{0}'", day.name);
 
+            SaveUtility.Save(SaveSlot.Main);
+
             Game.Scenes.LoadMainScene(day.Scene, true);
         }
 
@@ -102,6 +105,9 @@ namespace Astro {
             MusicUtility.StopMusic(1);
 
             Log.Msg("[ScriptTriggers] Loading day '{0}'", day.name);
+
+            state.CompletedPrelude = true;
+            SaveUtility.Save(SaveSlot.Main);
 
             Game.Scenes.LoadMainScene(day.Scene, true);
         }

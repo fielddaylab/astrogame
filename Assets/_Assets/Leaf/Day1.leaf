@@ -20,9 +20,7 @@ $call SetRadioFrequency(100, true)
 $call SetChannelActive(Unlocks_Active, false)
 $call SetChannelActive(IceCube, false)
 $call IntroCutscene->PrepareCutscene()
-
-:: ResetSubtitlePosition
-$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
+$start Observatory.ResetSubtitlePosition
 
 :: OpeningCutscene
 @trigger SceneReady
@@ -40,9 +38,12 @@ $call TelescopeLook(155, -30)
 @when   cutsceneId == "IntroCutscene"
 @cutscene
 
-$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $set temp:powerButtonHint = false
 $set temp:pressedPowerButton = false
+$wait 0.1
+
+{@Astrid} Whoa. This place has really changed. Elijah, where are you? $[Astrid/L1/l1_a_01]
+$call Wait(1)
 
 $call IntroSfx->Play()
 $wait 0.1
@@ -314,7 +315,6 @@ $set temp:guideOpen = false
 @once
 
 $set temp:waitingForManualOpen = false
-$call SubtitleController->SetSubtitlePosition(0.5, 1, 0, -140)
 $call MoveToView("Right")
 $call SetGuideHighlight(false)
 $set temp:firstSubmission = false
@@ -350,10 +350,12 @@ $set temp:guideOpen = true
 @cutscene
 @once
 
+$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 650)
 $set temp:waitingForNeutrinoStar = false
 $set temp:waitingForManualOpen = true
+$start Observatory.AnchorNextSubtitleToTop
+
 $call HintModals->Hide("SelectStar", 0.2)
-$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 650)
 
 $if temp:guideOpen
     $goto .IntroRefGuideOpened
@@ -387,8 +389,10 @@ $call SetGuideHighlight(true)
 @trigger    OnIncorrectOpenIdSubmission
 
 $call SubtitleController->SetSubtitlePosition(0.5, 1, 0, -140)
+$wait 0.1
+
 {@Radio} Hmm, that wasn’t correct, remember to look at your photometer, and then line it up with the closest range in your manual. $[Radio/L1/l1_r_22]
-$goto .ResetSubtitlePosition
+$start Observatory.ResetSubtitlePosition
 
 :: FirstDupliacteSubmission
 @trigger    OnDuplicateOpenIdSubmission
@@ -413,7 +417,7 @@ $goto .ResetSubtitlePosition
 @cutscene
 @once
 
-$branch .ResetSubtitlePosition
+$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $set temp:firstSubmission = true
 $call SetRadioDialLocked(false)
 
@@ -427,7 +431,6 @@ $goto .PostPoint
 @cutscene
 @once
 
-$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 {@Astrid} Nice! I'll try another one. $[Astrid/L1/l1_a_9b]
 $goto .PostPoint
 
@@ -519,10 +522,11 @@ $call Wait(1)
 $goto .PostClearanceUpgrade
 
 :: PostClearanceUpgrade
-$branch Observatory.PathToMonitor
+$start Observatory.PathToMonitor
 $call ConsoleCommandLine->PlayConsoleText("Day1ConsoleText")
 
 $call SetInputState(true)
+$start Observatory.AnchorNextSubtitleToTop
 $call StartPuzzleNavigation()
 
 :: HotColdEncouragement3
@@ -559,7 +563,6 @@ $call StartPuzzleNavigation()
 @cutscene
 @once
 
-$call SubtitleController->SetSubtitlePosition(0.5, 1, 0, -140)
 $call StopPuzzleNavigation()
 $call SetInputState(false)
 $call SetRefGuideActive(false)
@@ -602,8 +605,11 @@ $call HintModals->Hide("FirstPuzzleStar", 0.2)
 $call IsolatePuzzleCell(1, 3)
 
 {@Astrid} Okay, apparent magnitude… I can load that from the Photometer. $[Astrid/L1/l1_a_27]
+$goto .PostFirstPuzzleStarSelected
+
+:: PostFirstPuzzleStarSelected
+$start Observatory.ResetSubtitlePosition
 $call HintModals->SlideInFromRight("AtikCell", 0.4)
-$goto .ResetSubtitlePosition
 
 :: NotAtikAstrid
 @trigger    OnPuzzleCellSelected

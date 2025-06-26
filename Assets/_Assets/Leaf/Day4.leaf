@@ -14,7 +14,7 @@ $call SetInstrumentUnlocked(ColorInstrument, true)
 $call SetInstrumentUnlocked(TemperatureInstrument, true)
 $call SetInstrumentUnlocked(SpectrometerInstrument, true)
 $call SetInstrumentUnlocked(HistoricalDataInstrument, true)
-$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
+$start Observatory.ResetSubtitlePosition
 $call StopPuzzleMode()
 $call StopOpenMode()
 $call SetRefPageActive(14, false)
@@ -255,7 +255,7 @@ $call SetStickyFirstPage(-1)
 $call SetRadioFrequency(137)
 $call MonitorUI->HideCERESLogo()
 $call OpenRefGuidePage("ConstellationDraco")
-$call Wait(1)
+$wait 2.5
 $goto .SetupPuzzleNav
 
 :: SetupPuzzleNav
@@ -305,11 +305,12 @@ $call Wait(2)
 // {@Astrid} Wait.... World’s End is a garden? $[Astrid/L4/l4_a_01]
 // {@Astrid} This painting is incredible. Elijah is so talented. $[Astrid/L4/l4_a_02] 
 // {@Astrid} Maybe he shoulda been a painter instead of a rogue astronomer... $[Astrid/L4/l4_a_02b]
+$goto .EndDay
 
+// :: EndDay
+// @trigger    CutsceneEnd
+// @when   cutsceneId == "EndDay4"
 :: EndDay
-@trigger    CutsceneEnd
-@when   cutsceneId == "EndDay4"
-
-$call Wait(2)
+$call Wait(1)
 $call StopMusic(1)
 $call LoadNextDay()

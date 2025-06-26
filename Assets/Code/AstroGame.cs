@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Astro.Audio;
+using Astro.Save;
 using BeauPools;
 using BeauRoutine;
 using BeauUtil;
@@ -25,6 +26,11 @@ namespace Astro {
         public const int InteractUpdateMask = 1 << 4;
         public const int PuzzleSubmissionUpdateMask = 1 << 5;
         public const int AnySubmissionUpdateMask = 1 << 6;
+
+        /// <summary>
+        /// Save state buffer.
+        /// </summary>
+        static public SaveMgr SaveBuffer { get; private set; }
 
         static public new EventDispatcher<EvtArgs> Events { get; private set; }
 
@@ -94,9 +100,12 @@ namespace Astro {
         static private void OnPreBoot() {
             Events = new EventDispatcher<EvtArgs>();
             SetEventDispatcher(Events);
-            
+
+            SaveBuffer = new SaveMgr();
+
             PlayerProgressState progress = new PlayerProgressState();
             SharedState.Register(progress);
+
 
             Rendering.EnableAspectClamping(4, 3);
 
