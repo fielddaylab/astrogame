@@ -16,24 +16,17 @@ namespace Astro.Title {
         [AudioEventRef] public StringHash32 MusicEvent;
         public float FadeInDuration = 1;
 
-        [NonSerialized] public AudioHandle MusicHandle;
-
         void IRegistrationCallbacks.OnRegister() {
             AstroGame.Events.Register<ViewNode>(ViewNavUtility.Events.NodeEntered, OnNodeLoaded);
             ScriptUtility.RegisterForSignal("KillMusic", OnKillMusicSignal);
         }
 
         void IRegistrationCallbacks.OnDeregister() {
-            Sfx.Stop(MusicHandle, 1);
             ScriptUtility.DeregisterAllSignalsForContext(this);
             Game.Events?.DeregisterAllForContext(this);
         }
 
         private void OnNodeLoaded(ViewNode node) {
-            if (MusicHandle.IsValid) {
-                return;
-            }
-
             StringHash32 nodeId = node.Id;
 
             if (nodeId == "Title") {
@@ -42,8 +35,7 @@ namespace Astro.Title {
         }
 
         private void OnKillMusicSignal() {
-            Sfx.Stop(MusicHandle, 0.05f);
-            MusicHandle = default;
+            MusicUtility.StopMusic(0.05f);
         }
     }
 }

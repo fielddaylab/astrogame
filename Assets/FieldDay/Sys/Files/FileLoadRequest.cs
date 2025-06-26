@@ -1,5 +1,4 @@
 using System;
-using System.Text;
 using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay.Data;
@@ -12,10 +11,13 @@ namespace FieldDay.Files {
         public FileLocation Location;
         public FileBufferMode Mode;
         public FileLoadFlags Flags;
-        public StringHash32 Identifier;
+
+        public StringHash32 Name;
         public StringHash32 Group;
 
         public string Path;
+        public uint PathKey;
+
         public FileReadHandler Callback;
         public object CallbackContext;
     }
@@ -39,7 +41,10 @@ namespace FieldDay.Files {
     public enum FileLoadFlags : ushort {
         Audio_Compressed = 0x001,
         Audio_Streaming = 0x002,
-        Texture_MarkNonReadable = 0x004
+        Texture_MarkNonReadable = 0x004,
+
+        InfiniteRetries = 0x008,
+        PushToExhaustedQueueOnFailure = 0x010
     }
 
     public readonly struct FileLoadResult {
@@ -131,6 +136,7 @@ namespace FieldDay.Files {
 
     public enum FileLoadPriority : byte {
         Low,
-        High
+        High,
+        Urgent
     }
 }

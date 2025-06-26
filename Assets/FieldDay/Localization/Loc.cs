@@ -2,7 +2,6 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using BeauUtil;
 using BeauUtil.Debugger;
-using UnityEditor.ShortcutManagement;
 
 namespace FieldDay.Localization {
     static public class Loc {

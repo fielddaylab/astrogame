@@ -33,6 +33,7 @@ namespace FieldDay.Audio {
 
         [NonSerialized] internal StringHash32 CachedId;
         [NonSerialized] internal int CachedBusIndex = -1;
+        [NonSerialized] internal uint CachedStreamedClipKey;
         [NonSerialized] internal AudioEmitterProfile CachedEmitterProfile;
         [NonSerialized] internal RandomDeck<AudioClip> SampleSelector;
         

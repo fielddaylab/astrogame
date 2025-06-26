@@ -35,19 +35,20 @@ namespace Astro.Radio {
             loadRequest.CallbackContext = null;
             loadRequest.Mode = FileBufferMode.AudioClip;
             loadRequest.Flags = FileLoadFlags.Audio_Compressed;
-            loadRequest.Identifier = channel.AssetId;
+            loadRequest.Name = channel.AssetId;
             loadRequest.Path = channel.AudioStream;
             loadRequest.Location = FileLocation.Streaming;
             loadRequest.Group = "RadioStream";
+            loadRequest.PathKey = default;
 
             Game.Files.RequestFile(loadRequest, FileLoadPriority.High);
         }
 
         static private void OnStreamLoadFinished(FileLoadRequest request, FileLoadResult result, object context) {
-            StringHash32 assetId = request.Identifier;
+            StringHash32 assetId = request.Name;
             if (result.Succeeded()) {
                 Log.Msg("[RadioStreamsLoadingSystem] Loaded radio clip '{0}'", result.Request.url);
-                Find.State<RadioStreamsState>().DownloadedAudioClips.Add(request.Identifier, result.ReadAudioClip());
+                Find.State<RadioStreamsState>().DownloadedAudioClips.Add(request.Name, result.ReadAudioClip());
             } else {
                 Log.Error("[RadioStreamsLoadingSystem] Unable to load radio stream from '{0}': {1}", result.Request.url, result.Request.error);
             }

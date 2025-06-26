@@ -288,7 +288,21 @@ namespace FieldDay.Audio {
                         if (voice.PlaybackDelay > 0) {
                             voice.PlaybackDelay -= deltaTime;
                         }
-                        if (voice.PlaybackDelay <= 0 && IsVoiceLoaded(voice)) {
+
+                        bool voiceLoaded = IsVoiceLoaded(voice);
+                        if (!voiceLoaded && voice.StreamingEntry != null) {
+                            if ((voice.StreamingEntry.Flags & StreamedClipFlags.Error) != 0) {
+                                // voice failed to load
+                                Log.Error("[AudioMgr] Cancelling voice due to loading error");
+                                voice.State = VoiceState.Stopped;
+                                UpdatePlayingInstanceCount(voice.Handle, voice.BusIndex, false);
+                            } else if ((voice.StreamingEntry.Flags & StreamedClipFlags.Loaded) != 0) {
+                                voice.Components.Source.clip = voice.StreamingEntry.Clip;
+                                voiceLoaded = IsVoiceLoaded(voice);
+                            }
+                        }
+
+                        if (voiceLoaded && voice.PlaybackDelay <= 0) {
                             if ((voice.Flags & AudioPlaybackFlags.RandomizePlaybackStart) != 0) {
                                 voice.Components.Source.time = RNG.Instance.NextFloat(voice.Components.Source.clip.length);
                             }
@@ -394,7 +408,8 @@ namespace FieldDay.Audio {
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static private bool IsVoiceLoaded(VoiceData voice) {
-            return voice.Components.Source.clip.loadState == AudioDataLoadState.Loaded;
+            AudioClip clip = voice.Components.Source.clip;
+            return clip != null && clip.loadState == AudioDataLoadState.Loaded;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -515,6 +530,7 @@ namespace FieldDay.Audio {
             m_TargetablePropertyBlocks.TryFree(ref voice.VoiceProperties);
 
             if (voice.StreamingEntry != null) {
+                Assert.True(voice.StreamingEntry.RefCount > 0);
                 voice.StreamingEntry.RefCount--;
                 voice.StreamingEntry = null;
             }
