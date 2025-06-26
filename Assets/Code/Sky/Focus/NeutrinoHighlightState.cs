@@ -8,9 +8,14 @@ using Leaf.Runtime;
 
 namespace Astro {
     public class NeutrinoHighlightState : SharedStateComponent, IRegistrationCallbacks {
-        public Sprite HighlightVisibleSprite;
-        public Sprite HighlightNotVisibleSprite;
-        public float HighlightNotVisibleAlpha = 0.4f;
+        [SerializeField] private Sprite m_HighlightVisibleSprite;
+        [SerializeField] private Sprite m_HighlightNotVisibleSprite;
+
+        [NonSerialized] static public Sprite HighlightVisibleSprite;
+        [NonSerialized] static public Sprite HighlightNotVisibleSprite;
+
+        [SerializeField] private float m_HighlightNotVisibleAlpha = 0.4f;
+        public static float HighlightNotVisibleAlpha = 0.4f;
 
         [NonSerialized] public bool OpenModeStarted;
         [NonSerialized] public bool OpenModeEnded;
@@ -24,6 +29,13 @@ namespace Astro {
         private Action setOpenModeStarted;
         private Action updateNeutrinoHighlights;
         private Action setOpenModeEnded;
+
+        protected override void OnEnable() {
+            HighlightVisibleSprite = m_HighlightVisibleSprite;
+            HighlightNotVisibleSprite = m_HighlightNotVisibleSprite;
+            HighlightNotVisibleAlpha = m_HighlightNotVisibleAlpha;
+            base.OnEnable();
+        }
 
         public void OnRegister() {
             setOpenModeStarted = () => {
