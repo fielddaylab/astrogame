@@ -62,6 +62,9 @@ namespace Astro {
                 }
 
                 tmpText.SetText(asset.TextFields[i]);
+                if (asset.Font) { tmpText.font = asset.Font; }
+                tmpText.lineSpacing = asset.LineSpacing;
+                tmpText.fontStyle = asset.FontStyle;
                 tmpText.gameObject.GetComponent<MeshRenderer>().enabled = true;
             }
 

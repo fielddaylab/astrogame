@@ -1,6 +1,7 @@
 using System;
 using EasyAssetStreaming;
 using FieldDay.Assets;
+using TMPro;
 using UnityEngine;
 
 namespace Astro {
@@ -42,6 +43,10 @@ namespace Astro {
 
         public bool DifInitPos = false;
         public Vector3 InitPos;
+
+        public TMP_FontAsset Font;
+        public float LineSpacing = 0;
+        public FontStyles FontStyle = FontStyles.Normal;
 
 
         private void OnEnable() {
