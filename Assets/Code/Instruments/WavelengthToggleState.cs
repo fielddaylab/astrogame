@@ -29,10 +29,14 @@ namespace Astro {
         public Material HorizonGlowVisibleMaterial;
         public Material HorizonGlowBlueMaterial;
         [FormerlySerializedAs("HorizonGlowRadioMaterial")] public Material HorizonGlowInfraredMaterial;
+        public Material HorizonObjsVisibleMaterial;
+        public Material HorizonObjsAltMaterial;
 
         [NonSerialized] public CelestialObjectVisMask CurrentState = CelestialObjectVisMask.Visible;
 
         [NonSerialized] public bool AllowChanges = true;
+
+        [NonSerialized] public SpriteRenderer[] HorizonObjsRenderers;
 
         public void OnDeregister() {
         }
