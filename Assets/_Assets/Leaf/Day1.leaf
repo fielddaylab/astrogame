@@ -190,7 +190,7 @@ $call MonitorUI->PowerOn()
 $call WaitForMovedToView("Monitor")
 
 {@Radio} I'll help you get up and running. Start by moving your telescope. $[Radio/L1/l1_r_05]
-$goto .SetupTelescopeTutorial
+$start .SetupTelescopeTutorial
 
 :: SetupTelescopeTutorial
 $call StartMonitorControls()
@@ -221,6 +221,7 @@ $set temp:introMoveTheTelescope = true
 $call HintModals->Hide("TelescopeControls", 0.2)
 
 {@Radio} Your equipment seems to be working. Let’s test it out and look for the constellation Ursa Major. Sending coordinates now... $[Radio/L1/l1_r_07]
+$set temp:introMoveTheTelescope = true
 $call MonitorUI->PlayRadioDownload(4.0)
 {@Radio} OK, looks like you received the coordinates. See those dots above your monitor? They will light up as you near the target. $[Radio/L1/l1_r_08]
 $branch .SetupNeutrinoNavigation
