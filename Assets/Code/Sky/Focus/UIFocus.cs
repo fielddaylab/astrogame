@@ -21,6 +21,14 @@ namespace Astro {
         public SphereCollider Clickable;
         public PointerListener Button;
 
+        public void OnDestroy()
+        {
+            if (Game.IsShuttingDown) { return; }
+            Game.Events.DeregisterAll(GameEvents.StartPuzzleNavigation);
+            Game.Events.DeregisterAll(GameEvents.PuzzleNavigationComplete);
+            Game.Events.DeregisterAll(GameEvents.StopPuzzleNavigation);
+        }
+
         public void OnDeregister()
         {
 
