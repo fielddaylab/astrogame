@@ -25,7 +25,7 @@ namespace Astro {
 
         #region Save
 
-        public void Read(object self, ref Save.ByteReader reader, SaveStateChunkConsts consts, ref SaveScratchpad scratch)
+        public void Read(object self, ref ByteReader reader, SaveStateChunkConsts consts, ref SaveScratchpad scratch)
         {
             int dayIndex = reader.Read<byte>();
             DayIndex = dayIndex;
@@ -33,7 +33,7 @@ namespace Astro {
             CompletedPrelude = completedPrelude;
         }
 
-        public void Write(object self, ref Save.ByteWriter writer, SaveStateChunkConsts consts, ref SaveScratchpad scratch)
+        public void Write(object self, ref ByteWriter writer, SaveStateChunkConsts consts, ref SaveScratchpad scratch)
         {
             writer.Write((byte)DayIndex);
             writer.Write((bool)CompletedPrelude);
