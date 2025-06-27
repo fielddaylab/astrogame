@@ -22,7 +22,7 @@ $call SetChannelActive(IceCube, false)
 $call IntroCutscene->PrepareCutscene()
 $start Observatory.ResetSubtitlePosition
 $call SpawnDocument("ElijahIntro")
-$call ChapterTitles->PrepareTransition()
+$call ChapterTitles->PrepareTransition(true)
 
 :: OpeningCutscene
 @trigger SceneReady

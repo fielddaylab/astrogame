@@ -33,9 +33,9 @@ namespace Astro {
         }
 
         [LeafMember("PrepareTransition")]
-        public void Prepare() {
+        public void Prepare(bool hideBackground = false) {
             Canvas.enabled = true;
-            Background.SetAlpha(1);
+            Background.SetAlpha(hideBackground ? 0 : 1);
             Text.alpha = 0;
             Sfx.SetMixState("ChapterTransition", 1, 0);
             Game.Input.PauseRaycasts();

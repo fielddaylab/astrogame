@@ -2,14 +2,17 @@
 #define DEVELOPMENT
 #endif // (UNITY_EDITOR && !IGNORE_UNITY_EDITOR) || DEVELOPMENT_BUILD
 
+using BeauPools;
 using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay.Components;
+using FieldDay.Debugging;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using Unity.IL2CPP.CompilerServices;
+using UnityEditor;
 using UnityEngine;
 
 using ComponentIndex = BeauUtil.TypeIndex<FieldDay.Components.IComponentData>;
@@ -64,6 +67,15 @@ namespace FieldDay.Systems {
             }
 
             static public readonly Predicate<UpdateRecord, ISystem> FindPredicate = (u, s) => u.System == s;
+            static public readonly Comparison<UpdateRecord> Comparer = (a, b) => {
+                if (a.UpdateOrder < b.UpdateOrder) {
+                    return -1;
+                } else if (a.UpdateOrder > b.UpdateOrder) {
+                    return 1;
+                } else {
+                    return CompareUtils.Compare(a.System.GetType().FullName, b.System.GetType().FullName);
+                }
+            };
         }
 
         public delegate void SystemCallback(ISystem system);
@@ -316,6 +328,10 @@ namespace FieldDay.Systems {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal void DebugUpdate(float deltaTime, int categoryMask, bool isLoading) {
             ProcessUpdates(m_Updates[GameLoopPhase.DebugUpdate], m_Updates.PopBucketDirty(GameLoopPhase.DebugUpdate), deltaTime, categoryMask, isLoading);
+
+#if DEVELOPMENT
+            RenderDebugInfo();
+#endif // DEVELOPMENT
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -382,7 +398,7 @@ namespace FieldDay.Systems {
         [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
         static private void ProcessUpdates(RingBuffer<UpdateRecord> systems, bool needsSort, float deltaTime, int categoryMask, bool isLoading) {
             if (needsSort) {
-                systems.Sort((a, b) => a.UpdateOrder - b.UpdateOrder);
+                systems.Sort(UpdateRecord.Comparer);
             }
 
             foreach(var sys in systems) {
@@ -441,5 +457,96 @@ namespace FieldDay.Systems {
         }
 
         #endregion // Cached Info
+
+        #region Debug
+
+        private enum DebuggingFlags {
+            DisplayStats,
+            DisplayOrder
+        }
+
+#if DEVELOPMENT
+
+        static private int s_DebugBucketIndex;
+
+        internal void RenderDebugInfo() {
+            if (DebugFlags.IsFlagSet(DebuggingFlags.DisplayStats)) {
+                using(PooledStringBuilder psb = PooledStringBuilder.Create()) {
+                    psb.Builder.Append("System Count: ").AppendNoAlloc(m_AllSystems.Count);
+                    for(int i = 0; i < BucketList.Length; i++) {
+                        psb.Builder.Append("\n   ").Append(BucketNames[i]).Append(": ").AppendNoAlloc(m_Updates[BucketList[i]].Count);
+                    }
+                    DebugDraw.AddLogText(psb, ColorBank.Azure);
+                }
+            }
+
+            if (DebugFlags.IsFlagSet(DebuggingFlags.DisplayOrder)) {
+                var systems = GetSortedUpdatesForPhase(BucketList[s_DebugBucketIndex]);
+                bool isLoading = GameLoop.IsLoading;
+                int categoryMask = GameLoop.UpdateMask;
+                using (PooledStringBuilder psb = PooledStringBuilder.Create()) {
+                    psb.Builder.Append("Phase ").Append(BucketNames[s_DebugBucketIndex]).Append(": ").AppendNoAlloc(systems.Count);
+                    if (systems.Count > 0) {
+                        int prevOrder = systems[0].UpdateOrder;
+                        foreach(var sys in systems) {
+                            if (sys.UpdateOrder != prevOrder) {
+                                psb.Builder.Append("\n ---");
+                                prevOrder = sys.UpdateOrder;
+                            }
+                            psb.Builder.Append('\n');
+                            if ((sys.AllowDuringLoad || !isLoading) && (categoryMask & sys.CategoryMask) != 0) {
+                                psb.Builder.Append("[X] ");
+                            } else {
+                                psb.Builder.Append("[ ] ");
+                            }
+                            psb.Builder.Append(sys.System.GetType().FullName);
+                        }
+                    }
+                    DebugDraw.AddViewportText(new Vector2(0, 1), new Vector2(16, -16), psb, ColorBank.Wheat, 0, TextAnchor.UpperLeft, DebugTextStyle.BackgroundDark);
+                }
+            }
+        }
+
+        static private readonly GameLoopPhase[] BucketList = new GameLoopPhase[] {
+            GameLoopPhase.DebugUpdate, GameLoopPhase.PreUpdate,
+            GameLoopPhase.FixedUpdate, GameLoopPhase.LateFixedUpdate,
+            GameLoopPhase.Update, GameLoopPhase.UnscaledUpdate,
+            GameLoopPhase.LateUpdate, GameLoopPhase.UnscaledLateUpdate,
+            GameLoopPhase.ApplicationPreRender,
+        };
+
+        static private readonly string[] BucketNames = new string[] {
+            "Debug Update", "PreUpdate",
+            "Fixed Update", "Late Fixed Update",
+            "Update", "Unscaled Update",
+            "Late Update", "Unscaled Late Update",
+            "Application PreRender"
+        };
+        
+        private RingBuffer<UpdateRecord> GetSortedUpdatesForPhase(GameLoopPhase phase) {
+            RingBuffer<UpdateRecord> systems = m_Updates[phase];
+            if (m_Updates.PopBucketDirty(phase)) {
+                systems.Sort(UpdateRecord.Comparer);
+            }
+            return systems;
+        }
+
+        [EngineMenuFactory]
+        static private DMInfo CreateSystemsDebugMenu() {
+            DMInfo info = new DMInfo("ECS Systems", 24);
+            
+            DebugFlags.Menu.AddFlagToggle(info, "Display Stats", DebuggingFlags.DisplayStats);
+            info.AddDivider();
+            
+            DMPredicate groupPredicate = () => DebugFlags.IsFlagSet(DebuggingFlags.DisplayOrder);
+            DebugFlags.Menu.AddFlagToggle(info, "Display Order", DebuggingFlags.DisplayOrder);
+            info.AddSlider("Bucket Selection", () => s_DebugBucketIndex, (f) => s_DebugBucketIndex = (int)f, 0, BucketList.Length - 1, 1,
+                (f) => BucketNames[(int)f], groupPredicate, 1);
+            return info;
+        }
+
+#endif // DEVELOPMENT
+
+        #endregion // Debug
     }
 }

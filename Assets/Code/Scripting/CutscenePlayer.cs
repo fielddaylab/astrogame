@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using BeauRoutine;
 using BeauUtil;
@@ -20,6 +21,8 @@ namespace Astro {
         public SerializedHash32 EndNode;
         public TweenSettings EndNodeTransitionOverride;
 
+        [NonSerialized] private bool m_PrepareLock;
+
         IEnumerator<WorkSlicer.Result?> IScenePreload.Preload() {
             Director.played += (p) => OnCutsceneBegin();
             Director.stopped += (p) => OnCutsceneEnd();
@@ -28,19 +31,23 @@ namespace Astro {
 
         [LeafMember("PrepareCutscene")]
         public void PrepareCutscene() {
+            m_PrepareLock = true;
+
             Director.gameObject.SetActive(true);
             Director.time = 0;
             Director.Evaluate();
-            Director.gameObject.SetActive(false);
 
             ViewState state = Find.State<ViewState>();
             state.DefaultNode = null;
             ViewNavUtility.ClearCurrentNode(state);
             CutsceneUtility.SyncCamera(Camera, state);
+
+            Director.gameObject.SetActive(false);
         }
 
         [LeafMember("BeginCutscene")]
         public void BeginCutscene() {
+            m_PrepareLock = false;
             Director.gameObject.SetActive(true);
             Director.Play();
         }
@@ -51,6 +58,10 @@ namespace Astro {
         }
 
         private void OnCutsceneBegin() {
+            if (m_PrepareLock) {
+                return;
+            }
+
             Camera.gameObject.SetActive(true);
             AssetGroup.SetActive(true);
 
@@ -65,6 +76,10 @@ namespace Astro {
         }
 
         private void OnCutsceneEnd() {
+            if (m_PrepareLock) {
+                return;
+            }
+
             if (!Director || !Camera || Game.IsShuttingDown || !this.Actor || GameLoop.IsLoading) {
                 return;
             }

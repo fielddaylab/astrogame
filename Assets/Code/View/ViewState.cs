@@ -146,11 +146,11 @@ namespace Astro {
         /// Clears the current node.
         /// </summary>
         static public void ClearCurrentNode(ViewState state) {
+            state.ActiveTransitionRoutine.Stop();
+
             if (state.ActiveNode == null) {
                 return;
             }
-
-            state.ActiveTransitionRoutine.Stop();
 
             DeactivateAllLinks(state);
 
