@@ -7,7 +7,7 @@ using UnityEngine;
 using BeauRoutine;
 
 namespace Astro {
-    public class UIFocus : BatchedComponent {
+    public class UIFocus : BatchedComponent, IRegistrationCallbacks {
         [NonSerialized] public Transform Target;
         [NonSerialized] public CelestialAsset TargetData;
         [NonSerialized] public bool IsVisibleInCurrentFilter;
@@ -20,6 +20,18 @@ namespace Astro {
         public SpriteRenderer TrackerSprite;
         public SphereCollider Clickable;
         public PointerListener Button;
+
+        public void OnDeregister()
+        {
+
+        }
+
+        public void OnRegister()
+        {
+            Game.Events.Register(GameEvents.StartPuzzleNavigation, () => { FocusableUtility.SetCursorHintEnabled(this, false); });
+            Game.Events.Register(GameEvents.PuzzleNavigationComplete, () => { FocusableUtility.SetCursorHintEnabled(this, true); });
+            Game.Events.Register(GameEvents.StopPuzzleNavigation, () => { FocusableUtility.SetCursorHintEnabled(this, true); });
+        }
 
         private void Awake() {
             Button.onClick.Register(OnClicked);
@@ -136,6 +148,11 @@ namespace Astro {
 
         public static void UpdateFocusTrackerSprite(UIFocus focus, Sprite trackerSprite){
             focus.TrackerSprite.sprite = trackerSprite; 
+        }
+
+        public static void SetCursorHintEnabled(UIFocus focus, bool enabled)
+        {
+            focus.Button.enabled = enabled;
         }
     }
 }
