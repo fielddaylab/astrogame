@@ -155,7 +155,6 @@ namespace Astro.Save {
             writer.Head = head;
             writer.Capacity = MainBufferSize;
             writer.Written = 0;
-            writer.Tag = default;
 
             m_ChunkRecords.Clear();
 
@@ -213,7 +212,6 @@ namespace Astro.Save {
                 chunkWriter.Head = m_ChunkBuffer;
                 chunkWriter.Written = 0;
                 chunkWriter.Capacity = ChunkBufferSize;
-                chunkWriter.Tag = chunk.Id;
 
                 chunk.Writer(chunk.Context, ref chunkWriter, consts, ref m_CurrentScratch);
 
@@ -324,7 +322,6 @@ namespace Astro.Save {
             ByteReader reader;
             reader.Head = m_MainBuffer;
             reader.Remaining = bytes.Length;
-            reader.Tag = default;
 
             SaveStateHeader header;
             header.PlayerCode = reader.ReadUTF8();
@@ -422,7 +419,6 @@ namespace Astro.Save {
                 return new ByteReader() {
                     Head = record.Data.Ptr,
                     Remaining = record.Data.Length,
-                    Tag = record.Id
                 };
             } else {
                 // TODO: decompress if desired
@@ -436,16 +432,12 @@ namespace Astro.Save {
                 return new ByteReader() {
                     Head = m_ChunkBuffer,
                     Remaining = (int) record.UncompressedSize,
-                    Tag = record.Id
                 };
             }
         }
 
         public void ReleaseChunk(ByteReader reader) {
-            if (!reader.Tag.IsEmpty && m_ActiveChunk == reader.Tag) {
-                m_ActiveChunk = default;
-                Log.Msg("[SaveMgr] Chunk '{0}' released", reader.Tag);
-            }
+            m_ActiveChunk = default;
         }
 
         #endregion // Read

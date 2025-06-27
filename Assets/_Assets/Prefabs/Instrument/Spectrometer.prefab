@@ -500,8 +500,8 @@ Transform:
   m_GameObject: {fileID: 3108598262978453927}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.0107, y: 0, z: 0}
-  m_LocalScale: {x: 2.2096856, y: 0.45, z: 0.10000001}
+  m_LocalPosition: {x: -0, y: 0, z: 0.008}
+  m_LocalScale: {x: 2.26, y: 0.45, z: 0.10000001}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 476803468223333620}
@@ -583,7 +583,7 @@ Transform:
   m_GameObject: {fileID: 3971328668483501054}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.008000136, y: -0.236, z: -0.021000084}
+  m_LocalPosition: {x: -0.008, y: -0.236, z: -0.021}
   m_LocalScale: {x: 2.2, y: 0.07, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -666,8 +666,8 @@ Transform:
   m_GameObject: {fileID: 5263404523501439764}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.0107, y: 0, z: 0}
-  m_LocalScale: {x: 2.2096856, y: 0.45, z: 0.10000001}
+  m_LocalPosition: {x: -0, y: 0, z: 0.008}
+  m_LocalScale: {x: 2.26, y: 0.45, z: 0.10000001}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 476803468223333620}
@@ -748,15 +748,15 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5667829936932221613}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.008, y: 0.043, z: 0.027}
+  m_LocalRotation: {x: 0, y: -0.0017453891, z: 0, w: 0.9999985}
+  m_LocalPosition: {x: -0.008, y: 0.032, z: 0.007}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7107640539083168879}
   - {fileID: 6244771537545047372}
   m_Father: {fileID: 2445994067923915254}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -0.2, z: 0}
 --- !u!114 &1013617905242467379
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1202,7 +1202,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6730835773594439966, guid: 7cc852bca9df94c40bbcc407a574677e, type: 3}
       propertyPath: m_fontSize
-      value: 1
+      value: 0.95
+      objectReference: {fileID: 0}
+    - target: {fileID: 6730835773594439966, guid: 7cc852bca9df94c40bbcc407a574677e, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 0.95
       objectReference: {fileID: 0}
     - target: {fileID: 7943738638698727664, guid: 7cc852bca9df94c40bbcc407a574677e, type: 3}
       propertyPath: m_LocalScale.x

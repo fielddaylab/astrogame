@@ -15,8 +15,8 @@ namespace Astro {
         [NonSerialized] public SpectrographMaterialMask CurrentElements;
         // TODO: use pools for lines?
         public List<GameObject> Lines;
-
         public void OnRegister() {
+
             if (BackgroundWidth == default) {
                 BackgroundWidth = Background.gameObject.transform.localScale.x;
             }
@@ -79,7 +79,7 @@ namespace Astro {
             EqualizeLineNums(graph, linePos.Count, state);
             for (int i = 0; i < linePos.Count; i++) {
                 graph.Lines[i].SetActive(true);
-                graph.Lines[i].transform.localPosition = new Vector3((graph.BackgroundWidth*linePos[i] - graph.BackgroundWidth/2), 0f, -0.01f);
+                graph.Lines[i].transform.localPosition = new Vector3((graph.BackgroundWidth*linePos[i] - graph.BackgroundWidth/2), 0f, 0f);
             }
         }
 
