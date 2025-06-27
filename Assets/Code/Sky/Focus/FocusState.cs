@@ -5,6 +5,7 @@ using FieldDay.SharedState;
 using System;
 using UnityEngine;
 using Astro.Reference;
+using BeauUtil.Debugger;
 
 namespace Astro {
     public class FocusState : SharedStateComponent {
@@ -91,6 +92,17 @@ namespace Astro {
     }
 
     public static partial class FocusableUtility {
+        public static void SetCurrentFocus(CelestialAsset asset, FocusState state = null) {
+            if (state == null) state = Find.State<FocusState>();
+
+            UIFocus assetFocus = state.ActiveFocii.Find(f => f.TargetData == asset);
+            if (assetFocus != null) {
+                SetCurrentFocus(state, assetFocus);
+            } else {
+                Log.Warn("[FocusableUtility > SetCurrentFocus] could not find asset {0}", asset.AssetId);
+            }
+        }
+        
         public static void SetCurrentFocus(FocusState state, UIFocus focus) {
             if (focus == null && state.CurrentFocus == null) {
                 // already focused on nothing
@@ -106,7 +118,7 @@ namespace Astro {
             // TODO: anything that needs to happen to previous focus
 
             state.OnFocusUpdated.Invoke(focus);
-            
+
             // Set new focus
             state.CurrentFocus = focus;
             state.FocusUpdated = true;
@@ -127,7 +139,7 @@ namespace Astro {
 
             if (IsCurrentFocusInNeutrinoEvent()) {
                 ScriptUtility.Trigger(ScriptEvents.OnNeutrinoStarSelected);
-            } else { 
+            } else {
                 using (var table = TempVarTable.Alloc()) {
                     table.Set("starName", focus.TargetData.DisplayName);
                     ScriptUtility.Trigger(ScriptEvents.OnStarSelected, table);
