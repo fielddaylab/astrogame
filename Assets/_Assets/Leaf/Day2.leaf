@@ -21,8 +21,8 @@ $call SetRefPageActive(21, false)
 $call SetRefPageActive(23, false)
 $call SetChannelActive(Unlocks_Active, false)
 $call SetRadioFrequency(137, true)
-$call MonitorPower->Deactivate()
-$start Observatory.ResetSubtitlePosition
+$call ChapterTitles->PrepareTransition()
+$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 
 :: BeginDay
 @trigger    SceneReady
@@ -30,12 +30,16 @@ $start Observatory.ResetSubtitlePosition
 @cutscene
 @who    Astrid
 
+$call ChapterTitles->DisplayChapterTitles()
 $call SetInputState(false)
 $call WaitForMovedToView("DocumentPuzzle")
+$call ChapterTitles->FadeOutBackground()
+$call ChapterTitles->FinishTransition(3)
 
 {@Astrid} Looks like I got some mail... I guess the postal service is working again. $[Astrid/L2/l2_a_01]
 
 $call SetInputState(true)
+
 $call SpawnDocumentToCamera("Day2DadIcecubePostcard")
 $call EnableDocumentClose("Day2DadIcecubePostcard", true, true)
 
@@ -53,7 +57,7 @@ $call SetInputState(false)
 $call Wait(1)
 $call SpawnDocumentToCamera("HerculesPostcard")
 $call SetInputState(true)
-$call QueueMusic("Music.StarDome", 3)
+$call PlayMusic("Music.StarDome", 3)
 {@Astrid} Elijah! Finally, some news. $[Astrid/L2/l2_a_04]
 
 {@Astrid} I love his postcards. Must be traveling with his art supplies as always. Looks like the Hercules constellation? $[Astrid/L2/l2_a_05]

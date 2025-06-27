@@ -436,7 +436,6 @@ GameObject:
   m_Component:
   - component: {fileID: 148551095}
   - component: {fileID: 148551100}
-  - component: {fileID: 148551099}
   - component: {fileID: 148551098}
   - component: {fileID: 148551097}
   - component: {fileID: 148551096}
@@ -511,24 +510,6 @@ MonoBehaviour:
   StopFadeDuration: 0
   AutoPlay: 0
   AllowDuplicates: 0
---- !u!114 &148551099
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 148551094}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3fdfa673bafee9f428c04204256857ec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CharacterId:
-    m_Source: Astrid
-    m_HashValue: 245717574
-  DefaultPlaybackEvent:
-    m_HashValue: 2319567043
-  Player: {fileID: 148551100}
 --- !u!82 &148551100
 AudioSource:
   m_ObjectHideFlags: 0
@@ -953,6 +934,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3b3ba35fa9923d94a9f4558b973a4dfe, type: 2}
   - {fileID: 11400000, guid: 2f95f7dcf69b0b44b9a1003142f7696f, type: 2}
   - {fileID: 11400000, guid: a61e08a313cd072469e3560daf267fff, type: 2}
+  - {fileID: 11400000, guid: abfb1542952475046b55be1f690208a8, type: 2}
 --- !u!4 &547523887
 Transform:
   m_ObjectHideFlags: 0
@@ -1542,7 +1524,6 @@ Transform:
   - {fileID: 579866461}
   - {fileID: 148551095}
   - {fileID: 1592517211}
-  - {fileID: 1470519368}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: -44.569, y: 90, z: 0}
 --- !u!114 &942389646
@@ -2679,11 +2660,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 5.1608973, y: 6.2973723, z: 2.343371}
   m_Center: {x: -1.8077056, y: 0.3430016, z: -0.6716857}
---- !u!224 &1470519368 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 1116767842075553544, guid: f5cfc8bf0d157b7428054d1c31a22948, type: 3}
-  m_PrefabInstance: {fileID: 4240526831257599325}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1516362966
 GameObject:
   m_ObjectHideFlags: 0
@@ -2890,7 +2866,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1592517211}
   - component: {fileID: 1592517216}
-  - component: {fileID: 1592517215}
   - component: {fileID: 1592517214}
   - component: {fileID: 1592517213}
   - component: {fileID: 1592517212}
@@ -2965,24 +2940,6 @@ MonoBehaviour:
   StopFadeDuration: 0
   AutoPlay: 0
   AllowDuplicates: 0
---- !u!114 &1592517215
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1592517210}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3fdfa673bafee9f428c04204256857ec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CharacterId:
-    m_Source: Astrid
-    m_HashValue: 245717574
-  DefaultPlaybackEvent:
-    m_HashValue: 2414525022
-  Player: {fileID: 1592517216}
 --- !u!82 &1592517216
 AudioSource:
   m_ObjectHideFlags: 0
@@ -3694,7 +3651,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 942389645}
+    m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1116767842075553544, guid: f5cfc8bf0d157b7428054d1c31a22948, type: 3}
       propertyPath: m_Pivot.x
@@ -3776,89 +3733,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1620019443356534400, guid: f5cfc8bf0d157b7428054d1c31a22948, type: 3}
-      propertyPath: m_UVRect.width
-      value: 6.6048
-      objectReference: {fileID: 0}
-    - target: {fileID: 1620019443356534400, guid: f5cfc8bf0d157b7428054d1c31a22948, type: 3}
-      propertyPath: m_UVRect.height
-      value: 0.26666668
-      objectReference: {fileID: 0}
-    - target: {fileID: 1623701163828517958, guid: f5cfc8bf0d157b7428054d1c31a22948, type: 3}
-      propertyPath: m_UVRect.width
-      value: 4.9536
-      objectReference: {fileID: 0}
-    - target: {fileID: 1623701163828517958, guid: f5cfc8bf0d157b7428054d1c31a22948, type: 3}
-      propertyPath: m_UVRect.height
-      value: 0.2
-      objectReference: {fileID: 0}
     - target: {fileID: 4031842777486742802, guid: f5cfc8bf0d157b7428054d1c31a22948, type: 3}
       propertyPath: m_Name
       value: ChapterCanvas
       objectReference: {fileID: 0}
-    - target: {fileID: 4031842777486742802, guid: f5cfc8bf0d157b7428054d1c31a22948, type: 3}
-      propertyPath: m_IsActive
+    - target: {fileID: 6014791602481848480, guid: f5cfc8bf0d157b7428054d1c31a22948, type: 3}
+      propertyPath: m_Enabled
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4830516319975820910, guid: f5cfc8bf0d157b7428054d1c31a22948, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 187.94
-      objectReference: {fileID: 0}
-    - target: {fileID: 6014791602481848480, guid: f5cfc8bf0d157b7428054d1c31a22948, type: 3}
-      propertyPath: m_Camera
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 6014791602481848480, guid: f5cfc8bf0d157b7428054d1c31a22948, type: 3}
-      propertyPath: m_RenderMode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6866328551743976842, guid: f5cfc8bf0d157b7428054d1c31a22948, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6866328551743976842, guid: f5cfc8bf0d157b7428054d1c31a22948, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6866328551743976842, guid: f5cfc8bf0d157b7428054d1c31a22948, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 481.6
-      objectReference: {fileID: 0}
-    - target: {fileID: 6866328551743976842, guid: f5cfc8bf0d157b7428054d1c31a22948, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 122.57
-      objectReference: {fileID: 0}
-    - target: {fileID: 6866328551743976842, guid: f5cfc8bf0d157b7428054d1c31a22948, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 495.36002
-      objectReference: {fileID: 0}
-    - target: {fileID: 6866328551743976842, guid: f5cfc8bf0d157b7428054d1c31a22948, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -61.285
-      objectReference: {fileID: 0}
-    - target: {fileID: 8880787742937996854, guid: f5cfc8bf0d157b7428054d1c31a22948, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8880787742937996854, guid: f5cfc8bf0d157b7428054d1c31a22948, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8880787742937996854, guid: f5cfc8bf0d157b7428054d1c31a22948, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 262.04
-      objectReference: {fileID: 0}
-    - target: {fileID: 8880787742937996854, guid: f5cfc8bf0d157b7428054d1c31a22948, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 65.37
-      objectReference: {fileID: 0}
-    - target: {fileID: 8880787742937996854, guid: f5cfc8bf0d157b7428054d1c31a22948, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 495.36005
-      objectReference: {fileID: 0}
-    - target: {fileID: 8880787742937996854, guid: f5cfc8bf0d157b7428054d1c31a22948, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -155.255
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4094,6 +3975,7 @@ SceneRoots:
   - {fileID: 238910210}
   - {fileID: 602424801}
   - {fileID: 1931264334}
+  - {fileID: 4240526831257599325}
   - {fileID: 942389645}
   - {fileID: 90577941}
   - {fileID: 437814476}

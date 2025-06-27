@@ -24,10 +24,8 @@ namespace Astro
 
     static public partial class InstrumentUtility {
         static public void TrySetValue(DialAdjustableInstrument instrument, int value) {
-            if (instrument.CurrentValue != value) {
-                float clampedVal = Mathf.Clamp01((value - instrument.Offset) / instrument.LinearMap);
-                DialUtility.TrySetDial(instrument.Source, clampedVal);
-            }
+            float clampedVal = Mathf.Clamp01((value - instrument.Offset) / instrument.LinearMap);
+            DialUtility.TrySetDial(instrument.Source, clampedVal);
         }
     }
 }

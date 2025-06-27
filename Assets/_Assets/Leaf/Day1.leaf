@@ -22,6 +22,7 @@ $call SetChannelActive(IceCube, false)
 $call IntroCutscene->PrepareCutscene()
 $start Observatory.ResetSubtitlePosition
 $call SpawnDocument("ElijahIntro")
+$call ChapterTitles->PrepareTransition()
 
 :: OpeningCutscene
 @trigger SceneReady
@@ -29,10 +30,15 @@ $call SpawnDocument("ElijahIntro")
 @who    IntroCutscene
 
 $call PlayMusic("Music.Gently-Falling", 1)
+$wait 1
+$call ChapterTitles->DisplayChapterTitles()
 $call IntroCutscene->BeginCutscene()
+$call ChapterTitles->FadeOutBackground()
 $call MonitorUI->PowerOff()
 $wait 2
 $call TelescopeLook(155, -30)
+$wait 3
+$call ChapterTitles->FinishTransition()
 
 :: ArrivalAtTheShed
 @trigger    CutsceneEnd

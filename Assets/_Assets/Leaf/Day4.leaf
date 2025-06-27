@@ -25,6 +25,7 @@ $call SetRefPageActive(23, false)
 $call SetChannelActive(Unlocks_Active, false)
 $call SetRadioFrequency(137, true)
 $call MonitorPower->Deactivate()
+$call ChapterTitles->PrepareTransition()
 
 :: BeginDay
 @trigger    SceneReady
@@ -32,8 +33,14 @@ $call MonitorPower->Deactivate()
 @who    Astrid
 
 $call PlayMusic("Music.Moonthought", 3)
+$call ChapterTitles->DisplayChapterTitles()
+
 $call WaitForMovedToView("DocumentPuzzle")
+$call ChapterTitles->FadeOutBackground()
+$call ChapterTitles->FinishTransition(1)
+
 $call SetInputState(false)
+$wait 1
 $call SpawnDocumentToCamera("Day4ElijahPostcard")
 $call SetInputState(true)
 

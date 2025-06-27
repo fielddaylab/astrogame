@@ -198,6 +198,7 @@ namespace FieldDay.Audio {
                 UpdateTweens(deltaTime);
                 UpdateBuses();
                 UpdateMixers(deltaTime);
+                PropagateBusProperties();
                 UpdateVoices(deltaTime, Time.realtimeSinceStartupAsDouble);
 
                 switch (Frame.Index % 60) {

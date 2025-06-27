@@ -154,17 +154,23 @@ namespace FieldDay.Audio {
 #endif // UNITY_EDITOR
 
         private unsafe void UpdateBuses() {
-            AudioPropertyBlock block;
+            AudioPropertyBlock block = default;
             for (int i = 0; i < m_BusCount; i++) {
                 ref BusData bus = ref m_BusData[i];
-                block = bus.ParentIndex < 0 ? AudioPropertyBlock.Default : m_WorkingBusProperties[bus.ParentIndex];
-                AudioPropertyBlock.Combine(block, bus.BusProperties, ref block);
+                AudioPropertyBlock.Combine(AudioPropertyBlock.Default, bus.BusProperties, ref block);
                 AudioPropertyBlock.Combine(block, *bus.ScriptProperties, ref block);
 #if DEVELOPMENT
                 AudioPropertyBlock.Combine(block, m_DebugBusProperties[i], ref block);
 #endif // DEVELOPMENT
                 block.Volume *= bus.ConfigVolume;
                 m_WorkingBusProperties[i] = block;
+            }
+        }
+
+        private void PropagateBusProperties() {
+            for (int i = 1; i < m_BusCount; i++) {
+                ref BusData bus = ref m_BusData[i];
+                AudioPropertyBlock.Combine(m_WorkingBusProperties[i], m_WorkingBusProperties[bus.ParentIndex], ref m_WorkingBusProperties[i]);
             }
         }
 

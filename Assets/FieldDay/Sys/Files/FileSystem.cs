@@ -103,6 +103,8 @@ namespace FieldDay.Files {
         public void RequestFile(in FileLoadRequest request, FileLoadPriority priority) {
             Assert.NotNull(request.Callback, "Callback must be specified");
             Assert.True(!string.IsNullOrEmpty(request.Path), "Path must be specified");
+            Assert.True(request.Callback != null, "Callback must be specified");
+
             switch (priority) {
                 case FileLoadPriority.Urgent:
                     m_HighPriorityRequests.PushFront(request);

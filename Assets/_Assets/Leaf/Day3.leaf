@@ -22,6 +22,7 @@ $call SetRefPageActive(23, false)
 $call SetRadioFrequency(137, true)
 $call SetChannelActive(Unlocks_Active, false)
 $call MonitorPower->Deactivate()
+$call ChapterTitles->PrepareTransition()
 $start Observatory.ResetSubtitlePosition
 
 :: BeginDay
@@ -30,11 +31,15 @@ $start Observatory.ResetSubtitlePosition
 @who    Astrid
 
 $call PlayMusic("Music.Moonthought", 3)
+$call ChapterTitles->DisplayChapterTitles()
 
 $call SetInputState(false)
 $call WaitForMovedToView("DocumentPuzzle")
+$call ChapterTitles->FadeOutBackground()
+$call ChapterTitles->FinishTransition(1)
 
 $call SetInputState(true)
+$wait 1
 $call SpawnDocumentToCamera("Day3ElijahPostcard")
 
 :: Day3ElijahPostcardFlavor

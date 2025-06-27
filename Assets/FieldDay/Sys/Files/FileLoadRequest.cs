@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay.Data;
@@ -20,6 +21,67 @@ namespace FieldDay.Files {
 
         public FileReadHandler Callback;
         public object CallbackContext;
+
+        public void ConfigureAudioClip(AudioClipLoadType loadType) {
+            Mode = FileBufferMode.AudioClip;
+            Flags &= ~(FileLoadFlags.Audio_Streaming | FileLoadFlags.Audio_Compressed);
+            if (loadType == AudioClipLoadType.CompressedInMemory) {
+                Flags |= FileLoadFlags.Audio_Compressed;
+            } else if (loadType == AudioClipLoadType.Streaming) {
+                Flags |= FileLoadFlags.Audio_Streaming;
+            }
+        }
+
+        public void ConfigureTexture(bool markAsNonReadable) {
+            Mode = FileBufferMode.Texture;
+            Flags &= ~(FileLoadFlags.Texture_MarkNonReadable);
+            if (markAsNonReadable) {
+                Flags |= FileLoadFlags.Texture_MarkNonReadable;
+            }
+        }
+
+        public void SetIdentifiers(StringHash32 name, StringHash32 group) {
+            Name = name;
+            Group = group;
+        }
+
+        public void SetInfiniteRetries() {
+            Flags |= FileLoadFlags.InfiniteRetries;
+        }
+
+        public void PutInExhaustedQueue() {
+            Flags |= FileLoadFlags.PushToExhaustedQueueOnFailure;
+        }
+
+        static public FileLoadRequest Buffer(string path, FileLocation location, FileReadHandler callback, object callbackContext = null) {
+            return new FileLoadRequest() {
+                Location = location,
+                Mode = FileBufferMode.Buffer,
+                Path = path,
+                Callback = callback,
+                CallbackContext = callbackContext
+            };
+        }
+
+        static public FileLoadRequest Texture(string path, FileLocation location, FileReadHandler callback, object callbackContext = null) {
+            return new FileLoadRequest() {
+                Location = location,
+                Mode = FileBufferMode.Texture,
+                Path = path,
+                Callback = callback,
+                CallbackContext = callbackContext
+            };
+        }
+
+        static public FileLoadRequest AudioClip(string path, FileLocation location, FileReadHandler callback, object callbackContext = null) {
+            return new FileLoadRequest() {
+                Location = location,
+                Mode = FileBufferMode.AudioClip,
+                Path = path,
+                Callback = callback,
+                CallbackContext = callbackContext
+            };
+        }
     }
 
     public delegate void FileReadHandler(FileLoadRequest request, FileLoadResult result, object context);
@@ -90,11 +152,39 @@ namespace FieldDay.Files {
         }
 
         /// <summary>
+        /// Interprets the downloaded data as a byte span.
+        /// </summary>
+        public unsafe UnsafeSpan<byte> ReadByteSpan() {
+            Assert.True(Succeeded());
+            var nativeData = Handler.nativeData;
+            byte* ptr = (byte*)NativeArrayUnsafeUtility.GetUnsafeReadOnlyPtr(nativeData);
+            return new UnsafeSpan<byte>(ptr, nativeData.Length);
+        }
+
+        /// <summary>
         /// Interprets the downloaded data as a string.
         /// </summary>
         public unsafe string ReadText() {
             Assert.True(Succeeded());
             return Handler.text;
+        }
+
+        /// <summary>
+        /// Interprets the downloaded data as a string buffer.
+        /// </summary>
+        public unsafe void ReadText(UnsafeSpan<char> destination) {
+            Assert.True(Succeeded());
+            var nativeData = Handler.nativeData;
+            byte* ptr = (byte*)NativeArrayUnsafeUtility.GetUnsafeReadOnlyPtr(nativeData);
+            StringUtils.DecodeUFT8(ptr, nativeData.Length, destination.Ptr, destination.Length);
+        }
+
+        /// <summary>
+        /// Estimates the length of the string data.
+        /// </summary>
+        public unsafe int EstimateStringLength() {
+            Assert.True(Succeeded());
+            return StringUtils.DecodeSizeUTF8((int) Request.downloadedBytes);
         }
 
         /// <summary>

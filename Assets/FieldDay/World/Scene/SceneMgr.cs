@@ -18,8 +18,8 @@ using FieldDay.Threading;
 using System.Diagnostics;
 
 #if UNITY_EDITOR
-using UnityEditor.SceneManagement;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 #endif // UNITY_EDITOR
 
 namespace FieldDay.Scenes {

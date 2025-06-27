@@ -32,6 +32,7 @@ namespace Astro {
 
         [Header("Misc")]
         public RadioChannelSet RadioChannels;
+        public string[] ChapterTitles;
     }
 
     static public class DayConfigUtil {
