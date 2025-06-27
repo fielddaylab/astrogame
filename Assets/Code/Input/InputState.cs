@@ -86,7 +86,9 @@ namespace Astro {
         }
 
         static private int CalculateFinalMask(int desiredMask, int filter) {
-            return (LayerMasks.TopLayer_Mask & desiredMask) | (desiredMask & filter);
+            int mask = (LayerMasks.TopLayer_Mask & desiredMask) | (desiredMask & filter);
+            // Log.Msg("[InputState > CalculateFinalMask] dump mask {0}", mask);
+            return mask;
         }
 
         public static bool IsClickable(InputState state, GameObject gameObject) {
