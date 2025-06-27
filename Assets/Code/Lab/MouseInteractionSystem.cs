@@ -14,7 +14,7 @@ namespace Astro {
     /// Responsible for triggering Lab Interactables
     /// </summary>
     /// 
-    [SysUpdate(GameLoopPhase.Update, 0, AstroGame.InteractUpdateMask)]
+    [SysUpdate(GameLoopPhase.Update, -1, AstroGame.InteractUpdateMask)]
     public class MouseInteractionSystem : SharedStateSystemBehaviour<LabInteractableState, DocumentBoardState, InputState> {
 
         public override void ProcessWork(float deltaTime) {
