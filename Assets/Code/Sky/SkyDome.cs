@@ -18,6 +18,7 @@ namespace Astro {
         public MeshRenderer HorizonPlane;
         public MeshRenderer HorizonRing;
         public MeshRenderer HorizonGlow;
+        public Transform HorizonObjsRoot;
 
         [NonSerialized] public CelestialObject[] AllObjects;
         [NonSerialized] public RingBuffer<CelestialObject> AboveHorizon = new RingBuffer<CelestialObject>(128, RingBufferMode.Expand);

@@ -56,6 +56,14 @@ namespace Astro {
             skyDome.HorizonPlane.sharedMaterial = SelectMaterial(mask, state.HorizonPlaneVisibleMaterial, state.HorizonPlaneBlueMaterial, state.HorizonPlaneInfraredMaterial);
             skyDome.HorizonRing.sharedMaterial = SelectMaterial(mask, state.HorizonRingVisibleMaterial, state.HorizonRingBlueMaterial, state.HorizonRingInfraredMaterial);
             skyDome.HorizonGlow.sharedMaterial = SelectMaterial(mask, state.HorizonGlowVisibleMaterial, state.HorizonGlowBlueMaterial, state.HorizonGlowInfraredMaterial);
+            
+            Material horizonObjsMaterial = SelectMaterial(mask, state.HorizonObjsVisibleMaterial, state.HorizonObjsAltMaterial, state.HorizonObjsAltMaterial);
+            if (state.HorizonObjsRenderers == null) {
+                state.HorizonObjsRenderers = skyDome.HorizonObjsRoot.GetComponentsInChildren<SpriteRenderer>();
+            }
+            foreach (var renderer in state.HorizonObjsRenderers) {
+                renderer.SetSharedMaterialAtIndex(0, horizonObjsMaterial);
+            }
         }
 
         static private Material SelectMaterial(CelestialObjectVisMask mask, Material visible, Material blue, Material infrared) {
