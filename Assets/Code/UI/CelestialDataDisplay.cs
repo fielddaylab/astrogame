@@ -41,8 +41,7 @@ namespace Astro {
             Game.Events.Register(GameEvents.ValidOpenIdSubmission, CelestialDataDisplayUtil.PlayClearancePointAnimation);
             Game.Events.Register(GameEvents.ValidKnowledgeSubmission, CelestialDataDisplayUtil.UpdateCurrentDataDisplay);
             Game.Events.Register(GameEvents.UnacceptedOpenIdSubmission, CelestialDataDisplayUtil.UpdateCurrentDataDisplay);
-            Game.Scenes.QueueOnLoad(() =>
-            {
+            Game.Scenes.QueueOnLoad(() => {
                 Find.State<FocusState>().OnFocusUpdated.Register(CelestialDataDisplayUtil.OnFocusUpdated);
 
                 // Set the number of pips in our clearance level display

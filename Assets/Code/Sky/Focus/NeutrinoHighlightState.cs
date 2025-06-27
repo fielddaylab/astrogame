@@ -5,6 +5,7 @@ using System;
 using BeauUtil;
 using System.Collections.Generic;
 using Leaf.Runtime;
+using System.Collections;
 
 namespace Astro {
     public class NeutrinoHighlightState : SharedStateComponent, IRegistrationCallbacks {
@@ -87,16 +88,28 @@ namespace Astro {
         }
 
         [LeafMember("AddAssetToSubmissionGroup")]
-        public static void LeafAddAssetToSubmissionGroup(StringHash32 assetId) {
+        public static IEnumerator LeafAddAssetToSubmissionGroup(StringHash32 assetId) {
             NeutrinoHighlightState state = Find.State<NeutrinoHighlightState>();
 
             CelestialAsset asset = Find.NamedAsset<CelestialAsset>(assetId);
             if (asset == null) {
                 Debug.LogWarning("[LeafAddAssetToSubmissionGroup] could not add asset to submission group: " + assetId.ToDebugString());
-                return;
+                yield break;
             }
 
             state.SubmissionObjects.Add(Find.NamedAsset<CelestialAsset>(assetId));
+
+            // Check if the player has already submitted the required data for this asset, and if so, give them a point
+            DayConfigAsset currentDay = DayConfigUtil.GetConfigForState();
+            bool hasIdentifiedNeutrinoType = CelestialDataDisplayUtil.HasIdentifiedDataType(currentDay.AcceptedIDSubmissions, asset);
+
+            if (hasIdentifiedNeutrinoType) {
+                FocusState focusState = Find.State<FocusState>();
+                FocusableUtility.SetCurrentFocus(asset, focusState);
+                ReviewUtility.AddPoints(1);
+                CelestialDataDisplayUtil.PlayClearancePointAnimation();
+                yield return Find.State<CelestialDataDisplay>().AnimRoutine;
+            }
         }
 
         [LeafMember("RemoveAssetToSubmissionGroup")]
