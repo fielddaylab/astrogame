@@ -48,6 +48,9 @@ static public class LayerMasks {
     // Layer 16: SpaceDome
     public const int SpaceDome_Index = 16;
     public const int SpaceDome_Mask = 65536;
+    // Layer 31: Tappable
+    public const int Tappable_Index = 31;
+    public const int Tappable_Mask = -2147483648;
 }
 static public class SortingLayers {
     
@@ -89,4 +92,7 @@ static public class RenderingLayers {
     // Rendering Layer 3: RefGuide_Lighting
     public const uint RefGuide_Lighting_Index = 3;
     public const uint RefGuide_Lighting_Mask = 8;
+    // Rendering Layer 4: Doc_Lighting
+    public const uint Doc_Lighting_Index = 4;
+    public const uint Doc_Lighting_Mask = 16;
 }

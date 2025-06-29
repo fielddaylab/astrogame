@@ -8,6 +8,8 @@ using Astro.Reference;
 using Leaf.Runtime;
 using FieldDay.Scripting;
 using BeauUtil;
+using FieldDay.Audio;
+using FieldDay.Debugging;
 
 namespace Astro {
     /// <summary>
@@ -26,12 +28,15 @@ namespace Astro {
             if (m_StateC.InputEnabled && !isCurrentlyDragging && Game.Input.IsMousePressed(FieldDay.HID.MouseButton.Left) && !Game.Input.AreRaycastsPaused()) {
                 var ray = Game.Rendering.PrimaryCamera.ScreenPointToRay(Input.mousePosition);
 
+                bool hitRaycast = false;
                 if (Physics.Raycast(ray, out RaycastHit hit, 25f, m_StateC.AppliedLayerMask)) {
                     if (hit.collider.TryGetComponent(out RefGuideControl refControl) && refControl.isActiveAndEnabled) {
                         ReferenceUtility.HandleControl(refControl);
+                        hitRaycast = true;
                     }
 
                     if (hit.collider.TryGetComponent(out DocumentPart docPart) && docPart.isActiveAndEnabled) {
+                        hitRaycast = true;
                         DocumentUtility.ProcessDocPartInteraction(docPart, m_StateB);
                         if (m_StateB.InteractedThisFrame) {
                             return;
@@ -39,13 +44,25 @@ namespace Astro {
                     }
 
                     if (hit.collider.TryGetComponent(out LabInteractable interactable)) {
-                        UseLabInteractable(interactable);
+                        hitRaycast = UseLabInteractable(interactable);
                     }
 
                     if (hit.collider.TryGetComponent(out ViewLink link) && link.isActiveAndEnabled) {
                         ViewNavUtility.MoveByLink(Find.State<ViewState>(), link);
+                        hitRaycast = true;
                     }
+                }
 
+                if (!hitRaycast && Physics.Raycast(ray, out hit, 25f, LayerMasks.Tappable_Mask)) {
+                    if (hit.collider.TryGetComponent(out TappableCollider tap) && tap.isActiveAndEnabled) {
+                        TappableMaterial tapMat = Find.NamedAsset<TappableMaterial>(tap.Material);
+                        Sfx.PlayDetached(tapMat.Sound, hit.point, Quaternion.identity);
+                        DebugDraw.AddPoint(hit.point, 0.1f, Color.yellow, 1);
+                        hitRaycast = true;
+                    }
+                }
+
+                if (hitRaycast) {
                     Game.Input.ConsumeAllInputForFrame();
                 }
             }
@@ -65,9 +82,9 @@ namespace Astro {
             }
         }
 
-        private void UseLabInteractable(LabInteractable interactable) {
+        private bool UseLabInteractable(LabInteractable interactable) {
             if (!interactable.isActiveAndEnabled) {
-                return;
+                return false;
             }
 
             using (var table = TempVarTable.Alloc()) {
@@ -87,6 +104,7 @@ namespace Astro {
             m_StateA.CurrInteractable = interactable;
             m_StateA.StartMousePos = Input.mousePosition;
             m_StateA.CurrMousePos = Input.mousePosition;
+            return true;
         } 
     }
 }
