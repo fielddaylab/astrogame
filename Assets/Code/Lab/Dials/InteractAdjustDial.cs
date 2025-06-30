@@ -1,5 +1,6 @@
 using BeauRoutine;
 using BeauUtil;
+using BeauUtil.Debugger;
 using FieldDay;
 using FieldDay.Components;
 using System;
@@ -67,6 +68,8 @@ namespace Astro
             }
             */
 
+            // Log.Msg("adjusted dial ({0}/{1}) by {1} to ({2}/{3})", preRawVal, preConstrainedVal, delta * dial.InputSensitivity, postRawVal, dial.CurrConstrainedVal);
+
             dial.CurrRawVal = postRawVal;
             dial.ConstrainedValDelta = dial.CurrConstrainedVal - preConstrainedVal;
 
@@ -77,6 +80,7 @@ namespace Astro
             var valDelta = value - dial.CurrConstrainedVal;
             var inputDelta = valDelta / dial.InputSensitivity;
             TryAdjustDial(dial, inputDelta);
+            dial.BaseVal = value;
         }
     }
 }
