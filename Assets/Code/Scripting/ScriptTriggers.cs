@@ -28,6 +28,7 @@ namespace Astro {
         static private void OnScore() {
             using (var table = TempVarTable.Alloc()) {
                 table.Set("sciencePoints", ReviewUtility.GetPoints());
+                table.Set("openIDThresholdHit", ReviewUtility.GetPoints() >= DayConfigUtil.GetConfigForState().NumNeutrinoPoints);
                 ScriptUtility.Trigger(ScriptEvents.PointsUpdated, table);
             }
         }
