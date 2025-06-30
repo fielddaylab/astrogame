@@ -91,7 +91,7 @@ $call StartOpenMode()
 
 :: FinishOpenID
 @trigger    PointsUpdated
-@when   sciencePoints > 2
+@when   openIDThresholdHit 
 @once
 
 $call SetInputState(false)

@@ -3,6 +3,7 @@
 :: Preload
 @function   ScenePreload
 $call InitUpdateMasks()
+$call ToggleDeskPicture()
 $call SetInputState(false)
 $call StopPuzzleMode()
 $call StopOpenMode()
@@ -121,12 +122,13 @@ $endif
 :: TuneToIceCubeIntro
 @trigger    RadioChannelListenStart
 @when       channelId == "IceCube_Intro"
+@priority   High
+@boostScore 1000
 @interrupt
-@cutscene
 @once
 
 $set temp:introRadioChannelTuned = true
-$call SetInputState(false)
+// $call SetInputState(false)
 $call SetRadioDialLocked(true)
 $call SnapRadioToChannel()
 $if temp:introRadioHint
@@ -444,7 +446,7 @@ $call UnlockMonitorFocus()
 
 :: ClearanceUpgrade
 @trigger    PointsUpdated
-@when   sciencePoints > 2
+@when   openIDThresholdHit 
 @boostScore 200
 @interrupt
 @cutscene
