@@ -15,6 +15,7 @@ namespace Astro {
     public sealed class CutscenePlayer : ScriptActorComponent, IBaked, IScenePreload {
         [Required] public PlayableDirector Director;
         [Required] public CutsceneCamera Camera;
+        public Transform StartPosition;
         public ActiveGroup AssetGroup;
 
         [Header("Transition Back To Gameplay")]
@@ -40,7 +41,10 @@ namespace Astro {
             ViewState state = Find.State<ViewState>();
             state.DefaultNode = null;
             ViewNavUtility.ClearCurrentNode(state);
-            CutsceneUtility.SyncCamera(Camera, state);
+            if (StartPosition != null) {
+                CutsceneUtility.SyncCamera(StartPosition, state);
+                CutsceneUtility.SyncCameraTracker(Camera, StartPosition);
+            }
 
             Director.gameObject.SetActive(false);
         }
@@ -67,7 +71,12 @@ namespace Astro {
 
             ViewState state = Find.State<ViewState>();
             ViewNavUtility.ClearCurrentNode(state);
-            CutsceneUtility.SyncCamera(Camera, state);
+            if (StartPosition != null) {
+                CutsceneUtility.SyncCamera(StartPosition, state);
+                CutsceneUtility.SyncCameraTracker(Camera, StartPosition);
+            } else {
+                CutsceneUtility.SyncCamera(Camera, state);
+            }
 
             using (var table = TempVarTable.Alloc()) {
                 table.Set("cutsceneId", this.Actor.Id);

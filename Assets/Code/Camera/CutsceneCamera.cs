@@ -34,5 +34,16 @@ namespace Astro {
             view.Camera.RootTransform.SetPositionAndRotation(pos, rot);
             view.Camera.EffectsTransform.SetLocalPositionAndRotation(default, default);
         }
+
+        static public void SyncCameraTracker(CutsceneCamera camera, Transform position) {
+            position.GetPositionAndRotation(out Vector3 pos, out Quaternion rot);
+            camera.Tracker.SetPositionAndRotation(pos, rot);
+        }
+
+        static public void SyncCamera(Transform position, ViewState view) {
+            position.GetPositionAndRotation(out Vector3 pos, out Quaternion rot);
+            view.Camera.RootTransform.SetPositionAndRotation(pos, rot);
+            view.Camera.EffectsTransform.SetLocalPositionAndRotation(default, default);
+        }
     }
 }
