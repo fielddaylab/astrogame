@@ -26,8 +26,8 @@ $branch .PathToDesk
 $call MoveToView("Left")
 
 :: PathToMonitor
-@function   MovePlayerToMonitor
 @exposed
+@function   MovePlayerToMonitor
 $call InputPushPause()
 $branch .PathToDesk
 $call MoveToView("Monitor")
