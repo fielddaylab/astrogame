@@ -14,7 +14,6 @@ namespace Astro {
             ReviewUtility.OnPointsUpdated.Register(OnScore);
             ReviewUtility.OnCorrectPuzzleSubmission.Register(OnCorrectPuzzleSubmit);
 
-            Game.Events.Register(GameEvents.PuzzleNavigationComplete, OnPuzzleNavComplete);
             Game.Events.Register(GameEvents.NeutrinoNavigationComplete, OnNeutrinoNavComplete);
 
             Game.Events.Register(GameEvents.ValidOpenIdSubmission, OnValidOpenIdSubmission);
@@ -37,10 +36,6 @@ namespace Astro {
                 table.Set("puzzleName", Find.State<PuzzleState>().ActivePuzzle.DisplayName);
                 ScriptUtility.Trigger(ScriptEvents.CorrectPuzzleSubmission, table);
             }
-        }
-
-        static private void OnPuzzleNavComplete() {
-            ScriptUtility.Trigger(ScriptEvents.PuzzleNavigationComplete);
         }
 
         static private void OnNeutrinoNavComplete() {
@@ -238,12 +233,10 @@ namespace Astro {
             GameLoop.ResumeUpdates(AstroGame.MonitorControlsUpdateMask);
         }
 
-        [LeafMember("StopPuzzleNavigation")]
-        static private void LeafStopPuzzleNavigation() {
-            Game.Events.Dispatch(GameEvents.StopPuzzleNavigation);
-
-            // GameLoop.SuspendUpdates(AstroGame.MonitorControlsUpdateMask);
-        }
+        // [LeafMember("StopPuzzleNavigation")]
+        // static private void LeafStopPuzzleNavigation() {
+        //     Game.Events.Dispatch(GameEvents.StopPuzzleNavigation);
+        // }
 
         [LeafMember("ClearMonitorSelection")]
         static private void LeafClearMonitorSelection() {

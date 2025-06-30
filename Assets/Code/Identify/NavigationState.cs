@@ -69,7 +69,8 @@ namespace Astro {
         } 
 
         public static void OnPuzzleNavComplete() {
-            NavigationState navState = Find.State<NavigationState>(); 
+            NavigationState navState = Find.State<NavigationState>();
+            ScriptUtility.Trigger(ScriptEvents.PuzzleNavigationComplete);
             Game.Events.Dispatch(GameEvents.StopPuzzleNavigation);
         }
 
