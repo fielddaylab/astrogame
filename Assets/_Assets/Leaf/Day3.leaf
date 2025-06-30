@@ -217,6 +217,9 @@ $call ClearMonitorSelection()
 $call MonitorUI->ShowCERESLogo()
 $call SetInstrumentUnlocked(InfraredWavelength, true)
 $call SetInstrumentUnlocked(HistoricalDataInstrument, true)
+$call Wait(2)
+$call ConsoleCommandLine->PlayConsoleText("LoadHistData")
+
 $call SetStickyFirstPage(-1)
 $call OpenRefGuidePage("HistoricalData")
 
@@ -234,7 +237,6 @@ $call Wait(1)
 {@Astrid} Wait, does this mean that Elijah got a satellite uplink working? Oh man, Dad is going to be so surprised. $[Astrid/L3/l3_a_13]
 // {@Astrid} How did he do it? $[Astrid/L3/l3_a_14] 
 {@Astrid} I bet he put it together out of all this old tech lying around. We used to have so much fun wiring up old radios. $[Astrid/L3/l3_a_15]
-
 //TODO
 $call OpenRefGuidePage("ConstellationLeo")
 $call Wait(1)
@@ -313,9 +315,12 @@ $call OpenRefGuidePage("HistoricalData")
 $call ClearMonitorSelection()
 $call StopPuzzleMode()
 $call SetInputState(false)
+$call ConsoleCommandLine->PlayConsoleText("PlayMessage")
 $call SetRefPageActive(18, false)
 $call SetRefPageActive(19, true)
 $call OpenRefGuideToPage(19)
+
+$call Wait(1)
 
 {@Elijah} Well… if Leo’s puzzle opened, that means the historical data made it through. Something’s working. $[Elijah/L3/l3_e_01]
 {@Elijah} That would mean that part of the system’s still alive. $[Elijah/L3/l3_e_02]

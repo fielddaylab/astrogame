@@ -1024,6 +1024,7 @@ $endif
 
 $call StopPuzzleMode()
 $call SetInputState(false)
+$call ConsoleCommandLine->PlayConsoleText("PlayMessage")
 
 $call Wait(2)
 $call SetRefPageActive(14, false)

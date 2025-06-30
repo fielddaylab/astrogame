@@ -54,6 +54,13 @@ namespace Astro {
             };
             btn.MonitorLoadingCollider.SetActive(true);
             Routine.Start( btn.SetButtonActive(false) );
+            ConsoleTypedText console = Find.FirstComponent<ConsoleTypedText>();
+            //console.Play("IdSubmit");
+            if (rgs.SelectedRefClassification != null) {
+                console.PlayClassification(rgs.SelectedRefClassification);
+            } else if (rgs.SelectedMaterials != 0){
+                console.PlayMaterials(rgs.SelectedMaterials);
+            }
             return true;
         }
     }

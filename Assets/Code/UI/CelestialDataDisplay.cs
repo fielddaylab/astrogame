@@ -39,8 +39,11 @@ namespace Astro {
         
         protected override void OnEnable() {
             Game.Events.Register(GameEvents.ValidOpenIdSubmission, CelestialDataDisplayUtil.PlayClearancePointAnimation);
-            Game.Events.Register(GameEvents.ValidKnowledgeSubmission, CelestialDataDisplayUtil.UpdateCurrentDataDisplay);
-            Game.Events.Register(GameEvents.UnacceptedOpenIdSubmission, CelestialDataDisplayUtil.UpdateCurrentDataDisplay);
+            Game.Events.Register(GameEvents.ValidKnowledgeSubmission, CelestialDataDisplayUtil.PlayUnacceptedFeedback);
+            Game.Events.Register(GameEvents.UnacceptedOpenIdSubmission, CelestialDataDisplayUtil.PlayUnacceptedFeedback);
+            Game.Events.Register(GameEvents.DuplicateOpenIdSubmission, CelestialDataDisplayUtil.PlayDuplicateFeedback);
+            Game.Events.Register(GameEvents.IncorrectOpenIdSubmission, CelestialDataDisplayUtil.PlayIncorrectFeedback);
+            Game.Events.Register(GameEvents.InvalidOpenIdSubmission, CelestialDataDisplayUtil.PlayIncorrectFeedback);
             Game.Scenes.QueueOnLoad(() => {
                 Find.State<FocusState>().OnFocusUpdated.Register(CelestialDataDisplayUtil.OnFocusUpdated);
 
@@ -245,7 +248,7 @@ namespace Astro {
         public static void PlayClearancePointAnimation() {
             CelestialDataDisplay display = Find.State<CelestialDataDisplay>();
             PlayerPointsState points = Find.State<PlayerPointsState>();
-
+            Find.FirstComponent<ConsoleTypedText>().Play("IdCorrect");
             if (display.DataPanelActive) {
                 display.HideCelestialDataDisplay();
             }
@@ -269,7 +272,6 @@ namespace Astro {
         public static void UpdateCurrentDataDisplay() {
             CelestialDataDisplay display = Find.State<CelestialDataDisplay>();
             var focus = Find.State<FocusState>().CurrentFocus;
-
             if (focus == null) return;
 
             UpdateStarRepresentation(focus);
@@ -290,6 +292,19 @@ namespace Astro {
             } else {
                 display.DataRequirmentHint.SetActive(false);
             }
+        }
+
+        public static void PlayUnacceptedFeedback() {
+            Find.FirstComponent<ConsoleTypedText>().Play("IdIrrelevant");
+
+        }
+
+        public static void PlayDuplicateFeedback() {
+            Find.FirstComponent<ConsoleTypedText>().Play("IdDuplicate");
+        }
+
+        public static void PlayIncorrectFeedback() {
+            Find.FirstComponent<ConsoleTypedText>().Play("IdIncorrect");
         }
 
         public static void UpdateDataDisplay(CelestialDataDisplay display, CelestialAsset asset) {
@@ -332,7 +347,7 @@ namespace Astro {
                 Row.gameObject.SetActive(true);
                 display.NumRevealedRows++;
                 Row.Find("Label").GetComponent<TextMeshProUGUI>().SetText("Elements:");
-                Row.Find("Value").GetComponent<TextMeshProUGUI>().SetText( BuildMaterialsLabel(asset.Spectrograph) );
+                Row.Find("Value").GetComponent<TextMeshProUGUI>().SetText( SpectrographUtility.ToSymbolsString(asset.Spectrograph) );
             }
 
             return; 
@@ -398,37 +413,37 @@ namespace Astro {
             }
         }
 
-        private static string BuildMaterialsLabel(SpectrographMaterialMask materials) {
-            StringBuilder sb = new StringBuilder();
-            if (materials != 0) {
-                if ((materials & SpectrographMaterialMask.Hydrogen) != 0) {
-                    sb.Append("H, ");
-                }
-                if ((materials & SpectrographMaterialMask.Helium) != 0) {
-                    sb.Append("He, ");
-                }
-                if ((materials & SpectrographMaterialMask.Carbon) != 0) {
-                    sb.Append("C, ");
-                }
-                if ((materials & SpectrographMaterialMask.Oxygen) != 0) {
-                    sb.Append("O, ");
-                }
-                if ((materials & SpectrographMaterialMask.Sodium) != 0) {
-                    sb.Append("Na, ");
-                }
-                if ((materials & SpectrographMaterialMask.Magnesium) != 0) {
-                    sb.Append("Mg, ");
-                }
-                if ((materials & SpectrographMaterialMask.Calcium) != 0) {
-                    sb.Append("Ca, ");
-                }
-                if ((materials & SpectrographMaterialMask.Iron) != 0) {
-                    sb.Append("Fe, ");
-                }
-                sb.Length -= 2; // trim last delim
-            }
-            return sb.ToString();
-        }
+        //private static string BuildMaterialsLabel(SpectrographMaterialMask materials) {
+        //    StringBuilder sb = new StringBuilder();
+        //    if (materials != 0) {
+        //        if ((materials & SpectrographMaterialMask.Hydrogen) != 0) {
+        //            sb.Append("H, ");
+        //        }
+        //        if ((materials & SpectrographMaterialMask.Helium) != 0) {
+        //            sb.Append("He, ");
+        //        }
+        //        if ((materials & SpectrographMaterialMask.Carbon) != 0) {
+        //            sb.Append("C, ");
+        //        }
+        //        if ((materials & SpectrographMaterialMask.Oxygen) != 0) {
+        //            sb.Append("O, ");
+        //        }
+        //        if ((materials & SpectrographMaterialMask.Sodium) != 0) {
+        //            sb.Append("Na, ");
+        //        }
+        //        if ((materials & SpectrographMaterialMask.Magnesium) != 0) {
+        //            sb.Append("Mg, ");
+        //        }
+        //        if ((materials & SpectrographMaterialMask.Calcium) != 0) {
+        //            sb.Append("Ca, ");
+        //        }
+        //        if ((materials & SpectrographMaterialMask.Iron) != 0) {
+        //            sb.Append("Fe, ");
+        //        }
+        //        sb.Length -= 2; // trim last delim
+        //    }
+        //    return sb.ToString();
+        //}
 
     }
 }

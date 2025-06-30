@@ -122,33 +122,33 @@ namespace Astro {
 
         private void CheckObjectIdentification() {
             ReviewResult result = ReviewUtility.EvaluateSubmission(m_State.Identification, Find.State<PlayerProgressState>());
-            ReviewResult[] acceptedResults = new ReviewResult[] { ReviewResult.Success, ReviewResult.SuccessNotInNeutrinoEvent, ReviewResult.ClassificationNotInAccepted };
+            ReviewResult[] acceptedResults = new ReviewResult[] { ReviewResult.Success, ReviewResult.CorrectNotInNeutrinoEvent, ReviewResult.CorrectNotAccepted, ReviewResult.Duplicate };
             ReviewUtility.ShowResultSprite(Array.IndexOf(acceptedResults, result) != -1, m_State);
 
             switch (result) {
                 case ReviewResult.Success: {
-                    ReviewUtility.AddPoints(1);
+                    ReviewUtility.AddPoints(1); 
                     Game.Events.Dispatch(GameEvents.ValidOpenIdSubmission);
                     break;
                 }
-                case ReviewResult.SuccessNotInNeutrinoEvent: {
+                case ReviewResult.CorrectNotInNeutrinoEvent: {
                     Game.Events.Dispatch(GameEvents.ValidKnowledgeSubmission);
                     break;
+                }
+                case ReviewResult.CorrectNotAccepted: {
+                        Game.Events.Dispatch(GameEvents.UnacceptedOpenIdSubmission);
+                        break;
                 }
                 case ReviewResult.Duplicate: {
                     Game.Events.Dispatch(GameEvents.DuplicateOpenIdSubmission);
                     break;
                 }
-                case ReviewResult.ClassificationNotFound: {
+                case ReviewResult.Incorrect: {
                     Game.Events.Dispatch(GameEvents.IncorrectOpenIdSubmission);
                     break;
                 }
-                case ReviewResult.AssetNotInNeutrinoEvent: {
+                case ReviewResult.IncorrectNotInNeutrinoEvent: {
                     Game.Events.Dispatch(GameEvents.InvalidOpenIdSubmission);
-                    break;
-                }
-                case ReviewResult.ClassificationNotInAccepted: {
-                    Game.Events.Dispatch(GameEvents.UnacceptedOpenIdSubmission);
                     break;
                 }
             }

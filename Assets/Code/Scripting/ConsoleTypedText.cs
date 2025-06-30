@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Text;
+using BeauPools;
 using BeauRoutine;
 using BeauUtil;
 using FieldDay;
@@ -35,8 +36,33 @@ namespace Astro {
             return PlayAsset(asset);
         }
 
+        public IEnumerator PlayClassification(ReferenceClassification rc) {
+            string text;
+            using (PooledStringBuilder psb = PooledStringBuilder.Create()) {
+                psb.Builder.Append("> SUBMIT \"");
+                psb.Builder.Append(rc.Label).Append("\"");
+                text = psb.Builder.ToString();
+            }
+            return PlayString(text, true, 0.25f);
+        }
+
+        public IEnumerator PlayMaterials(SpectrographMaterialMask mask) {
+            string text;
+            using (PooledStringBuilder psb = PooledStringBuilder.Create()) {
+                psb.Builder.Append("> SUBMIT \"");
+                psb.Builder.Append(SpectrographUtility.ToSymbolsString(mask)).Append("\"");
+                text = psb.Builder.ToString();
+            }
+            return PlayString(text, true, 0.25f);
+        }
+
         public IEnumerator PlayAsset(ConsoleTextAsset textAsset) {
             m_Routine.Replace(this, AssetRoutine(textAsset));
+            return m_Routine.Wait();
+        }
+
+        public IEnumerator PlayString(string text, bool isKeyboard, float delayAfter) {
+            m_Routine.Replace(this, StringLineRoutine(text, isKeyboard, delayAfter));
             return m_Routine.Wait();
         }
 
@@ -87,6 +113,44 @@ namespace Astro {
                 
                 Text.maxVisibleCharacters++;
             }
+            Hide();
+        }
+
+        private IEnumerator StringLineRoutine(string line, bool isKeyboard, float delayAfter) {
+            Text.SetText(string.Empty);
+            Text.enabled = true;
+            Group.alpha = 1;
+            m_TextBuilder.Clear();
+            m_TextBuilder.Append(line);
+            ScriptActor keyboardActor = ScriptUtility.FindActor("KeyboardSfxLocation");
+
+            Text.SetText(m_TextBuilder);
+            Text.maxVisibleCharacters = 0;
+
+            ViewState viewState = Find.State<ViewState>();
+            while (viewState.ActiveTransitionRoutine.Exists()) {
+                yield return 0.1f;
+            }
+
+            int charIdx = 0;
+            int charCount = line.Length;
+
+            while (charIdx < charCount) {
+                char c = line[charIdx++];
+                Text.maxVisibleCharacters++;
+
+                if (charIdx > 2 && isKeyboard) {
+                    Sfx.PlayDetached("Oneshot.Keyboard.Type", keyboardActor.transform);
+                    // TODO: play keyboard clicky clacky sound
+                    yield return 0.04f;
+                } else {
+                    yield return 0.02f;
+                }
+            }
+
+            yield return delayAfter;
+
+            Text.maxVisibleCharacters++;
 
             Hide();
         }

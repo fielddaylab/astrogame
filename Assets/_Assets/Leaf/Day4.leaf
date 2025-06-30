@@ -301,6 +301,7 @@ $call Wait(1)
 $call ClearMonitorSelection()
 $call StopPuzzleMode()
 $call SetInputState(false)
+$call ConsoleCommandLine->PlayConsoleText("LightsMessage")
 $call EndDay4->BeginCutscene()
 
 $call Wait(2)

@@ -1,6 +1,8 @@
 
 
 using Astro;
+using BeauPools;
+using BeauUtil;
 using FieldDay;
 using FieldDay.Components;
 using ScriptableBake;
@@ -95,13 +97,48 @@ namespace Astro {
                 }
             }
         }
-
         private static void UpdateBackground(Spectrograph graph, SpectrometerState state) {
             if (graph.CurrentElements == 0) {
                 graph.Background.sharedMaterial = state.BlankBackground;
             } else {
                 graph.Background.sharedMaterial = state.SpectrumBackground;
             }
+        }
+
+        public static string ToSymbolsString(SpectrographMaterialMask mask) {
+            using PooledStringBuilder psb = PooledStringBuilder.Create();
+            if ((mask & SpectrographMaterialMask.Hydrogen) != 0) {
+                psb.Builder.Append("H, ");
+            }
+            if ((mask & SpectrographMaterialMask.Helium) != 0) {
+                psb.Builder.Append("He, ");
+            }
+            if ((mask & SpectrographMaterialMask.Carbon) != 0) {
+                psb.Builder.Append("C, ");
+            }
+            if ((mask & SpectrographMaterialMask.Iron) != 0) {
+                psb.Builder.Append("Fe, ");
+            }
+            if ((mask & SpectrographMaterialMask.Calcium) != 0) {
+                psb.Builder.Append("Ca, ");
+            }
+            if ((mask & SpectrographMaterialMask.Sodium) != 0) {
+                psb.Builder.Append("Na, ");
+            }
+            if ((mask & SpectrographMaterialMask.Magnesium) != 0) {
+                psb.Builder.Append("Mg, ");
+            }
+            if ((mask & SpectrographMaterialMask.Oxygen) != 0) {
+                psb.Builder.Append("O, ");
+            }
+            if ((mask & SpectrographMaterialMask.Titanium) != 0) {
+                psb.Builder.Append("Ti, ");
+            }
+            if ((mask & SpectrographMaterialMask.Lithium) != 0) {
+                psb.Builder.Append("Li, ");
+            }
+            psb.Builder.TrimEnd(new[] {',', ' '});
+            return psb.Builder.ToString();
         }
     }
 }
