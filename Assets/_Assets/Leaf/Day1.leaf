@@ -122,7 +122,8 @@ $endif
 :: TuneToIceCubeIntro
 @trigger    RadioChannelListenStart
 @when       channelId == "IceCube_Intro"
-@boostScore HIGH
+@priority   High
+@boostScore 1000
 @interrupt
 @once
 
