@@ -248,7 +248,8 @@ $goto .SetupPuzzleNav
 :: SetupPuzzleNav
 $branch Observatory.PathToMonitor
 $call ConsoleCommandLine->PlayConsoleText("Day3ConsoleText")
-$call Wait(1)
+$call SetRefGuideActive(false)
+$wait 1
 $call StartPuzzleNavigation()
 $call SetInputState(true)
 
@@ -258,18 +259,15 @@ $call SetInputState(true)
 @once
 
 $call SetInputState(false)
-$call StopPuzzleNavigation()
 $call WaitForMovedToView("Right")
-$call SetRefGuideActive(false)
 $call ClearMonitorSelection()
 // Dont remove this wait
 // We need it because something is messing with the input here 😭
-$call Wait(1)
-$set temp:LeoPuzzleStarted = true
-
+$wait 1
 $call StartPuzzleMode()
 $call SetInputState(true)
 
+$set temp:LeoPuzzleStarted = true
 {@Astrid} Elijah had figured out that Zosma isn’t the nearest star... $[Astrid/L3/l3_a_20]
 {@Astrid} Now that I've got that parallax data, I can finish what he started. $[Astrid/L3/l3_a_21]
 

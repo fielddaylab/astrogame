@@ -55,7 +55,10 @@ namespace Astro {
                     EqCoords target = puzzleState.ActivePuzzle.PuzzleCoordinates;
 
                     m_StateB.ConstellationSnapRoutine = Routine.Start(NavigationUtility.SnapAlignment(target))
-                        .OnComplete(() => { Game.Events.Dispatch(GameEvents.PuzzleNavigationComplete); });
+                        .OnComplete(() => {
+                            Game.Events.Dispatch(GameEvents.PuzzleNavigationComplete); 
+                            m_StateB.ConstellationSnapRoutine = Routine.Null;
+                            });
                 }
             }
 

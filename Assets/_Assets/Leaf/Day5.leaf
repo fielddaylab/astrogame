@@ -109,6 +109,8 @@ $goto .SetupPuzzleNav
 :: SetupPuzzleNav
 $branch Observatory.PathToMonitor
 $call ConsoleCommandLine->PlayConsoleText("Day5ConsoleText")
+$call SetRefGuideActive(false)
+$wait 1
 $call Wait(1)
 $call StartPuzzleNavigation()
 $call SetInputState(true)
@@ -117,9 +119,8 @@ $call SetInputState(true)
 @trigger    PuzzleNavigationComplete
 @once
 
-$call StopPuzzleNavigation()
+$call SetInputState(false)
 $call WaitForMovedToView("Right")
-$call SetRefGuideActive(false)
 $call ClearMonitorSelection()
 // Dont remove this wait
 // We need it because something is messing with the input here 😭

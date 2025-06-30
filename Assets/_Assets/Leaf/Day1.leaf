@@ -528,6 +528,7 @@ $goto .PostClearanceUpgrade
 
 :: PostClearanceUpgrade
 $start Observatory.PathToMonitor
+$call SetRefGuideActive(false)
 $call ConsoleCommandLine->PlayConsoleText("Day1ConsoleText")
 
 $call SetInputState(true)
@@ -568,9 +569,7 @@ $call StartPuzzleNavigation()
 @cutscene
 @once
 
-$call StopPuzzleNavigation()
 $call SetInputState(false)
-$call SetRefGuideActive(false)
 $call StartPuzzleMode()
 
 {@Astrid} (*Wistful sigh*) Happy birthday to me. $[Astrid/L1/l1_a_20]
@@ -581,14 +580,14 @@ $goto .PostPuzzleNavigationComplete
 
 :: PostPuzzleNavigationComplete
 $set temp:waitingForSelectAtik = true
-$call Wait(0.5)
+$wait 0.5
 $call HintModals->SlideInFromRight("FirstPuzzleStar", 0.4)
 $call SetInputState(true)
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $branch .SelectAtikReminder
 
 :: SelectAtikReminder
-$call Wait(10)
+$wait 10
 $if temp:waitingForSelectAtik
     {@Astrid}  It looks like the star compass gives me readings when I select the stars. That helps. $[Astrid/L1/l1_a_26]
     $goto .SelectAtikReminder
@@ -1033,6 +1032,9 @@ $call ClearMonitorSelection()
 {@Elijah} He just did what had to be done. The satellite’s still up there, and maybe—just maybe—someone still believes it matters. $[Elijah/L1/l1_e_02]
 
 {@Astrid} Elijah! Its so good his voice, even if it's just a recording... It's been so long since I've gotten more than a letter. $[Astrid/L1/l1_a_43]
+$call SetRefGuideActive(false)
+$wait 0.5
+
 {@Dad} CERES HQ checking in. Great work today! $[Dad/L1/l1_d_11]
 {@Dad} It’s late where you are. Get some rest, kiddo. I sent you a letter. You should get it in a few weeks. $[Dad/L1/l1_d_12]
 {@Astrid} (*yawns*) Okay, I’ll be looking out for it. Can I say I miss you on here? $[Astrid/L1/l1_a_44]

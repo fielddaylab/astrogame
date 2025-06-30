@@ -372,12 +372,8 @@ $call SetInputState(true)
 @cutscene
 @once
 
-$call SetInputState(false)
-$call StopPuzzleNavigation()
 $call ClearMonitorSelection()
-$wait 0.5
 $call StartPuzzleMode()
-$call SetInputState(true)
 
 :: HerculesPuzzleComplete
 @trigger    CorrectPuzzleSubmission

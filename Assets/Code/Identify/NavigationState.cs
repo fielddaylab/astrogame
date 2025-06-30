@@ -45,7 +45,8 @@ namespace Astro {
             Game.Events.Deregister(GameEvents.StopNeutrinoNavigation, NavigationUtility.OnNeutrinoNavStopped);
             Game.Events.Deregister(GameEvents.StopOpenMode, NavigationUtility.OnOpenIdStopped);
 
-            Game.Events.Deregister(GameEvents.StopPuzzleNavigation, NavigationUtility.OnPuzzleNavStart);
+            Game.Events.Deregister(GameEvents.StartPuzzleNavigation, NavigationUtility.OnPuzzleNavStart);
+            Game.Events.Deregister(GameEvents.PuzzleNavigationComplete, NavigationUtility.OnPuzzleNavComplete);
             Game.Events.Deregister(GameEvents.StopPuzzleNavigation, NavigationUtility.OnPuzzleNavStopped);
         } 
     }
@@ -68,9 +69,9 @@ namespace Astro {
         } 
 
         public static void OnPuzzleNavComplete() {
-            NavigationState navState = Find.State<NavigationState>(); 
+            NavigationState navState = Find.State<NavigationState>();
+            ScriptUtility.Trigger(ScriptEvents.PuzzleNavigationComplete);
             Game.Events.Dispatch(GameEvents.StopPuzzleNavigation);
-            navState.ConstellationSnapRoutine = Routine.Null;
         }
 
         public static void OnPuzzleNavStopped() {
