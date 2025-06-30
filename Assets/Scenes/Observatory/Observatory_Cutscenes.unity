@@ -122,6 +122,37 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &301196080
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 301196081}
+  m_Layer: 0
+  m_Name: StartPos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &301196081
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 301196080}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.023980884, y: -0.7067, z: -0.023980884, w: -0.7067}
+  m_LocalPosition: {x: 22.409992, y: 19.46, z: 4.9200068}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 325515780}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &325515779
 GameObject:
   m_ObjectHideFlags: 0
@@ -155,7 +186,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 301196081}
   m_Father: {fileID: 1590071818}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &325515781
@@ -306,6 +338,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Director: {fileID: 325515783}
   Camera: {fileID: 981749358}
+  StartPosition: {fileID: 301196081}
   AssetGroup:
     GameObjects: []
     Behaviours: []
@@ -517,6 +550,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Director: {fileID: 415795016}
   Camera: {fileID: 981749358}
+  StartPosition: {fileID: 0}
   AssetGroup:
     GameObjects: []
     Behaviours: []
@@ -642,6 +676,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Director: {fileID: 888268528}
   Camera: {fileID: 981749358}
+  StartPosition: {fileID: 0}
   AssetGroup:
     GameObjects: []
     Behaviours: []
@@ -873,6 +908,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Director: {fileID: 912099076}
   Camera: {fileID: 981749358}
+  StartPosition: {fileID: 0}
   AssetGroup:
     GameObjects: []
     Behaviours: []
@@ -1017,6 +1053,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Director: {fileID: 1027667019}
   Camera: {fileID: 981749358}
+  StartPosition: {fileID: 0}
   AssetGroup:
     GameObjects: []
     Behaviours: []
