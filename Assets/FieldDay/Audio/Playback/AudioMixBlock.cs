@@ -11,19 +11,15 @@ namespace FieldDay.Audio {
         public unsafe fixed float Pitch[AudioMgr.MaxBuses];
         public unsafe fixed float Pan[AudioMgr.MaxBuses];
 
-#if SUPPORTS_AUDIOEFFECTS
         public unsafe fixed float LoPass[AudioMgr.MaxBuses];
         public unsafe fixed float HiPass[AudioMgr.MaxBuses];
-#endif // SUPPORTS_AUDIOEFFECTS
 
         public unsafe void Reset() {
             for(int i = 0; i < AudioMgr.MaxBuses; i++) {
                 Volume[i] = Pitch[i] = 1;
                 Pan[i] = 0;
 
-#if SUPPORTS_AUDIOEFFECTS
                 LoPass[i] = HiPass[i] = 0;
-#endif // SUPPORTS_AUDIOEFFECTS
             }
         }
 

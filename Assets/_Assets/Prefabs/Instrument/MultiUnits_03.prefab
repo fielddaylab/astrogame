@@ -432,6 +432,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 17d9da1e192b3c948b74a691682fc3ca, type: 2}
+    - target: {fileID: 4635682576255221327, guid: f7e2ff335571d814bbe4ec84a132a2e7, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 4936310586666393905, guid: f7e2ff335571d814bbe4ec84a132a2e7, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -471,7 +475,32 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f7e2ff335571d814bbe4ec84a132a2e7, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4288838228218172396}
+    - targetCorrespondingSourceObject: {fileID: 701436865583028064, guid: f7e2ff335571d814bbe4ec84a132a2e7, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7720724053086112110}
   m_SourcePrefab: {fileID: 100100000, guid: f7e2ff335571d814bbe4ec84a132a2e7, type: 3}
+--- !u!1 &1240596910252682773 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 701436865583028064, guid: f7e2ff335571d814bbe4ec84a132a2e7, type: 3}
+  m_PrefabInstance: {fileID: 1768645051635628405}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7720724053086112110
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1240596910252682773}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ae620349e7bce24688d2ab26f9be5a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Always: 1
+  DestroyInactiveChildren: 1
+  Recursive: 1
+  DestroyGameObject: 1
+  IgnoreAnimators: 1
 --- !u!1 &1462003689827025956 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: f7e2ff335571d814bbe4ec84a132a2e7, type: 3}
@@ -491,7 +520,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Always: 1
   DestroyInactiveChildren: 1
-  Recursive: 1
+  Recursive: 0
   DestroyGameObject: 1
   IgnoreAnimators: 1
 --- !u!4 &2234282603723300510 stripped
