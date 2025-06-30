@@ -118,5 +118,25 @@ namespace FieldDay.Rendering {
             Transform cameraTransform = camera.transform;
             matrix = Matrix4x4.Rotate(Quaternion.LookRotation(-Geom.Forward(cameraTransform.rotation), upVector));
         }
+
+        /// <summary>
+        /// Renders the given camera to the given RenderTexture.
+        /// </summary>
+        static public void RenderToTexture(Camera camera, RenderTexture texture) {
+            Game.Rendering.PushManualRender();
+
+            Rect prevRect = camera.rect;
+            RenderTexture prevRT = camera.targetTexture;
+            
+            camera.rect = new Rect(0, 0, 1, 1);
+            camera.targetTexture = texture;
+
+            camera.Render();
+
+            camera.targetTexture = prevRT;
+            camera.rect = prevRect;
+
+            Game.Rendering.PopManualRender();
+        }
     }
 }

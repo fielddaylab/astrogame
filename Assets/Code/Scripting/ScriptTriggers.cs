@@ -3,6 +3,7 @@ using Astro.Save;
 using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay;
+using FieldDay.Scenes;
 using FieldDay.Scripting;
 using Leaf.Runtime;
 using UnityEngine;
@@ -73,7 +74,7 @@ namespace Astro {
 
         // TODO make this actually process more than one day
         [LeafMember("LoadNextDay")]
-        static public void LoadNextDay() {
+        static public void LoadNextDay(StringHash32 transitionType = default) {
             PlayerProgressState state = Find.State<PlayerProgressState>();
             StoryAsset story = Find.GlobalAsset<StoryAsset>();
 
@@ -85,11 +86,13 @@ namespace Astro {
 
             SaveUtility.Save(SaveSlot.Main);
 
-            Game.Scenes.LoadMainScene(day.Scene, true);
+            Game.Scenes.LoadMainScene(day.Scene, true, new MainSceneTransitionArgs() {
+                TransitionType = transitionType
+            });
         }
 
         [LeafMember("LoadDay")]
-        static public void LoadDay(StringHash32 dayId) {
+        static public void LoadDay(StringHash32 dayId, StringHash32 transitionType = default) {
             PlayerProgressState state = Find.State<PlayerProgressState>();
             StoryAsset story = Find.GlobalAsset<StoryAsset>();
             for (int i = 0; i < story.Days.Length; i++) {
@@ -109,7 +112,9 @@ namespace Astro {
             state.CompletedPrelude = true;
             SaveUtility.Save(SaveSlot.Main);
 
-            Game.Scenes.LoadMainScene(day.Scene, true);
+            Game.Scenes.LoadMainScene(day.Scene, true, new MainSceneTransitionArgs() {
+                TransitionType = transitionType
+            });
         }
 
         [LeafMember("SetInputState")]

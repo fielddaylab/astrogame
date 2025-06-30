@@ -168,6 +168,8 @@ namespace FieldDay.Rendering {
         private LightProbesState m_LightProbesState;
         private long m_LightProbesKickTS;
 
+        private uint m_ManualRenderDepth;
+
 #if DEVELOPMENT
 
         private CameraRestoreData m_DebugPrimaryCameraRestore;
@@ -479,6 +481,10 @@ namespace FieldDay.Rendering {
         }
 
         private void OnCanvasPreUpdate() {
+            if (m_ManualRenderDepth > 0) {
+                return;
+            }
+
 #if DEVELOPMENT
             if (DebugFlags.IsFlagSet(DebuggingFlags.TraceExecution)) {
                 Log.Trace("[RenderMgr] Canvas pre-update");
@@ -509,6 +515,10 @@ namespace FieldDay.Rendering {
         }
 
         private void OnApplicationPreRender() {
+            if (m_ManualRenderDepth > 0) {
+                return;
+            }
+
 #if DEVELOPMENT
             if (DebugFlags.IsFlagSet(DebuggingFlags.TraceExecution)) {
                 Log.Trace("[RenderMgr] Application pre-render");
@@ -519,6 +529,10 @@ namespace FieldDay.Rendering {
         }
 
         private void OnApplicationPostRender() {
+            if (m_ManualRenderDepth > 0) {
+                return;
+            }
+
 #if DEVELOPMENT
             if (DebugFlags.IsFlagSet(DebuggingFlags.TraceExecution)) {
                 Log.Trace("[RenderMgr] Application post-render");
@@ -555,7 +569,7 @@ namespace FieldDay.Rendering {
         #region Camera Callbacks
 
         void ICameraPreCullCallback.OnCameraPreCull(Camera inCamera, CameraCallbackSource inSource) {
-            if (!GameLoop.IsRenderingOrPreparingRendering() || !CameraUtility.IsGameCamera(inCamera)) {
+            if (m_ManualRenderDepth > 0 || !GameLoop.IsRenderingOrPreparingRendering() || !CameraUtility.IsGameCamera(inCamera)) {
                 return;
             }
 
@@ -579,7 +593,7 @@ namespace FieldDay.Rendering {
         }
 
         void ICameraPreRenderCallback.OnCameraPreRender(Camera inCamera, CameraCallbackSource inSource) {
-            if (!GameLoop.IsRendering() || !CameraUtility.IsGameCamera(inCamera)) {
+            if (m_ManualRenderDepth > 0 || !GameLoop.IsRendering() || !CameraUtility.IsGameCamera(inCamera)) {
                 return;
             }
 
@@ -670,7 +684,7 @@ namespace FieldDay.Rendering {
         }
 
         void ICameraPostRenderCallback.OnCameraPostRender(Camera inCamera, CameraCallbackSource inSource) {
-            if (!GameLoop.IsRendering() || !CameraUtility.IsGameCamera(inCamera)) {
+            if (m_ManualRenderDepth > 0 || !GameLoop.IsRendering() || !CameraUtility.IsGameCamera(inCamera)) {
                 return;
             }
 
@@ -817,5 +831,18 @@ namespace FieldDay.Rendering {
 #endif // DEVELOPMENT
 
         #endregion // Debug
+
+        #region Manual Rendering
+
+        public void PushManualRender() {
+            m_ManualRenderDepth++;
+        }
+
+        public void PopManualRender() {
+            Assert.True(m_ManualRenderDepth > 0);
+            m_ManualRenderDepth--;
+        }
+
+        #endregion // Manual Rendering
     }
 }
