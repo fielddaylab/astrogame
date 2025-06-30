@@ -172,7 +172,7 @@ $call SetStickyFirstPage(2)
 
 :: ClearanceUpgrade
 @trigger    PointsUpdated
-@when   sciencePoints > 4
+@when   openIDThresholdHit 
 @cutscene
 @once
 

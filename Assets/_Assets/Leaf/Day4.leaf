@@ -208,7 +208,7 @@ $call SetRadioFrequency(137)
 
 :: ClearanceUpgrade
 @trigger    PointsUpdated
-@when   sciencePoints > 6
+@when   openIDThresholdHit 
 @cutscene
 @once
 

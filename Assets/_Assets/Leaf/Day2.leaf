@@ -3,6 +3,7 @@
 :: Preload
 @function   ScenePreload
 $call InitUpdateMasks()
+$call ToggleDeskPicture()
 $call EnableDocumentClose("HerculesPostcard", false)
 $call EnableDocumentClose("Day2DadIcecubePostcard", false)
 $call EnableDocumentClose("1833", false)
@@ -106,23 +107,10 @@ $call SetInputState(true)
 @once
 
 $call SetInputState(false)
-$call Wait(1)
-$call SpawnDocumentToCamera("CouplePhoto")
-$call SetInputState(true)
-
-{@Astrid} Oh! I love this! $[Astrid/L2/l2_a_09]
-
-:: SpawnPuzzleQuestion
-@trigger    DocumentInspectEnd
-@when   documentId == "CouplePhoto"
-@once
-
+$wait 1
 $set temp:puzzleComplete = false
-$call SetInputState(false)
-$call Wait(1)
-
 {@Astrid} I still have so many questions. I need to sort some things out. $[Astrid/L2/l2_a_t01]
-$call Wait(0.5)
+$wait 0.5
 
 $call SpawnDocumentToCamera("Day2Question")
 $call StartDocumentPuzzle("Day2DocumentPuzzle")
@@ -130,15 +118,6 @@ $set temp:docPuzzleSolved = false
 $call SetInputState(true)
 
 {@Astrid} Where is Elijah? Is he okay? $[Astrid/L2/l2_a_3]
-
-// :: SpawnPuzzleQuestion2
-// @trigger    DocumentInspectEnd
-// @when   documentId == "Day2Question"
-// @once
-
-// $call SpawnDocumentToCamera("Day2Question2")
-
-// {@Astrid} And what on earth is he working on now?
 
 :: Day2Question2DocumentInspectEnd
 @trigger    DocumentInspectEnd
@@ -160,11 +139,11 @@ $set temp:DocOnboardHintVisible = true
 
 {@Astrid} Could he be working at Aunt Martha's clinic? They would drive each other crazy, that's not it. $[Astrid/L2/l2_a_12]
 
-:: IncorrectDocumentResponse3
-@trigger    DocumentPuzzlePromptStart
-@when   answerId == "CouplePhoto", !temp:docPuzzleSolved
+// :: IncorrectDocumentResponse3
+// @trigger    DocumentPuzzlePromptStart
+// @when   answerId == "CouplePhoto", !temp:docPuzzleSolved
 
-{@Astrid} I wish you were here Elijah. $[Astrid/L2/l2_a_t04]
+// {@Astrid} I wish you were here Elijah. $[Astrid/L2/l2_a_t04]
 
 :: IncorrectDocumentResponse4
 @trigger    DocumentPuzzlePromptStart
@@ -293,7 +272,7 @@ $call UnlockMonitorFocus()
 
 :: ClearanceUpgrade
 @trigger    PointsUpdated
-@when   sciencePoints > 3
+@when   openIDThresholdHit 
 @boostScore 200
 @interrupt
 @cutscene
