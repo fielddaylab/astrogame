@@ -172,14 +172,13 @@ namespace Astro {
             display.DataRequirmentHint.SetActive(true);
         }
 
-        static public void UpdateStarRepresentation(UIFocus focus) {
+        static public void UpdateStarRepresentation(UIFocus focus, bool hasIdentifiedNeutrinoType) {
             bool inNeutrinoEvent = NeutrinoEventUtil.IsAssetInNeutrinoEvent(focus.TargetData);
-            bool hasDataToDisplay = HasIdDataToDisplay(focus.TargetData);
 
             Sprite update;
-            if (inNeutrinoEvent & hasDataToDisplay) {
+            if (inNeutrinoEvent && hasIdentifiedNeutrinoType) {
                 update = FocusState.DataSubmittedNeutrinoStarSprite;
-            } else if (hasDataToDisplay) {
+            } else if (HasIdDataToDisplay(focus.TargetData)) {
                 update = FocusState.DataSubmittedStarSprite;
             } else {
                 update = null;
@@ -275,12 +274,13 @@ namespace Astro {
             var focus = Find.State<FocusState>().CurrentFocus;
             if (focus == null) return;
 
-            UpdateStarRepresentation(focus);
+            DayConfigAsset config = DayConfigUtil.GetConfigForState();
+            bool hasIdentifiedNeutrinoType = HasIdentifiedDataType(config.AcceptedIDSubmissions, focus.TargetData);
+
+            UpdateStarRepresentation(focus, hasIdentifiedNeutrinoType);
 
             UpdateDataDisplay(display, focus.TargetData);
 
-            DayConfigAsset config = DayConfigUtil.GetConfigForState();
-            bool hasIdentifiedNeutrinoType = HasIdentifiedDataType(config.AcceptedIDSubmissions, focus.TargetData);
 
             if (!display.DataPanelActive) {
                 display.AnimRoutine = Routine.Start(display.RevealCelestialDataDisplay());
@@ -297,7 +297,7 @@ namespace Astro {
 
         public static void PlayUnacceptedFeedback() {
             Find.FirstComponent<ConsoleTypedText>().Play("IdIrrelevant");
-
+            UpdateCurrentDataDisplay();
         }
 
         public static void PlayDuplicateFeedback() {
