@@ -571,7 +571,6 @@ $call StartPuzzleNavigation()
 @cutscene
 @once
 
-$call SetInputState(false)
 $call StartPuzzleMode()
 
 {@Astrid} (*Wistful sigh*) Happy birthday to me. $[Astrid/L1/l1_a_20]
@@ -584,7 +583,6 @@ $goto .PostPuzzleNavigationComplete
 $set temp:waitingForSelectAtik = true
 $wait 0.5
 $call HintModals->SlideInFromRight("FirstPuzzleStar", 0.4)
-$call SetInputState(true)
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $branch .SelectAtikReminder
 

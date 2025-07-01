@@ -1,12 +1,10 @@
+
+using BeauUtil;
 using BeauPools;
 using BeauRoutine;
-using BeauUtil;
 using FieldDay;
 using FieldDay.SharedState;
 using Leaf.Runtime;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
@@ -37,6 +35,9 @@ namespace Astro {
         [Header("Consts")]
         public Material UnselectedCellMat;
         public Material SelectedCellMat;
+
+        // Tracking stars that have guess trackers on them
+        public UIFocus[] PuzzleEntryGuesses = new UIFocus[4]{ null, null, null, null };
 
         public Routine PuzzleCorrectSubmissionRoutine = new Routine();
 

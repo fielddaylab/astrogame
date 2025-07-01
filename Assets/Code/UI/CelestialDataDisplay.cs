@@ -184,7 +184,8 @@ namespace Astro {
             } else {
                 update = null;
             }
-            FocusableUtility.UpdateFocusTrackerSprite(focus, update);
+
+            FocusableUtility.UpdateFocusPipSprite(focus, update);
         }
 
         public static void OnFocusUpdated(UIFocus focus) {

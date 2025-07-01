@@ -16,10 +16,13 @@ namespace Astro {
         [NonSerialized] public SpriteRenderer Highlight;
 
         public Transform Root;
-        public SpriteRenderer Represent2D;
-        public SpriteRenderer TrackerSprite;
         public SphereCollider Clickable;
         public PointerListener Button;
+
+        [Header("Apperance")]
+        public SpriteRenderer Represent2D;
+        public SpriteRenderer TrackerSprite;
+        public SpriteRenderer PipSprite;
 
         public void OnDestroy()
         {
@@ -147,19 +150,24 @@ namespace Astro {
             float scaleFactor = Mathf.Clamp(Mathf.Pow(state.BaseScale, visibleLight) - 0.45f, state.MinScale, state.MaxScale);
             focus.Root.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
             Vector3 scaleDefault = Find.State<FocusState>().DefaultTrackerPipScale;
-            focus.TrackerSprite.GetComponent<Transform>().localScale = new Vector3(scaleDefault.x / scaleFactor, scaleDefault.y / scaleFactor, scaleDefault.z);
+            var trackerTransform = focus.TrackerSprite.transform;
+            var pipTransform = focus.PipSprite.transform;
+            pipTransform.localScale = trackerTransform.localScale = new Vector3(scaleDefault.x / scaleFactor, scaleDefault.y / scaleFactor, scaleDefault.z);
 
             // Update clicable region of our asset to match the new scale
             float clickableRadius = state.BaseScale * Math.Min(1, 1 / scaleFactor);
             focus.Clickable.radius = clickableRadius / scaleFactor;
         }
 
-        public static void UpdateFocusTrackerSprite(UIFocus focus, Sprite trackerSprite){
+        public static void UpdateFocusTrackerSprite(UIFocus focus, Sprite trackerSprite) {
             focus.TrackerSprite.sprite = trackerSprite; 
         }
 
-        public static void SetCursorHintEnabled(UIFocus focus, bool enabled)
-        {
+        public static void UpdateFocusPipSprite(UIFocus focus, Sprite pipSprite) {
+            focus.PipSprite.sprite = pipSprite; 
+        }
+
+        public static void SetCursorHintEnabled(UIFocus focus, bool enabled) {
             focus.Button.enabled = enabled;
         }
     }

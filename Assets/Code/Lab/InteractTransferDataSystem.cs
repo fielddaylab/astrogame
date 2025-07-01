@@ -31,7 +31,14 @@ namespace Astro {
                     }
 
                     if (isRowComplete) {
-                        FocusableUtility.UpdateFocusTrackerSprite(Find.State<FocusState>().CurrentFocus, FocusState.GuessTrackerSprites[dataState.SelectedTarget.PuzzleRow]);
+                        int rowIndex = dataState.SelectedTarget.PuzzleRow;
+                        UIFocus current = Find.State<FocusState>().CurrentFocus;
+                        // clear any previous stars we put this guess tracker on
+                        if (puzzleState.PuzzleEntryGuesses[rowIndex] != null) {
+                            FocusableUtility.UpdateFocusTrackerSprite(puzzleState.PuzzleEntryGuesses[rowIndex], null);   
+                        }
+                        FocusableUtility.UpdateFocusTrackerSprite(current, FocusState.GuessTrackerSprites[rowIndex]);
+                        puzzleState.PuzzleEntryGuesses[rowIndex] = current;
                          
                         using (var table = TempVarTable.Alloc()) {
                             table.Set("rowId", dataState.SelectedTarget.PuzzleRow);

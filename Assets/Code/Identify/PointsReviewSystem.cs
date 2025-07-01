@@ -61,9 +61,13 @@ namespace Astro {
             PuzzleState puzzle = Find.State<PuzzleState>();
             if (PuzzleUtility.CheckSolutionCorrect(puzzle, out BitSet32 rowsCorrectness)) { 
                 // update puzzle star appeances
+                foreach (UIFocus focus in Find.State<FocusState>().ActiveFocii) {
+                    FocusableUtility.UpdateFocusTrackerSprite(focus, null);
+                }
+
                 foreach (var row in puzzle.ActivePuzzle.Rows) {
                     UIFocus currentFocus = FocusableUtility.GetFocusByData(row.Object);
-                    FocusableUtility.UpdateFocusTrackerSprite(currentFocus, FocusState.DataSubmittedStarSprite);
+                    FocusableUtility.UpdateFocusPipSprite(currentFocus, FocusState.DataSubmittedStarSprite);
                 }
 
                 ReviewUtility.OnCorrectPuzzleSubmission.Invoke(puzzle.ActivePuzzle.DisplayName);
@@ -73,6 +77,12 @@ namespace Astro {
 
                 Log.Msg("[PointsReviewSystem] Puzzle CORRECT! :D");
             } else {
+                // Clear the tracker for any star outside the puzzle
+                // TODO less expensive subset?
+                foreach (UIFocus focus in Find.State<FocusState>().ActiveFocii) {
+                    FocusableUtility.UpdateFocusTrackerSprite(focus, null);
+                }
+
                 using (var table = TempVarTable.Alloc()) {
                     for (int r = 0; r < puzzle.ActivePuzzle.Rows.Length; r++) {
                         StringHash32 assetId = puzzle.ActivePuzzle.Rows[r].Object;
@@ -89,6 +99,7 @@ namespace Astro {
                     }
                     ScriptUtility.Trigger(ScriptEvents.IncorrectPuzzleSubmission, table);
                 }
+
                 ReviewUtility.ShowResultSprite(false, m_State);
                 Log.Msg("[SubmitPuzzleSystem] Puzzle INCORRECT! D:");
                 PuzzleUtility.ClearRows(puzzle, rowsCorrectness);
