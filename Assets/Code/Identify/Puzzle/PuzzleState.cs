@@ -7,6 +7,7 @@ using FieldDay.SharedState;
 using Leaf.Runtime;
 using System.Text;
 using UnityEngine;
+using FieldDay.Audio;
 
 namespace Astro {
     public sealed class PuzzleState : SharedStateComponent, IRegistrationCallbacks {
@@ -97,12 +98,20 @@ namespace Astro {
         public static void DeactivatePuzzlePanel() {
             PuzzleDisplay display = Find.State<PuzzleState>().Display;
 
+            // Flip the puzzle panel
+            Sfx.PlayDetached("Oneshot.LabButtonC.Click", display.RotateModulePos);
+            display.FlipRoutine.Replace(display, display.RotateModulePos.RotateTo(-180f, 0.35f, Axis.Z, Space.Self).Ease(Curve.CubeInOut).ForceOnCancel());
+
             display.CellAnchorPos.gameObject.SetActive(false);
             display.HeaderAnchorPos.gameObject.SetActive(false);
         }
 
         public static void ActivatePuzzlePanel() {
             PuzzleDisplay display = Find.State<PuzzleState>().Display;
+
+            // Flip the puzzle panel
+            Sfx.PlayDetached("Oneshot.LabButtonC.Click", display.RotateModulePos);
+            display.FlipRoutine.Replace(display, display.RotateModulePos.RotateTo(0f, 0.35f, Axis.Z, Space.Self).Ease(Curve.CubeInOut).ForceOnCancel());
 
             display.CellAnchorPos.gameObject.SetActive(true);
             display.HeaderAnchorPos.gameObject.SetActive(true);

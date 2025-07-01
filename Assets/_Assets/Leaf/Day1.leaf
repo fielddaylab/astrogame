@@ -109,8 +109,8 @@ $start .TuneRadioHint
 :: TuneRadioHint
 $call Wait(5)
 $if !temp:introRadioHint, !temp:introRadioChannelTuned
-    $call HintModals->SlideInFromRight("IntroRadioControls", 0.4)
     $set temp:introRadioHint = true
+    $call HintModals->SlideInFromRight("IntroRadioControls", 0.4)
 $else
     $call HintModals->Wiggle("IntroRadioControls")
 $endif
@@ -128,7 +128,6 @@ $endif
 @once
 
 $set temp:introRadioChannelTuned = true
-// $call SetInputState(false)
 $call SetRadioDialLocked(true)
 $call SnapRadioToChannel()
 $if temp:introRadioHint

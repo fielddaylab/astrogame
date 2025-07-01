@@ -11,7 +11,6 @@ namespace Astro {
         public PuzzleHeader Clues;
         public int NumCols;
         public Transform CellAnchorPos;
-        public Transform RotateModulePos;
         public Transform HeaderAnchorPos;
         public Transform ClueGroup;
         public float RowSpacing;
@@ -19,7 +18,11 @@ namespace Astro {
         public float BaseCellWidth;
         public float ContentWidth;
         public SubmitButton SubmitButton;
-        //public Collider BackgroundCollider;
+
+        [Header ("Panel")]
+        public Transform RotateModulePos;
+        public Vector3 StartingRotation;
+        public Routine FlipRoutine;
     }
 
     public static partial class PuzzleUtility {
@@ -27,16 +30,19 @@ namespace Astro {
         static private float OFFSCREEN_SPACING = 40;
         static private Vector3 DEFAULT_RENDER_SCALE = new Vector3(0.51f, 0.23f, 1);
 
-        public static void LoadCells(PuzzleDisplay display, RingBuffer<PuzzleCell> cells, PuzzleHeader[] headers, int numCols) {
-            Routine.Start( display.SubmitButton.SetButtonActive(false) );
+        public static void LoadCells(PuzzleDisplay display, RingBuffer<PuzzleCell> cells, PuzzleHeader[] headers, int numCols)
+        {
+            Routine.Start(display.SubmitButton.SetButtonActive(false));
 
             int numRows = cells.Count / numCols;
             display.Cells = new PuzzleCell[numRows * numCols];
             display.Headers = headers;
             display.NumCols = numCols;
 
-            for (int r = 0; r < numRows; r++) {
-                for (int c = 0; c < numCols; c++) {
+            for (int r = 0; r < numRows; r++)
+            {
+                for (int c = 0; c < numCols; c++)
+                {
                     var currCell = cells[r * numCols + c];
                     display.Cells[r * numCols + c] = currCell;
                 }
