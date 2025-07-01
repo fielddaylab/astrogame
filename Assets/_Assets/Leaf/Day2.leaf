@@ -370,9 +370,11 @@ $call SetRefPageActive(16, false)
 $call SetRefPageActive(17, true)
 $call OpenRefGuideToPage(17)
 
+$call TapeDeck->SetTapeActive(true)
 {@Elijah} If you’re hearing this, it means you’ve solved Hercules—and that part of the satellite could come back online soon. $[Elijah/L2/l2_e_01] 
 {@Elijah} That would be huge. With historical data restored, the other astronomers can finally start seeing the bigger picture. $[Elijah/L2/l2_e_02]
 {@Elijah} I knew you’d get this far. Keep going! Everything depends on it now. $[Elijah/L2/l2_e_03]
+$call TapeDeck->SetTapeActive(false)
 
 $call Wait(2)
 

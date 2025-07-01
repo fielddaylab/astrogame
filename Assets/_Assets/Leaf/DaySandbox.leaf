@@ -29,10 +29,15 @@ $call StartNeutrinoNavigation()
 $call Wait(0.5)
 $call SetInputState(true)
 
+
 :: NeutrinoNavigationComplete
 @trigger    NeutrinoNavigationComplete
 @once
 
+$call TapeDeck->SetTapeActive(true)
 $call StopNeutrinoNavigation()
 {@Radio} Neutrino Origin Detected
 $call StartOpenMode()
+
+$call Wait(4)
+$call TapeDeck->SetTapeActive(false)

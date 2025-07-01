@@ -1029,9 +1029,12 @@ $call SetRefPageActive(14, false)
 $call SetRefPageActive(15, true)
 $call OpenRefGuideToPage(15)
 $call ClearMonitorSelection()
+
+$call TapeDeck->SetTapeActive(true)
 {@Elijah} If you’re hearing this… it means you didn’t give up. Good. Remember—Perseus didn’t wait for the gods to fix things. $[Elijah/L1/l1_e_01a]
 {@Elijah} He just did what had to be done. The satellite’s still up there, and maybe—just maybe—someone still believes it matters. $[Elijah/L1/l1_e_02]
 
+$call TapeDeck->SetTapeActive(false)
 {@Astrid} Elijah! Its so good his voice, even if it's just a recording... It's been so long since I've gotten more than a letter. $[Astrid/L1/l1_a_43]
 $call SetRefGuideActive(false)
 $wait 0.5
