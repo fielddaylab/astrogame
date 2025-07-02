@@ -254,6 +254,7 @@ namespace Astro {
             }
 
             Game.Events.Dispatch(GameEvents.LockMonitorFocus);
+            display.DataRequirmentHint.SetActive(false);
             display.AnimRoutine = Routine.Start(display,
                 Sequence.Create(display.RevealClearancePointDisplay())
                 .Wait(0.2f)

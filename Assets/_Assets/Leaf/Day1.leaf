@@ -566,11 +566,13 @@ $call StartPuzzleNavigation()
 
 :: PuzzleNavigationComplete
 @trigger    PuzzleNavigationComplete
+@priority   Low
 @boostScore 100
 @cutscene
 @once
 
 $call StartPuzzleMode()
+$set temp:waitingForSelectAtik = true
 
 {@Astrid} (*Wistful sigh*) Happy birthday to me. $[Astrid/L1/l1_a_20]
 {@Astrid} Whoooaa... what's all this? $[Astrid/L1/l1_a_21]
@@ -579,7 +581,6 @@ $call StartPuzzleMode()
 $goto .PostPuzzleNavigationComplete
 
 :: PostPuzzleNavigationComplete
-$set temp:waitingForSelectAtik = true
 $wait 0.5
 $call HintModals->SlideInFromRight("FirstPuzzleStar", 0.4)
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
@@ -595,7 +596,7 @@ $endif
 :: FirstPuzzleStarSelected
 @trigger   OnStarSelected
 @when   starName == "Atik", temp:waitingForSelectAtik
-@boostScore 100
+@boostScore 200
 @interrupt
 @cutscene
 @once
@@ -651,9 +652,10 @@ $call HintModals->Hide("AtikCell", 0.2)
 :: AtikAppMagFilled
 @trigger    OnPuzzleCellFilled
 @when   cellId == "R1C3", temp:waitingForFillAppMag
-@boostScore 100 
-@cutscene
+@priority Medium
+@boostScore 300 
 @interrupt
+@cutscene
 @once
 
 $set temp:waitingForSelectAppMag = false
