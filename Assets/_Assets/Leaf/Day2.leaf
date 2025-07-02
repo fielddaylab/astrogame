@@ -306,16 +306,18 @@ $endif
 @cutscene
 @once
 
-$call SetRadioDialLocked(true)
 $call SnapRadioToChannel()
 $call SetChannelActive(Unlocks_Active, false)
-$call SetChannelActive(Unlocks_Inactive, true)
+// $call SetChannelActive(Unlocks_Inactive, true)
 $set temp:radioChannelTuned = true
 $call SetInputState(false)
 $call ClearMonitorSelection()
 $call MonitorUI->PlayRadioDownload(2)
 
 $call Wait(1)
+$call SetRadioFrequency(137)
+$call SnapRadioToChannel()
+$call SetRadioDialLocked(true)
 $call ClearMonitorSelection()
 $call MonitorUI->ShowCERESLogo()
 $call SetInstrumentUnlocked(SpectrometerInstrument, true)
@@ -327,7 +329,6 @@ $call OpenRefGuidePage("Spectrometer")
 {@Radio} Thanking you for being an important part of the CERES Distributed Network of Citizen Observatories. $[Radio/L2/l2_r_14]
 {@Radio} Together, we will map the stars for a better tomorrow. $[Radio/L2/l2_r_15]
 
-$call SetRadioFrequency(137)
 $call MonitorUI->HideCERESLogo()
 $call Wait(0.5)
 

@@ -490,7 +490,6 @@ $call HintModals->Hide("RadioControls", 0.2)
 $call MonitorUI->PlayRadioDownload(2)
 $call ClearMonitorSelection()
 $call SetChannelActive(Unlocks_Active, false)
-$call SetChannelActive(Unlocks_Inactive, true)
 $call SetRadioDialLocked(false)
 $call MonitorUI->ShowCERESLogo()
 $call Wait(1)
@@ -518,6 +517,7 @@ $call SetRefGuideActive(false)
 {@Astrid} (*Sigh*) ...Another birthday without Elijah. Maybe he’s watching the Perseids, wherever he is...  $[Astrid/L1/l1_a_12]
 {@Astrid} I think I saw something about Perseus in that reference guide... $[Astrid/L1/l1_a_13]
 
+$call SetChannelActive(Unlocks_Inactive, true)
 $call OpenRefGuidePage("ConstellationPerseus")
 
 {@Astrid} Huh… There’s something about Perseus here… $[Astrid/L1/l1_a_14]
@@ -573,9 +573,13 @@ $call StartPuzzleNavigation()
 
 $call StartPuzzleMode()
 $set temp:waitingForSelectAtik = true
+$wait 0.3
+{@Astrid} What the ...!?
 
-{@Astrid} (*Wistful sigh*) Happy birthday to me. $[Astrid/L1/l1_a_20]
+$wait 1
+// {@Astrid} (*Wistful sigh*) Happy birthday to me. $[Astrid/L1/l1_a_20]
 {@Astrid} Whoooaa... what's all this? $[Astrid/L1/l1_a_21]
+$wait 2
 {@Astrid} It must be the data from that Perseus page! $[Astrid/L1/l1_a_22]
 {@Astrid} Okay, you got this Astrid… Start with what I know - the coordinates for Atik.  $[Astrid/L1/l1_a_25]
 $goto .PostPuzzleNavigationComplete

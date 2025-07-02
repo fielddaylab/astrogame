@@ -8,6 +8,9 @@ using Leaf.Runtime;
 using System.Text;
 using UnityEngine;
 using FieldDay.Audio;
+using System.Collections;
+using UnityEngine.UI;
+using FieldDay.HID;
 
 namespace Astro {
     public sealed class PuzzleState : SharedStateComponent, IRegistrationCallbacks {
@@ -98,6 +101,10 @@ namespace Astro {
         public static void DeactivatePuzzlePanel() {
             PuzzleDisplay display = Find.State<PuzzleState>().Display;
 
+            foreach (RectTransform child in display.PuzzleOverrideDisplays.GetComponentsInChildren<RectTransform>()) {
+                child.gameObject.SetActive(false);
+            }
+
             // Flip the puzzle panel
             Sfx.PlayDetached("Oneshot.LabButtonC.Click", display.RotateModulePos);
             display.FlipRoutine.Replace(display, display.RotateModulePos.RotateTo(-180f, 0.35f, Axis.Z, Space.Self).Ease(Curve.CubeInOut).ForceOnCancel());
@@ -110,17 +117,46 @@ namespace Astro {
         public static void ActivatePuzzlePanel() {
             PuzzleDisplay display = Find.State<PuzzleState>().Display;
 
+            InputUtility.SetInputEnabled(Find.State<InputState>(), false);
+            display.OverrideRoutine.Replace(PuzzleTransitionRoutine(display));
+        }
+
+        public static IEnumerator PuzzleTransitionRoutine(PuzzleDisplay display) {
+            MonitorUIMgr monitorUI = MonitorUIMgr.Instance;
+            yield return monitorUI.ShowElement("OffPanel");
+            yield return monitorUI.ShowElement("PuzzleMsg");
+
+            MonitorUIElement off = monitorUI.GetElement("OffPanel");
+
+            yield return off.GetComponent<Image>().ColorTo(new Color(1f, 0.745f, 0.24f), 0.2f);
+
+            foreach (RectTransform child in display.PuzzleOverrideDisplays.GetComponentsInChildren<RectTransform>(true)) {
+                yield return new WaitForSeconds(0.2f);
+                Sfx.PlayDetached("Oneshot.LabButtonC.Click", display.PuzzleOverrideDisplays.transform);
+                child.gameObject.SetActive(true);
+            }
+
+            yield return new WaitForSeconds(2f);
+
+            foreach (RectTransform child in display.PuzzleOverrideDisplays.GetComponentsInChildren<RectTransform>(true)) {
+                child.gameObject.SetActive(false);
+            }
+
+            off.GetComponent<Image>().color = Color.black;
+            yield return monitorUI.HideElement("PuzzleMsg");
+            yield return monitorUI.HideElement("OffPanel");
+
             // Flip the puzzle panel
             Sfx.PlayDetached("Oneshot.LabButtonC.Click", display.RotateModulePos);
             display.FlipRoutine.Replace(display, display.RotateModulePos.RotateTo(0f, 0.35f, Axis.Z, Space.Self).Ease(Curve.CubeInOut).ForceOnCancel());
 
+            InputUtility.SetInputEnabled(Find.State<InputState>(), true);
             display.CellAnchorPos.gameObject.SetActive(true);
             display.HeaderAnchorPos.gameObject.SetActive(true);
             display.ClueGroup.gameObject.SetActive(true);
-        }
+        }        
 
-        public static bool IsSlotIsolated(PuzzleState state, StringHash32 slotId)
-        {
+        public static bool IsSlotIsolated(PuzzleState state, StringHash32 slotId) {
             foreach (var isolated in state.IsolatedSlots) {
                 if (isolated.Equals(slotId)) {
                     return true;

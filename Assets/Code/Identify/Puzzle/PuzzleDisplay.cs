@@ -19,10 +19,13 @@ namespace Astro {
         public float ContentWidth;
         public SubmitButton SubmitButton;
 
-        [Header ("Panel")]
+        [Header("Panel")]
         public Transform RotateModulePos;
         public Vector3 StartingRotation;
+
         public Routine FlipRoutine;
+        public Routine OverrideRoutine;
+        public Canvas PuzzleOverrideDisplays;
     }
 
     public static partial class PuzzleUtility {
