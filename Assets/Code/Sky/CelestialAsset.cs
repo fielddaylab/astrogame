@@ -17,9 +17,11 @@ namespace Astro {
 
         [Header("Categorization")]
         public CelestialObjectCategory Category;
-        [ClassificationId] public StringHash32[] ClassIds; // deprecated
+        [ClassificationId] public StringHash32[] ClassIds; 
         [ReferenceEntryId] public StringHash32 ReferenceId; // deprecated
         [ConstellationId] public StringHash32 ConstellationId; // deprecated
+
+        public bool AtypicalForClass;
 
         [Header("Temperature and Color")]
         public uint Temperature;
