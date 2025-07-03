@@ -90,7 +90,9 @@ namespace Astro {
 
             focus.Root.localScale = scale;
             Vector3 currTrackerScale = focus.TrackerSprite.GetComponent<Transform>().localScale;
-            focus.TrackerSprite.GetComponent<Transform>().localScale = new Vector3(currTrackerScale.x / scale.x, currTrackerScale.y / scale.y, 1f);
+            Transform tracker = focus.TrackerSprite.transform;
+            Transform pip = focus.PipSprite.transform;
+            tracker.localScale = pip.localScale = new Vector3(currTrackerScale.x / scale.x, currTrackerScale.y / scale.y, 1f);
         }
 
         public static void UpdateFocusFilterAppearance(UIFocus focus, CelestialObjectVisMask visMask = CelestialObjectVisMask.Visible){
@@ -117,11 +119,10 @@ namespace Astro {
                 Vector3 highlightScaleDefault = Find.State<FocusState>().DefaultTrackerPipScale;
 
                 focus.Root.localScale = new Vector3(highlightScaleFactor, highlightScaleFactor, highlightScaleFactor);
-                focus.TrackerSprite.GetComponent<Transform>().localScale = new Vector3(
-                    highlightScaleDefault.x / highlightScaleFactor,
-                    highlightScaleDefault.y / highlightScaleFactor,
-                    highlightScaleDefault.z
-                );
+
+                Transform tracker = focus.TrackerSprite.transform;
+                Transform pip = focus.PipSprite.transform;
+                tracker.localScale = pip.localScale = new Vector3(highlightScaleDefault.x / highlightScaleFactor, highlightScaleDefault.y / highlightScaleFactor, 1f);
                 return;
             }
             
