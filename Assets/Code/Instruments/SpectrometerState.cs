@@ -62,6 +62,9 @@ namespace Astro {
             if (mask.HasFlag(SpectrographMaterialMask.Titanium)) {
                 result.AddRange(state.Wavelengths[SpectrographMaterialMask.Titanium]);
             }
+            if (mask.HasFlag(SpectrographMaterialMask.Lithium)) {
+                result.AddRange(state.Wavelengths[SpectrographMaterialMask.Lithium]);
+            }
             return result;
         }
 
