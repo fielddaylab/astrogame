@@ -271,11 +271,10 @@ namespace Astro {
             float oldZoom = m_State.Zoom;
             float newZoom = oldZoom;
 
-            if (Game.Input.IsKeyPressed(KeyCode.I)) {
-                newZoom = Mathf.Clamp(newZoom - m_State.ZoomIncrement, m_State.ZoomBounds.x, m_State.ZoomBounds.y);
-            }
-            if (Game.Input.IsKeyPressed(KeyCode.K)) {
-                newZoom = Mathf.Clamp(newZoom + m_State.ZoomIncrement, m_State.ZoomBounds.x, m_State.ZoomBounds.y);
+            if (Game.Input.IsKeyDown(KeyCode.Q)) {
+                newZoom = Mathf.Clamp(newZoom - (m_State.ZoomIncrement * Frame.DeltaTime), m_State.ZoomBounds.x, m_State.ZoomBounds.y);
+            } else if (Game.Input.IsKeyDown(KeyCode.E)) {
+                newZoom = Mathf.Clamp(newZoom + (m_State.ZoomIncrement * Frame.DeltaTime), m_State.ZoomBounds.x, m_State.ZoomBounds.y);
             }
 
             if (oldZoom != newZoom) {

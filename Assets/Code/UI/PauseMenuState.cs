@@ -75,6 +75,7 @@ namespace Astro {
             if (paused) {
                 state.CurrentUpdateMask = GameLoop.UpdateMask;
                 GameLoop.SuspendUpdates(Bits.All32);
+                GameLoop.ResumeUpdates(AstroGame.PauseUpdateMask);
                 //PauseCutscenes();
                 InputUtility.SetClickableMaskCustom(input, LayerMasks.UI_Mask);
                 Game.Events.Dispatch(GameEvents.GamePaused);

@@ -26,6 +26,7 @@ namespace Astro {
         public const int InteractUpdateMask = 1 << 4;
         public const int PuzzleSubmissionUpdateMask = 1 << 5;
         public const int AnySubmissionUpdateMask = 1 << 6;
+        public const int PauseUpdateMask = 1 << 7;
 
         /// <summary>
         /// Save state buffer.

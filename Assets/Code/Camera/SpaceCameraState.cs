@@ -15,6 +15,7 @@ namespace Astro {
         public bool EnableMouseControls;
         public bool EnableMouseAutoControls;
         public bool EnableSmoothKeyboardControls = true;
+        public bool EnableSmoothZoom = true;
         public bool InputEnabled = true;
 
         public Transform StarRoot;
