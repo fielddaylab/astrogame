@@ -176,9 +176,9 @@ namespace Astro {
             bool inNeutrinoEvent = NeutrinoEventUtil.IsAssetInNeutrinoEvent(focus.TargetData);
 
             Sprite update;
-            if (inNeutrinoEvent && hasIdentifiedNeutrinoType) {
+            if (inNeutrinoEvent && hasIdentifiedNeutrinoType & focus.IsVisibleInCurrentFilter) {
                 update = FocusState.DataSubmittedNeutrinoStarSprite;
-            } else if (HasIdDataToDisplay(focus.TargetData)) {
+            } else if (HasIdDataToDisplay(focus.TargetData) & focus.IsVisibleInCurrentFilter) {
                 update = FocusState.DataSubmittedStarSprite;
             } else {
                 update = null;

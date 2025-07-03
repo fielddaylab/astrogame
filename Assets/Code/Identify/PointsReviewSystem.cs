@@ -64,7 +64,9 @@ namespace Astro {
 
                 foreach (var row in puzzle.ActivePuzzle.Rows) {
                     UIFocus currentFocus = FocusableUtility.GetFocusByData(row.Object);
-                    FocusableUtility.UpdateFocusPipSprite(currentFocus, FocusState.DataSubmittedStarSprite);
+                    if (currentFocus.IsVisibleInCurrentFilter) {
+                        FocusableUtility.UpdateFocusPipSprite(currentFocus, FocusState.DataSubmittedStarSprite);    
+                    }
                 }
 
                 ReviewUtility.OnCorrectPuzzleSubmission.Invoke(puzzle.ActivePuzzle.DisplayName);
