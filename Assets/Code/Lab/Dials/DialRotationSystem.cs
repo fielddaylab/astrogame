@@ -7,7 +7,7 @@ using Astro;
 using BeauUtil;
 using BeauRoutine;
 
-[SysUpdate(GameLoopPhase.Update, 50)] // After InteractAdjustDialSystem
+[SysUpdate(GameLoopPhase.Update, 60)] // After DialAdjustInstrumentSystem
 public class DialRotationSystem : ComponentSystemBehaviour<InteractAdjustDial>
 {
     public override void ProcessWorkForComponent(InteractAdjustDial primary, float deltaTime)

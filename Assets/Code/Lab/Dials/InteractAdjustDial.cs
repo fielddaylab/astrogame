@@ -53,22 +53,6 @@ namespace Astro
             var postRawVal = dial.BaseVal + delta * dial.InputSensitivity;
 
             dial.CurrConstrainedVal = Math.Clamp(postRawVal, 0, 1);
-            var rawValDelta = postRawVal - preRawVal;
-
-            /* TODO: passthrough logic
-            if (rawValDelta > 0 && dial.CurrConstrainedVal == 0)
-            {
-                rawValDelta = 0;
-                dial.PassThroughOffset = postRawVal;
-            }
-            else if (rawValDelta > 1 && dial.CurrConstrainedVal == 1)
-            {
-                rawValDelta = 1;
-                dial.PassThroughOffset = postRawVal;
-            }
-            */
-
-            // Log.Msg("adjusted dial ({0}/{1}) by {1} to ({2}/{3})", preRawVal, preConstrainedVal, delta * dial.InputSensitivity, postRawVal, dial.CurrConstrainedVal);
 
             dial.CurrRawVal = postRawVal;
             dial.ConstrainedValDelta = dial.CurrConstrainedVal - preConstrainedVal;
@@ -78,8 +62,13 @@ namespace Astro
 
         public static void TrySetDial(InteractAdjustDial dial, float value) {
             var valDelta = value - dial.CurrConstrainedVal;
-            var inputDelta = valDelta / dial.InputSensitivity;
-            TryAdjustDial(dial, inputDelta);
+
+            var preConstrainedVal = dial.CurrConstrainedVal;
+            dial.CurrConstrainedVal = Math.Clamp(dial.CurrConstrainedVal + valDelta, 0, 1);
+            dial.ConstrainedValDelta = dial.CurrConstrainedVal - preConstrainedVal;
+
+            dial.ValChanged = true;
+
             dial.BaseVal = value;
         }
     }
