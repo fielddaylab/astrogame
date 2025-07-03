@@ -1,12 +1,15 @@
+using Astro.Save;
 using FieldDay;
 using FieldDay.Audio;
+using FieldDay.Data;
 using FieldDay.Rendering;
 using FieldDay.SharedState;
 using System;
 using UnityEngine;
 
 namespace Astro {
-    public class UserSettingsState : SharedStateComponent, IRegistrationCallbacks {
+    public class UserSettingsState : SharedStateComponent, IRegistrationCallbacks, ISaveStateChunkObject 
+    {
         [NonSerialized] public string PlayerCode = null;
         [NonSerialized] public float MasterVolume;
         [NonSerialized] public bool CameraDriftEnabled = true;
@@ -15,12 +18,36 @@ namespace Astro {
 
         public void OnDeregister()
         {
-
+            AstroGame.SaveBuffer.DeregisterHandler("UserSettingsState");
         }
 
         public void OnRegister()
         {
             PlayerCode = PlayerPrefs.GetString("LatestPlayerCode", null);
+            AstroGame.SaveBuffer.RegisterHandler("UserSettingsState", this);
+        }
+
+        public void Read(object self, ref ByteReader reader, SaveStateChunkConsts consts, ref SaveScratchpad scratch)
+        {
+            float volume = reader.Read<float>();
+            SettingsUtility.SetMasterVolume(this, volume);
+
+            bool cameraDrift = reader.Read<bool>();
+            SettingsUtility.SetCameraDrift(this, cameraDrift);
+
+            bool highQuality = reader.Read<bool>();
+            SettingsUtility.SetQualityMode(this, highQuality);
+
+            bool fullscreen = reader.Read<bool>();
+            SettingsUtility.SetFullscreen(this, fullscreen);
+        }
+
+        public void Write(object self, ref ByteWriter writer, SaveStateChunkConsts consts, ref SaveScratchpad scratch)
+        {
+            writer.Write((float)MasterVolume);
+            writer.Write((bool)CameraDriftEnabled);
+            writer.Write((bool)HighQualityMode);
+            writer.Write((bool)FullscreenEnabled);
         }
     }
 
