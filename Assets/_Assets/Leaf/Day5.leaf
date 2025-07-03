@@ -72,6 +72,7 @@ $call WaitForMovedToView("Right")
 $call SetInputState(false)
 
 {@Radio} Star HQ to Station Seven. IceCube is reading a high-energy neutrino emission from the area of the Eridanus Constellation.
+$call SetInputState(true)
 {@Radio} Identification of nearby celestial objects is requested. Uploading area of interest...
 $branch .SetupNeutrinoNav
 
@@ -79,14 +80,12 @@ $branch .SetupNeutrinoNav
 $call WaitForMovedToView("Monitor")
 $call MonitorUI->PlayRadioDownload(2)
 $call StartNeutrinoNavigation()
-$call SetInputState(true)
 
 :: NeutrinoNavigationComplete
 @trigger    NeutrinoNavigationComplete
 @once
 
 $call StopNeutrinoNavigation()
-{@Radio} Neutrino Origin Detected
 $call StartOpenMode()
 
 :: FinishOpenID
@@ -107,7 +106,9 @@ $call Wait(1)
 $goto .SetupPuzzleNav
 
 :: SetupPuzzleNav
-$branch Observatory.PathToMonitor
+
+$start Observatory.PathToMonitor
+$call ClearMonitorSelection()
 $call ConsoleCommandLine->PlayConsoleText("Day5ConsoleText")
 $call SetRefGuideActive(false)
 $wait 1

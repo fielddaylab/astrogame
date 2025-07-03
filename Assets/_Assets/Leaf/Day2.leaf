@@ -188,6 +188,7 @@ $endif
 $call WaitForMovedToView("Right")
 {@Radio} CERES HQ to Station Twelve. $[Radio/L2/l2_r_01]
 {@Radio} IceCube is reading a high-energy neutrino emission from the area of the Hydra Constellation. $[Radio/L2/l2_r_02]
+$call SetInputState(true)
 {@Radio} Identification of nearby celestial objects is requested. Uploading area of interest. $[Radio/L2/l2_r_03]
 $goto .SetupNeutrinoNav
 
@@ -195,7 +196,6 @@ $goto .SetupNeutrinoNav
 $call WaitForMovedToView("Monitor")
 $call MonitorUI->PlayRadioDownload(4)
 $call StartNeutrinoNavigation()
-$call SetInputState(true)
 
 :: NeutrinoNavigationComplete
 @trigger    NeutrinoNavigationComplete
@@ -306,20 +306,33 @@ $endif
 @cutscene
 @once
 
-$call SnapRadioToChannel()
-$call SetChannelActive(Unlocks_Active, false)
-// $call SetChannelActive(Unlocks_Inactive, true)
 $set temp:radioChannelTuned = true
+$call SetRadioFrequency(375, true)
+$call SnapRadioToChannel()
+$call SetRadioDialLocked(true)
 $call SetInputState(false)
 $call ClearMonitorSelection()
 $call MonitorUI->PlayRadioDownload(2)
+$call ConsoleCommandLine->PlayConsoleText("UpgradeSystem")
+$call SetChannelActive(Unlocks_Active, false)
+$call SetRadioDialLocked(false)
+$call SetInputState(true)
+$call SetChannelActive(Unlocks_Inactive, true)
 
-$call Wait(1)
-$call SetRadioFrequency(137)
+:: CompleteUpgradeSequence
+@trigger    RadioChannelListenStart
+@when       channelId == "IceCube", temp:radioChannelTuned
+@priority   High
+@boostScore 1000
+@interrupt
+@once
+
+$call SetRadioFrequency(137, true)
 $call SnapRadioToChannel()
 $call SetRadioDialLocked(true)
-$call ClearMonitorSelection()
 $call MonitorUI->ShowCERESLogo()
+$wait 1
+
 $call SetInstrumentUnlocked(SpectrometerInstrument, true)
 $call SetStickyFirstPage(-1)
 $call OpenRefGuidePage("Spectrometer")
@@ -329,6 +342,7 @@ $call OpenRefGuidePage("Spectrometer")
 {@Radio} Thanking you for being an important part of the CERES Distributed Network of Citizen Observatories. $[Radio/L2/l2_r_14]
 {@Radio} Together, we will map the stars for a better tomorrow. $[Radio/L2/l2_r_15]
 
+$call SetRadioDialLocked(false)
 $call MonitorUI->HideCERESLogo()
 $call Wait(0.5)
 
@@ -380,6 +394,7 @@ $call TapeDeck->SetTapeActive(false)
 $call Wait(2)
 
 {@Dad} Astrid... What are you up to? Elijah's puzzles are a wild goose chase. I don't want you getting your hopes up. $[Dad/L2/l2_d_1]
+$call SetRefGuideActive(false)
 
 {@Astrid} But dad, I think I'm getting close here... $[Astrid/L2/l2_a_19]
 {@Astrid} That satellite was built to withstand a CME. If we could decrypt what's stored on it... it would change everything! $[Astrid/L2/l2_a_20]

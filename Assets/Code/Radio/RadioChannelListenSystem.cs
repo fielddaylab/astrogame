@@ -28,7 +28,7 @@ namespace Astro.Radio {
                 m_StateC.CurrListenChannel = m_StateA.LastKnownChannel;
 
                 using (var table = TempVarTable.Alloc()) {
-                    table.Set("channelId", m_StateC.CurrListenChannel.AssetId);
+                    if (m_StateC.CurrListenChannel != null) table.Set("channelId", m_StateC.CurrListenChannel.AssetId);
                     ScriptUtility.Trigger(ScriptEvents.RadioChannelListenStart, table);
                 }
             }

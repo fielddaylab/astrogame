@@ -153,12 +153,12 @@ $call Wait(1)
 $call Wait(1)
 
 {@Radio} CERES HQ to Station Twelve. IceCube is reading a high-energy neutrino emission from the area of the Orion Constellation. $[Radio/L3/l3_r_01]
+$call SetInputState(true)
 {@Radio} Identification of nearby celestial objects is requested. Uploading area of interest. $[Radio/L3/l3_r_02]
 $goto .SetupNeutrinoNav
 
 :: SetupNeutrinoNav
 $call WaitForMovedToView("Monitor")
-$call SetInputState(true)
 $call MonitorUI->PlayRadioDownload(2)
 $call StartNeutrinoNavigation()
 
@@ -204,24 +204,41 @@ $endif
 @cutscene
 @once
 
-$call SetRadioDialLocked(true)
-$call SnapRadioToChannel()
-$call SetChannelActive(Unlocks_Active, false)
-$call SetChannelActive(Unlocks_Inactive, true)
 $set temp:radioChannelTuned = true
+$call SetRadioFrequency(375, true)
+$call SnapRadioToChannel()
+$call SetRadioDialLocked(true)
 $call SetInputState(false)
-$call MonitorUI->PlayRadioDownload(2)
-
-$call Wait(1)
 $call ClearMonitorSelection()
+$call MonitorUI->PlayRadioDownload(2)
+$call ConsoleCommandLine->PlayConsoleText("UpgradeSystem")
+$call SetChannelActive(Unlocks_Active, false)
+$call SetRadioDialLocked(false)
+$call SetInputState(true)
+$call SetChannelActive(Unlocks_Inactive, true)
+
+:: CompleteUpgradeSequence
+@trigger    RadioChannelListenStart
+@when       channelId == "IceCube", temp:radioChannelTuned
+@priority   High
+@boostScore 1000
+@interrupt
+@once
+
+$call SetRadioFrequency(137, true)
+$call SnapRadioToChannel()
+$call SetRadioDialLocked(true)
 $call MonitorUI->ShowCERESLogo()
+$wait 1
+
 $call SetInstrumentUnlocked(InfraredWavelength, true)
 $call SetInstrumentUnlocked(HistoricalDataInstrument, true)
-$call Wait(2)
 $call ConsoleCommandLine->PlayConsoleText("LoadHistData")
+$wait 2
 
 $call SetStickyFirstPage(-1)
 $call OpenRefGuidePage("HistoricalData")
+
 
 {@Radio} Congratulations on being awarded clearance <b>level 3</b>. You are now cleared to use the historical data module. $[Radio/L3/l3_r_04]
 {@Radio} This will allow you to measure parallax over a period of time so that you can determine the distance of the stars. $[Radio/L3/l3_r_05]
@@ -230,7 +247,7 @@ $call OpenRefGuidePage("HistoricalData")
 // {@Radio} Thanking you for being an important part of the CERES Distributed Network of Citizen Observatories. $[Radio/L3/l3_r_08] 
 // {@Radio} Together, we will map the stars for a better tomorrow. $[Radio/L3/l3_r_09]
 
-$call SetRadioFrequency(137)
+$call SetRadioDialLocked(false)
 $call MonitorUI->HideCERESLogo()
 $call Wait(1)
 
@@ -267,6 +284,7 @@ $call ClearMonitorSelection()
 // We need it because something is messing with the input here 😭
 $wait 1
 $call StartPuzzleMode()
+$wait 4
 $call SetInputState(true)
 
 $set temp:LeoPuzzleStarted = true
@@ -312,9 +330,9 @@ $call OpenRefGuidePage("HistoricalData")
 @cutscene
 @once
 
-$call ClearMonitorSelection()
 $call StopPuzzleMode()
 $call SetInputState(false)
+$call ClearMonitorSelection()
 $call ConsoleCommandLine->PlayConsoleText("PlayMessage")
 $call SetRefPageActive(18, false)
 $call SetRefPageActive(19, true)

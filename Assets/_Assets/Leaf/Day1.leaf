@@ -110,9 +110,9 @@ $start .TuneRadioHint
 $call Wait(5)
 $if !temp:introRadioHint, !temp:introRadioChannelTuned
     $set temp:introRadioHint = true
-    $call HintModals->SlideInFromRight("IntroRadioControls", 0.4)
+    $call HintModals->SlideInFromRight("CeresRadioHint", 0.4)
 $else
-    $call HintModals->Wiggle("IntroRadioControls")
+    $call HintModals->Wiggle("CeresRadioHint")
 $endif
 $if !temp:introRadioChannelTuned
     {@Astrid} Ok... I need to tune the radio to 137 mega hertz...
@@ -128,11 +128,12 @@ $endif
 @once
 
 $set temp:introRadioChannelTuned = true
-$call SetRadioDialLocked(true)
+$call SetRadioFrequency(137, true)
 $call SnapRadioToChannel()
+$call SetRadioDialLocked(true)
 $if temp:introRadioHint
     $set temp:introRadioHint = false
-    $call HintModals->Hide("IntroRadioControls", 0.2)
+    $call HintModals->Hide("CeresRadioHint", 0.2)
 $endif
 $call MonitorUI->HideElement("CommError")
 $call MonitorUI->HideElement("CommErrorMsg2")
@@ -150,7 +151,9 @@ $call WaitForMovedToView("Right")
 {@Astrid} Oh, a radio signal! How do I work this thing? Hello? This is Astrid... Elijah's friend. $[Astrid/L1/l1_a_02]
 {@Radio} Station Twelve, please log in and report. $[Radio/L1/l1_r_02]
 // {@Astrid} Log in? How exactly am I supposed to do that? $[Astrid/L1/l1_a_03]
+$start Observatory.PathToMonitor
 $wait 0.5
+$call WaitForMovedToView("Right")
 $call ConsoleCommandLine->PlayConsoleText("AstridLogin")
 $wait 1
 
@@ -483,16 +486,34 @@ $endif
 @once
 
 $set temp:radioChannelTuned = true
-$call SetInputState(false)
-$call SetRadioDialLocked(true)
+$call SetRadioFrequency(375, true)
 $call SnapRadioToChannel()
+$call SetRadioDialLocked(true)
+$call SetInputState(false)
 $call HintModals->Hide("RadioControls", 0.2)
-$call MonitorUI->PlayRadioDownload(2)
 $call ClearMonitorSelection()
+$call MonitorUI->PlayRadioDownload(2)
+$call HintModals->SlideInFromRight("CeresRadioHint", 0.4)
+$call ConsoleCommandLine->PlayConsoleText("UpgradeSystem")
 $call SetChannelActive(Unlocks_Active, false)
 $call SetRadioDialLocked(false)
+$call SetInputState(true)
+$call SetChannelActive(Unlocks_Inactive, true)
+
+:: CompleteUpgradeSequence
+@trigger    RadioChannelListenStart
+@when       channelId == "IceCube", temp:radioChannelTuned
+@priority   High
+@boostScore 1000
+@interrupt
+@once
+
+$call SetRadioFrequency(137, true)
+$call SnapRadioToChannel()
+$call SetRadioDialLocked(true)
+$call HintModals->Hide("CeresRadioHint", 0.2)
 $call MonitorUI->ShowCERESLogo()
-$call Wait(1)
+$wait 1
 
 {@Radio} Ope, and I need to read this thing.... (*clears throat*) $[Radio/L1/l1_r_29]
 $call SetInstrumentUnlocked(ColorInstrument, true)
@@ -501,20 +522,17 @@ $call OpenRefGuidePage("Colormeter")
 
 {@Radio} Congratulations on being awarded clearance <b>level one</b>. You are now cleared to use the color meter.  $[Radio/L1/l1_r_30]
 {@Astrid} Starting at the bottom... clearance level one. $[Astrid/L1/l1_a_10]
-// {@Radio} Please reference your CERES Operator Manual for further information about your equipment. $[Radio/L1/l1_r_31]
 {@Radio} Thanking you for being an important part of the CERES Distributed Network of Citizen Observatories. $[Radio/L1/l1_r_32]
-{@Radio} Together, we will map the stars for a better tomorrow. $[Radio/L1/l1_r_33]
 
 {@Astrid} Ugh, riveting... $[Astrid/L1/l1_a_11]
+{@Radio} Together, we will map the stars for a better tomorrow. $[Radio/L1/l1_r_33]
 
-{@Radio} Tuning you to the Ice Cube CERES headquarters for further instruction... $[Radio/L1/l1_r_34]
-$call SetRadioFrequency(137)
-
+$call SetRadioDialLocked(false)
 $call MonitorUI->HideCERESLogo()
 $call Wait(1)
 $call SetRefGuideActive(false)
 
-{@Astrid} (*Sigh*) ...Another birthday without Elijah. Maybe he’s watching the Perseids, wherever he is...  $[Astrid/L1/l1_a_12]
+{@Astrid} (*Sigh*) Another birthday without Elijah. Maybe he’s watching the Perseids, wherever he is...  $[Astrid/L1/l1_a_12]
 {@Astrid} I think I saw something about Perseus in that reference guide... $[Astrid/L1/l1_a_13]
 
 $call SetChannelActive(Unlocks_Inactive, true)
@@ -627,7 +645,7 @@ $call HintModals->SlideInFromRight("AtikCell", 0.4)
 
 :: NotPuzzleCellAstrid
 @trigger    OnLabInteraction
-@when   cellId != "R1C3", temp:waitingForSelectAppMag
+@when   cellId != "R1C3", actorId != "PhotometerLoadBtn", temp:waitingForSelectAppMag
 
 $call HintModals->Wiggle("AtikCell")
 {@Astrid} First, I need to select a cell on the grid. $[Astrid/L1/l1_a_t01]
@@ -635,14 +653,26 @@ $call HintModals->Wiggle("AtikCell")
 :: AtikAppMagSelected
 @trigger    OnPuzzleCellSelected
 @when   cellId == "R1C3", temp:waitingForSelectAppMag
-@cutscene
 @interrupt
+@cutscene
 
 $set temp:waitingForFillAppMag = true
 $call AddIsolatedSlot(ApparentMagnitude)
 $call HintModals->Hide("AtikCell", 0.2)
 
 {@Astrid} Now all I have to do is load in data from the photometer. $[Astrid/L1/l1_a_t23]
+
+:: AtikAppMagInstrumentSelected
+@trigger    OnLabInteraction
+@when   actorId == "PhotometerLoadBtn", temp:waitingForSelectAppMag
+@interrupt
+@cutscene
+
+$set temp:waitingForFillAppMag = true
+$call AddIsolatedSlot(ApparentMagnitude)
+$call HintModals->Hide("AtikCell", 0.2)
+
+{@Astrid} I need the apparent magnitude space for Atik on this grid... $[Astrid/L1/l1_a_28]
 
 :: AstridThatsNotThePhotometer
 @trigger    OnLabInteraction
@@ -703,7 +733,7 @@ $call IsolatePuzzleCell(1, 4)
 
 :: NotBlueLightAstrid
 @trigger OnPuzzleCellSelected
-@when   cellId != "R1C4", temp:waitingForBlueLight
+@when   cellId != "R1C4", actorId != "PhotometerLoadBtn", temp:waitingForBlueLight
 @interrupt
 @cutscene
 
@@ -722,8 +752,24 @@ $endif
 @cutscene
 
 $call AddIsolatedSlot(BlueMagnitude)
-$set temp:AtikCell2Hint = false
-$call HintModals->Hide("AtikCell2", 0.2)
+$if temp:AtikCell2Hint
+    $set temp:AtikCell2Hint = false
+    $call HintModals->Hide("AtikCell2", 0.2)
+$endif
+
+{@Astrid} Ok, now I can load this data into the blue magnitude space with my photometer just like before. $[Astrid/L1/l1_a_33]
+
+:: BlueLightInstrumentSelected
+@trigger    OnLabInteraction
+@when   actorId = "PhotometerLoadBtn", temp:waitingForBlueLight
+@interrupt
+@cutscene
+
+$call AddIsolatedSlot(BlueMagnitude)
+$if temp:AtikCell2Hint
+    $set temp:AtikCell2Hint = false
+    $call HintModals->Hide("AtikCell2", 0.2)
+$endif
 
 {@Astrid} Ok, now I can load this data into the blue magnitude space with my photometer just like before. $[Astrid/L1/l1_a_33]
 
@@ -740,20 +786,21 @@ $call SetInputState(false)
 
 {@Astrid} It looks like I have the visible magnitude of the star and the blue magnitude. $[Astrid/L1/l1_a_t06] 
 {@Astrid} So now the color module can calculate a <b>color index</b>! $[Astrid/L1/l1_a_t07]
+$call SetInputState(true)
 {@Astrid} The hotter the star, the bluer it is. Now I can load the color of the star... and put it in the color space for Atik. $[Astrid/L1/l1_a_36]
 $goto .PostAtikBlueMagFilled
 
 :: PostAtikBlueMagFilled
 $call IsolatePuzzleCell(1, 2)
-$call SetInputState(true)
 $set temp:waitingForFillColor = true
 
 :: AtikColorCellSelected
 @trigger    OnPuzzleCellSelected
 @when   cellId == "R1C2", temp:waitingForFillColor
+@priority   Medium
+@boostScore 100
 @interrupt
 @cutscene
-
 
 $call AddIsolatedSlot(Color)
 {@Astrid} Alright, now I should load the color in from the color indexer. $[Astrid/L1/l1_a_38]
@@ -761,6 +808,8 @@ $call AddIsolatedSlot(Color)
 :: AtikColorInstrumentSelected
 @trigger    OnLabInteraction
 @when   actorId == "ColorIndexLoadBtn", temp:waitingForFillColor
+@priority   Medium
+@boostScore 100
 @interrupt
 @cutscene
 
@@ -778,6 +827,8 @@ $call AddIsolatedSlot(Color)
 :: AtikColorFilled
 @trigger    OnPuzzleRowFilled
 @when   rowId == 1, temp:waitingForFillColor
+@priority   High
+@boostScore 200
 @interrupt
 @cutscene
 @once

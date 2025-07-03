@@ -130,12 +130,12 @@ $set temp:docPuzzleSolved = false
 @once
 
 $set temp:docPuzzleSolved = true
+$call SetInputState(false)
 {@Astrid} That's it... The only thing to do is to keep adding data to CERES and finishing these puzzles.  $[Astrid/L4/l4d_a_11]
 
-$call Wait(1)
-$call SetInputState(false)
-$call MoveToView("Right")
-$call Wait(1)
+$wait 1
+$call WaitForMovedToView("Right")
+$wait 1
 
 {@Dad} Astrid, are you there? I can't believe you did it. You unlocked the unencrypted portion of the Gorynych Satellite! $[Dad/L4/l4_d_01] 
 {@Dad} Now we'll have access to all the data stored on the satellite. $[Dad/L4/l4_d_02]
@@ -155,9 +155,10 @@ $call Wait(1)
 
 {@Dad} Anyway, you keep up the great work, Little Bear. We’ll talk soon. Over and out. $[Dad/L4/l4_d_09]
 
-$call Wait(1)
+$wait 1
 
 {@Radio} CERES HQ to Station Twelve. IceCube is reading a high-energy neutrino emission from the area of the Taurus Constellation. $[Radio/L4/l4_r_01]
+$call SetInputState(true)
 {@Radio} Identification of nearby celestial objects is requested. Uploading area of interest. $[Radio/L4/l4_r_02]
 $branch .SetupNeutrinoNav
 
@@ -165,7 +166,6 @@ $branch .SetupNeutrinoNav
 $call WaitForMovedToView("Monitor")
 $call MonitorUI->PlayRadioDownload(2)
 $call StartNeutrinoNavigation()
-$call SetInputState(true)
 
 :: NeutrinoNavigationComplete
 @trigger    NeutrinoNavigationComplete
@@ -240,16 +240,33 @@ $endif
 @cutscene
 @once
 
-$call SetRadioDialLocked(true)
-$call SnapRadioToChannel()
-$call SetChannelActive(Unlocks_Active, false)
-$call SetChannelActive(Unlocks_Inactive, true)
 $set temp:radioChannelTuned = true
+$call SetRadioFrequency(375, true)
+$call SnapRadioToChannel()
+$call SetRadioDialLocked(true)
 $call SetInputState(false)
-$call MonitorUI->PlayRadioDownload(2)
-
-$call Wait(1)
 $call ClearMonitorSelection()
+$call MonitorUI->PlayRadioDownload(2)
+$call ConsoleCommandLine->PlayConsoleText("UpgradeSystem")
+$call SetChannelActive(Unlocks_Active, false)
+$call SetRadioDialLocked(false)
+$call SetInputState(true)
+$call SetChannelActive(Unlocks_Inactive, true)
+
+:: CompleteUpgradeSequence
+@trigger    RadioChannelListenStart
+@when       channelId == "IceCube", temp:radioChannelTuned
+@priority   High
+@boostScore 1000
+@interrupt
+@once
+
+$call SetRadioFrequency(137, true)
+$call SnapRadioToChannel()
+$call SetRadioDialLocked(true)
+$call MonitorUI->ShowCERESLogo()
+$wait 1
+
 $call MonitorUI->ShowCERESLogo()
 $call SetInstrumentUnlocked(HistoricalDataModeToggle, true)
 $call SetStickyFirstPage(-1)
@@ -259,7 +276,7 @@ $call SetStickyFirstPage(-1)
 {@Radio} Thanking you for being an important part of the CERES Distributed Network of Citizen Observatories. $[Radio/L4/l4_r_06] 
 {@Radio} Together, we will map the stars for a better tomorrow. $[Radio/L4/l4_r_07]
 
-$call SetRadioFrequency(137)
+$call SetRadioDialLocked(false)
 $call MonitorUI->HideCERESLogo()
 $call OpenRefGuidePage("ConstellationDraco")
 $wait 2.5
