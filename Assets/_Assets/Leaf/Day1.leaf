@@ -508,6 +508,7 @@ $call SetChannelActive(Unlocks_Inactive, true)
 @interrupt
 @once
 
+$call SetInputState(false)
 $call SetRadioFrequency(137, true)
 $call SnapRadioToChannel()
 $call SetRadioDialLocked(true)
@@ -541,7 +542,7 @@ $call OpenRefGuidePage("ConstellationPerseus")
 {@Astrid} Huh… There’s something about Perseus here… $[Astrid/L1/l1_a_14]
 {@Astrid} Aha! $[Astrid/L1/l1_a_15]
 
-$call Wait(1)
+$wait 1
 // {@Astrid} Can this telescope can help me find Perseus? I hope I didn't miss the meteor shower. $[Astrid/L1/l1_a_16]
 $goto .PostClearanceUpgrade
 
@@ -787,12 +788,10 @@ $call SetInputState(false)
 {@Astrid} It looks like I have the visible magnitude of the star and the blue magnitude. $[Astrid/L1/l1_a_t06] 
 {@Astrid} So now the color module can calculate a <b>color index</b>! $[Astrid/L1/l1_a_t07]
 $call SetInputState(true)
-{@Astrid} The hotter the star, the bluer it is. Now I can load the color of the star... and put it in the color space for Atik. $[Astrid/L1/l1_a_36]
-$goto .PostAtikBlueMagFilled
-
-:: PostAtikBlueMagFilled
 $call IsolatePuzzleCell(1, 2)
 $set temp:waitingForFillColor = true
+
+{@Astrid} The hotter the star, the bluer it is. Now I can load the color of the star... and put it in the color space for Atik. $[Astrid/L1/l1_a_36]
 
 :: AtikColorCellSelected
 @trigger    OnPuzzleCellSelected

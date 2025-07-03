@@ -327,6 +327,7 @@ $call SetChannelActive(Unlocks_Inactive, true)
 @interrupt
 @once
 
+$call SetInputState(false)
 $call SetRadioFrequency(137, true)
 $call SnapRadioToChannel()
 $call SetRadioDialLocked(true)
@@ -356,9 +357,9 @@ $goto .SetupPuzzleNav
 :: SetupPuzzleNav
 $branch Observatory.PathToMonitor
 $call ConsoleCommandLine->PlayConsoleText("Day2ConsoleText")
-$call Wait(2)
-$call StartPuzzleNavigation()
 $call SetRefGuideActive(false)
+$wait 2
+$call StartPuzzleNavigation()
 $call SetInputState(true)
 
 :: PuzzleNavigationComplete

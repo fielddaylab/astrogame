@@ -261,6 +261,7 @@ $call SetChannelActive(Unlocks_Inactive, true)
 @interrupt
 @once
 
+$call SetInputState(false)
 $call SetRadioFrequency(137, true)
 $call SnapRadioToChannel()
 $call SetRadioDialLocked(true)

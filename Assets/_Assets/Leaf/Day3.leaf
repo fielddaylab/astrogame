@@ -225,6 +225,8 @@ $call SetChannelActive(Unlocks_Inactive, true)
 @interrupt
 @once
 
+$call SetInputState(false)
+$call LockMonitorFocus()
 $call SetRadioFrequency(137, true)
 $call SnapRadioToChannel()
 $call SetRadioDialLocked(true)
@@ -238,7 +240,6 @@ $wait 2
 
 $call SetStickyFirstPage(-1)
 $call OpenRefGuidePage("HistoricalData")
-
 
 {@Radio} Congratulations on being awarded clearance <b>level 3</b>. You are now cleared to use the historical data module. $[Radio/L3/l3_r_04]
 {@Radio} This will allow you to measure parallax over a period of time so that you can determine the distance of the stars. $[Radio/L3/l3_r_05]
