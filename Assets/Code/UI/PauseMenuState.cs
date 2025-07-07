@@ -2,17 +2,23 @@ using BeauRoutine;
 using BeauUtil;
 using FieldDay;
 using FieldDay.Audio;
+using FieldDay.Scenes;
 using FieldDay.Scripting;
 using FieldDay.SharedState;
+using FieldDay.UI;
 using FieldDay.UI.Animation;
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Astro {
     public class PauseMenuState : SharedStateComponent, IRegistrationCallbacks {
         #region Inspector
+
+        public TMP_Text PlayerCodeDisplay;
 
         [Header("Button")]
         public Button Button;
@@ -24,6 +30,8 @@ namespace Astro {
         //public Color FadeColor;
         public float TransitionTime;
 
+        #endregion // Inspector
+
         [NonSerialized] public int CurrentUpdateMask;
         [NonSerialized] public bool GamePaused;
         [NonSerialized] public Routine ButtonRoutine;
@@ -33,11 +41,11 @@ namespace Astro {
 
         public void OnRegister() {
             Button.onClick.AddListener(() => PauseUtility.StartTogglePause(this));
+            PlayerCodeDisplay.SetTextAndActive(PlayerPrefs.GetString("LatestPlayerCode", null));
         }
-        #endregion // Inspector
     }
 
-    public static class PauseUtility {
+        public static class PauseUtility {
         public static void SetPauseButtonActive(PauseMenuState state, bool active) {
             state.Button.interactable = active;
             state.Button.gameObject.SetActive(active);
