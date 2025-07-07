@@ -314,6 +314,13 @@ namespace Astro {
         }
 
         private static void ReturnDocToBoard(DocumentInteractable doc, DocumentBoardState state) {
+            // Reveal the Pin object if we have one
+            Transform pin = doc.transform.Find("Pin");
+            if (pin != null) pin.gameObject.SetActive(true);
+
+            // Always show the starting face of the documents
+            if (doc.Flipped) FlipDoc(doc, state);
+
             SetInteractionLayer(state.DocZoomed, LayerMasks.DocumentInteract_Index);
 
             UpdateEnabledDocParts(doc, DocumentBoardState.BoardActiveFunctions);
@@ -323,9 +330,8 @@ namespace Astro {
                     DocumentRenderer renderer = doc.Renderer;
                     DocumentAsset asset = Find.NamedAsset<DocumentAsset>(doc.AssetName);
 
-                    DocumentUtility.DisplayLowResDocument(renderer, asset);
-
-                });
+                    DisplayLowResDocument(renderer, asset);
+                });                    
 
             state.StoredDocPos = Vector3.zero;
             state.DocZoomed = null;
@@ -338,6 +344,10 @@ namespace Astro {
         }
 
         private static void BringDocToCam(DocumentInteractable doc, DocumentBoardState state) {
+            // Hide the Pin object if we have one
+            Transform pin = doc.transform.Find("Pin");
+            if (pin != null) pin.gameObject.SetActive(false);
+            
             if (state.OverrideStoredDoc) {
                 state.StoredDocPos = state.OverrideStoredDocPos;
                 state.OverrideStoredDoc = false;
@@ -350,7 +360,7 @@ namespace Astro {
             DocumentRenderer renderer = doc.Renderer;
             DocumentAsset asset = Find.NamedAsset<DocumentAsset>(doc.AssetName);
 
-            DocumentUtility.DisplayFullDocument(renderer, asset);
+            DisplayFullDocument(renderer, asset);
 
             UpdateEnabledDocParts(doc, DocumentBoardState.ZoomActiveFunctions);
 
@@ -394,7 +404,12 @@ namespace Astro {
             doc.Flipped = !doc.Flipped;
             float angle = doc.Flipped ? 180 : 0;
             float lift = state.DocZoomed ? 0.5f : -0.5f;
+
             state.DocumentRoutine.Replace(DocRotateY(doc, lift, angle));
+            state.DocumentRoutine.OnStop(() => {
+                Quaternion docRot = doc.BodyRoot.localRotation;
+                doc.BodyRoot.Rotate(Vector3.up, 180f);
+            });
             state.InteractedThisFrame = true;
 
             using (var table = TempVarTable.Alloc()) {
@@ -453,15 +468,18 @@ namespace Astro {
         }
 
         private static IEnumerator DocRotateY(DocumentInteractable doc, float lift, float angle) {
+            // Pick document up
             yield return Routine.Combine(
-                doc.transform.MoveTo(doc.transform.localPosition.z + lift, 0.2f, Axis.Z, Space.Self).Ease(Curve.CubeIn),
-                doc.BodyRoot.MoveTo(doc.BodyRoot.localPosition.y - 0.1f, 0.2f, Axis.Y, Space.Self).Ease(Curve.CubeIn)
+                doc.transform.MoveTo(doc.transform.localPosition.z + lift, 0.2f, Axis.Z, Space.Self).Ease(Curve.CubeIn).ForceOnCancel(),
+                doc.BodyRoot.MoveTo(doc.BodyRoot.localPosition.y - 0.1f, 0.2f, Axis.Y, Space.Self).Ease(Curve.CubeIn).ForceOnCancel()
             );
-            yield return doc.BodyRoot.RotateTo(doc.BodyRoot.localRotation.y + angle, 0.3f, Axis.Y, Space.Self, AngleMode.Absolute).Ease(Curve.SineInOut);
+            // Flip it
+            yield return doc.BodyRoot.RotateTo(doc.BodyRoot.localRotation.y + angle, 0.3f, Axis.Y, Space.Self, AngleMode.Absolute).Ease(Curve.SineInOut).ForceOnCancel();
             
+            // Put document back
             yield return Routine.Combine(
-                doc.BodyRoot.MoveTo(doc.BodyRoot.localPosition.y + 0.1f, 0.2f, Axis.Y, Space.Self).Ease(Curve.CubeIn),
-                doc.transform.MoveTo(doc.transform.localPosition.z - lift, 0.2f, Axis.Z, Space.Self).Ease(Curve.CubeIn)
+                doc.BodyRoot.MoveTo(doc.BodyRoot.localPosition.y + 0.1f, 0.2f, Axis.Y, Space.Self).Ease(Curve.CubeIn).ForceOnCancel(),
+                doc.transform.MoveTo(doc.transform.localPosition.z - lift, 0.2f, Axis.Z, Space.Self).Ease(Curve.CubeIn).ForceOnCancel()
             );
             yield return null;
         }
