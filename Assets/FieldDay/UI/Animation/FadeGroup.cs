@@ -28,6 +28,7 @@ namespace FieldDay.UI.Animation {
         [NonSerialized] public bool CurrentState;
 
         private void Awake() {
+            gameObject.SetActive(false);
             CurrentState = isActiveAndEnabled;
         }
 

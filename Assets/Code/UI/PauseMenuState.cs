@@ -1,18 +1,17 @@
+
+using TMPro;
+using System;
+using System.Collections;
 using BeauRoutine;
 using BeauUtil;
 using FieldDay;
-using FieldDay.Audio;
-using FieldDay.Scenes;
-using FieldDay.Scripting;
-using FieldDay.SharedState;
-using FieldDay.UI;
-using FieldDay.UI.Animation;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using FieldDay.UI;
+using FieldDay.UI.Animation;
+using FieldDay.Audio;
+using FieldDay.SharedState;
+using UnityEngine.Events;
 
 namespace Astro {
     public class PauseMenuState : SharedStateComponent, IRegistrationCallbacks {
@@ -36,13 +35,15 @@ namespace Astro {
         [NonSerialized] public bool GamePaused;
         [NonSerialized] public Routine ButtonRoutine;
 
-        public void OnDeregister() {
-        }
+        private UnityAction m_StartTogglePause;
 
         public void OnRegister() {
-            Button.onClick.AddListener(() => PauseUtility.StartTogglePause(this));
+            m_StartTogglePause = () => { PauseUtility.StartTogglePause(this); };
+            Button.onClick.AddListener(m_StartTogglePause);
             PlayerCodeDisplay.SetTextAndActive(PlayerPrefs.GetString("LatestPlayerCode", null));
         }
+
+        public void OnDeregister() { Button.onClick.RemoveListener(m_StartTogglePause); }
     }
 
         public static class PauseUtility {
