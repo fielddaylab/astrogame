@@ -155,7 +155,12 @@ namespace Astro {
 
             PlayerKnowledgeQueryResult query = PlayerKnowledgeUtility.KnowsFlags(asset.AssetId, PlayerCelestialAssetKnowledgeFlags.IdentifiedResources, out PlayerCelestialAssetKnowledge knowledgeRecord);
 
+            if (submission.Materials != asset.Spectrograph) {
+                return ReviewResult.Incorrect;
+            }
+
             if (!NeutrinoEventUtil.IsIdInNeutrinoEvent(submission.AssetId)) {
+                // outside neutrino area 
                 switch (query) {
                     case PlayerKnowledgeQueryResult.InvalidData:
                         return ReviewResult.IncorrectNotInNeutrinoEvent;
@@ -163,14 +168,15 @@ namespace Astro {
                         return ReviewResult.Duplicate;
                     case PlayerKnowledgeQueryResult.NewKnowledge:
                     default:
+                        knowledgeRecord.Flags |= PlayerCelestialAssetKnowledgeFlags.IdentifiedResources;
+                        PlayerKnowledgeUtility.UpdateKnowledge(asset.AssetId, knowledgeRecord);
                         return ReviewResult.CorrectNotInNeutrinoEvent;
                 }
             } else if ((ClassificationTypeMask.Spectrometer & config.AcceptedIDSubmissions) == 0) {
+                // inside neutrino area, but not accepted type
+                knowledgeRecord.Flags |= PlayerCelestialAssetKnowledgeFlags.IdentifiedResources;
+                PlayerKnowledgeUtility.UpdateKnowledge(asset.AssetId, knowledgeRecord);
                 return ReviewResult.CorrectNotAccepted;
-            }
-
-            if (submission.Materials != asset.Spectrograph) {
-                return ReviewResult.Incorrect;
             }
 
             switch (query) {
