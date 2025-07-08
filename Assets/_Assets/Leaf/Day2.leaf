@@ -25,6 +25,7 @@ $call SetRadioFrequency(137, true)
 $call MonitorPower->Deactivate()
 $call ChapterTitles->PrepareTransition()
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
+$call SetRadioDialLocked(true)
 
 :: BeginDay
 @trigger    SceneReady
@@ -267,6 +268,7 @@ $call OpenRefGuidePage("SpectralClass")
 
 $set temp:waitingForNeutrinoStar = false
 $call UnlockMonitorFocus()
+$call SetRadioDialLocked(false)
 
 {@Radio} Nice Job, You're getting the hang of this. $[Radio/L2/l2_r_11]
 
