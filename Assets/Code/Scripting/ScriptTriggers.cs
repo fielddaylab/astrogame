@@ -73,12 +73,13 @@ namespace Astro {
         static public void LoadNextDay(StringHash32 transitionType = default) {
             PlayerProgressState state = Find.State<PlayerProgressState>();
             StoryAsset story = Find.GlobalAsset<StoryAsset>();
-
             Game.Events.Dispatch(GameEvents.BeforeNextDayLoad);
 
             state.DayIndex += 1;
             DayConfigAsset day = Find.NamedAsset<DayConfigAsset>(story.Days[state.DayIndex]);
-            Log.Msg("[ScriptTriggers] Loading day '{0}'", day.name);
+            Log.Msg("[ScriptTriggers > LoadNextDay] Loading day '{0}'", day.name);
+
+            MusicUtility.StopMusic(1);
 
             SaveUtility.Save(SaveSlot.Main);
 
@@ -91,6 +92,8 @@ namespace Astro {
         static public void LoadDay(StringHash32 dayId, StringHash32 transitionType = default) {
             PlayerProgressState state = Find.State<PlayerProgressState>();
             StoryAsset story = Find.GlobalAsset<StoryAsset>();
+            Game.Events.Dispatch(GameEvents.BeforeNextDayLoad);
+
             for (int i = 0; i < story.Days.Length; i++) {
                 if (story.Days[i] == dayId) {
                     state.DayIndex = i;
@@ -99,11 +102,9 @@ namespace Astro {
             }
 
             var day = Find.NamedAsset<DayConfigAsset>(dayId);
+            Log.Msg("[ScriptTriggers > LoadDay] Loading day '{0}'", day.name);
 
-            Game.Events.Dispatch(GameEvents.BeforeNextDayLoad);
             MusicUtility.StopMusic(1);
-
-            Log.Msg("[ScriptTriggers] Loading day '{0}'", day.name);
 
             state.CompletedPrelude = true;
             SaveUtility.Save(SaveSlot.Main);

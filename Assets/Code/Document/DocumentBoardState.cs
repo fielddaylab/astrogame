@@ -72,21 +72,21 @@ namespace Astro {
             state.DocumentCloseEnabledState.TryAdd(spawned.Interactable.AssetName, true);
 
             if (toBoard && !asset.Prefab.AlwaysHighRes) {
-                DocumentUtility.DisplayLowResDocument(spawned, asset);
-            }
-            else {
-                DocumentUtility.DisplayFullDocument(spawned, asset);
+                DisplayLowResDocument(spawned, asset);
+            } else {
+                DisplayFullDocument(spawned, asset);
             }
 
             PlayerProgressState progressState = Find.State<PlayerProgressState>();
-            ArchiveState archiveState = Find.State<ArchiveState>();
+            // ArchiveState archiveState = Find.State<ArchiveState>();
 
             var localPos = asset.DefaultPinnedPos;
-            bool fromArchive = archiveIndex != -1;
-            bool fromCurrDayArchive = progressState.DayIndex == archiveIndex + archiveState.DayOffset;
+            // bool fromArchive = archiveIndex != -1;
+            // bool fromCurrDayArchive = progressState.DayIndex == archiveIndex + archiveState.DayOffset;
 
             // override with init position if doc has different init position and it's being spawned to the current day
-            if (asset.DifInitPos && (!fromArchive || (fromArchive && fromCurrDayArchive))) {
+            // if (asset.DifInitPos && (!fromArchive || (fromArchive && fromCurrDayArchive))) {
+            if (asset.DifInitPos) {
                 localPos = asset.InitPos;
             }
 
@@ -95,12 +95,14 @@ namespace Astro {
 
             // place somewhere offscreen
             spawned.transform.position = new Vector3(-500, -500, 500);
+            
+            UpdateEnabledDocParts(spawned.Interactable, DocumentBoardState.BoardActiveFunctions);
 
             // load assets
             state.DocumentLoadRoutine.Replace(AwaitDocLoadComplete(spawned))
                 .OnComplete(() => {
                     // restore doc position
-                    if (toBoard && !fromArchive) { spawned.transform.localPosition = localPos; }
+                    if (toBoard) { spawned.transform.localPosition = localPos; }
                 });
 
             return spawned;
@@ -114,18 +116,18 @@ namespace Astro {
         [LeafMember("SpawnDocumentToCamera")]
         public static void LeafSpawnDocumentToCamera(StringHash32 id) {
             DocumentBoardState state = Find.State<DocumentBoardState>();
-            ArchiveState archiveState = Find.State<ArchiveState>();
+            // ArchiveState archiveState = Find.State<ArchiveState>();
 
             if (state.DocumentRoutine.Exists()) {
                 // wait for previous document routine to complete
-                state.DocumentRoutine.OnComplete(() => { state.DocumentRoutine.Replace(SpawnDocumentToCamera(state, archiveState, id)); });
+                state.DocumentRoutine.OnComplete(() => { state.DocumentRoutine.Replace(SpawnDocumentToCamera(state, id)); });
             }
             else {
-                state.DocumentRoutine.Replace(SpawnDocumentToCamera(state, archiveState, id));
+                state.DocumentRoutine.Replace(SpawnDocumentToCamera(state, id));
             }
         }
 
-        public static IEnumerator SpawnDocumentToCamera(DocumentBoardState state, ArchiveState archiveState, StringHash32 id) {
+        public static IEnumerator SpawnDocumentToCamera(DocumentBoardState state, StringHash32 id) {
             var asset = Find.NamedAsset<DocumentAsset>(id);
             var spawned = SpawnDocument(asset, id, out Vector3 pinnedPos, state, true, false);
 

@@ -99,7 +99,7 @@ namespace Astro {
             if (assetFocus != null) {
                 SetCurrentFocus(state, assetFocus);
             } else {
-                Log.Warn("[FocusableUtility > SetCurrentFocus] could not find asset {0}", asset.AssetId);
+                Log.Warn("[FocusableUtility > SetCurrentFocus] could not find CelestialAsset: {0}", asset != null ? asset.AssetId : "null");
             }
         }
         

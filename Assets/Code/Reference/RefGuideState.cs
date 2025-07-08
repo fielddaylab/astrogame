@@ -645,10 +645,24 @@ namespace Astro.Reference {
             SetReferenceActive(active);
         }
 
-        [LeafMember("SetRefPageActive")]
+        [LeafMember("SetRefPageNumActive")]
         private static void LeafSetRefGuideActive(int pageNum, bool active) {
             RefGuideState state = Find.State<RefGuideState>();
             state.ActivePages[pageNum] = active;
+        }
+
+        [LeafMember("SetRefPageActive")]
+        private static void LeafSetRefGuideActive(StringHash32 name, bool active) {
+            RefGuideState state = Find.State<RefGuideState>();
+            int pageIdx = 0;
+            foreach (ReferencePageAsset page in state.PageList.Pages) {
+                if (page.AssetId == name) {
+                    state.ActivePages[pageIdx] = active;
+                    return;
+                }
+                pageIdx++;
+            }
+            Log.Warn("[RefGuideState > SetRefPageActive] Failed to find page {0}", name);
         }
 
         [LeafMember("SetRefGuidePagesLocked")]

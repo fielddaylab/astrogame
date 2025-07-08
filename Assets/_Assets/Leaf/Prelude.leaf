@@ -103,7 +103,8 @@ $call EndOfPrologue->BeginCutscene()
 $wait 1
 $call PlayMusic("Music.Gently-Falling", 1)
 $wait 4
-$call LoadDay("Day1", "CopyTexture")
+// $call LoadDay("Day1", "CopyTexture")
+$call LoadDay("Day1")
 
 :: FadeOutStarClick
 $call PerseidsClickable->SetClickable(false)

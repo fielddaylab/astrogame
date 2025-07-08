@@ -40,6 +40,7 @@ namespace Astro {
                 CheckObjectIdentification();
             } 
             if (m_State.CurrentSubmission == ReviewSubmissionType.Puzzle) {
+                Game.Events.Dispatch(GameEvents.MonitorEmptySpaceClicked);
                 // if puzzle checking is expensive, could this be amortized over the timer duration?
                 CheckPuzzle();
             }
