@@ -63,6 +63,10 @@ public class MonitorUIMgr : ScriptActorComponent {
         yield return Tween.Value(0f, 1f, (f) => { e.element.alpha = f; }, Mathf.Lerp, duration).ForceOnCancel();
     }
 
+    public IEnumerator HideElement(MonitorUIElement e, float duration = 0.5f) {
+        yield return Tween.Value(1f, 0f, (f) => { e.element.alpha = f; }, Mathf.Lerp, duration).ForceOnCancel();
+    }
+
     public IEnumerator HideElement(StringHash32 _id, float duration = 0.5f) {
         MonitorUIElement e = m_Elements.Find(e => e.Id == _id);
         yield return Tween.Value(1f, 0f, (f) => { e.element.alpha = f; }, Mathf.Lerp, duration).ForceOnCancel();
@@ -76,6 +80,14 @@ public class MonitorUIMgr : ScriptActorComponent {
     [LeafMember("HideElement")]
     private IEnumerator LeafHideElement(StringHash32 _id, float duration = 0.5f) {
         yield return HideElement(_id, duration);
+    }
+
+    [LeafMember("Clear")]
+    private void LeafClearMonitor(float duration = 0.5f) {
+        foreach (MonitorUIElement e in m_Elements) {
+            if (e.element.alpha <= 0) continue;
+            StartCoroutine(HideElement(e, duration));
+        }
     }
 
     [LeafMember("CERESLogoToCorner")]

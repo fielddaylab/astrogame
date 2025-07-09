@@ -297,7 +297,7 @@ $set temp:radioChannelTuned = false
 $start .UpgradeReminder
 
 :: UpgradeReminder
-$call Wait(10)
+$wait 10
 $if !temp:radioChannelTuned
     {@Astrid} I should tune to 375 mHz on the Radio to upgrade my rig.
     $branch .UpgradeReminder
@@ -311,6 +311,7 @@ $endif
 @once
 
 $set temp:radioChannelTuned = true
+$set temp:radioChannelTunedBack = false
 $call SetRadioFrequency(375, true)
 $call SnapRadioToChannel()
 $call SetRadioDialLocked(true)
@@ -322,6 +323,16 @@ $call SetChannelActive(Unlocks_Active, false)
 $call SetRadioDialLocked(false)
 $call SetInputState(true)
 $call SetChannelActive(Unlocks_Inactive, true)
+$start .UpgradeReminder2
+
+:: UpgradeReminder2
+$wait 10
+$if !temp:radioChannelTunedBack
+    $call MonitorUI->ShowElement("CeresMsg")
+    $call MonitorUI->ShowElement("CommErrorMsg2")
+    {@Astrid} I should tune back to 137 mHz on the Radio to complete this upgrade.
+    $branch .UpgradeReminder2
+$endif
 
 :: CompleteUpgradeSequence
 @trigger    RadioChannelListenStart
@@ -331,10 +342,14 @@ $call SetChannelActive(Unlocks_Inactive, true)
 @interrupt
 @once
 
+$set temp:radioChannelTunedBack = true
 $call SetInputState(false)
 $call SetRadioFrequency(137, true)
 $call SnapRadioToChannel()
 $call SetRadioDialLocked(true)
+$call MonitorUI->Clear(0.2)
+$wait 0.4
+
 $call MonitorUI->ShowCERESLogo()
 $wait 1
 
