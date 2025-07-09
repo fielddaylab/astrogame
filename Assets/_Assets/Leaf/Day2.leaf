@@ -15,6 +15,8 @@ $call SetInstrumentUnlocked(TemperatureInstrument, true)
 $call SpawnDocument("MiniLabors")
 $call StopPuzzleMode()
 $call StopOpenMode()
+$call SetStickyFirstPage(1)
+$call SetRefGuidePagesLocked(true)
 $call SetRefPageActive("ConstellationPerseus", false)
 $call SetRefPageActive("ConstellationHerculesCompleted", false)
 $call SetRefPageActive("ConstellationLeoCompleted", false)
@@ -205,7 +207,6 @@ $call StartNeutrinoNavigation()
 
 $call StopNeutrinoNavigation()
 $call StartOpenMode()
-$call SetStickyFirstPage(1)
 $set temp:waitingForNeutrinoStar = true
 
 {@Radio} We need to know the spectral types of these stars. In order to determine that you’ll need to calculate the <i>temperature</i>. $[Radio/L2/l2_r_04]
@@ -269,6 +270,7 @@ $call OpenRefGuidePage("SpectralClass")
 $set temp:waitingForNeutrinoStar = false
 $call UnlockMonitorFocus()
 $call SetRadioDialLocked(false)
+$call SetRefGuidePagesLocked(false)
 
 {@Radio} Nice Job, You're getting the hang of this. $[Radio/L2/l2_r_11]
 

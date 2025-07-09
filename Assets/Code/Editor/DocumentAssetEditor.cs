@@ -73,7 +73,7 @@ public class DocumentAssetEditor : Editor {
                 EditorGUILayout.Space();
             }
         }
-        EditorGUI.indentLevel -= 1;
         EditorGUILayout.Space();
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("Font")); 
         }
 }

@@ -337,7 +337,8 @@ $start .IntroFirstSubmissionTimeout
 @cutscene
 
 $call SetInputState(true)
-$call Wait(20)
+$call SetRadioDialLocked(true)
+$wait 15
 
 $if !temp:firstSubmission
     {@Radio} Do you see your photometer in the equipment stack? That should tell you what the apparent magnitude of the star is. $[Radio/L1/l1_r_20(1)]
@@ -493,8 +494,8 @@ $call SetInputState(false)
 $call HintModals->Hide("RadioControls", 0.2)
 $call ClearMonitorSelection()
 $call MonitorUI->PlayRadioDownload(2)
-$call HintModals->SlideInFromRight("CeresRadioHint", 0.4)
 $call ConsoleCommandLine->PlayConsoleText("UpgradeSystem")
+$call HintModals->SlideInFromRight("CeresRadioHint", 0.4)
 $call SetChannelActive(Unlocks_Active, false)
 $call SetRadioDialLocked(false)
 $call SetInputState(true)
@@ -512,7 +513,7 @@ $call SetInputState(false)
 $call SetRadioFrequency(137, true)
 $call SnapRadioToChannel()
 $call SetRadioDialLocked(true)
-$call HintModals->Hide("CeresRadioHint", 0.2)
+$call HintModals->CloseAllModals()
 $call MonitorUI->ShowCERESLogo()
 $wait 1
 
@@ -628,7 +629,7 @@ $call SubtitleController->SetSubtitlePosition(0.5, 1, 0, -140)
 $call LockMonitorFocus()
 $set temp:waitingForSelectAppMag = true
 $set temp:waitingForSelectAtik = false
-$call HintModals->Hide("FirstPuzzleStar", 0.2)
+$call HintModals->CloseAllModals()
 $call IsolatePuzzleCell(1, 3)
 
 {@Astrid} Okay, apparent magnitude… I can load that from the Photometer. $[Astrid/L1/l1_a_27]
@@ -753,10 +754,7 @@ $endif
 @cutscene
 
 $call AddIsolatedSlot(BlueMagnitude)
-$if temp:AtikCell2Hint
-    $set temp:AtikCell2Hint = false
-    $call HintModals->Hide("AtikCell2", 0.2)
-$endif
+$call HintModals->CloseAllModals()
 
 {@Astrid} Ok, now I can load this data into the blue magnitude space with my photometer just like before. $[Astrid/L1/l1_a_33]
 
@@ -767,10 +765,7 @@ $endif
 @cutscene
 
 $call AddIsolatedSlot(BlueMagnitude)
-$if temp:AtikCell2Hint
-    $set temp:AtikCell2Hint = false
-    $call HintModals->Hide("AtikCell2", 0.2)
-$endif
+$call HintModals->CloseAllModals()
 
 {@Astrid} Ok, now I can load this data into the blue magnitude space with my photometer just like before. $[Astrid/L1/l1_a_33]
 
@@ -857,13 +852,8 @@ $call UnlockMonitorFocus()
 @interrupt
 @cutscene
 
-$if temp:waitingForSelectAlgol 
-    $set temp:waitingForSelectAlgol = false
-    $call HintModals->Hide("BrightestBlue", 0.2)
-    $set temp:BrightestBlueHintVisible = false
-    $call HintModals->SlideInFromRight("CompleteRow", 0.4)
-    $set temp:CompleteRowHintVisible = true
-$endif
+$call HintModals->CloseAllModals()
+$call HintModals->SlideInFromRight("CompleteRow", 0.4)
 $call LockMonitorFocus()
 
 {@Astrid} Is this the brightest star in blue? If so, that would make this <i>Algol</i>. $[Astrid/L1/l1_a_t16]
@@ -880,13 +870,8 @@ $call UnlockMonitorFocus()
 @interrupt
 @cutscene
 
-$if !temp:waitingForSelectAlgol 
-    $set temp:waitingForSelectAlgol = true
-    $call HintModals->Hide("CompleteRow", 0.2)
-    $set temp:CompleteRowHintVisible = false
-    $call HintModals->SlideInFromRight("BrightestBlue", 0.4)
-    $set temp:BrightestBlueHintVisible = true
-$endif
+$call HintModals->CloseAllModals()
+$call HintModals->SlideInFromRight("BrightestBlue", 0.4)
 // {@Astrid} I should compare the blue magnitude of this star to the others in this cluster...
 {@Astrid} I should compare its blue magnitude to the others in this cluster. $[Astrid/L1/l1_a_t10] 
 
@@ -945,13 +930,7 @@ $endif
 $if temp:MirfakRowFilled, temp:MenkibRowFilled
     $goto .PuzzleGridReadyForSubmissionFirstTime
 $endif
-
-$set temp:AlgolRowFilled = true
-$call HintModals->Hide("CompleteRow", 0.2)
-$set temp:CompleteRowHintVisible = false
-$if temp:BrightestBlueHintVisible
-    $call HintModals->Hide("BrightestBlue", 0.2)
-$endif
+$call HintModals->CloseAllModals()
 $call UnlockMonitorFocus()
 $set temp:readyToSubmit = false
 
@@ -970,11 +949,7 @@ $branch .PuzzleTimeoutHint
 @cutscene
 
 $set temp:AlgolRowFilled = true
-$call HintModals->Hide("CompleteRow", 0.2)
-$set temp:CompleteRowHintVisible = false
-$if temp:BrightestBlueHintVisible
-    $call HintModals->Hide("BrightestBlue", 0.2)
-$endif
+$call HintModals->CloseAllModals()
 $call HintModals->SlideInFromRight("ElijahPuzzle", 0.4)
 $branch .PuzzleTimeoutHint
 
@@ -1007,15 +982,7 @@ $set temp:MenkibRowFilled = true
 @trigger    OnPuzzleGridFullyPopulated
 @interrupt
 
-$if temp:CompleteRowHintVisible
-    $call HintModals->Hide("CompleteRow", 0.2)
-    $set temp:CompleteRowHintVisible = false
-$endif
-$if temp:BrightestBlueHintVisible
-    $call HintModals->Hide("BrightestBlue", 0.2)
-    $set temp:BrightestBlueHintVisible = false
-$endif
-$call HintModals->Hide("ElijahPuzzle", 0.2)
+$call HintModals->CloseAllModals()
 
 :: PuzzleGridReadyForSubmissionFirstTime
 @trigger    OnPuzzleGridFullyPopulated
@@ -1024,15 +991,7 @@ $call HintModals->Hide("ElijahPuzzle", 0.2)
 @boostScore 2000
 @once
 
-$if temp:CompleteRowHintVisible
-    $call HintModals->Hide("CompleteRow", 0.2)
-    $set temp:CompleteRowHintVisible = false
-$endif
-$if temp:BrightestBlueHintVisible
-    $call HintModals->Hide("BrightestBlue", 0.2)
-    $set temp:BrightestBlueHintVisible = false
-$endif
-$call HintModals->Hide("ElijahPuzzle", 0.2)
+$call HintModals->CloseAllModals()
 
 $set temp:CompletedMenkibRow = false
 $set temp:CompletedAlgolRow = false

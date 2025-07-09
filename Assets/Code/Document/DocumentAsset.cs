@@ -48,7 +48,6 @@ namespace Astro {
         public float LineSpacing = 0;
         public FontStyles FontStyle = FontStyles.Normal;
 
-
         private void OnEnable() {
             SetupDocumentAsset();
         }
