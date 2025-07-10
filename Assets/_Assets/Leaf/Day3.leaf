@@ -230,6 +230,7 @@ $call LockMonitorFocus()
 $call SetRadioFrequency(137, true)
 $call SnapRadioToChannel()
 $call SetRadioDialLocked(true)
+$call ClearMonitorSelection()
 $call MonitorUI->ShowCERESLogo()
 $wait 1
 

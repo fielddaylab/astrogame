@@ -20,7 +20,7 @@ namespace Astro
             }
 
             if (transfer.DataSlot != null) {
-                if (transfer.DataSlot.TryGetComponent(out RelevantSlotHighlight highlight)) {
+                if (transfer.DataSlot.TryGetComponent(out RelevantSlotHighlight highlight)){
                     highlight.Ignored = true;
                 }
             }

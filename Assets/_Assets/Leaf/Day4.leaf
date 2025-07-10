@@ -265,10 +265,10 @@ $call SetInputState(false)
 $call SetRadioFrequency(137, true)
 $call SnapRadioToChannel()
 $call SetRadioDialLocked(true)
+$call ClearMonitorSelection()
 $call MonitorUI->ShowCERESLogo()
 $wait 1
 
-$call MonitorUI->ShowCERESLogo()
 $call SetInstrumentUnlocked(HistoricalDataModeToggle, true)
 $call SetStickyFirstPage(-1)
 

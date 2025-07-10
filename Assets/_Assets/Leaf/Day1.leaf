@@ -514,6 +514,7 @@ $call SetInputState(false)
 $call SetRadioFrequency(137, true)
 $call SnapRadioToChannel()
 $call SetRadioDialLocked(true)
+$call ClearMonitorSelection()
 $call HintModals->CloseAllModals()
 $call MonitorUI->ShowCERESLogo()
 $wait 1
