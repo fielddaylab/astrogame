@@ -36,6 +36,12 @@ namespace Astro {
             return PlayAsset(asset);
         }
 
+        [LeafMember("PlayConsoleTextAndWait")]
+        public IEnumerator LeafPlayAndWait(StringHash32 textAsset) {
+            ConsoleTextAsset asset = Find.NamedAsset<ConsoleTextAsset>(textAsset); 
+            return PlayAssetAndWait(asset);
+        }
+
         public IEnumerator PlayClassification(ReferenceClassification rc) {
             string text;
             using (PooledStringBuilder psb = PooledStringBuilder.Create()) {
@@ -57,8 +63,12 @@ namespace Astro {
         }
 
         public IEnumerator PlayAsset(ConsoleTextAsset textAsset) {
-            m_Routine.Replace(this, AssetRoutine(textAsset));
-            return m_Routine.Wait();
+            yield return m_Routine.Replace(this, AssetRoutine(textAsset));
+            yield return m_Routine.Replace(this, HideRoutine());
+        }
+
+        public IEnumerator PlayAssetAndWait(ConsoleTextAsset textAsset) {
+            yield return m_Routine.Replace(this, AssetRoutine(textAsset));
         }
 
         public IEnumerator PlayString(string text, bool isKeyboard, float delayAfter) {
@@ -113,7 +123,7 @@ namespace Astro {
                 
                 Text.maxVisibleCharacters++;
             }
-            Hide();
+            // Hide();
         }
 
         private IEnumerator StringLineRoutine(string line, bool isKeyboard, float delayAfter) {

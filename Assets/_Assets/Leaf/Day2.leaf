@@ -284,7 +284,7 @@ $call SetRefGuidePagesLocked(false)
 
 $call SetInputState(false)
 $call SetRefGuideActive(false)
-$call Wait(4)
+$wait 4
 
 $call StopOpenMode()
 $call SetInputState(true)
@@ -311,48 +311,24 @@ $endif
 @once
 
 $set temp:radioChannelTuned = true
-$set temp:radioChannelTunedBack = false
 $call SetRadioFrequency(375, true)
 $call SnapRadioToChannel()
-$call SetRadioDialLocked(true)
 $call SetInputState(false)
 $call ClearMonitorSelection()
+$call LockMonitorFocus()
 $call MonitorUI->PlayRadioDownload(2)
 $call ConsoleCommandLine->PlayConsoleText("UpgradeSystem")
 $call SetChannelActive(Unlocks_Active, false)
-$call SetRadioDialLocked(false)
-$call SetInputState(true)
 $call SetChannelActive(Unlocks_Inactive, true)
-$start .UpgradeReminder2
-
-:: UpgradeReminder2
-$wait 10
-$if !temp:radioChannelTunedBack
-    $call MonitorUI->ShowElement("CeresMsg")
-    $call MonitorUI->ShowElement("CommErrorMsg2")
-    {@Astrid} I should tune back to 137 mHz on the Radio to complete this upgrade.
-    $branch .UpgradeReminder2
-$endif
-
-:: CompleteUpgradeSequence
-@trigger    RadioChannelListenStart
-@when       channelId == "IceCube", temp:radioChannelTuned
-@priority   High
-@boostScore 1000
-@interrupt
-@once
-
-$set temp:radioChannelTunedBack = true
-$call SetInputState(false)
-$call SetRadioFrequency(137, true)
+$call MonitorUI->ShowCERESLogo()
+$call MonitorUI->CERESLogoToCorner(0.5)
+$wait 1
+$call SetRadioFrequency(137)
 $call SnapRadioToChannel()
 $call SetRadioDialLocked(true)
-$call MonitorUI->Clear(0.2)
-$wait 0.4
+$call SetInputState(true)
 
-$call ClearMonitorSelection()
-$call MonitorUI->ShowCERESLogo()
-$wait 1
+$call ConsoleCommandLine->PlayConsoleTextAndWait("Day2UpgradeSystem")
 
 $call SetInstrumentUnlocked(SpectrometerInstrument, true)
 $call SetStickyFirstPage(-1)
@@ -363,12 +339,16 @@ $call OpenRefGuidePage("Spectrometer")
 {@Radio} Thanking you for being an important part of the CERES Distributed Network of Citizen Observatories. $[Radio/L2/l2_r_14]
 {@Radio} Together, we will map the stars for a better tomorrow. $[Radio/L2/l2_r_15]
 
-$call SetRadioDialLocked(false)
+$call ConsoleCommandLine->HideConsole()
+$wait 0.1
+$call MonitorUI->CERESLogoToCenter(0.5)
+$wait 1
 $call MonitorUI->HideCERESLogo()
-$call Wait(0.5)
+$call SetRadioDialLocked(false)
+$wait 0.5
 
 $call OpenRefGuidePage("ConstellationHercules")
-$call Wait(1)
+$wait 1
 
 {@Astrid} Hmmm, Hercules. Just like Elijah's postcard! $[Astrid/L2/l2_a_16]
 {@Astrid} These are the puzzles Elijah had been working on. What is this all for? $[Astrid/L2/l2_a_17]
@@ -388,6 +368,7 @@ $call SetInputState(true)
 @once
 
 $call ClearMonitorSelection()
+$call UnlockMonitorFocus()
 $call StartPuzzleMode()
 $call SetRadioDialLocked(false)
 

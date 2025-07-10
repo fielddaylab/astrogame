@@ -490,38 +490,29 @@ $endif
 $set temp:radioChannelTuned = true
 $call SetRadioFrequency(375, true)
 $call SnapRadioToChannel()
-$call SetRadioDialLocked(true)
 $call SetInputState(false)
 $call HintModals->Hide("RadioControls", 0.2)
 $call ClearMonitorSelection()
+$call LockMonitorFocus()
 $call MonitorUI->PlayRadioDownload(2)
 $call ConsoleCommandLine->PlayConsoleText("UpgradeSystem")
-$call HintModals->SlideInFromRight("CeresRadioHint", 0.4)
+// $call HintModals->SlideInFromRight("CeresRadioHint", 0.4)
 $call SetChannelActive(Unlocks_Active, false)
-$call SetRadioDialLocked(false)
-$call SetInputState(true)
 $call SetChannelActive(Unlocks_Inactive, true)
-
-:: CompleteUpgradeSequence
-@trigger    RadioChannelListenStart
-@when       channelId == "IceCube", temp:radioChannelTuned
-@priority   High
-@boostScore 1000
-@interrupt
-@once
-
-$call SetInputState(false)
-$call SetRadioFrequency(137, true)
-$call SnapRadioToChannel()
-$call SetRadioDialLocked(true)
-$call ClearMonitorSelection()
-$call HintModals->CloseAllModals()
 $call MonitorUI->ShowCERESLogo()
+$call MonitorUI->CERESLogoToCorner(0.5)
 $wait 1
 
-{@Radio} Ope, and I need to read this thing.... (*clears throat*) $[Radio/L1/l1_r_29]
+$call SetRadioFrequency(137)
+$call SnapRadioToChannel()
+$call SetRadioDialLocked(true)
+$call SetInputState(true)
+
+$call ConsoleCommandLine->PlayConsoleTextAndWait("Day1UpgradeSystem")
+
 $call SetInstrumentUnlocked(ColorInstrument, true)
 $call SetInstrumentUnlocked(TemperatureInstrument, true)
+$call SetStickyFirstPage(-1)
 $call OpenRefGuidePage("Colormeter")
 
 {@Radio} Congratulations on being awarded clearance <b>level one</b>. You are now cleared to use the color meter.  $[Radio/L1/l1_r_30]
@@ -531,9 +522,14 @@ $call OpenRefGuidePage("Colormeter")
 {@Astrid} Ugh, riveting... $[Astrid/L1/l1_a_11]
 {@Radio} Together, we will map the stars for a better tomorrow. $[Radio/L1/l1_r_33]
 
-$call SetRadioDialLocked(false)
+$call ConsoleCommandLine->HideConsole()
+$wait 0.1
+$call MonitorUI->CERESLogoToCenter(0.5)
+$wait 1
 $call MonitorUI->HideCERESLogo()
-$call Wait(1)
+$call SetRadioDialLocked(false)
+$wait 0.5
+
 $call SetRefGuideActive(false)
 
 {@Astrid} (*Sigh*) Another birthday without Elijah. Maybe he’s watching the Perseids, wherever he is...  $[Astrid/L1/l1_a_12]
@@ -594,6 +590,7 @@ $call StartPuzzleNavigation()
 @once
 
 $call StartPuzzleMode()
+$call UnlockMonitorFocus()
 $set temp:waitingForSelectAtik = true
 $wait 0.3
 {@Astrid} What the ...!?
