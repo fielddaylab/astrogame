@@ -38,6 +38,7 @@ namespace Astro.Reference {
         [NonSerialized] public bool SubmissionActive = true;
 
         [NonSerialized] public bool AllowPageChanges = true;
+        [NonSerialized] public bool ControlAnimDeactivated = false;
 
         [NonSerialized] public Routine TransitionRoutine;
         [NonSerialized] public RefGuideInteractionState CurrentState;
@@ -483,8 +484,7 @@ namespace Astro.Reference {
                     rgs.SelectedRegionsPerPage[rgs.CurrentPageNum] = new List<ReferenceClassification> {
                         region.Classification
                     };
-                }
-                else {
+                } else {
                     rgs.SelectedRegionsPerPage[rgs.CurrentPageNum].Clear();
                     rgs.SelectedRegionsPerPage[rgs.CurrentPageNum].Add(region.Classification);
                 }
@@ -493,8 +493,7 @@ namespace Astro.Reference {
                 // update selections per page
                 if (!rgs.SelectedRegionsPerPage.ContainsKey(rgs.CurrentPageNum)) {
                     rgs.SelectedRegionsPerPage[rgs.CurrentPageNum] = new List<ReferenceClassification>();
-                }
-                else {
+                } else {
                     rgs.SelectedRegionsPerPage[rgs.CurrentPageNum].Clear();
                 }
             }
@@ -502,8 +501,7 @@ namespace Astro.Reference {
             RefGuideControlPage page = Array.Find(rig.ControlPages, p => Array.IndexOf(p.Regions, region) != -1);
 
             RefreshSelectedControls(rig, page);
-
-            TryEnableIDSubmit(Find.State<FocusState>().CurrentFocus != null);
+            //TryEnableIDSubmit(Find.State<FocusState>().CurrentFocus != null);
         }
 
         public static void ToggleRadioControl(RefGuideControl region, RefGuideState rgs) {
@@ -559,8 +557,7 @@ namespace Astro.Reference {
             RefreshSelectedControls(rig, page);
         }
 
-        private static void RefreshSelectedControls(RefGuideRig rig, RefGuideControlPage page)
-        {
+        private static void RefreshSelectedControls(RefGuideRig rig, RefGuideControlPage page) {
             var rgs = Find.State<RefGuideState>();
 
             DisableHighlights(rig, rgs);
@@ -602,8 +599,7 @@ namespace Astro.Reference {
                     // Materials
                     if (rgs.SelectedMaterials.HasFlag(r.Material)) {
                         rgs.SelectedMaterials &= ~r.Material;
-                    }
-                    else {
+                    } else {
                         rgs.SelectedMaterials |= r.Material;
                     }
                 }
@@ -633,6 +629,7 @@ namespace Astro.Reference {
             if (!rgs.SubmissionActive) return;
 
             bool refGuideselection = rgs.SelectedRefClassification != null || rgs.SelectedMaterials != 0;
+            if (!refGuideselection) rgs.ControlAnimDeactivated = false;
 
             bool buttonActive = focusActive && refGuideselection && !ReviewUtility.ReviewInProgress();
             Routine.Start( rgs.SubmitButton.SetButtonActive(buttonActive) );
