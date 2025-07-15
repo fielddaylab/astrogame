@@ -136,6 +136,15 @@ namespace Astro {
             GameLoop.ResumeUpdates(AstroGame.InstrumentUpdateMask);
         }
 
+        [LeafMember("StartFinalPuzzleMode")]
+        static private void LeafStartFinalPuzzle() {
+            Game.Events.Dispatch(GameEvents.StartFinalPuzzle);
+            GameLoop.ResumeUpdates(AstroGame.MonitorControlsUpdateMask);
+            GameLoop.ResumeUpdates(AstroGame.PuzzleSubmissionUpdateMask);
+            GameLoop.ResumeUpdates(AstroGame.AnySubmissionUpdateMask);
+            GameLoop.ResumeUpdates(AstroGame.InstrumentUpdateMask); 
+        }
+
         [LeafMember("StopPuzzleMode")]
         static private void LeafStopPuzzleMode() {
             Game.Events.Dispatch(GameEvents.StopPuzzleMode);

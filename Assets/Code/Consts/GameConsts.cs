@@ -25,7 +25,8 @@ public static class GameEvents {
     public static readonly StringHash32 StopPuzzleNavigation = "stop-constellation-mode";
     public static readonly StringHash32 LockMonitorFocus = "lock-monitor-focus";
     public static readonly StringHash32 UnlockMonitorFocus = "unlock-monitor-focus";
-    public static readonly StringHash32 BeforeNextDayLoad = "before-next-day-load";
+    public static readonly StringHash32 BeforeNextDayLoad = "before-next-day-load"; 
+    public static readonly StringHash32 StartFinalPuzzle = "start-final-puzzle";
 
     public static readonly StringHash32 GamePaused = "game-paused";
     public static readonly StringHash32 GameResumed = "game-resumed";
@@ -38,7 +39,6 @@ public static class GameEvents {
 
     public static readonly StringHash32 TryCreateNewName = "try-create-new-name";
     public static readonly StringHash32 TitleErrorReceived = "title-error-received";
-
 }
 
 public static class ScriptEvents {

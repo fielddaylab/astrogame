@@ -37,6 +37,7 @@ namespace Astro {
             m_SetButtonToId = () => PuzzleUtility.SetButtonMode(this, SubmitButtonType.SubmitIdentification);
 
             Game.Events.Register(GameEvents.StartPuzzleMode, m_SetButtonToPuzzle);
+            Game.Events.Register(GameEvents.StartFinalPuzzle, m_SetButtonToPuzzle);
             Game.Events.Register(GameEvents.StartOpenMode, m_SetButtonToId);
         }
 

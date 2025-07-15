@@ -47,6 +47,7 @@ namespace Astro {
 
         public void OnRegister() {
             Game.Events.Register(GameEvents.StartPuzzleMode, PuzzleUtility.ActivatePuzzlePanel);
+            Game.Events.Register(GameEvents.StartFinalPuzzle, PuzzleUtility.ActivateFinalPuzzle);
             Game.Events.Register(GameEvents.StopPuzzleMode, PuzzleUtility.DeactivatePuzzlePanel);
 
             Game.Scenes.QueueOnEnable(() => {
@@ -121,6 +122,13 @@ namespace Astro {
             display.OverrideRoutine.Replace(PuzzleTransitionRoutine(display));
         }
 
+        public static void ActivateFinalPuzzle() {
+            PuzzleDisplay display = Find.State<PuzzleState>().Display;
+
+            InputUtility.SetInputEnabled(Find.State<InputState>(), false);
+            display.OverrideRoutine.Replace(FinalPuzzleTransitionRoutine(display));
+        }
+
         public static IEnumerator PuzzleTransitionRoutine(PuzzleDisplay display) {
             MonitorUIMgr monitorUI = MonitorUIMgr.Instance;
             yield return monitorUI.ShowElement("OffPanel");
@@ -149,6 +157,37 @@ namespace Astro {
             // Flip the puzzle panel
             Sfx.PlayDetached("Oneshot.LabButtonC.Click", display.RotateModulePos);
             display.FlipRoutine.Replace(display, display.RotateModulePos.RotateTo(0f, 0.35f, Axis.Z, Space.Self).Ease(Curve.CubeInOut).ForceOnCancel());
+
+            InputUtility.SetInputEnabled(Find.State<InputState>(), true);
+            display.CellAnchorPos.gameObject.SetActive(true);
+            display.HeaderAnchorPos.gameObject.SetActive(true);
+            display.ClueGroup.gameObject.SetActive(true);
+        }        
+
+        public static IEnumerator FinalPuzzleTransitionRoutine(PuzzleDisplay display) {
+            MonitorUIMgr monitorUI = MonitorUIMgr.Instance;
+            yield return monitorUI.ShowElement("OffPanel");
+            yield return monitorUI.ShowElement("PuzzleMsg");
+
+            MonitorUIElement off = monitorUI.GetElement("OffPanel");
+
+            yield return off.GetComponent<Image>().ColorTo(new Color(1f, 0.745f, 0.24f), 0.2f);
+
+            foreach (RectTransform child in display.PuzzleOverrideDisplays.GetComponentsInChildren<RectTransform>(true)) {
+                yield return new WaitForSeconds(0.2f);
+                Sfx.PlayDetached("Oneshot.LabButtonC.Click", display.PuzzleOverrideDisplays.transform);
+                child.gameObject.SetActive(true);
+            }
+
+            yield return new WaitForSeconds(2f);
+
+            foreach (RectTransform child in display.PuzzleOverrideDisplays.GetComponentsInChildren<RectTransform>(true)) {
+                child.gameObject.SetActive(false);
+            }
+
+            off.GetComponent<Image>().color = Color.black;
+            yield return monitorUI.HideElement("PuzzleMsg");
+            yield return monitorUI.HideElement("OffPanel");
 
             InputUtility.SetInputEnabled(Find.State<InputState>(), true);
             display.CellAnchorPos.gameObject.SetActive(true);

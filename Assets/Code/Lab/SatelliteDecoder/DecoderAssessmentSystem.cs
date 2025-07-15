@@ -2,24 +2,15 @@ using BeauUtil.Debugger;
 using FieldDay;
 using FieldDay.Scripting;
 using FieldDay.Systems;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
-using UnityEngine;
 
-
-namespace Astro
-{
+namespace Astro {
     [SysUpdate(GameLoopPhase.Update, 500, AstroGame.InteractUpdateMask)] // after DecoderDialInteractionSystem
-    public class DecoderAssessmentSystem : SharedStateSystemBehaviour<SatelliteDecoderState>
-    {
-        public override bool HasWork()
-        {
+    public class DecoderAssessmentSystem : SharedStateSystemBehaviour<SatelliteDecoderState> {
+        public override bool HasWork() {
             return base.HasWork() && m_State.InputUpdatedThisFrame;
         }
 
-        public override void ProcessWork(float deltaTime)
-        {
+        public override void ProcessWork(float deltaTime) {
             base.ProcessWork(deltaTime);
 
             if (DecoderUtility.AssessSequence(m_State.Dials, m_State.Solution)) {
@@ -28,10 +19,8 @@ namespace Astro
         }
     }
 
-    public static partial class DecoderUtility
-    {
-        public static bool AssessSequence(SatelliteDecoderDial[] dials, string solution)
-        {
+    public static partial class DecoderUtility {
+        public static bool AssessSequence(SatelliteDecoderDial[] dials, string solution) {
             Assert.True(solution.Length == dials.Length);
 
             char dialChar, solutionChar;

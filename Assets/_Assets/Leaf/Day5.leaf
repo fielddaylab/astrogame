@@ -125,7 +125,7 @@ $call WaitForMovedToView("Right")
 $call ClearMonitorSelection()
 // Dont remove this wait
 // We need it because something is messing with the input here 😭
-$call Wait(1)
+$wait 1
 $call StartPuzzleMode()
 $call SetInputState(true)
 
@@ -144,24 +144,29 @@ $branch .SatelliteDecodeBegin
 $call SetInputState(false)
 $call SetRefPageActive("ConstellationAndromeda", false)
 $call SetRefPageActive("ConstellationAndromedaCompleted", true)
-$call OpenRefGuideToPage("ConstellationAndromedaCompleted")
+$call OpenRefGuidePage("ConstellationAndromedaCompleted")
 
 {@Astrid} That was the last piece of the puzzle! If only I had a way to connect to the satellite...
 $call ScriptFader->FadeOut()
-$call Wait(2)
+$wait 2
 $call ScriptFader->FadeIn()
+
 {@Astrid} A special delivery from Elijah?
 {@Astrid} It's a Satellite Decoder!
 $call MoveToView("Right")
-$call Wait(0.5)
+$wait 0.5
+$call SetRefGuideActive(false)
 $call ScriptFader->FadeOut()
-$call Wait(2)
+$wait 2
 $call SatelliteDecoder->SetDecoderActive(true)
 $call ScriptFader->FadeIn()
 
+$call StartFinalPuzzleMode()
 {@Astrid} This is it! Now that I have the decoder, I can finally attempt to connect to the satellite.
-{@Astrid} Each of the puzzles I completed seems to correspond to one letter of the passcode.
 $call SetInputState(true)
+$call OpenRefGuidePage("ConstellationPerseusCompleted")
+
+{@Astrid} Each of the puzzles I completed seems to correspond to one letter of the passcode.
 
 :: SuccessfulDecode
 @trigger OnDecoderSuccess
