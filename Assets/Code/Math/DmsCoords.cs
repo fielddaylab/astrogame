@@ -59,17 +59,23 @@ namespace Astro {
 
         #region ToString
 
+        /*
         public override string ToString() {
-            return string.Format("{0}{1}\u00B0 {2}' {3:F1}\"", Degrees >= 0 ? "+" : "", Degrees.ToStringLookup(), Minutes.ToStringLookup(), Seconds);
+            return string.Format("{0}{1}\u00B0 {2}' {3:F1}\"", Degrees >= 0 ? "+" : "-", Degrees.ToStringLookup(), Minutes.ToStringLookup(), Seconds);
+        }
+        */
+
+        public override string ToString() {
+            return string.Format("{0}{1}\u00B0 {2}'", Degrees >= 0 ? "+" : "", Degrees.ToStringLookup(), Minutes.ToStringLookup());
         }
 
         public void ToString(StringBuilder sb) {
             if (Degrees >= 0) {
                 sb.Append('+');
             }
-            sb.AppendNoAlloc(Degrees).Append("\u00B0 ")
-                .AppendNoAlloc(Minutes, 0, 2).Append("' ")
-                .AppendNoAlloc(Seconds, 1, 2).Append('"');
+            sb.AppendNoAlloc(Degrees, 0, 2).Append("\u00B0 ")
+                .AppendNoAlloc(Minutes, 0, 2).Append("' ");
+                //sb.AppendNoAlloc(Seconds, 1, 2).Append('"');
         }
 
         #endregion // ToString

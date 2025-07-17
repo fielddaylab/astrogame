@@ -58,14 +58,20 @@ namespace Astro {
 
         #region ToString
 
+        /*
         public override string ToString() {
             return string.Format("{0}h {1}m {2:F1}s", Hours.ToStringLookup(), Minutes.ToStringLookup(), Seconds);
         }
+        */
+
+        public override string ToString() {
+            return string.Format(" {0}h {1}m", Hours.ToStringLookup(), Minutes.ToStringLookup());
+        }
 
         public void ToString(StringBuilder sb) {
-            sb.AppendNoAlloc(Hours).Append("h ")
-                .AppendNoAlloc(Minutes, 0, 2).Append("m ")
-                .AppendNoAlloc(Seconds, 1, 2).Append('s');
+            sb.AppendNoAlloc(Hours, 0, 2).Append("h ")
+                .AppendNoAlloc(Minutes, 0, 2).Append("m");
+            //sb.AppendNoAlloc(Seconds, 1, 2).Append('s');
         }
 
         #endregion // ToString
