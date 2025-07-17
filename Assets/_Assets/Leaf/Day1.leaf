@@ -198,7 +198,6 @@ $wait 1
 $call MonitorUI->HideCERESLogo()
 $call MonitorUI->PowerOn()
 $call WaitForMovedToView("Monitor")
-$call SetRefGuideActive(false)
 
 {@Radio} I'll help you get up and running. Start by moving your telescope. $[Radio/L1/l1_r_05]
 $start .SetupTelescopeTutorial

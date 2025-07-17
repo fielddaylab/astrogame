@@ -102,6 +102,12 @@ namespace Astro.Reference {
                 ReferenceUtility.SetControlIconActive(3, false);
                 ReferenceUtility.SetControlIconActive(4, true);
             });
+
+            OwnedNode = ViewNavUtility.GetNodeById("Monitor");
+            OwnedNode.OnEnter.Register(() => {
+                var viewState = Find.State<ViewState>();
+                ReferenceUtility.SetReferenceActive(false);
+            });
         }
 
         #endregion // Registration
@@ -212,7 +218,7 @@ namespace Astro.Reference {
                     ScriptUtility.Trigger(ScriptEvents.OnRefGuideOpened);
                 }
             } else {
-                if (guide.CurrentState == RefGuideInteractionState.Open) {
+                if (guide.CurrentState == RefGuideInteractionState.Open || guide.CurrentState == RefGuideInteractionState.Zoomed) {
                     guide.TransitionRoutine.Replace(guide, TransitionToClose(guide, rig)).TryManuallyUpdate(0);
                     ScriptUtility.Trigger(ScriptEvents.OnRefGuideClosed);
                 }
