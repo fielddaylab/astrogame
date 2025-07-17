@@ -96,13 +96,13 @@ $call StartOpenMode()
 $call SetInputState(false)
 $call SetRefGuideActive(false)
 
-$call Wait(4)
+$wait 4
 
 $call StopOpenMode()
 $call ClearMonitorSelection()
 
 $call OpenRefGuidePage("ConstellationAndromeda")
-$call Wait(1)
+$wait 1
 $goto .SetupPuzzleNav
 
 :: SetupPuzzleNav
@@ -112,7 +112,6 @@ $call ClearMonitorSelection()
 $call ConsoleCommandLine->PlayConsoleText("Day5ConsoleText")
 $call SetRefGuideActive(false)
 $wait 1
-$call Wait(1)
 $call StartPuzzleNavigation()
 $call SetInputState(true)
 

@@ -1,19 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using FieldDay;
 using FieldDay.Systems;
-using FieldDay.HID;
 
-namespace Astro
-{
+namespace Astro {
     [SysUpdate(GameLoopPhase.Update, 10)] // After MouseInteractionSystem
-    public class InteractAdjustDialSystem : ComponentSystemBehaviour<InteractAdjustDial, LabInteractable>
-    {
-        public override void ProcessWorkForComponent(InteractAdjustDial primary, LabInteractable secondary, float deltaTime)
-        {
-            if (secondary.InteractEnded)
-            {
+    public class InteractAdjustDialSystem : ComponentSystemBehaviour<InteractAdjustDial, LabInteractable> {
+        public override void ProcessWorkForComponent(InteractAdjustDial primary, LabInteractable secondary, float deltaTime) {
+            if (secondary.InteractEnded) {
                 primary.BaseVal = primary.CurrConstrainedVal;
             }
 

@@ -58,6 +58,7 @@ namespace Astro {
 
         public void OnDeregister() {
             Game.Events?.Deregister(GameEvents.StartPuzzleMode, PuzzleUtility.DeactivatePuzzlePanel);
+            Game.Events?.Deregister(GameEvents.StartFinalPuzzle, PuzzleUtility.ActivateFinalPuzzle);
             Game.Events?.Deregister(GameEvents.StopPuzzleMode, PuzzleUtility.ActivatePuzzlePanel);
         }
     }

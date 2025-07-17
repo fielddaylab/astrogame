@@ -129,7 +129,6 @@ $endif
 
 $set temp:introRadioChannelTuned = true
 $call SetRadioFrequency(137, true)
-$call SnapRadioToChannel()
 $call SetRadioDialLocked(true)
 $if temp:introRadioHint
     $set temp:introRadioHint = false
@@ -486,25 +485,22 @@ $endif
 @cutscene
 @once
 
-$set temp:radioChannelTuned = true
-$call SetRadioFrequency(375, true)
-$call SnapRadioToChannel()
-$call SetInputState(false)
 $call HintModals->Hide("RadioControls", 0.2)
+
+$set temp:radioChannelTuned = true
+$call SetRadioDialLocked(true)
+$call SetRadioFrequency(375, true)
+$call SetInputState(false)
 $call ClearMonitorSelection()
 $call LockMonitorFocus()
 $call MonitorUI->PlayRadioDownload(2)
 $call ConsoleCommandLine->PlayConsoleText("UpgradeSystem")
-// $call HintModals->SlideInFromRight("CeresRadioHint", 0.4)
 $call SetChannelActive(Unlocks_Active, false)
 $call SetChannelActive(Unlocks_Inactive, true)
+$call SetRadioFrequency(137)
 $call MonitorUI->ShowCERESLogo()
 $call MonitorUI->CERESLogoToCorner(0.5)
 $wait 1
-
-$call SetRadioFrequency(137)
-$call SnapRadioToChannel()
-$call SetRadioDialLocked(true)
 $call SetInputState(true)
 
 $call ConsoleCommandLine->PlayConsoleTextAndWait("Day1UpgradeSystem")

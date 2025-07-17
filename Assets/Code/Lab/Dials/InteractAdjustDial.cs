@@ -1,17 +1,13 @@
+
+using System;
+using UnityEngine;
 using BeauRoutine;
-using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay;
 using FieldDay.Components;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
-namespace Astro
-{
-    public class InteractAdjustDial : BatchedComponent, IRegistrationCallbacks
-    {
+namespace Astro {
+    public class InteractAdjustDial : BatchedComponent, IRegistrationCallbacks {
         public delegate bool CanAdjustPredicate(InteractAdjustDial dial, Vector2 delta);
 
         [Header("Parameters")]
@@ -31,22 +27,16 @@ namespace Astro
 
         public CanAdjustPredicate CanAdjust;
 
-        public void OnDeregister()
-        {
+        public void OnDeregister() { }
 
-        }
-
-        public void OnRegister()
-        {
+        public void OnRegister() {
             CurrRawVal = BaseVal;
             CurrConstrainedVal = BaseVal;
         }
     }
 
-    public static class DialUtility
-    {
-        public static void TryAdjustDial(InteractAdjustDial dial, float delta)
-        {
+    public static class DialUtility {
+        public static void TryAdjustDial(InteractAdjustDial dial, float delta) {
             var preConstrainedVal = dial.CurrConstrainedVal;
             var preRawVal = dial.CurrRawVal;
 

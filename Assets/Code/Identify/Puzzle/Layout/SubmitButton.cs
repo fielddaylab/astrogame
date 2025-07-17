@@ -42,8 +42,9 @@ namespace Astro {
         }
 
         public void OnDeregister() {
-            Game.Events.Deregister(GameEvents.StartPuzzleMode, m_SetButtonToPuzzle);
-            Game.Events.Deregister(GameEvents.StartOpenMode, m_SetButtonToId);
+            Game.Events?.Deregister(GameEvents.StartPuzzleMode, m_SetButtonToPuzzle);
+            Game.Events?.Deregister(GameEvents.StartFinalPuzzle, m_SetButtonToPuzzle);
+            Game.Events?.Deregister(GameEvents.StartOpenMode, m_SetButtonToId);
         }
 
         public IEnumerator SetButtonActive(bool active) {

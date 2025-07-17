@@ -205,29 +205,24 @@ $endif
 @once
 
 $set temp:radioChannelTuned = true
+$call SetRadioDialLocked(true)
 $call SetRadioFrequency(375, true)
-$call SnapRadioToChannel()
 $call SetInputState(false)
 $call ClearMonitorSelection()
 $call LockMonitorFocus()
 $call MonitorUI->PlayRadioDownload(2)
 $call ConsoleCommandLine->PlayConsoleText("UpgradeSystem")
 $wait 1
-
 $call SetInstrumentUnlocked(InfraredWavelength, true)
 $call SetInstrumentUnlocked(HistoricalDataInstrument, true)
 $call ConsoleCommandLine->PlayConsoleText("LoadHistData")
 $wait 1
-
 $call SetChannelActive(Unlocks_Active, false)
 $call SetChannelActive(Unlocks_Inactive, true)
+$call SetRadioFrequency(137)
 $call MonitorUI->ShowCERESLogo()
 $call MonitorUI->CERESLogoToCorner(0.5)
 $wait 1
-
-$call SetRadioFrequency(137)
-$call SnapRadioToChannel()
-$call SetRadioDialLocked(true)
 $call SetInputState(true)
 
 $call ConsoleCommandLine->PlayConsoleTextAndWait("Day3UpgradeSystem")
