@@ -831,7 +831,6 @@ $goto .HintForSecondRow
 
 :: HintForSecondRow
 $set temp:AlgolRowFilled = false
-$set temp:BrightestBlueHintVisible = true
 $set temp:waitingForSelectAlgol = true
 $call HintModals->SlideInFromRight("BrightestBlue", 0.4)
 $call UnlockMonitorFocus()
@@ -846,9 +845,8 @@ $call UnlockMonitorFocus()
 @interrupt
 @cutscene
 
-$call HintModals->CloseAllModals()
-$call HintModals->SlideInFromRight("CompleteRow", 0.4)
-$call LockMonitorFocus()
+// $call HintModals->CloseAllModals()
+// $call HintModals->SlideInFromRight("CompleteRow", 0.4)
 
 {@Astrid} Is this the brightest star in blue? If so, that would make this <i>Algol</i>. $[Astrid/L1/l1_a_t16]
 {@Astrid} If this is Algol, then I should this stars data into the first row. $[Astrid/L1/l1_a_t17]
@@ -864,9 +862,8 @@ $call UnlockMonitorFocus()
 @interrupt
 @cutscene
 
-$call HintModals->CloseAllModals()
-$call HintModals->SlideInFromRight("BrightestBlue", 0.4)
-// {@Astrid} I should compare the blue magnitude of this star to the others in this cluster...
+// $call HintModals->CloseAllModals()
+// $call HintModals->SlideInFromRight("BrightestBlue", 0.4)
 {@Astrid} I should compare its blue magnitude to the others in this cluster. $[Astrid/L1/l1_a_t10] 
 
 :: AtikSelectedPostFilled
@@ -933,6 +930,7 @@ $set temp:readyToSubmit = false
 $branch .PostAlgolDataFilled
 
 ::PostAlgolDataFilled
+$call UnlockMonitorFocus()
 $call HintModals->SlideInFromRight("ElijahPuzzle", 0.4)
 $branch .PuzzleTimeoutHint
 
@@ -944,6 +942,7 @@ $branch .PuzzleTimeoutHint
 
 $set temp:AlgolRowFilled = true
 $call HintModals->CloseAllModals()
+$call UnlockMonitorFocus()
 $call HintModals->SlideInFromRight("ElijahPuzzle", 0.4)
 $branch .PuzzleTimeoutHint
 
