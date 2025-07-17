@@ -75,6 +75,7 @@ namespace Astro.Radio {
         }
 
         [LeafMember("SnapRadioToChannel")]
+        //! There appear to be some issues when this is called in script immediatley after SetRadioFrequency
         static public void SnapRadioFrequencyToChannel() {
             var state = Find.State<RadioRig>();
             if (state.ClosestChannel != null) {
