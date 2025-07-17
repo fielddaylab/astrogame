@@ -58,7 +58,7 @@ namespace Astro {
         private void CheckPuzzle() {
             PuzzleState puzzle = Find.State<PuzzleState>();
             if (PuzzleUtility.CheckSolutionCorrect(puzzle, out BitSet32 rowsCorrectness)) { 
-                // update puzzle star appeances
+                // clear puzzle star appeances
                 foreach (UIFocus focus in Find.State<FocusState>().ActiveFocii) {
                     FocusableUtility.UpdateFocusTrackerSprite(focus, null);
                 }

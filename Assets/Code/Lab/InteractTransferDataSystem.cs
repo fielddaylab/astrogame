@@ -18,19 +18,20 @@ namespace Astro {
                     var puzzleState = Find.State<PuzzleState>();
                     PuzzleUtility.CheckEnableSubmit(puzzleState);
 
-                    bool isRowComplete = true;
-                    for (int i = 0; i < puzzleState.Display.Cells.Length; i++) {
-                        var currentCell = puzzleState.Display.Cells[i].DataSlot;
+                    // Updating guess tracker logic
+                    // bool isRowComplete = true;
+                    // for (int i = 0; i < puzzleState.Display.Cells.Length; i++) {
+                    //     var currentCell = puzzleState.Display.Cells[i].DataSlot;
+                    //     if (currentCell.PuzzleRow != dataState.SelectedTarget.PuzzleRow) continue;
 
-                        if (currentCell.PuzzleRow != dataState.SelectedTarget.PuzzleRow) continue;
+                    //     if (!currentCell.HasData) {
+                    //         isRowComplete = false;
+                    //         break;
+                    //     }
+                    // }
+                    bool isCoordinateCell = dataState.SelectedTarget.PuzzleCol == 1;
 
-                        if (!currentCell.HasData) {
-                            isRowComplete = false;
-                            break;
-                        }
-                    }
-
-                    if (isRowComplete) {
+                    if (isCoordinateCell) {
                         int rowIndex = dataState.SelectedTarget.PuzzleRow;
                         UIFocus current = Find.State<FocusState>().CurrentFocus;
                         // clear any previous stars we put this guess tracker on
@@ -54,8 +55,7 @@ namespace Astro {
                     DataUtility.ClearSelections(dataState);
 
                     return;
-                }
-                else {
+                } else {
                     Debug.Log("[InteractTransferSystem] Transfer unsuccessful");
                 }
             }
