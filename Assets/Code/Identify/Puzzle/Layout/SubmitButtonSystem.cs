@@ -1,12 +1,11 @@
-using FieldDay.Systems;
+
 using FieldDay;
-using System;
-using BeauUtil.Debugger;
-using System.Collections;
+using FieldDay.Systems;
+
 using BeauUtil;
-using Astro.Reference;
 using BeauRoutine;
-using UnityEditorInternal;
+using BeauUtil.Debugger;
+using Astro.Reference;
 
 namespace Astro {
     [SysUpdate(GameLoopPhase.Update, 501, AstroGame.AnySubmissionUpdateMask)] // After RowSelectSystem
