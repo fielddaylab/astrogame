@@ -772,13 +772,13 @@ $call HintModals->CloseAllModals()
 
 $call ReleaseIsolatedPuzzle()
 $set temp:waitingForBlueLight = false
+$set temp:waitingForFillColor = true
 $call SetInputState(false)
-
 {@Astrid} It looks like I have the visible magnitude of the star and the blue magnitude. $[Astrid/L1/l1_a_t06] 
 {@Astrid} So now the color module can calculate a <b>color index</b>! $[Astrid/L1/l1_a_t07]
-$call SetInputState(true)
+
 $call IsolatePuzzleCell(1, 2)
-$set temp:waitingForFillColor = true
+$call SetInputState(true)
 
 {@Astrid} The hotter the star, the bluer it is. Now I can load the color of the star... and put it in the color space for Atik. $[Astrid/L1/l1_a_36]
 
@@ -816,7 +816,7 @@ $call AddIsolatedSlot(Color)
 @trigger    OnPuzzleRowFilled
 @when   rowId == 1, temp:waitingForFillColor
 @priority   High
-@boostScore 200
+@boostScore 400
 @interrupt
 @cutscene
 @once

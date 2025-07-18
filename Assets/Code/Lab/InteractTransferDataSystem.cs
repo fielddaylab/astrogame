@@ -18,17 +18,6 @@ namespace Astro {
                     var puzzleState = Find.State<PuzzleState>();
                     PuzzleUtility.CheckEnableSubmit(puzzleState);
 
-                    // Updating guess tracker logic
-                    // bool isRowComplete = true;
-                    // for (int i = 0; i < puzzleState.Display.Cells.Length; i++) {
-                    //     var currentCell = puzzleState.Display.Cells[i].DataSlot;
-                    //     if (currentCell.PuzzleRow != dataState.SelectedTarget.PuzzleRow) continue;
-
-                    //     if (!currentCell.HasData) {
-                    //         isRowComplete = false;
-                    //         break;
-                    //     }
-                    // }
                     bool isCoordinateCell = dataState.SelectedTarget.PuzzleCol == 1;
 
                     if (isCoordinateCell) {
@@ -39,13 +28,26 @@ namespace Astro {
                             FocusableUtility.UpdateFocusTrackerSprite(puzzleState.PuzzleEntryGuesses[rowIndex], null);   
                         }
                         FocusableUtility.UpdateFocusTrackerSprite(current, FocusState.GuessTrackerSprites[rowIndex]);
-                        puzzleState.PuzzleEntryGuesses[rowIndex] = current;
-                         
+                        puzzleState.PuzzleEntryGuesses[rowIndex] = current;     
+                    }
+
+                    bool isRowComplete = true;
+                    for (int i = 0; i < puzzleState.Display.Cells.Length; i++) {
+                        var currentCell = puzzleState.Display.Cells[i].DataSlot;
+                        if (currentCell.PuzzleRow != dataState.SelectedTarget.PuzzleRow) continue;
+
+                        if (!currentCell.HasData) {
+                            isRowComplete = false;
+                            break;
+                        }
+                    }
+
+                    if (isRowComplete) {
                         using (var table = TempVarTable.Alloc()) {
                             table.Set("rowId", dataState.SelectedTarget.PuzzleRow);
                             ScriptUtility.Trigger(ScriptEvents.OnPuzzleRowFilled, table);
-                        } 
-                    } else { 
+                        }
+                    } else {
                         using (var table = TempVarTable.Alloc()) {
                             table.Set("cellId", targetSlotId);
                             ScriptUtility.Trigger(ScriptEvents.OnPuzzleCellFilled, table);
