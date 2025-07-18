@@ -31,7 +31,8 @@ namespace Astro {
     public enum ReviewSubmissionType {
         None,
         Identification,
-        Puzzle
+        Puzzle,
+        Decoder
     }
 
     public enum ReviewResult {

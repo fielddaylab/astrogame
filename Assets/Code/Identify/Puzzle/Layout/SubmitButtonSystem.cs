@@ -6,31 +6,54 @@ using System.Collections;
 using BeauUtil;
 using Astro.Reference;
 using BeauRoutine;
+using UnityEditorInternal;
 
 namespace Astro {
     [SysUpdate(GameLoopPhase.Update, 501, AstroGame.AnySubmissionUpdateMask)] // After RowSelectSystem
 
-    // TODO: connect/merge with PointsReviewSystem
+    // TODO: connect/merge with ReviewSystem
     public class SubmitButtonSystem : ComponentSystemBehaviour<SubmitButton, LabInteractable> {
         public override void ProcessWorkForComponent(SubmitButton primary, LabInteractable secondary, float deltaTime) {          
             if (!secondary.InteractReceived) { return; }
 
-            if ((primary.ButtonType & SubmitButtonType.SubmitPuzzle) != 0) {
-                if (Find.State<PuzzleState>().ActivePuzzle != null) {
+            switch (primary.ButtonType) {
+                case SubmitButtonType.SubmitIdentification:
+                    TrySubmitIdentification(primary);
+                    break;
+                
+                case SubmitButtonType.SubmitPuzzle:
+                    if (Find.State<PuzzleState>().ActivePuzzle == null) break;
+
                     TrySubmitPuzzle(primary);
-                }
-            }
-            if ((primary.ButtonType & SubmitButtonType.SubmitIdentification) != 0) {
-                TrySubmitIdentification(primary);
+                    break;
+                
+                case SubmitButtonType.Decoder:
+                    Log.Msg("[SubmitButtonSystem] assessing puzzle state");
+                    TrySubmitDecoderPasscode(primary);
+                    break;
+                
+                default:
+                    Log.Warn("[SubmitButtonSystem] submit button state unrecognized.");
+                    break;
             }
         }
 
+        private bool TrySubmitDecoderPasscode(SubmitButton btn) {
+            ReviewState reviewState = Find.State<ReviewState>();
+            if (reviewState.CurrentSubmission == ReviewSubmissionType.None) {
+                reviewState.CurrentSubmission = ReviewSubmissionType.Decoder;
+                Routine.Start(btn.SetButtonActive(false));
+                return true;
+            }
+            return false;
+        }
+
         private bool TrySubmitPuzzle(SubmitButton btn) {
-            ReviewState pps = Find.State<ReviewState>();
-            if (pps.CurrentSubmission == ReviewSubmissionType.None) {
-                pps.CurrentSubmission = ReviewSubmissionType.Puzzle;
+            ReviewState reviewState = Find.State<ReviewState>();
+            if (reviewState.CurrentSubmission == ReviewSubmissionType.None) {
+                reviewState.CurrentSubmission = ReviewSubmissionType.Puzzle;
                 btn.PuzzleLoadingCollider.SetActive(true);
-                Routine.Start( btn.SetButtonActive(false) );
+                Routine.Start(btn.SetButtonActive(false));
                 return true;
             }
             return false;
@@ -55,7 +78,7 @@ namespace Astro {
             btn.MonitorLoadingCollider.SetActive(true);
             Routine.Start( btn.SetButtonActive(false) );
             ConsoleTypedText console = Find.FirstComponent<ConsoleTypedText>();
-            //console.Play("IdSubmit");
+            
             if (rgs.SelectedRefClassification != null) {
                 console.PlayClassification(rgs.SelectedRefClassification);
             } else if (rgs.SelectedMaterials != 0){
@@ -66,10 +89,10 @@ namespace Astro {
     }
 
     public static partial class PuzzleUtility {
-
         public static void SetButtonMode(SubmitButton button, SubmitButtonType type) {
             button.ButtonType = type;
         }
+
         public static bool CheckSolutionCorrect(PuzzleState state, out BitSet32 rowsCorrect) {
 
             // convert combined flags to array of single flags

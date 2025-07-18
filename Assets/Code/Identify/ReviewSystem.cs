@@ -7,25 +7,27 @@ using FieldDay.Scripting;
 using FieldDay.Systems;
 using FieldDay.Audio;
 using System;
+using BeauRoutine;
 
 namespace Astro {
     [SysUpdate(GameLoopPhase.Update, 0, AstroGame.AnySubmissionUpdateMask)]
-    public class PointsReviewSystem : SharedStateSystemBehaviour<ReviewState> {
-
+    public class ReviewSystem : SharedStateSystemBehaviour<ReviewState> {
         public override bool HasWork() {
             return base.HasWork() && (m_State.CurrentSubmission != 0);
         }
 
         public override void ProcessWork(float deltaTime) {
             if (m_State.ReviewTimer.Advance(deltaTime)) {
-                CheckObjectOrPuzzle();
+                ReviewSubmission();
                 m_State.ReviewCooldown.Paused = false;
                 return;
             } else if (!m_State.ReviewTimer.Paused) {
                 TryProgressPips(m_State.ReviewTimer.GetProgress(), m_State.ReviewModule);
                 return;
             }
+
             CelestialDataDisplay display = Find.State<CelestialDataDisplay>();
+
             if (m_State.ReviewCooldown.Advance(deltaTime)) {
                 if(!display.AnimRoutine.Exists()){
                     ReviewModuleUtility.ResetReview( m_State.ReviewModule );
@@ -35,15 +37,37 @@ namespace Astro {
             }        
         }
 
-        private void CheckObjectOrPuzzle() {
-            if (m_State.CurrentSubmission == ReviewSubmissionType.Identification) {
-                CheckObjectIdentification();
-            } 
-            if (m_State.CurrentSubmission == ReviewSubmissionType.Puzzle) {
-                Game.Events.Dispatch(GameEvents.MonitorEmptySpaceClicked);
-                // if puzzle checking is expensive, could this be amortized over the timer duration?
-                CheckPuzzle();
-            }
+        private void ReviewSubmission() {
+            switch (m_State.CurrentSubmission) {
+                case ReviewSubmissionType.Identification:
+                    CheckObjectIdentification();
+                    break;
+
+                case ReviewSubmissionType.Puzzle:
+                    Game.Events.Dispatch(GameEvents.MonitorEmptySpaceClicked);
+                    CheckPuzzle();
+                    break;
+
+                case ReviewSubmissionType.Decoder:
+                    SatelliteDecoderState decoderState = Find.State<SatelliteDecoderState>();
+                    ReviewState reviewState = Find.State<ReviewState>();
+
+                    bool success = DecoderUtility.AssessSequence(decoderState);
+
+                    ReviewModuleUtility.ShowResultSprite(success, reviewState.ReviewModule);
+                    if (success) {
+                        ScriptUtility.Trigger(ScriptEvents.OnDecoderSuccess);
+                    } else { // TODO trigger additional feedback for incorrect submissions
+                        //? Dear god, why did we bury the submit button here?
+                        SubmitButton button = Find.State<PuzzleState>().Display.SubmitButton;
+
+                        Routine.Start( button.SetButtonActive(true) );
+                    }
+                    break;
+
+                default:
+                    break;
+            }    
         }
 
         private void TryProgressPips(float timerProgress, ReviewModule module) {
@@ -75,7 +99,7 @@ namespace Astro {
 
                 puzzle.ActivePuzzle = null;
 
-                Log.Msg("[PointsReviewSystem] Puzzle CORRECT! :D");
+                Log.Msg("[ReviewSystem] Puzzle CORRECT! :D");
             } else {
                 // Clear the tracker for any star outside the puzzle
                 // TODO less expensive subset?

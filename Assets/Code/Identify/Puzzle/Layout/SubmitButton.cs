@@ -27,6 +27,7 @@ namespace Astro {
 
         private Action m_SetButtonToPuzzle;  
         private Action m_SetButtonToId;
+        private Action m_SetButtonToDecoder;  
 
         private void Awake() {
             labButton = GetComponent<LabButton>();
@@ -35,15 +36,19 @@ namespace Astro {
         public void OnRegister() {
             m_SetButtonToPuzzle = () => PuzzleUtility.SetButtonMode(this, SubmitButtonType.SubmitPuzzle);
             m_SetButtonToId = () => PuzzleUtility.SetButtonMode(this, SubmitButtonType.SubmitIdentification);
+            m_SetButtonToDecoder = () => {
+                PuzzleUtility.SetButtonMode(this, SubmitButtonType.Decoder);
+                Routine.Start(SetButtonActive(true));
+            };
 
             Game.Events.Register(GameEvents.StartPuzzleMode, m_SetButtonToPuzzle);
-            Game.Events.Register(GameEvents.StartFinalPuzzle, m_SetButtonToPuzzle);
+            Game.Events.Register(GameEvents.StartFinalPuzzle, m_SetButtonToDecoder);
             Game.Events.Register(GameEvents.StartOpenMode, m_SetButtonToId);
         }
 
         public void OnDeregister() {
             Game.Events?.Deregister(GameEvents.StartPuzzleMode, m_SetButtonToPuzzle);
-            Game.Events?.Deregister(GameEvents.StartFinalPuzzle, m_SetButtonToPuzzle);
+            Game.Events?.Deregister(GameEvents.StartFinalPuzzle, m_SetButtonToDecoder);
             Game.Events?.Deregister(GameEvents.StartOpenMode, m_SetButtonToId);
         }
 
@@ -64,6 +69,7 @@ namespace Astro {
     [Serializable, Flags]
     public enum SubmitButtonType {
         SubmitPuzzle = 1,
-        SubmitIdentification = 2
+        SubmitIdentification = 2,
+        Decoder = 3
     }
 }

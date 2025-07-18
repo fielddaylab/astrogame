@@ -1,13 +1,8 @@
-using FieldDay.SharedState;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using FieldDay.SharedState;
 
-namespace Astro
-{
-    public class SatelliteDecoderState : SharedStateComponent
-    {
+namespace Astro {
+    public class SatelliteDecoderState : SharedStateComponent {
         public SatelliteDecoderDial[] Dials;
         public string Solution;
 

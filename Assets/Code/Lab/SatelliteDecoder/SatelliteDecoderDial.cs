@@ -8,10 +8,8 @@ using TMPro;
 using UnityEngine;
 
 
-namespace Astro
-{
-    public class SatelliteDecoderDial : BatchedComponent, IRegistrationCallbacks
-    {
+namespace Astro {
+    public class SatelliteDecoderDial : BatchedComponent, IRegistrationCallbacks {
         public float FacetAngle = 45; // How much the spinner turns on each click
         public Transform Spinner;
         public TextMeshPro[] TextDisplays;
@@ -23,14 +21,13 @@ namespace Astro
         [HideInInspector] public Quaternion CurrTargetRotation;
 
         [HideInInspector]
-        public char[] Values = new char[]
-        {
+        public char[] Values = new char[] {
         'A', 'B', 'C', 'D', 'E',
         'F', 'G', 'H', 'I', 'J',
         'K', 'L', 'M', 'N', 'O',
         'P', 'Q', 'R', 'S', 'T',
-        'U', 'V', 'W', 'X', 'Y', 'Z',
-        };
+        'U', 'V', 'W', 'X', 'Y',
+        'Z' };
 
         public Routine RotateRoutine;
         public Routine CountTimeRoutine;
@@ -43,30 +40,27 @@ namespace Astro
         [HideInInspector] public float HoldTriggerTime;
         [HideInInspector] public float HoldTriggerTimer = 0;
 
+        /// <summary>
+        /// Note: this value must be less than rotate duration!
+        /// </summary>
         [HideInInspector] public float HoldCooldownTime;
         [HideInInspector] public float HoldCooldownTimer = 0;
 
-        public void OnRegister()
-        {
+        public void OnRegister() {
             RotateDuration = 0.15f;
-            HoldCooldownTime = 0.12f; // must be less than rotate duration!
+            HoldCooldownTime = 0.12f;
             HoldTriggerTime = 0.2f;
             CurrTargetRotation = Spinner.localRotation;
             DecoderUtility.UpdateDecoderDialVals(this, true);
         }
 
-        public void OnDeregister()
-        {
-
-        }
+        public void OnDeregister() { }
 
 #if UNITY_EDITOR
         [ContextMenu("Arrange Dial Texts")]
-        private void MenuArrangeDialTexts()
-        {
+        private void MenuArrangeDialTexts() {
             float step = 360f / TextDisplays.Length;
-            for (int i = 0; i < TextDisplays.Length; i++)
-            {
+            for (int i = 0; i < TextDisplays.Length; i++) {
                 // position
                 TextDisplays[i].transform.position = Spinner.transform.position;
                 TextDisplays[i].transform.localPosition += new Vector3(Mathf.Cos(Mathf.Deg2Rad * i * step) * SpacingRadius, Mathf.Sin(Mathf.Deg2Rad * i * step) * SpacingRadius + YOffset, 0);
