@@ -1,4 +1,5 @@
 using Astro.Save;
+using BeauUtil;
 using FieldDay;
 using FieldDay.Audio;
 using FieldDay.Data;
@@ -12,6 +13,13 @@ namespace Astro {
     {
         [NonSerialized] public string PlayerCode = null;
         [NonSerialized] public float MasterVolume;
+        [Range(0,1)] public float DefaultMasterVol;
+        [NonSerialized] public float MusicVolume;
+        [Range(0, 1)] public float DefaultMusicVol;
+        [NonSerialized] public float SFXVolume;
+        [Range(0, 1)] public float DefaultSFXVol;
+        [NonSerialized] public float VoiceVolume;
+        [Range(0, 1)] public float DefaultVoiceVol;
         [NonSerialized] public bool CameraDriftEnabled = true;
         [NonSerialized] public bool HighQualityMode;
         [NonSerialized] public bool FullscreenEnabled;
@@ -23,6 +31,10 @@ namespace Astro {
 
         public void OnRegister()
         {
+            MasterVolume = DefaultMasterVol;
+            MusicVolume = DefaultMusicVol;
+            SFXVolume = DefaultSFXVol;
+            VoiceVolume = DefaultVoiceVol;
             PlayerCode = PlayerPrefs.GetString("LatestPlayerCode", null);
             AstroGame.SaveBuffer.RegisterHandler("UserSettingsState", this);
         }
@@ -31,6 +43,19 @@ namespace Astro {
         {
             float volume = reader.Read<float>();
             SettingsUtility.SetMasterVolume(this, volume);
+
+
+            /*
+             * Leaving this out for now to avoid messing with saves?
+            float musicVol = reader.Read<float>();
+            SettingsUtility.SetAudioBusVolume(this, SettingsUtility.MUSIC_BUS_ID, musicVol);
+
+            float sfxVol = reader.Read<float>();
+            SettingsUtility.SetAudioBusVolume(this, SettingsUtility.SFX_BUS_ID, sfxVol);
+
+            float voVol = reader.Read<float>();
+            SettingsUtility.SetAudioBusVolume(this, SettingsUtility.VO_BUS_ID, voVol);
+            */
 
             bool cameraDrift = reader.Read<bool>();
             SettingsUtility.SetCameraDrift(this, cameraDrift);
@@ -45,6 +70,13 @@ namespace Astro {
         public void Write(object self, ref ByteWriter writer, SaveStateChunkConsts consts, ref SaveScratchpad scratch)
         {
             writer.Write((float)MasterVolume);
+            /*
+             * Leaving this out for now to avoid messing with saves?
+            writer.Write((float)MusicVolume);
+            writer.Write((float)SFXVolume);
+            writer.Write((float)MusicVolume);
+            */
+
             writer.Write((bool)CameraDriftEnabled);
             writer.Write((bool)HighQualityMode);
             writer.Write((bool)FullscreenEnabled);
@@ -52,6 +84,10 @@ namespace Astro {
     }
 
     public static class SettingsUtility {
+        public static string MUSIC_BUS_ID = "Music";
+        public static string SFX_BUS_ID = "Sfx";
+        public static string VO_BUS_ID = "VO";
+
         public static void SetQualityMode(UserSettingsState state, bool mode) {
             state.HighQualityMode = mode;
         }
@@ -70,6 +106,13 @@ namespace Astro {
             }
             state.MasterVolume = set;
             Sfx.SetBusVolume(AudioBus.Master, set);
+        }
+        
+        public static void SetAudioBusVolume(UserSettingsState state, StringHash32 busId, float set) {
+            if (set < 0 || set > 1.0f) {
+                throw new ArgumentOutOfRangeException("[SettingsUtility] Set volume " + set + " invalid! Must be 0 to 1");
+            }
+            Sfx.SetBusVolume(busId, set);
         }
     }
 }
