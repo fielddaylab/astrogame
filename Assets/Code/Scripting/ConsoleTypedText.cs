@@ -16,6 +16,7 @@ namespace Astro {
         public CanvasGroup Group;
         public TMP_Text Text;
 
+        public bool DataHidden;
         private Routine m_Routine;
         private StringBuilder m_TextBuilder = new StringBuilder(512);
 
@@ -23,6 +24,17 @@ namespace Astro {
             base.OnScriptRegister(actor);
             Group.alpha = 0;
             Text.enabled = false;
+        }
+
+        private void SetDataRequirementHidden(bool hide) {
+            CelestialDataDisplay display = Find.State<CelestialDataDisplay>();
+            if (hide && display.DataRequirmentHint.activeSelf) {
+                display.DataRequirmentHint.SetActive(false);
+                DataHidden = true;
+            } else if (DataHidden) {
+                display.DataRequirmentHint.SetActive(true);
+                DataHidden = false;
+            }        
         }
 
         [LeafMember("HideConsole")]
@@ -79,9 +91,11 @@ namespace Astro {
         private IEnumerator HideRoutine() {
             yield return Group.FadeTo(0, 0.3f);
             Text.enabled = false;
+            SetDataRequirementHidden(false);
         }
 
         private IEnumerator AssetRoutine(ConsoleTextAsset textAsset) {
+            SetDataRequirementHidden(true);
             Text.SetText(string.Empty);
             Text.enabled = true;
             Group.alpha = 1;
@@ -127,6 +141,7 @@ namespace Astro {
         }
 
         private IEnumerator StringLineRoutine(string line, bool isKeyboard, float delayAfter) {
+            SetDataRequirementHidden(true);
             Text.SetText(string.Empty);
             Text.enabled = true;
             Group.alpha = 1;
