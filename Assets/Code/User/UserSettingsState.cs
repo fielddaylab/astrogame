@@ -84,9 +84,9 @@ namespace Astro {
     }
 
     public static class SettingsUtility {
-        public static string MUSIC_BUS_ID = "Music";
-        public static string SFX_BUS_ID = "Sfx";
-        public static string VO_BUS_ID = "VO";
+        public static StringHash32 MUSIC_BUS_ID = "Music";
+        public static StringHash32 SFX_BUS_ID = "Sfx";
+        public static StringHash32 VO_BUS_ID = "VO";
 
         public static void SetQualityMode(UserSettingsState state, bool mode) {
             state.HighQualityMode = mode;
@@ -112,7 +112,18 @@ namespace Astro {
             if (set < 0 || set > 1.0f) {
                 throw new ArgumentOutOfRangeException("[SettingsUtility] Set volume " + set + " invalid! Must be 0 to 1");
             }
+            SetAudioSetting(state, busId, set);
             Sfx.SetBusVolume(busId, set);
+        }
+
+        public static void SetAudioSetting(UserSettingsState state, StringHash32 busId, float set) {
+            if (busId == MUSIC_BUS_ID) {
+                state.MusicVolume = set;
+            } else if (busId == SFX_BUS_ID) {
+                state.SFXVolume = set;
+            } else if (busId == VO_BUS_ID) {
+                state.VoiceVolume = set;
+            }
         }
     }
 }
