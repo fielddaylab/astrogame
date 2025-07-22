@@ -208,6 +208,7 @@ $call StartNeutrinoNavigation()
 $call StopNeutrinoNavigation()
 $call StartOpenMode()
 $set temp:waitingForNeutrinoStar = true
+$call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 650)
 
 {@Radio} We need to know the spectral types of these stars. In order to determine that you’ll need to calculate the <i>temperature</i>. $[Radio/L2/l2_r_04]
 {@Radio} We need both <i>visible</i> and <i>blue wavelength</i> measurements to calculate this. $[Radio/L2/l2_r_09]
@@ -267,6 +268,7 @@ $call OpenRefGuidePage("SpectralClass")
 @cutscene
 @once
 
+$start Observatory.ResetSubtitlePosition
 $set temp:waitingForNeutrinoStar = false
 $call UnlockMonitorFocus()
 $call SetRadioDialLocked(false)
