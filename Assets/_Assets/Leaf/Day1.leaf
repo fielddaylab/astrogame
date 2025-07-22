@@ -918,6 +918,7 @@ $endif
 @cutscene
 @once
 
+$set temp:AlgolRowFilled = true
 $if temp:MirfakRowFilled, temp:MenkibRowFilled
     $goto .PuzzleGridReadyForSubmissionFirstTime
 $endif
@@ -947,7 +948,7 @@ $call HintModals->SlideInFromRight("ElijahPuzzle", 0.4)
 $branch .PuzzleTimeoutHint
 
 :: PuzzleTimeoutHint
-$call Wait(30)
+$wait 30
 $if !temp:readyToSubmit, !temp:MenkibRowFilled
     {@Astrid} Let’s see here, I know Menkib is NOT the brightest in visible. Which of my remaining stars does that match? $[Astrid/L1/l1_a_t20]
     $branch .PuzzleTimeoutHint
