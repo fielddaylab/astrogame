@@ -23,6 +23,15 @@ namespace Astro.Radio {
                 m_State.StaticVolume = 0;
                 m_State.StaticModeTimer = 0;
             } else {    
+                // Special case for off channel
+                if (m_State.Dial.CurrentValue == 100) {
+                    if (m_State.StaticMode != RadioStaticMode.Off) {
+                        Sfx.PlayDetached("Oneshot.LabButtonC.Click", m_State.StreamEmitter.transform);
+                    }
+                    TurnOffRadio(m_State);
+                    return;
+                }
+
                 switch (m_State.StaticMode) {
                     case RadioStaticMode.Off: {
                         UpdateOff(m_State);
@@ -49,11 +58,6 @@ namespace Astro.Radio {
             if (Sfx.IsActive(m_State.StaticAudioHandle)) {
                 float vol = m_State.StaticVolume * (1 - m_State.NormalizedChannelStrength);
                 Sfx.SetVolume(m_State.StaticAudioHandle, vol);
-
-                //using (var psb = PooledStringBuilder.Create()) {
-                //    psb.Builder.Append("Radio Static volume: ").AppendNoAlloc(vol, 3);
-                //    DebugDraw.AddLogText(psb, Color.green);
-                //}
             }
 
             float duckingMix = Math.Max(m_State.StaticVolume / 2, m_State.NormalizedChannelStrength);
@@ -61,14 +65,13 @@ namespace Astro.Radio {
         }
 
         static private void UpdateOff(RadioRig state) {
+            if (!state.Dial.Updated) return;
 
-            if (state.Dial.Updated) {
-                state.StaticAudioHandle = Sfx.PlayFrom("Loop.Radio.Static", state.StaticEmitter, new SfxPlayArgs() { Pitch = 1, Volume = 0 });
-                state.StaticVolume = 0;
+            state.StaticAudioHandle = Sfx.PlayFrom("Loop.Radio.Static", state.StaticEmitter, new SfxPlayArgs() { Pitch = 1, Volume = 0 });
+            state.StaticVolume = 0;
 
-                state.StaticMode = RadioStaticMode.FadeIn;
-                state.StaticModeTimer = 0;
-            }
+            state.StaticMode = RadioStaticMode.FadeIn;
+            state.StaticModeTimer = 0;
         }
 
         static private void UpdateFadeIn(RadioRig state, float deltaTime) {
@@ -89,13 +92,16 @@ namespace Astro.Radio {
                 state.StaticModeTimer += deltaTime;
                 state.StaticVolume = 1 - Math.Min(1, state.StaticModeTimer / FadeOutDuration);
 
-                if (state.StaticVolume <= 0) {
-                    state.StaticMode = RadioStaticMode.Off;
-                    state.StaticModeTimer = 0;
-                    Sfx.Stop(state.StaticAudioHandle);
-                    state.StaticAudioHandle = default;
-                }
+                if (state.StaticVolume <= 0) TurnOffRadio(state);
             }
+        }
+
+        static private void TurnOffRadio(RadioRig rig) {
+            rig.StaticMode = RadioStaticMode.Off;
+            rig.StaticVolume = 0;
+            rig.StaticModeTimer = 0;
+            Sfx.Stop(rig.StaticAudioHandle);
+            rig.StaticAudioHandle = default;
         }
 
         static private void UpdateTuning(RadioRig state, float deltaTime) {
