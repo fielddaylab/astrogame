@@ -227,7 +227,7 @@ $set temp:radioChannelTuned = false
 $start .UpgradeReminder
 
 :: UpgradeReminder
-$call Wait(10)
+$wait 10
 $if !temp:radioChannelTuned
     {@Astrid} I should tune to 375 mHz on the Radio to upgrade my rig.
     $branch .UpgradeReminder
@@ -247,7 +247,7 @@ $call SetInputState(false)
 $call ClearMonitorSelection()
 $call LockMonitorFocus()
 $call MonitorUI->PlayRadioDownload(2)
-$call ConsoleCommandLine->PlayConsoleText("UpgradeSystem")
+$call ConsoleCommandLine->PlayConsoleTextAndWait("UpgradeSystem")
 $call SetChannelActive(Unlocks_Active, false)
 $call SetChannelActive(Unlocks_Inactive, true)
 $call SetRadioFrequency(137)
@@ -256,7 +256,7 @@ $call MonitorUI->CERESLogoToCorner(0.5)
 $wait 1
 $call SetInputState(true)
 
-$call ConsoleCommandLine->PlayConsoleTextAndWait("Day4UpgradeSystem")
+$call ConsoleCommandLine->PlayConsoleText("Day4UpgradeSystem")
 
 $call SetInstrumentUnlocked(HistoricalDataModeToggle, true)
 $call SetStickyFirstPage(-1)
@@ -282,6 +282,7 @@ $goto .SetupPuzzleNav
 :: SetupPuzzleNav
 $branch Observatory.PathToMonitor
 $call ConsoleCommandLine->PlayConsoleText("Day4ConsoleText")
+$call ConsoleCommandLine->HideConsole()
 $call SetRefGuideActive(false)
 $wait 1
 $call StartPuzzleNavigation()
@@ -316,7 +317,8 @@ $call Wait(1)
 $call ClearMonitorSelection()
 $call StopPuzzleMode()
 $call SetInputState(false)
-$call ConsoleCommandLine->PlayConsoleText("LightsMessage")
+$call ConsoleCommandLine->PlayConsoleTextAndWait("LightsMessage")
+$call ConsoleCommandLine->HideConsole()
 $call EndDay4->BeginCutscene()
 
 $call Wait(2)

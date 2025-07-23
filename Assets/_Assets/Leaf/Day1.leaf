@@ -91,7 +91,8 @@ $endif
 {@Astrid} There we go!
 $call MonitorUI->ShowCERESLogo()
 $call MonitorUI->CERESLogoToCorner(0.5)
-$call ConsoleCommandLine->PlayConsoleText("SystemBoot")
+$call ConsoleCommandLine->PlayConsoleTextAndWait("SystemBoot")
+$call ConsoleCommandLine->HideConsole()
 $wait 1
 $call MonitorUI->ShowElement("CommError")
 $wait 1
@@ -494,7 +495,7 @@ $call SetInputState(false)
 $call ClearMonitorSelection()
 $call LockMonitorFocus()
 $call MonitorUI->PlayRadioDownload(2)
-$call ConsoleCommandLine->PlayConsoleText("UpgradeSystem")
+$call ConsoleCommandLine->PlayConsoleTextAndWait("UpgradeSystem")
 $call SetChannelActive(Unlocks_Active, false)
 $call SetChannelActive(Unlocks_Inactive, true)
 $call SetRadioFrequency(137)
@@ -503,7 +504,7 @@ $call MonitorUI->CERESLogoToCorner(0.5)
 $wait 1
 $call SetInputState(true)
 
-$call ConsoleCommandLine->PlayConsoleTextAndWait("Day1UpgradeSystem")
+$call ConsoleCommandLine->PlayConsoleText("Day1UpgradeSystem")
 
 $call SetInstrumentUnlocked(ColorInstrument, true)
 $call SetInstrumentUnlocked(TemperatureInstrument, true)
@@ -543,8 +544,8 @@ $goto .PostClearanceUpgrade
 :: PostClearanceUpgrade
 $start Observatory.PathToMonitor
 $call SetRefGuideActive(false)
-$call ConsoleCommandLine->PlayConsoleText("Day1ConsoleText")
-
+$call ConsoleCommandLine->PlayConsoleTextAndWait("Day1ConsoleText")
+$call ConsoleCommandLine->HideConsole()
 $call SetInputState(true)
 $start Observatory.AnchorNextSubtitleToTop
 $call StartPuzzleNavigation()
@@ -1030,9 +1031,7 @@ $endif
 
 $call StopPuzzleMode()
 $call SetInputState(false)
-$call ConsoleCommandLine->PlayConsoleText("PlayMessage")
-
-$wait 2
+$call ConsoleCommandLine->PlayConsoleTextAndWait("PlayMessage")
 $call SetRefPageActive("ConstellationPerseus", false)
 $call SetRefPageActive("ConstellationPerseusCompleted", true)
 $call OpenRefGuidePage("ConstellationPerseusCompleted")

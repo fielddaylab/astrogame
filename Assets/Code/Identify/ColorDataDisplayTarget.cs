@@ -37,13 +37,11 @@ namespace Astro
             SetPanelMaterials(display.Panel.PanelMesh, packet.Value.AssetId, display.UnlitMaterial);
         }
 
-        public static void OnClear(ColorDataDisplayTarget display)
-        {
+        public static void OnClear(ColorDataDisplayTarget display) {
             SetPanelMaterials(display.Panel.PanelMesh, null, false);
         }
 
-        public static void SetPanelMaterials(MeshRenderer mesh, StringHash32 colorId, bool unlit)
-        {
+        public static void SetPanelMaterials(MeshRenderer mesh, StringHash32 colorId, bool unlit) {
             if (mesh == null) { return; }
 
             Material newMat;

@@ -319,7 +319,7 @@ $call SetInputState(false)
 $call ClearMonitorSelection()
 $call LockMonitorFocus()
 $call MonitorUI->PlayRadioDownload(2)
-$call ConsoleCommandLine->PlayConsoleText("UpgradeSystem")
+$call ConsoleCommandLine->PlayConsoleTextAndWait("UpgradeSystem")
 $call SetChannelActive(Unlocks_Active, false)
 $call SetChannelActive(Unlocks_Inactive, true)
 $call SetRadioFrequency(137)
@@ -328,7 +328,7 @@ $call MonitorUI->CERESLogoToCorner(0.5)
 $wait 1
 $call SetInputState(true)
 
-$call ConsoleCommandLine->PlayConsoleTextAndWait("Day2UpgradeSystem")
+$call ConsoleCommandLine->PlayConsoleText("Day2UpgradeSystem")
 
 $call SetInstrumentUnlocked(SpectrometerInstrument, true)
 $call SetStickyFirstPage(-1)
@@ -357,6 +357,7 @@ $goto .SetupPuzzleNav
 :: SetupPuzzleNav
 $branch Observatory.PathToMonitor
 $call ConsoleCommandLine->PlayConsoleText("Day2ConsoleText")
+$call ConsoleCommandLine->HideConsole()
 $call SetRefGuideActive(false)
 $wait 2
 $call StartPuzzleNavigation()
@@ -381,8 +382,8 @@ $call SetRadioDialLocked(false)
 $call ClearMonitorSelection()
 $call StopPuzzleMode()
 $call SetInputState(false)
-$call ConsoleCommandLine->PlayConsoleText("PlayMessage")
-$call Wait(2)
+$call ConsoleCommandLine->PlayConsoleTextAndWait("PlayMessage")
+$wait 2
 $call SetRefPageActive("ConstellationHercules", false)
 $call SetRefPageActive("ConstellationHerculesCompleted", true)
 $call OpenRefGuidePage("ConstellationHerculesCompleted")
@@ -391,9 +392,10 @@ $call TapeDeck->SetTapeActive(true)
 {@Elijah} If you’re hearing this, it means you’ve solved Hercules—and that part of the satellite could come back online soon. $[Elijah/L2/l2_e_01] 
 {@Elijah} That would be huge. With historical data restored, the other astronomers can finally start seeing the bigger picture. $[Elijah/L2/l2_e_02]
 {@Elijah} I knew you’d get this far. Keep going! Everything depends on it now. $[Elijah/L2/l2_e_03]
+$call ConsoleCommandLine->HideConsole()
 $call TapeDeck->SetTapeActive(false)
 
-$call Wait(2)
+$wait 2
 
 {@Dad} Astrid... What are you up to? Elijah's puzzles are a wild goose chase. I don't want you getting your hopes up. $[Dad/L2/l2_d_1]
 $call SetRefGuideActive(false)

@@ -30,12 +30,14 @@ namespace Astro {
         }
 
         public static void SetInstrumentUnlocked(LabInstrument instrument, bool unlocked, StringHash32 actorId) {
-            if (unlocked) {
-                if (TryAddToActiveInstruments(instrument)) {
-                    instrument.OnUnlock?.Invoke(instrument);
-                    AstroGame.Events.Queue(GameEvents.InstrumentUnlocked, ScriptUtility.ActorId(instrument));
-                }
-            }
+            // TODO why did we do this? Did we want to make this lock at some point?
+            if (!unlocked) return;
+
+            // Check if instrument already in active instruments
+            if (!TryAddToActiveInstruments(instrument)) return;
+
+            instrument.OnUnlock?.Invoke(instrument);
+            AstroGame.Events.Queue(GameEvents.InstrumentUnlocked, ScriptUtility.ActorId(instrument));
         }
 
         private static bool TryAddToActiveInstruments(LabInstrument instrument, InstrumentInventoryState inventory = null) {
@@ -46,6 +48,7 @@ namespace Astro {
             if (inventory.ActiveInstruments.Contains(instrument))
                 return false;
 
+            instrument.Unlocked = true;
             inventory.ActiveInstruments.PushBack(instrument);
 
             var currMap = inventory.ActiveInstrumentMap;

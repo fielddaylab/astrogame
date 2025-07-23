@@ -35,28 +35,49 @@ namespace Astro {
         private void Awake() {
             HideCelestialDataDisplay();
             HideClearancePointDisplay();
+            DataRequirmentHint.SetActive(false);
         }
+
+        Action m_UnacceptedFeedback;
+        Action m_DuplicateFeedback;
+        Action m_IncorrectFeedback; 
         
         protected override void OnEnable() {
+            m_UnacceptedFeedback = () => {
+                Find.FirstComponent<ConsoleTypedText>().Play("IdIrrelevant");
+                CelestialDataDisplayUtil.UpdateCurrentDataDisplay();
+            };
+            m_DuplicateFeedback = () => {
+                Find.FirstComponent<ConsoleTypedText>().Play("IdDuplicate");
+            };
+            m_IncorrectFeedback = () => {
+                Find.FirstComponent<ConsoleTypedText>().Play("IdIncorrect");
+            };
+
             Game.Events.Register(GameEvents.ValidOpenIdSubmission, CelestialDataDisplayUtil.PlayClearancePointAnimation);
-            Game.Events.Register(GameEvents.ValidKnowledgeSubmission, CelestialDataDisplayUtil.PlayUnacceptedFeedback);
-            Game.Events.Register(GameEvents.UnacceptedOpenIdSubmission, CelestialDataDisplayUtil.PlayUnacceptedFeedback);
-            Game.Events.Register(GameEvents.DuplicateOpenIdSubmission, CelestialDataDisplayUtil.PlayDuplicateFeedback);
-            Game.Events.Register(GameEvents.IncorrectOpenIdSubmission, CelestialDataDisplayUtil.PlayIncorrectFeedback);
-            Game.Events.Register(GameEvents.InvalidOpenIdSubmission, CelestialDataDisplayUtil.PlayIncorrectFeedback);
-            Game.Scenes.QueueOnLoad(() => {
+            Game.Events.Register(GameEvents.ValidKnowledgeSubmission, m_UnacceptedFeedback);
+            Game.Events.Register(GameEvents.UnacceptedOpenIdSubmission, m_UnacceptedFeedback);
+            Game.Events.Register(GameEvents.DuplicateOpenIdSubmission, m_DuplicateFeedback);
+            Game.Events.Register(GameEvents.IncorrectOpenIdSubmission, m_IncorrectFeedback);
+            Game.Events.Register(GameEvents.InvalidOpenIdSubmission, m_IncorrectFeedback);
+            Game.Scenes.QueueOnLoad(() =>
+            {
                 Find.State<FocusState>().OnFocusUpdated.Register(CelestialDataDisplayUtil.OnFocusUpdated);
 
                 // Set the number of pips in our clearance level display
                 DayConfigAsset config = DayConfigUtil.GetConfigForState();
 
                 int i = 0;
-                foreach (RectTransform transform in PointsRowTransform) {
+                foreach (RectTransform transform in PointsRowTransform)
+                {
                     if (transform == PointsRowTransform) continue;
 
-                    if (i >= config.NumNeutrinoPoints) {
+                    if (i >= config.NumNeutrinoPoints)
+                    {
                         transform.gameObject.SetActive(false);
-                    } else {
+                    }
+                    else
+                    {
                         transform.gameObject.SetActive(true);
                     }
                     i++;
@@ -142,6 +163,13 @@ namespace Astro {
         }
 
         public void OnDeregister() {
+            Game.Events.Deregister(GameEvents.ValidOpenIdSubmission, CelestialDataDisplayUtil.PlayClearancePointAnimation);
+            Game.Events.Deregister(GameEvents.ValidKnowledgeSubmission, m_UnacceptedFeedback);
+            Game.Events.Deregister(GameEvents.UnacceptedOpenIdSubmission, m_UnacceptedFeedback);
+            Game.Events.Deregister(GameEvents.DuplicateOpenIdSubmission, m_DuplicateFeedback);
+            Game.Events.Deregister(GameEvents.IncorrectOpenIdSubmission, m_IncorrectFeedback);
+            Game.Events.Deregister(GameEvents.InvalidOpenIdSubmission, m_IncorrectFeedback);
+
             Game.Events.Deregister(GameEvents.MonitorEmptySpaceClicked, clearDataDisplay);
         }
 
@@ -297,16 +325,12 @@ namespace Astro {
         }
 
         public static void PlayUnacceptedFeedback() {
-            Find.FirstComponent<ConsoleTypedText>().Play("IdIrrelevant");
-            UpdateCurrentDataDisplay();
         }
 
         public static void PlayDuplicateFeedback() {
-            Find.FirstComponent<ConsoleTypedText>().Play("IdDuplicate");
         }
 
         public static void PlayIncorrectFeedback() {
-            Find.FirstComponent<ConsoleTypedText>().Play("IdIncorrect");
         }
 
         public static void UpdateDataDisplay(CelestialDataDisplay display, CelestialAsset asset) {
@@ -414,38 +438,5 @@ namespace Astro {
                 return "UNKOWN";
             }
         }
-
-        //private static string BuildMaterialsLabel(SpectrographMaterialMask materials) {
-        //    StringBuilder sb = new StringBuilder();
-        //    if (materials != 0) {
-        //        if ((materials & SpectrographMaterialMask.Hydrogen) != 0) {
-        //            sb.Append("H, ");
-        //        }
-        //        if ((materials & SpectrographMaterialMask.Helium) != 0) {
-        //            sb.Append("He, ");
-        //        }
-        //        if ((materials & SpectrographMaterialMask.Carbon) != 0) {
-        //            sb.Append("C, ");
-        //        }
-        //        if ((materials & SpectrographMaterialMask.Oxygen) != 0) {
-        //            sb.Append("O, ");
-        //        }
-        //        if ((materials & SpectrographMaterialMask.Sodium) != 0) {
-        //            sb.Append("Na, ");
-        //        }
-        //        if ((materials & SpectrographMaterialMask.Magnesium) != 0) {
-        //            sb.Append("Mg, ");
-        //        }
-        //        if ((materials & SpectrographMaterialMask.Calcium) != 0) {
-        //            sb.Append("Ca, ");
-        //        }
-        //        if ((materials & SpectrographMaterialMask.Iron) != 0) {
-        //            sb.Append("Fe, ");
-        //        }
-        //        sb.Length -= 2; // trim last delim
-        //    }
-        //    return sb.ToString();
-        //}
-
     }
 }

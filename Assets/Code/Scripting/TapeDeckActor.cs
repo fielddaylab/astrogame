@@ -26,7 +26,7 @@ namespace Astro {
             } else {
                 TapeDeck.Unlocked = false;
                 TapeDeck.OnUnlock?.Invoke(TapeDeck);
-
+                
                 Anim.Stop();
             }
         }

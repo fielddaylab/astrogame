@@ -43,10 +43,22 @@ namespace Astro {
         }
 
         [LeafMember("PlayConsoleText")]
-        public IEnumerator Play(StringHash32 textAsset) {
-            ConsoleTextAsset asset = Find.NamedAsset<ConsoleTextAsset>(textAsset); 
-            return PlayAsset(asset);
+        public void Play(StringHash32 textAsset) {
+            ConsoleTextAsset asset = Find.NamedAsset<ConsoleTextAsset>(textAsset);
+            m_Routine.Replace(PlayAsset(asset));
         }
+
+        public IEnumerator PlayAsset(ConsoleTextAsset textAsset) {
+            Routine playRoutine = Routine.Start(this,
+                Sequence.Create(AssetRoutine(textAsset))
+                .Wait(0.2f)
+                .Then(() => { m_Routine.Replace(HideRoutine()); })
+            );
+            yield return m_Routine.Replace(playRoutine);
+            // yield return m_Routine.Replace(this, PlayAsset(textAsset));
+            // yield return m_Routine.Replace(this, HideRoutine());
+        }
+
 
         [LeafMember("PlayConsoleTextAndWait")]
         public IEnumerator LeafPlayAndWait(StringHash32 textAsset) {
@@ -72,11 +84,6 @@ namespace Astro {
                 text = psb.Builder.ToString();
             }
             return PlayString(text, true, 0.25f);
-        }
-
-        public IEnumerator PlayAsset(ConsoleTextAsset textAsset) {
-            yield return m_Routine.Replace(this, AssetRoutine(textAsset));
-            yield return m_Routine.Replace(this, HideRoutine());
         }
 
         public IEnumerator PlayAssetAndWait(ConsoleTextAsset textAsset) {
