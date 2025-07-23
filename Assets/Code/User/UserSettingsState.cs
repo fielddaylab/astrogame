@@ -44,18 +44,29 @@ namespace Astro {
             float volume = reader.Read<float>();
             SettingsUtility.SetMasterVolume(this, volume);
 
+            if (consts.Version >= 2)
+            {
+                // Version 2 added individual audio bus settings
+                float musicVol = reader.Read<float>();
+                SettingsUtility.SetAudioBusVolume(this, SettingsUtility.MUSIC_BUS_ID, musicVol);
 
-            /*
-             * Leaving this out for now to avoid messing with saves?
-            float musicVol = reader.Read<float>();
-            SettingsUtility.SetAudioBusVolume(this, SettingsUtility.MUSIC_BUS_ID, musicVol);
+                float sfxVol = reader.Read<float>();
+                SettingsUtility.SetAudioBusVolume(this, SettingsUtility.SFX_BUS_ID, sfxVol);
 
-            float sfxVol = reader.Read<float>();
-            SettingsUtility.SetAudioBusVolume(this, SettingsUtility.SFX_BUS_ID, sfxVol);
+                float voVol = reader.Read<float>();
+                SettingsUtility.SetAudioBusVolume(this, SettingsUtility.VO_BUS_ID, voVol);
+            }
+            else
+            {
+                float musicVol = DefaultMusicVol;
+                SettingsUtility.SetAudioBusVolume(this, SettingsUtility.MUSIC_BUS_ID, musicVol);
 
-            float voVol = reader.Read<float>();
-            SettingsUtility.SetAudioBusVolume(this, SettingsUtility.VO_BUS_ID, voVol);
-            */
+                float sfxVol = DefaultSFXVol;
+                SettingsUtility.SetAudioBusVolume(this, SettingsUtility.SFX_BUS_ID, sfxVol);
+
+                float voVol = DefaultVoiceVol;
+                SettingsUtility.SetAudioBusVolume(this, SettingsUtility.VO_BUS_ID, voVol);
+            }
 
             bool cameraDrift = reader.Read<bool>();
             SettingsUtility.SetCameraDrift(this, cameraDrift);
@@ -70,12 +81,10 @@ namespace Astro {
         public void Write(object self, ref ByteWriter writer, SaveStateChunkConsts consts, ref SaveScratchpad scratch)
         {
             writer.Write((float)MasterVolume);
-            /*
-             * Leaving this out for now to avoid messing with saves?
+
             writer.Write((float)MusicVolume);
             writer.Write((float)SFXVolume);
             writer.Write((float)MusicVolume);
-            */
 
             writer.Write((bool)CameraDriftEnabled);
             writer.Write((bool)HighQualityMode);
