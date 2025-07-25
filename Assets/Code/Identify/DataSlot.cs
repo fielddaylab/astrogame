@@ -12,6 +12,9 @@ namespace Astro {
         [Required] public DataDisplay[] Displays;
         public bool IsSource;
         public bool IsActive = true;
+        /// <summary>
+        /// used for handling the photometer magnitude slots. With it, we can populate slots with the correct data without needing to display it immediately
+        /// </summary>
         public bool IsHidingData;
 
         public int PuzzleRow = -1;

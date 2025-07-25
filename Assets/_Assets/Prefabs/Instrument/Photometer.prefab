@@ -309,6 +309,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Mesh: {fileID: 3091021500252941265}
   Ignored: 0
+  OriginalMaterial: {fileID: 0}
 --- !u!1 &570418889483195964
 GameObject:
   m_ObjectHideFlags: 0
@@ -619,6 +620,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Mesh: {fileID: 3091021500252941265}
   Ignored: 1
+  OriginalMaterial: {fileID: 0}
 --- !u!1 &1284999045257472430
 GameObject:
   m_ObjectHideFlags: 0
@@ -988,8 +990,11 @@ GameObject:
   - component: {fileID: 9070138477509206528}
   - component: {fileID: 7404601679685020724}
   - component: {fileID: 5082321426108468324}
+  - component: {fileID: 6406197558053510821}
   - component: {fileID: 3671049769539962560}
   - component: {fileID: 8066432914581860032}
+  - component: {fileID: 5392054050149130063}
+  - component: {fileID: 5691513259450981776}
   m_Layer: 6
   m_Name: Photometer Instrument
   m_TagString: Untagged
@@ -1074,6 +1079,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Mesh: {fileID: 3091021500252941265}
   Ignored: 0
+  OriginalMaterial: {fileID: 0}
+--- !u!114 &6406197558053510821
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2244598294880535265}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ef9024f0f439a84dbfe13735dcd5a50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Target: {fileID: 7404601679685020724}
+  m_Renderers:
+  - {fileID: 2694063876044031694}
+  m_MatIndex: 1
+  SwapSpeed: 1
+  m_InitMat: {fileID: 2100000, guid: 2f75848563b72cb45877dc22eb77cec5, type: 2}
+  m_UnlockMat: {fileID: 2100000, guid: aae69f2c36185ea4bb6e7a4738f5b080, type: 2}
 --- !u!114 &3671049769539962560
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1109,6 +1134,48 @@ MonoBehaviour:
   Recursive: 0
   DestroyGameObject: 0
   IgnoreAnimators: 1
+--- !u!114 &5392054050149130063
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2244598294880535265}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ef9024f0f439a84dbfe13735dcd5a50, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Target: {fileID: 7404601679685020724}
+  m_Renderers:
+  - {fileID: 3091021500252941265}
+  m_MatIndex: 0
+  SwapSpeed: 1
+  m_InitMat: {fileID: 2100000, guid: 2f75848563b72cb45877dc22eb77cec5, type: 2}
+  m_UnlockMat: {fileID: 2100000, guid: 17d9da1e192b3c948b74a691682fc3ca, type: 2}
+--- !u!114 &5691513259450981776
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2244598294880535265}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 011709f6930d15c4ea72fbc0b119e1d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Target: {fileID: 7404601679685020724}
+  m_Renderers:
+  - {fileID: 7647275482490334154}
+  - {fileID: 5511854466737870175}
+  - {fileID: 1936807576342814456}
+  - {fileID: 8487474383479506374}
+  - {fileID: 8869742297161136690}
+  - {fileID: 1465166152987092806}
+  - {fileID: 6229928302364862403}
+  m_InitVal: 0
+  m_SetTo: 1
 --- !u!1 &2335412543984537104
 GameObject:
   m_ObjectHideFlags: 0
@@ -2846,6 +2913,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Mesh: {fileID: 3091021500252941265}
   Ignored: 0
+  OriginalMaterial: {fileID: 0}
 --- !u!1 &5782680119082328726
 GameObject:
   m_ObjectHideFlags: 0
@@ -3072,6 +3140,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Mesh: {fileID: 3091021500252941265}
   Ignored: 1
+  OriginalMaterial: {fileID: 0}
 --- !u!1 &5956854024658637899
 GameObject:
   m_ObjectHideFlags: 0

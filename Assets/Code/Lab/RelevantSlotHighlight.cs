@@ -1,44 +1,42 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using FieldDay;
-using FieldDay.Systems;
 using FieldDay.Components;
-using TMPro;
-using System;
 using FieldDay.Rendering;
 
-namespace Astro
-{
-    public class RelevantSlotHighlight : BatchedComponent
-    {
+namespace Astro {
+    public class RelevantSlotHighlight : BatchedComponent {
         public MeshRenderer Mesh;
         public bool Ignored;
-        
+
+        [Tooltip("If not set, this will default to the first material in the MeshRenderer if available")]
         [NonSerialized] public Material OriginalMaterial;
         [NonSerialized] public bool Dimmed;
 
         private void Awake() {
-            if (Mesh) {
-                OriginalMaterial = Mesh.sharedMaterials[0];
+            if (!Mesh) return;
+
+            if (!TryGetComponent<InteractSelectPuzzleCell>(out var i)) {
+                Dimmed = true;
             }
+
+            // Assumed to be the dimmed material if this needs to be unlocked
+            if (OriginalMaterial == null) OriginalMaterial = Mesh.sharedMaterials[0];
         }
     }
 
     public static class SlotHighlightUtility
     {
-        static public void SetAvailableHighlight(SlotHighlightState highlightState, RelevantSlotHighlight highlight, bool active)
-        {
+        static public void SetAvailableHighlight(SlotHighlightState highlightState, RelevantSlotHighlight highlight, bool active) {
             highlight.Mesh.SetSharedMaterialAtIndex(0, active ? highlightState.AvailableCellMat : highlightState.UnselectedCellMat);
         }
 
-        static public void SetSelectedHighlight(SlotHighlightState highlightState, RelevantSlotHighlight highlight, bool active)
-        {
+        static public void SetSelectedHighlight(SlotHighlightState highlightState, RelevantSlotHighlight highlight, bool active) {
             highlight.Mesh.SetSharedMaterialAtIndex(0, active ? highlightState.SelectedCellMat : highlightState.UnselectedCellMat);
         }
 
         static public void SetInstrumentHighlight(SlotHighlightState highlightState, RelevantSlotHighlight highlight, bool active) {
-            if (highlight.Dimmed) { return; }
+            if (highlight.Dimmed) return;
 
             highlight.Mesh.SetSharedMaterialAtIndex(0, active ? highlightState.SelectedInstrumentMat : highlight.OriginalMaterial);
         }
@@ -52,7 +50,7 @@ namespace Astro
             SlotHighlightState highlightState = Find.State<SlotHighlightState>();
             foreach (LabInstrument instrument in state.ActiveInstruments) {
                 foreach (DataSlot slot in instrument.AutoPopulated) {
-                    if (slot.IsHidingData || !slot.gameObject.activeSelf || !slot.IsActive) {
+                    if (!slot.gameObject.activeSelf || !slot.IsActive) {
                         continue;
                     }
 

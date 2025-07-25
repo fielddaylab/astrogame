@@ -134,6 +134,7 @@ namespace Astro {
             GameLoop.ResumeUpdates(AstroGame.PuzzleSubmissionUpdateMask);
             GameLoop.ResumeUpdates(AstroGame.AnySubmissionUpdateMask);
             GameLoop.ResumeUpdates(AstroGame.InstrumentUpdateMask);
+            SlotHighlightUtility.SetInstrumentButtonsDimmed(Find.State<InstrumentInventoryState>(), false);
         }
 
         [LeafMember("StartFinalPuzzleMode")]
@@ -206,7 +207,6 @@ namespace Astro {
                 GameLoop.SuspendUpdates(AstroGame.AnySubmissionUpdateMask);
             }
             GameLoop.SuspendUpdates(AstroGame.InstrumentUpdateMask);
-            SlotHighlightUtility.SetInstrumentButtonsDimmed(Find.State<InstrumentInventoryState>(), false);
 
             ViewState viewState = Find.State<ViewState>();
             var targetNode = ViewNavUtility.GetNodeById("Right");

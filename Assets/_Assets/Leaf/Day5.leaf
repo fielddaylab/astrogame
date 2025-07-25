@@ -109,7 +109,7 @@ $goto .SetupPuzzleNav
 
 $start Observatory.PathToMonitor
 $call ClearMonitorSelection()
-$call ConsoleCommandLine->PlayConsoleText("Day5ConsoleText")
+$call ConsoleCommandLine->PlayConsoleTextAndWait("Day5ConsoleText")
 $call ConsoleCommandLine->HideConsole()
 $call SetRefGuideActive(false)
 $wait 1

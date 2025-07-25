@@ -1,22 +1,20 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
+
 using BeauUtil;
 using BeauUtil.Debugger;
 using UnityEditor;
 using UnityEngine;
 
-namespace Astro
-{
+namespace Astro {
     [CreateAssetMenu(menuName = "AstroGame/Puzzle Cell Library")]
-    public sealed class PuzzleCellLibrary : ScriptableObject
-    {
-        public enum BundleType : byte
-        {
+    public sealed class PuzzleCellLibrary : ScriptableObject {
+        public enum BundleType : byte {
             XSmall = 0,
             Small = 1,
             Medium = 2,
-            Large = 3
+            MediumSlim = 2,
+            Large = 3,
         }
 
         [Serializable]

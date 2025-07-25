@@ -3,7 +3,8 @@
 :: Preload
 @function ScenePreload
 $call InitUpdateMasks()
-// $call SetInstrumentUnlocked(CoordinateInstrument, true)
+$call SetInstrumentUnlocked(VisibleWavelength, true)
+$call SetInstrumentUnlocked(CoordinateInstrument, true)
 // $call SetInstrumentUnlocked(PhotometerInstrument, true)
 // $call SetInstrumentUnlocked(BlueWavelength, true)
 // $call SetInstrumentUnlocked(InfraredWavelength, true)

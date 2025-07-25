@@ -6,9 +6,12 @@ $call InitUpdateMasks()
 $call ToggleDeskPicture()
 $call SetInputState(false)
 $call StopPuzzleMode()
+// TODO This actually does nothing right now...
+// Set InstrumentInventoryState.cs > ln 34
+// $call SetInstrumentUnlocked(VisibleWavelength, false)
+// $call SetInstrumentUnlocked(CoordinateInstrument, false)
+// $call SetInstrumentUnlocked(PhotometerInstrument, false)
 $call StopOpenMode()
-$call SetInstrumentUnlocked(CoordinateInstrument, false)
-$call SetInstrumentUnlocked(PhotometerInstrument, false)
 $call SetRefGuidePagesLocked(true)
 $call SetRefPageActive("ConstellationPerseusCompleted", false)
 $call SetRefPageActive("ConstellationHerculesCompleted", false)
@@ -693,6 +696,7 @@ $set temp:waitingForSelectAppMag = false
 $set temp:waitingForFillAppMag = false
 $set temp:waitingForBlueFilter = true
 $call ReleaseIsolatedPuzzle()
+$call SetInstrumentUnlocked(VisibleWavelength, true)
 $call SetInstrumentUnlocked(BlueWavelength, true)
 $call IsolatePuzzleCell(1, 1)
 {@Astrid} Let's see... to fill in the rest of this sequence, I also need the blue magnitude. $[Astrid/L1/l1_a_29]

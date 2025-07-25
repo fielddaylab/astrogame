@@ -4,10 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Astro
-{
-    public class PuzzleCell : BatchedComponent
-    {
+namespace Astro {
+    public class PuzzleCell : BatchedComponent {
         public DataSlot DataSlot;
         public MeshRenderer MainMesh;
         public MeshFilter MainMeshFilter;
@@ -19,10 +17,8 @@ namespace Astro
         public Transform ContentContainer;
     }
 
-    public static partial class PuzzleUtility
-    {
-        public static void UpdateCellVisuals(PuzzleState state, PuzzleCell cell, bool selected)
-        {
+    public static partial class PuzzleUtility {
+        public static void UpdateCellVisuals(PuzzleState state, PuzzleCell cell, bool selected) {
             cell.OutlineMesh.SetSharedMaterialAtIndex(0, selected ? state.SelectedCellMat : state.UnselectedCellMat);
         }
     }

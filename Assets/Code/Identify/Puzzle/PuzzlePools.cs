@@ -7,10 +7,8 @@ using TMPro;
 using BeauUtil;
 using System.Collections.Generic;
 
-namespace Astro
-{
-    public class PuzzlePools : SharedStateComponent, IRegistrationCallbacks
-    {
+namespace Astro {
+    public class PuzzlePools : SharedStateComponent, IRegistrationCallbacks {
         #region Types
 
         [Serializable] public class PuzzleCellPool : SerializablePool<PuzzleCell> { }
@@ -57,21 +55,18 @@ namespace Astro
         }
     }
 
-    public static class PuzzlePoolUtility
-    {
-        public static void ClearAllocations(PuzzlePools pools)
-        {
+    public static class PuzzlePoolUtility {
+        public static void ClearAllocations(PuzzlePools pools) {
             pools.Allocations[PuzzleCellLibrary.BundleType.XSmall] = 0;
             pools.Allocations[PuzzleCellLibrary.BundleType.Small] = 0;
             pools.Allocations[PuzzleCellLibrary.BundleType.Medium] = 0;
+            pools.Allocations[PuzzleCellLibrary.BundleType.MediumSlim] = 0;
             pools.Allocations[PuzzleCellLibrary.BundleType.Large] = 0;
         }
 
-        public static bool TryAllocateOnBundleType(PuzzlePools pools, PuzzleCellLibrary.BundleType type, out StringHash32 id)
-        {
+        public static bool TryAllocateOnBundleType(PuzzlePools pools, PuzzleCellLibrary.BundleType type, out StringHash32 id) {
             int compareNum = pools.NumXSmall;
-            switch (type)
-            {
+            switch (type) {
                 case PuzzleCellLibrary.BundleType.XSmall:
                     compareNum = pools.NumXSmall;
                     break;
@@ -85,18 +80,20 @@ namespace Astro
                     compareNum = pools.NumLarge;
                     break;
                 default:
+                    compareNum = pools.NumMedium;
                     break;
             }
 
-            if (pools.Allocations[type] < compareNum)
-            {
+            if ((int)type == 4){ // MediumSlim which will reuse medium allocations
+                type = PuzzleCellLibrary.BundleType.Medium;
+            }
+
+            if (pools.Allocations[type] < compareNum) {
                 // allocations available
                 pools.Allocations[type]++;
 
                 id = ((int)type).ToStringLookup() + "C" + pools.Allocations[type].ToStringLookup();
-            }
-            else
-            {
+            } else {
                 // no more allocations available
                 Debug.LogError("[PuzzlePools] No more puzzle cell allocations available for type " + type + "!");
                 id = "0" + "C" + "0";

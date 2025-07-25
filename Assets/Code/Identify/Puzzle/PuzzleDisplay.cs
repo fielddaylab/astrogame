@@ -105,7 +105,7 @@ namespace Astro {
                     currCell.MainMeshFilter.mesh = colData[c].Bundle.Mesh;
                     currCell.OutlineMeshFilter.mesh = colData[c].Bundle.OutlineMesh;
                     currCell.OutlineMeshFilter.transform.localPosition = currCell.OutlineMeshFilter.transform.localPosition + colData[c].Bundle.OutlineOffset;
-                    UnityEngine.Object.Destroy(currCell.Collider);
+                    Object.Destroy(currCell.Collider);
                     currCell.Collider = currCell.MainMesh.gameObject.AddComponent<BoxCollider>();
                     currCell.Collider.size *= 1.05f;
 
@@ -162,8 +162,7 @@ namespace Astro {
             }
         }
 
-        private static PuzzleCellLibrary.AssembledCellData[] LookupColData(PuzzleCellLibrary library, List<DataTypeMask> types)
-        {
+        private static PuzzleCellLibrary.AssembledCellData[] LookupColData(PuzzleCellLibrary library, List<DataTypeMask> types) {
             PuzzleCellLibrary.AssembledCellData[] newDims = new PuzzleCellLibrary.AssembledCellData[types.Count];
             for (int i = 0; i < types.Count; i++) {
                 library.Lookup(types[i], out var assembledData);
