@@ -11,13 +11,15 @@ using FieldDay.Audio;
 using System.Collections;
 using UnityEngine.UI;
 using FieldDay.HID;
+using System.Collections.Generic;
+using System;
 
 namespace Astro {
     public sealed class PuzzleState : SharedStateComponent, IRegistrationCallbacks {
         public PuzzleAsset QueuedPuzzle;
         public PuzzleAsset ActivePuzzle;
 
-        public PuzzleDisplay Display;
+        [NonSerialized] public PuzzleDisplay Display;
         public bool CellsUpdated = false;
 
         // Temp flag for grouped vs individual cell implementation
@@ -41,7 +43,7 @@ namespace Astro {
         public Material SelectedCellMat;
 
         // Tracking stars that have guess trackers on them
-        public UIFocus[] PuzzleEntryGuesses = new UIFocus[4]{ null, null, null, null };
+        public UIFocus[] PuzzleEntryGuesses = new UIFocus[4] { null, null, null, null };
 
         public Routine PuzzleCorrectSubmissionRoutine = new Routine();
 
@@ -60,6 +62,10 @@ namespace Astro {
             Game.Events?.Deregister(GameEvents.StartPuzzleMode, PuzzleUtility.DeactivatePuzzlePanel);
             Game.Events?.Deregister(GameEvents.StartFinalPuzzle, PuzzleUtility.ActivateFinalPuzzle);
             Game.Events?.Deregister(GameEvents.StopPuzzleMode, PuzzleUtility.ActivatePuzzlePanel);
+        }
+
+        private void Awake() {
+            Display = FindFirstObjectByType<PuzzleDisplay>();
         }
     }
 
@@ -155,6 +161,8 @@ namespace Astro {
             yield return monitorUI.HideElement("PuzzleMsg");
             yield return monitorUI.HideElement("OffPanel");
 
+            GeneratePreExsistingTrackers();
+
             // Flip the puzzle panel
             Sfx.PlayDetached("Oneshot.LabButtonC.Click", display.RotateModulePos);
             display.FlipRoutine.Replace(display, display.RotateModulePos.RotateTo(0f, 0.35f, Axis.Z, Space.Self).Ease(Curve.CubeInOut).ForceOnCancel());
@@ -164,6 +172,28 @@ namespace Astro {
             display.HeaderAnchorPos.gameObject.SetActive(true);
             display.ClueGroup.gameObject.SetActive(true);
         }        
+
+        public static void GeneratePreExsistingTrackers() {
+            PuzzleState state = Find.State<PuzzleState>();
+            ExtractCols(state.ActivePuzzle, out List<DataTypeMask> types, out int numCols);
+
+            for (int r = 0; r < state.ActivePuzzle.Rows.Length; r++) {
+                for (int c = 0; c < numCols; c++) {
+
+                    // check for pre existing data directly
+                    if ((state.ActivePuzzle.Rows[r].ProvidedProperties & types[c]) != 0) {
+                        StringHash32 assetId = state.ActivePuzzle.Rows[r].Object; 
+                        CelestialAsset asset = Find.NamedAsset<CelestialAsset>(assetId);
+                        UIFocus focus = FocusableUtility.GetFocusByData(assetId);
+
+                        if (c == 1) { // collumn for coordinates, which control trackers 
+                            FocusableUtility.UpdateFocusTrackerSprite(focus, FocusState.GuessTrackerSprites[r]);
+                            state.PuzzleEntryGuesses[r] = focus;     
+                        }
+                    }
+                }
+            }            
+        }
 
         public static IEnumerator FinalPuzzleTransitionRoutine(PuzzleDisplay display) {
             MonitorUIMgr monitorUI = MonitorUIMgr.Instance;
