@@ -263,7 +263,7 @@ $goto .SetupPuzzleNav
 
 :: SetupPuzzleNav
 $branch Observatory.PathToMonitor
-$call ConsoleCommandLine->PlayConsoleText("Day3ConsoleText")
+$call ConsoleCommandLine->PlayConsoleTextAndWait("Day3ConsoleText")
 $call ConsoleCommandLine->HideConsole()
 $call SetRefGuideActive(false)
 $wait 1
