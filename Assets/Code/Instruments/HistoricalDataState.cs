@@ -15,17 +15,19 @@ namespace Astro {
         public Quaternion ModeRotDefault;
         public Quaternion ModeRotOn;
 
+        public MeshRenderer InstrumentMesh;
+
         [Header("External")]
         public Photometer ConnectedPhotometer;
 
         [NonSerialized] public bool SendingAbsMag;
         [NonSerialized] public Routine KnobRoutine;
 
-        public void OnDeregister() {
-        }
 
         public void OnRegister() {
             ParallaxDataUtility.SetInstrumentMode(false, this, true, false);
         }
+
+        public void OnDeregister() { }
     }
 }

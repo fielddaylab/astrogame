@@ -6,6 +6,7 @@ using EasyAssetStreaming;
 using FieldDay;
 using FieldDay.Audio;
 using FieldDay.Components;
+using FieldDay.Rendering;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -39,8 +40,7 @@ namespace Astro {
         [NonSerialized] public StreamingQuadTexture EarthTex;
         [NonSerialized] public DataDisplay DistanceDisplay;
 
-        public void OnDeregister() {
-        }
+        public void OnDeregister() { }
 
         public void OnRegister() {
             EarthInitPos = EarthSprite.localPosition;
@@ -113,13 +113,15 @@ namespace Astro {
         }
 
         public static void SetInstrumentMode(bool absMag, HistoricalDataState hds, bool force, bool playSfx) {
-            if (force || absMag != hds.SendingAbsMag) {
-                hds.SendingAbsMag = absMag;
-                hds.KnobRoutine.Replace(hds, SlideRoutine(hds));
-                PhotometerUtility.TogglePhotometerMode(absMag, hds.ConnectedPhotometer);
-                if (playSfx) {
-                    Sfx.PlayDetached("Oneshot.LabButtonC.Click", hds.ModeSwitch);
-                }
+            if (!force && absMag == hds.SendingAbsMag) return;
+
+            hds.SendingAbsMag = absMag;
+            hds.KnobRoutine.Replace(hds, SlideRoutine(hds));
+            hds.KnobRoutine.OnStop(() => { SwapParallaxToggleDisplay(hds); } );
+            hds.KnobRoutine.OnComplete(() => { SwapParallaxToggleDisplay(hds); } );
+            PhotometerUtility.TogglePhotometerMode(absMag, hds.ConnectedPhotometer);
+            if (playSfx) {
+                Sfx.PlayDetached("Oneshot.LabButtonC.Click", hds.ModeSwitch);
             }
         }
 
@@ -129,7 +131,16 @@ namespace Astro {
             } else {
                 yield return hds.ModeSwitch.RotateQuaternionTo(hds.ModeRotDefault, 0.2f, Space.Self).Ease(Curve.BackOut);
             }
+
             yield return null;
+        }
+
+        private static void SwapParallaxToggleDisplay(HistoricalDataState hds) {
+            Material top = hds.InstrumentMesh.materials[3]; // Top display on Parallax instrument
+            Material bottom = hds.InstrumentMesh.materials[2]; // Bottom display on Parallax instrument
+
+            hds.InstrumentMesh.SetSharedMaterialAtIndex(2, top);
+            hds.InstrumentMesh.SetSharedMaterialAtIndex(3, bottom);
         }
     }
 }
