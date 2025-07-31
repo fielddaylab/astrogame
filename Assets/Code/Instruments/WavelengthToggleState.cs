@@ -38,8 +38,7 @@ namespace Astro {
 
         [NonSerialized] public SpriteRenderer[] HorizonObjsRenderers;
 
-        public void OnDeregister() {
-        }
+        public void OnDeregister() { }
 
         public void OnRegister() {
             LabButtonUtility.ForceDown(VisibleButton);

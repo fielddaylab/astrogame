@@ -4,10 +4,8 @@ using UnityEngine;
 using FieldDay;
 using FieldDay.SharedState;
 
-namespace Astro
-{
-    public class ColorTextureState : SharedStateComponent
-    {
+namespace Astro {
+    public class ColorTextureState : SharedStateComponent {
         [Header("Indicators")]
         public Material IndicatorInactive;
         public Material IndicatorActive;

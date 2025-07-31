@@ -14,13 +14,10 @@ namespace Astro {
         public CastableEvent<LabInstrument> OnUnlock = new CastableEvent<LabInstrument>();
     }
 
-    public static partial class InstrumentUtility
-    {
-        public static DataTypeMask GenerateTypeMask(LabInstrument instrument)
-        {
+    public static partial class InstrumentUtility {
+        public static DataTypeMask GenerateTypeMask(LabInstrument instrument) {
             DataTypeMask allTypes = 0;
-            foreach (var slot in instrument.AutoPopulated)
-            {
+            foreach (var slot in instrument.AutoPopulated) {
                 allTypes |= slot.Type;
             }
 

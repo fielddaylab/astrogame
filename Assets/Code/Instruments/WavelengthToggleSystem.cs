@@ -1,6 +1,7 @@
 using FieldDay;
 using FieldDay.Components;
 using FieldDay.Rendering;
+using FieldDay.Scripting;
 using FieldDay.SharedState;
 using FieldDay.Systems;
 using System;
@@ -83,7 +84,26 @@ namespace Astro {
             WavelengthToggleState state = Find.State<WavelengthToggleState>();
             MeshRenderer toggleIndicator = button.GetComponent<WavelengthToggleButton>().Indicator;
 
-            if (buttonMask == selectedMask) {
+            InstrumentInventoryState invState = Find.State<InstrumentInventoryState>();
+            LabInstrument wavelengthInstrument = null;
+            bool isButtonActive = false;
+            switch(selectedMask) {
+                case CelestialObjectVisMask.Visible:
+                    wavelengthInstrument = ScriptUtility.FindActor("VisibleWavelength").GetComponent<LabInstrument>();
+                    isButtonActive = invState.ActiveInstruments.Contains(wavelengthInstrument);
+                    break;
+                case CelestialObjectVisMask.Blue:
+                    wavelengthInstrument = ScriptUtility.FindActor("BlueWavelength").GetComponent<LabInstrument>();
+                    isButtonActive = invState.ActiveInstruments.Contains(wavelengthInstrument);
+                    break;
+                case CelestialObjectVisMask.Infrared:
+                    wavelengthInstrument = ScriptUtility.FindActor("InfraredWavelength").GetComponent<LabInstrument>();
+                    isButtonActive = invState.ActiveInstruments.Contains(wavelengthInstrument);
+                    break; 
+            }
+
+
+            if (buttonMask == selectedMask && isButtonActive) {
                 LabButtonUtility.SetDown(button, playSfx);
                 button.Collider.enabled = false;
 
