@@ -26,7 +26,11 @@ namespace Astro {
             VoiceSlider.onValueChanged.RemoveAllListeners();
         }
 
-        public void OnRegister() {            
+        public void OnRegister() {
+            UserSettingsState state = Find.State<UserSettingsState>();
+
+            DriftToggle.isOn = state.CameraDriftEnabled;
+            FullscreenToggle.isOn = state.FullscreenEnabled;
             UpdateCameraDrift(DriftToggle.isOn);
             UpdateFullscreen(FullscreenToggle.isOn);
             DriftToggle.onValueChanged.AddListener(UpdateCameraDrift);

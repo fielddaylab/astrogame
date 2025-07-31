@@ -22,7 +22,7 @@ namespace Astro {
         [Range(0, 1)] public float DefaultVoiceVol;
         [NonSerialized] public bool CameraDriftEnabled = true;
         [NonSerialized] public bool HighQualityMode;
-        [NonSerialized] public bool FullscreenEnabled;
+        [NonSerialized] public bool FullscreenEnabled = false;
 
         public void OnDeregister()
         {
