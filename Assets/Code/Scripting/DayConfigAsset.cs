@@ -24,9 +24,6 @@ namespace Astro {
         public NeutrinoConfigAsset NeutrinoEvent;
         public ClassificationTypeMask AcceptedIDSubmissions = ClassificationTypeMask.ALL;
 
-        [Header("Documents")]
-        public List<ArchiveLayout> DocLayout = new List<ArchiveLayout>();
-
         [Header("Misc")]
         public RadioChannelSet RadioChannels;
         public string[] ChapterTitles;

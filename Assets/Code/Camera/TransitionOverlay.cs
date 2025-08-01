@@ -88,6 +88,7 @@ namespace Astro {
                 TextureOverlay.texture = null;
                 RenderTexture.ReleaseTemporary(TextureCopy);
                 TextureCopy = null;
+                Sfx.SetMixState("SceneTransition_FadeOut", 0, 0.2f);
             } else {
                 DefaultFader.Hide(0.5f, 0.04f, false);
                 Sfx.SetMixState("SceneTransition_FadeOut", 0, 0.4f);

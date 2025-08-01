@@ -24,19 +24,21 @@ namespace Astro
     public static class ArchiveUtility { 
         public static void LoadArchive(ArchiveState archiveState, DocumentBoardState boardState, int dayIndex)
         {
-            if (dayIndex == archiveState.CurrArchiveIndex) { return; }
-            if (archiveState.LoadRoutine.Exists()) { return; }
+            throw new NotImplementedException();
 
-            HideCurrentArchive(archiveState, boardState);
+            //if (dayIndex == archiveState.CurrArchiveIndex) { return; }
+            //if (archiveState.LoadRoutine.Exists()) { return; }
 
-            PlayerProgressState playerState = Find.State<PlayerProgressState>();
-            StoryAsset story = Find.GlobalAsset<StoryAsset>();
+            //HideCurrentArchive(archiveState, boardState);
 
-            var archiveIndex = dayIndex; // - archiveState.DayOffset;
-            DayConfigAsset day = Find.NamedAsset<DayConfigAsset>(story.Days[archiveIndex]);
-            var currLayout = day.DocLayout[0];
+            //PlayerProgressState playerState = Find.State<PlayerProgressState>();
+            //StoryAsset story = Find.GlobalAsset<StoryAsset>();
 
-            archiveState.LoadRoutine.Replace(LoadArchiveRoutine(archiveState, boardState, dayIndex, currLayout, archiveIndex));
+            //var archiveIndex = dayIndex; // - archiveState.DayOffset;
+            //DayConfigAsset day = Find.NamedAsset<DayConfigAsset>(story.Days[archiveIndex]);
+            //var currLayout = day.DocLayout[0];
+
+            //archiveState.LoadRoutine.Replace(LoadArchiveRoutine(archiveState, boardState, dayIndex, currLayout, archiveIndex));
         }
 
         public static IEnumerator LoadArchiveRoutine(ArchiveState archiveState, DocumentBoardState boardState, int dayIndex, ArchiveLayout currLayout, int archiveIndex)
