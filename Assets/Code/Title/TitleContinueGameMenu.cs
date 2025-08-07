@@ -48,7 +48,7 @@ namespace Astro.Title {
 
         private void HandleLoadError()
         {
-            Debug.LogError("load from server failed");
+            Debug.LogError("[SaveUtility] load from server failed");
         }
 
         private void HandlePlayerCodeUpdated(string text)
