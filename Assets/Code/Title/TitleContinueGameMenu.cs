@@ -69,8 +69,6 @@ namespace Astro.Title {
             MenuFade.Hide();
             CloseFade.Hide();
 
-            Game.Input.PauseRaycasts();
-
             if (progressState.CompletedPrelude)
             {
                 StringHash32 dayId = "Day" + (progressState.DayIndex + 1);
@@ -112,7 +110,9 @@ namespace Astro.Title {
             yield return 2;
             ScriptTriggers.LoadDay(dayId);
             yield return null;
-            Game.Input.ResumeRaycasts();
+            if (Game.Input.AreRaycastsPaused()) {
+                Game.Input.ResumeRaycasts();
+            }
         }
     }
 }
