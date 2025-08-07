@@ -22,7 +22,7 @@ namespace Astro {
         [NonSerialized] public Vector3 OverrideStoredDocPos;
         [NonSerialized] public DocumentInteractable DocZoomed;
         [NonSerialized] public Routine DocumentRoutine;
-        [NonSerialized] public Routine DocumentLoadRoutine;
+        [NonSerialized] public List<Routine> DocumentLoadQueue = new List<Routine>();
 
         public Transform DocumentParent;
         public Rect DraggableBounds;
@@ -99,11 +99,14 @@ namespace Astro {
             UpdateEnabledDocParts(spawned.Interactable, DocumentBoardState.BoardActiveFunctions);
 
             // load assets
-            state.DocumentLoadRoutine.Replace(AwaitDocLoadComplete(spawned))
+            Routine loadRoutine = Routine.Null;
+            loadRoutine = Routine.Start(AwaitDocLoadComplete(spawned))
                 .OnComplete(() => {
                     // restore doc position
                     if (toBoard) { spawned.transform.localPosition = localPos; }
+                    state.DocumentLoadQueue.Remove(loadRoutine);
                 });
+            state.DocumentLoadQueue.Add(loadRoutine);
 
             return spawned;
         }
@@ -134,7 +137,7 @@ namespace Astro {
             // InputUtility.SetClickableMaskTopLayer(Find.State<InputState>());
 
             // wait for assets to load
-            while (state.DocumentLoadRoutine.Exists()) {
+            while (state.DocumentLoadQueue.Count > 0) {
                 yield return null;
             }
 
