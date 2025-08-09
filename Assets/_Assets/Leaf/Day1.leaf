@@ -6,11 +6,6 @@ $call InitUpdateMasks()
 $call ToggleDeskPicture()
 $call SetInputState(false)
 $call StopPuzzleMode()
-// TODO This actually does nothing right now...
-// Set InstrumentInventoryState.cs > ln 34
-// $call SetInstrumentUnlocked(VisibleWavelength, false)
-// $call SetInstrumentUnlocked(CoordinateInstrument, false)
-// $call SetInstrumentUnlocked(PhotometerInstrument, false)
 $call StopOpenMode()
 $call SetRefGuidePagesLocked(true)
 $call SetRefPageActive("ConstellationPerseusCompleted", false)
@@ -26,6 +21,7 @@ $call SetChannelActive(IceCube, false)
 $call IntroCutscene->PrepareCutscene()
 $start Observatory.ResetSubtitlePosition
 $call SpawnDocument("ElijahIntro")
+$call SetStickyFirstPage(7)
 $call ChapterTitles->PrepareTransition(true)
 
 :: OpeningCutscene
@@ -59,7 +55,7 @@ $call IntroSfx2->Play()
 $wait 3
 $call SetInputState(true)
 
-{@Astrid} Whoa. This place has really changed. Elijah, where are you? $[Astrid/L1/l1_a_01]
+{@Astrid}	Whoa. This place has really changed. Elijah, where are you?	$[level1/Astrid/l1_a_01]
 $start .PowerButtonHint
 
 :: PowerButtonHint
@@ -72,7 +68,7 @@ $else
 $endif
 
 $if !temp:pressedPowerButton
-    {@Astrid} Might as well get Elijah’s system up and running, maybe I can find some information about where he went...
+    {@Astrid}	I should power this thing up. Maybe it'll help me figure out where Elijah went. 	$[level1/Astrid/l1_a_02]
     $branch .PowerButtonHint
 $endif
 
@@ -91,7 +87,6 @@ $if temp:powerButtonHint
     $set temp:powerButtonHint = false
     $call HintModals->Hide("MonitorPower", 0.2)
 $endif
-{@Astrid} There we go!
 $call MonitorUI->ShowCERESLogo()
 $call MonitorUI->CERESLogoToCorner(0.5)
 $call ConsoleCommandLine->PlayConsoleTextAndWait("SystemBoot")
@@ -107,11 +102,10 @@ $call MonitorUI->ShowElement("CommErrorMsg2")
 $call SetChannelActive(IceCube_Intro, true)
 $wait 0.5
 
-{@Astrid} Hmmm, radio huh?
 $start .TuneRadioHint
 
 :: TuneRadioHint
-$call Wait(5)
+$wait 10
 $if !temp:introRadioHint, !temp:introRadioChannelTuned
     $set temp:introRadioHint = true
     $call HintModals->SlideInFromRight("CeresRadioHint", 0.4)
@@ -119,7 +113,7 @@ $else
     $call HintModals->Wiggle("CeresRadioHint")
 $endif
 $if !temp:introRadioChannelTuned
-    {@Astrid} Ok... I need to tune the radio to 137 mega hertz...
+    {@Astrid}	Okay... I need to tune the radio to 137 megahertz. 	$[level1/Astrid/l1_a_03]
     $branch .TuneRadioHint
 $endif
 
@@ -150,59 +144,54 @@ $call SetChannelActive(IceCube_Intro, false)
 $call SetChannelActive(IceCube, true)
 
 $call WaitForMovedToView("Right")
-// {@Radio} CERES HQ to Station Twelve. Elijah, do you copy? Please log in and provide status report. $[Radio/L1/l1_r_01]
-{@Astrid} Oh, a radio signal! How do I work this thing? Hello? This is Astrid... Elijah's friend. $[Astrid/L1/l1_a_02]
-{@Radio} Station Twelve, please log in and report. $[Radio/L1/l1_r_02]
-// {@Astrid} Log in? How exactly am I supposed to do that? $[Astrid/L1/l1_a_03]
+{@Radio}	CERES HQ to Station 12. Elijah, do you copy? 	$[level1/radio_lady/l1_r_01]
+{@Radio}	Please log in and provide status report.	$[level1/radio_lady/l1_r_02]
+{@Astrid}	Whoa, a radio signal! 	$[level1/Astrid/l1_a_04]
+{@Astrid}	I thought radio channels were supposed to be super regulated. How does Elijah even have this? 	$[level1/Astrid/l1_a_05]
+{@Radio}	Station 12, please log in and report.	$[level1/radio_lady/l1_r_03]
+{@Astrid}	Ok, here goes.	$[level1/Astrid/l1_a_06]
+
 $start Observatory.PathToMonitor
 $wait 0.5
 $call WaitForMovedToView("Right")
 $call ConsoleCommandLine->PlayConsoleText("AstridLogin")
 $wait 1
 
-{@Dad} I told you, he's not there... Astrid? Is that you? $[Dad/L1/l1_d_1]
+{@Radio} ...I told you, he's not there. Astrid, is that you? 	$[level1/dad/l1_d_01]
 
-{@Astrid} (*gasp*) Dad! I- I can’t believe it's you. Are you still at the South Pole? Can you hear me? $[Astrid/L1/l1_a_04]
+{@Astrid}	(*gasp*) Dad!? I—I can’t believe it. Are you still at the South Pole? Can you hear me?	$[level1/Astrid/l1_a_07]
+{@Dad}	Loud and clear. Well… not clear, exactly. But you know what I mean.	$[level1/dad/l1_d_02]
+{@Dad}	It’s so good to hear your voice, Little Bear.	$[level1/dad/l1_d_03]
+{@Astrid}	Hold on. Why are you calling Elijah's radio? Do you know where he went? 	$[level1/Astrid/l1_a_08]
+{@Dad}	It’s sort of a long story.	$[level1/dad/l1_d_04]
+{@Dad}	My team here at IceCube is working to rebuild the knowledge of the cosmos that was lost during the coronal mass ejection two tears ago.	$[level1/dad/l1_d_05]
+{@Dad}	We've joined up with a network of citizen astronomers around the world. We call it CERES. 	$[level1/dad/l1_d_06]
+{@Astrid}	Ceres... I think Elijah told me about her once. The Roman goddess of Earth and agriculture.	$[level1/Astrid/l1_a_09]
+{@Dad}	Yeah, Elijah loved the name. I told him it was just an acronym, but I swear, everything I tell that kid goes in one ear and out the other. 	$[level1/dad/l1_d_07]
+{@Astrid}	So... where is he? 	$[level1/Astrid/l1_a_10]
+{@Dad}	A few weeks ago, he reached out about some mysterious side project. He said he had to go out on the road. 	$[level1/dad/l1_d_08]
+{@Dad}	I tried to stop him, but ... I mean, you know how he is.	$[level1/dad/l1_d_09]
+{@Astrid}	I don't get it. Why would he leave when he knew I was coming? 	$[level1/Astrid/l1_a_11]
 
-{@Dad} Loud and clear... Well ... not clear, exactly. But you know what I mean. $[Dad/L1/l1_d_2]
-{@Dad} It’s <i>so</i> good to hear your voice, Little Bear. $[Dad/L1/l1_d_3]
-
-{@Astrid} Do you know where Elijah is? I came here looking for him. $[Astrid/L1/l1_a_05]
-
-{@Dad} I’m sorry, Astrid, I wish I could’ve warned you in time. Elijah’s not there. He probably won’t be back for a while. $[Dad/L1/l1_d_4]
-
-{@Astrid} What? Why not? Where is he? $[Astrid/L1/l1_a_06]
-
-{@Dad} It’s sort of a long story. $[Dad/L1/l1_d_5]
-{@Dad} My team here at IceCube is working to rebuild humanity's knowledge of the cosmos, everything that was lost during the Collapse.  $[Dad/L1/l1_d_6]
-{@Dad} And Elijah’s been helping us. But a few weeks ago he reached out about something big he’d been working on. $[Dad/L1/l1_d_7]
-{@Dad} He said he was heading out to visit the other stations. $[Dad/L1/l1_d_8]
-{@Dad} Anyway, I haven’t heard from him in awhile - you know him, always hard to pin down. $[Dad/L1/l1_d_9]
-
-{@Astrid} Wait a second. He’s been working with you? $[Astrid/L1/l1_a_07]
-
-{@Monitor} All CERES transmissions must comply with authorized protocols, or we’ll be forced to revoke your clearance. $[Monitor/L1/l1_m_1] 
-// {@Monitor} This is an official warning.
-{@Monitor} Remember, communication is a privilege, not a right. $[Monitor/L1/l1_m_2]
-
-{@Astrid} Whoa. Who was that? $[Astrid/L1/l1_a_08]
-
-{@Dad} Sorry, uh…“Station Twelve,” this channel doesn’t allow for… personal communications. I’ll grant you entry-level access so you can help us. I should sign off now. More later. $[Dad/L1/l1_d_10]
+{@Monitor}	All CERES transmissions must comply with authorized protocols, or we’ll be forced to revoke your clearance. 	$[level1/monitor/l1_m_01]
+{@Monitor}	Remember, communication is a privilege, not a right.	$[level1/monitor/l1_m_02]
+{@Astrid}	Whoa. Who was that?	$[level1/Astrid/l1_a_12]
+{@Dad}	 Sorry, uh…“Station 12,” this channel doesn’t allow for… personal communications. 	$[level1/dad/l1_d_10]
+{@Dad}	The Recovery Board is strict about research-only radio bands. 	$[level1/dad/l1_d_11]
+{@Dad}	I’ll grant you entry-level access so you can help us. I should sign off now. More later.	$[level1/dad/l1_d_12]
 
 $call SetInstrumentUnlocked(CoordinateInstrument, true)
 $call SetInstrumentUnlocked(PhotometerInstrument, true)
 $wait 1
-
-{@Radio} Station Twelve, this is CERES HQ. You have been granted entry level access. $[Radio/L1/l1_r_03]
-{@Radio} Training begins immediately. Please follow all directives. $[Radio/L1/l1_r_04]
-
-{@Astrid} Um, okay... Gosh, there’s a lot of buttons here... $[Astrid/L1/l1_a_09]
+{@Radio}	Station 12, this is CERES HQ. You have been granted entry level access.	$[level1/radio_lady/l1_r_04]
+{@Radio}	Training begins immediately. Please follow all directives.	$[level1/radio_lady/l1_r_05]
+{@Astrid}	Um, okay... Gosh, there are a lot of buttons here...	$[level1/Astrid/l1_a_13]
 
 $call MonitorUI->HideCERESLogo()
 $call MonitorUI->PowerOn()
 $call WaitForMovedToView("Monitor")
 
-{@Radio} I'll help you get up and running. Start by moving your telescope. $[Radio/L1/l1_r_05]
+{@Radio}	I'll help you get up and running. Start by moving your telescope.	$[level1/radio_lady/l1_r_06]
 $start .SetupTelescopeTutorial
 
 :: SetupTelescopeTutorial
@@ -217,7 +206,7 @@ $start .MoveTelescopeReminder
 $wait 10
 $if !temp:introMoveTheTelescope
     $call HintModals->Wiggle("TelescopeControls")
-    {@Radio} See if you can move your telescope. $[Radio/L1/l1_r_06]
+    {@Radio}	See if you can move your telescope.	$[level1/radio_lady/l1_r_07]
     $branch .MoveTelescopeReminder
 $endif
 
@@ -233,10 +222,10 @@ $call TelescopeSetMoveEventActive(false)
 $set temp:introMoveTheTelescope = true
 $call HintModals->Hide("TelescopeControls", 0.2)
 
-{@Radio} Your equipment seems to be working. Let’s test it out and look for the constellation Ursa Major. Sending coordinates now... $[Radio/L1/l1_r_07]
+{@Radio}	Your equipment seems to be working. Let’s test it out and look for the constellation Ursa Major. Sending coordinates now.	$[level1/radio_lady/l1_r_08]
 $set temp:introMoveTheTelescope = true
 $call MonitorUI->PlayRadioDownload(4.0)
-{@Radio} OK, looks like you received the coordinates. See those dots above your monitor? They will light up as you near the target. $[Radio/L1/l1_r_08]
+{@Radio}	OK, looks like you received the coordinates. See those dots above your monitor? They will light up as you near the target.	$[level1/radio_lady/l1_r_09]
 $branch .SetupNeutrinoNavigation
 
 :: SetupNeutrinoNavigation
@@ -248,32 +237,32 @@ $call HintModals->SlideInFromLeft("NeutrinoNav", 0.4)
 @when   newPips == 1
 @once
 
-{@Radio} Nice! Getting warmer... $[Radio/L1/l1_r_09a]
+{@Radio}	Nice. Getting warmer.	$[level1/radio_lady/l1_r_10a]
 
 :: HotColdEncouragement2
 @trigger    OnNeutrinoNavWarmer
 @when   newPips == 2
 @once
 
-{@Radio} Nice! Getting warmer... $[Radio/L1/l1_r_09b]
+{@Radio}	Nice. Getting warmer.	$[level1/radio_lady/l1_r_10b]
 
 :: Colder
 @trigger    OnNeutrinoNavColder
 @when   newPips == 0
 
-{@Radio} Colder... $[Radio/L1/l1_r_10a]
+{@Radio}	Colder.	$[level1/radio_lady/l1_r_11a]
 
 :: Colder2
 @trigger    OnNeutrinoNavColder
 @when   newPips == 1
 
-{@Radio} Colder... $[Radio/L1/l1_r_10b]
+{@Radio}	Colder.	$[level1/radio_lady/l1_r_11b]
 
 :: Colder3
 @trigger    OnNeutrinoNavColder
 @when   newPips == 3
 
-{@Radio} Colder... $[Radio/L1/l1_r_10c]
+{@Radio}	Colder.	$[level1/radio_lady/l1_r_11c]
 
 :: NeutrinoNavigationComplete
 @trigger    NeutrinoNavigationComplete
@@ -289,11 +278,14 @@ $call HintModals->Hide("NeutrinoNav", 0.2)
 $call SetInputState(false)
 $call StartOpenMode()
 $set temp:introMoveTheTelescope = true
+$call SetStickyFirstPage(8)
 
-{@Radio} Nice job! $[Radio/L1/l1_r_11]
-$wait 1
-{@Radio} So earlier this morning, Ice Cube detected a high energy neutrino coming from one of several possible stars in this location. $[Radio/L1/l1_r_12]
-{@Radio} All right. Select a possible neutrino origin on your display. $[Radio/L1/l1_r_15]
+{@Radio}	Nice job!	$[level1/radio_lady/l1_r_12]
+{@Radio}	So, earlier this morning, IceCube detected a high-energy neutrino coming from one of several possible stars in this location.	$[level1/radio_lady/l1_r_13]
+{@Radio}	Our team at IceCube is tasked with studying these neutrino sources, and mapping the stars in this region is critical. 	$[level1/radio_lady/l1_r_15]
+{@Radio}	You can learn more about the IceCube project in your reference guide. 	$[level1/radio_lady/l1_r_16]
+{@Radio}	If you can ID them for us, we should be able to upgrade your access level.	$[level1/radio_lady/l1_r_17]
+{@Radio}	To get started, select a possible neutrino source on your display.	$[level1/radio_lady/l1_r_18]
 $goto .PostNeutrinoNavigationComplete
 
 :: PostNeutrinoNavigationComplete
@@ -301,6 +293,14 @@ $set temp:waitingForNeutrinoStar = true
 
 $call HintModals->SlideInFromLeft("SelectStar", 0.4)
 $call SetInputState(true)
+$start .FirstStarHint
+
+:: FirstStarHint
+$wait 10
+$if temp:waitingForNeutrinoStar
+    {@Radio}	Astrid, you still there? Select a possible neutrino source on your display.	$[level1/radio_lady/l1_r_19]
+    $branch .FirstStarHint
+$endif
 
 :: OnStarSelected
 @trigger    OnStarSelected
@@ -309,7 +309,7 @@ $call SetInputState(true)
 @interrupt
 
 $call ClearMonitorSelection()
-{@Radio} Hmmm. It doesn't look like that is a possible neutrino origin. Look for objects with a blue highlight. $[Radio/L1/l1_r_16]
+{@Radio}	Hmmm. That doesn't look a possible neutrino source. Look for objects highlighted in blue.	$[level1/radio_lady/l1_r_20]
 
 :: OnRefGuideClosed
 @trigger    OnRefGuideClosed
@@ -326,14 +326,16 @@ $set temp:guideOpen = false
 @cutscene
 @once
 
+$set temp:waitingForNeutrinoStar = false
 $set temp:waitingForManualOpen = false
 $call MoveToView("Right")
 $call SetGuideHighlight(false)
 $set temp:firstSubmission = false
 
-{@Radio} Do you see your photometer in the equipment stack? That should tell you what the apparent magnitude of the star is. $[Radio/L1/l1_r_20]
-{@Radio} All you need to do is find that number in your reference guide and submit the data. $[Radio/L1/l1_r_21]
-{@Radio} Another coalition astronomer will verify your classification. $[Radio/L1/l1_r_18]
+{@Astrid}	Got it. 	$[level1/Astrid/l1_a_14]
+{@Radio}	Okay. Do you see the photometer in your equipment stack? That should tell you the apparent magnitude of the star. 	$[level1/radio_lady/l1_r_24]
+{@Radio}	All you need to do is match that number with the correct range in your reference guide and submit the data.	$[level1/radio_lady/l1_r_25]
+{@Radio}	Another coalition astronomer will verify your classification.	$[level1/radio_lady/l1_r_26]
 $start .IntroFirstSubmissionTimeout
 
 :: IntroFirstSubmissionTimeout
@@ -344,8 +346,8 @@ $call SetRadioDialLocked(true)
 $wait 15
 
 $if !temp:firstSubmission
-    {@Radio} Do you see your photometer in the equipment stack? That should tell you what the apparent magnitude of the star is. $[Radio/L1/l1_r_20(1)]
-    {@Radio} All you need to do is find that number in your reference guide and submit the data. $[Radio/L1/l1_r_21(1)]
+    {@Radio}	Okay. Do you see the photometer in your equipment stack? That should tell you the apparent magnitude of the star. 	$[level1/radio_lady/l1_r_24(1)]
+    {@Radio}	All you need to do is match that number with the correct range in your reference guide and submit the data.	$[level1/radio_lady/l1_r_25(1)]
     $branch .IntroFirstSubmissionTimeout
 $endif
 
@@ -377,19 +379,26 @@ $endif
 $call LockMonitorFocus()
 $call SetGuideHighlight(true)
 
-{@Radio} Great! See if you can find Elijah’s operator manual. It's a small, spiral bound notebook. $[Radio/L1/l1_r_19]
+{@Radio}	Great! Now see if you can find Elijah’s operator manual. It's a small, spiral bound notebook.	$[level1/radio_lady/l1_r_22]
+$start .OpenManualHint
 
-:: PlayerLeavesNeutrinoTask
-@trigger    OnLeaveNeutrinoRegion
-@once
-
-{@Radio} You're headed off target. $[Radio/L1/l1_r_23]
+:: OpenManualHint
+$wait 10
+$if temp:waitingForManualOpen
+    {@Radio}	Have you found Elijah's operator manual?	$[level1/radio_lady/l1_r_23]
+    $branch .OpenManualHint
+$endif
 
 :: PlayerLeavesNeutrinoTask2
 @trigger    OnLeaveNeutrinoRegion
 @once
 
-{@Radio} Looks like you’re drifting away from the cluster. $[Radio/L1/l1_r_24]
+{@Radio}	Looks like you’re drifting away from the cluster.	$[level1/radio_lady/l1_r_29]
+
+:: PlayerLeavesNeutrinoTask
+@trigger    OnLeaveNeutrinoRegion
+
+{@Radio}	You are headed off target.	$[level1/radio_lady/l1_r_28]
 
 :: ValidKnowledgeSubmission
 @trigger    OnValidKnowledgeSubmission
@@ -404,7 +413,7 @@ $call SetGuideHighlight(true)
 $call SubtitleController->SetSubtitlePosition(0.5, 1, 0, -140)
 $wait 0.1
 
-{@Radio} Hmm, that wasn’t correct, remember to look at your photometer, and then line it up with the closest range in your manual. $[Radio/L1/l1_r_22]
+{@Radio}	Hmm, that wasn’t correct. Remember to look at your photometer, and then line it up with the correct range in your manual.	$[level1/radio_lady/l1_r_27]
 $start Observatory.ResetSubtitlePosition
 
 :: FirstDupliacteSubmission
@@ -413,14 +422,14 @@ $start Observatory.ResetSubtitlePosition
 @cutscene
 @once
 
-{@Radio} Looks like you’ve already submitted that info. $[Radio/L1/l1_r_25]
-{@Radio} You won’t get any points towards your access level for identifying that property again. $[Radio/L1/l1_r_26]
+{@Radio}	Looks like you’ve already submitted that info. 	$[level1/radio_lady/l1_r_30]
+{@Radio}	You won’t get any points towards your access level for identifying that property again.	$[level1/radio_lady/l1_r_31]
 
 :: DupliacteSubmission
 @trigger    OnDuplicateOpenIdSubmission
 @interrupt
 
-{@Astrid} Looks like I have to determine the apparent magnitude of some of the other stars in this cluster. $[Astrid/L1/l1_a_18]
+{@Astrid}	Looks like I have to determine the apparent magnitude of some of the other stars in this cluster.	$[level1/Astrid/l1_a_16a]
 
 :: FirstPoint
 @trigger    PointsUpdated
@@ -434,7 +443,8 @@ $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $set temp:firstSubmission = true
 $call SetRadioDialLocked(false)
 
-{@Astrid} Okay! Maybe I can determine the apparent magnitude of some other stars in this cluster.  $[Astrid/L1/l1_a_9a]
+{@Astrid}	Okay. That wasn't too bad. 	$[level1/Astrid/l1_a_15]
+{@Radio}	Nice job. See if you can determine the brightness for another star in the cluster.	$[level1/radio_lady/l1_r_32]
 $goto .PostPoint
 
 :: SecondPoint
@@ -444,7 +454,7 @@ $goto .PostPoint
 @cutscene
 @once
 
-{@Astrid} Nice! I'll try another one. $[Astrid/L1/l1_a_9b]
+{@Astrid}	Nice! I'll try another one.	$[level1/Astrid/l1_a_16]
 $goto .PostPoint
 
 :: PostPoint
@@ -464,10 +474,13 @@ $call SetRefGuideActive(false)
 $call Wait(4)
 $call StopOpenMode()
 $set temp:radioChannelTuned = false
-{@Radio} You’ve identified the necessary data to earn a higher access level.  $[Radio/L1/l1_r_27]
+{@Astrid}	Looks like CERES is trying to contact me. I wonder what that's about...	$[level1/Astrid/l1_a_17]
+{@Radio}	It looks like you’ve identified the necessary data to earn a higher access level. 	$[level1/radio_lady/l1_r_33]
+{@Radio}	You’ll need to tune to 375 megahertz on your radio so we can unlock your equipment.	$[level1/radio_lady/l1_r_34]
 
 $call SetChannelActive(Unlocks_Active, true)
 $call SetChannelActive(Unlocks_Inactive, false)
+$call SetStickyFirstPage(7)
 $call HintModals->SlideInFromRight("RadioControls", 0.4)
 $call SetInputState(true)
 
@@ -478,7 +491,7 @@ $call SetInputState(true)
 $call Wait(10)
 $if !temp:radioChannelTuned
     $call HintModals->Wiggle("RadioControls")
-    {@Astrid} I should tune to 375 mHz on the Radio to upgrade my rig.
+    {@Astrid}	I wonder if I can upgrade my rig. The upgrade channel should be in my reference guide	$[level1/Astrid/l1_a_g1]
     $branch .UpgradeReminder
 $endif
 
@@ -514,12 +527,8 @@ $call SetInstrumentUnlocked(TemperatureInstrument, true)
 $call SetStickyFirstPage(-1)
 $call OpenRefGuidePage("Colormeter")
 
-{@Radio} Congratulations on being awarded clearance <b>level one</b>. You are now cleared to use the color meter.  $[Radio/L1/l1_r_30]
-{@Astrid} Starting at the bottom... clearance level one. $[Astrid/L1/l1_a_10]
-{@Radio} Thanking you for being an important part of the CERES Distributed Network of Citizen Observatories. $[Radio/L1/l1_r_32]
-
-{@Astrid} Ugh, riveting... $[Astrid/L1/l1_a_11]
-{@Radio} Together, we will map the stars for a better tomorrow. $[Radio/L1/l1_r_33]
+$wait 0.5
+{@Astrid} "Clearance level 1... Color meter access granted. Please reference Ceres Operations manual fo rmore info. Congratuations on reaching clearance Level 1. Together we will map the stars for a greater tomorrow"	$[level1/Astrid/l1_a_20]
 
 $call ConsoleCommandLine->HideConsole()
 $wait 0.1
@@ -531,17 +540,16 @@ $wait 0.5
 
 $call SetRefGuideActive(false)
 
-{@Astrid} (*Sigh*) Another birthday without Elijah. Maybe he’s watching the Perseids, wherever he is...  $[Astrid/L1/l1_a_12]
-{@Astrid} I think I saw something about Perseus in that reference guide... $[Astrid/L1/l1_a_13]
+{@Astrid}	*sigh* Another birthday without Elijah. Maybe he’s watching the Perseids, wherever he is.	$[level1/Astrid/l1_a_21]
+{@Astrid}	I wonder if there's anything about the Perseids in that operator's manual. 	$[level1/Astrid/l1_a_22]
 
 $call SetChannelActive(Unlocks_Inactive, true)
 $call OpenRefGuidePage("ConstellationPerseus")
 
-{@Astrid} Huh… There’s something about Perseus here… $[Astrid/L1/l1_a_14]
-{@Astrid} Aha! $[Astrid/L1/l1_a_15]
-
+{@Astrid}	Yes… There’s something about Perseus here!  	$[level1/Astrid/l1_a_23]
+{@Astrid}	Aha!	$[level1/Astrid/l1_a_24]
+{@Astrid}	This time it's my turn to see Perseus through a telescope.	$[level1/Astrid/l1_a_25]
 $wait 1
-// {@Astrid} Can this telescope can help me find Perseus? I hope I didn't miss the meteor shower. $[Astrid/L1/l1_a_16]
 $goto .PostClearanceUpgrade
 
 :: PostClearanceUpgrade
@@ -558,28 +566,28 @@ $call StartPuzzleNavigation()
 @when   newPips > 0
 @once
 
-{@Astrid} Getting warmer... $[Astrid/L1/a_warmer_01]
+{@Astrid}	Getting warmer...	$[level1/Astrid/l1_a_26]
 
 :: HotColdEncouragement4
 @trigger    OnConstellationNavWarmer
 @when   newPips > 1
 @once
 
-{@Astrid} Getting closer... $[Astrid/L1/a_warmer_02]
+{@Astrid}	Getting closer...	$[level1/Astrid/l1_a_27]
 
 :: Colder4
 @trigger    OnConstellationNavColder
 @when   newPips < 1
 @once
 
-{@Astrid} Ope. Not over here. $[Astrid/L1/a_colder_01] 
+{@Astrid}	Oops, not over here...	$[level1/Astrid/l1_a_28]
 
 :: Colder5
 @trigger    OnConstellationNavColder
 @when   newPips < 2
 @once
 
-{@Astrid} Ack. Colder... $[Astrid/L1/a_colder_02] 
+{@Astrid}	Ach, colder!	$[level1/Astrid/l1_a_29]
 
 :: PuzzleNavigationComplete
 @trigger    PuzzleNavigationComplete
@@ -588,18 +596,21 @@ $call StartPuzzleNavigation()
 @cutscene
 @once
 
+{@Astrid}	(*sigh*) Happy birthday to me.	$[level1/Astrid/l1_a_32]
 $call StartPuzzleMode()
 $call UnlockMonitorFocus()
 $set temp:waitingForSelectAtik = true
 $wait 0.3
-{@Astrid} What the ...!?
+{@Astrid}	Whoa... what's happening? Did I break something??	$[level1/Astrid/l1_a_33]
 
 $wait 1
-// {@Astrid} (*Wistful sigh*) Happy birthday to me. $[Astrid/L1/l1_a_20]
-{@Astrid} Whoooaa... what's all this? $[Astrid/L1/l1_a_21]
+{@Astrid}	Overriding the CERES framework? 	$[level1/Astrid/l1_a_34]
 $wait 2
-{@Astrid} It must be the data from that Perseus page! $[Astrid/L1/l1_a_22]
-{@Astrid} Okay, you got this Astrid… Start with what I know - the coordinates for Atik.  $[Astrid/L1/l1_a_25]
+{@Astrid}	Elijah must've set this up.	$[level1/Astrid/l1_a_35]
+{@Astrid}	This looks like the data from that Perseus page!	$[level1/Astrid/l1_a_36]
+{@Astrid}	Do I finally get to do some astronomy by myself? This is wild. 	$[level1/Astrid/l1_a_37]
+{@Astrid}	I've been so busy helping Aunt Martha. I hope I remember how to do this. 	$[level1/Astrid/l1_a_38]
+{@Astrid}	Okay, you got this Astrid. Start with what I know—the coordinates for Atik. 	$[level1/Astrid/l1_a_39]
 $goto .PostPuzzleNavigationComplete
 
 :: PostPuzzleNavigationComplete
@@ -611,7 +622,7 @@ $branch .SelectAtikReminder
 :: SelectAtikReminder
 $wait 10
 $if temp:waitingForSelectAtik
-    {@Astrid}  It looks like the star compass gives me readings when I select the stars. That helps. $[Astrid/L1/l1_a_26]
+    {@Astrid}	It looks like the star compass gives me readings when I select a star on the monitor. That helps.	$[level1/Astrid/l1_a_40]
     $goto .SelectAtikReminder
 $endif
 
@@ -630,7 +641,8 @@ $set temp:waitingForSelectAtik = false
 $call HintModals->CloseAllModals()
 $call IsolatePuzzleCell(1, 3)
 
-{@Astrid} Okay, apparent magnitude… I can load that from the Photometer. $[Astrid/L1/l1_a_27]
+{@Astrid}	Yes! Now I can use my photometer to fill in the apparent magnitude for Atik.	$[level1/Astrid/l1_a_41]
+{@Astrid}	I think can enter the apparent magnitude for Atik in the puzzle cell beneath the monitor.	$[level1/Astrid/l1_a_42]
 $goto .PostFirstPuzzleStarSelected
 
 :: PostFirstPuzzleStarSelected
@@ -641,14 +653,14 @@ $call HintModals->SlideInFromRight("AtikCell", 0.4)
 @trigger    OnPuzzleCellSelected
 @when   cellId != "R1C3", temp:waitingForSelectAppMag
 
-{@Astrid} I need the apparent magnitude space for Atik on this grid... $[Astrid/L1/l1_a_28]
+{@Astrid}	I need to select the apparent magnitude space for Atik on this grid...	$[level1/Astrid/l1_a_43]
 
 :: NotPuzzleCellAstrid
 @trigger    OnLabInteraction
 @when   cellId != "R1C3", actorId != "PhotometerLoadBtn", temp:waitingForSelectAppMag
 
 $call HintModals->Wiggle("AtikCell")
-{@Astrid} First, I need to select a cell on the grid. $[Astrid/L1/l1_a_t01]
+{@Astrid}	I think can enter the apparent magnitude for Atik in the puzzle cell beneath the monitor.	$[level1/Astrid/l1_a_42(1)]
 
 :: AtikAppMagSelected
 @trigger    OnPuzzleCellSelected
@@ -660,7 +672,7 @@ $set temp:waitingForFillAppMag = true
 $call AddIsolatedSlot(ApparentMagnitude)
 $call HintModals->Hide("AtikCell", 0.2)
 
-{@Astrid} Now all I have to do is load in data from the photometer. $[Astrid/L1/l1_a_t23]
+{@Astrid}	Now all I have to do is load in data from the photometer.	$[level1/Astrid/l1_a_44]
 
 :: AtikAppMagInstrumentSelected
 @trigger    OnLabInteraction
@@ -672,7 +684,7 @@ $set temp:waitingForFillAppMag = true
 $call AddIsolatedSlot(ApparentMagnitude)
 $call HintModals->Hide("AtikCell", 0.2)
 
-{@Astrid} I need the apparent magnitude space for Atik on this grid... $[Astrid/L1/l1_a_28]
+{@Astrid}	I need to select the apparent magnitude space for Atik on this grid...	$[level1/Astrid/l1_a_43(1)]
 
 :: AstridThatsNotThePhotometer
 @trigger    OnLabInteraction
@@ -681,7 +693,7 @@ $call HintModals->Hide("AtikCell", 0.2)
 @interrupt
 @cutscene
 
-{@Astrid} Hmmm... that's not the photometer. $[Astrid/L1/l1_a_31]
+{@Astrid}	Hmm, that’s not the photometer. 	$[level1/Astrid/l1_a_45]
 
 :: AtikAppMagFilled
 @trigger    OnPuzzleCellFilled
@@ -699,8 +711,8 @@ $call ReleaseIsolatedPuzzle()
 $call SetInstrumentUnlocked(VisibleWavelength, true)
 $call SetInstrumentUnlocked(BlueWavelength, true)
 $call IsolatePuzzleCell(1, 1)
-{@Astrid} Let's see... to fill in the rest of this sequence, I also need the blue magnitude. $[Astrid/L1/l1_a_29]
-{@Astrid} I need to select the blue wavelength filter just below the monitor. $[Astrid/L1/l1_a_34]
+{@Astrid}	Let's see... to fill in the rest of this sequence, I also need the Blue magnitude. 	$[level1/Astrid/l1_a_46]
+{@Astrid}	I need to select the blue wavelength filter just below the monitor.	$[level1/Astrid/l1_a_47]
 $call HintModals->SlideInFromLeft("BlueFilter", 0.4)
 $goto .PostAtikAppMagFilled
 
@@ -721,8 +733,8 @@ $call HintModals->Hide("BlueFilter", 0.2)
 $call ReleaseIsolatedPuzzle()
 $call IsolatePuzzleCell(1, 4)
 
-{@Astrid} Oh, with the blue wavelength filter on, my photometer takes a new reading highlighted. $[Astrid/L1/l1_a_t02] 
-{@Astrid} I can load this data into the blue magnitude space on the puzzle grid. $[Astrid/L1/l1_a_t03]
+{@Astrid}	Ok, with the blue filter on, my photometer has a new reading!	$[level1/Astrid/l1_a_49]
+{@Astrid}	Now I can load this data into the blue magnitude space with my photometer just like before. 	$[level1/Astrid/l1_a_50]
 
 :: AtikNotBlueFilterSelected
 @trigger    OnLabInteraction
@@ -730,7 +742,7 @@ $call IsolatePuzzleCell(1, 4)
 @interrupt
 @cutscene
 
-{@Astrid} The blue wavelength filter is there on the monitor. $[Astrid/L1/l1_a_30]
+{@Astrid}	The Blue wavelength filter is there on the monitor.	$[level1/Astrid/l1_a_48]
 
 :: NotBlueLightAstrid
 @trigger OnPuzzleCellSelected
@@ -744,7 +756,7 @@ $if !temp:AtikCell2Hint
     $call HintModals->SlideInFromRight("AtikCell2", 0.4)
     $set temp:AtikCell2Hint = true
 $endif
-{@Astrid} That’s not it. I need the blue magnitude space, next to the data I just submitted. $[Astrid/L1/l1_a_t04]
+{@Astrid}	I'm looking for the blue magnitude cell on the grid. It should be next to that data I just entered. $[level1/Astrid/l1_a_51]
 
 :: BlueLightCellSelected
 @trigger    OnPuzzleCellSelected
@@ -755,7 +767,7 @@ $endif
 $call AddIsolatedSlot(BlueMagnitude)
 $call HintModals->CloseAllModals()
 
-{@Astrid} Ok, now I can load this data into the blue magnitude space with my photometer just like before. $[Astrid/L1/l1_a_33]
+{@Astrid}	I'm looking for the blue magnitude cell on the grid. It should be next to that data I just entered. $[level1/Astrid/l1_a_51]
 
 :: BlueLightInstrumentSelected
 @trigger    OnLabInteraction
@@ -766,7 +778,7 @@ $call HintModals->CloseAllModals()
 $call AddIsolatedSlot(BlueMagnitude)
 $call HintModals->CloseAllModals()
 
-{@Astrid} Ok, now I can load this data into the blue magnitude space with my photometer just like before. $[Astrid/L1/l1_a_33]
+{@Astrid}	I'm looking for the blue magnitude cell on the grid. It should be next to that data I just entered. $[level1/Astrid/l1_a_51]
 
 :: AtikBlueMagFilled
 @trigger    OnPuzzleCellFilled
@@ -779,13 +791,12 @@ $call ReleaseIsolatedPuzzle()
 $set temp:waitingForBlueLight = false
 $set temp:waitingForFillColor = true
 $call SetInputState(false)
-{@Astrid} It looks like I have the visible magnitude of the star and the blue magnitude. $[Astrid/L1/l1_a_t06] 
-{@Astrid} So now the color module can calculate a <b>color index</b>! $[Astrid/L1/l1_a_t07]
+{@Astrid}	I've got the apparent magnitude and the blue magnitude... so now I can calculate the <b>color index</b>!	$[level1/Astrid/l1_a_52]
 
 $call IsolatePuzzleCell(1, 2)
 $call SetInputState(true)
 
-{@Astrid} The hotter the star, the bluer it is. Now I can load the color of the star... and put it in the color space for Atik. $[Astrid/L1/l1_a_36]
+{@Astrid}	The hotter the star, the bluer it is. Now I can load the color of the star... and put it in the color space for Atik	$[level1/Astrid/l1_a_53]
 
 :: AtikColorCellSelected
 @trigger    OnPuzzleCellSelected
@@ -796,7 +807,7 @@ $call SetInputState(true)
 @cutscene
 
 $call AddIsolatedSlot(Color)
-{@Astrid} Alright, now I should load the color in from the color indexer. $[Astrid/L1/l1_a_38]
+{@Astrid}	Alright, now I should load the calculated color index.	$[level1/Astrid/l1_a_55]
 
 :: AtikColorInstrumentSelected
 @trigger    OnLabInteraction
@@ -807,7 +818,7 @@ $call AddIsolatedSlot(Color)
 @cutscene
 
 $call AddIsolatedSlot(Color)
-{@Astrid} Now I can load the color index of Atik in its color space. $[Astrid/L1/l1_a_t08]
+{@Astrid}	Now I can load this data into the last empty cell in the second row.	$[level1/Astrid/l1_a_56]
 
 :: WhereIsTheColorIndexer
 @trigger    OnLabInteraction
@@ -815,7 +826,7 @@ $call AddIsolatedSlot(Color)
 @interrupt
 @cutscene
 
-{@Astrid} Where was the color indexer... oh yeah, to the right of the photometer $[Astrid/L1/l1_a_39]
+{@Astrid}	Where was the color index... oh yeah, to the right of the photometer.	$[level1/Astrid/l1_a_54]
 
 :: AtikColorFilled
 @trigger    OnPuzzleRowFilled
@@ -831,7 +842,7 @@ $set temp:AtikRowFilled = true
 $call ReleaseIsolatedPuzzle()
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 
-{@Astrid} O-kay! Now it’s just process of elimination. Atik is here in the second row. $[Astrid/L1/l1_a_t09]
+{@Astrid}	Okay, now it’s just process of elimination. I’m pretty sure Atik is the star on the second row of this grid.	$[level1/Astrid/l1_a_57]
 $goto .HintForSecondRow
 
 :: HintForSecondRow
@@ -840,8 +851,8 @@ $set temp:waitingForSelectAlgol = true
 $call HintModals->SlideInFromRight("BrightestBlue", 0.4)
 $call UnlockMonitorFocus()
 
-{@Astrid} What else do the clues on the monitor say? It looks like Algol is the brightest star in Blue. $[Astrid/L1/l1_a_t24]
-{@Astrid} Which of these stars is the brightest in blue? $[Astrid/L1/l1_a_t25]
+{@Astrid}	What else do the clues on the monitor say? Apparently Algol is the brightest star in Blue?	$[level1/Astrid/l1_a_58]
+{@Astrid}	Which of these stars is the brightest in blue?	$[level1/Astrid/l1_a_59]
 
 :: SecondPuzzleStarSelected
 @trigger   OnStarSelected
@@ -850,11 +861,8 @@ $call UnlockMonitorFocus()
 @interrupt
 @cutscene
 
-// $call HintModals->CloseAllModals()
-// $call HintModals->SlideInFromRight("CompleteRow", 0.4)
-
-{@Astrid} Is this the brightest star in blue? If so, that would make this <i>Algol</i>. $[Astrid/L1/l1_a_t16]
-{@Astrid} If this is Algol, then I should this stars data into the first row. $[Astrid/L1/l1_a_t17]
+{@Astrid}	Is this the brightest star in the blue filter? That would make this Algol.	$[level1/Astrid/l1_a_61]
+{@Astrid}	If this is Algol, then I should load this star's data into the first row.	$[level1/Astrid/l1_a_62]
 
 $branch .PostSecondPuzzleStarSelected
 
@@ -867,9 +875,7 @@ $call UnlockMonitorFocus()
 @interrupt
 @cutscene
 
-// $call HintModals->CloseAllModals()
-// $call HintModals->SlideInFromRight("BrightestBlue", 0.4)
-{@Astrid} I should compare its blue magnitude to the others in this cluster. $[Astrid/L1/l1_a_t10] 
+{@Astrid}	I should compare the blue magnitude of this star to the others in the cluster.	$[level1/Astrid/l1_a_60]
 
 :: AtikSelectedPostFilled
 @trigger   OnStarSelected
@@ -878,8 +884,8 @@ $call UnlockMonitorFocus()
 @interrupt
 @cutscene
 
-{@Astrid} I’ve already submitted the data for this star. $[Astrid/L1/l1_a_t11]
-{@Astrid} I think this is the second one, <i>Atik</i>. $[Astrid/L1/l1_a_t13]
+{@Astrid}	I’ve already submitted the data for this star.	$[level1/Astrid/l1_a_68]
+{@Astrid}	I think this is the second one... <i>Atik</i>.	$[level1/Astrid/l1_a_70]
 
 $if !temp:readyToSubmit, temp:AlgolRowFilled
     $branch .PuzzleTimeoutHint
@@ -892,8 +898,8 @@ $endif
 @interrupt
 @cutscene
 
-{@Astrid} I’ve already submitted the data for this star.  $[Astrid/L1/l1_a_t11]
-{@Astrid} I think this is the first star on my grid, <i>Algol</i>. $[Astrid/L1/l1_a_t12]
+{@Astrid}	I’ve already submitted the data for this star.	$[level1/Astrid/l1_a_68]
+{@Astrid}	I think this is the first star on my grid... <i>Algol</i>.	$[level1/Astrid/l1_a_69]
 
 :: MenkibSelectedPostComplete
 @trigger   OnStarSelected
@@ -902,8 +908,8 @@ $endif
 @interrupt
 @cutscene
 
-{@Astrid} I’ve already submitted the data for this star. $[Astrid/L1/l1_a_t11]
-{@Astrid} This should be <i>Menkib</i>. $[Astrid/L1/l1_a_t14]
+{@Astrid}	I’ve already submitted the data for this star.	$[level1/Astrid/l1_a_68]
+{@Astrid}	This should be <i>Menkib</i>.	$[level1/Astrid/l1_a_71]
 
 :: MirfakSelectedPostComplete
 @trigger   OnStarSelected
@@ -912,8 +918,8 @@ $endif
 @interrupt
 @cutscene
 
-{@Astrid} I’ve already submitted the data for this star. $[Astrid/L1/l1_a_t11] 
-{@Astrid} I think this one is <i>Mirfak</i>. $[Astrid/L1/l1_a_t15]
+{@Astrid}	I’ve already submitted the data for this star.	$[level1/Astrid/l1_a_68]
+{@Astrid}	I think this one is <i>Mirfak</i>.	$[level1/Astrid/l1_a_72]
 
 :: AlgolDataFilled
 @trigger    OnPuzzleRowFilled
@@ -931,8 +937,8 @@ $call HintModals->CloseAllModals()
 $call UnlockMonitorFocus()
 $set temp:readyToSubmit = false
 
-{@Astrid} Okay, I’ve eliminated two rows of the grid. That just leaves two stars to go. $[Astrid/L1/l1_a_t18]
-{@Astrid} Maybe Elijah left me a clue to help me figure out which star is Menkib and which is Mirfak. $[Astrid/L1/l1_a_t19]
+{@Astrid}	Okay, I’ve eliminated two rows of the grid. That just leaves two stars to go. 	$[level1/Astrid/l1_a_63]
+{@Astrid}	I can use the clues on the monitor to figure out which star is Menkib and which is Mirfak.	$[level1/Astrid/l1_a_64]
 $branch .PostAlgolDataFilled
 
 ::PostAlgolDataFilled
@@ -955,11 +961,11 @@ $branch .PuzzleTimeoutHint
 :: PuzzleTimeoutHint
 $wait 30
 $if !temp:readyToSubmit, !temp:MenkibRowFilled
-    {@Astrid} Let’s see here, I know Menkib is NOT the brightest in visible. Which of my remaining stars does that match? $[Astrid/L1/l1_a_t20]
+    {@Astrid}	Let’s see. I know Menkib is NOT the brightest in visible. Which of my remaining stars does that match?	$[level1/Astrid/l1_a_73]
     $branch .PuzzleTimeoutHint
 $elseif !temp:readyToSubmit, !temp:MirfakRowFilled
-    {@Astrid} Let’s see, I know Mirfak is cooler than Atik... and the hotter the star the bluer it is, just like a flame! $[Astrid/L1/l1_a_t21]
-    {@Astrid} I should double check if either of these stars are cooler than the star in row two. $[Astrid/L1/l1_a_t22]
+    {@Astrid}	Let’s see. I know Mirfak is cooler than Atik. And the hotter the star, the bluer it is—just like a flame.	$[level1/Astrid/l1_a_74]
+    {@Astrid}	I should check if either of these stars are colder than the star in row two.	$[level1/Astrid/l1_a_75]
     $branch .PuzzleTimeoutHint
 $endif
 
@@ -995,7 +1001,7 @@ $call HintModals->CloseAllModals()
 $set temp:CompletedMenkibRow = false
 $set temp:CompletedAlgolRow = false
 $set temp:CompletedMirfakbRow = false
-{@Astrid} That’s all the data… (*deep breath*) Here goes nothing! $[Astrid/L1/l1_a_41]
+{@Astrid}	That’s all the data… (deep breath) Here goes nothing!	$[level1/Astrid/l1_a_65]
 
 :: IncorrectPuzzleSubmission
 @trigger    IncorrectPuzzleSubmission
@@ -1018,10 +1024,10 @@ $else
 $endif
 $if !local:row_0
     $set temp:AlgolRowFilled = false
-    {@Astrid} I don't think that's right... $[Astrid/L1/a_negative_4] 
+    {@Astrid}	Ugh. That's not right. What did I miss? 	$[level1/Astrid/l1_a_66]
     $goto .HintForSecondRow
 $else
-    {@Astrid} Hmm, that doesn’t look right... $[Astrid/L1/a_negative_1]
+    {@Astrid}	Ugh. That's not right. What did I miss? 	$[level1/Astrid/l1_a_66(1)]
     $set temp:CompletedAlgolRow = true
     $branch .PuzzleTimeoutHint
 $endif
@@ -1033,6 +1039,7 @@ $endif
 @interrupt
 @once
 
+{@Astrid}	Yes!! I got it!	$[level1/Astrid/l1_a_76]
 $call StopPuzzleMode()
 $call SetInputState(false)
 $call ConsoleCommandLine->PlayConsoleTextAndWait("PlayMessage")
@@ -1042,24 +1049,32 @@ $call OpenRefGuidePage("ConstellationPerseusCompleted")
 $call ClearMonitorSelection()
 
 $call TapeDeck->SetTapeActive(true)
-{@Elijah} If you’re hearing this… it means you didn’t give up. Good. Remember—Perseus didn’t wait for the gods to fix things. $[Elijah/L1/l1_e_01a]
-{@Elijah} He just did what had to be done. The satellite’s still up there, and maybe—just maybe—someone still believes it matters. $[Elijah/L1/l1_e_02]
-
+{@Elijah}	Check, check? Alright, this is recording. 	$[level1/Elijah/l1_e_01]
+{@Astrid}	Elijah! 	$[level1/Astrid/l1_a_77]
+{@Elijah}	Astrid. If you're hearing this, you solved the first puzzle. One down, four to go. 	$[level1/Elijah/l1_e_02]
+{@Elijah}	Part of me wants to tell you to keep working. If anyone can solve those puzzles, you can. 	$[level1/Elijah/l1_e_03]
+{@Elijah}	But that's pretty messed up of me to ask. I was supposed to be there to meet you. We were supposed to do this together. 	$[level1/Elijah/l1_e_04]
+{@Astrid}	Do what together?	$[level1/Astrid/l1_a_78]
+{@Elijah}	I've been thinking about that Shakespeare quote. "...thou, residing here, go'st yet with me,   And I, hence fleeting, here remain with thee.” I'm with you there... in spirit.	$[level1/Elijah/l1_e_05]
+{@Astrid}	Dude. I wish.	$[level1/Astrid/l1_a_79]
+{@Elijah}	I hope you can understand. Love you, Astrid. 	$[level1/Elijah/l1_e_06]
+$call ConsoleCommandLine->HideConsole()
 $call TapeDeck->SetTapeActive(false)
-{@Astrid} Elijah! Its so good his voice, even if it's just a recording... It's been so long since I've gotten more than a letter. $[Astrid/L1/l1_a_43]
+{@Astrid}	Ugh. What will all be worth it? 	$[level1/Astrid/l1_a_80]
+{@Astrid}	I don't get it. It looks like there's more tape... why can't I play the rest of the message?	$[level1/Astrid/l1_a_81]
+
 $call SetRefGuideActive(false)
 $wait 0.5
 
-{@Dad} CERES HQ checking in. Great work today! $[Dad/L1/l1_d_11]
-{@Dad} It’s late where you are. Get some rest, kiddo. I sent you a letter. You should get it in a few weeks. $[Dad/L1/l1_d_12]
-{@Astrid} (*yawns*) Okay, I’ll be looking out for it. Can I say I miss you on here? $[Astrid/L1/l1_a_44]
-{@Dad} (*half-sigh, half-laugh*) Over and out, Little Bear. $[Dad/L1/l1_d_13]
-$call Wait(1)
+{@Dad}	CERES HQ checking in. Great work today!	$[level1/dad/l1_d_13]
+{@Dad}	It’s late where you are. Get some rest. I sent you a letter. You should get it in a few weeks.	$[level1/dad/l1_d_14]
+{@Astrid}	(*yawns*) Ok. I’ll be looking out for it. Can I say I miss you on here?	$[level1/Astrid/l1_a_82]
+$wait 1
 
 $call EndDay2->BeginCutscene()
-$call Wait(1)
-{@Astrid} Huh... What are you getting yourself into, Elijah? $[Astrid/L1/l1_a_45]
-$call Wait(1)
+$wait 1
+{@Astrid}	Oh, Elijah... What are you getting yourself into?	$[level1/Astrid/l1_a_83]
+$wait 1
 
 :: EndDay
 @trigger    CutsceneEnd

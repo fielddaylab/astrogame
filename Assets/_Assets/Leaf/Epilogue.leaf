@@ -1,6 +1,40 @@
 #basePath Ending
 
-:: Start
+:: Preload
+@function   ScenePreload
+$call InitUpdateMasks()
+$call ToggleDeskPicture()
+$call SetInputState(false)
+$call StopPuzzleMode()
+$call StopOpenMode()
+$call SetRefGuidePagesLocked(true)
+$call SetRefPageActive("ConstellationPerseusCompleted", false)
+$call SetRefPageActive("ConstellationHerculesCompleted", false)
+$call SetRefPageActive("ConstellationLeoCompleted", false)
+$call SetRefPageActive("ConstellationDracoCompleted", false)
+$call SetRefPageActive("ConstellationAndromedaCompleted", false)
+
+$call SetRadioFrequency(100, true)
+
+$call TelescopeLook(155, -30)
+$call MonitorUI->PowerOff()
+$set temp:powerButtonHint = false
+$set temp:pressedPowerButton = false
+$call SetChannelActive(Unlocks_Active, false)
+$call SetChannelActive(IceCube, false)
+$call PlayMusic("Music.Gently-Falling", 1)
+
+$start Observatory.ResetSubtitlePosition
+
+:: OpeningCutscene
 @trigger SceneReady
 @cutscene
-$call EndingCutscene->BeginCutscene()
+@who    IntroCutscene
+
+$wait 1
+
+$call IntroSfx->Play()
+$wait 0.1
+$call IntroSfx2->Play()
+$wait 3
+$call SetInputState(true)

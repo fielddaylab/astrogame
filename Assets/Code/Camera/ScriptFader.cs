@@ -1,26 +1,17 @@
-using FieldDay.Scripting;
-using FieldDay.UI.Animation;
-using Leaf.Runtime;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace Astro
-{
-    public class ScriptFader : ScriptActorComponent
-    {
+using Leaf.Runtime;
+using FieldDay.Scripting;
+using FieldDay.UI.Animation;
+
+namespace Astro {
+    public class ScriptFader : ScriptActorComponent {
         [SerializeField] private FadeGroup Group;
 
         [LeafMember("FadeIn")]
-        private void LeafFadeIn()
-        {
-            Group.Hide();
-        }
+        private void LeafFadeIn() { Group.Hide(); }
 
         [LeafMember("FadeOut")]
-        private void LeafFadeOut()
-        {
-            Group.Show();
-        }
+        private void LeafFadeOut() { Group.Show(); }
     }
 }

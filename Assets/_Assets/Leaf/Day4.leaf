@@ -45,7 +45,7 @@ $wait 1
 $call SpawnDocumentToCamera("Day4ElijahPostcard")
 $call SetInputState(true)
 
-{@Astrid} Draco! One of my favorite Constellations. $[Astrid/L4/l4d_a_05]
+{@Astrid}	Draco, the dragon constellation. I wonder if Elijah is trying to signal its time for the final puzzle...	$[level4/Astrid/l4_a_08]
 
 :: Day4ElijahPostcard
 @trigger    DocumentInspectFlip
@@ -55,8 +55,8 @@ $call SetInputState(true)
 
 $call SetInputState(true)
 $call EnableDocumentClose("Day4ElijahPostcard", true, true)
-{@Astrid} He's updated the technology at nine stations… that means he’ll be home soon! $[Astrid/L4/l4d_a_06]
-{@Astrid} But—<i>the blue light</i>—what is he talking about? $[Astrid/L4/l4d_a_07]
+{@Astrid}	Yes! Only two more stations, and then Elijah can come home. 	$[level4/Astrid/l4_a_09]
+{@Astrid}	A surprise when I finish the Draco puzzle? That's so Elijah. 	$[level4/Astrid/l4_a_10]
 
 :: SpawnDoc2
 @trigger    DocumentInspectEnd
@@ -67,8 +67,9 @@ $call EnableDocumentClose("Day4ElijahPostcard", true, true)
 
 $call SpawnDocumentToCamera("Day4Letter")
 
-{@Astrid} Jocelyn! She must have gotten my last letter and figured out my new address. $[Astrid/L4/l4d_a_01] 
-{@Astrid} She thinks the story of what we are working on here matters. That people will want to know! $[Astrid/L4/l4d_a_02]
+{@Astrid}	Jocelyn! She must've gotten my letter.  	$[level4/Astrid/l4_a_01]
+{@Astrid}	Wow... she says she loves the work Elijah and I are doing. She thinks I could turn it into a regular column!	$[level4/Astrid/l4_a_02]
+{@Astrid}	But the paper won't run a story about the meteor storm unless I can get more details. I need to figure out when and where it's going to happen. 	$[level4/Astrid/l4_a_03]
 
 :: SpawnDoc
 @trigger    DocumentInspectEnd
@@ -81,7 +82,7 @@ $call SetInputState(false)
 $call SpawnDocumentToCamera("DadUrsaPostcard")
 $call SetInputState(true)
 
-{@Astrid} Oh Dad... Its our constellations. He always did think of us as the big and little dipper. Ursa Major and Ursa Minor. $[Astrid/L4/l4d_a_03] 
+{@Astrid}	Aw, Dad... It's our constellations! He always thought of us as Ursa Major and Ursa Minor. Big Bear and Little Bear.	$[level4/Astrid/l4_a_04]
 
 :: DadUrsaPostcardComment
 @trigger    DocumentInspectFlip
@@ -90,7 +91,9 @@ $call SetInputState(true)
 @cutscene
 @once
 
-{@Astrid} I really don't want to wait another year to see Dad.  $[Astrid/L4/l4d_a_04]
+{@Astrid}	Ugh. “You mean more to me than the whole celestial sphere?”	$[level4/Astrid/l4_a_05]
+{@Astrid}	I thought Elijah was supposed to be the poet around here.	$[level4/Astrid/l4_a_06]
+{@Astrid}	Well... I guess neither of you are here, exactly.  	$[level4/Astrid/l4_a_07]
 
 :: SpawnPuzzleQuestion
 @trigger    DocumentInspectEnd
@@ -107,21 +110,21 @@ $call SpawnDocumentToCamera("Day4Question")
 $call StartDocumentPuzzle("Day4DocumentPuzzle")
 $set temp:docPuzzleSolved = false
 
-{@Astrid} How can I figure out when the Meteor storm going to take place? $[Astrid/L4/l4d_a_08]
+{@Astrid}	How can I figure out when the meteor storm is going to happen? 	$[level4/Astrid/l4_a_11]
 
 :: IncorrectDocumentResponse
 @trigger    DocumentPuzzlePromptStart
 @when   answerId == "Day4Letter", !temp:docPuzzleSolved
 @interrupt
 
-{@Astrid} Jocelyn said that I can only get the story in the paper and get the word out to everyone if I have more details. $[Astrid/L4/l4d_a_09]
+{@Astrid}	Jocelyn said they'll only publish the story if I have more details. 	$[level4/Astrid/l4_a_12]
 
 :: IncorrectDocumentResponse2
 @trigger    DocumentPuzzlePromptStart
 @when   answerId == "DadUrsaPostcard", !temp:docPuzzleSolved
 @interrupt
 
-{@Astrid} Dad's so far away. I don't think he's going to be able to help out... $[Astrid/L4/l4d_a_10]
+{@Astrid}	Dad's so far away. I don't think he can help.	$[level4/Astrid/l4_a_13]
 
 :: EndPuzzleSection
 @trigger    DocumentPuzzleSolved
@@ -132,35 +135,35 @@ $set temp:docPuzzleSolved = false
 
 $set temp:docPuzzleSolved = true
 $call SetInputState(false)
-{@Astrid} That's it... The only thing to do is to keep adding data to CERES and finishing these puzzles.  $[Astrid/L4/l4d_a_11]
+{@Astrid}	Elijah's right... I need to keep working on these puzzles. Once we unlock the satellite, we'll be able to figure out when the meteor storm is happening. 	$[level4/Astrid/l4_a_14]
 
 $wait 1
 $call WaitForMovedToView("Right")
 $wait 1
 
-{@Dad} Astrid, are you there? I can't believe you did it. You unlocked the unencrypted portion of the Gorynych Satellite! $[Dad/L4/l4_d_01] 
-{@Dad} Now we'll have access to all the data stored on the satellite. $[Dad/L4/l4_d_02]
-{@Dad} Star charts, meteor storms, black holes and supernovas. The whole recorded history of the night sky! $[Dad/L4/l4_d_03]
+{@Dad}	Hey Astrid, are you there? 	$[level4/Dad/l4_d_01]
+{@Astrid}	Hey Dad!	$[level4/Astrid/l4_a_15]
+{@Dad}	The unencrypted portion of the Gorynich Satellite is making the rounds in CERES, and it checks out. 	$[level4/Dad/l4_d_02]
+{@Dad}	All kinds of data have been streaming in from the satellite the last few weeks. They sure don't build them like this anymore. 	$[level4/Dad/l4_d_03]
+{@Astrid}	Yeah, this is what I was telling you about. 	$[level4/Astrid/l4_a_16]
+{@Astrid}	Just think... once I decrypt the satellite, we could use it for communication! Unregulated radio channels, long range public broadcasts...	$[level4/Astrid/l4_a_17]
+{@Dad}	This data seems good. Maybe you're onto something with this satellite thing, Bear. 	$[level4/Dad/l4_d_04]
+{@Astrid}	Yeah, I'm really excited about this. 	$[level4/Astrid/l4_a_18]
+{@Astrid}	Actually, I have news, too. I talked to my friend at the Chicago Telegram. She said she might have a job for me!	$[level4/Astrid/l4_a_19]
+{@Astrid}	Oh, um... can we talk about this here? 	$[level4/Astrid/l4_a_20]
+{@Dad}	Whoa, hold on... a job? What are you talking about? 	$[level4/Dad/l4_d_05]
+{@Astrid}	Well... She thinks I could write an astronomy column for them. And I could go to college there!	$[level4/Astrid/l4_a_21]
+{@Astrid}	I mean, first I'll finish these puzzles, but then--	$[level4/Astrid/l4_a_22]
+{@Dad}	Slow down, Astrid. What about this job? There is still so much work to be done for CERES.	$[level4/Dad/l4_d_06]
+{@Monitor}	Station 12, this is your third, and final, warning. Cease all personal communications, or we will terminate your connection. 	$[level4/monitor/l4_m_01]
+{@Astrid}	Friggin' Recovery Board... Okay, okay. Sorry. 	$[level4/Astrid/l4_a_23]
+{@Dad}	Uh... Bear, I just...	$[level4/Dad/l4_d_07]
 
-// {@Astrid} Wait a second... meteor storms? That’s what Elijah’s been so worried about. $[Astrid/L4/l4_a_05]
-{@Astrid} Maybe we’ll be able to figure out when the storm is coming! $[Astrid/L4/l4_a_06]
-
-{@Dad} Speaking of Elijah... He was supposed to be on his way home by now. $[Dad/L4/l4_d_04]
-{@Dad} But I just heard from the CERES station in Tallgrass Prairie National Preserve west of Kansas City. $[Dad/L4/l4_d_05]
-{@Dad} They said they had one more job for him... a station near St. Louis that wasn’t on the map. $[Dad/L4/l4_d_06]
-{@Dad} They’ve been cut off from supplies for a while. They need food and water. $[Dad/L4/l4_d_07]
-{@Dad} Elijah agreed to go and help them. That means it’ll be a bit longer before he gets home. $[Dad/L4/l4_d_08]
-
-{@Astrid} Ugh. So much for solving this mystery together. Eleven cities in two months. The eleven labors of Elijah. $[Astrid/L4/l4_a_07]
-{@Astrid} I guess it’s not quite as bad as Hercules... he ended up with twelve. $[Astrid/L4/l4_a_08]
-
-{@Dad} Anyway, you keep up the great work, Little Bear. We’ll talk soon. Over and out. $[Dad/L4/l4_d_09]
-
-$wait 1
-
-{@Radio} CERES HQ to Station Twelve. IceCube is reading a high-energy neutrino emission from the area of the Taurus Constellation. $[Radio/L4/l4_r_01]
 $call SetInputState(true)
-{@Radio} Identification of nearby celestial objects is requested. Uploading area of interest. $[Radio/L4/l4_r_02]
+{@Radio}	Station 12, are you ready for your next assignment? IceCube is detecting high-energy neutrino emission from the area of the Taurus constellation.	$[level4/radio_lady/l4_r_01]
+{@Radio}	Identification of nearby celestial objects is requested. Uploading area of interest...	$[level4/radio_lady/l4_r_02]
+{@Astrid}	Uh... sure thing. 	$[level4/Astrid/l4_a_24]
+
 $branch .SetupNeutrinoNav
 
 ::SetupNeutrinoNav
@@ -176,6 +179,10 @@ $call StopNeutrinoNavigation()
 $call StartOpenMode()
 $call SetStickyFirstPage(3)
 
+{@Radio}	Some of these stars are outside the standard spectral types.	$[level4/radio_lady/l4_r_03]
+{@Radio}	Brown Dwarfs so cold they barely glow - you'll only see them in infrared.	$[level4/radio_lady/l4_r_04]
+{@Radio}	Use your Spectrometer to identify them.	$[level4/radio_lady/l4_r_05]
+
 :: IdentifiedOneBrownDwarf
 @trigger    PointsUpdated
 @when   sciencePoints > 0
@@ -185,8 +192,8 @@ $call SetStickyFirstPage(3)
 $call SetInputState(false)
 $call ClearMonitorSelection()
 
-$call Wait(2)
-{@Radio} CERES HQ to Station Twelve. Our neutrino emission reading has expanded please hold while we update your targeting system.
+$wait 2
+{@Radio}	CERES HQ to Station Twelve. Our neutrino emission reading has expanded please hold while we update your targeting system.	$[level4/radio_lady/l4_r_05a]
 
 $goto .UpdateSubmissionArea
 
@@ -222,15 +229,15 @@ $call SetInputState(true)
 $call SetChannelActive(Unlocks_Active, true)
 $call SetChannelActive(Unlocks_Inactive, false)
 $set temp:radioChannelTuned = false
+$call SetStickyFirstPage(7)
 
-{@Astrid} It looks like I'm ready for the next level!
-
+{@Astrid}	I'll bet I am ready for a clearance upgrade. The CERES channels are in my reference guide	$[level2/Astrid/l2_a_23]
 $start .UpgradeReminder
 
 :: UpgradeReminder
-$wait 10
+$wait 15
 $if !temp:radioChannelTuned
-    {@Astrid} I should tune to 375 mHz on the Radio to upgrade my rig.
+    {@Astrid}	I'll bet I am ready for a clearance upgrade. The CERES channels are in my reference guide	$[level2/Astrid/l2_a_23(1)]
     $branch .UpgradeReminder
 $endif
 
@@ -258,15 +265,11 @@ $wait 1
 $call SetInputState(true)
 
 $call ConsoleCommandLine->PlayConsoleText("Day4UpgradeSystem")
+$wait 10
 
 $call SetInstrumentUnlocked(HistoricalDataModeToggle, true)
 $call SetStickyFirstPage(-1)
 $call OpenRefGuidePage("ParallaxDataTransfer")
-
-{@Radio} Congratulations on being awarded clearance level 4. You are now cleared to use the infrared module on your telescope. $[Radio/L4/l4_r_04]
-{@Radio} Please reference your CERES Operator Manual for further information about your equipment. $[Radio/L4/l4_r_05]
-{@Radio} Thanking you for being an important part of the CERES Distributed Network of Citizen Observatories. $[Radio/L4/l4_r_06] 
-{@Radio} Together, we will map the stars for a better tomorrow. $[Radio/L4/l4_r_07]
 
 $call ConsoleCommandLine->HideConsole()
 $wait 0.1
@@ -311,33 +314,71 @@ $call SetInputState(true)
 $call SetRefPageActive("ConstellationDraco", false)
 $call SetRefPageActive("ConstellationDracoCompleted", true)
 $call OpenRefGuidePage("ConstellationDracoCompleted")
-$call Wait(2)
 $call SetRefGuideActive(false)
-$call Wait(1)
+$wait 2
 
 $call ClearMonitorSelection()
 $call StopPuzzleMode()
 $call SetInputState(false)
+$call ConsoleCommandLine->PlayConsoleTextAndWait("PlayMessage")
+$call TapeDeck->SetTapeActive(true)
+{@Elijah}	I just packed my bags for the road... 	$[level4/Elijah/l4_e_01]
+{@Elijah}	This is so hard. You've already had to wait for your dad, and now I'm leaving too.	$[level4/Elijah/l4_e_02]
+{@Elijah}	It's not fair, but I don't know what else to do.	$[level4/Elijah/l4_e_03]
+{@Elijah}	I wish we could make this decision together.	$[level4/Elijah/l4_e_04]
+{@Elijah}	Anyway... Um, if you're hearing this, you solved Draco. One of my favorites. 	$[level4/Elijah/l4_e_05]
+{@Elijah}	Hercules was supposed to steal a golden apple from the garden at the end of the world. It was one of his final tasks.	$[level4/Elijah/l4_e_06]
+{@Elijah}	The catch: the apples were guarded by a dragon. 	$[level4/Elijah/l4_e_07]
+{@Elijah}	There are so many dragons in folklore. Zmey Gorynich, in Slavic. Ladon, in Hercules' story. And about a million others.	$[level4/Elijah/l4_e_08]
+{@Elijah}	I wonder what it says about us that all across the world, people tell each other stories about monsters... and the people who fight them. 	$[level4/Elijah/l4_e_09]
+{@Elijah}	Anyway. Ready for your surprise? 	$[level4/Elijah/l4_e_10]
+{@Elijah}	Run the program: "DRACO" then look up.	$[level4/Elijah/l4_e_11]
+$call ConsoleCommandLine->HideConsole()
+$call TapeDeck->SetTapeActive(false)
+{@Astrid}	Okay... here goes. 	$[level4/Astrid/l4_a_25]
 $call ConsoleCommandLine->PlayConsoleTextAndWait("LightsMessage")
 $call ConsoleCommandLine->HideConsole()
 $call EndDay4->BeginCutscene()
 
-$call Wait(2)
+$wait 2
 $call SetDomeGlow(true)
-$call Wait(3)
-{@Astrid} Whoa. That’s it. It’s the dragon! $[Astrid/L4/l4_a_09]
-{@Astrid} I should’ve guessed. Elijah said “the dragon is coming.” It’s going to be a Draconid meteor storm! $[Astrid/L4/l4_a_10]
-{@Astrid} So World's End  must be what Elijah calls his station! World’s End - like the garden of the golden apples from the Hercules myths. $[Astrid/L4/l4_a_03]
-{@Astrid} It’s not about the world ending. It’s about, searching for the stars. $[Astrid/L4/l4_a_04] 
-// {@Astrid} Wait.... World’s End is a garden? $[Astrid/L4/l4_a_01]
-// {@Astrid} This painting is incredible. Elijah is so talented. $[Astrid/L4/l4_a_02] 
-// {@Astrid} Maybe he shoulda been a painter instead of a rogue astronomer... $[Astrid/L4/l4_a_02b]
+$wait 3
+{@Astrid}	Whoa. These apples... Its like they're exploding. 	$[level4/Astrid/l4_a_26]
+{@Astrid}	The dragon... the meteor storm... 	$[level4/Astrid/l4_a_27]
+{@Astrid}	Elijah said “the dragon is waking up.” The meteor storm must be coming from the Draco constellation.	$[level4/Astrid/l4_a_28]
+{@Astrid}	It all makes sense now. Hercules goes to World's End and has to fight the dragon for golden apples...	$[level4/Astrid/l4_a_29]
+{@Astrid}	All of that talk of the end of the world... He was just talking about the Draco constellation this whole time. That's why he named this station World's End. That was literally the most complicated way of explaining this to me. 	$[level4/Astrid/l4_a_30]
+{@Astrid}	The Draconids are in October. We don't have as much time as I thought. These aren't the Leonids in November. This is going to happen soon. 	$[level4/Astrid/l4_a_31]
+{@Astrid}	 And the newspaper goes to print next week.	$[level4/Astrid/l4_a_32]
+{@Astrid}	Even if I send a letter to Jocelyn right now, it won't get to her in time. 	$[level4/Astrid/l4_a_33]
 $goto .EndDay
 
-// :: EndDay
-// @trigger    CutsceneEnd
-// @when   cutsceneId == "EndDay4"
 :: EndDay
-$call Wait(1)
+@trigger    CutsceneEnd
+@cutscene
+@when   cutsceneId == "EndDay4"
+
+{@Dad}	Station 12, this is CERES HQ checking in–	$[level4/Dad/l4_d_08]
+{@Astrid}	Dad! Listen, I figured it out. It's not going to be a Leonid meteor storm. It's the Draconids!	$[level4/Astrid/l4_a_34]
+{@Dad}	The.. Draconids?	$[level4/Dad/l4_d_09]
+{@Astrid}	The Draconids are in two weeks. Everyone's going to panic! 	$[level4/Astrid/l4_a_35]
+{@Astrid}	It's too late to write to Jocelyn. I think–I think I need to go to the newspaper myself. 	$[level4/Astrid/l4_a_36]
+{@Monitor}	Station 12, Cease and desist all personal communications. 	$[level4/monitor/l4_m_02]
+{@Dad}	Ugh... the Recovery Board... but...	$[level4/Dad/l4_d_10]
+{@Dad}	Astrid, this is crazy. You can't just run off to Chicago.	$[level4/Dad/l4_d_11]
+{@Dad}	If you finish the last puzzle, Open comms will come online and you can get the word out that way.	$[level4/Dad/l4_d_12]
+{@Astrid}	What if it doesn't work? What if something goes wrong?	$[level4/Astrid/l4_a_37]
+{@Dad}	That's not your responsibility. You've done enough. Just wait for Elijah, let him handle it. 	$[level4/Dad/l4_d_13]
+{@Astrid}	Dad, I've already spent so much time waiting!	$[level4/Astrid/l4_a_38]
+{@Dad}	Bear, just calm down. This is what you need to do–	$[level4/Dad/l4_d_14]
+{@Monitor}	Station 12, your clearance has been revoked. 	$[level4/monitor/l4_m_03]
+{@Astrid}	Whoa. Wait, just a second–	$[level4/Astrid/l4_a_39]
+{@Monitor}	Your access is resistricted to incoming data only. 	$[level4/monitor/l4_m_04]
 $call StopMusic(1)
+{@Astrid}	Wait, I just need two more minutes!	$[level4/Astrid/l4_a_40]
+{@Astrid}	Hello?	$[level4/Astrid/l4_a_41]
+$wait 1
+{@Astrid}	Dad?	$[level4/Astrid/l4_a_42]
+
+$wait 3
 $call LoadNextDay()
