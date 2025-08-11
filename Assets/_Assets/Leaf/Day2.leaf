@@ -351,8 +351,10 @@ $wait 1
 $call SetInputState(true)
 
 $call ConsoleCommandLine->PlayConsoleText("Day2UpgradeSystem")
-
 $call SetInstrumentUnlocked(SpectrometerInstrument, true)
+
+$wait 10
+
 $call SetStickyFirstPage(-1)
 $call OpenRefGuidePage("Spectrometer")
 

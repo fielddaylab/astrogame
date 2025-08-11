@@ -164,7 +164,7 @@ $wait 1
 {@Dad}	It’s so good to hear your voice, Little Bear.	$[level1/dad/l1_d_03]
 {@Astrid}	Hold on. Why are you calling Elijah's radio? Do you know where he went? 	$[level1/Astrid/l1_a_08]
 {@Dad}	It’s sort of a long story.	$[level1/dad/l1_d_04]
-{@Dad}	My team here at IceCube is working to rebuild the knowledge of the cosmos that was lost during the coronal mass ejection two tears ago.	$[level1/dad/l1_d_05]
+{@Dad}	My team here at IceCube is working to rebuild the knowledge of the cosmos that was lost during the coronal mass ejection two years ago.	$[level1/dad/l1_d_05]
 {@Dad}	We've joined up with a network of citizen astronomers around the world. We call it CERES. 	$[level1/dad/l1_d_06]
 {@Astrid}	Ceres... I think Elijah told me about her once. The Roman goddess of Earth and agriculture.	$[level1/Astrid/l1_a_09]
 {@Dad}	Yeah, Elijah loved the name. I told him it was just an acronym, but I swear, everything I tell that kid goes in one ear and out the other. 	$[level1/dad/l1_d_07]
@@ -278,7 +278,7 @@ $call HintModals->Hide("NeutrinoNav", 0.2)
 $call SetInputState(false)
 $call StartOpenMode()
 $set temp:introMoveTheTelescope = true
-$call SetStickyFirstPage(1)
+$call SetStickyFirstPage(0)
 
 {@Radio}	Nice job!	$[level1/radio_lady/l1_r_12]
 {@Radio}	So, earlier this morning, IceCube detected a high-energy neutrino coming from one of several possible stars in this location.	$[level1/radio_lady/l1_r_13]
