@@ -6,6 +6,7 @@ using FieldDay.HID;
 using FieldDay.Scripting;
 using FieldDay.SharedState;
 using Leaf.Runtime;
+using Mono.Cecil.Cil;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -130,7 +131,7 @@ namespace Astro {
 
         public static IEnumerator SpawnDocumentToCamera(DocumentBoardState state, StringHash32 id) {
             var asset = Find.NamedAsset<DocumentAsset>(id);
-            var spawned = SpawnDocument(asset, id, out Vector3 pinnedPos, state, false);
+            DocumentRenderer spawned = SpawnDocument(asset, id, out Vector3 pinnedPos, state, false);
 
             // Init pinned position
             spawned.transform.SetParent(state.DocumentParent, false);
@@ -311,6 +312,16 @@ namespace Astro {
             }
         }
 
+        [LeafMember("ReturnDocToBoard")]
+        private static void ReturnDocToBoardLeaf(StringHash32 docId) {
+            DocumentBoardState state = Find.State<DocumentBoardState>();
+            DocumentRenderer doc = state.SpawnedDocuments.Find(doc => doc.Interactable.AssetName == docId);
+
+            if (doc == null) Debug.LogWarningFormat("[DocumentBoardState > ReturnDocToBoard] failed to find document {0}", docId.ToDebugString());
+
+            ReturnDocToBoard(doc.Interactable, state); 
+        }
+
         private static void ReturnDocToBoard(DocumentInteractable doc, DocumentBoardState state) {
             // Reveal the Pin object if we have one
             Transform pin = doc.transform.Find("Pin");
@@ -339,6 +350,16 @@ namespace Astro {
                 table.Set("documentId", doc.AssetName);
                 ScriptUtility.Trigger(ScriptEvents.DocumentInspectEnd, table);
             }
+        }
+
+        [LeafMember("BringDocToCam")]
+        private static void BringDocToCamLeaf(StringHash32 docId) {
+            DocumentBoardState state = Find.State<DocumentBoardState>();
+            DocumentRenderer doc = state.SpawnedDocuments.Find(doc => doc.Interactable.AssetName == docId);
+
+            if (doc == null) Debug.LogWarningFormat("[DocumentBoardState > BringDocToCam] failed to find document {0}", docId.ToDebugString());
+
+            BringDocToCam(doc.Interactable, state); 
         }
 
         private static void BringDocToCam(DocumentInteractable doc, DocumentBoardState state) {
@@ -390,6 +411,16 @@ namespace Astro {
 
         public static void CancelZoom(DocumentBoardState state) {
             state.SpawnDocumentToCamera.OnComplete(() => ToggleZoomDoc(state.DocZoomed, state));
+        }
+
+        [LeafMember("FlipDoc")]
+        private static void FlipDocLeaf(StringHash32 docId) {
+            DocumentBoardState state = Find.State<DocumentBoardState>();
+            DocumentRenderer doc = state.SpawnedDocuments.Find(doc => doc.Interactable.AssetName == docId);
+
+            if (doc == null) Debug.LogWarningFormat("[DocumentBoardState > BringDocToCam] failed to find document {0}", docId.ToDebugString());
+
+            FlipDoc(doc.Interactable, state);
         }
 
         public static void FlipDoc(DocumentInteractable doc, DocumentBoardState state = null) {

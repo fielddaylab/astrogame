@@ -13,5 +13,8 @@ namespace Astro {
 
         [LeafMember("FadeOut")]
         private void LeafFadeOut() { Group.Show(); }
+
+        [LeafMember("CutToBlack")]
+        private void LeafCutToBlack() { Group.SetVisibleNow(true); }
     }
 }

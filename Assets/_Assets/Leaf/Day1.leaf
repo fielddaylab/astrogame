@@ -59,7 +59,7 @@ $call SetInputState(true)
 $start .PowerButtonHint
 
 :: PowerButtonHint
-$call Wait(5)
+$wait 8
 $if !temp:powerButtonHint, !temp:pressedPowerButton
     $call HintModals->SlideInFromRight("MonitorPower", 0.4)
     $set temp:powerButtonHint = true
