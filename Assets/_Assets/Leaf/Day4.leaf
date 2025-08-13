@@ -371,10 +371,10 @@ $goto .EndDay
 {@Dad}	That's not your responsibility. You've done enough. Just wait for Elijah, let him handle it. 	$[level4/Dad/l4_d_13]
 {@Astrid}	Dad, I've already spent so much time waiting!	$[level4/Astrid/l4_a_38]
 {@Dad}	Bear, just calm down. This is what you need to do–	$[level4/Dad/l4_d_14]
+$call StopMusic(0)
 {@Monitor}	Station 12, your clearance has been revoked. 	$[level4/monitor/l4_m_03]
 {@Astrid}	Whoa. Wait, just a second–	$[level4/Astrid/l4_a_39]
 {@Monitor}	Your access is resistricted to incoming data only. 	$[level4/monitor/l4_m_04]
-$call StopMusic(1)
 {@Astrid}	Wait, I just need two more minutes!	$[level4/Astrid/l4_a_40]
 {@Astrid}	Hello?	$[level4/Astrid/l4_a_41]
 $wait 1

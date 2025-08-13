@@ -69,6 +69,9 @@ public class MonitorUIMgr : ScriptActorComponent {
 
     public IEnumerator HideElement(StringHash32 _id, float duration = 0.5f) {
         MonitorUIElement e = m_Elements.Find(e => e.Id == _id);
+        if (e == null) yield break;
+        if (e.element.alpha == 0) yield break;
+
         yield return Tween.Value(1f, 0f, (f) => { e.element.alpha = f; }, Mathf.Lerp, duration).ForceOnCancel();
     }
 

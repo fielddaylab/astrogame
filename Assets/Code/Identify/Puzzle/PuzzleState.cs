@@ -179,18 +179,16 @@ namespace Astro {
 
             for (int r = 0; r < state.ActivePuzzle.Rows.Length; r++) {
                 for (int c = 0; c < numCols; c++) {
-
                     // check for pre existing data directly
-                    if ((state.ActivePuzzle.Rows[r].ProvidedProperties & types[c]) != 0) {
-                        StringHash32 assetId = state.ActivePuzzle.Rows[r].Object; 
-                        CelestialAsset asset = Find.NamedAsset<CelestialAsset>(assetId);
-                        UIFocus focus = FocusableUtility.GetFocusByData(assetId);
+                    if ((state.ActivePuzzle.Rows[r].ProvidedProperties & types[c]) == 0) continue;
 
-                        if (c == 1) { // collumn for coordinates, which control trackers 
-                            FocusableUtility.UpdateFocusTrackerSprite(focus, FocusState.GuessTrackerSprites[r]);
-                            state.PuzzleEntryGuesses[r] = focus;     
-                        }
-                    }
+                    StringHash32 assetId = state.ActivePuzzle.Rows[r].Object; 
+                    CelestialAsset asset = Find.NamedAsset<CelestialAsset>(assetId);
+                    UIFocus focus = FocusableUtility.GetFocusByData(assetId);
+
+                    if (c != 1) continue; // collumn for coordinates, which control trackers 
+                    FocusableUtility.UpdateFocusTrackerSprite(focus, FocusState.GuessTrackerSprites[r]);
+                    state.PuzzleEntryGuesses[r] = focus;     
                 }
             }            
         }

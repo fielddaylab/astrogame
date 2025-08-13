@@ -16,6 +16,8 @@ $call SetRefPageActive("ConstellationAndromedaCompleted", false)
 
 $call SetRadioFrequency(100, true)
 
+$set temp:readyForUpgrade = false
+
 $call SetChannelActive(Unlocks_Active, false)
 $call SetChannelActive(IceCube, false)
 $call IntroCutscene->PrepareCutscene()
@@ -99,7 +101,7 @@ $wait 0.25
 $call MonitorUI->HideElement("CommErrorMsg1")
 $wait 0.25
 $call MonitorUI->ShowElement("CommErrorMsg2")
-$call SetChannelActive(IceCube_Intro, true)
+$call SetChannelActive(IceCube, true)
 $wait 0.5
 
 $start .TuneRadioHint
@@ -119,7 +121,7 @@ $endif
 
 :: TuneToIceCubeIntro
 @trigger    RadioChannelListenStart
-@when       channelId == "IceCube_Intro"
+@when       channelId == "IceCube"
 @priority   High
 @boostScore 1000
 @interrupt
@@ -140,20 +142,18 @@ $wait 1
 $call MonitorUI->ShowElement("LinkEstablished")
 $wait 1
 $call MonitorUI->HideElement("LinkEstablished")
-$call SetChannelActive(IceCube_Intro, false)
 $call SetChannelActive(IceCube, true)
 
 $call WaitForMovedToView("Right")
-{@Radio}	CERES HQ to Station 12. Elijah, do you copy? 	$[level1/radio_lady/l1_r_01]
-{@Radio}	Please log in and provide status report.	$[level1/radio_lady/l1_r_02]
-{@Astrid}	Whoa, a radio signal! 	$[level1/Astrid/l1_a_04]
-{@Astrid}	I thought radio channels were supposed to be super regulated. How does Elijah even have this? 	$[level1/Astrid/l1_a_05]
-{@Radio}	Station 12, please log in and report.	$[level1/radio_lady/l1_r_03]
-{@Astrid}	Ok, here goes.	$[level1/Astrid/l1_a_06]
+{@Radio} CERES HQ to Station 12. Elijah, do you copy? $[level1/radio_lady/l1_r_01]
+{@Radio} Please log in and provide status report. $[level1/radio_lady/l1_r_02]
+{@Astrid} Whoa, a radio signal! $[level1/Astrid/l1_a_04]
+{@Astrid} I thought radio channels were supposed to be super regulated. How does Elijah even have this? $[level1/Astrid/l1_a_05]
+{@Radio} Station 12, please log in and report.	$[level1/radio_lady/l1_r_03]
+{@Astrid} Ok, here goes. $[level1/Astrid/l1_a_06]
 
-$start Observatory.PathToMonitor
+$start Observatory.PathToInstruments
 $wait 0.5
-$call WaitForMovedToView("Right")
 $call ConsoleCommandLine->PlayConsoleText("AstridLogin")
 $wait 1
 
@@ -278,6 +278,7 @@ $call HintModals->Hide("NeutrinoNav", 0.2)
 $call SetInputState(false)
 $call StartOpenMode()
 $set temp:introMoveTheTelescope = true
+$set temp:upgradeChannelTuned = false
 $call SetStickyFirstPage(0)
 
 {@Radio}	Nice job!	$[level1/radio_lady/l1_r_12]
@@ -332,22 +333,22 @@ $call MoveToView("Right")
 $call SetGuideHighlight(false)
 $set temp:firstSubmission = false
 
-{@Astrid}	Got it. 	$[level1/Astrid/l1_a_14]
-{@Radio}	Okay. Do you see the photometer in your equipment stack? That should tell you the apparent magnitude of the star. 	$[level1/radio_lady/l1_r_24]
-{@Radio}	All you need to do is match that number with the correct range in your reference guide and submit the data.	$[level1/radio_lady/l1_r_25]
-{@Radio}	Another coalition astronomer will verify your classification.	$[level1/radio_lady/l1_r_26]
+{@Astrid} Got it. $[level1/Astrid/l1_a_14]
+{@Radio} Okay. Do you see the photometer in your equipment stack? That should tell you the apparent magnitude of the star. 	$[level1/radio_lady/l1_r_24]
+{@Radio} All you need to do is match that number with the correct range in your reference guide and submit the data.	$[level1/radio_lady/l1_r_25]
+$call SetChannelActive(IceCube, false)
+{@Radio} Another coalition astronomer will verify your classification.	$[level1/radio_lady/l1_r_26]
 $start .IntroFirstSubmissionTimeout
 
 :: IntroFirstSubmissionTimeout
 @cutscene
 
 $call SetInputState(true)
-$call SetRadioDialLocked(true)
 $wait 15
 
 $if !temp:firstSubmission
-    {@Radio}	Okay. Do you see the photometer in your equipment stack? That should tell you the apparent magnitude of the star. 	$[level1/radio_lady/l1_r_24(1)]
-    {@Radio}	All you need to do is match that number with the correct range in your reference guide and submit the data.	$[level1/radio_lady/l1_r_25(1)]
+    {@Radio} Okay. Do you see the photometer in your equipment stack? That should tell you the apparent magnitude of the star. 	$[level1/radio_lady/l1_r_24(1)]
+    {@Radio} All you need to do is match that number with the correct range in your reference guide and submit the data.	$[level1/radio_lady/l1_r_25(1)]
     $branch .IntroFirstSubmissionTimeout
 $endif
 
@@ -379,13 +380,13 @@ $endif
 $call LockMonitorFocus()
 $call SetGuideHighlight(true)
 
-{@Radio}	Great! Now see if you can find Elijah’s operator manual. It's a small, spiral bound notebook.	$[level1/radio_lady/l1_r_22]
+{@Radio} Great! Now see if you can find Elijah’s operator manual. It's a small, spiral bound notebook.	$[level1/radio_lady/l1_r_22]
 $start .OpenManualHint
 
 :: OpenManualHint
 $wait 10
 $if temp:waitingForManualOpen
-    {@Radio}	Have you found Elijah's operator manual?	$[level1/radio_lady/l1_r_23]
+    {@Radio} Have you found Elijah's operator manual? $[level1/radio_lady/l1_r_23]
     $branch .OpenManualHint
 $endif
 
@@ -393,12 +394,12 @@ $endif
 @trigger    OnLeaveNeutrinoRegion
 @once
 
-{@Radio}	Looks like you’re drifting away from the cluster.	$[level1/radio_lady/l1_r_29]
+{@Radio} Looks like you’re drifting away from the cluster. $[level1/radio_lady/l1_r_29]
 
 :: PlayerLeavesNeutrinoTask
 @trigger    OnLeaveNeutrinoRegion
 
-{@Radio}	You are headed off target.	$[level1/radio_lady/l1_r_28]
+{@Radio} You are headed off target. $[level1/radio_lady/l1_r_28]
 
 :: ValidKnowledgeSubmission
 @trigger    OnValidKnowledgeSubmission
@@ -413,7 +414,7 @@ $endif
 $call SubtitleController->SetSubtitlePosition(0.5, 1, 0, -140)
 $wait 0.1
 
-{@Radio}	Hmm, that wasn’t correct. Remember to look at your photometer, and then line it up with the correct range in your manual.	$[level1/radio_lady/l1_r_27]
+{@Radio} Hmm, that wasn’t correct. Remember to look at your photometer, and then line it up with the correct range in your manual. $[level1/radio_lady/l1_r_27]
 $start Observatory.ResetSubtitlePosition
 
 :: FirstDupliacteSubmission
@@ -422,14 +423,14 @@ $start Observatory.ResetSubtitlePosition
 @cutscene
 @once
 
-{@Radio}	Looks like you’ve already submitted that info. 	$[level1/radio_lady/l1_r_30]
-{@Radio}	You won’t get any points towards your access level for identifying that property again.	$[level1/radio_lady/l1_r_31]
+{@Radio} Looks like you’ve already submitted that info. $[level1/radio_lady/l1_r_30]
+{@Radio} You won’t get any points towards your access level for identifying that property again. $[level1/radio_lady/l1_r_31]
 
 :: DupliacteSubmission
 @trigger    OnDuplicateOpenIdSubmission
 @interrupt
 
-{@Astrid}	Looks like I have to determine the apparent magnitude of some of the other stars in this cluster.	$[level1/Astrid/l1_a_16a]
+{@Astrid} Looks like I have to determine the apparent magnitude of some of the other stars in this cluster. $[level1/Astrid/l1_a_16a]
 
 :: FirstPoint
 @trigger    PointsUpdated
@@ -443,9 +444,23 @@ $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $set temp:firstSubmission = true
 $call SetRadioDialLocked(false)
 
-{@Astrid}	Okay. That wasn't too bad. 	$[level1/Astrid/l1_a_15]
-{@Radio}	Nice job. See if you can determine the brightness for another star in the cluster.	$[level1/radio_lady/l1_r_32]
-$goto .PostPoint
+{@Astrid} Okay. That wasn't too bad. $[level1/Astrid/l1_a_15]
+$call SetChannelActive(IceCube, true)
+$start .PostPoint
+
+:: IceCubeFirstPoint
+@trigger    RadioChannelListenStart
+@when       channelId == "IceCube", temp:introRadioChannelTuned, temp:firstSubmission
+@priority   High
+@boostScore 1000
+@interrupt
+@cutscene
+@once
+
+$call SetRadioDialLocked(true)
+$call SetChannelActive(IceCube, false)
+{@Radio} Nice job! See if you can determine the brightness for another star in the cluster.	$[level1/radio_lady/l1_r_32]
+$start .PostPoint
 
 :: SecondPoint
 @trigger    PointsUpdated
@@ -455,9 +470,10 @@ $goto .PostPoint
 @once
 
 {@Astrid}	Nice! I'll try another one.	$[level1/Astrid/l1_a_16]
-$goto .PostPoint
+$start .PostPoint
 
 :: PostPoint
+$call SetRadioDialLocked(false)
 $call UnlockMonitorFocus()
 
 :: ClearanceUpgrade
@@ -470,13 +486,13 @@ $call UnlockMonitorFocus()
 
 $call SetInputState(false)
 $call SetRefGuideActive(false)
+$set temp:readyForUpgrade = true
 
-$call Wait(4)
+$call MonitorUI->ShowElement("CeresMsg")
+$wait 1
 $call StopOpenMode()
-$set temp:radioChannelTuned = false
-{@Astrid}	Looks like CERES is trying to contact me. I wonder what that's about...	$[level1/Astrid/l1_a_17]
-{@Radio}	It looks like you’ve identified the necessary data to earn a higher access level. 	$[level1/radio_lady/l1_r_33]
-{@Radio}	You’ll need to tune to 375 megahertz on your radio so we can unlock your equipment.	$[level1/radio_lady/l1_r_34]
+{@Astrid} Looks like CERES is trying to contact me. I wonder what that's about...	$[level1/Astrid/l1_a_17]
+$call SetChannelActive(IceCube, true)
 
 $call SetChannelActive(Unlocks_Active, true)
 $call SetChannelActive(Unlocks_Inactive, false)
@@ -486,10 +502,27 @@ $call SetInputState(true)
 
 $start .UpgradeReminder
 
+:: IceCubeUpgradeReminder
+@trigger    RadioChannelListenStart
+@when       channelId == "IceCube", temp:introRadioChannelTuned, !temp:upgradeChannelTuned, temp:readyForUpgrade
+@priority   Medium
+@boostScore 1000
+@cutscene
+@once
+
+$call MonitorUI->HideElement("CeresMsg")
+$call SetRadioDialLocked(true)
+{@Radio} It looks like you’ve identified the necessary data to earn a higher access level. $[level1/radio_lady/l1_r_33]
+{@Radio} You’ll need to tune to 375 megahertz on your radio so we can unlock your equipment. $[level1/radio_lady/l1_r_34]
+$call SetRadioDialLocked(false)
+$call SetChannelActive(IceCube, false)
+
+$start .UpgradeReminder
+
 :: UpgradeReminder
 $call SetInputState(true)
-$call Wait(10)
-$if !temp:radioChannelTuned
+$wait 10
+$if !temp:upgradeChannelTuned
     $call HintModals->Wiggle("RadioControls")
     {@Astrid}	I wonder if I can upgrade my rig. The upgrade channel should be in my reference guide	$[level1/Astrid/l1_a_g1]
     $branch .UpgradeReminder
@@ -502,9 +535,10 @@ $endif
 @cutscene
 @once
 
+$call MonitorUI->HideElement("CeresMsg")
 $call HintModals->Hide("RadioControls", 0.2)
 
-$set temp:radioChannelTuned = true
+$set temp:upgradeChannelTuned = true
 $call SetRadioDialLocked(true)
 $call SetRadioFrequency(375, true)
 $call SetInputState(false)
@@ -528,7 +562,7 @@ $call SetStickyFirstPage(-1)
 $call OpenRefGuidePage("Colormeter")
 
 $wait 0.5
-{@Astrid} "Clearance level 1... Color meter access granted. Please reference Ceres Operations manual fo rmore info. Congratuations on reaching clearance Level 1. Together we will map the stars for a greater tomorrow"	$[level1/Astrid/l1_a_20]
+{@Astrid} "Clearance level 1... Color meter access granted. Please reference Ceres Operations manual fo rmore info. Congratuations on reaching clearance Level 1. Together we will map the stars for a greater tomorrow" $[level1/Astrid/l1_a_20]
 
 $call ConsoleCommandLine->HideConsole()
 $wait 0.1
@@ -767,7 +801,7 @@ $endif
 $call AddIsolatedSlot(BlueMagnitude)
 $call HintModals->CloseAllModals()
 
-{@Astrid}	I'm looking for the blue magnitude cell on the grid. It should be next to that data I just entered. $[level1/Astrid/l1_a_51]
+{@Astrid}	Now I can load this data into the blue magnitude space with my photometer just like before. 	$[level1/Astrid/l1_a_50]
 
 :: BlueLightInstrumentSelected
 @trigger    OnLabInteraction
@@ -925,6 +959,7 @@ $endif
 @trigger    OnPuzzleRowFilled
 @when   rowId == 0, temp:AtikRowFilled
 @boostScore 1000
+@priority High
 @interrupt
 @cutscene
 @once
@@ -1065,6 +1100,12 @@ $call TapeDeck->SetTapeActive(false)
 
 $call SetRefGuideActive(false)
 $wait 0.5
+
+$call MonitorUI->ShowElement("CeresMsg")
+$wait 1
+$call SetRadioFrequency(137)
+$call MonitorUI->HideElement("CeresMsg")
+$wait 1
 
 {@Dad}	CERES HQ checking in. Great work today!	$[level1/dad/l1_d_13]
 {@Dad}	It’s late where you are. Get some rest. I sent you a letter. You should get it in a few weeks.	$[level1/dad/l1_d_14]
