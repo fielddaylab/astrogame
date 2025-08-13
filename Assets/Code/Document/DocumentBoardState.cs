@@ -1,15 +1,17 @@
-using BeauRoutine;
-using BeauUtil;
-using FieldDay;
-using FieldDay.Assets;
-using FieldDay.HID;
-using FieldDay.Scripting;
-using FieldDay.SharedState;
-using Leaf.Runtime;
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+using BeauUtil;
+using BeauRoutine;
+using FieldDay;
+using FieldDay.HID;
+using Leaf.Runtime;
+using FieldDay.Assets;
+using FieldDay.Scripting;
+using FieldDay.SharedState;
 
 namespace Astro {
     public sealed class DocumentBoardState : SharedStateComponent {
@@ -21,8 +23,8 @@ namespace Astro {
         [NonSerialized] public bool OverrideStoredDoc;
         [NonSerialized] public Vector3 OverrideStoredDocPos;
         [NonSerialized] public DocumentInteractable DocZoomed;
-        [NonSerialized] public Routine DocumentRoutine;
-        [NonSerialized] public Routine DocumentLoadRoutine;
+        [NonSerialized] public Routine SpawnDocumentToCamera;
+        [NonSerialized] public RingBuffer<Routine> DocumentLoadQueue = new RingBuffer<Routine>();
 
         public Transform DocumentParent;
         public Rect DraggableBounds;
@@ -58,7 +60,7 @@ namespace Astro {
     public static partial class DocumentUtility {
         #region Spawning
 
-        public static DocumentRenderer SpawnDocument(DocumentAsset asset, StringHash32 id, out Vector3 pinnedPos, DocumentBoardState state = null, bool addToArchive = true, bool toBoard = false, int archiveIndex = -1) {
+        public static DocumentRenderer SpawnDocument(DocumentAsset asset, StringHash32 id, out Vector3 pinnedPos, DocumentBoardState state = null, bool toBoard = false) {
             if (state == null) {
                 state = Find.State<DocumentBoardState>();
             }
@@ -93,50 +95,44 @@ namespace Astro {
             spawned.transform.localPosition = localPos;
             var pinnedPosCopy = pinnedPos = spawned.transform.position;
 
-            // place somewhere offscreen
+            // initially somewhere offscreen until visuals are loaded
             spawned.transform.position = new Vector3(-500, -500, 500);
             
             UpdateEnabledDocParts(spawned.Interactable, DocumentBoardState.BoardActiveFunctions);
 
-            // load assets
-            state.DocumentLoadRoutine.Replace(AwaitDocLoadComplete(spawned))
-                .OnComplete(() => {
-                    // restore doc position
-                    if (toBoard) { spawned.transform.localPosition = localPos; }
-                });
+            Action restoreDocPos = () => { 
+                if (toBoard) { spawned.transform.localPosition = localPos; }
+            };
+
+            // start the load routine for the DocumentLoadSystem to listen to
+            Routine loadRoutine = Routine.Null;
+            loadRoutine = Routine.Start(AwaitDocLoadComplete(spawned)).OnComplete(restoreDocPos).OnStop(restoreDocPos);
+
+            state.DocumentLoadQueue.PushBack(loadRoutine);
 
             return spawned;
         }
 
         [LeafMember("SpawnDocument")]
         public static void LeafSpawnDocument(StringHash32 id) {
-            SpawnDocument(Find.NamedAsset<DocumentAsset>(id), id, out Vector3 pinnedPos, Find.State<DocumentBoardState>(), true, true);
+            SpawnDocument(Find.NamedAsset<DocumentAsset>(id), id, out Vector3 pinnedPos, Find.State<DocumentBoardState>(), true);
         }
 
         [LeafMember("SpawnDocumentToCamera")]
         public static void LeafSpawnDocumentToCamera(StringHash32 id) {
             DocumentBoardState state = Find.State<DocumentBoardState>();
-            // ArchiveState archiveState = Find.State<ArchiveState>();
 
-            if (state.DocumentRoutine.Exists()) {
+            if (state.SpawnDocumentToCamera.Exists()) {
                 // wait for previous document routine to complete
-                state.DocumentRoutine.OnComplete(() => { state.DocumentRoutine.Replace(SpawnDocumentToCamera(state, id)); });
-            }
-            else {
-                state.DocumentRoutine.Replace(SpawnDocumentToCamera(state, id));
+                state.SpawnDocumentToCamera.OnComplete(() => { state.SpawnDocumentToCamera.Replace(SpawnDocumentToCamera(state, id)); });
+            } else {
+                state.SpawnDocumentToCamera.Replace(SpawnDocumentToCamera(state, id));
             }
         }
 
         public static IEnumerator SpawnDocumentToCamera(DocumentBoardState state, StringHash32 id) {
             var asset = Find.NamedAsset<DocumentAsset>(id);
-            var spawned = SpawnDocument(asset, id, out Vector3 pinnedPos, state, true, false);
-
-            // InputUtility.SetClickableMaskTopLayer(Find.State<InputState>());
-
-            // wait for assets to load
-            while (state.DocumentLoadRoutine.Exists()) {
-                yield return null;
-            }
+            DocumentRenderer spawned = SpawnDocument(asset, id, out Vector3 pinnedPos, state, false);
 
             // Init pinned position
             spawned.transform.SetParent(state.DocumentParent, false);
@@ -151,6 +147,8 @@ namespace Astro {
             // Move to zoomed view
             ToggleZoomDoc(spawned.Interactable, state);
             SetDocumentInteractionEnabled(true);
+
+            yield return null;
         }
 
         public static void SpawnDocument(StringHash32 id) {
@@ -219,7 +217,7 @@ namespace Astro {
         #region Interaction
 
         public static void ProcessDocPartInteraction(DocumentPart docPart, DocumentBoardState state) {
-            if (state.DocumentRoutine.Exists()) {
+            if (state.SpawnDocumentToCamera.Exists()) {
                 return;
             }
             switch (docPart.PartType) {
@@ -249,17 +247,17 @@ namespace Astro {
             if (state == null) {
                 state = Find.State<DocumentBoardState>();
             }
-            if (state.DocumentRoutine.Exists() || state.DocZoomed) {
+            if (state.SpawnDocumentToCamera.Exists() || state.DocZoomed) {
                 return;
             }
             if (newDoc != null && state.SelectedDocument != newDoc) {
                 state.SelectedDocument = newDoc;
-                state.DocumentRoutine.Replace(ToggleDocHover(state.SelectedDocument.transform, state.DocHoverOffset)); // 
+                state.SpawnDocumentToCamera.Replace(ToggleDocHover(state.SelectedDocument.transform, state.DocHoverOffset)); // 
                 state.SelectedDocument.IsDragging = true;
                 CursorHint.TryLock(partHint);
             } else {
                 CursorHint.Unlock();
-                state.DocumentRoutine.Replace(ToggleDocHover(state.SelectedDocument.transform, -state.DocHoverOffset));
+                state.SpawnDocumentToCamera.Replace(ToggleDocHover(state.SelectedDocument.transform, -state.DocHoverOffset));
                 state.SelectedDocument.IsDragging = false;
                 state.DraggablePlacedThisFrame = true;
                 state.DraggablePlaced = state.SelectedDocument;
@@ -315,6 +313,16 @@ namespace Astro {
             }
         }
 
+        [LeafMember("ReturnDocToBoard")]
+        private static void ReturnDocToBoardLeaf(StringHash32 docId) {
+            DocumentBoardState state = Find.State<DocumentBoardState>();
+            DocumentRenderer doc = state.SpawnedDocuments.Find(doc => doc.Interactable.AssetName == docId);
+
+            if (doc == null) Debug.LogWarningFormat("[DocumentBoardState > ReturnDocToBoard] failed to find document {0}", docId.ToDebugString());
+
+            ReturnDocToBoard(doc.Interactable, state); 
+        }
+
         private static void ReturnDocToBoard(DocumentInteractable doc, DocumentBoardState state) {
             // Reveal the Pin object if we have one
             Transform pin = doc.transform.Find("Pin");
@@ -327,7 +335,7 @@ namespace Astro {
 
             UpdateEnabledDocParts(doc, DocumentBoardState.BoardActiveFunctions);
 
-            state.DocumentRoutine.Replace(MoveDocToPos(doc.transform, state.StoredDocPos))
+            state.SpawnDocumentToCamera.Replace(MoveDocToPos(doc.transform, state.StoredDocPos))
                 .OnComplete(() => {
                     DocumentRenderer renderer = doc.Renderer;
                     DocumentAsset asset = Find.NamedAsset<DocumentAsset>(doc.AssetName);
@@ -343,6 +351,16 @@ namespace Astro {
                 table.Set("documentId", doc.AssetName);
                 ScriptUtility.Trigger(ScriptEvents.DocumentInspectEnd, table);
             }
+        }
+
+        [LeafMember("BringDocToCam")]
+        private static void BringDocToCamLeaf(StringHash32 docId) {
+            DocumentBoardState state = Find.State<DocumentBoardState>();
+            DocumentRenderer doc = state.SpawnedDocuments.Find(doc => doc.Interactable.AssetName == docId);
+
+            if (doc == null) Debug.LogWarningFormat("[DocumentBoardState > BringDocToCam] failed to find document {0}", docId.ToDebugString());
+
+            BringDocToCam(doc.Interactable, state); 
         }
 
         private static void BringDocToCam(DocumentInteractable doc, DocumentBoardState state) {
@@ -366,7 +384,7 @@ namespace Astro {
 
             UpdateEnabledDocParts(doc, DocumentBoardState.ZoomActiveFunctions);
 
-            state.DocumentRoutine.Replace(MoveDocToCam(viewState, doc.transform, Game.Rendering.PrimaryCamera.transform, zoomOffset))
+            state.SpawnDocumentToCamera.Replace(MoveDocToCam(viewState, doc.transform, Game.Rendering.PrimaryCamera.transform, zoomOffset))
                 .OnComplete(() => {
                     using (var table = TempVarTable.Alloc()) {
                         table.Set("documentId", doc.AssetName);
@@ -393,7 +411,17 @@ namespace Astro {
         }
 
         public static void CancelZoom(DocumentBoardState state) {
-            state.DocumentRoutine.OnComplete(() => ToggleZoomDoc(state.DocZoomed, state));
+            state.SpawnDocumentToCamera.OnComplete(() => ToggleZoomDoc(state.DocZoomed, state));
+        }
+
+        [LeafMember("FlipDoc")]
+        private static void FlipDocLeaf(StringHash32 docId) {
+            DocumentBoardState state = Find.State<DocumentBoardState>();
+            DocumentRenderer doc = state.SpawnedDocuments.Find(doc => doc.Interactable.AssetName == docId);
+
+            if (doc == null) Debug.LogWarningFormat("[DocumentBoardState > BringDocToCam] failed to find document {0}", docId.ToDebugString());
+
+            FlipDoc(doc.Interactable, state);
         }
 
         public static void FlipDoc(DocumentInteractable doc, DocumentBoardState state = null) {
@@ -407,8 +435,8 @@ namespace Astro {
             float angle = doc.Flipped ? 180 : 0;
             float lift = state.DocZoomed ? 0.5f : -0.5f;
 
-            state.DocumentRoutine.Replace(DocRotateY(doc, lift, angle));
-            state.DocumentRoutine.OnStop(() => {
+            state.SpawnDocumentToCamera.Replace(DocRotateY(doc, lift, angle));
+            state.SpawnDocumentToCamera.OnStop(() => {
                 Quaternion docRot = doc.BodyRoot.localRotation;
                 doc.BodyRoot.Rotate(Vector3.up, 180f);
             });
@@ -442,12 +470,8 @@ namespace Astro {
             yield return null;
         }
 
-        private static IEnumerator AwaitDocLoadComplete(DocumentRenderer doc)
-        {
-            while (!DocumentUtility.IsFullyLoaded(doc))
-            {
-                yield return null;
-            }
+        private static IEnumerator AwaitDocLoadComplete(DocumentRenderer doc) {
+            while (!IsFullyLoaded(doc)) yield return null;
         }
 
         private static IEnumerator MoveDocToCam(ViewState viewState, Transform doc, Transform cam, Vector3 offset) {

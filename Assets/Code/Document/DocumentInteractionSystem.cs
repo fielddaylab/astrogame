@@ -16,7 +16,7 @@ namespace Astro {
             if (!m_StateA.EnableDocumentInteraction) return;
 
             if (m_StateA.SelectedDocument != null) {
-                if (!m_StateA.DocumentRoutine.Exists()) {
+                if (!m_StateA.SpawnDocumentToCamera.Exists()) {
                     DocumentUtility.MoveSelectedToMouse(m_StateA);
                 }
                 if (m_StateB.InputEnabled && Game.Input.IsMousePressed(MouseButton.Left)) {

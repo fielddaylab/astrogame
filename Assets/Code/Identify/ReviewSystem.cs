@@ -114,8 +114,10 @@ namespace Astro {
 
                         if (rowsCorrectness[r]) {
                             FocusableUtility.UpdateFocusTrackerSprite(focus, FocusState.GuessTrackerSubmittedSprites[r]);
+                            puzzle.PuzzleEntryGuesses[r] = focus;     
                         } else {
                             FocusableUtility.UpdateFocusTrackerSprite(focus, null);
+                            puzzle.PuzzleEntryGuesses[r] = null;     
                         }
 
                         StringHash32 key = "row_" + r;

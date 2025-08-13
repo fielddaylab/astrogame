@@ -32,7 +32,6 @@ $start Observatory.ResetSubtitlePosition
 @boostScore 100
 @who    Astrid
 
-$call PlayMusic("Music.Moonthought", 3)
 $call ChapterTitles->DisplayChapterTitles()
 
 $call WaitForMovedToView("DocumentPuzzle")
@@ -41,44 +40,83 @@ $call ChapterTitles->FinishTransition(1)
 
 $call SetInputState(false)
 $wait 1
+
 $call SpawnDocumentToCamera("Day5ElijahPostcard")
 $call SetInputState(true)
+{@Astrid}	Elijah said I was like Perseus. But lately I feel more like Andromeda... stuck. Waiting..	$[level5/Astrid/l5_a_01]
+{@Astrid}	It's like I'm a puppet. 	$[level5/Astrid/l5_a_02]
+{@Astrid}	I wish I could decide my own fate. Being Andromeda sucks. 	$[level5/Astrid/l5_a_03]
+		
+{@Astrid}	Ugh. Time to get back to work.	$[level5/Astrid/l5_a_04]
 
 :: SpawnPuzzleDocs1
 @trigger    DocumentInspectEnd
 @when   documentId == "Day5ElijahPostcard"
+@interrupt
 @cutscene
 @once
 
-$call Wait(1)
+$wait 1
 $call SpawnDocumentToCamera("Day5Martha")
+{@Astrid}	Dad would say I should keep working with him at CERES. Aunt Martha would think I'm crazy. Elijah... I'm not sure...	$[level5/Astrid/l5_a_09]
+{@Astrid}	Ugh. Time to focus. There’s still work to do.	$[level5/Astrid/l5_a_10]
+{@Astrid}	Just solve the last puzzle. When the satellite is unlocked, I'll have access to new radio channels. I can use it to contact Jocelyn and get the word out.	$[level5/Astrid/l5_a_11]
+{@Astrid}	Then I can figure out this job thing. 	$[level5/Astrid/l5_a_12]
 
 :: SpawnPuzzleDocs2
 @trigger    DocumentInspectEnd
 @when   documentId == "Day5Martha"
+@interrupt
 @cutscene
 @once
 
-$call Wait(1)
+$wait 1
 $call SpawnDocumentToCamera("NewspaperLetter")
+{@Astrid}	Oh my gosh, its happening for real! They just offered me a job at the paper! 	$[level5/Astrid/l5_a_05]
+{@Astrid}	This is so cool. There's so much I could do! A column, a radio show... maybe Elijah and I could even put out some art! We've always talked about making zines together.	$[level5/Astrid/l5_a_06]
+{@Astrid}	Everyone thinks the sky is just bad omens. 	$[level5/Astrid/l5_a_07]
+{@Astrid}	Maybe I could change that... starting with this meteor storm.	$[level5/Astrid/l5_a_08]
+
+:: BadLetter
+@trigger    DocumentInspectEnd
+@when   documentId == "NewspaperLetter"
+@interrupt
+@cutscene
+@once
+
+$wait 1
+$call SpawnDocumentToCamera("RecoveryBoardLetter")
+{@Astrid}	Does this mean I can't work on the puzzle? No, it looks like I just have to do some more identification. Really? 	$[level5/Astrid/l5_a_13]
 
 :: StartDay
 @trigger    DocumentInspectEnd
-@when   documentId == "NewspaperLetter"
+@when   documentId == "RecoveryBoardLetter"
+@interrupt
 @cutscene
+@priority   High
 @once
 
-$call Wait(1)
-$call WaitForMovedToView("Right")
+$wait 1
 $call SetInputState(false)
+$call WaitForMovedToView("Right")
+{@Astrid} I don't have time for this, I need to be working on the Andromeda puzzle. $[level5/Astrid/l5_a_19]
+$call OpenRefGuidePage("ConstellationAndromeda")
+$wait 1
+$call WaitForMovedToView("Monitor")
+$call ConsoleCommandLine->PlayConsoleTextAndWait("Day5ConsoleText")
+$call MonitorUI->ShowCERESLogo()
+$call ConsoleCommandLine->PlayConsoleTextAndWait("AccessDenied")
+{@Astrid} What's going on? I can't use the constellation finder.	$[level5/Astrid/l5_a_20]
+$call MonitorUI->CERESLogoToCorner(0.5)
+$call ConsoleCommandLine->HideConsole()
+{@Astrid} I guess that letter was right... $[level5/Astrid/l5_a_21]
+{@Astrid} Oh, it looks like incoming data from CERES. $[level5/Astrid/l5_a_18]
 
-{@Radio} Star HQ to Station Seven. IceCube is reading a high-energy neutrino emission from the area of the Eridanus Constellation.
+$call SetRefGuideActive(false)
 $call SetInputState(true)
-{@Radio} Identification of nearby celestial objects is requested. Uploading area of interest...
 $branch .SetupNeutrinoNav
 
 :: SetupNeutrinoNav
-$call WaitForMovedToView("Monitor")
 $call MonitorUI->PlayRadioDownload(2)
 $call StartNeutrinoNavigation()
 
@@ -86,8 +124,10 @@ $call StartNeutrinoNavigation()
 @trigger    NeutrinoNavigationComplete
 @once
 
+$call SetStickyFirstPage(4)
 $call StopNeutrinoNavigation()
 $call StartOpenMode()
+{@Astrid}	Woah, it is really quiet here without the CERES channel. 	$[level5/Astrid/l5_a_22]
 
 :: FinishOpenID
 @trigger    PointsUpdated
@@ -97,13 +137,20 @@ $call StartOpenMode()
 $call SetInputState(false)
 $call SetRefGuideActive(false)
 
-$wait 4
+$call MonitorUI->CERESLogoToCenter(0.5)
+$wait 1
+$call MonitorUI->HideCERESLogo()
+
+{@Astrid}	Okay, got it. 	$[level5/Astrid/l5_a_23]
+{@Astrid}	Now I can finally finish this encryption puzzle.	$[level5/Astrid/l5_a_24]
+{@Astrid}	This is it. Here goes nothing... $[level5/Astrid/l5_a_25]
+
+$wait 1
 
 $call StopOpenMode()
 $call ClearMonitorSelection()
 
-$call OpenRefGuidePage("ConstellationAndromeda")
-$wait 1
+$call SetStickyFirstPage(-1)
 $goto .SetupPuzzleNav
 
 :: SetupPuzzleNav
@@ -147,34 +194,61 @@ $call SetRefPageActive("ConstellationAndromeda", false)
 $call SetRefPageActive("ConstellationAndromedaCompleted", true)
 $call OpenRefGuidePage("ConstellationAndromedaCompleted")
 
-{@Astrid} That was the last piece of the puzzle! If only I had a way to connect to the satellite...
-$call ScriptFader->FadeOut()
-$wait 2
-$call ScriptFader->FadeIn()
-
-{@Astrid} A special delivery from Elijah?
-{@Astrid} It's a Satellite Decoder!
+{@Astrid}	Yes!! I did it!	$[level5/Astrid/l5_a_26]
 $call MoveToView("Right")
+$call StartFinalPuzzleMode()
+{@Astrid} Whoa... what's this? $[level5/Astrid/l5_a_27]
 $wait 0.5
 $call SetRefGuideActive(false)
 $call ScriptFader->FadeOut()
-$wait 2
+$wait 1
 $call SatelliteDecoder->SetDecoderActive(true)
+$wait 1
 $call ScriptFader->FadeIn()
 
-$call StartFinalPuzzleMode()
-{@Astrid} This is it! Now that I have the decoder, I can finally attempt to connect to the satellite.
+{@Astrid}	Looks like I just need to put in the password. 	$[level5/Astrid/l5_a_28]
 $call SetInputState(true)
 $call OpenRefGuidePage("ConstellationPerseusCompleted")
 
-{@Astrid} Each of the puzzles I completed seems to correspond to one letter of the passcode.
+{@Astrid} I wish Elijah was here to see this. $[level5/Astrid/l5_a_29]
+{@Astrid} Okay... here goes nothing. $[level5/Astrid/l5_a_30]
 
 :: SuccessfulDecode
 @trigger    OnDecoderSuccess
 @once
 
-{@Astrid} I did it! I'm a genius.
 $call SetInputState(false)
+{@Astrid} I don't get it. The password is correct... but nothing's happening. $[level5/Astrid/l5_a_31]
+{@Astrid} I thought I was going to get a radio signal. $[level5/Astrid/l5_a_32]
+$call StopPuzzleMode()
+$call ClearMonitorSelection()
 
-// TODO: dialog
-$call TransitionToScene("OutroP2")
+$call SetInputState(false)
+$call ConsoleCommandLine->PlayConsoleTextAndWait("PlayMessage")
+$call TapeDeck->SetTapeActive(true)
+{@Elijah} Astrid, you did it! You solved it! $[level5/Elijah/l5_e_01]
+{@Elijah} You are literally the smartest person I know. $[level5/Elijah/l5_e_02]
+{@Elijah} Now I just need to put in the final upgrade command when I get back. $[level5/Elijah/l5_e_03]
+{@Elijah} Then World's End will have access to everything! New radio channels, all the unencrypted data... $[level5/Elijah/l5_e_04]
+{@Elijah} It's so weird recording this, getting excited about something that hasn't happened yet... $[level5/Elijah/l5_e_05]
+{@Elijah} But I know it will. You're the stuff of Greek myth, remember? $[level5/Elijah/l5_e_06]
+{@Elijah} Hopefully, as you're listening to this, I'm already back home with you. Maybe we're listening to this together, and laughing at what a dork I am.	$[level5/Elijah/l5_e_07]
+{@Elijah} If not... I'll be there as soon as I can. I promise. $[level5/Elijah/l5_e_08]
+{@Elijah} I can't wait to see you. Then we can figure out what's next. $[level5/Elijah/l5_e_09]
+$call ConsoleCommandLine->HideConsole()
+$call TapeDeck->SetTapeActive(false)
+
+{@Astrid} Ugh. I can't believe this. I still have to wait? $[level5/Astrid/l5_a_33]
+{@Astrid} ELIJAH! You're driving me crazy! $[level5/Astrid/l5_a_34]
+{@Astrid} Why wouldn't you just tell me the upgrade command so I can do it myself? $[level5/Astrid/l5_a_35]
+{@Astrid} I needed this to work! Now how am I going to reach Jocelyn? $[level5/Astrid/l5_a_36]
+{@Astrid} Elijah might get back in time ... but he might not. $[level5/Astrid/l5_a_37]
+{@Astrid} I need to make a decision. $[level5/Astrid/l5_a_38]
+{@Astrid} I've waited so long to see Elijah again. $[level5/Astrid/l5_a_39]
+{@Astrid} But I need to tell people about the meteor storm... what it means. Get them excited, not afraid. $[level5/Astrid/l5_a_40]
+{@Astrid} I know what Dad would say, and Aunt Martha... but they're not here. $[level5/Astrid/l5_a_41]
+{@Astrid} I have to decide this for myself. $[level5/Astrid/l5_a_42]
+{@Astrid} .... Finally.	$[level5/Astrid/l5_a_43]
+
+$wait 0.5
+$call LoadNextDay()

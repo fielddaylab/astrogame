@@ -330,6 +330,8 @@ namespace Astro.Save {
             header.Version = reader.Read<int>();
             m_CurrentHeader = header;
 
+            Game.SharedState.Get<UserSettingsState>().PlayerCode = header.PlayerCode;
+
             SaveStateChunkConsts consts;
 
             reader.Skip(1);

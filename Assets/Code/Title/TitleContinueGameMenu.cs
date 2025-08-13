@@ -48,7 +48,7 @@ namespace Astro.Title {
 
         private void HandleLoadError()
         {
-            Debug.LogError("load from server failed");
+            Debug.LogError("[SaveUtility] load from server failed");
         }
 
         private void HandlePlayerCodeUpdated(string text)
@@ -68,8 +68,6 @@ namespace Astro.Title {
 
             MenuFade.Hide();
             CloseFade.Hide();
-
-            Game.Input.PauseRaycasts();
 
             if (progressState.CompletedPrelude)
             {
@@ -112,7 +110,9 @@ namespace Astro.Title {
             yield return 2;
             ScriptTriggers.LoadDay(dayId);
             yield return null;
-            Game.Input.ResumeRaycasts();
+            if (Game.Input.AreRaycastsPaused()) {
+                Game.Input.ResumeRaycasts();
+            }
         }
     }
 }
