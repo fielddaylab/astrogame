@@ -249,6 +249,7 @@ $wait 1
 $call SetInstrumentUnlocked(HistoricalDataInstrument, true)
 
 $call ConsoleCommandLine->PlayConsoleTextAndWait("LoadHistData")
+$call SetRadioFrequency(137)
 {@Radio}	Whoa. Hold on. 	$[level3/radio_lady/l3_r_05]
 {@Radio}	What is all this? 	$[level3/radio_lady/l3_r_06]
 {@Astrid}	Hey... um, are you still talking to me? 	$[level3/Astrid/l3_a_35]
@@ -321,12 +322,12 @@ $call ClearMonitorSelection()
 $wait 1
 $call StartPuzzleMode()
 $call UnlockMonitorFocus()
-$wait 4
+$wait 5
 $call SetInputState(true)
 
 $set temp:LeoPuzzleStarted = true
-{@Astrid}	Elijah figured out that Zosma isn’t the nearest star.	$[level3/Astrid/l3_a_48]
-{@Astrid}	Now that I've got the parallax data, I can finish what he started.	$[level3/Astrid/l3_a_49]
+{@Astrid} Elijah figured out that Zosma isn’t the nearest star.	$[level3/Astrid/l3_a_48]
+{@Astrid} Now that I've got the parallax data, I can finish what he started.	$[level3/Astrid/l3_a_49]
 
 :: EnablePlayerInput
 $call SetInputState(true)
