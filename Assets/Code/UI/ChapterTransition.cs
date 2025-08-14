@@ -1,4 +1,5 @@
 using BeauRoutine;
+using BeauUtil;
 using FieldDay;
 using FieldDay.Audio;
 using FieldDay.Scenes;
@@ -56,6 +57,20 @@ namespace Astro {
             }
         }
 
+        [LeafMember("DisplayIntroTitles")]
+        public IEnumerator IntroTextCycle() {
+            DayConfigAsset config = Find.NamedAsset<DayConfigAsset>("Day0(Prelude)");
+            for(int i = 0; i < config.ChapterTitles.Length; i++) {
+                Text.SetText(config.ChapterTitles[i]);
+                Text.alpha = 0;
+                yield return Text.FadeTo(1, TextFadeInTime);
+                yield return TextDuration;
+                if (i < config.ChapterTitles.Length - 1) {
+                    yield return Text.FadeTo(0, TextFadeOutTime);
+                }
+            }
+        }
+
         [LeafMember("FadeOutBackground")]
         public void FadeOutBackground() {
             Routine.Start(this, Background.FadeTo(0, BackgroundFadeOutTime));
@@ -64,7 +79,7 @@ namespace Astro {
 
         [LeafMember("FinishTransition")]
         public void Finish(float delay = 0) {
-            Game.Input.ResumeRaycasts();
+            if (m_PausedRaycasts) Game.Input.ResumeRaycasts();
             m_PausedRaycasts = false;
             Routine.Start(this, Text.FadeTo(0, FinalFadeOutTime).OnComplete(() => {
                 Canvas.enabled = false;
