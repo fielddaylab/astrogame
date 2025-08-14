@@ -482,6 +482,8 @@ namespace Astro.Reference {
                 return;
             }
 
+            Game.Events.Dispatch(GameEvents.ClassificationClicked);
+
             if (rgs.SelectedRefClassification != region.Classification) {
                 rgs.SelectedRefClassification = region.Classification;
 
@@ -528,6 +530,8 @@ namespace Astro.Reference {
                 }
                 return;
             }
+
+            Game.Events.Dispatch(GameEvents.ClassificationClicked);
 
             if (rgs.SelectedMaterials.HasFlag(region.Material)) {
                 rgs.SelectedMaterials &= ~region.Material;

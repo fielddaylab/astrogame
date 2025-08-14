@@ -2,12 +2,14 @@ using BeauPools;
 using BeauUtil;
 using FieldDay;
 using FieldDay.Components;
+using FieldDay.Rendering;
 using FieldDay.Scripting;
 using FieldDay.UI;
 using Leaf.Runtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 namespace Astro
@@ -16,6 +18,7 @@ namespace Astro
     {
         [SerializeField] private GameObject BlankPanel; 
         [SerializeField] private GameObject ActivatedPanel;
+        [SerializeField] private MeshRenderer HighlightPanel;
 
         public void SetDecoderActive(bool active) {
             BlankPanel.SetActive(!active);
@@ -25,6 +28,10 @@ namespace Astro
             } else {
                 Find.State<PuzzleState>().Display.Clues.Text.SetTextAndActive("");
             }
+        }
+
+        public void SetDecoderHighlightActive(bool active) {
+            HighlightPanel.gameObject.SetActive(active);
         }
 
         private void DisplayDecoderClues() {
@@ -42,6 +49,12 @@ namespace Astro
         public void LeafSetDecoderActive(bool active)
         {
             SetDecoderActive(active);
+        }
+
+        [LeafMember("SetDecoderHighlightActive")]
+        public void LeafSetDecoderHighlightActive(bool active)
+        {
+            SetDecoderHighlightActive(active);
         }
 
         [LeafMember("SwapPanel")]

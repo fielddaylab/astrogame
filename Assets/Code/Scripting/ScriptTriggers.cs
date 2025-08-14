@@ -23,6 +23,7 @@ namespace Astro {
             Game.Events.Register(GameEvents.IncorrectOpenIdSubmission, OnIncorrectOpenIdSubmission);
             Game.Events.Register(GameEvents.DuplicateOpenIdSubmission, OnDuplicateOpenIdSubmission);
             Game.Events.Register(GameEvents.UnacceptedOpenIdSubmission, OnUnacceptedOpenIdSubmission);
+            Game.Events.Register(GameEvents.ClassificationClicked, OnClassificationClicked);
         }
 
         static private void OnScore() {
@@ -66,6 +67,10 @@ namespace Astro {
 
         static private void OnUnacceptedOpenIdSubmission() {
             ScriptUtility.Trigger(ScriptEvents.OnUnacceptedOpenIdSubmission);
+        }
+
+        static private void OnClassificationClicked() {
+            ScriptUtility.Trigger(ScriptEvents.OnClassificationClicked);
         }
 
         // TODO make this actually process more than one day

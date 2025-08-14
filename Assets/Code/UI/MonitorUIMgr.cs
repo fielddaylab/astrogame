@@ -102,6 +102,15 @@ public class MonitorUIMgr : ScriptActorComponent {
         );
     }
 
+    [LeafMember("CERESLogoToWatching")]
+    private IEnumerator LeafCERESLogoToWatching(float duration = 0.2f) {
+        RectTransform LogoTransform = CERESLogo.gameObject.GetComponent<RectTransform>();
+        yield return Routine.Combine(
+            LogoTransform.AnchorPosTo(new Vector2(777f, -94f), duration).ForceOnCancel(),
+            LogoTransform.ScaleTo(0.3f, duration).ForceOnCancel()
+        );
+    }
+
     [LeafMember("CERESLogoToCenter")]
     private IEnumerator LeafCERESLogoToCenter(float duration = 0.1f) {
         RectTransform LogoTransform = CERESLogo.gameObject.GetComponent<RectTransform>();

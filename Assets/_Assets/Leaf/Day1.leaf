@@ -350,6 +350,9 @@ $wait 15
 $if !temp:firstSubmission
     {@Radio} Okay. Do you see the photometer in your equipment stack? That should tell you the apparent magnitude of the star. 	$[level1/radio_lady/l1_r_24(1)]
     {@Radio} All you need to do is match that number with the correct range in your reference guide and submit the data.	$[level1/radio_lady/l1_r_25(1)]
+    $call HintModals->SlideInFromRight("SubmitRangeHint", 0.2)
+    $set temp:waitingForFirstClassificationClick = true
+    
     $branch .IntroFirstSubmissionTimeout
 $endif
 
@@ -402,15 +405,32 @@ $endif
 
 {@Radio} You are headed off target. $[level1/radio_lady/l1_r_28]
 
+:: FirstClassificationClicked
+@trigger    OnClassificationClicked
+@when       temp:waitingForFirstClassificationClick == true
+
+$call HintModals->Hide("SubmitRangeHint", 0.2)
+$set temp:waitingForFirstClassificationClick = false
+
 :: ValidKnowledgeSubmission
 @trigger    OnValidKnowledgeSubmission
 @cutscene
 @interrupt
 
+$if temp:waitingForFirstClassificationClick
+    $call HintModals->Hide("SubmitRangeHint", 0.2)
+    $set temp:waitingForFirstClassificationClick = false
+$endif
+
 {@Radio} Thanks for adding that data. Please return to the neutrino zone. $[Radio/L1/l1_r_35]
 
 :: IncorrectSubmission
 @trigger    OnIncorrectOpenIdSubmission
+
+$if temp:waitingForFirstClassificationClick
+    $call HintModals->Hide("SubmitRangeHint", 0.2)
+    $set temp:waitingForFirstClassificationClick = false
+$endif
 
 $call SubtitleController->SetSubtitlePosition(0.5, 1, 0, -140)
 $wait 0.1
@@ -424,12 +444,22 @@ $start Observatory.ResetSubtitlePosition
 @cutscene
 @once
 
+$if temp:waitingForFirstClassificationClick
+    $call HintModals->Hide("SubmitRangeHint", 0.2)
+    $set temp:waitingForFirstClassificationClick = false
+$endif
+
 {@Radio} Looks like you’ve already submitted that info. $[level1/radio_lady/l1_r_30]
 {@Radio} You won’t get any points towards your access level for identifying that property again. $[level1/radio_lady/l1_r_31]
 
 :: DupliacteSubmission
 @trigger    OnDuplicateOpenIdSubmission
 @interrupt
+
+$if temp:waitingForFirstClassificationClick
+    $call HintModals->Hide("SubmitRangeHint", 0.2)
+    $set temp:waitingForFirstClassificationClick = false
+$endif
 
 {@Astrid} Looks like I have to determine the apparent magnitude of some of the other stars in this cluster. $[level1/Astrid/l1_a_16a]
 
@@ -440,6 +470,11 @@ $start Observatory.ResetSubtitlePosition
 @boostScore 400
 @cutscene
 @once
+
+$if temp:waitingForFirstClassificationClick
+    $call HintModals->Hide("SubmitRangeHint", 0.2)
+    $set temp:waitingForFirstClassificationClick = false
+$endif
 
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $set temp:firstSubmission = true

@@ -23,6 +23,7 @@ $call SetRefPageActive("ConstellationHercules", false)
 $call SetRefPageActive("ConstellationLeo", false)
 $call SetRefPageActive("ConstellationDraco", false)
 $call SetRefPageActive("ConstellationAndromedaCompleted", false)
+$call SetChannelActive(IceCube, false)
 $call SetRadioFrequency(137, true)
 $call MonitorPower->Deactivate()
 $call ChapterTitles->PrepareTransition()
@@ -108,7 +109,7 @@ $call ConsoleCommandLine->PlayConsoleTextAndWait("Day5ConsoleText")
 $call MonitorUI->ShowCERESLogo()
 $call ConsoleCommandLine->PlayConsoleTextAndWait("AccessDenied")
 {@Astrid} What's going on? I can't use the constellation finder.	$[level5/Astrid/l5_a_20]
-$call MonitorUI->CERESLogoToCorner(0.5)
+$call MonitorUI->CERESLogoToWatching(0.5)
 $call ConsoleCommandLine->HideConsole()
 {@Astrid} I guess that letter was right... $[level5/Astrid/l5_a_21]
 {@Astrid} Oh, it looks like incoming data from CERES. $[level5/Astrid/l5_a_18]
@@ -204,6 +205,7 @@ $call SetRefGuideActive(false)
 $call ScriptFader->FadeOut()
 $wait 1
 $call SatelliteDecoder->SetDecoderActive(true)
+$call SatelliteDecoder->SetDecoderHighlightActive(true)
 $wait 1
 $call ScriptFader->FadeIn()
 
@@ -213,6 +215,12 @@ $call OpenRefGuidePage("ConstellationPerseusCompleted")
 
 {@Astrid} I wish Elijah was here to see this. $[level5/Astrid/l5_a_29]
 {@Astrid} Okay... here goes nothing. $[level5/Astrid/l5_a_30]
+
+:: FirstInteractDecoder
+@trigger    OnDecoderInteract
+@once
+
+$call SatelliteDecoder->SetDecoderHighlightActive(false)
 
 :: SuccessfulDecode
 @trigger    OnDecoderSuccess

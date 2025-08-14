@@ -41,7 +41,7 @@ public class DocumentAssetEditor : Editor {
         EditorGUILayout.Space();
 
         if (asset.Prefab != null) {
-            m_ShowTextRegions = EditorGUILayout.Foldout(m_ShowTextRegions, "Document Text");
+            m_ShowTextRegions = asset.Prefab.TextRegions.Length > 0 && EditorGUILayout.Foldout(m_ShowTextRegions, "Document Text");
 
             if ( m_ShowTextRegions ) {
                 for (int i = 0; i < asset.Prefab.TextRegions.Length; i++) {
