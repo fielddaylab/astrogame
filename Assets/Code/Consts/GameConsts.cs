@@ -14,6 +14,7 @@ public static class GameEvents {
     public static readonly StringHash32 DuplicateOpenIdSubmission = "duplicate-open-id-submission";
     public static readonly StringHash32 IncorrectOpenIdSubmission = "incorrect-open-id-submission";
     public static readonly StringHash32 UnacceptedOpenIdSubmission = "unaccepted-open-id-submission";
+    public static readonly StringHash32 ClassificationClicked = "classification-clicked";
     public static readonly StringHash32 StopOpenMode = "stop-open-mode";
     public static readonly StringHash32 StartPuzzleMode = "start-puzzle-mode";
     public static readonly StringHash32 StopPuzzleMode = "stop-puzzle-mode";
@@ -77,6 +78,7 @@ public static class ScriptEvents {
     public static readonly StringHash32 OnDuplicateOpenIdSubmission = "OnDuplicateOpenIdSubmission";
     public static readonly StringHash32 OnIncorrectOpenIdSubmission = "OnIncorrectOpenIdSubmission";
     public static readonly StringHash32 OnUnacceptedOpenIdSubmission = "OnUnacceptedOpenIdSubmission";
+    public static readonly StringHash32 OnClassificationClicked = "OnClassificationClicked";
     public static readonly StringHash32 OnNeutrinoNavWarmer = "OnNeutrinoNavWarmer";
     public static readonly StringHash32 OnNeutrinoNavColder = "OnNeutrinoNavColder";
     public static readonly StringHash32 OnLeaveNeutrinoRegion = "OnLeaveNeutrinoRegion";
