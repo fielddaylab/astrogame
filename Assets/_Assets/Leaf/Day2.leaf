@@ -222,7 +222,7 @@ $start .FirstStarHint
 $wait 10
 $if temp:waitingForNeutrinoStar
     {@Radio}	Astrid, you still there? Select a possible neutrino source on your display.	$[level1/radio_lady/l1_r_19]
-    $branch .TuneRadioHint
+    $branch .FirstStarHint
 $endif
 
 :: OnNonNeutrinoStarSelected
@@ -452,6 +452,7 @@ $wait 1
 {@Radio}	Station 12, we have a new cluster for you to investigate. 	$[level2/radio_lady/l2_r_17]
 {@Astrid}	Hang on, I was just talking to my dad... 	$[level2/Astrid/l2_a_33]
 {@Radio}	I'm taking over for now. Are you able to continue working? 	$[level2/radio_lady/l2_r_18]
+$call SetRefGuideActive(false)
 {@Astrid}	No, signing off for tonight. 	$[level2/Astrid/l2_a_34]
 
 $call StopMusic(1)
