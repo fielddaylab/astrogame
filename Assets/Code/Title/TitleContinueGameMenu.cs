@@ -97,7 +97,7 @@ namespace Astro.Title {
                 yield return null;
             }
 
-            NewGameMenu.NewGameBegin();
+            NewGameMenu.NewGameBegin(true);
 
             GlobalFade.Hide();
         }
@@ -108,7 +108,7 @@ namespace Astro.Title {
             Game.Events.Dispatch(GameEvents.TitleGameStarting);
             // TODO: start playing walking sounds
             yield return 2;
-            ScriptTriggers.LoadDay(dayId);
+            ScriptTriggers.LoadDay(dayId, default, true);
             yield return null;
             if (Game.Input.AreRaycastsPaused()) {
                 Game.Input.ResumeRaycasts();

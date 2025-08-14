@@ -4,6 +4,7 @@ using System.IO;
 using BeauData;
 using BeauRoutine;
 using BeauUtil.Debugger;
+using BeauUtil.Services;
 using FieldDay;
 using FieldDay.Data;
 using FieldDay.Debugging;
@@ -69,6 +70,8 @@ namespace Astro.Save {
         static private IEnumerator SaveRoutine(SaveSlot slot) {
             yield return null;
 
+            Game.Events.Dispatch(GameEvents.ProfileSaveBegin);
+
             AstroGame.SaveBuffer.Write(slot);
             if (slot == SaveSlot.Main) {
                 AstroGame.SaveBuffer.EncodeToBase64();
@@ -130,12 +133,14 @@ namespace Astro.Save {
 
                     if (future.IsComplete()) {
                          Log.Msg("[SaveUtility] Saved to server!");
+                        Game.Events.Dispatch(GameEvents.ProfileSaveSuccess);
                         break;
                     } else {
                         attempts--;
                         Log.Warn("[SaveUtility] Failed to save to server: {0}", future.GetFailure().Object);
                         if (attempts > 0) {
                             Log.Warn("[SaveUtility] Retrying server save...", attempts);
+                            Game.Events.Dispatch(GameEvents.ProfileSaveError);
                             yield return 1;
                             ++retryCount;
                         } else {
@@ -144,17 +149,12 @@ namespace Astro.Save {
                     }
                 }
             }
+
+            Log.Msg("[SaveUtility] ...finished save routine attempt");
+            Game.Events.Dispatch(GameEvents.ProfileSaveAttemptCompleted);
         }
 
         static private IEnumerator ReloadRoutine(bool waitForCutsceneClose) {
-            if (waitForCutsceneClose) {
-                /*
-                var scriptRuntime = ScriptUtility.Runtime;
-                while(scriptRuntime.Cutscene.IsRunning()) {
-                    yield return null;
-                }
-                */
-            }
             yield return null;
             if (AstroGame.SaveBuffer.HasSave) {
                 AstroGame.SaveBuffer.Read();

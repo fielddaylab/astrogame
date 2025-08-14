@@ -89,7 +89,7 @@ namespace Astro {
         }
 
         [LeafMember("LoadDay")]
-        static public void LoadDay(StringHash32 dayId, StringHash32 transitionType = default) {
+        static public void LoadDay(StringHash32 dayId, StringHash32 transitionType = default, bool ignoreSave = false) {
             PlayerProgressState state = Find.State<PlayerProgressState>();
             StoryAsset story = Find.GlobalAsset<StoryAsset>();
             Game.Events.Dispatch(GameEvents.BeforeNextDayLoad);
@@ -107,7 +107,9 @@ namespace Astro {
             MusicUtility.StopMusic(1);
 
             state.CompletedPrelude = true;
-            SaveUtility.Save(SaveSlot.Main);
+            if (!ignoreSave) {
+                SaveUtility.Save(SaveSlot.Main);
+            }
 
             Game.Scenes.LoadMainScene(day.Scene, true, new MainSceneTransitionArgs() {
                 TransitionType = transitionType

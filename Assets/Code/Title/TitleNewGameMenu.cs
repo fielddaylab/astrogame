@@ -75,7 +75,7 @@ namespace Astro.Title {
             OGD.Player.ClaimId(m_PlayerCodeInput.text, null, HandleClaimNewIdSuccess, HandleClaimNewIdError);
         }
 
-        public void NewGameBegin()
+        public void NewGameBegin(bool ignoreSave = false)
         {
             Find.State<ViewState>().ActiveNode.BackLink = null;
 
@@ -87,7 +87,9 @@ namespace Astro.Title {
                 GuiCommands.SetActive(comp.gameObject, false);
             }
 
-            SaveUtility.Save(SaveSlot.Main);
+            if (!ignoreSave) {
+                SaveUtility.Save(SaveSlot.Main);
+            }
 
             Routine.Start(this, NewGameBeginSequence()).ExecuteWhileDisabled();
         }

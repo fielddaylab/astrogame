@@ -39,6 +39,11 @@ public static class GameEvents {
 
     public static readonly StringHash32 TryCreateNewName = "try-create-new-name";
     public static readonly StringHash32 TitleErrorReceived = "title-error-received";
+
+    public static readonly StringHash32 ProfileSaveBegin = "profile-save-begin";
+    public static readonly StringHash32 ProfileSaveError = "profile-save-error";
+    public static readonly StringHash32 ProfileSaveSuccess = "profile-save-success";
+    public static readonly StringHash32 ProfileSaveAttemptCompleted = "profile-save-attempt-completed";
 }
 
 public static class ScriptEvents {
