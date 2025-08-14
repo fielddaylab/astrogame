@@ -203,6 +203,7 @@ $call SetRefGuideActive(false)
 $call ScriptFader->FadeOut()
 $wait 1
 $call SatelliteDecoder->SetDecoderActive(true)
+$call SatelliteDecoder->SetDecoderHighlightActive(true)
 $wait 1
 $call ScriptFader->FadeIn()
 
@@ -212,6 +213,12 @@ $call OpenRefGuidePage("ConstellationPerseusCompleted")
 
 {@Astrid} I wish Elijah was here to see this. $[level5/Astrid/l5_a_29]
 {@Astrid} Okay... here goes nothing. $[level5/Astrid/l5_a_30]
+
+:: FirstInteractDecoder
+@trigger    OnDecoderInteract
+@once
+
+$call SatelliteDecoder->SetDecoderHighlightActive(false)
 
 :: SuccessfulDecode
 @trigger    OnDecoderSuccess

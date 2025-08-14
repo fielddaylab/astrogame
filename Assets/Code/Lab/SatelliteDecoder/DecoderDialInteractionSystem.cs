@@ -1,6 +1,7 @@
 using BeauRoutine;
 using FieldDay;
 using FieldDay.Audio;
+using FieldDay.Scripting;
 using FieldDay.Systems;
 using System.Collections;
 using UnityEngine;
@@ -16,6 +17,7 @@ namespace Astro {
             foreach (var component in m_Components) {
                 if (component.Secondary.InteractReceived) {
                     DecoderUtility.AdjustDecoderDial(component.Primary.Target, component.Primary.Vector);
+                    ScriptUtility.Trigger(ScriptEvents.OnDecoderInteract);
                     decoderState.InputUpdatedThisFrame = true;
                 } else if (component.Secondary.IsDragging) {
                     // Quick scroll when button held

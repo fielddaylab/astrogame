@@ -84,6 +84,7 @@ public static class ScriptEvents {
     public static readonly StringHash32 OnConstellationNavColder = "OnConstellationNavColder";
     public static readonly StringHash32 BeginDecoderSequence = "BeginDecoderSequence";
     public static readonly StringHash32 OnDecoderSuccess = "OnDecoderSuccess";
+    public static readonly StringHash32 OnDecoderInteract = "OnDecoderInteract";
 
     public static readonly StringHash32 RadioChannelListenStart = "RadioChannelListenStart"; // player started listening
     public static readonly StringHash32 RadioChannelListenEnd = "RadioChannelListenEnd"; // player stopped listening
