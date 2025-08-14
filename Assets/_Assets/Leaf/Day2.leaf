@@ -264,7 +264,7 @@ $call OpenRefGuidePage("SpectralClass")
 {@Radio}	These categories are fuzzy - don't worry if your star doesn't match exactly. You'll get clearance for more precise tools later.	$[level2/radio_lady/l2_r_13]
 {@Radio}	Look up the spectral type in your manual, and submit the data	$[level2/radio_lady/l2_r_14]
 $set temp:waitingForFirstSubmission = true
-$start WaitingForFirstSubmission
+$start .WaitingForFirstSubmission
 
 :: WaitingForFirstSubmission
 $wait 15
