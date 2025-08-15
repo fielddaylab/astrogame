@@ -8,7 +8,7 @@ $call SetInputState(false)
 $call StopPuzzleMode()
 $call StopOpenMode()
 $call SetRefGuidePagesLocked(true)
-$call SpawnDocument("Day6Cal")
+$call SpawnDocument("Day5Cal")
 $call SpawnDocument("Day6Astrid")
 $call EnableDocumentClose("Day6Astrid", false)
 $call SetRefPageActive("ConstellationPerseus", false)
@@ -77,7 +77,6 @@ $wait 0.25
 $call MonitorUI->HideElement("CommErrorMsg1")
 $wait 0.25
 $call MonitorUI->ShowElement("CommErrorMsg2")
-$call SetChannelActive(IceCube_Intro, true)
 $wait 0.5
 $call SetRadioFrequency(137, true)
 $call SetRadioDialLocked(true)

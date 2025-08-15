@@ -20,7 +20,6 @@ $call SpawnDocument("Level1")
 $call SpawnDocument("MiniLabors")
 $call StopPuzzleMode()
 $call StopOpenMode()
-$call SetStickyFirstPage(1)
 $call SetRefGuidePagesLocked(true)
 $call SetRefPageActive("ConstellationPerseus", false)
 $call SetRefPageActive("ConstellationHerculesCompleted", false)
@@ -212,6 +211,7 @@ $call StartNeutrinoNavigation()
 $call StopNeutrinoNavigation()
 $call StartOpenMode()
 $set temp:waitingForNeutrinoStar = true
+$call SetStickyFirstPage(1)
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 650)
 
 {@Radio}	We need to identify the spectral types of these stars to inform our analysis. You should be able to get an approximate categorization using temperature.	$[level2/radio_lady/l2_r_04]
@@ -340,6 +340,7 @@ $endif
 $set temp:radioChannelTuned = true
 $call SetRadioDialLocked(true)
 $call SetRadioFrequency(375, true)
+$call SetStickyFirstPage(-1)
 $call SetInputState(false)
 $call ClearMonitorSelection()
 $call LockMonitorFocus()
@@ -355,11 +356,9 @@ $call SetInputState(true)
 
 $call ConsoleCommandLine->PlayConsoleText("Day2UpgradeSystem")
 $call SetInstrumentUnlocked(SpectrometerInstrument, true)
-
-$wait 10
-
-$call SetStickyFirstPage(-1)
+$wait 1
 $call OpenRefGuidePage("Spectrometer")
+$wait 9 // wait for the console text to finish
 
 $call ConsoleCommandLine->HideConsole()
 $wait 0.1

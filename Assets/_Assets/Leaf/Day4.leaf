@@ -226,7 +226,7 @@ $call SetRadioFrequency(137)
 
 $call SetInputState(false)
 $call SetRefGuideActive(false)
-$call Wait(4)
+$wait 4
 
 $call StopOpenMode()
 $call SetInputState(true)
@@ -255,6 +255,7 @@ $endif
 $set temp:radioChannelTuned = true
 $call SetRadioDialLocked(true)
 $call SetRadioFrequency(375, true)
+$call SetStickyFirstPage(-1)
 $call SetInputState(false)
 $call ClearMonitorSelection()
 $call LockMonitorFocus()
@@ -269,11 +270,11 @@ $wait 1
 $call SetInputState(true)
 
 $call ConsoleCommandLine->PlayConsoleText("Day4UpgradeSystem")
-$wait 10
+$wait 1
+$call OpenRefGuidePage("ParallaxDataTransfer")
+$wait 9 // wait for the console text to finish
 
 $call SetInstrumentUnlocked(HistoricalDataModeToggle, true)
-$call SetStickyFirstPage(-1)
-$call OpenRefGuidePage("ParallaxDataTransfer")
 
 $call ConsoleCommandLine->HideConsole()
 $wait 0.1
