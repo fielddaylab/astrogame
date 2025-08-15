@@ -69,21 +69,21 @@ namespace Astro.Title {
 
         #endregion // OGD
 
-        private void OnClickBegin()
-        {
+        private void OnClickBegin() {
             AstroGame.SaveBuffer.Clear();
             OGD.Player.ClaimId(m_PlayerCodeInput.text, null, HandleClaimNewIdSuccess, HandleClaimNewIdError);
         }
 
-        public void NewGameBegin(bool ignoreSave = false)
-        {
+        public void NewGameBegin(bool ignoreSave = false) {
             Find.State<ViewState>().ActiveNode.BackLink = null;
 
             MenuFade.Hide();
             CloseFade.Hide();
 
-            foreach (var comp in Find.Components<DisableDuringPrologue>())
-            {
+            PauseUtility.SetPauseButtonActive(true);
+            GameLoop.ResumeUpdates(AstroGame.PauseUpdateMask);
+
+            foreach (var comp in Find.Components<DisableDuringPrologue>()) {
                 GuiCommands.SetActive(comp.gameObject, false);
             }
 

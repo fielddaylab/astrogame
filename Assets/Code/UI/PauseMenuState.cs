@@ -47,7 +47,8 @@ namespace Astro {
     }
 
         public static class PauseUtility {
-        public static void SetPauseButtonActive(PauseMenuState state, bool active) {
+        public static void SetPauseButtonActive(bool active, PauseMenuState state = null) {
+            if (state == null) state = Find.State<PauseMenuState>();
             state.Button.interactable = active;
             state.Button.gameObject.SetActive(active);
         }
