@@ -5,6 +5,10 @@
 $call InitUpdateMasks()
 $call ToggleDeskPicture()
 $call SpawnDocument("Day3Cal")
+$call SpawnDocument("Level1")
+$call SpawnDocument("Level2")
+$call SpawnDocument("Panic")
+$call SpawnDocument("RadioDad")
 $call EnableDocumentClose("1833", false)
 $call EnableDocumentClose("Day3ElijahPostcard", false)
 $call SetInstrumentUnlocked(CoordinateInstrument, true)
@@ -42,8 +46,8 @@ $call ChapterTitles->FinishTransition(1)
 
 $call SetInputState(true)
 $wait 1
-{@Astrid}	Elijah! Okay... at least I know he's still alive. 	$[level3/Astrid/l3_a_01]
 $call SpawnDocumentToCamera("Day3ElijahPostcard")
+{@Astrid}	Elijah! Okay... at least I know he's still alive. 	$[level3/Astrid/l3_a_01]
 
 :: Day3ElijahPostcardFlavor
 @trigger    DocumentInspectFlip

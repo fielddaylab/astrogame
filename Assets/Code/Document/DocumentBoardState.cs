@@ -80,17 +80,8 @@ namespace Astro {
             }
 
             PlayerProgressState progressState = Find.State<PlayerProgressState>();
-            // ArchiveState archiveState = Find.State<ArchiveState>();
 
             var localPos = asset.DefaultPinnedPos;
-            // bool fromArchive = archiveIndex != -1;
-            // bool fromCurrDayArchive = progressState.DayIndex == archiveIndex + archiveState.DayOffset;
-
-            // override with init position if doc has different init position and it's being spawned to the current day
-            // if (asset.DifInitPos && (!fromArchive || (fromArchive && fromCurrDayArchive))) {
-            if (asset.DifInitPos) {
-                localPos = asset.InitPos;
-            }
 
             spawned.transform.localPosition = localPos;
             var pinnedPosCopy = pinnedPos = spawned.transform.position;
