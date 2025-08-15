@@ -62,29 +62,29 @@ $call SetInputState(true)
 @once
 
 $wait 1
-$call SpawnDocumentToCamera("Day5Martha")
-{@Astrid}	Dad would say I should keep working with him at CERES. Aunt Martha would think I'm crazy. Elijah... I'm not sure...	$[level5/Astrid/l5_a_09]
-{@Astrid}	Ugh. Time to focus. There’s still work to do.	$[level5/Astrid/l5_a_10]
-{@Astrid}	Just solve the last puzzle. When the satellite is unlocked, I'll have access to new radio channels. I can use it to contact Jocelyn and get the word out.	$[level5/Astrid/l5_a_11]
-{@Astrid}	Then I can figure out this job thing. 	$[level5/Astrid/l5_a_12]
-
-:: SpawnPuzzleDocs2
-@trigger    DocumentInspectEnd
-@when   documentId == "Day5Martha"
-@interrupt
-@cutscene
-@once
-
-$wait 1
 $call SpawnDocumentToCamera("NewspaperLetter")
 {@Astrid}	Oh my gosh, its happening for real! They just offered me a job at the paper! 	$[level5/Astrid/l5_a_05]
 {@Astrid}	This is so cool. There's so much I could do! A column, a radio show... maybe Elijah and I could even put out some art! We've always talked about making zines together.	$[level5/Astrid/l5_a_06]
 {@Astrid}	Everyone thinks the sky is just bad omens. 	$[level5/Astrid/l5_a_07]
 {@Astrid}	Maybe I could change that... starting with this meteor storm.	$[level5/Astrid/l5_a_08]
 
-:: BadLetter
+:: SpawnPuzzleDocs2
 @trigger    DocumentInspectEnd
 @when   documentId == "NewspaperLetter"
+@interrupt
+@cutscene
+@once
+
+$call SpawnDocumentToCamera("Day5Letter")
+{@Astrid}	Dad would say I should keep working with him at CERES. Aunt Martha would think I'm crazy. Elijah... I'm not sure...	$[level5/Astrid/l5_a_09]
+{@Astrid}	Ugh. Time to focus. There’s still work to do.	$[level5/Astrid/l5_a_10]
+{@Astrid}	Just solve the last puzzle. When the satellite is unlocked, I'll have access to new radio channels. I can use it to contact Jocelyn and get the word out.	$[level5/Astrid/l5_a_11]
+{@Astrid}	Then I can figure out this job thing. 	$[level5/Astrid/l5_a_12]
+
+$wait 1
+:: BadLetter
+@trigger    DocumentInspectEnd
+@when   documentId == "Day5Letter"
 @interrupt
 @cutscene
 @once
