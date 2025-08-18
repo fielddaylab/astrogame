@@ -6,8 +6,10 @@
 $call InitUpdateMasks()
 $call ToggleDeskPicture()
 $call SpawnDocument("Day4Cal")
-$call SpawnDocument("DontPanic")
+$call SpawnDocument("Level1")
+$call SpawnDocument("Level2")
 $call SpawnDocument("Satellite")
+$call SpawnDocument("Panic")
 $call SpawnDocument("Seriously")
 $call EnableDocumentClose("Day4ElijahPostcard", false)
 $call SetInstrumentUnlocked(CoordinateInstrument, true)
@@ -235,13 +237,13 @@ $call SetChannelActive(Unlocks_Inactive, false)
 $set temp:radioChannelTuned = false
 $call SetStickyFirstPage(7)
 
-{@Astrid}	I'll bet I am ready for a clearance upgrade. The CERES channels are in my reference guide	$[level2/Astrid/l2_a_23]
+{@Astrid}	I'll bet I am ready for a clearance upgrade. The CERES channels are in my reference guide	$[level2/Astrid/l2_a_22]
 $start .UpgradeReminder
 
 :: UpgradeReminder
 $wait 15
 $if !temp:radioChannelTuned
-    {@Astrid}	I'll bet I am ready for a clearance upgrade. The CERES channels are in my reference guide	$[level2/Astrid/l2_a_23(1)]
+    {@Astrid}	I'll bet I am ready for a clearance upgrade. The CERES channels are in my reference guide	$[level2/Astrid/l2_a_22(1)]
     $branch .UpgradeReminder
 $endif
 
@@ -380,10 +382,10 @@ $call StopMusic(0)
 {@Monitor}	Station 12, your clearance has been revoked. 	$[level4/monitor/l4_m_03]
 {@Astrid}	Whoa. Wait, just a second–	$[level4/Astrid/l4_a_39]
 {@Monitor}	Your access is resistricted to incoming data only. 	$[level4/monitor/l4_m_04]
-{@Astrid}	Wait, I just need two more minutes!	$[level4/Astrid/l4_a_40]
-{@Astrid}	Hello?	$[level4/Astrid/l4_a_41]
+{@Astrid} Wait, I just need two more minutes!	$[level4/Astrid/l4_a_40]
+{@Astrid} Hello?	$[level4/Astrid/l4_a_41]
 $wait 1
-{@Astrid}	Dad?	$[level4/Astrid/l4_a_42]
+{@Astrid} Dad?	$[level4/Astrid/l4_a_42]
 
 $wait 3
 $call LoadNextDay()

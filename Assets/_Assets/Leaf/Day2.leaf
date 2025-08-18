@@ -16,6 +16,7 @@ $call SetInstrumentUnlocked(TemperatureInstrument, true)
 $call SpawnDocument("Day2Cal")
 $call SpawnDocument("MarthaGuilt")
 $call SpawnDocument("ElijahHike")
+$call SpawnDocument("Cutoff")
 $call SpawnDocument("Level1")
 $call SpawnDocument("MiniLabors")
 $call StopPuzzleMode()
@@ -297,6 +298,7 @@ $start Observatory.ResetSubtitlePosition
 $call UnlockMonitorFocus()
 $call SetRadioDialLocked(false)
 $call SetRefGuidePagesLocked(false)
+$call SetChannelActive(IceCube, false)
 
 {@Radio}	Nice job! You're getting the hang of this. 	$[level2/radio_lady/l2_r_15]
 
@@ -358,7 +360,7 @@ $call ConsoleCommandLine->PlayConsoleText("Day2UpgradeSystem")
 $call SetInstrumentUnlocked(SpectrometerInstrument, true)
 $wait 1
 $call OpenRefGuidePage("Spectrometer")
-$wait 9 // wait for the console text to finish
+$wait 11 // wait for the console text to finish
 
 $call ConsoleCommandLine->HideConsole()
 $wait 0.1
@@ -372,6 +374,7 @@ $call OpenRefGuidePage("ConstellationHercules")
 $wait 1
 
 {@Astrid}	Hmm, Hercules. Just like Elijah's postcard. 	$[level2/Astrid/l2_a_23]
+$wait 1
 $goto .SetupPuzzleNav
 
 :: SetupPuzzleNav
@@ -425,7 +428,13 @@ $call TapeDeck->SetTapeActive(true)
 $call ConsoleCommandLine->HideConsole()
 $call TapeDeck->SetTapeActive(false)
 
-$wait 2
+$wait 1
+$call MonitorUI->ShowElement("CeresMsg")
+$wait 1
+$call SetRadioFrequency(137)
+$call MonitorUI->HideElement("CeresMsg")
+$wait 1
+
 
 {@Dad}	Station 12, this is CERES HQ. Nice work today. $[level2/Dad/l2_d_01]
 {@Astrid}	Dad, I'm so glad you called. I'm freaking out. I think I know what Elijah is working on!	$[level2/Astrid/l2_a_25]
@@ -458,4 +467,7 @@ $call SetRefGuideActive(false)
 {@Astrid}	No, signing off for tonight. 	$[level2/Astrid/l2_a_34]
 
 $call StopMusic(1)
+$call SetRadioFrequency(100)
+$wait 100
+
 $call LoadNextDay()

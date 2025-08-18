@@ -75,5 +75,6 @@ public class DocumentAssetEditor : Editor {
         }
         EditorGUILayout.Space();
         EditorGUILayout.PropertyField(serializedObject.FindProperty("Font")); 
-        }
+        serializedObject.ApplyModifiedProperties();
+    }
 }
