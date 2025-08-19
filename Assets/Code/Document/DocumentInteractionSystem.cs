@@ -15,18 +15,16 @@ namespace Astro {
             m_StateA.InteractedThisFrame = false;
             if (!m_StateA.EnableDocumentInteraction) return;
 
-            if (m_StateA.SelectedDocument != null) {
-                if (!m_StateA.SpawnDocumentToCamera.Exists()) {
-                    DocumentUtility.MoveSelectedToMouse(m_StateA);
-                }
-                if (m_StateB.InputEnabled && Game.Input.IsMousePressed(MouseButton.Left)) {
-                    DocumentUtility.DeselectDocument(m_StateA);
-                    Game.Input.ConsumeAllInputForFrame();
-                }
+            if (m_StateA.SelectedDocument == null) return;
+
+            if (!m_StateA.SpawnDocumentToCamera.Exists()) {
+                DocumentUtility.MoveSelectedToMouse(m_StateA);
             }
-
+            if (m_StateB.InputEnabled && Game.Input.IsMousePressed(MouseButton.Left)) {
+                DocumentUtility.DeselectDocument(m_StateA);
+                Game.Input.ConsumeAllInputForFrame();
+            }
         }
-
     }
 
     public static partial class DocumentUtility {

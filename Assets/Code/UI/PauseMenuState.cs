@@ -32,6 +32,7 @@ namespace Astro {
         #endregion // Inspector
 
         [NonSerialized] public int CurrentUpdateMask;
+        [NonSerialized] public int CurrentEventMask;
         [NonSerialized] public bool GamePaused;
         [NonSerialized] public Routine ButtonRoutine;
 
@@ -46,7 +47,7 @@ namespace Astro {
         public void OnDeregister() { Button.onClick.RemoveListener(m_StartTogglePause); }
     }
 
-        public static class PauseUtility {
+    public static class PauseUtility {
         public static void SetPauseButtonActive(bool active, PauseMenuState state = null) {
             if (state == null) state = Find.State<PauseMenuState>();
             state.Button.interactable = active;
@@ -87,10 +88,12 @@ namespace Astro {
                 GameLoop.SuspendUpdates(Bits.All32);
                 GameLoop.ResumeUpdates(AstroGame.PauseUpdateMask);
                 //PauseCutscenes();
+                state.CurrentEventMask = input.Raycaster.eventMask;
                 InputUtility.SetClickableMaskCustom(input, LayerMasks.UI_Mask);
                 Game.Events.Dispatch(GameEvents.GamePaused);
             } else {
                 InputUtility.SetClickableMaskDefault(input);
+                InputUtility.SetClickableMaskCustom(input, state.CurrentEventMask);
                 GameLoop.ResumeUpdates(state.CurrentUpdateMask);
                 //ResumeCutscenes();
                 Game.Events.Dispatch(GameEvents.GameResumed);
