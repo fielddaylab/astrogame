@@ -393,6 +393,7 @@ $call SetInputState(true)
 
 $call ClearMonitorSelection()
 $call UnlockMonitorFocus()
+$call SetStickyFirstPage(2)
 $call StartPuzzleMode()
 $call SetRadioDialLocked(false)
 
@@ -402,6 +403,7 @@ $call SetRadioDialLocked(false)
 @cutscene
 @once
 
+$call SetStickyFirstPage(-1)
 $call ClearMonitorSelection()
 $call StopPuzzleMode()
 $call SetInputState(false)
