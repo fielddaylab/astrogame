@@ -44,10 +44,9 @@ namespace Astro {
         }
 
         [LeafMember("IsDocumentPuzzleSolved")]
-        private static bool LeafIsDocumentPuzzleSolved()
-        {
+        private static bool LeafIsDocumentPuzzleSolved() {
             var puzzleState = Find.State<DocumentPuzzleState>();
-            return DocumentUtility.IsDocPuzzleCorrect(puzzleState);
+            return IsDocPuzzleCorrect(puzzleState);
         }
 
         #endregion // Leaf
@@ -62,8 +61,7 @@ namespace Astro {
             GameLoop.ResumeUpdates(AstroGame.DocumentUpdateMask);
         }
 
-        public static void EndDocumentPuzzle(DocumentPuzzleState state)
-        {
+        public static void EndDocumentPuzzle(DocumentPuzzleState state) {
             state.PuzzleActive = false;
             GameLoop.SuspendUpdates(AstroGame.DocumentUpdateMask);
         }
@@ -81,8 +79,7 @@ namespace Astro {
                     SetDocumentHighlight(state.CurrHoverDoc, Color.white);
                     state.CurrHoverDoc = null;
                 }
-            }
-            else if (state.CurrHoverDoc != null && state.CurrHoverDoc.Interactable.AssetName.Equals(doc.Interactable.AssetName)) {
+            } else if (state.CurrHoverDoc != null && state.CurrHoverDoc.Interactable.AssetName.Equals(doc.Interactable.AssetName)) {
                 // no change in hover asset
                 if (Game.IsDevBuild){
                     if (DebugFlags.IsFlagSet(DocumentPuzzleState.DebuggingFlags.DisplayDocumentHoverInfo)) {
@@ -99,22 +96,19 @@ namespace Astro {
                 }
                 SetDocumentHighlight(state.CurrHoverDoc, Color.white);
                 state.CurrHoverDoc = doc;
-                SetDocumentHighlight(state.CurrHoverDoc, DocumentPuzzleState.DocHighlightColor);
+                if (state.CurrHoverDoc.TriggersPrompter) SetDocumentHighlight(state.CurrHoverDoc, DocumentPuzzleState.DocHighlightColor);
             }
         }
 
-        public static void UpdateDocPuzzleAnswer(DocumentPuzzleState puzzleState, StringHash32 questionId, StringHash32 answerId)
-        {
+        public static void UpdateDocPuzzleAnswer(DocumentPuzzleState puzzleState, StringHash32 questionId, StringHash32 answerId) {
             if (!puzzleState.CurrSolutionPairs.ContainsKey(questionId)) {
                 puzzleState.CurrSolutionPairs.Add(questionId, answerId);
-            }
-            else {
+            } else {
                 puzzleState.CurrSolutionPairs[questionId] = answerId;
             }
         }
 
-        public static bool IsDocPuzzleCorrect(DocumentPuzzleState puzzleState)
-        {
+        public static bool IsDocPuzzleCorrect(DocumentPuzzleState puzzleState) {
             foreach (var pair in puzzleState.CurrPuzzle.SolutionPairs) {
                 if (!puzzleState.CurrSolutionPairs.ContainsKey(pair.Question.AssetId)) {
                     return false;

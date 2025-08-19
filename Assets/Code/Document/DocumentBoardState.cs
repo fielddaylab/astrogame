@@ -258,7 +258,7 @@ namespace Astro {
 
             //check if we are currently over a puzzle doc
             DocumentRenderer hoverDoc = Find.State<DocumentPuzzleState>().CurrHoverDoc;
-            if (hoverDoc != null) SetDocumentHighlight(hoverDoc, DocumentPuzzleState.DocHighlightColor);
+            if (hoverDoc != null && hoverDoc.TriggersPrompter) SetDocumentHighlight(hoverDoc, DocumentPuzzleState.DocHighlightColor);
         }
 
         public static void DeselectDocument(DocumentBoardState state) {

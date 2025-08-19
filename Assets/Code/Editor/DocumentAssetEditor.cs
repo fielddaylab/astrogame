@@ -35,7 +35,9 @@ public class DocumentAssetEditor : Editor {
 
         EditorGUILayout.PropertyField(serializedObject.FindProperty("Category")); 
         EditorGUILayout.PropertyField(serializedObject.FindProperty("Prefab"));
-        // EditorGUILayout.PropertyField(serializedObject.FindProperty("CloseEnabled"));
+        EditorGUILayout.Space();
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("Font")); 
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("TriggersPrompter")); 
         serializedObject.ApplyModifiedProperties();
 
         EditorGUILayout.Space();
@@ -73,8 +75,5 @@ public class DocumentAssetEditor : Editor {
                 EditorGUILayout.Space();
             }
         }
-        EditorGUILayout.Space();
-        EditorGUILayout.PropertyField(serializedObject.FindProperty("Font")); 
-        serializedObject.ApplyModifiedProperties();
     }
 }
