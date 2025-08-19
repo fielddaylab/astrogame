@@ -16,15 +16,12 @@ namespace Astro {
     public class ParallaxGraphAnimation : BatchedComponent, IRegistrationCallbacks {
         [NonSerialized] public float Scale;
 
-        //public MeshRenderer DisplayTarget;
-
         [Header("Inspector")]
         public DataSlot LinkedDistance;
         public GameObject AnimRoot;
-        public Transform SunSprite;
-        public Transform EarthSprite;
-        public Transform StarImageSprite;
-        public Transform RealStarSprite;
+        public SpriteRenderer EarthSprite;
+        public SpriteRenderer StarImageSprite;
+        public SpriteRenderer RealStarSprite;
         public Transform Ruler;
         public LineRenderer Line;
 
@@ -37,23 +34,28 @@ namespace Astro {
         [NonSerialized] public float ParallaxFactor;
         [NonSerialized] public Vector3 EarthInitPos;
         [NonSerialized] public Vector3 StarInitPos;
-        [NonSerialized] public StreamingQuadTexture EarthTex;
         [NonSerialized] public DataDisplay DistanceDisplay;
 
-        public void OnDeregister() { }
+        [NonSerialized] private Action<DataPacket, DataFormattingFlags> m_HandleDisplayRequest;
+        [NonSerialized] private Action m_HandleDisplayCleared;
+
+        public void OnDeregister() {
+            DistanceDisplay.OnDisplayRequested.Deregister(m_HandleDisplayRequest);
+            DistanceDisplay.OnDisplayCleared.Deregister(m_HandleDisplayCleared);
+        }
 
         public void OnRegister() {
-            EarthInitPos = EarthSprite.localPosition;
-            StarInitPos = StarImageSprite.localPosition;
-            Line.SetPosition(0, EarthSprite.position);
-            Line.SetPosition(1, StarImageSprite.position);
-            EarthTex = EarthSprite.GetComponent<StreamingQuadTexture>();
+            EarthInitPos = EarthSprite.transform.localPosition;
+            StarInitPos = StarImageSprite.transform.localPosition;
+            Line.SetPosition(0, EarthSprite.transform.position);
+            Line.SetPosition(1, StarImageSprite.transform.position);
+
+            m_HandleDisplayRequest = (packet, flags) => ParallaxDataUtility.OnDisplayRequest(this, packet, flags);
+            m_HandleDisplayCleared = () => ParallaxDataUtility.OnDisplayClear(this);
 
             DistanceDisplay = LinkedDistance.Displays[0];
-            DistanceDisplay.OnDisplayRequested.Register( 
-                (packet, flags) => ParallaxDataUtility.OnDisplayRequest(this, packet, flags), this);
-            DistanceDisplay.OnDisplayCleared.Register(
-                () => ParallaxDataUtility.OnDisplayClear(this), this);
+            DistanceDisplay.OnDisplayRequested.Register(m_HandleDisplayRequest);
+            DistanceDisplay.OnDisplayCleared.Register(m_HandleDisplayCleared);
         }
     }
 
@@ -79,10 +81,10 @@ namespace Astro {
             // middle school algebra don't fail me now
             if (anim.OrbitInX) {
                 float d = (anim.StarInitPos.y * distance) / (distance + anim.ParallaxMultiplier);
-                anim.RealStarSprite.localPosition = new Vector3(0, d, 0);
+                anim.RealStarSprite.transform.localPosition = new Vector3(0, d, 0);
             } else {
                 float d = (anim.StarInitPos.x * distance) / (distance + anim.ParallaxMultiplier);
-                anim.RealStarSprite.localPosition = new Vector3(d, 0, 0);
+                anim.RealStarSprite.transform.localPosition = new Vector3(d, 0, 0);
             }
             anim.Ruler.gameObject.SetActive(true);
             anim.Line.gameObject.SetActive(true);
@@ -90,8 +92,8 @@ namespace Astro {
         }
 
         public static void ResetAnimation(ParallaxGraphAnimation anim) {
-            anim.StarImageSprite.localPosition = anim.StarInitPos;
-            anim.EarthSprite.localPosition = anim.EarthInitPos;
+            anim.StarImageSprite.transform.localPosition = anim.StarInitPos;
+            anim.EarthSprite.transform.localPosition = anim.EarthInitPos;
             UpdateSpline(anim);
             anim.Ruler.gameObject.SetActive(false);
             anim.Line.gameObject.SetActive(false);
@@ -99,8 +101,8 @@ namespace Astro {
         }
 
         public static void UpdateSpline(ParallaxGraphAnimation anim) {
-            anim.Line.SetPosition(0, anim.EarthSprite.localPosition + LINE_Z_OFFSET);
-            anim.Line.SetPosition(1, anim.StarImageSprite.localPosition + LINE_Z_OFFSET);
+            anim.Line.SetPosition(0, anim.EarthSprite.transform.localPosition + LINE_Z_OFFSET);
+            anim.Line.SetPosition(1, anim.StarImageSprite.transform.localPosition + LINE_Z_OFFSET);
         }
 
         public static void OnDisplayClear(ParallaxGraphAnimation anim) {
