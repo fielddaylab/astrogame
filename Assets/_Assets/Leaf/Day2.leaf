@@ -435,12 +435,16 @@ $call MonitorUI->ShowElement("CeresMsg")
 $wait 1
 $call SetRadioFrequency(137)
 $call MonitorUI->HideElement("CeresMsg")
+$goto .PuzzleNavigationComplete01
+
+:: PuzzleNavigationComplete01
+@cutscene
+
 $wait 1
-
-
 {@Dad}	Station 12, this is CERES HQ. Nice work today. $[level2/Dad/l2_d_01]
 {@Astrid}	Dad, I'm so glad you called. I'm freaking out. I think I know what Elijah is working on!	$[level2/Astrid/l2_a_25]
-{@Dad}	Whoa, Astrid, didn't you get my letter? This channel is—	$[level2/Dad/l2_d_02]
+{@Dad}	{vox-overlap -0.5} Whoa, Astrid, didn't you get my letter? This channel is—	$[level2/Dad/l2_d_02]
+
 {@Astrid}	I know, but just listen! Elijah said something about a satellite. It has data from before the Collapse!	$[level2/Astrid/l2_a_26]
 {@Dad}	Oh, Astrid. The Gorynich satellite is just a wild goose chase. 	$[level2/Dad/l2_d_03]
 {@Dad}	Or... a wild dragon chase, I guess. 	$[level2/Dad/l2_d_04]

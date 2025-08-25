@@ -281,6 +281,7 @@ $call StartOpenMode()
 $set temp:introMoveTheTelescope = true
 $set temp:upgradeChannelTuned = false
 $call SetStickyFirstPage(0)
+$call SetRefGuidePagesLocked(false)
 
 {@Radio}	Nice job!	$[level1/radio_lady/l1_r_12]
 {@Radio}	So, earlier this morning, IceCube detected a high-energy neutrino coming from one of several possible stars in this location.	$[level1/radio_lady/l1_r_13]
@@ -787,7 +788,6 @@ $call HintModals->SlideInFromLeft("BlueFilter", 0.4)
 $goto .PostAtikAppMagFilled
 
 :: PostAtikAppMagFilled
-$call SetRefGuidePagesLocked(false)
 $call Wait(1)
 
 :: BlueFilterSelected
