@@ -26,6 +26,7 @@ namespace Astro.Title {
             yield return null;
 
             GameLoop.ResumeUpdates(Bits.All32);
+            GameLoop.SuspendUpdates(AstroGame.PauseUpdateMask);
 
             TitleGroup.SetVisibleNow(false);
             yield return null;
