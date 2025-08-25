@@ -1,118 +1,138 @@
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
     <title>{{{ PRODUCT_NAME }}}</title>
-    
-    <link rel="shortcut icon" href="TemplateData/favicon.ico">
-    <link rel="stylesheet" href="TemplateData/style.css">
 
-#if BRAINPOP
+    <link rel="shortcut icon" href="TemplateData/favicon.ico" />
+    <link rel="stylesheet" href="TemplateData/style.css" />
+
+    #if BRAINPOP
     <!-- brainpop -->
     <script src="https://cdn.brainpop.com/games/assets/js/cameraProxyDOMCrossDomain.js"></script>
     <script src="https://cdn.brainpop.com/games/assets/js/html2canvas.js"></script>
-#endif
+    #endif
 
     <script src="CompatibilityChecks.js"></script>
-
+    <script src="FloatingDropdown/index.js"></script>
   </head>
   <body>
+    <floating-dropdown>
+      <style>
+        floating-dropdown {
+          --custom-font: "brandon-grotesque";
+          --left-offset: 25%;
+          --scale-factor: 0.9;
+        }
+      </style>
+      <img
+        slot="header"
+        src="FloatingDropdown/vault-library-logo.png"
+        alt="Vault Games Library"
+      />
+      <span slot="desc" class="content">
+        Field Day presents the largest collection of
+        <span style="color: #00ecd0">FREE</span>
+        learning games on the web.
+      </span>
+      <span slot="button-label" class="content"> OPEN VAULT </span>
+    </floating-dropdown>
     <div id="BrainPOPsnapArea">
-        <div id="unity-container" class="unity-desktop">
+      <div id="unity-container" class="unity-desktop">
         <canvas id="unity-canvas"></canvas>
         <div id="unity-loading-bar">
-            <div id="unity-logo"></div>
-            <div id="unity-progress-bar-empty">
+          <div id="unity-logo"></div>
+          <div id="unity-progress-bar-empty">
             <div id="unity-progress-bar-full"></div>
-            </div>
+          </div>
         </div>
-        <div id="unity-warning"> </div>
-        </div>
+        <div id="unity-warning"></div>
+      </div>
     </div>
     <script>
-      var container = document.querySelector("#unity-container");
-      var canvas = document.querySelector("#unity-canvas");
-      var loadingBar = document.querySelector("#unity-loading-bar");
-      var progressBarFull = document.querySelector("#unity-progress-bar-full");
-      var warningBanner = document.querySelector("#unity-warning");
+            var container = document.querySelector("#unity-container");
+            var canvas = document.querySelector("#unity-canvas");
+            var loadingBar = document.querySelector("#unity-loading-bar");
+            var progressBarFull = document.querySelector("#unity-progress-bar-full");
+            var warningBanner = document.querySelector("#unity-warning");
 
-      // Shows a temporary message banner/ribbon for a few seconds, or
-      // a permanent error message on top of the canvas if type=='error'.
-      // If type=='warning', a yellow highlight color is used.
-      // Modify or remove this function to customize the visually presented
-      // way that non-critical warnings and error messages are presented to the
-      // user.
-      function unityShowBanner(msg, type) {
-        function updateBannerVisibility() {
-          warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
-        }
-        var div = document.createElement('div');
-        div.innerHTML = msg;
-        warningBanner.appendChild(div);
-        if (type == 'error') div.style = 'background: red; padding: 10px;';
-        else {
-          if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
-          setTimeout(function() {
-            warningBanner.removeChild(div);
-            updateBannerVisibility();
-          }, 5000);
-        }
-        updateBannerVisibility();
-      }
+            // Shows a temporary message banner/ribbon for a few seconds, or
+            // a permanent error message on top of the canvas if type=='error'.
+            // If type=='warning', a yellow highlight color is used.
+            // Modify or remove this function to customize the visually presented
+            // way that non-critical warnings and error messages are presented to the
+            // user.
+            function unityShowBanner(msg, type) {
+              function updateBannerVisibility() {
+                warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
+              }
+              var div = document.createElement('div');
+              div.innerHTML = msg;
+              warningBanner.appendChild(div);
+              if (type == 'error') div.style = 'background: red; padding: 10px;';
+              else {
+                if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
+                setTimeout(function() {
+                  warningBanner.removeChild(div);
+                  updateBannerVisibility();
+                }, 5000);
+              }
+              updateBannerVisibility();
+            }
 
-      var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/{{{ LOADER_FILENAME }}}";
-      var config = {
-        dataUrl: buildUrl + "/{{{ DATA_FILENAME }}}",
-        frameworkUrl: buildUrl + "/{{{ FRAMEWORK_FILENAME }}}",
-#if USE_WASM
-        codeUrl: buildUrl + "/{{{ CODE_FILENAME }}}",
-#endif
-#if MEMORY_FILENAME
-        memoryUrl: buildUrl + "/{{{ MEMORY_FILENAME }}}",
-#endif
-#if SYMBOLS_FILENAME
-        symbolsUrl: buildUrl + "/{{{ SYMBOLS_FILENAME }}}",
-#endif
-        streamingAssetsUrl: "StreamingAssets",
-        companyName: {{{ JSON.stringify(COMPANY_NAME) }}},
-        productName: {{{ JSON.stringify(PRODUCT_NAME) }}},
-        productVersion: {{{ JSON.stringify(PRODUCT_VERSION) }}},
-        showBanner: unityShowBanner,
-        webglContextAttributes: {
-            preserveDrawingBuffer: true,
-            powerPreference: {{{ WEBGL_POWER_PREFERENCE }}}
-        }
-      };
+            var buildUrl = "Build";
+            var loaderUrl = buildUrl + "/{{{ LOADER_FILENAME }}}";
+            var config = {
+              dataUrl: buildUrl + "/{{{ DATA_FILENAME }}}",
+              frameworkUrl: buildUrl + "/{{{ FRAMEWORK_FILENAME }}}",
+      #if USE_WASM
+              codeUrl: buildUrl + "/{{{ CODE_FILENAME }}}",
+      #endif
+      #if MEMORY_FILENAME
+              memoryUrl: buildUrl + "/{{{ MEMORY_FILENAME }}}",
+      #endif
+      #if SYMBOLS_FILENAME
+              symbolsUrl: buildUrl + "/{{{ SYMBOLS_FILENAME }}}",
+      #endif
+              streamingAssetsUrl: "StreamingAssets",
+              companyName: {{{ JSON.stringify(COMPANY_NAME) }}},
+              productName: {{{ JSON.stringify(PRODUCT_NAME) }}},
+              productVersion: {{{ JSON.stringify(PRODUCT_VERSION) }}},
+              showBanner: unityShowBanner,
+              webglContextAttributes: {
+                  preserveDrawingBuffer: true,
+                  powerPreference: {{{ WEBGL_POWER_PREFERENCE }}}
+              }
+            };
 
-      var support = DetectBrowserSupport();
-      if (support == "mobile") {
-        window.location.href = "./unsupported-mobile.html";
-      } else if (support == "no-webgl" || support == "ie") {
-        window.location.href = "./unsupported-config.html";
-      } else {
+            var support = DetectBrowserSupport();
+            if (support == "mobile") {
+              window.location.href = "./unsupported-mobile.html";
+            } else if (support == "no-webgl" || support == "ie") {
+              window.location.href = "./unsupported-config.html";
+            } else {
 
-  #if BACKGROUND_FILENAME
-        canvas.style.background = "url('" + buildUrl + "/{{{ BACKGROUND_FILENAME.replace(/'/g, '%27') }}}') center / cover";
-  #endif
-        loadingBar.style.display = "block";
+        #if BACKGROUND_FILENAME
+              canvas.style.background = "url('" + buildUrl + "/{{{ BACKGROUND_FILENAME.replace(/'/g, '%27') }}}') center / cover";
+        #endif
+              loadingBar.style.display = "block";
 
-        var script = document.createElement("script");
-        script.src = loaderUrl;
-        script.onload = () => {
-          createUnityInstance(canvas, config, (progress) => {
-            progressBarFull.style.width = 100 * progress + "%";
-          }).then((unityInstance) => {
-            loadingBar.style.display = "none";
-        window.unityInstance = unityInstance;
-          }).catch((message) => {
-            alert(message);
-          });
-        };
-        document.body.appendChild(script);
-      }
+              var script = document.createElement("script");
+              script.src = loaderUrl;
+              script.onload = () => {
+                createUnityInstance(canvas, config, (progress) => {
+                  progressBarFull.style.width = 100 * progress + "%";
+                }).then((unityInstance) => {
+                  loadingBar.style.display = "none";
+              window.unityInstance = unityInstance;
+                }).catch((message) => {
+                  alert(message);
+                });
+              };
+              document.body.appendChild(script);
+            }
     </script>
   </body>
 </html>
