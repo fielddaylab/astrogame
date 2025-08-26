@@ -6,6 +6,7 @@ using FieldDay.Components;
 using FieldDay.Scenes;
 using FieldDay.Scripting;
 using FieldDay.SharedState;
+using Leaf.Runtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,7 +20,6 @@ namespace Astro.Title {
 
         private void OnDestroy() {
             ScriptUtility.DeregisterAllSignalsForContext(this);
-            
         }
 
         IEnumerator<WorkSlicer.Result?> IScenePreload.Preload() {

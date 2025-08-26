@@ -5,6 +5,7 @@
 @boostScore 100
 @cutscene
 
+$call PreludePostcard->Deactivate() 
 $call ChapterTitles->PrepareTransition(true)
 $wait 0.5
 $call ChapterTitles->DisplayIntroTitles()
@@ -28,6 +29,8 @@ $wait 3.1
 {@Astrid} Don't worry. Next year we'll be together. Like, actually together. $[prelude/Astrid/pre_a_03] 
 {@Elijah} I'm literally counting down the days. It's gonna be so cool studying astronomy with you. $[prelude/Elijah/pre_e_03]  
 $wait 1 
+$call PreludePostcard->Activate() 
+$call PreludePostcard->SlideIn() 
 {@Elijah} Did you get my birthday card? I drew you as Perseus. $[prelude/Elijah/pre_e_04]
 {@Astrid} It's really great, Elijah . . . but I don't think I'm as cool as Perseus. $[prelude/Astrid/pre_a_04]
 {@Elijah} Girl, trust me. You're the stuff of Greek myth. $[prelude/Elijah/pre_e_05] 
@@ -35,6 +38,8 @@ $wait 1
 $call Perseids_ParticlesB->PlayEffects()
 {@Astrid}	Dudeeeee.  $[prelude/Astrid/pre_a_05]
 {@Elijah}   (*chuckle*) Sorry. $[prelude/Elijah/pre_e_06] 
+$call PreludePostcard->SlideOut() 
+$call PreludePostcard->Deactivate() 
 
 {@Astrid} Okay, let's focus. The Perseids won't wait for us. $[prelude/Astrid/pre_a_06] 
 {@Astrid} Bet I can find the Perseus constellation first.  $[prelude/Astrid/pre_a_07]
