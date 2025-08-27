@@ -101,7 +101,7 @@ namespace Astro.Title {
             }
             Find.GuiModule<LoadingIcon>().Hide();
 
-            Game.Events.Dispatch(GameEvents.TitleGameStarting);
+            AstroGame.Events.Dispatch(GameEvents.TitleGameStarting, Find.State<UserSettingsState>().PlayerCode);
             ScriptUtility.Trigger("BeginPrelude");
 
             Routine.StartDelay(() => {
