@@ -74,6 +74,13 @@ namespace Astro.Radio {
             InstrumentUtility.TrySetValue(state.Dial, frequency);
         }
 
+        [LeafMember("IsRadioFrequencyAt")]
+        static public bool IsRadioFrequencyAt(int frequency) {
+            var state = Find.State<RadioRig>();
+
+            return state.Dial.CurrentValue == frequency;
+        }
+
         [LeafMember("SnapRadioToChannel")]
         //! There appear to be some issues when this is called in script immediatley after SetRadioFrequency
         static public void SnapRadioFrequencyToChannel() {

@@ -397,12 +397,14 @@ $endif
 
 :: PlayerLeavesNeutrinoTask2
 @trigger    OnLeaveNeutrinoRegion
+@when   IsRadioFrequencyAt(137)
 @once
 
 {@Radio} Looks like you’re drifting away from the cluster. $[level1/radio_lady/l1_r_29]
 
 :: PlayerLeavesNeutrinoTask
 @trigger    OnLeaveNeutrinoRegion
+@when   IsRadioFrequencyAt(137)
 
 {@Radio} You are headed off target. $[level1/radio_lady/l1_r_28]
 
@@ -598,8 +600,8 @@ $call SetInstrumentUnlocked(TemperatureInstrument, true)
 $call SetStickyFirstPage(-1)
 $call OpenRefGuidePage("Colormeter")
 
-$wait 0.5
-{@Astrid} "Clearance level 1... Color meter access granted. Please reference Ceres Operations manual fo rmore info. Congratuations on reaching clearance Level 1. Together we will map the stars for a greater tomorrow" $[level1/Astrid/l1_a_20]
+$wait 1.5
+{@Astrid} "Clearance level 1... Color meter access granted. Please reference Ceres Operations manual for more info. Congratuations on reaching clearance Level 1. Together we will map the stars for a greater tomorrow" $[level1/Astrid/l1_a_20]
 
 $call ConsoleCommandLine->HideConsole()
 $wait 0.1
