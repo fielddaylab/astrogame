@@ -11,6 +11,7 @@ using BeauUtil;
 using UnityEngine.UI;
 using Astro.Audio;
 using BeauUtil.UI;
+using FieldDay.Scripting;
 
 namespace Astro {
     public class SubtitleDisplay : SharedRoutinePanel, IRegistrationCallbacks, IOnGuiUpdate {
@@ -33,6 +34,8 @@ namespace Astro {
         [NonSerialized] private SubtitleDisplayData m_CurrentDisplayData;
         [NonSerialized] private VoxWaveform m_CurrentWaveform;
         [NonSerialized] private bool m_UpdateRegistered;
+
+        [NonSerialized] private SubtitleLogData m_CurrentDisplayLogData = default;
 
         private Routine m_BounceAnim;
 
@@ -58,9 +61,19 @@ namespace Astro {
         #region Handlers
 
         private void HandleDisplayRequest(SubtitleDisplayData data) {
+            // DialogueAudioStart event
+            var scriptDB = Find.State<ScriptDatabase>();
+            ScriptDBUtility.TryLookupCustomLineCode(scriptDB, VoxUtility.GetLineCode(data.VoxHandle), out m_CurrentDisplayLogData.LineId);
+            m_CurrentDisplayLogData.ScriptContent = data.Subtitle.Data;
+            m_CurrentDisplayLogData.CharacterId = data.CharacterId;
+            AstroGame.Events.Dispatch(GameEvents.DialogueAudioStart, EvtArgs.Box(m_CurrentDisplayLogData));
+
             if (data.Priority < m_CurrentDisplayData.Priority || string.IsNullOrEmpty(data.Subtitle.Data)) {
                 return;
             }
+
+            // TODO: DialogueSubtitleStart event
+
 
             m_CurrentDisplayData = data;
             SyncDisplayedData(data);
@@ -73,6 +86,12 @@ namespace Astro {
         }
 
         private void HandleDismissRequest(SubtitleDisplayData data) {
+            // DialogueAudioEnd event
+            var scriptDB = Find.State<ScriptDatabase>();
+            ScriptDBUtility.TryLookupCustomLineCode(scriptDB, VoxUtility.GetLineCode(data.VoxHandle), out m_CurrentDisplayLogData.LineId);
+            m_CurrentDisplayLogData.CharacterId = data.CharacterId;
+            AstroGame.Events.Dispatch(GameEvents.DialogueAudioEnd, EvtArgs.Box(m_CurrentDisplayLogData));
+
             if (data.VoxHandle != m_CurrentDisplayData.VoxHandle) {
                 return;
             }

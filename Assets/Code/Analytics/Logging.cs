@@ -4,6 +4,7 @@ using BeauUtil;
 using BeauUtil.Debugger;
 using BeauUtil.Variants;
 using FieldDay;
+using FieldDay.Vox;
 using OGD;
 using System;
 using System.Collections.Generic;
@@ -193,6 +194,8 @@ namespace Astro {
                 .Register(GameEvents.ClickResumeGame, LogClickResumeGame)
                 .Register<string>(GameEvents.CutsceneStart, LogCutsceneStart)
                 .Register<string>(GameEvents.CutsceneEnd, LogCutsceneEnd)
+                .Register<SubtitleLogData>(GameEvents.DialogueAudioStart, LogDialogueAudioStart)
+                .Register<SubtitleLogData>(GameEvents.DialogueAudioEnd, LogDialogueAudioEnd)
                 ;
         }
         #endregion
@@ -267,22 +270,21 @@ namespace Astro {
         //* line_id
         //* script_content
         //* speaker_id
-        private void LogDialogueAudioStart(string lineId, string scriptContent, string speakerId) {
-            // TODO: this one's gonna be annoying
+        private void LogDialogueAudioStart(SubtitleLogData data) {
             m_Log.BeginEvent("dialog_audio_start");
-            m_Log.EventParam("line_id", lineId);
-            m_Log.EventParam("script_content", scriptContent);
-            m_Log.EventParam("speaker_id", speakerId);
+            m_Log.EventParam("line_id", data.LineId.ToString());
+            m_Log.EventParam("script_content", data.ScriptContent);
+            m_Log.EventParam("speaker_id", VoxUtility.FindEmitter(data.CharacterId).CharacterId.Source());
             m_Log.SubmitEvent();
         } 
 
         //dialog_audio_end/
         //* line_id
         //* speaker_id
-        private void LogDialogueAudioEnd(string lineId, string speakerId) {
+        private void LogDialogueAudioEnd(SubtitleLogData data) {
             m_Log.BeginEvent("dialog_audio_end");
-            m_Log.EventParam("line_id", lineId);
-            m_Log.EventParam("speaker_id", speakerId);
+            m_Log.EventParam("line_id", data.LineId.ToString());
+            m_Log.EventParam("speaker_id", VoxUtility.FindEmitter(data.CharacterId).CharacterId.Source());
             m_Log.SubmitEvent();
         }
 
@@ -1038,7 +1040,15 @@ namespace Astro {
         public string Title;
         public string Contents;
     }
- 
+
+    [Serializable]
+    public struct SubtitleLogData
+    {
+        public StringSlice LineId;
+        public string ScriptContent;
+        public SerializedHash32 CharacterId;
+    }
+
     #endregion //Data Structs
 
 }

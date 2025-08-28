@@ -260,6 +260,20 @@ namespace FieldDay.Scripting {
         }
 
         /// <summary>
+        /// Attempts to lookup a custom line code for the given line code.
+        /// </summary>
+        static public bool TryLookupCustomLineCode(ScriptDatabase db, StringHash32 lineCode, out StringSlice customLineCode) {
+            foreach (var package in db.RegisteredPackages) {
+                if (!(customLineCode = package.GetLineCustomName(lineCode)).IsEmpty) {
+                    return true;
+                }
+            }
+
+            customLineCode = null;
+            return false;
+        }
+
+        /// <summary>
         /// Finds a random valid trigger for the given bucket and request.
         /// </summary>
         static public unsafe ScriptNode FindRandomTrigger(ScriptDatabase db, StringHash32 bucketId, ScriptNodeLookupArgs request) {

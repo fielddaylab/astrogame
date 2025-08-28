@@ -10,6 +10,7 @@ namespace FieldDay.Vox {
         public StringHash32 CharacterId;
         public SubtitleEntry Subtitle;
         public VoxPriority Priority;
+        // public string CharacterSource;
     }
 
     static public partial class SubtitleUtility {
