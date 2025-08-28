@@ -12,6 +12,7 @@ using Leaf.Runtime;
 using FieldDay.Assets;
 using FieldDay.Scripting;
 using FieldDay.SharedState;
+using FieldDay.Audio;
 
 namespace Astro {
     public sealed class DocumentBoardState : SharedStateComponent {
@@ -491,6 +492,7 @@ namespace Astro {
                 yield return null;
             }
             var newOffset = cam.TransformVector(offset);
+            PlayLiftSound(doc.GetComponent<DocumentRenderer>());
             yield return Routine.Combine(
                 doc.MoveTo(cam.position + newOffset, 0.5f).Ease(Curve.QuartInOut),
                 doc.RotateTo(cam, 0.3f));
@@ -498,6 +500,7 @@ namespace Astro {
         }
         
         private static IEnumerator MoveDocToPos(Transform doc, Vector3 pos) {
+            PlayDropSound(doc.GetComponent<DocumentRenderer>());
             yield return Routine.Combine(
                 doc.MoveTo(pos, 0.5f).Ease(Curve.QuartInOut),
                 doc.RotateTo(0f, 0.3f, Axis.XYZ, Space.Self));
@@ -510,7 +513,9 @@ namespace Astro {
                 doc.transform.MoveTo(doc.transform.localPosition.z + lift, 0.2f, Axis.Z, Space.Self).Ease(Curve.CubeIn).ForceOnCancel(),
                 doc.BodyRoot.MoveTo(doc.BodyRoot.localPosition.y - 0.1f, 0.2f, Axis.Y, Space.Self).Ease(Curve.CubeIn).ForceOnCancel()
             );
+
             // Flip it
+            PlayFlipSound(doc.GetComponent<DocumentRenderer>());
             yield return doc.BodyRoot.RotateTo(doc.BodyRoot.localRotation.y + angle, 0.3f, Axis.Y, Space.Self, AngleMode.Absolute).Ease(Curve.SineInOut).ForceOnCancel();
             
             // Put document back
@@ -523,5 +528,32 @@ namespace Astro {
 
         #endregion // routines
 
+        #region Sfx
+
+        static public void PlayLiftSound(DocumentRenderer doc) {
+            if (doc.Thickness == DocumentThickness.Thick) {
+                Sfx.Play("Oneshot.Document.Thick.Lift", doc.transform);
+            } else {
+                Sfx.Play("Oneshot.Document.Thin.Lift", doc.transform);
+            }
+        }
+
+        static public void PlayFlipSound(DocumentRenderer doc) {
+            if (doc.Thickness == DocumentThickness.Thick) {
+                Sfx.Play("Oneshot.Document.Thick.Flip", doc.transform);
+            } else {
+                Sfx.Play("Oneshot.Document.Thin.Flip", doc.transform);
+            }
+        }
+
+        static public void PlayDropSound(DocumentRenderer doc) {
+            if (doc.Thickness == DocumentThickness.Thick) {
+                Sfx.Play("Oneshot.Document.Thick.Drop", doc.transform);
+            } else {
+                Sfx.Play("Oneshot.Document.Thin.Drop", doc.transform);
+            }
+        }
+
+        #endregion // Sfx
     }
 }
