@@ -18,8 +18,8 @@ namespace Astro {
         [Header("Categorization")]
         public CelestialObjectCategory Category;
         [ClassificationId] public StringHash32[] ClassIds; 
-        [ReferenceEntryId] public StringHash32 ReferenceId; // deprecated
-        [ConstellationId] public StringHash32 ConstellationId; // deprecated
+        //[ReferenceEntryId] public StringHash32 ReferenceId; // deprecated
+        //[ConstellationId] public StringHash32 ConstellationId; // deprecated
 
         public bool AtypicalForClass;
 
@@ -43,15 +43,35 @@ namespace Astro {
         [Header("Constellation Path")]
         [AssetName(typeof(SkyRegionBounds))] public StringHash32 ConstellationBoundaryId;
 
+        #endregion // Inspector
+
 #if UNITY_EDITOR
         private void OnValidate() {
             if ((Visibility & CelestialObjectVisMask.Visible) != 0) {
                 Visibility |= CelestialObjectVisMask.Blue | CelestialObjectVisMask.Infrared;
+
+                if (ColorId.IsEmpty) {
+                    float colorIndex = ApparentBlueMagnitude - ApparentMagnitude;
+                    if (colorIndex < -0.1f) {
+                        ColorId = "MainOTemp";
+                    } else if (colorIndex < 0f) {
+                        ColorId = "MainBTemp";
+                    } else if (colorIndex < 0.5f) {
+                        ColorId = "MainATemp";
+                    } else if (colorIndex < 0.75f) {
+                        ColorId = "MainFTemp";
+                    } else if (colorIndex < 1f) {
+                        ColorId = "MainGTemp";
+                    } else if (colorIndex < 1.5f) {
+                        ColorId = "MainKTemp";
+                    } else {
+                        ColorId = "MainMTemp";
+                    }
+                    Log.Msg("[CelestialAsset] Corrected color of {0} to {1}", name, ColorId.ToDebugString());
+                }
             }
         }
 #endif // UNITY_EDITOR
-
-        #endregion // Inspector
 
         /// <summary>
         /// Creates a DataPacket given a SINGLE data type flag and CelestialAsset.

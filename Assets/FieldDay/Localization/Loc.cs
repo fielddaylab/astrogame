@@ -12,6 +12,18 @@ namespace FieldDay.Localization {
 
         #endregion // Cached Vars
 
+        #region Current Language
+
+        /// <summary>
+        /// Current language id.
+        /// </summary>
+        static public LanguageId Language {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get { return s_CurrentLang; }
+        }
+
+        #endregion // Current Language
+
         #region Defaults
 
         /// <summary>

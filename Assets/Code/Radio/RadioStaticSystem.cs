@@ -22,7 +22,10 @@ namespace Astro.Radio {
                 m_State.StaticMode = RadioStaticMode.Off;
                 m_State.StaticVolume = 0;
                 m_State.StaticModeTimer = 0;
-            } else {    
+                m_State.StaticModeTimer = 0;
+                Sfx.Stop(m_State.StaticAudioHandle);
+                m_State.StaticAudioHandle = default;
+            } else {
                 // Special case for off channel
                 if (m_State.Dial.CurrentValue == 100) {
                     if (m_State.StaticMode != RadioStaticMode.Off) {
@@ -97,11 +100,14 @@ namespace Astro.Radio {
         }
 
         static private void TurnOffRadio(RadioRig rig) {
-            rig.StaticMode = RadioStaticMode.Off;
-            rig.StaticVolume = 0;
-            rig.StaticModeTimer = 0;
-            Sfx.Stop(rig.StaticAudioHandle);
-            rig.StaticAudioHandle = default;
+            if (rig.StaticMode != RadioStaticMode.Off) {
+                rig.StaticMode = RadioStaticMode.Off;
+                rig.StaticVolume = 0;
+                rig.StaticModeTimer = 0;
+                Sfx.Stop(rig.StaticAudioHandle);
+                rig.StaticAudioHandle = default;
+                Sfx.SetMixStateTarget(rig.MixId, 0);
+            }
         }
 
         static private void UpdateTuning(RadioRig state, float deltaTime) {

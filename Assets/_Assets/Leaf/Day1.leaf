@@ -174,6 +174,7 @@ $wait 1
 {@Dad}	I tried to stop him, but ... I mean, you know how he is.	$[level1/dad/l1_d_09]
 {@Astrid}	I don't get it. Why would he leave when he knew I was coming? 	$[level1/Astrid/l1_a_11]
 
+$call PlayRadioAlert()
 {@Monitor}	All CERES transmissions must comply with authorized protocols, or we’ll be forced to revoke your clearance. 	$[level1/monitor/l1_m_01]
 {@Monitor}	Remember, communication is a privilege, not a right.	$[level1/monitor/l1_m_02]
 {@Astrid}	Uhhh, who was that?	$[level1/Astrid/l1_a_12]
@@ -534,7 +535,6 @@ $call StopOpenMode()
 $call SetChannelActive(IceCube, true)
 
 $call SetChannelActive(Unlocks_Active, true)
-$call SetChannelActive(Unlocks_Inactive, false)
 $call SetStickyFirstPage(7)
 $call HintModals->SlideInFromRight("RadioControls", 0.4)
 $call SetInputState(true)
@@ -586,7 +586,6 @@ $call LockMonitorFocus()
 $call MonitorUI->PlayRadioDownload(2)
 $call ConsoleCommandLine->PlayConsoleTextAndWait("UpgradeSystem")
 $call SetChannelActive(Unlocks_Active, false)
-$call SetChannelActive(Unlocks_Inactive, true)
 $call SetRadioFrequency(137)
 $call MonitorUI->ShowCERESLogo()
 $call MonitorUI->CERESLogoToCorner(0.5)
@@ -616,7 +615,6 @@ $call SetRefGuideActive(false)
 {@Astrid}	*sigh* Another birthday without Elijah. Maybe he’s watching the Perseids, wherever he is.	$[level1/Astrid/l1_a_21]
 {@Astrid}	I wonder if there's anything about the Perseids in that operator's manual. 	$[level1/Astrid/l1_a_22]
 
-$call SetChannelActive(Unlocks_Inactive, true)
 $call OpenRefGuidePage("ConstellationPerseus")
 
 {@Astrid}	Yes… There’s something about Perseus here!  	$[level1/Astrid/l1_a_23]

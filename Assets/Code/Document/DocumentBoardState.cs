@@ -174,18 +174,22 @@ namespace Astro {
             Vector3 docExtents = new Vector3(doc.Size.width / 2, doc.Size.height / 2, 1);
             var position = doc.transform.position + new Vector3(0f, doc.Size.y, 0f);
 
-            var hits = Physics.OverlapBox(position, docExtents, doc.transform.rotation, LayerMasks.DocumentInteract_Mask);
-            for (int i = 0; i < hits.Length; i++) {
-                var currPart = hits[i].GetComponent<DocumentPart>();
+            var hits = Physics.OverlapBoxNonAlloc(position, docExtents, s_BoxOverlapWorkArray, doc.transform.rotation, LayerMasks.DocumentInteract_Mask);
+            for (int i = 0; i < hits; i++) {
+                var currPart = s_BoxOverlapWorkArray[i].GetComponent<DocumentPart>();
                 var currRenderer = currPart ? currPart.Document.Renderer : null;
                 if (currRenderer && !currRenderer.Interactable.AssetName.Equals(doc.Interactable.AssetName)) {
                     hit = currRenderer;
+                    Array.Clear(s_BoxOverlapWorkArray, 0, hits);
                     return true;
                 }
             }
 
+            Array.Clear(s_BoxOverlapWorkArray, 0, hits);
             return false;
         }
+
+        static private Collider[] s_BoxOverlapWorkArray = new Collider[16];
 
         #endregion // Spawning
 

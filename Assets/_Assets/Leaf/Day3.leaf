@@ -243,7 +243,6 @@ $wait 4
 
 $call StopOpenMode()
 $call SetChannelActive(Unlocks_Active, true)
-$call SetChannelActive(Unlocks_Inactive, false)
 $set temp:radioChannelTuned = false
 $call SetStickyFirstPage(7)
 
@@ -291,7 +290,6 @@ $call ConsoleCommandLine->PlayConsoleTextAndWait("UpgradeSystem")
 $wait 1
 
 $call SetChannelActive(Unlocks_Active, false)
-$call SetChannelActive(Unlocks_Inactive, true)
 $call SetRadioFrequency(137)
 $call MonitorUI->ShowCERESLogo()
 $call MonitorUI->CERESLogoToCorner(0.5)

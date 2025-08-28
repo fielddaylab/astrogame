@@ -1,3 +1,7 @@
+#if (UNITY_EDITOR && !IGNORE_UNITY_EDITOR) || DEVELOPMENT_BUILD
+#define DEVELOPMENT
+#endif // (UNITY_EDITOR && !IGNORE_UNITY_EDITOR) || DEVELOPMENT_BUILD
+
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -8,6 +12,8 @@ using System.Collections;
 using BeauUtil.IO;
 using UnityEngine;
 using BeauPools;
+using FieldDay.Debugging;
+using EasyAssetStreaming;
 
 using GlobalAssetIndex = BeauUtil.TypeIndex<FieldDay.Assets.IGlobalAsset>;
 using LiteAssetIndex = BeauUtil.TypeIndex<FieldDay.Assets.ILiteAsset>;
@@ -36,6 +42,10 @@ namespace FieldDay.Assets {
             if (IsSafeToUnloadPackages()) {
                 ProcessQueuedPackageUnloads();
             }
+
+#if DEVELOPMENT
+            DebugUpdate();
+#endif // DEVELOPMENT
         }
 
         internal void Shutdown() {
@@ -561,6 +571,83 @@ namespace FieldDay.Assets {
             }
         }
 #endif // UNITY_EDITOR
+
+        #region Debugging
+
+#if DEVELOPMENT
+
+        static private int s_StreamingTextureAuditIndex;
+
+        private void DebugUpdate() {
+            if (DebugFlags.IsFlagSet(DebuggingFlags.DisplayBasicStats)) {
+                int globalAssetCount = 0;
+                for(int i = 0; i < GlobalAssetIndex.Count; i++) {
+                    if (m_GlobalAssetTable[i] != null) {
+                        globalAssetCount++;
+                    }
+                }
+
+                int namedAssetCount = 0;
+                for(int i = 0; i < NamedAssetIndex.Count; i++) {
+                    if (m_NamedAssetTable[i] != null) {
+                        namedAssetCount += m_NamedAssetTable[i].GetAll().Count;
+                    }
+                }
+
+                using(PooledStringBuilder psb = PooledStringBuilder.Create()) {
+                    psb.Builder.Append("Asset Package Count: ").AppendNoAlloc(m_LoadedPackages.Count)
+                        .Append("\n   Global Asset Count: ").AppendNoAlloc(globalAssetCount)
+                        .Append("\n   Named Asset Count: ").AppendNoAlloc(namedAssetCount);
+
+                    DebugDraw.AddLogText(psb, ColorBank.Violet);
+                }
+            }
+
+            if (DebugFlags.IsFlagSet(DebuggingFlags.DisplayStreamingTextureStats)) {
+                var memStats = Streaming.TextureMemoryUsage();
+                var countStats = Streaming.TextureCount();
+
+                using (PooledStringBuilder psb = PooledStringBuilder.Create()) {
+                    psb.Builder.Append("Streamed Texture Count: ").AppendNoAlloc(countStats.Current)
+                        .Append(" / ").Append(countStats.Max);
+                    psb.Builder.Append("\n   Streamed Texture Memory: ");
+                    Unsafe.FormatBytes(memStats.Current, psb);
+                    psb.Builder.Append(" / ");
+                    Unsafe.FormatBytes(memStats.Max, psb);
+
+                    DebugDraw.AddLogText(psb, ColorBank.Violet);
+                }
+            }
+
+            if (DebugFlags.IsFlagSet(DebuggingFlags.AuditStreamingTextures)) {
+                DebugDraw.AddViewportImage(new Vector2(0.5f, 0.5f), new Vector2(0, 64f), Texture2D.whiteTexture, "Hey it's a texture", Color.white, 0, TextAnchor.UpperLeft, DebugTextStyle.BackgroundDark);
+            }
+        }
+
+        private enum DebuggingFlags {
+            DisplayBasicStats,
+            DisplayStreamingTextureStats,
+            AuditStreamingTextures
+        }
+
+        [EngineMenuFactory]
+        static private DMInfo CreateDebugMenu() {
+            DMInfo menu = new DMInfo("Assets", 16);
+            DebugFlags.Menu.AddFlagToggle(menu, "Display Asset Stats", DebuggingFlags.DisplayBasicStats);
+            menu.AddDivider();
+            DebugFlags.Menu.AddFlagToggle(menu, "Display Streamed Texture Stats", DebuggingFlags.DisplayStreamingTextureStats);
+            DebugFlags.Menu.AddFlagToggle(menu, "Audit Streaming Textures", DebuggingFlags.AuditStreamingTextures);
+            menu.AddDivider();
+            menu.AddButton("Hot-Reload Assets", () => Game.Assets.TryHotReloadAll());
+
+            DebugFlags.AddToggleGroup(DebuggingFlags.DisplayBasicStats, DebuggingFlags.DisplayStreamingTextureStats);
+
+            return menu;
+        }
+
+#endif // DEVELOPMENT
+
+        #endregion // Debugging
     }
 
     /// <summary>

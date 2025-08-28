@@ -31,6 +31,7 @@ namespace Astro {
             if (m_PausedRaycasts) {
                 Game.Input.ResumeRaycasts();
             }
+            Sfx.SetMixState("ChapterTransition", 0);
         }
 
         [LeafMember("PrepareTransition")]

@@ -82,17 +82,17 @@ namespace FieldDay.Debugging {
         #region Flags
 
 #if DEVELOPMENT
-        private struct FlagGroup64 {
-            public BitSet64 Flags;
-            public BitSet64 QueuedDisable;
-            public BitSet64 QueuedSingleFrame;
+        private struct FlagGroup256 {
+            public BitSet256 Flags;
+            public BitSet256 QueuedDisable;
+            public BitSet256 QueuedSingleFrame;
         }
 
         private const int MaxFlagGroups = 128;
         private const int MaxToggleGroups = 16;
 
-        static private FlagGroup64 s_GlobalFlags;
-        static private FlagGroup64[] s_FlagGroups = new FlagGroup64[MaxFlagGroups];
+        static private FlagGroup256 s_GlobalFlags;
+        static private FlagGroup256[] s_FlagGroups = new FlagGroup256[MaxFlagGroups];
         static private volatile int s_FlagGroupCount;
 
         static private int GetNextGroupIndex() {
@@ -102,10 +102,13 @@ namespace FieldDay.Debugging {
 
         static private class EnumFlagGroup<T> where T : unmanaged, Enum {
             static internal int Index = GetNextGroupIndex();
-            static internal BitSet64[] ToggleGroups = new BitSet64[MaxToggleGroups];
+
+            static internal BitSet256[] ToggleGroups = new BitSet256[MaxToggleGroups];
             static internal int ToggleGroupCount;
 
-            static internal void AddToggleGroup(BitSet64 group) {
+            [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
+            [Il2CppSetOption(Option.NullChecks, false)]
+            static internal void AddToggleGroup(BitSet256 group) {
                 for(int i = 0; i < ToggleGroupCount; i++) {
                     if ((ToggleGroups[i] & group) == group) {
                         ToggleGroups[i] = group;
@@ -117,7 +120,9 @@ namespace FieldDay.Debugging {
                 ToggleGroups[ToggleGroupCount++] = group;
             }
 
-            static internal void SetToggleGroupAware(ref BitSet64 value, int index) {
+            [Il2CppSetOption(Option.ArrayBoundsChecks, false)]
+            [Il2CppSetOption(Option.NullChecks, false)]
+            static internal void SetToggleGroupAware(ref BitSet256 value, int index) {
                 for(int i = 0; i < ToggleGroupCount; i++) {
                     if (ToggleGroups[i].IsSet(index)) {
                         value &= ~ToggleGroups[i];
@@ -281,12 +286,12 @@ namespace FieldDay.Debugging {
         }
 
         /// <summary>
-        /// Sets a mututally exclusive set of debug flags.
+        /// Sets a mutually exclusive set of debug flags.
         /// </summary>
         [Conditional("DEVELOPMENT"), Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
         static public void AddToggleGroup<T>(params T[] values) where T : unmanaged, Enum {
 #if DEVELOPMENT
-            BitSet64 bits = default;
+            BitSet256 bits = default;
             foreach(var value in values) {
                 bits.Set(Enums.ToInt(value));
             }
@@ -395,7 +400,7 @@ namespace FieldDay.Debugging {
 
 #if DEVELOPMENT
 
-        static private void ProcessQueue(ref FlagGroup64 group) {
+        static private void ProcessQueue(ref FlagGroup256 group) {
             if (group.QueuedDisable) {
                 group.Flags &= ~group.QueuedDisable;
                 group.QueuedDisable.Clear();

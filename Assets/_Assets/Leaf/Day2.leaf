@@ -316,7 +316,6 @@ $wait 4
 $call StopOpenMode()
 $call SetInputState(true)
 $call SetChannelActive(Unlocks_Active, true)
-$call SetChannelActive(Unlocks_Inactive, false)
 $set temp:radioChannelTuned = false
 $call SetStickyFirstPage(7)
 
@@ -348,7 +347,6 @@ $call LockMonitorFocus()
 $call MonitorUI->PlayRadioDownload(2)
 $call ConsoleCommandLine->PlayConsoleTextAndWait("UpgradeSystem")
 $call SetChannelActive(Unlocks_Active, false)
-$call SetChannelActive(Unlocks_Inactive, true)
 $call SetRadioFrequency(137)
 $call MonitorUI->ShowCERESLogo()
 $call MonitorUI->CERESLogoToCorner(0.5)
@@ -461,6 +459,7 @@ $wait 1
 {@Dad}	Even if you solve all the puzzles, it probably won't work. 	$[level2/Dad/l2_d_12]
 {@Astrid}	Elijah thinks it'll work. 	$[level2/Astrid/l2_a_31]
 {@Dad}	Elijah is obsessed with this thing! It's not healthy. I don't—	$[level2/Dad/l2_d_13]
+$call PlayRadioAlert()
 {@Monitor}	Station 12 and CERES HQ, you have been flagged non-compliant by the Recovery Board. You will lose access to this frequency upon any further violations.	$[level2/monitor/l2_m_01]
 {@Monitor}	I advise that you review communication protocols if you want to avoid termination. 	$[level2/monitor/l2_m_02]
 {@Astrid}	Whoa. Dad, are you there? 	$[level2/Astrid/l2_a_32]

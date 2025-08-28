@@ -2,6 +2,10 @@
 #define DEVELOPMENT
 #endif // UNITY_EDITOR || DEVELOPMENT_BUILD
 
+#if !UNITY_2020_1_OR_NEWER
+#define LEGACY_UWR_RESULT
+#endif // UNITY_2020_1_OR_NEWER
+
 using System;
 using System.Collections.Generic;
 using Unity.Collections;
@@ -436,14 +440,24 @@ namespace EasyAssetStreaming {
         #region Web Requests
 
         static internal bool ShouldRetry(UnityWebRequest webRequest) {
-            #if DEVELOPMENT
+#if LEGACY_UWR_RESULT
+#if DEVELOPMENT
             return webRequest.isNetworkError || !webRequest.isHttpError; // if no error flags set, failure was a simulated failure
-            #else
+#else
             return webRequest.isNetworkError;
-            #endif // DEVELOPMENT
+#endif // DEVELOPMENT
+#else
+#if DEVELOPMENT
+            var result = webRequest.result;
+            return result == UnityWebRequest.Result.ConnectionError || result != UnityWebRequest.Result.ProtocolError; // if no error flags set, failure was a simulated failure
+#else
+            return webRequest.result == UnityWebRequest.Result.ConnectionError;
+#endif // DEVELOPMENT
+#endif // LEGACY_UWR_RESULT
         }
 
         static internal Streaming.LoadResult ResultType(UnityWebRequest webRequest, bool wasFailure) {
+#if LEGACY_UWR_RESULT
             if (webRequest.isNetworkError) {
                 return Streaming.LoadResult.Error_Network;
             } else if (webRequest.isHttpError) {
@@ -457,32 +471,53 @@ namespace EasyAssetStreaming {
             } else {
                 return Streaming.LoadResult.Error_Unknown;
             }
+#else
+            var result = webRequest.result;
+            long responseCode = webRequest.responseCode;
+
+            switch(result) {
+                case UnityWebRequest.Result.ConnectionError:
+                    return Streaming.LoadResult.Error_Network;
+                case UnityWebRequest.Result.ProtocolError:
+                    return Streaming.LoadResult.Error_Server;
+                default:
+                    if (wasFailure) {
+                        return Streaming.LoadResult.Error_Simulated;
+                    } else if (responseCode == 304) {
+                        return Streaming.LoadResult.Success_Cached;
+                    } else if (responseCode >= 200 && responseCode < 400) {
+                        return Streaming.LoadResult.Success_Download;
+                    } else {
+                        return Streaming.LoadResult.Error_Unknown;
+                    }
+            }
+#endif // LEGACY_UWR_RESULT
         }
 
-        #endregion // Web Requests
+#endregion // Web Requests
 
         #region Misc
 
         internal struct NativeArrayContext : IDisposable {
-            #if ENABLE_UNITY_COLLECTIONS_CHECKS
+#if ENABLE_UNITY_COLLECTIONS_CHECKS
             public AtomicSafetyHandle? SafetyHandle;
-            #endif // ENABLE_UNITY_COLLECTIONS_CHECKS
+#endif // ENABLE_UNITY_COLLECTIONS_CHECKS
 
             public unsafe NativeArray<T> GetNativeArray<T>(T* ptr, int length) where T : unmanaged {
                 var arr = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<T>(ptr, length, Allocator.None);
-                #if ENABLE_UNITY_COLLECTIONS_CHECKS
+#if ENABLE_UNITY_COLLECTIONS_CHECKS
                 NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref arr, SafetyHandle.Value);
-                #endif // ENABLE_UNITY_COLLECTIONS_CHECKS
+#endif // ENABLE_UNITY_COLLECTIONS_CHECKS
                 return arr;
             }
             
             public void Dispose() {
-                #if ENABLE_UNITY_COLLECTIONS_CHECKS
+#if ENABLE_UNITY_COLLECTIONS_CHECKS
                 if (SafetyHandle.HasValue) {
                     AtomicSafetyHandle.Release(SafetyHandle.Value);
                     SafetyHandle = null;
                 }
-                #endif // ENABLE_UNITY_COLLECTIONS_CHECKS
+#endif // ENABLE_UNITY_COLLECTIONS_CHECKS
             }
         }
 
@@ -509,9 +544,9 @@ namespace EasyAssetStreaming {
 
         static internal NativeArrayContext NewArrayContext() {
             return new NativeArrayContext() {
-                #if ENABLE_UNITY_COLLECTIONS_CHECKS
+#if ENABLE_UNITY_COLLECTIONS_CHECKS
                 SafetyHandle = AtomicSafetyHandle.Create()
-                #endif // ENABLE_UNITY_COLLECTIONS_CHECKS
+#endif // ENABLE_UNITY_COLLECTIONS_CHECKS
             };
         }
 
