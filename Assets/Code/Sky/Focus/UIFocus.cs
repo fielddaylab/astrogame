@@ -74,7 +74,7 @@ namespace Astro {
 
             focus.TargetData = asset;
 
-            float scaleFactor = Mathf.Clamp(Mathf.Pow(state.BaseScale, asset.ApparentMagnitude) - 0.45f, state.MinScale, state.MaxScale);
+            float scaleFactor = Mathf.Clamp(Mathf.Pow(state.BaseScale, asset.ApparentMagnitude) - state.ScaleOffset, state.MinScale, state.MaxScale);
             focus.Root.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
             Vector3 scaleDefault = Find.State<FocusState>().DefaultTrackerPipScale;
             focus.TrackerSprite.GetComponent<Transform>().localScale = new Vector3(scaleDefault.x / scaleFactor, scaleDefault.y / scaleFactor, scaleDefault.z);
@@ -148,7 +148,7 @@ namespace Astro {
             focus.Represent2D.size = new Vector2(0.32f, 0.32f);
 
             // Update our scale based on the visible magnitude for our current filter
-            float scaleFactor = Mathf.Clamp(Mathf.Pow(state.BaseScale, visibleLight) - 0.45f, state.MinScale, state.MaxScale);
+            float scaleFactor = Mathf.Clamp(Mathf.Pow(state.BaseScale, visibleLight) - state.ScaleOffset, state.MinScale, state.MaxScale);
             focus.Root.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
             Vector3 scaleDefault = Find.State<FocusState>().DefaultTrackerPipScale;
             var trackerTransform = focus.TrackerSprite.transform;
