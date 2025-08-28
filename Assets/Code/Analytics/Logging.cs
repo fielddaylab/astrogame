@@ -183,6 +183,7 @@ namespace Astro {
 
         #region Event Registration
         private void RegisterEvents() {
+            // logging events
             AstroGame.Events
                 .Register<string>(GameEvents.TitleGameStarting, SetAnalyticsUserCode)
                 .Register(GameEvents.TitleNewGameClicked, LogClickNewGame)
@@ -194,11 +195,34 @@ namespace Astro {
                 .Register(GameEvents.ClickResumeGame, LogClickResumeGame)
                 .Register<string>(GameEvents.CutsceneStart, LogCutsceneStart)
                 .Register<string>(GameEvents.CutsceneEnd, LogCutsceneEnd)
-                .Register<SubtitleLogData>(GameEvents.DialogueAudioStart, LogDialogueAudioStart)
-                .Register<SubtitleLogData>(GameEvents.DialogueAudioEnd, LogDialogueAudioEnd)
+                .Register(GameEvents.DialogueAudioStart, LogDialogueAudioStart)
+                .Register(GameEvents.DialogueAudioEnd, LogDialogueAudioEnd)
+                .Register(GameEvents.DialogueTextDisplayed, LogDialogueTextDisplayed)
+                .Register(GameEvents.ClickSkipDialogueLine, LogClickSkipDialogueLine)
                 ;
+
+            // state update events
+            AstroGame.Events
+                .Register<SubtitleLogData>(GameEvents.SubtitleDataChanged, HandleSubtitleDataChanged)
+                ;
+
         }
         #endregion
+
+        #region Logging Variables
+
+        [NonSerialized] private SubtitleLogData m_LastKnownSubtitleData = default;
+
+        #endregion // Logging Variables
+
+        #region State Handlers
+
+        private void HandleSubtitleDataChanged(SubtitleLogData newData)
+        {
+            m_LastKnownSubtitleData = newData;
+        }
+
+        #endregion // State Handlers
 
         #region Logging
 
@@ -270,21 +294,21 @@ namespace Astro {
         //* line_id
         //* script_content
         //* speaker_id
-        private void LogDialogueAudioStart(SubtitleLogData data) {
+        private void LogDialogueAudioStart() {
             m_Log.BeginEvent("dialog_audio_start");
-            m_Log.EventParam("line_id", data.LineId.ToString());
-            m_Log.EventParam("script_content", data.ScriptContent);
-            m_Log.EventParam("speaker_id", VoxUtility.FindEmitter(data.CharacterId).CharacterId.Source());
+            m_Log.EventParam("line_id", m_LastKnownSubtitleData.LineId.ToString());
+            m_Log.EventParam("script_content", m_LastKnownSubtitleData.ScriptContent);
+            m_Log.EventParam("speaker_id", VoxUtility.FindEmitter(m_LastKnownSubtitleData.CharacterId).CharacterId.Source());
             m_Log.SubmitEvent();
         } 
 
         //dialog_audio_end/
         //* line_id
         //* speaker_id
-        private void LogDialogueAudioEnd(SubtitleLogData data) {
+        private void LogDialogueAudioEnd() {
             m_Log.BeginEvent("dialog_audio_end");
-            m_Log.EventParam("line_id", data.LineId.ToString());
-            m_Log.EventParam("speaker_id", VoxUtility.FindEmitter(data.CharacterId).CharacterId.Source());
+            m_Log.EventParam("line_id", m_LastKnownSubtitleData.LineId.ToString());
+            m_Log.EventParam("speaker_id", VoxUtility.FindEmitter(m_LastKnownSubtitleData.CharacterId).CharacterId.Source());
             m_Log.SubmitEvent();
         }
 
@@ -292,21 +316,21 @@ namespace Astro {
         //* line_id
         //* script_content
         //* speaker_id
-        private void LogDialogueTextDisplayed(string lineId, string scriptContent, string speakerId) {
+        private void LogDialogueTextDisplayed() {
             m_Log.BeginEvent("dialog_text_displayed");
-            m_Log.EventParam("line_id", lineId);
-            m_Log.EventParam("script_content", scriptContent);
-            m_Log.EventParam("speaker_id", speakerId);
+            m_Log.EventParam("line_id", m_LastKnownSubtitleData.LineId.ToString());
+            m_Log.EventParam("script_content", m_LastKnownSubtitleData.ScriptContent);
+            m_Log.EventParam("speaker_id", VoxUtility.FindEmitter(m_LastKnownSubtitleData.CharacterId).CharacterId.Source());
             m_Log.SubmitEvent();
         }
 
         //click_skip_dialog_line/
         //* line_id
         //* speaker_id
-        private void LogClickSkipDialogueLine(string lineId, string speakerId) {
+        private void LogClickSkipDialogueLine() { // TODO: wait for non-debug implementation
             m_Log.BeginEvent("click_skip_dialog_line");
-            m_Log.EventParam("line_id", lineId);
-            m_Log.EventParam("speaker_id", speakerId);
+            m_Log.EventParam("line_id", m_LastKnownSubtitleData.LineId.ToString());
+            m_Log.EventParam("speaker_id", VoxUtility.FindEmitter(m_LastKnownSubtitleData.CharacterId).CharacterId.Source());
             m_Log.SubmitEvent();
         }
 

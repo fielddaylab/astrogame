@@ -66,14 +66,16 @@ namespace Astro {
             ScriptDBUtility.TryLookupCustomLineCode(scriptDB, VoxUtility.GetLineCode(data.VoxHandle), out m_CurrentDisplayLogData.LineId);
             m_CurrentDisplayLogData.ScriptContent = data.Subtitle.Data;
             m_CurrentDisplayLogData.CharacterId = data.CharacterId;
-            AstroGame.Events.Dispatch(GameEvents.DialogueAudioStart, EvtArgs.Box(m_CurrentDisplayLogData));
+
+            AstroGame.Events.Dispatch(GameEvents.SubtitleDataChanged, EvtArgs.Box(m_CurrentDisplayLogData));
+            AstroGame.Events.Dispatch(GameEvents.DialogueAudioStart);
 
             if (data.Priority < m_CurrentDisplayData.Priority || string.IsNullOrEmpty(data.Subtitle.Data)) {
                 return;
             }
 
-            // TODO: DialogueSubtitleStart event
-
+            // DialogueSubtitleStart event
+            AstroGame.Events.Dispatch(GameEvents.DialogueTextDisplayed);
 
             m_CurrentDisplayData = data;
             SyncDisplayedData(data);
@@ -86,18 +88,18 @@ namespace Astro {
         }
 
         private void HandleDismissRequest(SubtitleDisplayData data) {
-            // DialogueAudioEnd event
-            var scriptDB = Find.State<ScriptDatabase>();
-            ScriptDBUtility.TryLookupCustomLineCode(scriptDB, VoxUtility.GetLineCode(data.VoxHandle), out m_CurrentDisplayLogData.LineId);
-            m_CurrentDisplayLogData.CharacterId = data.CharacterId;
-            AstroGame.Events.Dispatch(GameEvents.DialogueAudioEnd, EvtArgs.Box(m_CurrentDisplayLogData));
-
             if (data.VoxHandle != m_CurrentDisplayData.VoxHandle) {
                 return;
             }
 
+            // DialogueAudioEnd event
+            AstroGame.Events.Dispatch(GameEvents.DialogueAudioEnd);
+
             m_CurrentDisplayData = default;
             m_CurrentWaveform = default;
+
+            AstroGame.Events.Dispatch(GameEvents.SubtitleDataChanged, EvtArgs.Box(m_CurrentDisplayLogData));
+
             Hide(0.5f);
         }
 

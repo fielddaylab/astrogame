@@ -56,8 +56,11 @@ public static class GameEvents {
     public static readonly StringHash32 ClickResumeGame = "click-resume-game";
     public static readonly StringHash32 CutsceneStart = "cutscene-start"; // string cutsceneId
     public static readonly StringHash32 CutsceneEnd = "cutscene-end"; // string custceneId
-    public static readonly StringHash32 DialogueAudioStart = "dialogue-audio-start"; // string lineId, string scriptContent, string speakerId
-    public static readonly StringHash32 DialogueAudioEnd = "dialogue-audio-end"; // string lineId, string speakerId
+    public static readonly StringHash32 SubtitleDataChanged = "subtitle-data-changed"; // SubtitleLogData data
+    public static readonly StringHash32 DialogueAudioStart = "dialogue-audio-start";
+    public static readonly StringHash32 DialogueAudioEnd = "dialogue-audio-end";
+    public static readonly StringHash32 DialogueTextDisplayed = "dialogue-text-displayed";
+    public static readonly StringHash32 ClickSkipDialogueLine = "click-skip-dialogue-line";
 }
 
 public static class ScriptEvents {
