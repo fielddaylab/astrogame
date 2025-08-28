@@ -88,7 +88,7 @@ $call SetInputState(false)
 $call SpawnDocumentToCamera("DadUrsaPostcard")
 $call SetInputState(true)
 
-{@Astrid}	Aw, Dad... It's our constellations! He always thought of us as Ursa Major and Ursa Minor. Big Bear and Little Bear.	$[level4/Astrid/l4_a_04]
+{@Astrid}	Aw, Dad... It's our constellations! 	$[level4\Astrid\l4_a_04]
 
 :: DadUrsaPostcardComment
 @trigger    DocumentInspectFlip
@@ -117,6 +117,30 @@ $call StartDocumentPuzzle("Day4DocumentPuzzle")
 $set temp:docPuzzleSolved = false
 
 {@Astrid}	How can I figure out when the meteor storm is going to happen? 	$[level4/Astrid/l4_a_11]
+
+:: InspectCalendar
+@trigger    DocumentInspectStart
+@when   documentId == "Day4Cal"
+@cutscene
+@once
+
+{@Astrid}	Wow, its almost October already...	$[level4\Astrid\l4_a_10e]
+
+:: InspectPanic
+@trigger    DocumentInspectStart
+@when   documentId == "Panic"
+@cutscene
+@once
+
+{@Astrid}	People will panic if they don't know what's going on.	$[level4\Astrid\l4_a_10d]
+
+:: InspectSatellite
+@trigger    DocumentInspectStart
+@when   documentId == "SatellitePanic"
+@cutscene
+@once
+
+{@Astrid} The Gornych satelite. $[level4\Astrid\l4_a_10b]
 
 :: IncorrectDocumentResponse
 @trigger    DocumentPuzzlePromptStart

@@ -106,9 +106,42 @@ $call SetInputState(true)
 :: InspectMiniMap
 @trigger    DocumentInspectStart
 @when   documentId == "MiniLabors"
+@cutscene
 @once
 
 {@Astrid}	Hmm... The 12 labors. Elijah mentioned that in his postcard. 	$[level2/Astrid/l2_a_20]
+
+:: InspectRadioPostit
+@trigger    DocumentInspectStart
+@when   documentId == "Cutoff"
+@cutscene
+@once
+
+{@Astrid}	This little radio is my only connection to the rest of the world right now. 	$[level2/Astrid/l2_a_13a]
+
+:: InspectMarthaGuilt
+@trigger    DocumentInspectStart
+@when   documentId == "MarthaGuilt"
+@cutscene
+@once
+
+{@Astrid}	I feel so guilty for leaving Aunt Martha and the clinic. 	$[level2/Astrid/l2_a_13b]
+
+:: InspectElijahHike
+@trigger    DocumentInspectStart
+@when   documentId == "ElijahHike"
+@cutscene
+@once
+
+{@Astrid}	I wonder where he is right now. 	$[level2/Astrid/l2_a_13c]
+
+:: InspectDay2Cal
+@trigger    DocumentInspectStart
+@when   documentId == "Day2Cal"
+@cutscene
+@once
+
+{@Astrid}	I've been here for two weeks already!	$[level2/Astrid/l2_a_13d]
 
 :: SpawnPuzzleDocs3
 @trigger    DocumentInspectEnd
@@ -450,7 +483,7 @@ $wait 1
 {@Astrid}	Wait a second. You knew about this? 	$[level2/Astrid/l2_a_27]
 {@Dad}	Look... it's only rumors. You know how Elijah gets caught up in those old stories. 	$[level2/Dad/l2_d_05]
 {@Astrid}	What stories? ...Dad, you have to tell me. 	$[level2/Astrid/l2_a_28]
-{@Dad} Supposedly, there was a researcher from Slovakia who spent the last years of his life getting a satellite into orbit.	$[level2/Dad/l2_d_06]
+{@Dad} Supposedly, there was a researcher from Slovenia who spent the last years of his life getting a satellite into orbit. $[level2/Dad/l2_d_06]
 {@Dad}	This guy was super paranoid, so he built the satellite with tons of extra shielding. There's a chance... a tiny, negligible chance... that it could've survived the Collapse. 	$[level2/Dad/l2_d_07]
 {@Dad}	But the satellite is locked. Encrypted with a 5-letter key.	$[level2/Dad/l2_d_08]
 {@Dad}	I didn't want to give you false hope.	$[level2/Dad/l2_d_09]

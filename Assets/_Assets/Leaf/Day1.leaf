@@ -285,7 +285,7 @@ $call SetRefGuidePagesLocked(false)
 
 {@Radio}	Nice job!	$[level1/radio_lady/l1_r_12]
 {@Radio}	So, earlier this morning, IceCube detected a high-energy neutrino coming from one of several possible stars in this location.	$[level1/radio_lady/l1_r_13]
-{@Radio}	Our team at IceCube is tasked with studying these neutrino sources, and mapping the stars in this region is critical. 	$[level1/radio_lady/l1_r_15]
+// {@Radio}	Our team at IceCube is tasked with studying these neutrino sources, and mapping the stars in this region is critical. $[level1/radio_lady/l1_r_15]
 {@Radio}	You can learn more about the IceCube project in your reference guide. 	$[level1/radio_lady/l1_r_16]
 {@Radio}	If you can ID them for us, we should be able to upgrade your access level.	$[level1/radio_lady/l1_r_17]
 {@Radio}	To get started, select a possible neutrino source on your display.	$[level1/radio_lady/l1_r_18]
@@ -601,7 +601,8 @@ $call SetStickyFirstPage(-1)
 $call OpenRefGuidePage("Colormeter")
 
 $wait 1.5
-{@Astrid} "Clearance level 1... Color meter access granted. Please reference Ceres Operations manual for more info. Congratuations on reaching clearance Level 1. Together we will map the stars for a greater tomorrow" $[level1/Astrid/l1_a_20]
+{@Astrid} Clearance level 1... Color meter access granted. Please reference CERES Op. manual for more info. $[level1/Astrid/l1_a_20]
+{@Astrid} Congratuations on reaching clearance Level 1. Together we will map the stars for a greater tomorrow... $[level1/Astrid/l1_a_20a]
 
 $call ConsoleCommandLine->HideConsole()
 $wait 0.1
@@ -613,7 +614,8 @@ $wait 0.5
 
 $call SetRefGuideActive(false)
 
-{@Astrid}	*sigh* Another birthday without Elijah. Maybe he’s watching the Perseids, wherever he is.	$[level1/Astrid/l1_a_21]
+{@Astrid}	(*sigh*) Another birthday without Elijah. Maybe he’s watching the Perseids, wherever he is.	$[level1/Astrid/l1_a_21]
+$wait 1
 {@Astrid}	I wonder if there's anything about the Perseids in that operator's manual. 	$[level1/Astrid/l1_a_22]
 
 $call SetChannelActive(Unlocks_Inactive, true)
