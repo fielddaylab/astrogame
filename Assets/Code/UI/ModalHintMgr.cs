@@ -5,10 +5,13 @@ using Leaf.Runtime;
 using FieldDay.Scripting;
 using BeauUtil;
 using BeauRoutine;
+using Astro;
+using FieldDay;
 
 public class ModalHintMgr : ScriptActorComponent {
     [HideInInspector] public List<ModalHint> HintModals;
     public ModalHint activeHint = null;
+    private HintLogData m_CurrLogData = default;
 
     void Start() {
         HintModals.AddRange(GetComponentsInChildren<ModalHint>(true));
@@ -20,6 +23,8 @@ public class ModalHintMgr : ScriptActorComponent {
         ModalHint modal = HintModals.Find(m => m.Id == Id);
 
         modal.gameObject.SetActive(true);
+        ShowModalCommon(modal.Source, modal.Text.text);
+
         yield return Tween.Value(0f, 1f, (f) => { modal.Modal.alpha = f; }, Mathf.Lerp, fadeDuration).ForceOnCancel().OnComplete( () => { activeHint = modal; } ); 
     }
 
@@ -37,6 +42,7 @@ public class ModalHintMgr : ScriptActorComponent {
         ModalHint modal = HintModals.Find(m => m.Id == Id);
 
         modal.gameObject.SetActive(true);
+        ShowModalCommon(modal.Source, modal.Text.text);
 
         float endPosX = modal.Rect.anchoredPosition.x;
         float PosY = modal.Rect.anchoredPosition.y;
@@ -62,6 +68,7 @@ public class ModalHintMgr : ScriptActorComponent {
         ModalHint modal = HintModals.Find(m => m.Id == Id);
 
         modal.gameObject.SetActive(true);
+        ShowModalCommon(modal.Source, modal.Text.text);
 
         float endPosX = modal.Rect.anchoredPosition.x;
         float PosY = modal.Rect.anchoredPosition.y;
@@ -101,11 +108,13 @@ public class ModalHintMgr : ScriptActorComponent {
 
         yield return Tween.Value(1f, 0f, (f) => { modal.Modal.alpha = f; }, Mathf.Lerp, fadeDuration).OnComplete( () => { activeHint = null; } ).ForceOnCancel();
         modal.gameObject.SetActive(false);
+        HideModalCommon();
     }
 
     private IEnumerator HideModal(ModalHint modal, float fadeDuration = 0f) {
         yield return Tween.Value(1f, 0f, (f) => { modal.Modal.alpha = f; }, Mathf.Lerp, fadeDuration).OnComplete( () => { activeHint = null; } ).ForceOnCancel();
         modal.gameObject.SetActive(false);
+        HideModalCommon();
     }
 
     [LeafMember("Hide")]
@@ -122,5 +131,18 @@ public class ModalHintMgr : ScriptActorComponent {
             if (!modal.gameObject.activeInHierarchy) continue;
             StartCoroutine(HideModal(modal, 0.05f));
         }
+    }
+
+    private void ShowModalCommon(string id, string content)
+    {
+        m_CurrLogData.Id = id;
+        m_CurrLogData.Content = content;
+        AstroGame.Events.Dispatch(GameEvents.HintChanged, EvtArgs.Box(m_CurrLogData));
+        AstroGame.Events.Dispatch(GameEvents.HintDisplayed);
+    }
+
+    private void HideModalCommon()
+    {
+        AstroGame.Events.Dispatch(GameEvents.HintHidden);
     }
 }

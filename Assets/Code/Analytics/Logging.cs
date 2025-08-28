@@ -199,11 +199,14 @@ namespace Astro {
                 .Register(GameEvents.DialogueAudioEnd, LogDialogueAudioEnd)
                 .Register(GameEvents.DialogueTextDisplayed, LogDialogueTextDisplayed)
                 .Register(GameEvents.ClickSkipDialogueLine, LogClickSkipDialogueLine)
+                .Register(GameEvents.HintDisplayed, LogHintDisplayed)
+                .Register(GameEvents.HintHidden, LogHintHidden)
                 ;
 
             // state update events
             AstroGame.Events
                 .Register<SubtitleLogData>(GameEvents.SubtitleDataChanged, HandleSubtitleDataChanged)
+                .Register<HintLogData>(GameEvents.HintChanged, HandleHintChanged)
                 ;
 
         }
@@ -212,6 +215,7 @@ namespace Astro {
         #region Logging Variables
 
         [NonSerialized] private SubtitleLogData m_LastKnownSubtitleData = default;
+        [NonSerialized] private HintLogData m_LastKnownHint = default;
 
         #endregion // Logging Variables
 
@@ -220,6 +224,11 @@ namespace Astro {
         private void HandleSubtitleDataChanged(SubtitleLogData newData)
         {
             m_LastKnownSubtitleData = newData;
+        }
+
+        private void HandleHintChanged(HintLogData data)
+        {
+            m_LastKnownHint = data;
         }
 
         #endregion // State Handlers
@@ -337,18 +346,18 @@ namespace Astro {
         //hint_displayed/
         //* hint_id
         //* text_content
-        private void LogHintDisplayed(string hintId, string textContent) {
+        private void LogHintDisplayed() {
             m_Log.BeginEvent("hint_displayed");
-            m_Log.EventParam("hint_id", hintId);
-            m_Log.EventParam("text_content", textContent);
+            m_Log.EventParam("hint_id", m_LastKnownHint.Id);
+            m_Log.EventParam("text_content", m_LastKnownHint.Content);
             m_Log.SubmitEvent();
         }
 
         //hint_hidden/
         //* hint_id
-        private void LogHintHidden(string hintId) {
+        private void LogHintHidden() {
             m_Log.BeginEvent("hint_hidden");
-            m_Log.EventParam("hint_id", hintId);
+            m_Log.EventParam("hint_id", m_LastKnownHint.Id);
             m_Log.SubmitEvent();
         }
 
@@ -1071,6 +1080,14 @@ namespace Astro {
         public StringSlice LineId;
         public string ScriptContent;
         public SerializedHash32 CharacterId;
+    }
+
+
+    [Serializable]
+    public struct HintLogData
+    {
+        public string Id;
+        public string Content;
     }
 
     #endregion //Data Structs

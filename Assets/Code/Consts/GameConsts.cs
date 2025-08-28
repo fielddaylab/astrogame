@@ -61,6 +61,9 @@ public static class GameEvents {
     public static readonly StringHash32 DialogueAudioEnd = "dialogue-audio-end";
     public static readonly StringHash32 DialogueTextDisplayed = "dialogue-text-displayed";
     public static readonly StringHash32 ClickSkipDialogueLine = "click-skip-dialogue-line";
+    public static readonly StringHash32 HintChanged = "hint-changed"; 
+    public static readonly StringHash32 HintDisplayed = "hint-displayed";
+    public static readonly StringHash32 HintHidden = "hint-hidden"; 
 }
 
 public static class ScriptEvents {
