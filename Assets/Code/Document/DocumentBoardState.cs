@@ -26,6 +26,9 @@ namespace Astro {
         [NonSerialized] public Routine SpawnDocumentToCamera;
         [NonSerialized] public RingBuffer<Routine> DocumentLoadQueue = new RingBuffer<Routine>();
 
+        [NonSerialized] public Routine DocumentReturnToBoard;
+        [NonSerialized] public Routine DocumentBringToCam;
+
         public Transform DocumentParent;
         public Rect DraggableBounds;
 
@@ -225,7 +228,7 @@ namespace Astro {
                         break;
                     }
                 case DocPartFunction.Close: {
-                        ReturnDocToBoard(docPart.Document, state);
+                        state.DocumentReturnToBoard.Replace(ReturnDocToBoard(docPart.Document, state));
                         break;
                     }
                 case DocPartFunction.Flip: {
@@ -279,10 +282,10 @@ namespace Astro {
 
             if (state.DocZoomed) {
                 // Return doc to board
-                ReturnDocToBoard(doc, state);
+                state.DocumentReturnToBoard.Replace(ReturnDocToBoard(doc, state));
             } else {
                 // Bring doc to camera
-                BringDocToCam(doc, state);
+                state.DocumentBringToCam.Replace(BringDocToCam(doc, state));
             }
 
             state.InteractedThisFrame = true;
@@ -315,10 +318,10 @@ namespace Astro {
 
             if (doc == null) Debug.LogWarningFormat("[DocumentBoardState > ReturnDocToBoard] failed to find document {0}", docId.ToDebugString());
 
-            ReturnDocToBoard(doc.Interactable, state); 
+            state.DocumentReturnToBoard.Replace(ReturnDocToBoard(doc.Interactable, state));
         }
 
-        private static void ReturnDocToBoard(DocumentInteractable doc, DocumentBoardState state) {
+        private static IEnumerator ReturnDocToBoard(DocumentInteractable doc, DocumentBoardState state) {
             // Reveal the Pin object if we have one
             Transform pin = doc.transform.Find("Pin");
             if (pin != null) pin.gameObject.SetActive(true);
@@ -346,6 +349,8 @@ namespace Astro {
                 table.Set("documentId", doc.AssetName);
                 ScriptUtility.Trigger(ScriptEvents.DocumentInspectEnd, table);
             }
+
+            yield return null;
         }
 
         [LeafMember("BringDocToCam")]
@@ -355,10 +360,19 @@ namespace Astro {
 
             if (doc == null) Debug.LogWarningFormat("[DocumentBoardState > BringDocToCam] failed to find document {0}", docId.ToDebugString());
 
-            BringDocToCam(doc.Interactable, state); 
+            state.DocumentBringToCam.Replace(BringDocToCam(doc.Interactable, state)); 
         }
 
-        private static void BringDocToCam(DocumentInteractable doc, DocumentBoardState state) {
+        private static IEnumerator BringDocToCam(DocumentInteractable doc, DocumentBoardState state) {
+            // only allow one document at the camera at once
+            if (state.DocZoomed != null) {
+                state.DocumentReturnToBoard.Replace(ReturnDocToBoard(state.DocZoomed, state));
+                // wait for other document to return to board
+                while (state.SpawnDocumentToCamera.Exists() || state.DocumentReturnToBoard.Exists()) {
+                    yield return null;
+                }
+            }
+
             // Hide the Pin object if we have one
             Transform pin = doc.transform.Find("Pin");
             if (pin != null) pin.gameObject.SetActive(false);
@@ -392,6 +406,8 @@ namespace Astro {
             SetInteractionLayer(state.DocZoomed, LayerMasks.TopLayer_Index);
             // disallow selecting other documents while this loads
             InputUtility.SetClickableMaskTopLayer(Find.State<InputState>());
+
+            yield return null;
         }
 
         public static void OverrideStoredDocPos(DocumentInteractable doc, Vector3 newPos, DocumentBoardState state = null) {
