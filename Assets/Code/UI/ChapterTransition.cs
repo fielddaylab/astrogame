@@ -18,6 +18,7 @@ namespace Astro {
         public TMP_Text Text;
 
         [Header("Tuning")]
+        public bool UseMixer = true;
         public float TextFadeInTime = 0.6f;
         public float TextDuration = 1;
         public float TextFadeOutTime = 0.6f;
@@ -39,7 +40,9 @@ namespace Astro {
             Canvas.enabled = true;
             Background.SetAlpha(hideBackground ? 0 : 1);
             Text.alpha = 0;
-            Sfx.SetMixState("ChapterTransition", 1, 0);
+            if (UseMixer) {
+                Sfx.SetMixState("ChapterTransition", 1, 0);
+            }
             Game.Input.PauseRaycasts();
             m_PausedRaycasts = true;
         }
@@ -75,7 +78,9 @@ namespace Astro {
         [LeafMember("FadeOutBackground")]
         public void FadeOutBackground() {
             Routine.Start(this, Background.FadeTo(0, BackgroundFadeOutTime));
-            Sfx.SetMixState("ChapterTransition", 0, BackgroundFadeOutTime);
+            if (UseMixer) {
+                Sfx.SetMixState("ChapterTransition", 0, BackgroundFadeOutTime);
+            }
         }
 
         [LeafMember("FinishTransition")]

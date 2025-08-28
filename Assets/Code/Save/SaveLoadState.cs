@@ -1,23 +1,24 @@
+#if (UNITY_EDITOR && !IGNORE_UNITY_EDITOR) || DEVELOPMENT_BUILD
+#define DEVELOPMENT
+#endif
+
 using System;
 using System.Collections;
 using System.IO;
-using BeauData;
 using BeauRoutine;
 using BeauUtil.Debugger;
-using BeauUtil.Services;
 using FieldDay;
-using FieldDay.Data;
 using FieldDay.Debugging;
-using FieldDay.Scripting;
 using FieldDay.SharedState;
-using UnityEngine;
 
 namespace Astro.Save {
     public class SaveLoadState : SharedStateComponent {
         public string ServerURL;
         public Routine Operation;
 
-        [NonSerialized] public int TicksToCommit;
+#if DEVELOPMENT
+        [NonSerialized] public bool IsDebug;
+#endif // DEVELOPMENT
 
         private void Awake() {
             OGD.Core.Configure(ServerURL, "ASTRO");
@@ -25,8 +26,20 @@ namespace Astro.Save {
     }
 
     static public class SaveUtility {
+        static public void SetDebugFlag(bool debug) {
+#if DEVELOPMENT
+            Game.SharedState.Get<SaveLoadState>().IsDebug = debug;
+#endif // DEVELOPMENT
+        }
+
         static public void Save(SaveSlot slot) {
             var save = Game.SharedState.Get<SaveLoadState>();
+#if DEVELOPMENT
+            if (save.IsDebug) {
+                return;
+            }
+#endif // DEVELOPMENT
+
             if (save.Operation) {
                 Log.Error("[SaveUtility] Save/load operation is ongoing");
                 return;
@@ -35,18 +48,14 @@ namespace Astro.Save {
             save.Operation = Routine.Start(save, SaveRoutine(slot));
         }
 
-        static public void Commit() {
-            var save = Game.SharedState.Get<SaveLoadState>();
-            if (save.Operation) {
-                Log.Error("[SaveUtility] Save/load operation is ongoing");
-                return;
-            }
-
-            save.Operation = Routine.Start(save, CommitSaveRoutine());
-        }
-
         static public void Reload() {
             var save = Game.SharedState.Get<SaveLoadState>();
+#if DEVELOPMENT
+            if (save.IsDebug) {
+                return;
+            }
+#endif // DEVELOPMENT
+
             if (save.Operation) {
                 Log.Error("[SaveUtility] Save/load operation is ongoing");
                 return;
@@ -57,6 +66,12 @@ namespace Astro.Save {
 
         static public Future LoadFromServer(string inUserId) {
             var save = Game.SharedState.Get<SaveLoadState>();
+#if DEVELOPMENT
+            if (save.IsDebug) {
+                return Future.Failed();
+            }
+#endif // DEVELOPMENT
+
             if (save.Operation) {
                 Log.Error("[SaveUtility] Save/load operation is ongoing");
                 return Future.Failed();
@@ -74,22 +89,6 @@ namespace Astro.Save {
 
             AstroGame.SaveBuffer.Write(slot);
             if (slot == SaveSlot.Main) {
-                AstroGame.SaveBuffer.EncodeToBase64();
-
-#if UNITY_EDITOR
-                WriteToFileSystem();
-#endif // UNITY_EDITOR
-
-                if (!string.IsNullOrEmpty(AstroGame.SaveBuffer.SaveCode)) {
-                    yield return WriteToRemoteSave();
-                }
-            }
-        }
-
-        static private IEnumerator CommitSaveRoutine() {
-            yield return null;
-
-            if (AstroGame.SaveBuffer.TryCommitSave()) {
                 AstroGame.SaveBuffer.EncodeToBase64();
 
 #if UNITY_EDITOR

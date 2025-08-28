@@ -15,6 +15,7 @@ using UnityEngine;
 namespace Astro.Title {
     public sealed class PrologueEffects : MonoBehaviour, IScenePreload {
         public ParticleSystem[] Pops;
+        public GameObject CutToBlack;
 
         [NonSerialized] public int PopIndex;
 
@@ -28,6 +29,8 @@ namespace Astro.Title {
             ScriptUtility.RegisterForSignal("TransformerPop", OnTransformerPop);
             ScriptUtility.RegisterForSignal("DisableFreeLook", OnDisableFreeLook);
             ScriptUtility.RegisterForSignal("DisconnectView", OnDisconnectView);
+            ScriptUtility.RegisterForSignal("CutToBlack", OnCutToBlack);
+            ScriptUtility.RegisterForSignal("RunAway", OnRunAway);
             return null;
         }
 
@@ -53,9 +56,17 @@ namespace Astro.Title {
             Routine.Start(this, Tween.OneToZero((f) => cameraDrift.Scale = f, 0.5f));
         }
 
+        private void OnCutToBlack() {
+            CutToBlack.SetActive(true);
+            Sfx.StopAll();
+        }
+
         private void OnTransformerPop() {
             Pops[PopIndex++].Play();
             Sfx.Play("Prelude.TransformerPop");
+        }
+        private void OnRunAway() {
+            Sfx.Play("Prelude.RunningAway");
         }
     }
 }
