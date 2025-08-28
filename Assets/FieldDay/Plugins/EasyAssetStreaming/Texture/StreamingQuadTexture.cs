@@ -285,7 +285,7 @@ namespace EasyAssetStreaming {
             Vector2 size = m_Size;
             Vector2 appliedPivot = m_Pivot;
 
-            if (StreamingHelper.AutoSize(sizeMode, m_LoadedTexture, m_UVRect, transform.localPosition, m_Pivot, ref size, ref m_ClippedUVs, ref appliedPivot, StreamingHelper.GetParentSize(transform)) == 0) {
+            if (StreamingHelper.AutoSize(sizeMode, m_LoadedTexture, m_UVRect, transform.localPosition, m_Pivot, ref size, ref m_ClippedUVs, ref appliedPivot, StreamingHelper.GetParentSize(transform)) == 0 && m_MeshInstanceHash != 0) {
                 return;
             }
 
