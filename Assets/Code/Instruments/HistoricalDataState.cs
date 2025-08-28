@@ -16,6 +16,8 @@ namespace Astro {
         public Quaternion ModeRotOn;
 
         public MeshRenderer InstrumentMesh;
+        public Material BottomPanelEnabledMaterial;
+        public Material BottomPanelDisabledMaterial;
 
         [Header("External")]
         public Photometer ConnectedPhotometer;

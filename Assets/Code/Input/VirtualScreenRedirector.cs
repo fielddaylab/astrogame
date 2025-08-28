@@ -35,7 +35,8 @@ namespace Astro {
 
         // Called by Unity when a Raycaster should raycast because it extends BaseRaycaster.
         public override void Raycast(PointerEventData eventData, List<RaycastResult> resultAppendList) {
-            if ((Find.State<InputState>().AppliedLayerMask & RequiredMask) == 0) {
+            var inputState = Find.State<InputState>();
+            if ((inputState.AppliedLayerMask & RequiredMask) == 0 || !inputState.Raycaster.enabled) {
                 return;
             }
 
