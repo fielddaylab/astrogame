@@ -361,6 +361,7 @@ namespace Astro {
             m_Log.SubmitEvent();
         }
 
+        /* 
         //star_assigned/
         //* star_id
         private void LogStarAssigned(string starId) {
@@ -368,6 +369,7 @@ namespace Astro {
             m_Log.EventParam("star_id", starId);
             m_Log.SubmitEvent();
         }
+        */
 
         //star_highlighted/
         //* star_id
