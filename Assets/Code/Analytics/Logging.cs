@@ -183,7 +183,13 @@ namespace Astro {
         #region Event Registration
         private void RegisterEvents() {
             AstroGame.Events
-                .Register<string>(GameEvents.TitleGameStarting, SetAnalyticsUserCode);
+                .Register<string>(GameEvents.TitleGameStarting, SetAnalyticsUserCode)
+                .Register(GameEvents.TitleNewGameClicked, LogClickNewGame)
+                .Register(GameEvents.TitleContinueGameClicked, LogClickContinueGame)
+                .Register(GameEvents.TitleOptionsClicked, LogClickOptionsMenu)
+                .Register<bool>(GameEvents.GameStart, LogGameStart)
+                .Register<int>(GameEvents.BeginLevel, LogBeginLevel)
+                ;
         }
         #endregion
 
@@ -208,7 +214,7 @@ namespace Astro {
 
         //click_free_play_menu (pending implementation)/
         private void LogClickFreePlayMenu() {
-            m_Log.NewEvent("click_options_menu");
+            // m_Log.NewEvent("click_options_menu");
         }
         
         //game_start/
@@ -222,7 +228,7 @@ namespace Astro {
         //click_begin_level/
         //* level_number
         private void LogBeginLevel(int levelNum) {
-            m_Log.BeginEvent("click_begin_level");
+            m_Log.BeginEvent("begin_level");
             m_Log.EventParam("level_number", levelNum);
             m_Log.SubmitEvent();
         }

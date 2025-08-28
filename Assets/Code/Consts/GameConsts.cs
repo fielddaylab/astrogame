@@ -45,6 +45,13 @@ public static class GameEvents {
     public static readonly StringHash32 ProfileSaveError = "profile-save-error";
     public static readonly StringHash32 ProfileSaveSuccess = "profile-save-success";
     public static readonly StringHash32 ProfileSaveAttemptCompleted = "profile-save-attempt-completed";
+
+    // Additional Analytics
+    public static readonly StringHash32 TitleNewGameClicked = "title-new-game-clicked";
+    public static readonly StringHash32 TitleContinueGameClicked = "title-continue-game-clicked";
+    public static readonly StringHash32 TitleOptionsClicked = "title-options-game-clicked";
+    public static readonly StringHash32 GameStart = "game-start"; // bool fromResume
+    public static readonly StringHash32 BeginLevel = "begin-level"; // int levelNum
 }
 
 public static class ScriptEvents {

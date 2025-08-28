@@ -88,6 +88,8 @@ namespace Astro {
 
             SaveUtility.Save(SaveSlot.Main);
 
+            AstroGame.Events.Dispatch(GameEvents.BeginLevel, state.DayIndex);
+
             Game.Scenes.LoadMainScene(day.Scene, true, new MainSceneTransitionArgs() {
                 TransitionType = transitionType
             });
@@ -115,6 +117,8 @@ namespace Astro {
             if (!ignoreSave) {
                 SaveUtility.Save(SaveSlot.Main);
             }
+
+            AstroGame.Events.Dispatch(GameEvents.BeginLevel, state.DayIndex);
 
             Game.Scenes.LoadMainScene(day.Scene, true, new MainSceneTransitionArgs() {
                 TransitionType = transitionType

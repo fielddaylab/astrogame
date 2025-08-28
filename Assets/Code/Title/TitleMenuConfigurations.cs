@@ -82,10 +82,13 @@ namespace Astro.Title {
             if (nodeId == "Title") {
                 TitleGroup.Show();
             } else if (nodeId == "New") {
+                AstroGame.Events.Dispatch(GameEvents.TitleNewGameClicked);
                 NewGroup.Show();
             } else if (nodeId == "Continue") {
+                AstroGame.Events.Dispatch(GameEvents.TitleContinueGameClicked);
                 ContinueGroup.Show();
             } else if (nodeId == "Options") {
+                AstroGame.Events.Dispatch(GameEvents.TitleOptionsClicked);
                 OptionsGroup.Show();
             } else {
                 InProgressGroup.Show();
