@@ -80,6 +80,7 @@ namespace Astro {
 
             using (var table = TempVarTable.Alloc()) {
                 table.Set("cutsceneId", this.Actor.Id);
+                AstroGame.Events.Dispatch(GameEvents.CutsceneStart, this.Actor.Source);
                 ScriptUtility.Trigger(ScriptEvents.CutsceneBegin, table);
             }
         }
@@ -99,6 +100,7 @@ namespace Astro {
 
             using (var table = TempVarTable.Alloc()) {
                 table.Set("cutsceneId", this.Actor.Id);
+                AstroGame.Events.Dispatch(GameEvents.CutsceneEnd, this.Actor.Source);
                 ScriptUtility.Trigger(ScriptEvents.CutsceneEnd, table);
             }
             

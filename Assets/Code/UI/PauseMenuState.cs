@@ -76,6 +76,13 @@ namespace Astro {
             }
             state.GamePaused = paused;
 
+            if (paused) {
+                AstroGame.Events.Dispatch(GameEvents.ClickPauseGame);
+            }
+            else {
+                AstroGame.Events.Dispatch(GameEvents.ClickResumeGame);
+            }
+
             Routine.Settings.Paused = paused;
             //GameLoop.TimeScale = state.GamePaused ? 0f : 1f;
             Time.timeScale = paused ? 0 : 1;

@@ -25,6 +25,7 @@ namespace FieldDay.Scripting {
         #region ILeafActor
 
         public StringHash32 Id { get { return m_Id.Hash(); } }
+        public string Source { get { return m_Id.Source(); } }
         public VariantTable Locals { get { return m_Locals ?? (m_Locals = new VariantTable()); } }
 
         #endregion // ILeafActor

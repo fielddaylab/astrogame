@@ -189,6 +189,10 @@ namespace Astro {
                 .Register(GameEvents.TitleOptionsClicked, LogClickOptionsMenu)
                 .Register<bool>(GameEvents.GameStart, LogGameStart)
                 .Register<int>(GameEvents.BeginLevel, LogBeginLevel)
+                .Register(GameEvents.ClickPauseGame, LogClickPauseGame)
+                .Register(GameEvents.ClickResumeGame, LogClickResumeGame)
+                .Register<string>(GameEvents.CutsceneStart, LogCutsceneStart)
+                .Register<string>(GameEvents.CutsceneEnd, LogCutsceneEnd)
                 ;
         }
         #endregion
