@@ -20,14 +20,18 @@ namespace Astro {
 
             if (movedDome) {
                 if (!m_StateA.DomeAudioHandle.IsValid) {
-                    m_StateA.DomeAudioHandle = Sfx.Play(m_StateA.DomeRotationLoop, m_StateA.DomeRotationLoopLocation);
-                    Sfx.SetVolume(m_StateA.DomeAudioHandle, 0);
-                    Sfx.SetVolume(m_StateA.DomeAudioHandle, 1, 0.1f);
+                    m_StateA.DomeAudioHandle = Sfx.Play(m_StateA.DomeRotationLoop, m_StateA.DomeRotationLoopLocation, new SfxPlayArgs() {
+                        Volume = 0,
+                        Pitch = 0.5f
+                    });
+                    Sfx.SetVolume(m_StateA.DomeAudioHandle, 1, 0.5f);
+                    Sfx.SetPitch(m_StateA.DomeAudioHandle, 1, 0.5f);
                     //Log.Msg("beginning dome move audio");
                 }
             } else {
                 if (m_StateA.DomeAudioHandle.IsValid) {
-                    Sfx.Stop(m_StateA.DomeAudioHandle, 0.15f);
+                    Sfx.SetPitch(m_StateA.DomeAudioHandle, 0.5f, 0.5f);
+                    Sfx.Stop(m_StateA.DomeAudioHandle, 0.5f);
                     m_StateA.DomeAudioHandle = default;
                     //Log.Msg("stopping dome move audio");
                 }

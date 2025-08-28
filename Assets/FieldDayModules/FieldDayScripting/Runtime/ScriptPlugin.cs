@@ -13,6 +13,8 @@ using UnityEngine;
 
 namespace FieldDay.Scripting {
     public class ScriptPlugin : ILeafPlugin<ScriptNode>, ILeafPlugin, ILeafVariableAccess {
+        static public readonly StringHash32 VoxTag = "Script";
+
         private readonly ScriptRuntimeState m_RuntimeState;
         private readonly ScriptDatabase m_Database;
         private readonly IMethodCache m_CachedMethodCache;
@@ -254,6 +256,7 @@ namespace FieldDay.Scripting {
             if (vox != null && VoxUtility.HasHumanReadableMapping(line.LineCode)) {
                 VoxRequest req = default;
                 req.CharacterId = charId;
+                req.Tag = VoxTag;
                 req.LineCode = line.LineCode;
                 req.Subtitle = new SubtitleEntry(tagStr.RichTextString);
                 req.UnloadAfterPlayback = (thread.PeekNode().Flags & ScriptNodeFlags.Once) != 0;
@@ -288,7 +291,8 @@ namespace FieldDay.Scripting {
                     CharacterId = charId,
                     Priority = ScriptUtility.ScriptPriorityToVoxPriority(thread.Priority()),
                     Subtitle = new SubtitleEntry(tagStr.RichTextString),
-                    VoxHandle = VoxRequestHandle.Dummy
+                    VoxHandle = VoxRequestHandle.Dummy,
+                    Tag = VoxTag
                 };
             } else {
                 fakeSubtitleData = default;

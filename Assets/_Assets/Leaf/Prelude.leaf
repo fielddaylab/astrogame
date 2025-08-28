@@ -101,15 +101,14 @@ $wait 2
 $wait 4
 
 $call Signal("DisconnectView")
+$wait 2
+$call Signal("RunAway")
 
-$wait 5
-
-$call EndOfPrologue->BeginCutscene()
-$wait 1
-$call PlayMusic("Music.Gently-Falling", 1)
 $wait 4
-$call LoadDay("Day1", "CopyTexture")
-// $call LoadDay("Day1")
+$call Signal("CutToBlack")
+$wait 2
+
+$call LoadDay("Day1", "HardCut")
 
 :: FadeOutStarClick
 $call PerseidsClickable->SetClickable(false)

@@ -7,7 +7,7 @@ using FieldDay.SharedState;
 using FieldDay.Vox;
 using Leaf.Runtime;
 using System;
-using System.Net.Sockets;
+using System.Collections;
 using UnityEngine;
 
 namespace Astro.Radio {
@@ -19,12 +19,14 @@ namespace Astro.Radio {
         [Header("Audio Sources")]
         public AudioSource StreamEmitter;
         public AudioSource StaticEmitter;
+        public AudioSource VoxStaticEmitter;
 
         [Header("Mixes")]
         [AudioMixStateRef] public StringHash32 MixId;
 
         [NonSerialized] public AudioHandle StaticAudioHandle;
         [NonSerialized] public AudioHandle StreamAudioHandle;
+        [NonSerialized] public AudioHandle VoxStaticAudioHandle;
 
         [NonSerialized] public RadioChannel ClosestChannel;
         [NonSerialized] public float NormalizedChannelStrength;
@@ -40,6 +42,7 @@ namespace Astro.Radio {
         void IRegistrationCallbacks.OnDeregister() {
             Sfx.Stop(StaticAudioHandle);
             Sfx.Stop(StreamAudioHandle);
+            Sfx.Stop(VoxStaticAudioHandle);
         }
 
         void IRegistrationCallbacks.OnRegister() {
@@ -88,6 +91,16 @@ namespace Astro.Radio {
             if (state.ClosestChannel != null) {
                 InstrumentUtility.TrySetValue(state.Dial, state.ClosestChannel.Frequency);
             }
+        }
+
+        [LeafMember("PlayRadioAlert")]
+        static public IEnumerator PlayAlert() {
+            var state = Find.State<RadioRig>();
+            var display = Find.State<RadioWaveformState>();
+            Sfx.PlayFrom("Oneshot.Radio.Alert", state.StreamEmitter);
+            display.WaveformRenderer.sharedMaterial = display.AlertMaterial;
+            yield return 3;
+            display.WaveformRenderer.sharedMaterial = display.WaveformMaterial;
         }
     }
 }

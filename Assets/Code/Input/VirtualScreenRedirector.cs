@@ -66,8 +66,10 @@ namespace Astro {
             if (Physics.Raycast(ray, out hit)) {
 
                 if (hit.collider.transform == screenTransform) {
+                    Vector2 hitCoord = hit.textureCoord;
+
                     // Figure out where the pointer would be in the second camera based on texture position or RenderTexture.
-                    Vector3 virtualPos = new Vector3(hit.textureCoord.x, hit.textureCoord.y);
+                    Vector3 virtualPos = new Vector3(hitCoord.x, hitCoord.y);
                     virtualPos.x *= screenCamera.targetTexture.width;
                     virtualPos.y *= screenCamera.targetTexture.height;
 

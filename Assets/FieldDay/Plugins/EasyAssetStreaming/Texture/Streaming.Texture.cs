@@ -126,12 +126,27 @@ namespace EasyAssetStreaming {
         }
 
         /// <summary>
+        /// Returns the total number of streamed textures.
+        /// </summary>
+        static public MemoryStat TextureCount() {
+            return Textures.AssetUsage;
+        }
+
+        /// <summary>
         /// Returns the budgeted number of streamed texture bytes tolerated.
         /// If not 0, this will attempt to unload unreferenced textures when this is exceeded.
         /// </summary>
         static public long TextureMemoryBudget {
             get { return Textures.MemoryBudget; }
             set { Textures.MemoryBudget = value; }
+        }
+
+        /// <summary>
+        /// Returns an enumerator of all loaded textures.
+        /// </summary>
+        static public Dictionary<StreamingAssetHandle, Texture>.Enumerator AllTextures()
+        {
+            return Textures.TextureMap.GetEnumerator();
         }
 
         #endregion // Public API
@@ -217,6 +232,7 @@ namespace EasyAssetStreaming {
 
             static public readonly Dictionary<StreamingAssetHandle, Texture> TextureMap = new Dictionary<StreamingAssetHandle, Texture>(16);
             static public MemoryStat MemoryUsage = default;
+            static public MemoryStat AssetUsage = default;
             static public long MemoryBudget = 0;
 
             static private Queue<StreamingAssetHandle> s_TexturePostProcessQueue = new Queue<StreamingAssetHandle>(8);
@@ -256,6 +272,7 @@ namespace EasyAssetStreaming {
 
                         TextureMap[handle] = texture;
                         s_Cache.BindAsset(handle, texture);
+                        IncrementMemorySize(ref AssetUsage);
                     }
                 } else {
                     if (handle.AssetType.Sub == StreamingAssetSubTypeId.VideoTexture) {
@@ -284,6 +301,7 @@ namespace EasyAssetStreaming {
                 Texture texture = TextureMap[id];
                 TextureMap.Remove(id);
                 MemoryUsage.Current -= id.StateInfo.Size;
+                DecrementMemorySize(ref AssetUsage);
 
                 StreamingHelper.DestroyResource(texture);
             }
@@ -295,6 +313,7 @@ namespace EasyAssetStreaming {
 
                 TextureMap.Clear();
                 MemoryUsage.Current = 0;
+                AssetUsage.Current = 0;
             }
 
             #region Placeholder

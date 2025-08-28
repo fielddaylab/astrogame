@@ -119,7 +119,7 @@ namespace Astro {
             }
             if ((m_AvailableInstrumentTypes & DataTypeMask.ColorIndex) != 0) {
                 DataPacket newPacket;
-                if (m_StateA.ToConvert != null && !m_StateA.ToConvert.ColorId.IsEmpty) {
+                if (m_StateA.ToConvert != null && ((m_StateA.ToConvert.Visibility & CelestialObjectVisMask.Visible) != 0 || m_StateA.ToConvert.ApparentMagnitude != 0)) {
                     newPacket = DataPacket.ColorIndex(m_StateA.ToConvert.ApparentBlueMagnitude - m_StateA.ToConvert.ApparentMagnitude);
                 } else {
                     newPacket = DataPacket.Null(DataTypeMask.ColorIndex);

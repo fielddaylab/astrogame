@@ -10,8 +10,9 @@ using UnityEngine;
 namespace FieldDay.Vox {
     public struct VoxRequest {
         public StringHash32 LineCode;
-        public SubtitleEntry Subtitle;
         public StringHash32 CharacterId;
+        public StringHash32 Tag;
+        public SubtitleEntry Subtitle;
         
         public VoxPriority Priority;
         public bool StartPlayback;

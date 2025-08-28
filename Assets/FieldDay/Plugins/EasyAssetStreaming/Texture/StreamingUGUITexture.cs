@@ -59,6 +59,10 @@ namespace EasyAssetStreaming {
 
         private StreamingUGUITexture() {
             m_OnUpdatedEvent = (StreamingAssetHandle id, Streaming.AssetStatus status, object asset) => {
+                if (id != m_AssetHandle) {
+                    return;
+                }
+
                 if (status == Streaming.AssetStatus.Loaded) {
                     m_LoadedTexture = (Texture) asset;
                     m_RawImage.texture = m_LoadedTexture;

@@ -33,6 +33,7 @@ namespace Astro {
         [NonSerialized] public string BaseVisualAssetFileType;
 
         public bool AlwaysHighRes = false;
+        public DocumentThickness Thickness = DocumentThickness.Thick;
 
         private void Awake() {
             Interactable = GetComponent<DocumentInteractable>();
@@ -109,5 +110,10 @@ namespace Astro {
 
             return true;
         }
+    }
+
+	public enum DocumentThickness : byte {
+        Thin,
+        Thick
     }
 }

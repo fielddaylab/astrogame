@@ -8,7 +8,7 @@ using FieldDay.Vox;
 using UnityEngine;
 
 namespace Astro.Radio {
-    [SysUpdate(GameLoopPhase.LateUpdate, 504)]
+    [SysUpdate(GameLoopPhase.LateUpdate, 505)]
     public sealed class RadioWaveformSystem : SharedStateSystemBehaviour<RadioWaveformState, RadioRig, RadioStreamsState> {
         static private int VoiceLerpPropertyId;
         static private int LineColorPropertyId;
@@ -16,11 +16,14 @@ namespace Astro.Radio {
 
         public override void ProcessWork(float deltaTime) {
             bool wasPlayingVox = false;
-            foreach(var vox in m_StateA.Voices) {
+            foreach (var vox in m_StateA.Voices) {
                 if (vox.Player.isPlaying) {
                     SubtitleStyle style = Find.NamedAsset<SubtitleStyle>(vox.CharacterId);
                     m_StateA.CurrentColor = style.WaveformColor;
                     m_StateA.CurrentLerp = 1;
+
+                    m_StateA.LastVoiceColor = style.WaveformColor;
+                    m_StateA.LastVoiceCooldown = 0.4f;
 
                     float voxAmp = 1;
                     if (m_StateA.VoxWaveformTable.TryFind(VoxUtility.CurrentLineCode(vox), out var waveform)) {
@@ -36,13 +39,21 @@ namespace Astro.Radio {
                 }
             }
 
+            if (!wasPlayingVox && m_StateA.LastVoiceCooldown > 0) {
+                m_StateA.LastVoiceCooldown -= deltaTime;
+                m_StateA.CurrentColor = m_StateA.LastVoiceColor;
+                m_StateA.CurrentScale = 0;
+                m_StateA.CurrentLerp = 1;
+                wasPlayingVox = true;
+            }
+
             if (!wasPlayingVox) {
                 float noiseComponent = m_StateB.StaticVolume;
                 float channelComponent = m_StateB.NormalizedChannelStrength;
 
                 float channelAmp = 0;
                 if (m_StateB.ClosestChannel != null && m_StateB.StreamEmitter.isPlaying) {
-                    channelAmp = 1;
+                    channelAmp = 0.2f;
                     if (m_StateA.RadioWaveformTable.TryFind(m_StateB.ClosestChannel.WaveformKey, out var waveform)) {
                         float time = m_StateB.StreamEmitter.time;
                         float duration = m_StateB.StreamEmitter.clip.length;

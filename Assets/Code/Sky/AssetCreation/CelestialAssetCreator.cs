@@ -216,7 +216,7 @@ namespace Astro
             string entryAssetPath = "Assets/" + ENTRY_DIR + assetName + ".asset";
             ReferenceEntry entryAsset = AssetDatabase.LoadAssetAtPath<ReferenceEntry>(entryAssetPath);
             if (entryAsset != null) {
-                currAsset.ReferenceId = entryAsset.AssetId;
+                //currAsset.ReferenceId = entryAsset.AssetId;
             }
         }
 
@@ -226,7 +226,7 @@ namespace Astro
             string constellationAssetPath = "Assets/" + CONSTELLATION_DIR + assetName + ".asset";
             CelestialAsset constellationAsset = AssetDatabase.LoadAssetAtPath<CelestialAsset>(constellationAssetPath);
             if (constellationAsset != null) {
-                currAsset.ConstellationId = constellationAsset.AssetId;
+                //currAsset.ConstellationId = constellationAsset.AssetId;
             }
         }
 
@@ -244,7 +244,7 @@ namespace Astro
             ReferenceColor colorAsset = AssetDatabase.LoadAssetAtPath<ReferenceColor>(colorAssetPath);
             if (colorAsset != null)
             {
-                currAsset.ColorId = colorAsset.AssetId;
+                //currAsset.ColorId = colorAsset.AssetId;
             }
         }
 

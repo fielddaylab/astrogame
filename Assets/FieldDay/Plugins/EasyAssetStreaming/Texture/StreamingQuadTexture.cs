@@ -75,6 +75,10 @@ namespace EasyAssetStreaming {
 
         private StreamingQuadTexture() {
             OnAssetUpdated = (StreamingAssetHandle id, Streaming.AssetStatus status, object asset) => {
+                if (id != m_AssetHandle) {
+                    return;
+                }
+
                 if (status == Streaming.AssetStatus.Loaded) {
                     m_LoadedTexture = (Texture) asset;
                     if (m_MainTexturePropertyId != 0) {

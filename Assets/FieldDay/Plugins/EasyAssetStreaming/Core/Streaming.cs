@@ -2,6 +2,10 @@
 #define DEVELOPMENT
 #endif // UNITY_EDITOR || DEVELOPMENT_BUILD
 
+#if !UNITY_2020_1_OR_NEWER
+#define LEGACY_UWR_RESULT
+#endif // UNITY_2020_1_OR_NEWER
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -122,7 +126,7 @@ namespace EasyAssetStreaming {
         #if DEVELOPMENT
 
         static private float s_SimulatedFailureRate = 0;
-        static private float s_SimulatedDelay = 0;
+        //static private float s_SimulatedDelay = 0;
 
         #endif // DEVELOPMENT
 
@@ -749,6 +753,19 @@ namespace EasyAssetStreaming {
         }
 
         [MethodImpl(256)]
+        static private void IncrementMemorySize(ref MemoryStat memUsage) {
+            memUsage.Current++;
+            if (memUsage.Max < memUsage.Current) {
+                memUsage.Max = memUsage.Current;
+            }
+        }
+
+        [MethodImpl(256)]
+        static private void DecrementMemorySize(ref MemoryStat memUsage) {
+            memUsage.Current--;
+        }
+
+        [MethodImpl(256)]
         static private void RecomputeMemorySize(ref MemoryStat memUsage, StreamingAssetHandle id, UnityEngine.Object asset) {
             RecomputeMemorySize(ref memUsage, ref id.StateInfo, asset);
         }
@@ -772,11 +789,19 @@ namespace EasyAssetStreaming {
 
         [MethodImpl(256)]
         static private bool DownloadFailed(UnityWebRequest request) {
-            #if DEVELOPMENT
-            return request.isNetworkError || request.isHttpError || UnityEngine.Random.value < s_SimulatedFailureRate;
-            #else
+#if LEGACY_UWR_RESULT
+#if DEVELOPMENT
+            return request.isNetworkError || request.isHttpError || (s_SimulatedFailureRate > 0 && UnityEngine.Random.value < s_SimulatedFailureRate);
+#else
             return request.isNetworkError || request.isHttpError;
-            #endif // DEVELOPMENT
+#endif // DEVELOPMENT
+#else
+#if DEVELOPMENT
+            return request.result != UnityWebRequest.Result.Success || (s_SimulatedFailureRate > 0 && UnityEngine.Random.value < s_SimulatedFailureRate);
+#else
+            return request.result != UnityWebRequest.Result.Success;
+#endif // DEVELOPMENT
+#endif // LEGACY_UWR_RESULT
         }
 
         #endregion // Utilities

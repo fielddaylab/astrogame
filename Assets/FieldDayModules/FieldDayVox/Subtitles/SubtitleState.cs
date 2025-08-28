@@ -7,9 +7,12 @@ namespace FieldDay.Vox {
     /// </summary>
     public struct SubtitleDisplayData {
         public VoxRequestHandle VoxHandle;
-        public StringHash32 CharacterId;
-        public SubtitleEntry Subtitle;
         public VoxPriority Priority;
+        
+        public StringHash32 CharacterId;
+        public StringHash32 Tag;
+        
+        public SubtitleEntry Subtitle;
     }
 
     static public partial class SubtitleUtility {

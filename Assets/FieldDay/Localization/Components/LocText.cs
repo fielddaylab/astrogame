@@ -36,15 +36,19 @@ namespace FieldDay.Localization {
 
         [NonSerialized] private LocId m_LastAssignedId;
         [NonSerialized] private LanguageId m_LastKnownLanguage;
+        [NonSerialized] private TextMesh m_LastKnownMetrics;
 
         #region Unity Events
 
         protected override void OnEnable() {
             base.OnEnable();
             // TODO: register to localization
-            if (m_LastKnownLanguage.IsEmpty) {
-                m_Graphic.tintAllSprites = m_TintSprites;
-                // TODO: check if we should initialize
+            if (Loc.Language != m_LastKnownLanguage) {
+                if (m_LastKnownLanguage.IsEmpty) {
+                    m_Graphic.tintAllSprites = m_TintSprites;
+                }
+                m_LastKnownLanguage = Loc.Language;
+                // TODO: queue to be updated
             }
         }
 
@@ -70,7 +74,10 @@ namespace FieldDay.Localization {
         #region ILocalizedComponent
 
         void ILocalizedComponent.OnLocalizationUpdated(LanguageId language) {
-            
+            if (language != m_LastKnownLanguage) {
+                m_LastKnownLanguage = language;
+                // queue for update
+            }
         }
 
         #endregion // ILocalizedComponent
