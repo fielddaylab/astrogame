@@ -60,11 +60,12 @@ namespace Astro {
                         }
                     }
                 } else {
-                    if (!hitRaycast && Physics.Raycast(ray, out hit, 25f, LayerMasks.Tappable_Mask)) {
+                    if (!hitRaycast && Physics.Raycast(ray, out hit, 14f, LayerMasks.Tappable_Mask)) {
                         if (hit.collider.TryGetComponent(out TappableCollider tap) && tap.isActiveAndEnabled) {
                             TappableMaterial tapMat = Find.NamedAsset<TappableMaterial>(tap.Material);
                             Sfx.PlayDetached(tapMat.Sound, hit.point, Quaternion.identity);
                             DebugDraw.AddPoint(hit.point, 0.1f, Color.yellow, 1);
+                            DebugDraw.AddLogText(string.Format("tapped on {0} at distance {1}", tap.Material.ToDebugString(), hit.distance), Color.yellow, 1);
                             hitRaycast = true;
                         }
                     }

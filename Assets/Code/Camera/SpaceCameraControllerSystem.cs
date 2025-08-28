@@ -58,6 +58,7 @@ namespace Astro {
 
         private UpdateFlags ProcessInputs() {
             if (!m_State.InputEnabled) return 0;
+            if (!Find.State<InputState>().Raycaster.enabled) return 0;
 
             UpdateFlags updated = 0;
             if (!m_State.CameraRotationInputLocked) {
