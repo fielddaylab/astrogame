@@ -255,7 +255,7 @@ namespace Astro {
                 connectionRect.sizeDelta = new Vector2(navState.EdgeWidth, Vector2.Distance(anchorA, anchorB) - navState.EdgeInset);
 
                 Vector2 vector = anchorA - anchorB;
-                float angle = Vector2.Angle(Vector2.up, vector);
+                float angle = Vector2.SignedAngle(Vector2.up, vector);
                 connectionRect.localEulerAngles = new Vector3(0, 0, angle);
             }
 
