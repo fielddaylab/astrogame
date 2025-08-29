@@ -67,7 +67,7 @@ namespace Astro {
                         }
                     }
                 } else {
-                    if (!hitRaycast && Physics.Raycast(ray, out hit, 14f, LayerMasks.Tappable_Mask)) {
+                    if (!hitRaycast && Physics.Raycast(ray, out hit, 25f, LayerMasks.Tappable_Mask)) {
                         if (hit.collider.TryGetComponent(out TappableCollider tap) && tap.isActiveAndEnabled) {
                             TappableMaterial tapMat = Find.NamedAsset<TappableMaterial>(tap.Material);
                             Sfx.PlayDetached(tapMat.Sound, hit.point, Quaternion.identity);
