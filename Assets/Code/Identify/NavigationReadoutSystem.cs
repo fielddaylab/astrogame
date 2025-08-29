@@ -59,6 +59,7 @@ namespace Astro {
                             Game.Events.Dispatch(GameEvents.PuzzleNavigationComplete); 
                             m_StateB.ConstellationSnapRoutine = Routine.Null;
                             });
+                    AstroGame.Events.Dispatch(GameEvents.TelescopeViewAssigned, EvtArgs.Box(puzzleState.ActivePuzzle.Constellation));
                 }
             }
 

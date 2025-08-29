@@ -13,6 +13,7 @@ namespace Astro {
         [Header("Open ID Objects")]
         public CelestialAsset[] RelevantObjects;
         [NonSerialized] public StringHash32[] RelevantObjectIds;
+        public ConstellationId Constellation;
 
         private void OnEnable() {
             RelevantObjectIds = new StringHash32[RelevantObjects.Length];

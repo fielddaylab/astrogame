@@ -31,6 +31,7 @@ namespace Astro {
         [Header("Constellation")]
         [AssetName(typeof(CelestialAsset))]public StringHash32[] ConstellationStars;
         public Edge[] Edges;
+        public ConstellationId Constellation;
 
         [Header("Puzzle Position")]
         public EqCoords PuzzleCoordinates;

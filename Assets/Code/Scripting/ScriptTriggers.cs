@@ -259,6 +259,7 @@ namespace Astro {
 
             var navState = Find.State<NavigationState>();
             navState.ConstellationSnapRoutine.Replace(NavigationUtility.SnapAlignment(target));
+            AstroGame.Events.Dispatch(GameEvents.TelescopeViewAssigned, EvtArgs.Box(config.NeutrinoEvent.Constellation));
         }
 
         [LeafMember("StartPuzzleNavigation")]

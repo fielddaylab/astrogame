@@ -140,6 +140,19 @@ namespace Astro {
         Galaxy
     }
 
+    public enum ConstellationId {
+        UrsaMajor,
+        Andromeda,
+        Draco,
+        Eridanus,
+        Hercules,
+        Hydra,
+        Leo,
+        Orion,
+        Perseus,
+        Tauraus,
+    }
+
     [Flags]
     public enum CelestialObjectVisMask {
         Visible = 0x01,

@@ -218,6 +218,7 @@ namespace Astro {
                 .Register<StarLogData>(GameEvents.StarClicked, LogClickSelectStar)
                 .Register<StringHash32>(GameEvents.InstrumentUnlocked, LogToolUnlocked)
                 .Register<string>(GameEvents.TelescopeTurned, LogTurnTelescope)
+                .Register<ConstellationId>(GameEvents.TelescopeViewAssigned, LogTelescopeViewAssigned)
                 ;
 
             // state update events
@@ -571,11 +572,18 @@ namespace Astro {
         //* constellation_id
         //* goal_orientation
 
-        private void LogTelescopeViewAssigned(string constellation, TelescopeOrientationData goal) {
+        private void LogTelescopeViewAssigned(ConstellationId constellation) {
+            TelescopeRig rig = Find.State<TelescopeRig>();
+            TelescopeOrientationData orientation = new TelescopeOrientationData(
+                rig.Base.localRotation.x,
+                rig.Base.localRotation.y,
+                rig.Base.localRotation.z,
+                rig.Base.localRotation.w
+                );
+
             m_Log.BeginEvent("telescope_view_assigned");
-            m_Log.EventParam("constellation_id", constellation);
-            //m_Log.EventParam("goal_orientation", goal.ToJson);
-            //TODO: update with json
+            m_Log.EventParam("constellation_id", EnumLookup.ConstellationType[(int)constellation]);
+            m_Log.EventParamJson("goal_orientation", orientation.Append(m_JsonBuilder).End());
             m_Log.SubmitEvent();
         }
 
@@ -1091,6 +1099,9 @@ namespace Astro {
         };
         public static readonly string[] ClassificationType = new string[] {
             "BRIGHTNESS", "SPECTRAL_TYPE", "ELEMENTS", "HISTORICAL", "SPECTRAL_TYPE_DWARF", "LUMINOSITY"
+        };
+        public static readonly string[] ConstellationType = new string[] {
+            "URSA_MAJOR", "ANDROMEDA", "DRACO", "ERIDANUS", "HERCULES", "HYDRA", "LEO", "ORION", "PERSEUS", "TAURUS"
         };
         public static string FirstClassificationType(ClassificationTypeMask type) {
             foreach (var bit in Bits.Enumerate(type)) {
