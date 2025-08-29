@@ -4564,7 +4564,7 @@ Transform:
   m_GameObject: {fileID: 745290497}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -41.7, z: 4}
+  m_LocalPosition: {x: 0, y: 15.9, z: 5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4585,14 +4585,14 @@ MonoBehaviour:
   m_MeshFilter: {fileID: 745290501}
   m_MeshRenderer: {fileID: 745290500}
   m_ColorGroup: {fileID: 0}
-  m_Path: Postcards/ceres_paper.png
+  m_Path: Texture/DomeInterior-blacklit_Emissive.png
   m_Material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_Tessellation: 0
   m_Color:
     serializedVersion: 2
     rgba: 4282592768
   m_Visible: 1
-  m_Size: {x: 96.25, y: 124.55882}
+  m_Size: {x: 96.25, y: 96.25}
   m_Pivot: {x: 0.5, y: 0.5}
   m_UVRect:
     serializedVersion: 2
@@ -5866,6 +5866,7 @@ GameObject:
   - component: {fileID: 1180760398}
   - component: {fileID: 1180760402}
   - component: {fileID: 1180760403}
+  - component: {fileID: 1180760404}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -5985,7 +5986,7 @@ Transform:
   m_GameObject: {fileID: 1180760397}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -493.1, z: -10}
+  m_LocalPosition: {x: 0, y: 60, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6021,6 +6022,57 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40c018c42a0a1434c9573b5326b0a779, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1180760404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1180760397}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc9b36ba467144144b5bcb6ea49ab997, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SkyRenderer: {fileID: 1799885529}
+  StartY: 60
+  FastStartY: -16
+  EndY: -432
+  MovementCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  Duration: 60
+  StarsRenderer: {fileID: 745290499}
+  StarsPositionOffset: 0
+  StarsParallax: 0.2
+  CameraTransform: {fileID: 1180760401}
+  MainScene:
+    m_ScenePath: Assets/Scenes/Prelude/TitleScreen.unity
+    m_GUID: b9cba836a43aacd48b8b05d61a0384b1
+  DEBUG_UseFast: 0
+  SkyTexture: Texture/Credits.png
+  StarsTexture: Texture/DomeInterior-blacklit_Emissive.png
 --- !u!1 &1187195659
 GameObject:
   m_ObjectHideFlags: 0
@@ -9402,14 +9454,14 @@ MonoBehaviour:
   m_MeshFilter: {fileID: 1799885531}
   m_MeshRenderer: {fileID: 1799885530}
   m_ColorGroup: {fileID: 0}
-  m_Path: Postcards/1833.png
+  m_Path: Texture/Credits.png
   m_Material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_Tessellation: 0
   m_Color:
     serializedVersion: 2
     rgba: 4294967295
   m_Visible: 1
-  m_Size: {x: 96.25, y: 144.375}
+  m_Size: {x: 96.25, y: 96.25}
   m_Pivot: {x: 0.5, y: 0}
   m_UVRect:
     serializedVersion: 2

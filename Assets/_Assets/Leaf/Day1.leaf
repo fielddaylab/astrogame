@@ -7,6 +7,7 @@ $call ToggleDeskPicture()
 $call SetInputState(false)
 $call StopPuzzleMode()
 $call StopOpenMode()
+$call MonitorUI->PowerOff()
 $call SetRefGuidePagesLocked(true)
 $call SetRefPageActive("ConstellationPerseusCompleted", false)
 $call SetRefPageActive("ConstellationHerculesCompleted", false)
@@ -37,7 +38,6 @@ $wait 1
 $call ChapterTitles->DisplayChapterTitles()
 $call IntroCutscene->BeginCutscene()
 $call ChapterTitles->FadeOutBackground()
-$call MonitorUI->PowerOff()
 $wait 2
 $call TelescopeLook(155, -30)
 $wait 3
@@ -74,6 +74,15 @@ $if !temp:pressedPowerButton
     {@Astrid}	I should power this thing up. Maybe it'll help me figure out where Elijah went. 	$[level1/Astrid/l1_a_02]
     $branch .PowerButtonHint
 $endif
+
+:: InspectElijahBackSoon
+@trigger    DocumentInspectStart
+@when   documentId == "ElijahIntro"
+@cutscene
+@once
+
+{@Astrid} You'll be back soon? Back from where? $[level1/Astrid/l1_a_01a]
+$goto .PowerButtonHint
 
 :: PressedPowerButton
 @trigger OnLabInteraction
@@ -160,7 +169,7 @@ $wait 1
 
 {@Radio} ...I told you, he's not there. Astrid, is that you? 	$[level1/dad/l1_d_01]
 
-{@Astrid}	(*gasp*) Dad!? I—I can’t believe it. Are you still at the South Pole? Can you hear me?	$[level1/Astrid/l1_a_07]
+{@Astrid}	(*gasp*) Dad!? I—I can’t believe it. Are you still at the South Pole? Can you hear me? $[level1/Astrid/l1_a_07]
 {@Dad}	Loud and clear. Well… not clear, exactly. But you know what I mean.	$[level1/dad/l1_d_02]
 {@Dad}	It’s so good to hear your voice, Little Bear.	$[level1/dad/l1_d_03]
 {@Astrid}	Hold on. Why are you calling Elijah's radio? Do you know where he went? 	$[level1/Astrid/l1_a_08]
@@ -246,25 +255,25 @@ $call HintModals->SlideInFromLeft("NeutrinoNav", 0.4)
 @when   newPips == 2
 @once
 
-{@Radio}	Nice. Getting warmer.	$[level1/radio_lady/l1_r_10b]
+{@Radio} Nice. Warmer... $[level1/radio_lady/l1_r_10b]
 
 :: Colder
 @trigger    OnNeutrinoNavColder
 @when   newPips == 0
 
-{@Radio}	Colder.	$[level1/radio_lady/l1_r_11a]
+{@Radio} Colder. $[level1/radio_lady/l1_r_11a]
 
 :: Colder2
 @trigger    OnNeutrinoNavColder
 @when   newPips == 1
 
-{@Radio}	Colder.	$[level1/radio_lady/l1_r_11b]
+{@Radio} Colder. $[level1/radio_lady/l1_r_11b]
 
 :: Colder3
 @trigger    OnNeutrinoNavColder
 @when   newPips == 3
 
-{@Radio}	Colder.	$[level1/radio_lady/l1_r_11c]
+{@Radio} Colder. $[level1/radio_lady/l1_r_11c]
 
 :: NeutrinoNavigationComplete
 @trigger    NeutrinoNavigationComplete
@@ -284,12 +293,12 @@ $set temp:upgradeChannelTuned = false
 $call SetStickyFirstPage(0)
 $call SetRefGuidePagesLocked(false)
 
-{@Radio}	Nice job!	$[level1/radio_lady/l1_r_12]
-{@Radio}	So, earlier this morning, IceCube detected a high-energy neutrino coming from one of several possible stars in this location.	$[level1/radio_lady/l1_r_13]
-{@Radio}	Our team at IceCube is tasked with studying these neutrino sources, and mapping the stars in this region is critical. 	$[level1/radio_lady/l1_r_15]
-{@Radio}	You can learn more about the IceCube project in your reference guide. 	$[level1/radio_lady/l1_r_16]
-{@Radio}	If you can ID them for us, we should be able to upgrade your access level.	$[level1/radio_lady/l1_r_17]
-{@Radio}	To get started, select a possible neutrino source on your display.	$[level1/radio_lady/l1_r_18]
+{@Radio} Nice job! $[level1/radio_lady/l1_r_12]
+{@Radio} So, earlier this morning, the IceCube Neturino Observatory detected a high-energy neutrino coming from one of several possible stars in this location. $[level1/radio_lady/l1_r_13]
+{@Radio} You should see these stars highlighted on your display. $[level1/radio_lady/l1_r_14]
+{@Radio} You can learn more about the IceCube project in your reference guide. 	$[level1/radio_lady/l1_r_16]
+{@Radio} If you can ID them for us, we should be able to upgrade your access level.	$[level1/radio_lady/l1_r_17]
+{@Radio} To get started, select a possible neutrino source on your display.	$[level1/radio_lady/l1_r_18]
 $goto .PostNeutrinoNavigationComplete
 
 :: PostNeutrinoNavigationComplete
@@ -302,7 +311,7 @@ $start .FirstStarHint
 :: FirstStarHint
 $wait 10
 $if temp:waitingForNeutrinoStar
-    {@Radio}	Astrid, you still there? Select a possible neutrino source on your display.	$[level1/radio_lady/l1_r_19]
+    {@Radio} Astrid, you still there? Select a possible neutrino source on your display. $[level1/radio_lady/l1_r_19]
     $branch .FirstStarHint
 $endif
 
@@ -313,7 +322,7 @@ $endif
 @interrupt
 
 $call ClearMonitorSelection()
-{@Radio}	Hmmm. That doesn't look a possible neutrino source. Look for objects highlighted in blue.	$[level1/radio_lady/l1_r_20]
+{@Radio} Hmmm. That doesn't look a possible neutrino source. Look for objects highlighted in blue. $[level1/radio_lady/l1_r_20]
 
 :: OnRefGuideClosed
 @trigger    OnRefGuideClosed
@@ -354,7 +363,7 @@ $if !temp:firstSubmission
     {@Radio} All you need to do is match that number with the correct range in your reference guide and submit the data.	$[level1/radio_lady/l1_r_25(1)]
     $call HintModals->SlideInFromRight("SubmitRangeHint", 0.2)
     $set temp:waitingForFirstClassificationClick = true
-    
+
     $branch .IntroFirstSubmissionTimeout
 $endif
 
@@ -518,7 +527,7 @@ $call UnlockMonitorFocus()
 
 :: ClearanceUpgrade
 @trigger    PointsUpdated
-@when   openIDThresholdHit 
+@when   openIDThresholdHit
 @boostScore 200
 @interrupt
 @cutscene
@@ -600,7 +609,8 @@ $call SetStickyFirstPage(-1)
 $call OpenRefGuidePage("Colormeter")
 
 $wait 1.5
-{@Astrid} "Clearance level 1... Color meter access granted. Please reference Ceres Operations manual for more info. Congratuations on reaching clearance Level 1. Together we will map the stars for a greater tomorrow" $[level1/Astrid/l1_a_20]
+{@Astrid} Clearance level 1... Color meter access granted. Please reference CERES Op. manual for more info. $[level1/Astrid/l1_a_20]
+{@Astrid} Congratuations on reaching clearance Level 1. Together we will map the stars for a greater tomorrow... $[level1/Astrid/l1_a_20a]
 
 $call ConsoleCommandLine->HideConsole()
 $wait 0.1
@@ -612,14 +622,15 @@ $wait 0.5
 
 $call SetRefGuideActive(false)
 
-{@Astrid}	*sigh* Another birthday without Elijah. Maybe he’s watching the Perseids, wherever he is.	$[level1/Astrid/l1_a_21]
-{@Astrid}	I wonder if there's anything about the Perseids in that operator's manual. 	$[level1/Astrid/l1_a_22]
+{@Astrid}	(*sigh*) Another birthday without Elijah. Maybe he’s watching the Perseids, wherever he is.	$[level1/Astrid/l1_a_21]
+$wait 1.5
+{@Astrid} I wonder if there's anything about the Perseids in that operator's manual. $[level1/Astrid/l1_a_22]
 
 $call OpenRefGuidePage("ConstellationPerseus")
 
-{@Astrid}	Yes… There’s something about Perseus here!  	$[level1/Astrid/l1_a_23]
-{@Astrid}	Aha!	$[level1/Astrid/l1_a_24]
-{@Astrid}	This time it's my turn to see Perseus through a telescope.	$[level1/Astrid/l1_a_25]
+{@Astrid} Yes... There’s something about Perseus here! $[level1/Astrid/l1_a_23]
+{@Astrid} Aha! $[level1/Astrid/l1_a_24]
+{@Astrid} This time it's my turn to see Perseus through a telescope. $[level1/Astrid/l1_a_25]
 $wait 1
 $goto .PostClearanceUpgrade
 
@@ -770,7 +781,7 @@ $call HintModals->Hide("AtikCell", 0.2)
 @trigger    OnPuzzleCellFilled
 @when   cellId == "R1C3", temp:waitingForFillAppMag
 @priority Medium
-@boostScore 300 
+@boostScore 300
 @interrupt
 @cutscene
 @once
@@ -793,7 +804,7 @@ $call Wait(1)
 :: BlueFilterSelected
 @trigger    OnLabInteraction
 @when   actorId == "BlueFilter", temp:waitingForBlueFilter
-@boostScore 300 
+@boostScore 300
 @interrupt
 @cutscene
 

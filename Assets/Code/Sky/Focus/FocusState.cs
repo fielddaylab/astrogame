@@ -139,7 +139,10 @@ namespace Astro {
             if (state.CurrentFocus == null) return;
 
             if (IsCurrentFocusInNeutrinoEvent()) {
-                ScriptUtility.Trigger(ScriptEvents.OnNeutrinoStarSelected);
+                using (var table = TempVarTable.Alloc()) {
+                    table.Set("starName", focus.TargetData.DisplayName);
+                    ScriptUtility.Trigger(ScriptEvents.OnNeutrinoStarSelected, table);
+                }
             } else {
                 using (var table = TempVarTable.Alloc()) {
                     table.Set("starName", focus.TargetData.DisplayName);
