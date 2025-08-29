@@ -11,6 +11,8 @@ using BeauPools;
 using BeauUtil.UI;
 using FieldDay.Scripting;
 using static UnityEngine.GraphicsBuffer;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Astro {
     public enum NavigationMode {
@@ -94,6 +96,18 @@ namespace Astro {
             navState.ReadoutDirty = false;
             ReviewModuleUtility.ResetReview();
 
+            PuzzleState puzzleState = Find.State<PuzzleState>();
+            if (puzzleState.ActivePuzzle) {
+                TelescopeViewLogData logData = new TelescopeViewLogData();
+                logData.Constellation = puzzleState.ActivePuzzle.Constellation;
+                logData.Stars = new List<string>();
+                foreach (var assetId in puzzleState.ActivePuzzle.ConstellationStars) {
+                    var asset = Find.NamedAsset<CelestialAsset>(assetId);
+                    logData.Stars.Add(asset.DisplayName);
+                }
+                AstroGame.Events.Dispatch(GameEvents.FoundTelescopeView, EvtArgs.Box(logData));
+            }
+
             ScriptUtility.Invoke("MovePlayerToInstruments");
             //ViewNavUtility.LeafMoveToNode("Right");
 
@@ -143,6 +157,17 @@ namespace Astro {
 
             state.LookUpdatedThisFrame = true;
             state.OnLookUpdated.Invoke(state);
+
+            DayConfigAsset config = DayConfigUtil.GetConfigForState();
+            if (config) {
+                TelescopeViewLogData logData = new TelescopeViewLogData();
+                logData.Constellation = config.NeutrinoEvent.Constellation;
+                logData.Stars = new List<string>();
+                foreach(var asset in config.NeutrinoEvent.RelevantObjects) {
+                    logData.Stars.Add(asset.DisplayName);
+                }
+                AstroGame.Events.Dispatch(GameEvents.FoundTelescopeView, EvtArgs.Box(logData));
+            }
 
             ScriptUtility.Invoke("MovePlayerToInstruments");
 

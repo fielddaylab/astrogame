@@ -221,6 +221,7 @@ namespace Astro {
                 .Register<TelescopeViewLogData>(GameEvents.TelescopeViewAssigned, LogTelescopeViewAssigned)
                 .Register<int>(GameEvents.LocatorCloser, LogLocatorCloser)
                 .Register<int>(GameEvents.LocatorFurther, LogLocatorFurther)
+                .Register<TelescopeViewLogData>(GameEvents.FoundTelescopeView, LogFoundTelescopeView)
                 ;
 
             // state update events
@@ -601,11 +602,11 @@ namespace Astro {
         //found_telescope_view/
         //* constellation_id
         //* constellation: list[star_id]
-        private void LogFoundTelescopeView(ConstellationData constellation) {
+        private void LogFoundTelescopeView(TelescopeViewLogData logData) {
+            m_JsonBuilder.Clear();
             m_Log.BeginEvent("found_telescope_view");
-            m_Log.EventParam("constellation_id", constellation.Id);
-            //m_Log.EventParamJson("constellation", constellation.Stars);
-            // TODO: update with json
+            m_Log.EventParam("constellation_id", EnumLookup.ConstellationType[(int)logData.Constellation]);
+            m_Log.EventParamJson("constellation", logData.AppendStars(m_JsonBuilder).End());
             m_Log.SubmitEvent();
         }
 
@@ -1173,6 +1174,15 @@ namespace Astro {
     {
         public ConstellationId Constellation;
         public Vector3 Goal;
+        public List<string> Stars;
+
+        public readonly JsonBuilder AppendStars(JsonBuilder json)
+        {
+            foreach (var star in Stars) {
+                json.Field("star_id", star);
+            }
+            return json;
+        }
     }
 
     [Serializable] // more portable version of PuzzleAsset?
