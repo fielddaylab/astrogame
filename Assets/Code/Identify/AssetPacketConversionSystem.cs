@@ -100,8 +100,9 @@ namespace Astro {
                 DataPacket newPacket;
                 if (m_StateA.ToConvert != null && ((m_StateA.ToConvert.Visibility & CelestialObjectVisMask.Visible) != 0 || m_StateA.ToConvert.AbsoluteMagnitude != 0)) {
                     newPacket = DataPacket.AbsoluteMagnitude(m_StateA.ToConvert.AbsoluteMagnitude);
-                }
-                else {
+                } else if (m_StateA.ToConvert != null) {
+                    newPacket = DataPacket.AbsoluteMagnitude(-1000);
+                } else {
                     newPacket = DataPacket.MinAbsMagnitude();
                 }
                 m_ConvertedPackets.PushBack(newPacket);

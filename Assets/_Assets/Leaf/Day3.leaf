@@ -7,7 +7,7 @@ $call ToggleDeskPicture()
 $call SpawnDocument("Day3Cal")
 $call SpawnDocument("Level1")
 $call SpawnDocument("Level2")
-$call SpawnDocument("RadioDad")
+$call SpawnDocument("AnnoyingRadio")
 $call EnableDocumentClose("1833", false)
 $call EnableDocumentClose("Day3ElijahPostcard", false)
 $call SetInstrumentUnlocked(CoordinateInstrument, true)
@@ -72,7 +72,8 @@ $wait 1
 $call SpawnDocumentToCamera("1833")
 $call SetInputState(true)
 
-{@Astrid}	Apparently there was some crazy Leonid meteor storm in 1833. People thought the world was ending. 	$[level3/Astrid/l3_a_05]
+{@Astrid} Oh, here it is! $[level3/Astrid/l3_a_05a]
+{@Astrid} Apparently there was some crazy Leonid meteor storm in 1833. People thought the world was ending. $[level3/Astrid/l3_a_05]
 
 :: 1833FlipDocument
 @trigger    DocumentInspectFlip
@@ -82,7 +83,7 @@ $call SetInputState(true)
 @once
 
 $call EnableDocumentClose("1833", true, true)
-{@Astrid}	Elijah, come on. Half the words are smudged off! You really need to stop drinking iced coffee at your desk. 	$[level3/Astrid/l3_a_06]
+{@Astrid} Oh no! half the words are smudged off! One of us was drinking iced coffee at the desk.  $[level3/Astrid/l3_a_06]
 
 :: SpawnPuzzleDocs2
 @trigger    DocumentInspectEnd
@@ -96,9 +97,9 @@ $wait 1
 $call SpawnDocumentToCamera("Day3Dad")
 $call SetInputState(true)
 
-{@Astrid}	Dad! I haven't heard from him since we argued. I hope he's not too upset.	$[level3/Astrid/l3_a_07]
-{@Astrid}	Wow. I wish everyone could read this. After the CME, so many people are scared of anything unusual in the night sky.	$[level3/Astrid/l3_a_08]
-{@Astrid}	It would be nice if we could all enjoy looking at the stars again. Martha was always telling me to come inside after dark. She hated my stargazing. 	$[level3/Astrid/l3_a_09]
+{@Astrid} Dad! I haven't heard from him since we argued. $[level3/Astrid/l3_a_07]
+{@Astrid} After the CME, so many people are scared of anything unusual in the night sky. $[level3/Astrid/l3_a_08]
+{@Astrid} It would be nice if we could all enjoy looking at the stars again. Martha was always telling me to stop stargazing. $[level3/Astrid/l3_a_09]
 
 :: SpawnPuzzleDocs3
 @trigger    DocumentInspectEnd
@@ -115,14 +116,31 @@ $call SetInputState(true)
 $call StartDocumentPuzzle("Day3DocumentPuzzle")
 $set temp:docPuzzleSolved = false
 
-{@Astrid}	What is Elijah trying to warn people about?	$[level3/Astrid/l3_a_10]
+{@Astrid} What is Elijah trying to warn people about? $[level3/Astrid/l3_a_10]
 
-:: DocumentInspect1833
+:: InspectLevel2
 @trigger    DocumentInspectStart
-@when   documentId == "1833"
+@when   documentId == "Level2"
 @cutscene
 @once
 
+{@Astrid} Clearance Level 2! $[level3/Astrid/l3_a_09a]
+
+:: InspectRadioPostit
+@trigger    DocumentInspectStart
+@when   documentId == "AnnoyingRadio"
+@cutscene
+@once
+
+{@Astrid} The Recover Board lady is sooo annoying! $[level3/Astrid/l3_a_09b]
+
+:: InspectCalendar
+@trigger    DocumentInspectStart
+@when   documentId == "Day3Cal"
+@cutscene
+@once
+
+{@Astrid} Its already september! $[level3/Astrid/l3_a_09c]
 
 :: IncorrectDocumentResponse
 @trigger    DocumentPuzzlePromptStart
@@ -169,7 +187,7 @@ $wait 1
 {@Astrid} All this talk of UFOs and conspiracies is getting unhinged. 	$[level3/Astrid/l3_a_22]
 {@Astrid} Do you remember the panic on the eclipse last year? We can't have that happen again.	$[level3/Astrid/l3_a_23]
 {@Astrid} We can use the satellite to figure out what's coming and warn people. 	$[level3/Astrid/l3_a_24]
-{@Dad}	Warn them? Astrid, there are meteor showers all the time. These aren't omens, they are natural phenomena. 	$[level3/Dad/l3_d_07]
+{@Dad}	Warn them? Astrid, there are meteor showers all the time. These aren't omens, they are natural phenomena. $[level3/Dad/l3_d_07]
 {@Astrid} Dad, are you even listening? This isn't a meteor shower. Meteor storm. 	$[level3/Astrid/l3_a_25]
 {@Astrid} Like... the sky is falling, fire-and-brimstone type storm. I know meteors are harmless, but not everyone does. There is going to be panic.	$[level3/Astrid/l3_a_26]
 {@Dad} Look. I don't want to argue again. 	$[level3/Dad/l3_d_08]
@@ -193,6 +211,7 @@ $wait 1
 $goto .SetupNeutrinoNav
 
 :: SetupNeutrinoNav
+$call StartMonitorControls()
 $call WaitForMovedToView("Monitor")
 $call MonitorUI->PlayRadioDownload(2)
 $call StartNeutrinoNavigation()
@@ -207,26 +226,29 @@ $call SetStickyFirstPage(2)
 $call StopNeutrinoNavigation()
 $call StartOpenMode()
 $call SetInputState(false)
-{@Radio}	That spectrometer allows you to read the elemental fingerprint of a star. 	$[level3/radio_lady/l3_r_03]
-{@Radio}	That can give you a more precise spectral type... but for now we just need the <b>elements</b>.	$[level3/radio_lady/l3_r_04]
-{@Astrid}	Just the elements of the star, got it.	$[level3/Astrid/l3_a_34]
+// {@Radio}	That spectrometer allows you to read the elemental fingerprint of a star. 	$[level3/radio_lady/l3_r_03]
+// {@Radio}	That can give you a more precise spectral type... but for now we just need the <b>elements</b>.	$[level3/radio_lady/l3_r_04]
+// {@Astrid}	Just the elements of the star, got it.	$[level3/Astrid/l3_a_34]
+{@Radio}	The star's spetra is like its fingerprint. Each star has unique color, temperature, and elements. 	$[level3/radio_lady/l3_r_03]
+{@Radio}	Using the spectrometor gives us detailed information about what elements are in a star. 	$[level3/radio_lady/l3_r_04]
 $call ConsoleCommandLine->PlayConsoleTextAndWait("LoadHistData")
-$wait 2
+$wait 1
 {@Radio} Whoa. $[level3/radio_lady/l3_r_05]
+$wait 1
 {@Radio} What is all this? $[level3/radio_lady/l3_r_06]
 {@Astrid} Hey, are you still talking to me? $[level3/Astrid/l3_a_35]
 {@Radio} Please stand by. $[level3/radio_lady/l3_r_07]
 {@Radio} This is... this is incredible! Are you seeing this? $[level3/radio_lady/l3_r_08]
-{@Radio} Copy that. We're seeing data come through.... yeah a ton of it... Stars, supernovas... neutrino emissions... anomolies... $[level3/radio_lady/l3_r_09]
+// {@Radio} Copy that. We're seeing data come through.... yeah a ton of it... Stars, supernovas... neutrino emissions... anomolies... $[level3/radio_lady/l3_r_09]
 {@Radio} It's some kind of historical data packet. I can't believe it. A portion of the Gorynich satellite is online! $[level3/radio_lady/l3_r_10]
 {@Astrid} Whoa. Unlocking the last puzzle actually worked. $[level3/Astrid/l3_a_36]
-{@Astrid} Dad is going to absolutely freak out. $[level3/Astrid/l3_a_37]
+// {@Astrid} Dad is going to absolutely freak out. $[level3/Astrid/l3_a_37]
 $call ConsoleCommandLine->HideConsole()
 {@Radio} Station 12, come in. Sorry for the delay. $[level3/radio_lady/l3_r_11]
 {@Astrid} Uh, no problem. Any updates, or...? $[level3/Astrid/l3_a_38]
-{@Radio} Um... if you could stand by while I look this over. Can you work on identifying the elements in the Orion constellation while I sort this out?
-{@Astrid} Sure...
-{@Radio} ...yeah come check this out...
+{@Radio} Um... if you could stand by while I look this over. Can you work on identifying the elements in the Orion constellation while I sort this out? $[level3/radio_lady/l3_r_11a]
+{@Astrid} Sure... $[level3/Astrid/l3_a_38a]
+{@Radio} ...yeah come check this out... $[level3/radio_lady/l3_r_11b]
 $call SetRadioDialLocked(false)
 $call SetChannelActive(IceCube, false)
 $call SetInputState(true)
@@ -251,16 +273,16 @@ $wait 1
 $call SetRadioFrequency(137)
 $call MonitorUI->HideElement("CeresMsg")
 $wait 1
-{@Radio}	Astrid, come in, are you there? 	
-{@Astrid}	Hey! Yeah, I'm here. What happened?	
-{@Radio}	Well, long story, but it looks like the parallax module is working again and you will have access to historical data. 	
-{@Radio}	So.... You have been cleared to use the parallax module
+{@Radio}	Astrid, come in, are you there? $[level3/radio_lady/l3_r_13a]
+{@Astrid}	Hey! Yeah, I'm here. What happened?	$[level3/Astrid/l3_a_38b]
+{@Radio}	Well, long story, but it looks like the parallax module is working again and you will have access to historical data. $[level3/radio_lady/l3_r_13b]
+{@Radio}	So.... You have been cleared to use the parallax module. $[level3/radio_lady/l3_r_13c]
 {@Radio}	This will allow you to measure parallax, so that you can determine the distance of stars from Earth.	$[level3/radio_lady/l3_r_13]
 {@Astrid}	Sick. Anything else? Like... maybe any data on a giant meteor storm later this year? 	$[level3/Astrid/l3_a_40]
 {@Radio}	I fail to understand how that's relevant.	$[level3/radio_lady/l3_r_14]
 {@Astrid}	Never mind.	$[level3/Astrid/l3_a_41]
-{@Astrid}	Hey, if you run into my dad... would you mind telling him "I told you so" for me? 	$[level3/Astrid/l3_a_42]
-{@Radio}	Copy that. Good work today, Station 12. 	$[level3/radio_lady/l3_r_15]
+// {@Astrid}	Hey, if you run into my dad... would you mind telling him "I told you so" for me? 	$[level3/Astrid/l3_a_42]
+// {@Radio}	Copy that. Good work today, Station 12. 	$[level3/radio_lady/l3_r_15]
 $call SetInputState(true)
 $start .UpgradeReminder
 
@@ -411,7 +433,7 @@ $call ConsoleCommandLine->HideConsole()
 $call TapeDeck->SetTapeActive(false)
 
 {@Astrid}	Ugh. This sounds so familiar. Why does everyone in my life keep leaving? 	$[level3/Astrid/l3_a_59]
-{@Astrid}	At least I know why he left. 	$[level3/Astrid/l3_a_60]
+// {@Astrid}	At least I know why he left. 	$[level3/Astrid/l3_a_60]
 {@Astrid}	But even if we figure out everything about the meteor storm, how will it get people's attention and explain what to expect? 	$[level3/Astrid/l3_a_61]
 {@Astrid}	Hmm... I wonder if Jocelyn still works for the newspaper in Chicago.	$[level3/Astrid/l3_a_62]
 {@Astrid}	They probably won't run a story with so much missing information.	$[level3/Astrid/l3_a_63]

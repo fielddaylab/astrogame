@@ -15,6 +15,7 @@ $call SetInstrumentUnlocked(TemperatureInstrument, true)
 $call SetInstrumentUnlocked(SpectrometerInstrument, true)
 $call SetInstrumentUnlocked(HistoricalDataInstrument, true)
 $call SetInstrumentUnlocked(HistoricalDataModeToggle, true)
+$call SetDomeGlow(false)
 $call StopPuzzleMode()
 $call StopOpenMode()
 $call SpawnDocument("Day5Cal")
@@ -51,11 +52,8 @@ $wait 1
 
 $call SpawnDocumentToCamera("Day5ElijahPostcard")
 $call SetInputState(true)
-{@Astrid}	Elijah said I was like Perseus. But lately I feel more like Andromeda... stuck. Waiting..	$[level5/Astrid/l5_a_01]
-{@Astrid}	It's like I'm a puppet. 	$[level5/Astrid/l5_a_02]
+{@Astrid}	Elijah said I was like Perseus. But lately I feel more like Andromeda...	$[level5/Astrid/l5_a_01]
 {@Astrid}	I wish I could decide my own fate. Being Andromeda sucks. 	$[level5/Astrid/l5_a_03]
-		
-{@Astrid}	Ugh. Time to get back to work.	$[level5/Astrid/l5_a_04]
 
 :: SpawnPuzzleDocs1
 @trigger    DocumentInspectEnd
@@ -67,9 +65,6 @@ $call SetInputState(true)
 $wait 1
 $call SpawnDocumentToCamera("NewspaperLetter")
 {@Astrid}	Oh my gosh, its happening for real! They just offered me a job at the paper! 	$[level5/Astrid/l5_a_05]
-{@Astrid}	This is so cool. There's so much I could do! A column, a radio show... maybe Elijah and I could even put out some art! We've always talked about making zines together.	$[level5/Astrid/l5_a_06]
-{@Astrid}	Everyone thinks the sky is just bad omens. 	$[level5/Astrid/l5_a_07]
-{@Astrid}	Maybe I could change that... starting with this meteor storm.	$[level5/Astrid/l5_a_08]
 
 :: SpawnPuzzleDocs2
 @trigger    DocumentInspectEnd
@@ -80,8 +75,6 @@ $call SpawnDocumentToCamera("NewspaperLetter")
 
 $call SpawnDocumentToCamera("Day5Letter")
 {@Astrid}	Dad would say I should keep working with him at CERES. Aunt Martha would think I'm crazy. Elijah... I'm not sure...	$[level5/Astrid/l5_a_09]
-{@Astrid}	Ugh. Time to focus. There’s still work to do.	$[level5/Astrid/l5_a_10]
-{@Astrid}	Just solve the last puzzle. When the satellite is unlocked, I'll have access to new radio channels. I can use it to contact Jocelyn and get the word out.	$[level5/Astrid/l5_a_11]
 {@Astrid}	Then I can figure out this job thing. 	$[level5/Astrid/l5_a_12]
 
 $wait 1
@@ -95,6 +88,30 @@ $wait 1
 $wait 1
 $call SpawnDocumentToCamera("RecoveryBoardLetter")
 {@Astrid}	Does this mean I can't work on the puzzle? No, it looks like I just have to do some more identification. Really? 	$[level5/Astrid/l5_a_13]
+
+:: InspectCalendar
+@trigger    DocumentInspectStart
+@when   documentId == "Day4Cal"
+@cutscene
+@once
+
+{@Astrid}	There are only a few days before meteor storm!	$[level5/Astrid/l5_a_13c]
+
+:: InspectPuppetSketch
+@trigger    DocumentInspectStart
+@when   documentId == "Puppet"
+@cutscene
+@once
+
+{@Astrid}	Time for andromeda to cut her strings. 	$[level5/Astrid/l5_a_13b]
+
+:: InspectDontPanic
+@trigger    DocumentInspectStart
+@when   documentId == "DontPanic"
+@cutscene
+@once
+
+{@Astrid}	I've got to get the word out about the meteor storm 	$[level5/Astrid/l5_a_13a]
 
 :: StartDay
 @trigger    DocumentInspectEnd
@@ -125,6 +142,7 @@ $call SetInputState(true)
 $branch .SetupNeutrinoNav
 
 :: SetupNeutrinoNav
+$call StartMonitorControls()
 $call MonitorUI->PlayRadioDownload(2)
 $call StartNeutrinoNavigation()
 

@@ -68,7 +68,7 @@ namespace Astro {
                     }
 
                     if (packedEnabled.IsSet(packedIdx)) {
-                        // Check here to see if the star we are disabling is our current focus.
+                        // Check here to see if the star we are disabling is in our current focus.
                         FocusState state = Find.State<FocusState>();
                         if (state.CurrentFocus == focus) FocusableUtility.SetCurrentFocus(state, null);
 

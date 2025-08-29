@@ -134,7 +134,11 @@ namespace Astro {
                 case DataTypeMask.BlueMagnitude:
                 case DataTypeMask.InfraredMagnitude:
                 case DataTypeMask.AbsoluteMagnitude: {
-                    sb.AppendNoAlloc(packet.Value.Magnitude, 2);
+                    if (packet.Value.Magnitude < -100) {
+                        sb.Append("NULL");
+                    } else {
+                        sb.AppendNoAlloc(packet.Value.Magnitude, 2);
+                    }
                     return true;
                 }
 

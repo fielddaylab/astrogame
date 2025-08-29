@@ -57,7 +57,7 @@ $call EnableDocumentClose("Day2DadIcecubePostcard", true, true)
 
 {@Astrid}	Wow, that's Dad at IceCube!	$[level2/Astrid/l2_a_03]
 {@Astrid}	I wonder if he ever feels weird about the southern lights, after everything that happened.	$[level2/Astrid/l2_a_04]
-{@Astrid}	I guess auroras don't usually come with a huge coronal mass ejection... but I think it might still freak me out. 	$[level2/Astrid/l2_a_05]
+{@Astrid}	I guess auroras don't usually come with a huge <b>coronal mass ejection</b>... but I think it might still freak me out. 	$[level2/Astrid/l2_a_05]
 
 :: SpawnPuzzleDocs1
 @trigger    DocumentInspectEnd
@@ -106,9 +106,50 @@ $call SetInputState(true)
 :: InspectMiniMap
 @trigger    DocumentInspectStart
 @when   documentId == "MiniLabors"
+@cutscene
 @once
 
 {@Astrid}	Hmm... The 12 labors. Elijah mentioned that in his postcard. 	$[level2/Astrid/l2_a_20]
+
+:: InspectRadioPostit
+@trigger    DocumentInspectStart
+@when   documentId == "Cutoff"
+@cutscene
+@once
+
+{@Astrid}	This little radio is my only connection to the rest of the world right now. 	$[level2/Astrid/l2_a_13a]
+
+:: InspectMarthaGuilt
+@trigger    DocumentInspectStart
+@when   documentId == "MarthaGuilt"
+@cutscene
+@once
+
+{@Astrid}	I feel so guilty for leaving Aunt Martha and the clinic. 	$[level2/Astrid/l2_a_13b]
+
+:: InspectElijahHike
+@trigger    DocumentInspectStart
+@when   documentId == "ElijahHike"
+@cutscene
+@once
+
+{@Astrid}	I wonder where he is right now. 	$[level2/Astrid/l2_a_13c]
+
+:: InspectDay2Cal
+@trigger    DocumentInspectStart
+@when   documentId == "Day2Cal"
+@cutscene
+@once
+
+{@Astrid}	I've been here for two weeks already!	$[level2/Astrid/l2_a_13d]
+
+:: InspectLevel1
+@trigger    DocumentInspectStart
+@when   documentId == "Level1"
+@cutscene
+@once
+
+{@Astrid} I'm a certified astronomer now! $[level2/Astrid/l2_a_13e]
 
 :: SpawnPuzzleDocs3
 @trigger    DocumentInspectEnd
@@ -155,7 +196,7 @@ $set temp:DocOnboardHintVisible = true
 @trigger    DocumentPuzzlePromptStart
 @when   answerId == "HerculesPostcard", !temp:docPuzzleSolved
 
-{@Astrid}	Elijah's traveling to all the CERES stations! He says he's getting them ready for... something. 	$[level2/Astrid/l2_a_17]
+{@Astrid} Elijah says he's getting all the observatories ready for... something. $[level2/Astrid/l2_a_17]
 
 :: CorrectDocumentResponse
 @trigger    DocumentPuzzlePromptStart
@@ -200,6 +241,7 @@ $call SetInputState(true)
 $goto .SetupNeutrinoNav
 
 :: SetupNeutrinoNav
+$call StartMonitorControls()
 $call WaitForMovedToView("Monitor")
 $call MonitorUI->PlayRadioDownload(4)
 $call StartNeutrinoNavigation()
@@ -448,7 +490,7 @@ $wait 1
 {@Astrid}	Wait a second. You knew about this? 	$[level2/Astrid/l2_a_27]
 {@Dad}	Look... it's only rumors. You know how Elijah gets caught up in those old stories. 	$[level2/Dad/l2_d_05]
 {@Astrid}	What stories? ...Dad, you have to tell me. 	$[level2/Astrid/l2_a_28]
-{@Dad} Supposedly, there was a researcher from Slovakia who spent the last years of his life getting a satellite into orbit.	$[level2/Dad/l2_d_06]
+{@Dad} Supposedly, there was a researcher from Slovenia who spent the last years of his life getting a satellite into orbit. $[level2/Dad/l2_d_06]
 {@Dad}	This guy was super paranoid, so he built the satellite with tons of extra shielding. There's a chance... a tiny, negligible chance... that it could've survived the Collapse. 	$[level2/Dad/l2_d_07]
 {@Dad}	But the satellite is locked. Encrypted with a 5-letter key.	$[level2/Dad/l2_d_08]
 {@Dad}	I didn't want to give you false hope.	$[level2/Dad/l2_d_09]
