@@ -104,5 +104,14 @@ namespace Astro.Radio {
             }
             display.WaveformRenderer.sharedMaterial = display.WaveformMaterial;
         }
+
+        [LeafMember("PlayOneshotRadioAlert")]
+        static public void PlayOneshotAlert() {
+            var state = Find.State<RadioRig>();
+            var display = Find.State<RadioWaveformState>();
+            Sfx.PlayFrom("Oneshot.Radio.Alert", state.StreamEmitter);
+            display.WaveformRenderer.sharedMaterial = display.AlertMaterial;
+            display.WaveformRenderer.sharedMaterial = display.WaveformMaterial;
+        }
     }
 }

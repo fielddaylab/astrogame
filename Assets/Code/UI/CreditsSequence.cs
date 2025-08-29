@@ -11,6 +11,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Astro {
     [PreloadOrder(-10000)]
@@ -33,6 +34,9 @@ namespace Astro {
         public Transform CameraTransform;
         public SceneReference MainScene;
 
+        [Header("Close Button")]
+        public Button CloseButton;
+
         [Header("-- DEBUG --")]
         public bool DEBUG_UseFast;
 
@@ -40,17 +44,20 @@ namespace Astro {
         [HideInInspector] public string StarsTexture;
 
         [NonSerialized] private bool m_IsFastMode;
+        [NonSerialized] private Routine m_SequenceRoutine;
         [NonSerialized] private Routine m_MoveRoutine;
 
         private void Awake() {
             Game.Scenes.QueueOnLoad(OnSceneStart);
+
+            CloseButton.onClick.AddListener(OnCloseButtonClicked);
         }
 
         private void OnSceneStart() {
             if (!m_IsFastMode) {
-                Routine.Start(this, MainRoutine()).TryManuallyUpdate(0);
+                m_SequenceRoutine = Routine.Start(this, MainRoutine());
             } else {
-                Routine.Start(this, FastRoutine()).TryManuallyUpdate(0);
+                m_SequenceRoutine = Routine.Start(this, FastRoutine());
             }
         }
 
@@ -62,7 +69,7 @@ namespace Astro {
             yield return 2;
             m_MoveRoutine = Routine.Start(this, MoveRoutine());
 
-            yield return 15;
+            yield return 25;
             yield return Tween.OneToZero((f) => StarsRenderer.Alpha = f, 5);
 
             StarsRenderer.gameObject.SetActive(false);
@@ -84,6 +91,8 @@ namespace Astro {
             yield return m_MoveRoutine;
             yield return 1;
 
+            CloseButton.interactable = false;
+
             MusicUtility.StopMusic(2);
             Game.Scenes.LoadMainScene(MainScene);
         }
@@ -100,6 +109,12 @@ namespace Astro {
             SetCameraY(Mathf.LerpUnclamped(StartY, EndY, MovementCurve.Evaluate(f)));
         }
 
+        private void OnCloseButtonClicked() {
+            m_SequenceRoutine.Stop();
+            MusicUtility.StopMusic(1);
+            Game.Scenes.LoadMainScene(MainScene);
+        }
+
         IEnumerator<WorkSlicer.Result?> IScenePreload.Preload() {
             bool useFast = Game.Scenes.GetPreviousMainSceneIndex() <= 1;
 #if UNITY_EDITOR
@@ -114,6 +129,7 @@ namespace Astro {
                 SkyRenderer.Path = SkyTexture;
                 StarsRenderer.gameObject.SetActive(true);
                 SkyRenderer.gameObject.SetActive(true);
+                CloseButton.gameObject.SetActive(false);
             } else {
                 StarsRenderer.Unload();
                 SkyRenderer.Unload();
