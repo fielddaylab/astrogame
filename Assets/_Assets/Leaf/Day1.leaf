@@ -99,6 +99,7 @@ $if temp:powerButtonHint
     $set temp:powerButtonHint = false
     $call HintModals->Hide("MonitorPower", 0.2)
 $endif
+$call ComputerBootSound->Play()
 $call MonitorUI->ShowCERESLogo()
 $call MonitorUI->CERESLogoToCorner(0.5)
 $call ConsoleCommandLine->PlayConsoleTextAndWait("SystemBoot")
