@@ -1,4 +1,3 @@
-using System;
 using BeauUtil;
 using BeauUtil.Debugger;
 using EasyAssetStreaming;
@@ -8,6 +7,7 @@ using FieldDay.Scripting;
 using FieldDay.SharedState;
 using FieldDay.Systems;
 using FieldDay.Vox;
+using System;
 using UnityEngine;
 
 namespace Astro.Radio {
@@ -61,6 +61,13 @@ namespace Astro.Radio {
             if (Sfx.IsActive(m_StateB.StreamAudioHandle)) {
                 Sfx.SetVolume(m_StateB.StreamAudioHandle, m_StateB.NormalizedChannelStrength);
             } else if (m_StateA.WasAnyChannelPlayingLastFrame) {
+                if (m_StateA.LastKnownChannel != null && m_StateA.LastKnownChannel.Mode == RadioChannelMode.OneShot) {
+                    int channelIndex = Array.IndexOf(m_StateA.ChannelIndexMap, m_StateA.LastKnownChannel.AssetId);
+                    Assert.True(channelIndex >= 0);
+                    m_StateA.DeactivatedChannels.Set(channelIndex);
+                    m_StateB.LastKnownFrequency = -1;
+                }
+
                 var listenState = Find.State<RadioListenState>();
 
                 if (listenState.CurrListenChannel != null) {

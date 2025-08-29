@@ -3,6 +3,7 @@ using Astro.Save;
 using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay;
+using FieldDay.HID;
 using FieldDay.Scenes;
 using FieldDay.Scripting;
 using Leaf.Runtime;
@@ -131,6 +132,7 @@ namespace Astro {
             }
             else {
                 GameLoop.SuspendUpdates(AstroGame.InteractUpdateMask);
+                CursorHint.Unlock(CursorHint.Current);
             }
         }
 

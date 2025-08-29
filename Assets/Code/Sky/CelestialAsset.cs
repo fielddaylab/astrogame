@@ -50,7 +50,7 @@ namespace Astro {
             if ((Visibility & CelestialObjectVisMask.Visible) != 0) {
                 Visibility |= CelestialObjectVisMask.Blue | CelestialObjectVisMask.Infrared;
 
-                if (ColorId.IsEmpty) {
+                if (Category == CelestialObjectCategory.Star && ColorId.IsEmpty) {
                     float colorIndex = ApparentBlueMagnitude - ApparentMagnitude;
                     if (colorIndex < -0.1f) {
                         ColorId = "MainOTemp";

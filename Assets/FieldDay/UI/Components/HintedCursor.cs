@@ -15,7 +15,7 @@ namespace FieldDay.UI {
 
         [Header("Configuration")]
         [SerializeField] private Sprite m_DefaultHoverSprite;
-        [SerializeField] private Vector3 m_DefaultHeldScale = new Vector3(0.75f, 0.75f, 0.75f);
+        [SerializeField] private float m_DefaultHeldScale = 0.75f;
 
         #endregion // Inspector
 
@@ -84,7 +84,7 @@ namespace FieldDay.UI {
                     icon = m_DefaultHoverSprite;
                 } else {
                     if ((isButtonHeld || hintIsLocked) && type.HeldImage != null) {
-                        scaleDown = false;
+                        scaleDown = type.HeldScaleOverride > 0;
                         icon = type.HeldImage;
                     } else {
                         icon = type.DefaultImage;
@@ -109,11 +109,18 @@ namespace FieldDay.UI {
                 m_Position.sizeDelta = newSize;
             }
 
-            if (scaleDown) {
-                m_Position.localScale = m_DefaultHeldScale;
+            float scale;
+            if (hintIsInteractable && type) {
+                if (scaleDown) {
+                    scale = type.HeldScaleOverride > 0 ? type.HeldScaleOverride : m_DefaultHeldScale * type.DefaultScale;
+                } else {
+                    scale = type.DefaultScale;
+                }
             } else {
-                m_Position.localScale = Vector3.one;
+                scale = scaleDown ? m_DefaultHeldScale : 1;
             }
+
+            m_Position.localScale = new Vector3(scale, scale, scale);
         }
     }
 }
