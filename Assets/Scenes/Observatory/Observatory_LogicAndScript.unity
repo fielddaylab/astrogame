@@ -96,7 +96,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000020, guid: d1b1f49e96e28754e81ff04174607f74, type: 2}
+  m_LightingDataAsset: {fileID: 112000010, guid: d1b1f49e96e28754e81ff04174607f74, type: 2}
   m_LightingSettings: {fileID: 4890085278179872738, guid: 6f1803a0335cd4f4a9c123fe06a221ef, type: 2}
 --- !u!196 &4
 NavMeshSettings:
@@ -679,6 +679,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 100db5b3a040ee54792fea5c6c510a65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TapCursorLock: {fileID: 2035415899}
 --- !u!114 &238910224
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3367,6 +3368,54 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c900756f737486469640ca17d1f6837, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &2035415893
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2035415898}
+  - component: {fileID: 2035415899}
+  m_Layer: 0
+  m_Name: TapCursorLock
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2035415898
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2035415893}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2035415899
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2035415893}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a59a59fc4e9a014c8fbb22f00e5eeff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AlwaysFireClickEvents: 0
+  CursorType:
+    m_HashValue: 168488000
+  Tooltip: 
 --- !u!1 &2121029588
 GameObject:
   m_ObjectHideFlags: 0
@@ -4095,6 +4144,7 @@ SceneRoots:
   m_Roots:
   - {fileID: 1812546562}
   - {fileID: 238910210}
+  - {fileID: 2035415898}
   - {fileID: 602424801}
   - {fileID: 1931264334}
   - {fileID: 4240526831257599325}

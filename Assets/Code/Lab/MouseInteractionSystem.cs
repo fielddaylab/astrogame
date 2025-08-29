@@ -28,7 +28,14 @@ namespace Astro {
             bool allowClick = m_StateC.InputEnabled && !isCurrentlyDragging && !Game.Input.AreRaycastsPaused();
             bool isHoldingFreeLook = allowClick && Game.Input.IsKeyDown(KeyCode.Space);
 
-            m_StateC.Raycaster.enabled = !isHoldingFreeLook;
+            if (m_StateC.Raycaster.enabled != !isHoldingFreeLook) {
+                m_StateC.Raycaster.enabled = !isHoldingFreeLook;
+                if (isHoldingFreeLook) {
+                    CursorHint.TryLock(m_StateA.TapCursorLock);
+                } else {
+                    CursorHint.Unlock(m_StateA.TapCursorLock);
+                }
+            }
 
             if (allowClick && Game.Input.IsMousePressed(FieldDay.HID.MouseButton.Left)) {
                 var ray = Game.Rendering.PrimaryCamera.ScreenPointToRay(Input.mousePosition);
@@ -60,7 +67,7 @@ namespace Astro {
                         }
                     }
                 } else {
-                    if (!hitRaycast && Physics.Raycast(ray, out hit, 14f, LayerMasks.Tappable_Mask)) {
+                    if (!hitRaycast && Physics.Raycast(ray, out hit, 25f, LayerMasks.Tappable_Mask)) {
                         if (hit.collider.TryGetComponent(out TappableCollider tap) && tap.isActiveAndEnabled) {
                             TappableMaterial tapMat = Find.NamedAsset<TappableMaterial>(tap.Material);
                             Sfx.PlayDetached(tapMat.Sound, hit.point, Quaternion.identity);

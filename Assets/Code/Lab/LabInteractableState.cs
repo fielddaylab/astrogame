@@ -7,6 +7,8 @@ using FieldDay.SharedState;
 
 namespace Astro {
     public class LabInteractableState : SharedStateComponent {
+        public CursorHint TapCursorLock;
+
         [NonSerialized] public LabInteractable CurrInteractable;
         [NonSerialized] public Vector2 StartMousePos;
         [NonSerialized] public Vector2 CurrMousePos;

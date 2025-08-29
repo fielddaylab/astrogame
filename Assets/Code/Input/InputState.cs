@@ -3,6 +3,7 @@ using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay;
 using FieldDay.Debugging;
+using FieldDay.HID;
 using FieldDay.SharedState;
 using FieldDay.UI;
 using UnityEngine;
