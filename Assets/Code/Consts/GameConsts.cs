@@ -64,6 +64,9 @@ public static class GameEvents {
     public static readonly StringHash32 HintChanged = "hint-changed"; 
     public static readonly StringHash32 HintDisplayed = "hint-displayed";
     public static readonly StringHash32 HintHidden = "hint-hidden"; 
+    public static readonly StringHash32 StarHighlighted = "star-highlighted";
+    public static readonly StringHash32 StarUnhighlighted = "star-unhighlighted";
+    public static readonly StringHash32 HoverStar = "hover-star";
 }
 
 public static class ScriptEvents {

@@ -201,6 +201,9 @@ namespace Astro {
                 .Register(GameEvents.ClickSkipDialogueLine, LogClickSkipDialogueLine)
                 .Register(GameEvents.HintDisplayed, LogHintDisplayed)
                 .Register(GameEvents.HintHidden, LogHintHidden)
+                .Register<string>(GameEvents.StarHighlighted, LogStarHighlighted)
+                .Register<string>(GameEvents.StarUnhighlighted, LogStarUnhighlighted)
+                .Register<string>(GameEvents.HoverStar, LogHoverStar)
                 ;
 
             // state update events

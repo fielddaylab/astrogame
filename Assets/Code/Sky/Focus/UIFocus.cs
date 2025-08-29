@@ -106,6 +106,13 @@ namespace Astro {
             if (focus.HasHighlight && focus.IsVisibleInCurrentFilter != prevVis) {
                 focus.Highlight.sprite = focus.IsVisibleInCurrentFilter ? NeutrinoHighlightState.HighlightVisibleSprite : NeutrinoHighlightState.HighlightNotVisibleSprite;
                 focus.Highlight.SetAlpha(focus.IsVisibleInCurrentFilter ? 1 : NeutrinoHighlightState.HighlightNotVisibleAlpha);
+
+                if (focus.IsVisibleInCurrentFilter) {
+                    AstroGame.Events.Dispatch(GameEvents.StarHighlighted, focus.TargetData.DisplayName);
+                }
+                else {
+                    AstroGame.Events.Dispatch(GameEvents.StarUnhighlighted, focus.TargetData.DisplayName);
+                }
             }
 
             // Are we visible in the new filter?
