@@ -4,6 +4,8 @@ using BeauUtil;
 using BeauUtil.Debugger;
 using BeauUtil.Variants;
 using FieldDay;
+using FieldDay.Assets;
+using FieldDay.Scripting;
 using FieldDay.Vox;
 using OGD;
 using System;
@@ -37,7 +39,7 @@ namespace Astro {
 
         #region Game State
         private int m_CurrentLevel;
-        private InstrumentTypeMask m_UnlockedTools; // list of tool_id: name for each instrument 
+        private List<string> m_UnlockedTools; // list of tool_id: name for each instrument 
         private WavelengthTypeMask m_UnlockedFilters; // list of filter_type: name for each filter
         private TelescopeOrientationData m_TelescopeOrientation; // quaternion? TODO: check in with Luke about expected format
         private int m_LocatorProximity;
@@ -54,8 +56,8 @@ namespace Astro {
             m_JsonBuilder.Begin()
                 .Field("current_level", m_CurrentLevel)
                 .BeginArray("unlocked_tools");
-            foreach (var instrument in Bits.Enumerate(m_UnlockedTools)) { 
-                m_JsonBuilder.Item(EnumLookup.InstrumentType[(byte)instrument]);
+            foreach (var instrument in m_UnlockedTools) { 
+                m_JsonBuilder.Item(instrument);
             }
             m_JsonBuilder.EndArray();
             m_JsonBuilder.BeginArray("unlocked_filters");
@@ -88,8 +90,10 @@ namespace Astro {
             SubmitGameState();
         }
 
-        private void UpdateUnlockedTools(InstrumentTypeMask unlockedTool) {
-            m_UnlockedTools |= unlockedTool;
+        private void UpdateUnlockedTools(string unlockedTool) { 
+            if (!m_UnlockedTools.Contains(unlockedTool)){
+                m_UnlockedTools.Add(unlockedTool);
+            }
             SubmitGameState();
         }
 
@@ -210,6 +214,7 @@ namespace Astro {
                 .Register<string>(GameEvents.StarUnhighlighted, LogStarUnhighlighted)
                 .Register<string>(GameEvents.HoverStar, LogHoverStar)
                 .Register<StarLogData>(GameEvents.StarClicked, LogClickSelectStar)
+                .Register<StringHash32>(GameEvents.InstrumentUnlocked, LogToolUnlocked)
                 ;
 
             // state update events
@@ -282,6 +287,8 @@ namespace Astro {
             m_Log.BeginEvent("level_start");
             m_Log.EventParam("level_number", levelNum);
             m_Log.SubmitEvent();
+
+            UpdateCurrentLevel(levelNum);
         }
 
         //level_end/
@@ -479,10 +486,12 @@ namespace Astro {
 
         //tool_unlocked/
         //* tool_name
-        private void LogToolUnlocked(string toolName) {
+        private void LogToolUnlocked(StringHash32 toolId) {
             m_Log.BeginEvent("tool_unlocked");
-            m_Log.EventParam("tool_name", toolName);
+            m_Log.EventParam("tool_name", ScriptUtility.FindActor(toolId).Source);
             m_Log.SubmitEvent();
+
+            UpdateUnlockedTools(ScriptUtility.FindActor(toolId).Source);
         }
 
         //wavelength_filter_unlocked/
