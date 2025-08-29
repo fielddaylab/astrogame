@@ -40,7 +40,7 @@ namespace Astro {
         #region Game State
         private int m_CurrentLevel;
         private List<string> m_UnlockedTools; // list of tool_id: name for each instrument 
-        private WavelengthTypeMask m_UnlockedFilters; // list of filter_type: name for each filter
+        private List<string> m_UnlockedFilters; // list of filter_type: name for each filter
         private TelescopeOrientationData m_TelescopeOrientation; // quaternion? TODO: check in with Luke about expected format
         private int m_LocatorProximity;
         private WavelengthTypeMask m_WavelengthFilter;
@@ -61,8 +61,8 @@ namespace Astro {
             }
             m_JsonBuilder.EndArray();
             m_JsonBuilder.BeginArray("unlocked_filters");
-            foreach (var filter in Bits.Enumerate(m_UnlockedFilters)) { 
-                m_JsonBuilder.Item(EnumLookup.WavelengthType[(byte)filter]);
+            foreach (var filter in m_UnlockedFilters) { 
+                m_JsonBuilder.Item(filter);
             }
             m_JsonBuilder.EndArray();
             m_JsonBuilder.BeginArray("telescope_orientation")
@@ -97,8 +97,10 @@ namespace Astro {
             SubmitGameState();
         }
 
-        private void UpdateUnlockedFilters(WavelengthTypeMask unlockedFilter) {
-            m_UnlockedFilters |= unlockedFilter;
+        private void UpdateUnlockedFilters(string unlockedFilter) {
+            if (!m_UnlockedFilters.Contains(unlockedFilter)) {
+                m_UnlockedFilters.Add(unlockedFilter);
+            }
             SubmitGameState();
         }
 
@@ -230,6 +232,8 @@ namespace Astro {
 
         [NonSerialized] private SubtitleLogData m_LastKnownSubtitleData = default;
         [NonSerialized] private HintLogData m_LastKnownHint = default;
+
+        private string m_TempStr;
 
         #endregion // Logging Variables
 
@@ -487,11 +491,25 @@ namespace Astro {
         //tool_unlocked/
         //* tool_name
         private void LogToolUnlocked(StringHash32 toolId) {
-            m_Log.BeginEvent("tool_unlocked");
-            m_Log.EventParam("tool_name", ScriptUtility.FindActor(toolId).Source);
-            m_Log.SubmitEvent();
 
-            UpdateUnlockedTools(ScriptUtility.FindActor(toolId).Source);
+            m_TempStr = ScriptUtility.FindActor(toolId).Source;
+
+            // messy handling because we don't distinguish between wavelength filters and any other type of tool in code
+            if (m_TempStr.Equals("VisibleWavelength") || m_TempStr.Equals("BlueWavelength") || m_TempStr.Equals("InfraredWavelength")) {
+                if (m_UnlockedFilters.Contains(m_TempStr)) { return; }
+
+                LogWavelengthFilterUnlocked(m_TempStr);
+            }
+            else {
+
+                if (m_UnlockedTools.Contains(m_TempStr)) { return; }
+
+                m_Log.BeginEvent("tool_unlocked");
+                m_Log.EventParam("tool_name", ScriptUtility.FindActor(toolId).Source);
+                m_Log.SubmitEvent();
+
+                UpdateUnlockedTools(ScriptUtility.FindActor(toolId).Source);
+            }
         }
 
         //wavelength_filter_unlocked/
@@ -500,6 +518,8 @@ namespace Astro {
             m_Log.BeginEvent("wavelength_filter_unlocked");
             m_Log.EventParam("wavelength_type", filterName);
             m_Log.SubmitEvent();
+
+            UpdateUnlockedFilters(filterName);
         }
 
         ////TODO : events for scripted camera movements/view, maybe a switch_view? with view_node?
