@@ -52,8 +52,8 @@ $wait 1
 
 $call SpawnDocumentToCamera("Day5ElijahPostcard")
 $call SetInputState(true)
-{@Astrid}	Elijah said I was like Perseus. But lately I feel more like Andromeda...	$[level5\Astrid\l5_a_01]
-{@Astrid}	I wish I could decide my own fate. Being Andromeda sucks. 	$[level5\Astrid\l5_a_03]
+{@Astrid}	Elijah said I was like Perseus. But lately I feel more like Andromeda...	$[level5/Astrid/l5_a_01]
+{@Astrid}	I wish I could decide my own fate. Being Andromeda sucks. 	$[level5/Astrid/l5_a_03]
 
 :: SpawnPuzzleDocs1
 @trigger    DocumentInspectEnd
@@ -74,8 +74,8 @@ $call SpawnDocumentToCamera("NewspaperLetter")
 @once
 
 $call SpawnDocumentToCamera("Day5Letter")
-{@Astrid}	Dad would say I should keep working with him at CERES. Aunt Martha would think I'm crazy. Elijah... I'm not sure...	$[level5\Astrid\l5_a_09]
-{@Astrid}	Then I can figure out this job thing. 	$[level5\Astrid\l5_a_12]
+{@Astrid}	Dad would say I should keep working with him at CERES. Aunt Martha would think I'm crazy. Elijah... I'm not sure...	$[level5/Astrid/l5_a_09]
+{@Astrid}	Then I can figure out this job thing. 	$[level5/Astrid/l5_a_12]
 
 $wait 1
 :: BadLetter
@@ -95,7 +95,7 @@ $call SpawnDocumentToCamera("RecoveryBoardLetter")
 @cutscene
 @once
 
-{@Astrid}	There are only a few days before meteor storm!	$[level5\Astrid\l5_a_13c]
+{@Astrid}	There are only a few days before meteor storm!	$[level5/Astrid/l5_a_13c]
 
 :: InspectPuppetSketch
 @trigger    DocumentInspectStart
@@ -103,7 +103,7 @@ $call SpawnDocumentToCamera("RecoveryBoardLetter")
 @cutscene
 @once
 
-{@Astrid}	Time for andromeda to cut her strings. 	$[level5\Astrid\l5_a_13b]
+{@Astrid}	Time for andromeda to cut her strings. 	$[level5/Astrid/l5_a_13b]
 
 :: InspectDontPanic
 @trigger    DocumentInspectStart
@@ -111,7 +111,7 @@ $call SpawnDocumentToCamera("RecoveryBoardLetter")
 @cutscene
 @once
 
-{@Astrid}	I've got to get the word out about the meteor storm 	$[level5\Astrid\l5_a_13a]
+{@Astrid}	I've got to get the word out about the meteor storm 	$[level5/Astrid/l5_a_13a]
 
 :: StartDay
 @trigger    DocumentInspectEnd
