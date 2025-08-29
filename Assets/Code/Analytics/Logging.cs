@@ -1107,7 +1107,6 @@ namespace Astro {
     [Serializable]
     public struct StarLogData {
         public string Name;
-        public string Constellation;
         public EqCoords Coordinates;
         public double Distance;
         public double ColorIndex;
@@ -1124,7 +1123,6 @@ namespace Astro {
         public readonly JsonBuilder Append(JsonBuilder json)
         {
             json.Field("star_id", Name);
-            json.Field("constellation", Constellation);
             json.BeginObject("coordinates");
             Coordinates.Append(json).EndObject();
             json.Field("distance", Distance);

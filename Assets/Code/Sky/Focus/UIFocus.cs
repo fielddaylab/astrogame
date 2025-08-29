@@ -81,7 +81,6 @@ namespace Astro {
 
             focus.StarLog.AssetID = focus.TargetData.AssetId;
             focus.StarLog.Name = focus.TargetData.DisplayName;
-            focus.StarLog.Constellation = focus.TargetData.ConstellationName;
             focus.StarLog.Coordinates = focus.TargetData.Coords;
             focus.StarLog.Distance = focus.TargetData.Distance;
             if (!focus.TargetData.ColorId.IsEmpty)
