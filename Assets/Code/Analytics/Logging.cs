@@ -10,10 +10,7 @@ using FieldDay.Vox;
 using OGD;
 using System;
 using System.Collections.Generic;
-using System.Xml.Linq;
 using UnityEngine;
-using static UnityEditor.Progress;
-using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 
 namespace Astro {
 
@@ -39,8 +36,8 @@ namespace Astro {
 
         #region Game State
         private int m_CurrentLevel;
-        private List<string> m_UnlockedTools; // list of tool_id: name for each instrument 
-        private List<string> m_UnlockedFilters; // list of filter_type: name for each filter
+        private List<string> m_UnlockedTools = new List<string>(); // list of tool_id: name for each instrument 
+        private List<string> m_UnlockedFilters = new List<string>(); // list of filter_type: name for each filter
         private TelescopeOrientationData m_TelescopeOrientation; // quaternion? TODO: check in with Luke about expected format
         private int m_LocatorProximity;
         private WavelengthTypeMask m_WavelengthFilter;
@@ -217,6 +214,7 @@ namespace Astro {
                 .Register<string>(GameEvents.HoverStar, LogHoverStar)
                 .Register<StarLogData>(GameEvents.StarClicked, LogClickSelectStar)
                 .Register<StringHash32>(GameEvents.InstrumentUnlocked, LogToolUnlocked)
+                .Register<string>(GameEvents.TelescopeTurned, LogTurnTelescope)
                 ;
 
             // state update events
@@ -527,12 +525,22 @@ namespace Astro {
         //turn_telescope/
         //* direction
         //* new_orientation (initial orientation capture in game state should be orientation when key was pressed, new_orientation is when it was released)
-        private void LogTurnTelescope(string dir, TelescopeOrientationData newOrientation) {
+        private void LogTurnTelescope(string dir) {
+            TelescopeRig rig = Find.State<TelescopeRig>();
+            TelescopeOrientationData orientation = new TelescopeOrientationData(
+                rig.Base.localRotation.x,
+                rig.Base.localRotation.y,
+                rig.Base.localRotation.z,
+                rig.Base.localRotation.w
+                );
+
+            m_JsonBuilder.Clear();
             m_Log.BeginEvent("turn_telescope");
             m_Log.EventParam("direction", dir);
-            //m_Log.EventParamJson("new_orientation", newOrientation.ToString());
-            // TODO: update with json
+            m_Log.EventParamJson("new_orientation", orientation.Append(m_JsonBuilder).End());
             m_Log.SubmitEvent();
+
+            UpdateTelescopeOrientation(orientation);
         }
 
         //telescope_view_assigned/
@@ -1115,10 +1123,22 @@ namespace Astro {
         public float Y;
         public float Z;
 
-        //public string ToJsonString() {
-        //    // TODO: json translation
-        //    return "";
-        //}
+        public TelescopeOrientationData(float x, float y, float z, float w)
+        {
+            X = x;
+            Y = y;
+            Z = z;
+            W = w;
+        }
+
+        public readonly JsonBuilder Append(JsonBuilder json)
+        {
+            json.Field("x", X);
+            json.Field("y", Y);
+            json.Field("z", Z);
+            json.Field("w", W);
+            return json;
+        }
     }
 
     [Serializable] // more portable version of PuzzleAsset?

@@ -26,11 +26,22 @@ namespace Astro {
     static public partial class TelescopeUtility {
         static public void UpdateTelescopeRigRotation(TelescopeRig rig, Transform spaceCam)
         {
+            var prevX = rig.LastAppliedRotation.x;
+            var prevY = rig.LastAppliedRotation.y;
+
             rig.LastAppliedRotation.x = spaceCam.localEulerAngles.y;
             rig.LastAppliedRotation.y = spaceCam.localEulerAngles.x;
 
             // up/down (NOTE: space cam up/down is oriented along x, whereas the telescope up/down is oriented along z)
             float xRot = spaceCam.localEulerAngles.x;
+
+            if (prevX < rig.LastAppliedRotation.x) {
+                AstroGame.Events.Dispatch(GameEvents.TelescopeTurned, "right");
+            }
+            else if (prevX > rig.LastAppliedRotation.x)
+            {
+                AstroGame.Events.Dispatch(GameEvents.TelescopeTurned, "left");
+            }
 
             // left/right
             float yRot = spaceCam.localEulerAngles.y;
@@ -50,6 +61,14 @@ namespace Astro {
             localShaft = rig.Shaft.localEulerAngles;
             localShaft.z = xRot + rig.RotationOffset.z;
             rig.Shaft.localEulerAngles = localShaft;
+
+            if (prevY < rig.LastAppliedRotation.y) {
+                AstroGame.Events.Dispatch(GameEvents.TelescopeTurned, "down");
+            }
+            else if (prevY > rig.LastAppliedRotation.y)
+            {
+                AstroGame.Events.Dispatch(GameEvents.TelescopeTurned, "up");
+            }
         }
 
         static public void SuppressTelescopeRigAudio(bool syncTelescopeRotation) {

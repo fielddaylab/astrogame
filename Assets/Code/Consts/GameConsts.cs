@@ -69,6 +69,7 @@ public static class GameEvents {
     public static readonly StringHash32 StarUnhighlighted = "star-unhighlighted";
     public static readonly StringHash32 HoverStar = "hover-star";
     public static readonly StringHash32 StarClicked = "star-clicked";
+    public static readonly StringHash32 TelescopeTurned = "telescope-turned";
 }
 
 public static class ScriptEvents {
