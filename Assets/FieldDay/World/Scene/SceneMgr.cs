@@ -745,7 +745,7 @@ namespace FieldDay.Scenes {
         internal void Prepare() {
             if (m_MainScene == null && !m_MainSceneLoadProcess && !IsLoadQueued(SceneType.Main)) {
                 m_InitialSceneWasRedirected = false;
-                QueueMainLoadInternal(SceneManager.GetActiveScene().path, false, true, default);
+                QueueMainLoadInternal(SceneManager.GetActiveScene().path, false, true, default, true);
             }
 
             // need to ensure we still have a scene remaining when unloading,
@@ -898,7 +898,7 @@ namespace FieldDay.Scenes {
             }
         }
 
-        private void QueueMainLoadInternal(string path, bool killNonPersistentLoads, bool forceReload, in MainSceneTransitionArgs transition) {
+        private void QueueMainLoadInternal(string path, bool killNonPersistentLoads, bool forceReload, in MainSceneTransitionArgs transition, bool isDefaultScene = false) {
             SceneDataExt data = SceneDataExt.GetByPath(path);
 
             if (!forceReload && data != null && data.IsVisited(SceneDataExt.VisitFlags.Loaded)) {
@@ -919,7 +919,7 @@ namespace FieldDay.Scenes {
             }
             m_LoadProcessQueue.PushFront(args);
 
-            if (!killNonPersistentLoads) {
+            if (!isDefaultScene) {
                 DebugFlags.MarkNewSceneLoaded();
             }
         }
