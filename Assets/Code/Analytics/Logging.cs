@@ -209,8 +209,11 @@ namespace Astro {
                 .Register(GameEvents.ClickSkipDialogueLine, LogClickSkipDialogueLine)
                 .Register(GameEvents.HintDisplayed, LogHintDisplayed)
                 .Register(GameEvents.HintHidden, LogHintHidden)
-                .Register<string>(GameEvents.StarHighlighted, LogStarHighlighted)
-                .Register<string>(GameEvents.StarUnhighlighted, LogStarUnhighlighted)
+                .Register(GameEvents.MeteorAreaAssigned, LogMeteorAreaAssigned)
+                .Register(GameEvents.MeteorAreaHighlighted, LogMeteorAreaHighlighted)
+                .Register(GameEvents.MeteorAreaUnhighlighted, LogMeteorAreaUnhighlighted)
+                //.Register<string>(GameEvents.StarHighlighted, LogStarHighlighted)
+                //.Register<string>(GameEvents.StarUnhighlighted, LogStarUnhighlighted)
                 .Register<string>(GameEvents.HoverStar, LogHoverStar)
                 .Register<StarLogData>(GameEvents.StarClicked, LogClickSelectStar)
                 .Register<StringHash32>(GameEvents.InstrumentUnlocked, LogToolUnlocked)
@@ -400,6 +403,7 @@ namespace Astro {
         }
         */
 
+        /*
         //star_highlighted/
         //* star_id
         private void LogStarHighlighted(string starId) {
@@ -415,6 +419,26 @@ namespace Astro {
             m_Log.EventParam("star_id", starId);
             m_Log.SubmitEvent();
         }
+        */
+
+        //meteor_area_assigned/
+        private void LogMeteorAreaAssigned()
+        {
+            m_Log.NewEvent("meteor_area_assigned");
+        }
+
+        //meteor_area_highlighted/
+        private void LogMeteorAreaHighlighted()
+        {
+            m_Log.NewEvent("meteor_area_highlighted");
+        }
+
+        //meteor_area_unhighlighted/
+        private void LogMeteorAreaUnhighlighted()
+        {
+            m_Log.NewEvent("meteor_area_unhighlighted");
+        }
+
 
         //hover_star/
         //* star_id
