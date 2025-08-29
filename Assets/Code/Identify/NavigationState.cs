@@ -10,6 +10,7 @@ using System.Collections;
 using BeauPools;
 using BeauUtil.UI;
 using FieldDay.Scripting;
+using static UnityEngine.GraphicsBuffer;
 
 namespace Astro {
     public enum NavigationMode {
@@ -60,6 +61,16 @@ namespace Astro {
             navState.CurrentNavigationMode = NavigationMode.Constellation;
             navState.CameraDistanceFromTarget = -1;
 
+            PuzzleState puzzleState = Find.State<PuzzleState>();
+            if (puzzleState.ActivePuzzle) {
+                var target = puzzleState.ActivePuzzle.PuzzleCoordinates;
+
+                Vector3 targetFoward = WorldPositionUtility.GetLookVector(target);
+                TelescopeViewLogData logData = new TelescopeViewLogData();
+                logData.Constellation = puzzleState.ActivePuzzle.Constellation;
+                logData.Goal = targetFoward;
+                AstroGame.Events.Dispatch(GameEvents.TelescopeViewAssigned, EvtArgs.Box(logData));
+            }
 
             ScriptUtility.Invoke("MovePlayerToMonitor");
 
@@ -98,6 +109,18 @@ namespace Astro {
             navState.CurrentNavigationMode = NavigationMode.Neutrino;
             navState.CameraDistanceFromTarget = -1;
             navState.ResultShown = false;
+
+            DayConfigAsset config = DayConfigUtil.GetConfigForState();
+            if (config)
+            {
+                var target = config.NeutrinoEvent.NeutrinoCoordinates;
+
+                Vector3 targetFoward = WorldPositionUtility.GetLookVector(target);
+                TelescopeViewLogData logData = new TelescopeViewLogData();
+                logData.Constellation = config.NeutrinoEvent.Constellation;
+                logData.Goal = targetFoward;
+                AstroGame.Events.Dispatch(GameEvents.TelescopeViewAssigned, EvtArgs.Box(logData));
+            }
 
             ScriptUtility.Invoke("MovePlayerToMonitor");
             //ViewNavUtility.LeafMoveToNode("Monitor");

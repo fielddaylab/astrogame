@@ -59,7 +59,6 @@ namespace Astro {
                             Game.Events.Dispatch(GameEvents.PuzzleNavigationComplete); 
                             m_StateB.ConstellationSnapRoutine = Routine.Null;
                             });
-                    AstroGame.Events.Dispatch(GameEvents.TelescopeViewAssigned, EvtArgs.Box(puzzleState.ActivePuzzle.Constellation));
                 }
             }
 
@@ -112,11 +111,13 @@ namespace Astro {
                 using(var table = TempVarTable.Alloc()) {
                     table.Set("newPips", newPips);
                     ScriptUtility.Trigger(ScriptEvents.OnNeutrinoNavColder, table);
+                    AstroGame.Events.Dispatch(GameEvents.LocatorCloser, newPips);
                 }
             } else if (prevPips < newPips) {
                 using(var table = TempVarTable.Alloc()) {
                     table.Set("newPips", newPips);
                     ScriptUtility.Trigger(ScriptEvents.OnNeutrinoNavWarmer, table);
+                    AstroGame.Events.Dispatch(GameEvents.LocatorFurther, newPips);
                 }
             }
         }

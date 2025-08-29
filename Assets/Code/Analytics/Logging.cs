@@ -218,7 +218,9 @@ namespace Astro {
                 .Register<StarLogData>(GameEvents.StarClicked, LogClickSelectStar)
                 .Register<StringHash32>(GameEvents.InstrumentUnlocked, LogToolUnlocked)
                 .Register<string>(GameEvents.TelescopeTurned, LogTurnTelescope)
-                .Register<ConstellationId>(GameEvents.TelescopeViewAssigned, LogTelescopeViewAssigned)
+                .Register<TelescopeViewLogData>(GameEvents.TelescopeViewAssigned, LogTelescopeViewAssigned)
+                .Register<int>(GameEvents.LocatorCloser, LogLocatorCloser)
+                .Register<int>(GameEvents.LocatorFurther, LogLocatorFurther)
                 ;
 
             // state update events
@@ -572,18 +574,10 @@ namespace Astro {
         //* constellation_id
         //* goal_orientation
 
-        private void LogTelescopeViewAssigned(ConstellationId constellation) {
-            TelescopeRig rig = Find.State<TelescopeRig>();
-            TelescopeOrientationData orientation = new TelescopeOrientationData(
-                rig.Base.localRotation.x,
-                rig.Base.localRotation.y,
-                rig.Base.localRotation.z,
-                rig.Base.localRotation.w
-                );
-
+        private void LogTelescopeViewAssigned(TelescopeViewLogData logData) {
             m_Log.BeginEvent("telescope_view_assigned");
-            m_Log.EventParam("constellation_id", EnumLookup.ConstellationType[(int)constellation]);
-            m_Log.EventParamJson("goal_orientation", orientation.Append(m_JsonBuilder).End());
+            m_Log.EventParam("constellation_id", EnumLookup.ConstellationType[(int)logData.Constellation]);
+            m_Log.EventParam("goal_orientation", logData.Goal.ToString()); // TODO: no alloc stringify Vector3
             m_Log.SubmitEvent();
         }
 
@@ -1172,6 +1166,13 @@ namespace Astro {
             json.Field("w", W);
             return json;
         }
+    }
+
+    [Serializable]
+    public struct TelescopeViewLogData
+    {
+        public ConstellationId Constellation;
+        public Vector3 Goal;
     }
 
     [Serializable] // more portable version of PuzzleAsset?
