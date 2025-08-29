@@ -57,7 +57,7 @@ $call EnableDocumentClose("Day2DadIcecubePostcard", true, true)
 
 {@Astrid}	Wow, that's Dad at IceCube!	$[level2/Astrid/l2_a_03]
 {@Astrid}	I wonder if he ever feels weird about the southern lights, after everything that happened.	$[level2/Astrid/l2_a_04]
-{@Astrid}	I guess auroras don't usually come with a huge coronal mass ejection... but I think it might still freak me out. 	$[level2/Astrid/l2_a_05]
+{@Astrid}	I guess auroras don't usually come with a huge <b>coronal mass ejection</b>... but I think it might still freak me out. 	$[level2/Astrid/l2_a_05]
 
 :: SpawnPuzzleDocs1
 @trigger    DocumentInspectEnd
@@ -143,6 +143,14 @@ $call SetInputState(true)
 
 {@Astrid}	I've been here for two weeks already!	$[level2/Astrid/l2_a_13d]
 
+:: InspectLevel1
+@trigger    DocumentInspectStart
+@when   documentId == "Level1"
+@cutscene
+@once
+
+{@Astrid} I'm a certified astronomer now! $[level2/Astrid/l2_a_13e]
+
 :: SpawnPuzzleDocs3
 @trigger    DocumentInspectEnd
 @when   documentId == "Day2Martha"
@@ -188,7 +196,7 @@ $set temp:DocOnboardHintVisible = true
 @trigger    DocumentPuzzlePromptStart
 @when   answerId == "HerculesPostcard", !temp:docPuzzleSolved
 
-{@Astrid}	Elijah's traveling to all the CERES stations! He says he's getting them ready for... something. 	$[level2/Astrid/l2_a_17]
+{@Astrid} Elijah says he's getting all the observatories ready for... something. $[level2/Astrid/l2_a_17]
 
 :: CorrectDocumentResponse
 @trigger    DocumentPuzzlePromptStart
@@ -233,6 +241,7 @@ $call SetInputState(true)
 $goto .SetupNeutrinoNav
 
 :: SetupNeutrinoNav
+$call StartMonitorControls()
 $call WaitForMovedToView("Monitor")
 $call MonitorUI->PlayRadioDownload(4)
 $call StartNeutrinoNavigation()

@@ -15,6 +15,7 @@ $call SetInstrumentUnlocked(TemperatureInstrument, true)
 $call SetInstrumentUnlocked(SpectrometerInstrument, true)
 $call SetInstrumentUnlocked(HistoricalDataInstrument, true)
 $call SetInstrumentUnlocked(HistoricalDataModeToggle, true)
+$call SetDomeGlow(false)
 $call StopPuzzleMode()
 $call StopOpenMode()
 $call SpawnDocument("Day5Cal")
@@ -141,6 +142,7 @@ $call SetInputState(true)
 $branch .SetupNeutrinoNav
 
 :: SetupNeutrinoNav
+$call StartMonitorControls()
 $call MonitorUI->PlayRadioDownload(2)
 $call StartNeutrinoNavigation()
 

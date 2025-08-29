@@ -12,6 +12,7 @@ $call SpawnDocument("Satellite")
 $call SpawnDocument("Panic")
 $call SpawnDocument("Seriously")
 $call EnableDocumentClose("Day4ElijahPostcard", false)
+$call EnableDocumentClose("DadUrsaPostcard", false)
 $call SetInstrumentUnlocked(CoordinateInstrument, true)
 $call SetInstrumentUnlocked(PhotometerInstrument, true)
 $call SetInstrumentUnlocked(VisibleWavelength, true)
@@ -31,6 +32,7 @@ $call SetRefPageActive("ConstellationDracoCompleted", false)
 $call SetRefPageActive("ConstellationAndromedaCompleted", false)
 $call SetChannelActive(Unlocks_Active, false)
 $call SetRadioFrequency(137, true)
+$call SetRadioDialLocked(true)
 $call MonitorPower->Deactivate()
 $call ChapterTitles->PrepareTransition()
 
@@ -88,7 +90,7 @@ $call SetInputState(false)
 $call SpawnDocumentToCamera("DadUrsaPostcard")
 $call SetInputState(true)
 
-{@Astrid}	Aw, Dad... It's our constellations! 	$[level4\Astrid\l4_a_04]
+{@Astrid} Aw, Dad... It's our constellations! $[level4/Astrid/l4_a_04]
 
 :: DadUrsaPostcardComment
 @trigger    DocumentInspectFlip
@@ -97,9 +99,8 @@ $call SetInputState(true)
 @cutscene
 @once
 
-{@Astrid}	Ugh. “You mean more to me than the whole celestial sphere?”	$[level4/Astrid/l4_a_05]
-{@Astrid}	I thought Elijah was supposed to be the poet around here.	$[level4/Astrid/l4_a_06]
-{@Astrid}	Well... I guess neither of you are here, exactly.  	$[level4/Astrid/l4_a_07]
+$call EnableDocumentClose("DadUrsaPostcard", true, true)
+{@Astrid} Ugh. So much for seeing you next month. $[level4/Astrid/l4_a_07]
 
 :: SpawnPuzzleQuestion
 @trigger    DocumentInspectEnd
@@ -110,7 +111,7 @@ $call SetInputState(true)
 @once
 
 $call SetInputState(false)
-$call Wait(1)
+$wait 1
 $call SetInputState(true)
 $call SpawnDocumentToCamera("Day4Question")
 $call StartDocumentPuzzle("Day4DocumentPuzzle")
@@ -124,7 +125,7 @@ $set temp:docPuzzleSolved = false
 @cutscene
 @once
 
-{@Astrid}	Wow, its almost October already...	$[level4\Astrid\l4_a_10e]
+{@Astrid}	Wow, its almost October already...	$[level4/Astrid/l4_a_10e]
 
 :: InspectPanic
 @trigger    DocumentInspectStart
@@ -132,15 +133,23 @@ $set temp:docPuzzleSolved = false
 @cutscene
 @once
 
-{@Astrid}	People will panic if they don't know what's going on.	$[level4\Astrid\l4_a_10d]
+{@Astrid}	People will panic if they don't know what's going on.	$[level4/Astrid/l4_a_10d]
 
 :: InspectSatellite
 @trigger    DocumentInspectStart
-@when   documentId == "SatellitePanic"
+@when   documentId == "Satellite"
 @cutscene
 @once
 
-{@Astrid} The Gornych satelite. $[level4\Astrid\l4_a_10b]
+{@Astrid} The Gornych satelite. This upgrade was pretty exciting. $[level4/Astrid/l4_a_10b]
+
+:: InspectNewspaperPostit
+@trigger    DocumentInspectStart
+@when   documentId == "Seriously"
+@cutscene
+@once
+
+{@Astrid} If I get the story in the paper, will people take it seriously? $[level4/Astrid/l4_a_10a]
 
 :: IncorrectDocumentResponse
 @trigger    DocumentPuzzlePromptStart
@@ -155,6 +164,13 @@ $set temp:docPuzzleSolved = false
 @interrupt
 
 {@Astrid}	Dad's so far away. I don't think he can help.	$[level4/Astrid/l4_a_13]
+
+:: IncorrectDocumentResponse3
+@trigger    DocumentPuzzlePromptStart
+@when   answerId == "Panic", !temp:docPuzzleSolved
+@interrupt
+
+{@Astrid}	I drew this. It won't help answer my question though.	$[level1/Astrid/l1_a_g3]
 
 :: EndPuzzleSection
 @trigger    DocumentPuzzleSolved
@@ -174,30 +190,32 @@ $wait 1
 {@Dad}	Hey Astrid, are you there? 	$[level4/Dad/l4_d_01]
 {@Astrid}	Hey Dad!	$[level4/Astrid/l4_a_15]
 {@Dad}	The unencrypted portion of the Gorynich Satellite is making the rounds in CERES, and it checks out. 	$[level4/Dad/l4_d_02]
-{@Dad}	All kinds of data have been streaming in from the satellite the last few weeks. They sure don't build them like this anymore. 	$[level4/Dad/l4_d_03]
+// {@Dad}	All kinds of data have been streaming in from the satellite the last few weeks. They sure don't build them like this anymore. 	$[level4/Dad/l4_d_03]
 {@Astrid}	Yeah, this is what I was telling you about. 	$[level4/Astrid/l4_a_16]
-{@Astrid}	Just think... once I decrypt the satellite, we could use it for communication! Unregulated radio channels, long range public broadcasts...	$[level4/Astrid/l4_a_17]
+// {@Astrid}	Just think... once I decrypt the satellite, we could use it for communication! Unregulated radio channels, long range public broadcasts...	$[level4/Astrid/l4_a_17]
 {@Dad}	This data seems good. Maybe you're onto something with this satellite thing, Bear. 	$[level4/Dad/l4_d_04]
 {@Astrid}	Yeah, I'm really excited about this. 	$[level4/Astrid/l4_a_18]
-{@Astrid}	Actually, I have news, too. I talked to my friend at the Chicago Telegram. She said she might have a job for me!	$[level4/Astrid/l4_a_19]
-{@Astrid}	Oh, um... can we talk about this here? 	$[level4/Astrid/l4_a_20]
-{@Dad}	Whoa, hold on... a job? What are you talking about? 	$[level4/Dad/l4_d_05]
-{@Astrid}	Well... She thinks I could write an astronomy column for them. And I could go to college there!	$[level4/Astrid/l4_a_21]
-{@Astrid}	I mean, first I'll finish these puzzles, but then--	$[level4/Astrid/l4_a_22]
+{@Astrid} {vox-overlap -0.1} Actually, I have news, too. I talked to my friend at the Chicago Telegram. She said she might have a job for me! $[level4/Astrid/l4_a_19]
+// {@Astrid}	Oh, um... can we talk about this here? 	$[level4/Astrid/l4_a_20]
+{@Dad}	Whoa, hold on... a job? What are you talking about?  $[level4/Dad/l4_d_05]
+{@Astrid} {vox-overlap -0.3} Well... She thinks I could write an astronomy column for them. And I could go to college there! $[level4/Astrid/l4_a_21]
+// {@Astrid}	I mean, first I'll finish these puzzles, but then--	$[level4/Astrid/l4_a_22]
 {@Dad}	Slow down, Astrid. What about this job? There is still so much work to be done for CERES.	$[level4/Dad/l4_d_06]
 $call PlayRadioAlert()
 {@Monitor}	Station 12, this is your third, and final, warning. Cease all personal communications, or we will terminate your connection. 	$[level4/monitor/l4_m_01]
 {@Astrid}	Friggin' Recovery Board... Okay, okay. Sorry. 	$[level4/Astrid/l4_a_23]
 {@Dad}	Uh... Bear, I just...	$[level4/Dad/l4_d_07]
+$wait 2
 
 $call SetInputState(true)
 {@Radio}	Station 12, are you ready for your next assignment? IceCube is detecting high-energy neutrino emission from the area of the Taurus constellation.	$[level4/radio_lady/l4_r_01]
 {@Radio}	Identification of nearby celestial objects is requested. Uploading area of interest...	$[level4/radio_lady/l4_r_02]
-{@Astrid}	Uh... sure thing. 	$[level4/Astrid/l4_a_24]
+{@Astrid} Uh... sure thing. $[level4/Astrid/l4_a_24]
 
 $branch .SetupNeutrinoNav
 
-::SetupNeutrinoNav
+:: SetupNeutrinoNav
+$call StartMonitorControls()
 $call WaitForMovedToView("Monitor")
 $call MonitorUI->PlayRadioDownload(2)
 $call StartNeutrinoNavigation()
@@ -209,45 +227,82 @@ $call StartNeutrinoNavigation()
 $call StopNeutrinoNavigation()
 $call StartOpenMode()
 $call SetStickyFirstPage(3)
+$set temp:thisIsASmallStar = false
 
 {@Radio}	Some of these stars are outside the standard spectral types.	$[level4/radio_lady/l4_r_03]
 {@Radio}	Brown Dwarfs so cold they barely glow - you'll only see them in infrared.	$[level4/radio_lady/l4_r_04]
+$start .UnlockFromCeresChannel
 {@Radio}	Use your Spectrometer to identify them.	$[level4/radio_lady/l4_r_05]
 
-:: IdentifiedOneBrownDwarf
-@trigger    PointsUpdated
-@when   sciencePoints > 0
+::UnlockFromCeresChannel
+$call SetRadioDialLocked(false)
+$call SetInputState(true)
+$start .BDHints
+
+:: BDHints
+
+$wait 15
+$if GetFilterState() != 2
+    {@Astrid} What's happening here? $[level4/Astrid/l4_a_24b]
+    {@Astrid} I should select the infrared filter. $[level4/Astrid/l4_a_24c]
+$endif
+$goto .BDHints
+
+:: OnYDwarfSelected
+@trigger    OnNeutrinoStarSelected
+@when  starName == "WISE0410"
 @cutscene
+@interrupt
+@boostScore 500
 @once
 
-$call SetInputState(false)
-$call ClearMonitorSelection()
+{@Astrid} Huh, looks like this star has no spectrometer reading... $[level4/Astrid/l4_a_24d]
 
-$wait 2
-{@Radio}	CERES HQ to Station Twelve. Our neutrino emission reading has expanded please hold while we update your targeting system.	$[level4/radio_lady/l4_r_05a]
+:: OnDwarf2Selected
+@trigger    OnNeutrinoStarSelected
+@when  starName == "2MASSJ0355"
+@cutscene
+@interrupt
 
-$goto .UpdateSubmissionArea
+$branch .ThisIsASmallStar
 
-:: UpdateSubmissionArea
-$call MonitorUI->PlayRadioDownload(2)
-$call AddAssetToSubmissionGroup("Aldebaran")
-$call AddAssetToSubmissionGroup("Elnath")
-$call AddAssetToSubmissionGroup("Alcyone")
-$call AddAssetToSubmissionGroup("Tianguan")
-$call AddAssetToSubmissionGroup("Chamukuy")
-$call AddAssetToSubmissionGroup("Sadr al Tauri")
-$call AddAssetToSubmissionGroup("Ain")
-$call AddAssetToSubmissionGroup("Omicron Tauri")
-$call AddAssetToSubmissionGroup("Atlas")
-$call AddAssetToSubmissionGroup("Hyadum")
-$call AddAssetToSubmissionGroup("Electra")
-$call UpdateOpenIdSubmissions()
-$call SetInputState(true)
-$call SetRadioFrequency(137)
+:: OnDwarf3Selected
+@trigger    OnNeutrinoStarSelected
+@when  starName == "Teide 1"
+@cutscene
+@interrupt
+
+:: ThisIsASmallStar
+$if !temp:thisIsASmallStar
+    $set temp:thisIsASmallStar = true
+    {@Astrid} Wow, those stars are tiny. $[level4/Astrid/l4_a_24a]
+$endif
+
+// $wait 2
+// {@Radio}	CERES HQ to Station Twelve. Our neutrino emission reading has expanded please hold while we update your targeting system.	$[level4/radio_lady/l4_r_05a]
+
+// $goto .UpdateSubmissionArea
+
+// :: UpdateSubmissionArea
+// $call MonitorUI->PlayRadioDownload(2)
+// $call AddAssetToSubmissionGroup("Aldebaran")
+// $call AddAssetToSubmissionGroup("Elnath")
+// $call AddAssetToSubmissionGroup("Alcyone")
+// $call AddAssetToSubmissionGroup("Tianguan")
+// $call AddAssetToSubmissionGroup("Chamukuy")
+// $call AddAssetToSubmissionGroup("Sadr al Tauri")
+// $call AddAssetToSubmissionGroup("Ain")
+// $call AddAssetToSubmissionGroup("Omicron Tauri")
+// $call AddAssetToSubmissionGroup("Atlas")
+// $call AddAssetToSubmissionGroup("Hyadum")
+// $call AddAssetToSubmissionGroup("Electra")
+// $call UpdateOpenIdSubmissions()
+// $call SetInputState(true)
+// $call SetRadioFrequency(137)
 
 :: ClearanceUpgrade
 @trigger    PointsUpdated
-@when   openIDThresholdHit 
+@when   openIDThresholdHit
 @cutscene
 @once
 
@@ -261,6 +316,7 @@ $call SetChannelActive(Unlocks_Active, true)
 $set temp:radioChannelTuned = false
 $call SetStickyFirstPage(7)
 
+$call SetRadioDialLocked(false)
 {@Astrid}	I'll bet I am ready for a clearance upgrade. The CERES channels are in my reference guide	$[level2/Astrid/l2_a_22]
 $start .UpgradeReminder
 
@@ -296,6 +352,7 @@ $call SetInputState(true)
 
 $call ConsoleCommandLine->PlayConsoleText("Day4UpgradeSystem")
 $wait 1
+{@Astrid} With the historical data upgrade, I should able to use the parallax transfer module to calculate absolute magnitude. $[level4/Astrid/l4_a_24ea]
 $call OpenRefGuidePage("ParallaxDataTransfer")
 $wait 9 // wait for the console text to finish
 
@@ -326,21 +383,75 @@ $call SetInputState(true)
 @trigger    PuzzleNavigationComplete
 @once
 
+$set temp:WizeCompleted = false
+$set temp:EltaninCompleted = false
 $call SetInputState(false)
+{@Astrid} Oh, its the Draco puzzle! $[level4/Astrid/l4_a_24f]
 $call WaitForMovedToView("Right")
 $call ClearMonitorSelection()
 // Dont remove this wait
 // We need it because something is messing with the input here 😭
 $wait 1
+$set temp:DracoPuzzleComplete = false
 $call StartPuzzleMode()
 $call UnlockMonitorFocus()
 $call SetInputState(true)
+
+$wait 7 // For transition sequence
+
+{@Astrid} Null... I guess that means this star has no absolute magentude. $[level4/Astrid/l4_a_24g]
+{@Astrid} And it looks like there is a star missing- or maybe I just can't see it. I wonder if that's a Brown Dwarf that I could see in infrared. $[level4/Astrid/l4_a_24h]
+$branch .PuzzleTimeoutHint
+
+:: WizeDataFilled
+@trigger    OnPuzzleRowFilled
+@when   rowId == 3
+@interrupt
+@priority High
+
+$set temp:WizeCompleted = true
+
+:: EltaninDataFilled
+@trigger    OnPuzzleRowFilled
+@when   rowId == 2
+@interrupt
+@priority High
+
+$set temp:EltaninCompleted = true
+$branch .PuzzleTimeoutHint
+
+:: IncorrectPuzzleSubmission
+@trigger    IncorrectPuzzleSubmission
+@interrupt
+@priority High
+
+$if !local:row_2
+    $set temp:EltaninCompleted = false
+$endif
+$if !local:row_3
+    $set temp:WizeCompleted = false
+$endif
+$branch .PuzzleTimeoutHint
+
+:: PuzzleTimeoutHint
+$wait 10
+$if !temp:WizeCompleted, GetFilterState() != 2, !temp:DracoPuzzleComplete
+    {@Astrid} I should select the infrared filter. $[level4/Astrid/l4_a_24i]
+    $branch .PuzzleTimeoutHint
+$elseif !temp:WizeCompleted, !temp:DracoPuzzleComplete
+    {@Astrid} Ok, so WISE is spectral type T. That means it's a Brown Dwarf. $[level4/Astrid/l4_a_24j]
+    $branch .PuzzleTimeoutHint
+$elseif !temp:EltaninCompleted, !temp:DracoPuzzleComplete
+    {@Astrid} So, Eltanin has no hydrogen... I should use my spectrometer. $[level4/Astrid/l4_a_24k]
+    $branch .PuzzleTimeoutHint
+$endif
 
 :: DracoPuzzleComplete
 @trigger    CorrectPuzzleSubmission
 @when   puzzleName == "Draco"
 @once
 
+$set temp:DracoPuzzleComplete = true
 $call SetRefPageActive("ConstellationDraco", false)
 $call SetRefPageActive("ConstellationDracoCompleted", true)
 $call OpenRefGuidePage("ConstellationDracoCompleted")
@@ -366,6 +477,9 @@ $call TapeDeck->SetTapeActive(true)
 $call ConsoleCommandLine->HideConsole()
 $call TapeDeck->SetTapeActive(false)
 {@Astrid}	Okay... here goes. 	$[level4/Astrid/l4_a_25]
+$call MonitorUI->PowerOff()
+$call MoveToView("Monitor")
+$call AimTelescopeAt(0, 360)
 $call ConsoleCommandLine->PlayConsoleTextAndWait("LightsMessage")
 $call ConsoleCommandLine->HideConsole()
 $call EndDay4->BeginCutscene()
@@ -373,20 +487,23 @@ $call EndDay4->BeginCutscene()
 $wait 2
 $call SetDomeGlow(true)
 $wait 3
-{@Astrid}	Whoa. These apples... Its like they're exploding. 	$[level4/Astrid/l4_a_26]
-{@Astrid}	The dragon... the meteor storm... 	$[level4/Astrid/l4_a_27]
-{@Astrid}	Elijah said “the dragon is waking up.” The meteor storm must be coming from the Draco constellation.	$[level4/Astrid/l4_a_28]
-{@Astrid}	It all makes sense now. Hercules goes to World's End and has to fight the dragon for golden apples...	$[level4/Astrid/l4_a_29]
-{@Astrid}	All of that talk of the end of the world... He was just talking about the Draco constellation this whole time. That's why he named this station World's End! That was literally the most complicated way of explaining this to me. 	$[level4/Astrid/l4_a_30]
-{@Astrid}	The Draconids are in October. We don't have as much time as I thought. These aren't the Leonids in November. This is going to happen soon. 	$[level4/Astrid/l4_a_31]
-{@Astrid}	 And the newspaper goes to print next week.	$[level4/Astrid/l4_a_32]
-{@Astrid}	Even if I send a letter to Jocelyn right now, it won't get to her in time. 	$[level4/Astrid/l4_a_33]
+
+{@Astrid} Oh, a blacklight! Its making the painting glow. 	$[level4/Astrid/l4_a_26]
+{@Astrid} The dragon... the meteor storm... 	$[level4/Astrid/l4_a_27]
+{@Astrid} Elijah said “the dragon is waking up.” The meteor storm must be coming from the Draco constellation.	$[level4/Astrid/l4_a_28]
+{@Astrid} It all makes sense now. In the story, Hercules goes to the garden of World's End to fight the dragon for golden apples...	$[level4/Astrid/l4_a_29]
+{@Astrid} All of that talk of the end of the world... He was just talking about the Draco constellation this whole time. 	$[level4/Astrid/l4_a_30]
+{@Astrid} That's why he named this station World's End! It's all part of his story.	$[level4/Astrid/l4_a_30a]
+{@Astrid} The Draconids are in October. We don't have as much time as I thought. These aren't the Leonids in November. This is going to happen soon. 	$[level4/Astrid/l4_a_31]
+{@Astrid} And the newspaper goes to print next week.	$[level4/Astrid/l4_a_32]
+{@Astrid} Even if I send a letter to Jocelyn right now, it won't get to her in time. 	$[level4/Astrid/l4_a_33]
+
 $goto .EndDay
 
 :: EndDay
-@trigger    CutsceneEnd
-@cutscene
-@when   cutsceneId == "EndDay4"
+// // @trigger    CutsceneEnd
+// @cutscene
+// @when   cutsceneId == "EndDay4"
 
 {@Dad}	Station 12, this is CERES HQ checking in–	$[level4/Dad/l4_d_08]
 {@Astrid}	Dad! Listen, I figured it out. It's not going to be a Leonid meteor storm. It's the Draconids!	$[level4/Astrid/l4_a_34]
@@ -401,6 +518,7 @@ $call PlayRadioAlert()
 {@Astrid}	What if it doesn't work? What if something goes wrong?	$[level4/Astrid/l4_a_37]
 {@Dad}	That's not your responsibility. You've done enough. Just wait for Elijah, let him handle it. 	$[level4/Dad/l4_d_13]
 {@Astrid}	Dad, I've already spent so much time waiting!	$[level4/Astrid/l4_a_38]
+$call PlayRadioAlert(false)
 {@Dad}	Bear, just calm down. This is what you need to do–	$[level4/Dad/l4_d_14]
 $call StopMusic(0)
 {@Monitor}	Station 12, your clearance has been revoked. 	$[level4/monitor/l4_m_03]
