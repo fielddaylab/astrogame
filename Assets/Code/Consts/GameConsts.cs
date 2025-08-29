@@ -51,7 +51,8 @@ public static class GameEvents {
     public static readonly StringHash32 TitleContinueGameClicked = "title-continue-game-clicked";
     public static readonly StringHash32 TitleOptionsClicked = "title-options-game-clicked";
     public static readonly StringHash32 GameStart = "game-start"; // bool fromResume
-    public static readonly StringHash32 BeginLevel = "begin-level"; // int levelNum
+    public static readonly StringHash32 LevelStart = "level-start"; // int levelNum
+    public static readonly StringHash32 LevelEnd = "level-end"; // int levelNum
     public static readonly StringHash32 ClickPauseGame = "click-pause-game";
     public static readonly StringHash32 ClickResumeGame = "click-resume-game";
     public static readonly StringHash32 CutsceneStart = "cutscene-start"; // string cutsceneId
@@ -67,6 +68,7 @@ public static class GameEvents {
     public static readonly StringHash32 StarHighlighted = "star-highlighted";
     public static readonly StringHash32 StarUnhighlighted = "star-unhighlighted";
     public static readonly StringHash32 HoverStar = "hover-star";
+    public static readonly StringHash32 StarClicked = "star-clicked";
 }
 
 public static class ScriptEvents {

@@ -24,6 +24,8 @@ namespace Astro {
         public SpriteRenderer TrackerSprite;
         public SpriteRenderer PipSprite;
 
+        public StarLogData StarLog = default;
+
         public void OnDestroy()
         {
             if (Game.IsShuttingDown) { return; }
@@ -50,6 +52,9 @@ namespace Astro {
 
         private void OnClicked() {
             FocusableUtility.SetCurrentFocus(Find.State<FocusState>(), this);
+
+            StarLog.IsHighlighted = HasHighlight;
+            AstroGame.Events.Dispatch(GameEvents.StarClicked, EvtArgs.Box(StarLog));
         }
     }
 
@@ -73,6 +78,22 @@ namespace Astro {
             focus.Represent2D.sprite = trackerSprite;
 
             focus.TargetData = asset;
+
+            focus.StarLog.AssetID = focus.TargetData.AssetId;
+            focus.StarLog.Name = focus.TargetData.DisplayName;
+            focus.StarLog.Constellation = focus.TargetData.ConstellationName;
+            focus.StarLog.Coordinates = focus.TargetData.Coords;
+            focus.StarLog.Distance = focus.TargetData.Distance;
+            if (!focus.TargetData.ColorId.IsEmpty)
+            {
+                focus.StarLog.ColorIndex = focus.TargetData.ApparentBlueMagnitude - focus.TargetData.ApparentMagnitude;
+            }
+            focus.StarLog.Temperature = focus.TargetData.Temperature;
+            focus.StarLog.VisMagnitude = focus.TargetData.ApparentMagnitude;
+            focus.StarLog.BlueMagnitude = focus.TargetData.ApparentBlueMagnitude;
+            focus.StarLog.InfraredMagnitude = focus.TargetData.ApparentIRMagnitude;
+            focus.StarLog.AbsoluteMagnitude = focus.TargetData.AbsoluteMagnitude;
+            focus.StarLog.Elements = focus.TargetData.Spectrograph;
 
             float scaleFactor = Mathf.Clamp(Mathf.Pow(state.BaseScale, asset.ApparentMagnitude) - 0.45f, state.MinScale, state.MaxScale);
             focus.Root.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);

@@ -78,6 +78,9 @@ namespace Astro {
         static public void LoadNextDay(StringHash32 transitionType = default) {
             PlayerProgressState state = Find.State<PlayerProgressState>();
             StoryAsset story = Find.GlobalAsset<StoryAsset>();
+
+            AstroGame.Events.Dispatch(GameEvents.LevelEnd, state.DayIndex);
+
             Game.Events.Dispatch(GameEvents.BeforeNextDayLoad);
 
             state.DayIndex += 1;
@@ -88,7 +91,7 @@ namespace Astro {
 
             SaveUtility.Save(SaveSlot.Main);
 
-            AstroGame.Events.Dispatch(GameEvents.BeginLevel, state.DayIndex);
+            AstroGame.Events.Dispatch(GameEvents.LevelStart, state.DayIndex);
 
             Game.Scenes.LoadMainScene(day.Scene, true, new MainSceneTransitionArgs() {
                 TransitionType = transitionType
@@ -99,6 +102,9 @@ namespace Astro {
         static public void LoadDay(StringHash32 dayId, StringHash32 transitionType = default, bool ignoreSave = false) {
             PlayerProgressState state = Find.State<PlayerProgressState>();
             StoryAsset story = Find.GlobalAsset<StoryAsset>();
+
+            AstroGame.Events.Dispatch(GameEvents.LevelEnd, state.DayIndex);
+
             Game.Events.Dispatch(GameEvents.BeforeNextDayLoad);
 
             for (int i = 0; i < story.Days.Length; i++) {
@@ -118,7 +124,7 @@ namespace Astro {
                 SaveUtility.Save(SaveSlot.Main);
             }
 
-            AstroGame.Events.Dispatch(GameEvents.BeginLevel, state.DayIndex);
+            AstroGame.Events.Dispatch(GameEvents.LevelStart, state.DayIndex);
 
             Game.Scenes.LoadMainScene(day.Scene, true, new MainSceneTransitionArgs() {
                 TransitionType = transitionType

@@ -423,7 +423,7 @@ namespace Astro {
             return false;
         }
 
-        private static string MapTypeToLabel(ClassificationTypeMask type) {
+        public static string MapTypeToLabel(ClassificationTypeMask type) {
             if (type.HasFlag(ClassificationTypeMask.Photometer)) {
                 return "BRIGHTNESS";
             } else if (type.HasFlag(ClassificationTypeMask.ColorMeter)) {

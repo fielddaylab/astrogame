@@ -20,6 +20,7 @@ namespace Astro {
         [ClassificationId] public StringHash32[] ClassIds; 
         [ReferenceEntryId] public StringHash32 ReferenceId; // deprecated
         [ConstellationId] public StringHash32 ConstellationId; // deprecated
+        public string ConstellationName;
 
         public bool AtypicalForClass;
 

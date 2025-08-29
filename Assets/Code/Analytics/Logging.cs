@@ -8,7 +8,10 @@ using FieldDay.Vox;
 using OGD;
 using System;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using UnityEngine;
+using static UnityEditor.Progress;
+using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 
 namespace Astro {
 
@@ -42,11 +45,12 @@ namespace Astro {
         private bool m_MagnitudeModeIsApparent;
         private int m_PointsNeeded;
         private int m_PointsEarned;
-        private StarData m_SelectedStar;
+        private StarLogData m_SelectedStar;
         private PuzzleData m_LogicPuzzle;
 
 
         private void SubmitGameState() {
+            m_JsonBuilder.Clear();
             m_JsonBuilder.Begin()
                 .Field("current_level", m_CurrentLevel)
                 .BeginArray("unlocked_tools");
@@ -124,7 +128,7 @@ namespace Astro {
             SubmitGameState();
         }
 
-        private void UpdateSelectedStar(StarData star) {
+        private void UpdateSelectedStar(StarLogData star) {
             m_SelectedStar = star;
             SubmitGameState();
         }
@@ -190,7 +194,8 @@ namespace Astro {
                 .Register(GameEvents.TitleContinueGameClicked, LogClickContinueGame)
                 .Register(GameEvents.TitleOptionsClicked, LogClickOptionsMenu)
                 .Register<bool>(GameEvents.GameStart, LogGameStart)
-                .Register<int>(GameEvents.BeginLevel, LogBeginLevel)
+                .Register<int>(GameEvents.LevelStart, LogLevelStart)
+                .Register<int>(GameEvents.LevelEnd, LogLevelEnd)
                 .Register(GameEvents.ClickPauseGame, LogClickPauseGame)
                 .Register(GameEvents.ClickResumeGame, LogClickResumeGame)
                 .Register<string>(GameEvents.CutsceneStart, LogCutsceneStart)
@@ -204,6 +209,7 @@ namespace Astro {
                 .Register<string>(GameEvents.StarHighlighted, LogStarHighlighted)
                 .Register<string>(GameEvents.StarUnhighlighted, LogStarUnhighlighted)
                 .Register<string>(GameEvents.HoverStar, LogHoverStar)
+                .Register<StarLogData>(GameEvents.StarClicked, LogClickSelectStar)
                 ;
 
             // state update events
@@ -255,10 +261,12 @@ namespace Astro {
             m_Log.NewEvent("click_options_menu");
         }
 
+        /*
         //click_free_play_menu (pending implementation)/
         private void LogClickFreePlayMenu() {
             // m_Log.NewEvent("click_options_menu");
         }
+        */
         
         //game_start/
         //* from_resume
@@ -268,10 +276,19 @@ namespace Astro {
             m_Log.SubmitEvent();
         }
        
-        //click_begin_level/
+        //level_start/
         //* level_number
-        private void LogBeginLevel(int levelNum) {
-            m_Log.BeginEvent("begin_level");
+        private void LogLevelStart(int levelNum) {
+            m_Log.BeginEvent("level_start");
+            m_Log.EventParam("level_number", levelNum);
+            m_Log.SubmitEvent();
+        }
+
+        //level_end/
+        //* level_number
+        private void LogLevelEnd(int levelNum)
+        {
+            m_Log.BeginEvent("level_end");
             m_Log.EventParam("level_number", levelNum);
             m_Log.SubmitEvent();
         }
@@ -411,15 +428,53 @@ namespace Astro {
         //* absolute_magnitude
         //* spectral_elements : List[Element]
         //* is_highlighted
-        //* known_data
+        //* known_data: List[StarKnownData]
         //    * identification_type
         //    * category
-        private void LogClickSelectStar(StarData star, List<StarKnownData> knownData) {
+        private void LogClickSelectStar(StarLogData star)
+        {
+            StarKnownData knownData = new StarKnownData();
+            knownData.Data = new List<StarKnownDataItem>();
+            var asset = Find.NamedAsset<CelestialAsset>(star.AssetID);
+            var playerProgressState = Find.State<PlayerProgressState>();
+            if (playerProgressState.Knowledge.ContainsKey(star.AssetID)) {
+                var knowledge = playerProgressState.Knowledge[star.AssetID];
+                for (int i = 0; i < asset.ClassIds.Length; i++)
+                {
+                    if (knowledge.Classifications[i])
+                    {
+                        StarKnownDataItem item = new StarKnownDataItem();
+                        var refClass = Find.NamedAsset<ReferenceClassification>(asset.ClassIds[i]);
+
+                        item.IdentificationType = CelestialDataDisplayUtil.MapTypeToLabel(refClass.Type);
+
+                        switch (refClass.Type)
+                        {
+                            case ClassificationTypeMask.Photometer:
+                                item.Classification = refClass.Label;
+                                break;
+                            case ClassificationTypeMask.ColorMeter:
+                                item.Classification = refClass.Label;
+                                break;
+                            case ClassificationTypeMask.Spectrometer:
+                                item.Classification = SpectrographUtility.ToSymbolsString(star.Elements);
+                                break;
+                            case ClassificationTypeMask.Luminosity:
+                                item.Classification = refClass.Label;
+                                break;
+                            default:
+                                break;
+                        }
+                        knownData.Data.Add(item);
+                    }
+                }
+            }
+
+            m_JsonBuilder.Clear();
             m_Log.BeginEvent("click_select_star");
-            // m_Log.EventParamJson("star_id", star);
-            // TODO: json representation of StarData
-            //m_Log.EventParam("known_data", knownData);
-            // TODO: json representation of KnownData
+            m_Log.EventParamJson("star_data", star.Append(m_JsonBuilder).End());
+            m_Log.EventParamJson("known_data", knownData.Append(m_JsonBuilder).End());
+            m_Log.SubmitEvent();
         }
 
         //tool_unlocked/
@@ -989,12 +1044,13 @@ namespace Astro {
 
     #region Data Structs
     [Serializable]
-    public struct StarData {
+    public struct StarLogData {
         public string Name;
         public string Constellation;
         public EqCoords Coordinates;
-        public int ColorIndex;
-        public int Temperature;
+        public double Distance;
+        public double ColorIndex;
+        public uint Temperature;
         public float VisMagnitude;
         public float BlueMagnitude;
         public float InfraredMagnitude;
@@ -1002,10 +1058,25 @@ namespace Astro {
         public SpectrographMaterialMask Elements;
         public bool IsHighlighted;
 
-        //public string ToJsonString() {
-        //    // TODO: json translation
-        //    return "";
-        //}
+        public StringHash32 AssetID;
+
+        public readonly JsonBuilder Append(JsonBuilder json)
+        {
+            json.Field("star_id", Name);
+            json.Field("constellation", Constellation);
+            json.BeginObject("coordinates");
+            Coordinates.Append(json).EndObject();
+            json.Field("distance", Distance);
+            json.Field("color", ColorIndex);
+            json.Field("temperature", Temperature);
+            json.Field("visible_magnitude", VisMagnitude);
+            json.Field("blue_magnitude", BlueMagnitude);
+            json.Field("infrared_magnitude", InfraredMagnitude);
+            json.Field("absolute_magnitude", AbsoluteMagnitude);
+            json.Field("spectral_elements", SpectrographUtility.ToSymbolsString(Elements));
+            json.Field("is_highlighted", IsHighlighted);
+            return json;
+        }
     }
 
     [Serializable]
@@ -1054,9 +1125,33 @@ namespace Astro {
     }
 
     [Serializable]
-    public struct StarKnownData {
-        public ClassificationTypeMask IdentificationType; //  classification type (e.g. "Spectral Type")
+    public struct StarKnownDataItem {
+        public string IdentificationType; //  classification type (e.g. "Spectral Type")
         public string Classification; // specific classification (e.g. "A Type")
+
+        public readonly JsonBuilder Append(JsonBuilder json)
+        {
+            json.Field("identification_type", IdentificationType);
+            json.Field("category", Classification);
+            return json;
+        }
+    }
+
+    [Serializable]
+    public struct StarKnownData
+    {
+        public List<StarKnownDataItem> Data;
+
+        public readonly JsonBuilder Append(JsonBuilder json)
+        {
+            foreach(var item in Data)
+            {
+                json.BeginObject("star_known_datum");
+                item.Append(json).EndObject();
+            }
+
+            return json;
+        }
     }
 
     [Serializable]

@@ -227,6 +227,7 @@ namespace Astro
             CelestialAsset constellationAsset = AssetDatabase.LoadAssetAtPath<CelestialAsset>(constellationAssetPath);
             if (constellationAsset != null) {
                 currAsset.ConstellationId = constellationAsset.AssetId;
+                currAsset.ConstellationName = workingData;
             }
         }
 

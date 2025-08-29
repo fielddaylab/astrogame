@@ -1,4 +1,5 @@
 using BeauUtil;
+using FieldDay;
 using System;
 using System.Collections;
 using System.Runtime.InteropServices;
@@ -76,6 +77,14 @@ namespace Astro {
             sb.AppendNoAlloc(Degrees, 0, 2).Append("\u00B0 ")
                 .AppendNoAlloc(Minutes, 0, 2).Append("' ");
                 //sb.AppendNoAlloc(Seconds, 1, 2).Append('"');
+        }
+
+        public readonly JsonBuilder Append(JsonBuilder json)
+        {
+            json.Field("degrees", Degrees);
+            json.Field("minutes", Minutes);
+            json.Field("seconds", Seconds);
+            return json;
         }
 
         #endregion // ToString

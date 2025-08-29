@@ -1,4 +1,5 @@
 using BeauUtil;
+using FieldDay;
 using System;
 using System.Collections;
 using System.Runtime.InteropServices;
@@ -19,6 +20,15 @@ namespace Astro {
         public bool Equals(EqCoords other) {
             return RightAscension.Equals(other.RightAscension)
                 && Declination.Equals(other.Declination);
+        }
+
+        public readonly JsonBuilder Append(JsonBuilder json)
+        {
+            json.BeginObject("right_ascension");
+            RightAscension.Append(json).EndObject();
+            json.BeginObject("declination");
+            Declination.Append(json).EndObject();
+            return json;
         }
     }
 }
