@@ -222,6 +222,8 @@ $call StartNeutrinoNavigation()
 
 :: NeutrinoNavigationComplete
 @trigger    NeutrinoNavigationComplete
+@priority High
+@boostScore 500
 @once
 
 $call StopNeutrinoNavigation()
@@ -397,7 +399,7 @@ $call StartPuzzleMode()
 $call UnlockMonitorFocus()
 $call SetInputState(true)
 
-$wait 7 // For transition sequence
+$wait 8 // For transition sequence
 
 {@Astrid} Null... I guess that means this star has no absolute magentude. $[level4/Astrid/l4_a_24g]
 {@Astrid} And it looks like there is a star missing- or maybe I just can't see it. I wonder if that's a Brown Dwarf that I could see in infrared. $[level4/Astrid/l4_a_24h]
@@ -460,7 +462,6 @@ $wait 2
 
 $call ClearMonitorSelection()
 $call StopPuzzleMode()
-$call SetInputState(false)
 $call ConsoleCommandLine->PlayConsoleTextAndWait("PlayMessage")
 $call TapeDeck->SetTapeActive(true)
 {@Elijah}	I just packed my bags for the road... 	$[level4/Elijah/l4_e_01]
@@ -478,10 +479,12 @@ $call ConsoleCommandLine->HideConsole()
 $call TapeDeck->SetTapeActive(false)
 {@Astrid}	Okay... here goes. 	$[level4/Astrid/l4_a_25]
 $call MonitorUI->PowerOff()
-$call MoveToView("Monitor")
+$call WaitForMovedToView("Monitor")
 $call AimTelescopeAt(0, 360)
 $call ConsoleCommandLine->PlayConsoleTextAndWait("LightsMessage")
 $call ConsoleCommandLine->HideConsole()
+$start Observatory.PathToDesk
+$call WaitForMovedToView("DeskView")
 $call EndDay4->BeginCutscene()
 
 $wait 2
@@ -505,6 +508,13 @@ $goto .EndDay
 // @cutscene
 // @when   cutsceneId == "EndDay4"
 
+$wait 1
+$call MonitorUI->ShowElement("CeresMsg")
+$wait 1
+$call SetRadioFrequency(137)
+$call SetRadioDialLocked(true)
+$call MonitorUI->HideElement("CeresMsg")
+$call SetInputState(true)
 {@Dad}	Station 12, this is CERES HQ checking in–	$[level4/Dad/l4_d_08]
 {@Astrid}	Dad! Listen, I figured it out. It's not going to be a Leonid meteor storm. It's the Draconids!	$[level4/Astrid/l4_a_34]
 {@Dad}	The.. Draconids?	$[level4/Dad/l4_d_09]
@@ -518,13 +528,14 @@ $call PlayRadioAlert()
 {@Astrid}	What if it doesn't work? What if something goes wrong?	$[level4/Astrid/l4_a_37]
 {@Dad}	That's not your responsibility. You've done enough. Just wait for Elijah, let him handle it. 	$[level4/Dad/l4_d_13]
 {@Astrid}	Dad, I've already spent so much time waiting!	$[level4/Astrid/l4_a_38]
-$call PlayRadioAlert(false)
+$call PlayOneshotRadioAlert() 
 {@Dad}	Bear, just calm down. This is what you need to do–	$[level4/Dad/l4_d_14]
 $call StopMusic(0)
 {@Monitor}	Station 12, your clearance has been revoked. 	$[level4/monitor/l4_m_03]
-{@Astrid}	Whoa. Wait, just a second–	$[level4/Astrid/l4_a_39]
-{@Monitor}	Your access is resistricted to incoming data only. 	$[level4/monitor/l4_m_04]
+{@Astrid} {vox-overlap -0.2} Whoa. Wait, just a second–	$[level4/Astrid/l4_a_39]
+{@Monitor}{vox-overlap -0.2} Your access is resistricted to incoming data only. 	$[level4/monitor/l4_m_04]
 {@Astrid} Wait, I just need two more minutes!	$[level4/Astrid/l4_a_40]
+$wait 1
 {@Astrid} Hello?	$[level4/Astrid/l4_a_41]
 $wait 1
 {@Astrid} Dad?	$[level4/Astrid/l4_a_42]
