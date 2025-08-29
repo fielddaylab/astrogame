@@ -69,7 +69,7 @@ namespace Astro {
             yield return 2;
             m_MoveRoutine = Routine.Start(this, MoveRoutine());
 
-            yield return 15;
+            yield return 25;
             yield return Tween.OneToZero((f) => StarsRenderer.Alpha = f, 5);
 
             StarsRenderer.gameObject.SetActive(false);
