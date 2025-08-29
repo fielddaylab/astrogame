@@ -6,6 +6,7 @@ using UnityEngine.UIElements;
 using FieldDay;
 using System;
 using BeauUtil.Debugger;
+using BeauUtil;
 
 namespace Astro {
 
@@ -22,6 +23,8 @@ namespace Astro {
         private PointerEventData copyEventData;
 
         public LayerMask RequiredMask = LayerMasks.LabInteract_Mask;
+
+        private const int RaycastLayerMasks = Bits.All32 & ~LayerMasks.Tappable_Mask;
 
         public override Camera eventCamera { get { return eventCameraOverride; } }
 
@@ -64,7 +67,7 @@ namespace Astro {
 
             Ray ray = eventCameraOverride.ScreenPointToRay(copyEventData.position); // Mouse
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit)) {
+            if (Physics.Raycast(ray, out hit, 25, RaycastLayerMasks)) {
 
                 if (hit.collider.transform == screenTransform) {
                     Vector2 hitCoord = hit.textureCoord;
