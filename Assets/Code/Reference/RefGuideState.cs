@@ -6,6 +6,7 @@ using BeauRoutine.Splines;
 using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay;
+using FieldDay.Audio;
 using FieldDay.Scenes;
 using FieldDay.Scripting;
 using FieldDay.SharedState;
@@ -143,6 +144,7 @@ namespace Astro.Reference {
 
                 case RefGuideControlType.Bookmark: {
                     if (state.AllowPageChanges) {
+                        PlayBookSound("Oneshot.RefGuide.TurnPage");
                         LoadPage(control.GetComponentInParent<RefGuideBookmark>().Page, state);
                     }
                     break;
@@ -164,7 +166,7 @@ namespace Astro.Reference {
                 }
 
                 case RefGuideControlType.Zoom: {
-                        ToggleReferenceZoom();
+                    ToggleReferenceZoom();
                     break;
                 }
             }
@@ -283,6 +285,7 @@ namespace Astro.Reference {
             rig.IntermediatePosition.GetPositionAndRotation(out var p, out var r);
             rig.RootTransform.SetPositionAndRotation(p, r);
             SetGuideOpenVisibility(rig, true);
+            PlayBookSound("Oneshot.RefGuide.Lift");
 
             yield return Routine.Inline(rig.RootTransform.MoveTo(rig.RootTransform.localPosition.y + 0.1f, 0.3f, Axis.Y, Space.Self).Ease(Curve.BackOut).From());
 
@@ -294,6 +297,8 @@ namespace Astro.Reference {
             if (state.StickyFirstPage > -1) {
                 LoadPage(state.StickyFirstPage, state);
             }
+
+            PlayBookSound("Oneshot.RefGuide.Open");
             yield return Tween.ZeroToOne(SetRefGuideCoverAngle, 0.45f).Ease(Curve.Smooth);
             rig.CoverRenderer.enabled = false;
 
@@ -332,6 +337,7 @@ namespace Astro.Reference {
             }
 
             rig.CoverRenderer.enabled = true;
+            PlayBookSound("Oneshot.RefGuide.Close");
             yield return Tween.OneToZero(SetRefGuideCoverAngle, 0.25f).Ease(Curve.Smooth);
             yield return 0.27f;
 
@@ -339,6 +345,7 @@ namespace Astro.Reference {
             rig.RootTransform.SetPositionAndRotation(p, r);
             SetGuideOpenVisibility(rig, false);
 
+            PlayBookSound("Oneshot.RefGuide.Place");
             yield return Routine.Inline(rig.RootTransform.MoveTo(rig.RootTransform.localPosition.y + 0.05f, 0.12f, Axis.Y, Space.Self).Ease(Curve.CubeOut).From().ForceOnCancel(false));
             SetGuideInteraction(rig, RefGuideInteractionState.Closed);
             state.CurrentState = RefGuideInteractionState.Closed;
@@ -402,6 +409,7 @@ namespace Astro.Reference {
             while (!rgs.ActivePages[pageIdx]) {
                 pageIdx = (pageIdx + 1) % totalPages;
             }
+            PlayBookSound("Oneshot.RefGuide.TurnPage");
             LoadPage(pageIdx, rgs);
         }
 
@@ -412,6 +420,7 @@ namespace Astro.Reference {
             while (!rgs.ActivePages[pageIdx]) {
                 pageIdx = (pageIdx - 1 + totalPages) % totalPages;
             }
+            PlayBookSound("Oneshot.RefGuide.TurnPage");
             LoadPage(pageIdx, rgs);
         }
 
@@ -643,6 +652,10 @@ namespace Astro.Reference {
 
             bool buttonActive = focusActive && refGuideselection && !ReviewUtility.ReviewInProgress();
             Routine.Start( rgs.SubmitButton.SetButtonActive(buttonActive) );
+        }
+
+        public static void PlayBookSound(StringHash32 sfxId) {
+            Sfx.Play(sfxId, Find.State<RefGuideRig>().RootTransform);
         }
 
         #region Leaf

@@ -24,7 +24,7 @@ MonoBehaviour:
     - AssemblyName: FieldDay.Scripting, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
       TypeCount: 1
     Types:
-    - TypeName: SpaceFab.SpaceFabGame
+    - TypeName: Astro.AstroGame
       Self: 0
       MemberCount: 1
       OverloadCount: 0
@@ -56,14 +56,28 @@ MonoBehaviour:
     LookupFlags: 58
     LookupInherit: 0
     Assemblies:
+    - AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      TypeCount: 2
     - AssemblyName: FieldDay.Scripting, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
       TypeCount: 1
     Types:
+    - TypeName: Astro.AstroGame
+      Self: 0
+      MemberCount: 1
+      OverloadCount: 0
+    - TypeName: Astro.ScriptTriggers
+      Self: 0
+      MemberCount: 1
+      OverloadCount: 0
     - TypeName: FieldDay.Scripting.ScriptDebugHooks
       Self: 0
       MemberCount: 1
       OverloadCount: 0
     Members:
+    - MemberName: OnBoot
+      Type: 8
+    - MemberName: Init
+      Type: 8
     - MemberName: OnBoot
       Type: 8
     OverloadedMethods: []
@@ -82,11 +96,45 @@ MonoBehaviour:
     LookupFlags: 58
     LookupInherit: 0
     Assemblies:
+    - AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      TypeCount: 8
     - AssemblyName: FieldDay.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
       TypeCount: 1
     - AssemblyName: FieldDay.Scripting, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
       TypeCount: 1
     Types:
+    - TypeName: Astro.AstroGame
+      Self: 0
+      MemberCount: 1
+      OverloadCount: 0
+    - TypeName: Astro.NavigationUtility
+      Self: 0
+      MemberCount: 3
+      OverloadCount: 0
+    - TypeName: Astro.ReviewUtility
+      Self: 0
+      MemberCount: 1
+      OverloadCount: 0
+    - TypeName: Astro.ReviewSystem
+      Self: 0
+      MemberCount: 2
+      OverloadCount: 0
+    - TypeName: Astro.InputUtility
+      Self: 0
+      MemberCount: 1
+      OverloadCount: 0
+    - TypeName: Astro.InstrumentInventoryUtility
+      Self: 0
+      MemberCount: 1
+      OverloadCount: 0
+    - TypeName: Astro.RenderAtlasUpdateSystem
+      Self: 0
+      MemberCount: 1
+      OverloadCount: 0
+    - TypeName: Astro.Save.SaveUtility
+      Self: 0
+      MemberCount: 1
+      OverloadCount: 0
     - TypeName: FieldDay.Data.ConfigVar
       Self: 0
       MemberCount: 1
@@ -96,6 +144,28 @@ MonoBehaviour:
       MemberCount: 1
       OverloadCount: 0
     Members:
+    - MemberName: LoadLevel
+      Type: 8
+    - MemberName: DebugNeutrinoNav
+      Type: 8
+    - MemberName: DebugOpenId
+      Type: 8
+    - MemberName: DebugPuzzleNav
+      Type: 8
+    - MemberName: PointsMenu
+      Type: 8
+    - MemberName: SubmitCorrectPuzzleSolution
+      Type: 8
+    - MemberName: SpawnPuzzle
+      Type: 8
+    - MemberName: DebugNeutrinoNav
+      Type: 8
+    - MemberName: CreateDebugMenu
+      Type: 8
+    - MemberName: DebugMenu
+      Type: 8
+    - MemberName: SaveDebugMenu
+      Type: 8
     - MemberName: DebugMenuFactory
       Type: 8
     - MemberName: CreateDebugMenu
@@ -108,7 +178,7 @@ MonoBehaviour:
     LookupInherit: 0
     Assemblies:
     - AssemblyName: FieldDay.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-      TypeCount: 10
+      TypeCount: 11
     Types:
     - TypeName: FieldDay.Scenes.SceneMgr
       Self: 0
@@ -150,6 +220,10 @@ MonoBehaviour:
       Self: 0
       MemberCount: 1
       OverloadCount: 0
+    - TypeName: FieldDay.Assets.AssetMgr
+      Self: 0
+      MemberCount: 1
+      OverloadCount: 0
     Members:
     - MemberName: CreateDebugMenu
       Type: 8
@@ -170,6 +244,8 @@ MonoBehaviour:
     - MemberName: CreateDebugMenu
       Type: 8
     - MemberName: CreateAudioDebugMenu
+      Type: 8
+    - MemberName: CreateDebugMenu
       Type: 8
     OverloadedMethods: []
     TypeReferences: []
