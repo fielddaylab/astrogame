@@ -3,6 +3,7 @@ using BeauUtil;
 using FieldDay;
 using FieldDay.Scenes;
 using FieldDay.SharedState;
+using Leaf.Runtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -87,6 +88,15 @@ namespace Astro {
                 default:
                     return null;
             }
+        }
+
+        // Visible = 0x01,
+        // Infrared = 0x02,
+        // Blue = 0x04,
+        [LeafMember("GetFilterState")]
+        static private int GetFilterState() {
+            int value = (int)Find.State<SkyGenerationState>().VisMask;
+            return value;
         }
     }
 }

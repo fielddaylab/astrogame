@@ -2,6 +2,7 @@ using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay;
 using UnityEngine;
+using Leaf.Runtime;
 
 namespace Astro {
     /// <summary>
@@ -60,8 +61,13 @@ namespace Astro {
             return Quaternion.Euler(angles);
         }
 
-        public static void ForceLocalRotation(SpaceCameraState camState, Vector3 angles) {
+        [LeafMember("AimTelescopeAt")]
+        static public void LeafSetTelescopeLocalRotation(float x, float y) {
+            Vector3 angles = new Vector3(x, y, 0);
+            ForceLocalRotation(Find.State<SpaceCameraState>(), angles);
+        }
 
+        public static void ForceLocalRotation(SpaceCameraState camState, Vector3 angles) {
             angles.x = MathUtils.Wrap(angles.x, -180, 180);
             angles.y = MathUtils.Wrap(angles.y, -180, 180);
             angles.z = 0;
