@@ -40,6 +40,7 @@ namespace Astro {
         RightAscension = 0x01,
         Declination = 0x02,
         Shorten = 0x04,
+        NoUnit = 0x08,
 
         [Hidden] FullCoordinate = RightAscension | Declination
     }
@@ -109,7 +110,8 @@ namespace Astro {
         }
 
         static private bool TryFormatForDefaultOutput(DataPacket packet, DataFormattingFlags flags, StringBuilder sb) {
-            bool shorten = (flags & DataFormattingFlags.Shorten) != 0;
+            bool noUnit = (flags & DataFormattingFlags.NoUnit) != 0;
+            bool shorten = !noUnit && (flags & DataFormattingFlags.Shorten) != 0;
             switch (packet.Type) {
                 case DataTypeMask.Name: {
                     CelestialAsset asset = Find.NamedAsset<CelestialAsset>(packet.Value.AssetId);
@@ -143,10 +145,12 @@ namespace Astro {
 
                 case DataTypeMask.Distance: {
                     sb.AppendNoAlloc(packet.Value.Distance, shorten ? 0 : 1);
-                    if (!shorten) {
-                        sb.Append(" lightyears");
-                    } else {
-                        sb.Append(" ly");
+                    if (!noUnit) {
+                        if (!shorten) {
+                            sb.Append(" lightyears");
+                        } else {
+                            sb.Append(" ly");
+                        }
                     }
                     return true;
                 }

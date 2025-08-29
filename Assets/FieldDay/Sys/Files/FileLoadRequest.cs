@@ -16,8 +16,8 @@ namespace FieldDay.Files {
         public StringHash32 Name;
         public StringHash32 Group;
 
-        public string Path;
         public uint PathKey;
+        public string Path;
 
         public FileReadHandler Callback;
         public object CallbackContext;

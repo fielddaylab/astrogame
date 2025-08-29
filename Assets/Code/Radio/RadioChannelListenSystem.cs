@@ -24,7 +24,7 @@ namespace Astro.Radio {
             }
 
             // if the player has been listening for long enough, register this channel as being listened to
-            if (m_StateC.CurrListenChannel == null && m_StateC.ListenTime >= m_StateC.ListenTimeThreshold) {
+            if (m_StateA.LastKnownChannel != null && m_StateC.CurrListenChannel == null && m_StateC.ListenTime >= m_StateC.ListenTimeThreshold) {
                 m_StateC.CurrListenChannel = m_StateA.LastKnownChannel;
 
                 using (var table = TempVarTable.Alloc()) {

@@ -17,6 +17,7 @@ using FieldDay.Animation;
 using FieldDay.Memory;
 using FieldDay.Perf;
 using FieldDay.Files;
+using FieldDay.Localization;
 
 [assembly: InternalsVisibleTo("FieldDay.Core.Editor")]
 
@@ -105,6 +106,11 @@ namespace FieldDay {
         /// File system manager.
         /// </summary>
         static public FileSystem Files { get; internal set; }
+
+        /// <summary>
+        /// Localization manager.
+        /// </summary>
+        static public LocMgr Localization { get; internal set; }
 
         /// <summary>
         /// Event dispatcher. Maintains event dispatch.

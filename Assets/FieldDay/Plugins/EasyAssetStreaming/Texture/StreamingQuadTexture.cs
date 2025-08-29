@@ -75,6 +75,10 @@ namespace EasyAssetStreaming {
 
         private StreamingQuadTexture() {
             OnAssetUpdated = (StreamingAssetHandle id, Streaming.AssetStatus status, object asset) => {
+                if (id != m_AssetHandle) {
+                    return;
+                }
+
                 if (status == Streaming.AssetStatus.Loaded) {
                     m_LoadedTexture = (Texture) asset;
                     if (m_MainTexturePropertyId != 0) {
@@ -268,26 +272,25 @@ namespace EasyAssetStreaming {
         /// Resizes the mesh to preserve aspect ratio.
         /// </summary>
         public void Resize(AutoSizeMode sizeMode) {
+            bool needsMeshRebuild = false;
             if (sizeMode == AutoSizeMode.Disabled || !m_LoadedTexture) {
                 if (m_ClippedUVs != m_UVRect) {
                     m_ClippedUVs = m_UVRect;
-                    if (isActiveAndEnabled) {
-                        LoadMesh();
-                    }
+                    needsMeshRebuild = true;
                 }
-                return;
+            } else {
+                Vector2 size = m_Size;
+                Vector2 appliedPivot = m_Pivot;
+
+                if (StreamingHelper.AutoSize(sizeMode, m_LoadedTexture, m_UVRect, transform.localPosition, m_Pivot, ref size, ref m_ClippedUVs, ref appliedPivot, StreamingHelper.GetParentSize(transform)) != 0) {
+                    m_Size = size;
+                    needsMeshRebuild = true;
+                }
             }
 
-            Vector2 size = m_Size;
-            Vector2 appliedPivot = m_Pivot;
+            needsMeshRebuild = needsMeshRebuild || (m_MeshInstanceHash == 0 && m_LoadedTexture);
 
-            if (StreamingHelper.AutoSize(sizeMode, m_LoadedTexture, m_UVRect, transform.localPosition, m_Pivot, ref size, ref m_ClippedUVs, ref appliedPivot, StreamingHelper.GetParentSize(transform)) == 0) {
-                return;
-            }
-
-            m_Size = size;
-
-            if (isActiveAndEnabled) {
+            if (isActiveAndEnabled && needsMeshRebuild) {
                 LoadMesh();
             }
         }

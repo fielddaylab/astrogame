@@ -2,6 +2,10 @@
 #define DEVELOPMENT
 #endif // UNITY_EDITOR || DEVELOPMENT_BUILD
 
+#if !UNITY_2020_1_OR_NEWER
+#define LEGACY_UWR_RESULT
+#endif // UNITY_2020_1_OR_NEWER
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -227,7 +231,13 @@ namespace EasyAssetStreaming {
                 }
 
                 Loaded = true;
-                if (request.isNetworkError || request.isHttpError) {
+                bool hadError;
+#if LEGACY_UWR_RESULT
+                success = request.isNetworkError || request.isHttpError;
+#else
+                hadError = request.result != UnityWebRequest.Result.Success;
+#endif // LEGACY_UWR_RESULT
+                if (hadError) {
                     UnityEngine.Debug.LogErrorFormat("[Streaming] Unable to load streaming manifest (async): {0}", request.error);
                 } else {
                     try {
@@ -276,7 +286,7 @@ namespace EasyAssetStreaming {
                 data.TextureDefaults.Compression = ParseEnum(texSettings["Compression"], Textures.DefaultSettings.Default.Compression);
             }
 
-            #endregion // Loading
+#endregion // Loading
 
             #region Access
 
@@ -349,7 +359,7 @@ namespace EasyAssetStreaming {
             }
         }
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
 
         static private void WriteEnum<T>(JSON data, string id, T value) {
             data[id].AsString = value.ToString();
@@ -361,6 +371,6 @@ namespace EasyAssetStreaming {
             }
         }
 
-        #endif // UNITY_EDITOR
+#endif // UNITY_EDITOR
     }
 }

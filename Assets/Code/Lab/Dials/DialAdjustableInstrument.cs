@@ -5,10 +5,8 @@ using FieldDay.Components;
 using TMPro;
 using System;
 
-namespace Astro
-{
-    public class DialAdjustableInstrument : BatchedComponent
-    {
+namespace Astro {
+    public class DialAdjustableInstrument : BatchedComponent {
         public InteractAdjustDial Source;
 
         public float LinearMap = 1;

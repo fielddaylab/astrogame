@@ -39,9 +39,10 @@ namespace Astro {
 
         [Header("Focus Scale")]
         public Vector3 DefaultTrackerPipScale = new Vector3(0.88f, 0.88f, 1f);
-        public float BaseScale = 0.88f;
-        public float MinScale = 0.15f;
-        public float MaxScale = 0.32f;
+        public float BaseScale;
+        public float MinScale;
+        public float MaxScale;
+        public float ScaleOffset;
 
         private Action setMonitorInputActive;
         private Action setMonitorInputInactive;

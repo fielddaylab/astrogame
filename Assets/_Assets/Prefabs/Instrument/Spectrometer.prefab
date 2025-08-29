@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 736558000995782876}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.70710677, z: -0, w: 0.70710677}
-  m_LocalPosition: {x: 0.83900005, y: -0.08100015, z: -0.156}
+  m_LocalPosition: {x: 0.839, y: -0.08100015, z: 0.002}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -176,7 +176,7 @@ MonoBehaviour:
   - {fileID: 4394267625158328336}
   m_MatIndex: 0
   SwapSpeed: 1
-  m_InitMat: {fileID: 2100000, guid: 2f75848563b72cb45877dc22eb77cec5, type: 2}
+  m_InitMat: {fileID: 2100000, guid: 28bc3153c212b964a89a8f87cad299fa, type: 2}
   m_UnlockMat: {fileID: 2100000, guid: 17d9da1e192b3c948b74a691682fc3ca, type: 2}
 --- !u!114 &1466819941318455010
 MonoBehaviour:
@@ -264,7 +264,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Target: {fileID: 8249933874315370666}
   m_Renderers:
-  - {fileID: 4575102160552859525}
   - {fileID: 1807892862274751739}
   m_InitVal: 0
   m_SetTo: 1
@@ -359,7 +358,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -8330174609607452025, guid: d20834c64a4d78e48be698eb58cd78fa, type: 2}
+  - {fileID: -3786839852601790091, guid: 7a86051f64033ff42ad70379be3bfebf, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -700,7 +699,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 4623248114087566175, guid: f7e2ff335571d814bbe4ec84a132a2e7, type: 3}
+  - {fileID: 2100000, guid: 175e59bb04fa5ba4680c1c551d5bdf3b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -809,7 +808,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8922830604844952434
 Transform:
   m_ObjectHideFlags: 0
@@ -1057,10 +1056,10 @@ MeshRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7986772230182818360}
   m_Enabled: 1
-  m_CastShadows: 0
+  m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
+  m_StaticShadowCaster: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1

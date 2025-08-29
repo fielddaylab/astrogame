@@ -218,7 +218,6 @@ $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 650)
 {@Radio}	We need to identify the spectral types of these stars to inform our analysis. You should be able to get an approximate categorization using temperature.	$[level2/radio_lady/l2_r_04]
 {@Radio}	To calculate the temperature, you need to measure magnitude in Blue and Visible filters. 	$[level2/radio_lady/l2_r_05]
 {@Radio}	The color index will let us estimate the temperature.	$[level2/radio_lady/l2_r_06]
-{@Radio}	The hotter the star, the bluer its color, just like a flame. 	$[level2/radio_lady/l2_r_07]
 {@Radio}	Start by selecting a star on your telescope monitor.	$[level2/radio_lady/l2_r_08]
 $start .FirstStarHint
 
@@ -317,7 +316,6 @@ $wait 4
 $call StopOpenMode()
 $call SetInputState(true)
 $call SetChannelActive(Unlocks_Active, true)
-$call SetChannelActive(Unlocks_Inactive, false)
 $set temp:radioChannelTuned = false
 $call SetStickyFirstPage(7)
 
@@ -349,7 +347,6 @@ $call LockMonitorFocus()
 $call MonitorUI->PlayRadioDownload(2)
 $call ConsoleCommandLine->PlayConsoleTextAndWait("UpgradeSystem")
 $call SetChannelActive(Unlocks_Active, false)
-$call SetChannelActive(Unlocks_Inactive, true)
 $call SetRadioFrequency(137)
 $call MonitorUI->ShowCERESLogo()
 $call MonitorUI->CERESLogoToCorner(0.5)
@@ -435,12 +432,16 @@ $call MonitorUI->ShowElement("CeresMsg")
 $wait 1
 $call SetRadioFrequency(137)
 $call MonitorUI->HideElement("CeresMsg")
+$goto .PuzzleNavigationComplete01
+
+:: PuzzleNavigationComplete01
+@cutscene
+
 $wait 1
-
-
 {@Dad}	Station 12, this is CERES HQ. Nice work today. $[level2/Dad/l2_d_01]
 {@Astrid}	Dad, I'm so glad you called. I'm freaking out. I think I know what Elijah is working on!	$[level2/Astrid/l2_a_25]
-{@Dad}	Whoa, Astrid, didn't you get my letter? This channel is—	$[level2/Dad/l2_d_02]
+{@Dad}	{vox-overlap -0.5} Whoa, Astrid, didn't you get my letter? This channel is—	$[level2/Dad/l2_d_02]
+
 {@Astrid}	I know, but just listen! Elijah said something about a satellite. It has data from before the Collapse!	$[level2/Astrid/l2_a_26]
 {@Dad}	Oh, Astrid. The Gorynich satellite is just a wild goose chase. 	$[level2/Dad/l2_d_03]
 {@Dad}	Or... a wild dragon chase, I guess. 	$[level2/Dad/l2_d_04]
@@ -458,6 +459,7 @@ $wait 1
 {@Dad}	Even if you solve all the puzzles, it probably won't work. 	$[level2/Dad/l2_d_12]
 {@Astrid}	Elijah thinks it'll work. 	$[level2/Astrid/l2_a_31]
 {@Dad}	Elijah is obsessed with this thing! It's not healthy. I don't—	$[level2/Dad/l2_d_13]
+$call PlayRadioAlert()
 {@Monitor}	Station 12 and CERES HQ, you have been flagged non-compliant by the Recovery Board. You will lose access to this frequency upon any further violations.	$[level2/monitor/l2_m_01]
 {@Monitor}	I advise that you review communication protocols if you want to avoid termination. 	$[level2/monitor/l2_m_02]
 {@Astrid}	Whoa. Dad, are you there? 	$[level2/Astrid/l2_a_32]

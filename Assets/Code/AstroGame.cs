@@ -120,6 +120,10 @@ namespace Astro {
 
         [InvokeOnBoot]
         static private void OnBoot() {
+            GameLoop.OnPreUpdate.Register(() => {
+                Physics.SyncTransforms();
+            });
+
             Scenes.OnMainSceneLateEnable.Register(() => {
                 ScriptUtility.Invoke("ScenePreload");
             });

@@ -81,6 +81,20 @@ namespace FieldDay.Data {
         /// <summary>
         /// Writes the given array into the buffer.
         /// </summary>
+        public unsafe void WriteBuffer(byte* ptr, int count) {
+            if ((Written + count) > Capacity) {
+                throw new InsufficientMemoryException();
+            }
+
+            Unsafe.FastCopy(ptr, count, Head);
+
+            Head += count;
+            Written += count;
+        }
+
+        /// <summary>
+        /// Writes the given array into the buffer.
+        /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public unsafe void WriteBuffer<T>(UnsafeSpan<T> array) where T : unmanaged {
             WriteBuffer(array.Ptr, array.Length);
@@ -224,9 +238,44 @@ namespace FieldDay.Data {
         /// <summary>
         /// Copies data from the buffer into another buffer.
         /// </summary>
+        public unsafe void ReadBuffer(byte* ptr, int count) {
+            if (Remaining < count) {
+                throw new InsufficientMemoryException();
+            }
+
+            Unsafe.FastCopy(Head, count, ptr);
+            Head += count;
+            Remaining -= count;
+        }
+
+        /// <summary>
+        /// Copies data from the buffer into another buffer.
+        /// </summary>
+        public unsafe int FillBuffer(byte* ptr, int count) {
+            int totalCount = Math.Min(count, Remaining);
+            if (totalCount > 0) {
+                Unsafe.FastCopy(Head, totalCount, ptr);
+                Head += totalCount;
+                Remaining -= totalCount;
+            }
+            return totalCount;
+        }
+
+        /// <summary>
+        /// Copies data from the buffer into another buffer.
+        /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public unsafe void ReadBuffer<T>(UnsafeSpan<T> array) where T : unmanaged {
             ReadBuffer(array.Ptr, array.Length);
+        }
+
+        /// <summary>
+        /// Copies data from the buffer into another buffer.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public unsafe UnsafeSpan<byte> FillBuffer(UnsafeSpan<byte> array) {
+            int count = FillBuffer(array.Ptr, array.Length);
+            return new UnsafeSpan<byte>(array.Ptr, count);
         }
 
         /// <summary>
@@ -243,6 +292,21 @@ namespace FieldDay.Data {
             }
             Head += size;
             Remaining -= size;
+        }
+
+        /// <summary>
+        /// Copies data from the buffer into an array.
+        /// </summary>
+        public unsafe int FillBuffer(byte[] array) {
+            int totalCount = Math.Min(Remaining, array.Length);
+            if (totalCount > 0) {
+                fixed (byte* ptr = array) {
+                    Unsafe.FastCopy(Head, totalCount, ptr);
+                }
+                Head += totalCount;
+                Remaining -= totalCount;
+            }
+            return totalCount;
         }
 
         /// <summary>

@@ -25,6 +25,7 @@ $call SetRefPageActive("ConstellationLeoCompleted", false)
 $call SetRefPageActive("ConstellationDracoCompleted", false)
 $call SetRefPageActive("ConstellationAndromedaCompleted", false)
 $call SetRadioFrequency(137, true)
+$call SetRadioDialLocked(true)
 $call SetChannelActive(Unlocks_Active, false)
 $call MonitorPower->Deactivate()
 $call ChapterTitles->PrepareTransition()
@@ -199,14 +200,36 @@ $call SetInputState(true)
 
 :: NeutrinoNavigationComplete
 @trigger    NeutrinoNavigationComplete
+@cutscene
 @once
 
 $call SetStickyFirstPage(2)
 $call StopNeutrinoNavigation()
 $call StartOpenMode()
+$call SetInputState(false)
 {@Radio}	That spectrometer allows you to read the elemental fingerprint of a star. 	$[level3/radio_lady/l3_r_03]
 {@Radio}	That can give you a more precise spectral type... but for now we just need the <b>elements</b>.	$[level3/radio_lady/l3_r_04]
 {@Astrid}	Just the elements of the star, got it.	$[level3/Astrid/l3_a_34]
+$call ConsoleCommandLine->PlayConsoleTextAndWait("LoadHistData")
+$wait 2
+{@Radio} Whoa. $[level3/radio_lady/l3_r_05]
+{@Radio} What is all this? $[level3/radio_lady/l3_r_06]
+{@Astrid} Hey, are you still talking to me? $[level3/Astrid/l3_a_35]
+{@Radio} Please stand by. $[level3/radio_lady/l3_r_07]
+{@Radio} This is... this is incredible! Are you seeing this? $[level3/radio_lady/l3_r_08]
+{@Radio} Copy that. We're seeing data come through.... yeah a ton of it... Stars, supernovas... neutrino emissions... anomolies... $[level3/radio_lady/l3_r_09]
+{@Radio} It's some kind of historical data packet. I can't believe it. A portion of the Gorynich satellite is online! $[level3/radio_lady/l3_r_10]
+{@Astrid} Whoa. Unlocking the last puzzle actually worked. $[level3/Astrid/l3_a_36]
+{@Astrid} Dad is going to absolutely freak out. $[level3/Astrid/l3_a_37]
+$call ConsoleCommandLine->HideConsole()
+{@Radio} Station 12, come in. Sorry for the delay. $[level3/radio_lady/l3_r_11]
+{@Astrid} Uh, no problem. Any updates, or...? $[level3/Astrid/l3_a_38]
+{@Radio} Um... if you could stand by while I look this over. Can you work on identifying the elements in the Orion constellation while I sort this out?
+{@Astrid} Sure...
+{@Radio} ...yeah come check this out...
+$call SetRadioDialLocked(false)
+$call SetChannelActive(IceCube, false)
+$call SetInputState(true)
 
 :: ClearanceUpgrade
 @trigger    PointsUpdated
@@ -219,19 +242,32 @@ $call SetRefGuideActive(false)
 $wait 4
 
 $call StopOpenMode()
-$call SetInputState(true)
 $call SetChannelActive(Unlocks_Active, true)
-$call SetChannelActive(Unlocks_Inactive, false)
 $set temp:radioChannelTuned = false
 $call SetStickyFirstPage(7)
 
-{@Astrid}	I'll bet I am ready for a clearance upgrade. The CERES channels are in my reference guide.	$[level2/Astrid/l2_a_22]
+$call MonitorUI->ShowElement("CeresMsg")
+$wait 1
+$call SetRadioFrequency(137)
+$call MonitorUI->HideElement("CeresMsg")
+$wait 1
+{@Radio}	Astrid, come in, are you there? 	
+{@Astrid}	Hey! Yeah, I'm here. What happened?	
+{@Radio}	Well, long story, but it looks like the parallax module is working again and you will have access to historical data. 	
+{@Radio}	So.... You have been cleared to use the parallax module
+{@Radio}	This will allow you to measure parallax, so that you can determine the distance of stars from Earth.	$[level3/radio_lady/l3_r_13]
+{@Astrid}	Sick. Anything else? Like... maybe any data on a giant meteor storm later this year? 	$[level3/Astrid/l3_a_40]
+{@Radio}	I fail to understand how that's relevant.	$[level3/radio_lady/l3_r_14]
+{@Astrid}	Never mind.	$[level3/Astrid/l3_a_41]
+{@Astrid}	Hey, if you run into my dad... would you mind telling him "I told you so" for me? 	$[level3/Astrid/l3_a_42]
+{@Radio}	Copy that. Good work today, Station 12. 	$[level3/radio_lady/l3_r_15]
+$call SetInputState(true)
 $start .UpgradeReminder
 
 :: UpgradeReminder
 $wait 15
 $if !temp:radioChannelTuned
-    {@Astrid}	I'll bet I am ready for a clearance upgrade. The CERES channels are in my reference guide.	$[level2/Astrid/l2_a_22(1)]
+    {@Astrid}	I'll bet I am ready for a clearance upgrade. The CERES channels are in my reference guide.	$[level2/Astrid/l2_a_22]
     $branch .UpgradeReminder
 $endif
 
@@ -252,23 +288,8 @@ $call LockMonitorFocus()
 $call MonitorUI->PlayRadioDownload(2)
 $call ConsoleCommandLine->PlayConsoleTextAndWait("UpgradeSystem")
 $wait 1
-$call SetInstrumentUnlocked(HistoricalDataInstrument, true)
-
-$call ConsoleCommandLine->PlayConsoleTextAndWait("LoadHistData")
-$call SetRadioFrequency(137)
-{@Radio}	Whoa. Hold on. 	$[level3/radio_lady/l3_r_05]
-{@Radio}	What is all this? 	$[level3/radio_lady/l3_r_06]
-{@Astrid}	Hey... um, are you still talking to me? 	$[level3/Astrid/l3_a_35]
-{@Radio}	Please stand by. 	$[level3/radio_lady/l3_r_07]
-{@Radio}	This is... this is incredible! Are you seeing this?	$[level3/radio_lady/l3_r_08]
-$wait 1
-{@Radio}	Copy that. We're seeing data come through.... yeah a ton of it... Stars, supernovas... neutrino emissions... anomolies...	$[level3/radio_lady/l3_r_09]
-{@Radio}	It's some kind of historical data packet. I can't believe it. A portion of the Gorynich satellite is online!	$[level3/radio_lady/l3_r_10]
-{@Astrid}	Whoa. Unlocking of the last puzzle actually worked. 	$[level3/Astrid/l3_a_36]
-{@Astrid}	Dad is going to absolutely freak out. 	$[level3/Astrid/l3_a_37]
 
 $call SetChannelActive(Unlocks_Active, false)
-$call SetChannelActive(Unlocks_Inactive, true)
 $call SetRadioFrequency(137)
 $call MonitorUI->ShowCERESLogo()
 $call MonitorUI->CERESLogoToCorner(0.5)
@@ -276,18 +297,13 @@ $wait 1
 $call SetInputState(true)
 
 $call ConsoleCommandLine->PlayConsoleText("Day3UpgradeSystem")
+{@Astrid} Yes! We're halfway there, Elijah. Part of the satellite is already online! $[level3/Astrid/l3_a_43]
 $call OpenRefGuidePage("HistoricalData")
+{@Astrid} Guess we're still good together... even if we're not technically together. 	$[level3/Astrid/l3_a_44]
+{@Astrid} Ugh. This long distance stuff is giving me a headache. $[level3/Astrid/l3_a_45]
 
 $call SetInstrumentUnlocked(InfraredWavelength, true)
-{@Radio}	Station 12, come in. Sorry for the delay.	$[level3/radio_lady/l3_r_11]
-{@Astrid}	Uh, no problem. Any updates, or...? 	$[level3/Astrid/l3_a_38]
-{@Radio}	Yes. You have been cleared to use the parallax module	$[level3/radio_lady/l3_r_12]
-{@Radio}	This will allow you to measure parallax, so that you can determine the distance of stars from Earth.	$[level3/radio_lady/l3_r_13]
-{@Astrid} Sick. Anything else? Like... maybe any data on a giant meteor storm later this year? $[level3/Astrid/l3_a_40]
-{@Radio} I fail to understand how that's relevant.	$[level3/radio_lady/l3_r_14]
-{@Astrid} Never mind. $[level3/Astrid/l3_a_41]
-{@Astrid} Hey, if you run into my dad... would you mind telling him "I told you so" for me? $[level3/Astrid/l3_a_42]
-{@Radio} Copy that. Good work today, Station 12. $[level3/radio_lady/l3_r_15]
+$call SetInstrumentUnlocked(HistoricalDataInstrument, true)
 
 $call ConsoleCommandLine->HideConsole()
 $wait 0.1
@@ -388,7 +404,7 @@ $call TapeDeck->SetTapeActive(true)
 {@Elijah}	That means we'll have unmonitored stations. We'll be able to talk whenever we want! 	$[level3/Elijah/l3_e_04]
 {@Elijah}	Right now, as I'm recording this, it all seems impossible. 	$[level3/Elijah/l3_e_05]
 {@Elijah}	But if anyone can do the impossible, you can. 	$[level3/Elijah/l3_e_06]
-{@Elijah}	(sighs) I wish I could stay here. 	$[level3/Elijah/l3_e_07]
+{@Elijah}	(*sighs*) I wish I could stay here. 	$[level3/Elijah/l3_e_07]
 {@Elijah}	I promise, I'll come back as soon as I can.	$[level3/Elijah/l3_e_08]
 		
 $call ConsoleCommandLine->HideConsole()

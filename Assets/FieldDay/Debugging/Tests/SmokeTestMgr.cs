@@ -2,8 +2,6 @@
 #define DEVELOPMENT
 #endif // UNITY_EDITOR || DEVELOPMENT_BUILD
 
-#define FIELD_DAY_TESTS
-
 using BeauRoutine;
 using BeauUtil;
 using BeauUtil.Debugger;

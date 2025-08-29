@@ -119,8 +119,8 @@ namespace Astro {
 
             hds.SendingAbsMag = absMag;
             hds.KnobRoutine.Replace(hds, SlideRoutine(hds));
-            hds.KnobRoutine.OnStop(() => { SwapParallaxToggleDisplay(hds); } );
-            hds.KnobRoutine.OnComplete(() => { SwapParallaxToggleDisplay(hds); } );
+            hds.KnobRoutine.OnStop(() => { SwapParallaxToggleDisplay(hds, absMag); } );
+            hds.KnobRoutine.OnComplete(() => { SwapParallaxToggleDisplay(hds, absMag); } );
             PhotometerUtility.TogglePhotometerMode(absMag, hds.ConnectedPhotometer);
             if (playSfx) {
                 Sfx.PlayDetached("Oneshot.LabButtonC.Click", hds.ModeSwitch);
@@ -137,12 +137,8 @@ namespace Astro {
             yield return null;
         }
 
-        private static void SwapParallaxToggleDisplay(HistoricalDataState hds) {
-            Material top = hds.InstrumentMesh.materials[3]; // Top display on Parallax instrument
-            Material bottom = hds.InstrumentMesh.materials[2]; // Bottom display on Parallax instrument
-
-            hds.InstrumentMesh.SetSharedMaterialAtIndex(2, top);
-            hds.InstrumentMesh.SetSharedMaterialAtIndex(3, bottom);
+        private static void SwapParallaxToggleDisplay(HistoricalDataState hds, bool active) {
+            hds.InstrumentMesh.SetSharedMaterialAtIndex(2, active ? hds.BottomPanelEnabledMaterial : hds.BottomPanelDisabledMaterial);
         }
     }
 }

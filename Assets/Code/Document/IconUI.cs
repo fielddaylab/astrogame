@@ -1,8 +1,9 @@
 using UnityEngine;
 using FieldDay.Components;
+using UnityEngine.EventSystems;
 
 namespace Astro {
-    public class IconUI : BatchedComponent {
+    public class IconUI : BatchedComponent, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler {
         public MeshRenderer Renderer;
         public Collider Collider;
 
@@ -11,8 +12,16 @@ namespace Astro {
 
         [HideInInspector] public bool IsHighlighted = false;
 
-        void OnMouseEnter() { IsHighlighted = true; }
-        void OnMouseExit() { IsHighlighted = false; }
-        void OnMouseDown() { IsHighlighted = false; }
+        void IPointerEnterHandler.OnPointerEnter(PointerEventData eventData) {
+            IsHighlighted = true;
+        }
+
+        public void OnPointerExit(PointerEventData eventData) {
+            IsHighlighted = false;
+        }
+
+        void IPointerDownHandler.OnPointerDown(PointerEventData eventData) {
+            IsHighlighted = false;
+        }
     }
 }

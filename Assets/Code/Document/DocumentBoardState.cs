@@ -12,6 +12,7 @@ using Leaf.Runtime;
 using FieldDay.Assets;
 using FieldDay.Scripting;
 using FieldDay.SharedState;
+using FieldDay.Audio;
 
 namespace Astro {
     public sealed class DocumentBoardState : SharedStateComponent {
@@ -25,6 +26,9 @@ namespace Astro {
         [NonSerialized] public DocumentInteractable DocZoomed;
         [NonSerialized] public Routine SpawnDocumentToCamera;
         [NonSerialized] public RingBuffer<Routine> DocumentLoadQueue = new RingBuffer<Routine>();
+
+        [NonSerialized] public Routine DocumentReturnToBoard;
+        [NonSerialized] public Routine DocumentBringToCam;
 
         public Transform DocumentParent;
         public Rect DraggableBounds;
@@ -174,18 +178,22 @@ namespace Astro {
             Vector3 docExtents = new Vector3(doc.Size.width / 2, doc.Size.height / 2, 1);
             var position = doc.transform.position + new Vector3(0f, doc.Size.y, 0f);
 
-            var hits = Physics.OverlapBox(position, docExtents, doc.transform.rotation, LayerMasks.DocumentInteract_Mask);
-            for (int i = 0; i < hits.Length; i++) {
-                var currPart = hits[i].GetComponent<DocumentPart>();
+            var hits = Physics.OverlapBoxNonAlloc(position, docExtents, s_BoxOverlapWorkArray, doc.transform.rotation, LayerMasks.DocumentInteract_Mask);
+            for (int i = 0; i < hits; i++) {
+                var currPart = s_BoxOverlapWorkArray[i].GetComponent<DocumentPart>();
                 var currRenderer = currPart ? currPart.Document.Renderer : null;
                 if (currRenderer && !currRenderer.Interactable.AssetName.Equals(doc.Interactable.AssetName)) {
                     hit = currRenderer;
+                    Array.Clear(s_BoxOverlapWorkArray, 0, hits);
                     return true;
                 }
             }
 
+            Array.Clear(s_BoxOverlapWorkArray, 0, hits);
             return false;
         }
+
+        static private Collider[] s_BoxOverlapWorkArray = new Collider[16];
 
         #endregion // Spawning
 
@@ -221,7 +229,7 @@ namespace Astro {
                         break;
                     }
                 case DocPartFunction.Close: {
-                        ReturnDocToBoard(docPart.Document, state);
+                        state.DocumentReturnToBoard.Replace(ReturnDocToBoard(docPart.Document, state));
                         break;
                     }
                 case DocPartFunction.Flip: {
@@ -275,10 +283,10 @@ namespace Astro {
 
             if (state.DocZoomed) {
                 // Return doc to board
-                ReturnDocToBoard(doc, state);
+                state.DocumentReturnToBoard.Replace(ReturnDocToBoard(doc, state));
             } else {
                 // Bring doc to camera
-                BringDocToCam(doc, state);
+                state.DocumentBringToCam.Replace(BringDocToCam(doc, state));
             }
 
             state.InteractedThisFrame = true;
@@ -311,10 +319,10 @@ namespace Astro {
 
             if (doc == null) Debug.LogWarningFormat("[DocumentBoardState > ReturnDocToBoard] failed to find document {0}", docId.ToDebugString());
 
-            ReturnDocToBoard(doc.Interactable, state); 
+            state.DocumentReturnToBoard.Replace(ReturnDocToBoard(doc.Interactable, state));
         }
 
-        private static void ReturnDocToBoard(DocumentInteractable doc, DocumentBoardState state) {
+        private static IEnumerator ReturnDocToBoard(DocumentInteractable doc, DocumentBoardState state) {
             // Reveal the Pin object if we have one
             Transform pin = doc.transform.Find("Pin");
             if (pin != null) pin.gameObject.SetActive(true);
@@ -342,6 +350,8 @@ namespace Astro {
                 table.Set("documentId", doc.AssetName);
                 ScriptUtility.Trigger(ScriptEvents.DocumentInspectEnd, table);
             }
+
+            yield return null;
         }
 
         [LeafMember("BringDocToCam")]
@@ -351,10 +361,19 @@ namespace Astro {
 
             if (doc == null) Debug.LogWarningFormat("[DocumentBoardState > BringDocToCam] failed to find document {0}", docId.ToDebugString());
 
-            BringDocToCam(doc.Interactable, state); 
+            state.DocumentBringToCam.Replace(BringDocToCam(doc.Interactable, state)); 
         }
 
-        private static void BringDocToCam(DocumentInteractable doc, DocumentBoardState state) {
+        private static IEnumerator BringDocToCam(DocumentInteractable doc, DocumentBoardState state) {
+            // only allow one document at the camera at once
+            if (state.DocZoomed != null) {
+                state.DocumentReturnToBoard.Replace(ReturnDocToBoard(state.DocZoomed, state));
+                // wait for other document to return to board
+                while (state.SpawnDocumentToCamera.Exists() || state.DocumentReturnToBoard.Exists()) {
+                    yield return null;
+                }
+            }
+
             // Hide the Pin object if we have one
             Transform pin = doc.transform.Find("Pin");
             if (pin != null) pin.gameObject.SetActive(false);
@@ -388,6 +407,8 @@ namespace Astro {
             SetInteractionLayer(state.DocZoomed, LayerMasks.TopLayer_Index);
             // disallow selecting other documents while this loads
             InputUtility.SetClickableMaskTopLayer(Find.State<InputState>());
+
+            yield return null;
         }
 
         public static void OverrideStoredDocPos(DocumentInteractable doc, Vector3 newPos, DocumentBoardState state = null) {
@@ -471,6 +492,7 @@ namespace Astro {
                 yield return null;
             }
             var newOffset = cam.TransformVector(offset);
+            PlayLiftSound(doc.GetComponent<DocumentRenderer>());
             yield return Routine.Combine(
                 doc.MoveTo(cam.position + newOffset, 0.5f).Ease(Curve.QuartInOut),
                 doc.RotateTo(cam, 0.3f));
@@ -478,6 +500,7 @@ namespace Astro {
         }
         
         private static IEnumerator MoveDocToPos(Transform doc, Vector3 pos) {
+            PlayDropSound(doc.GetComponent<DocumentRenderer>());
             yield return Routine.Combine(
                 doc.MoveTo(pos, 0.5f).Ease(Curve.QuartInOut),
                 doc.RotateTo(0f, 0.3f, Axis.XYZ, Space.Self));
@@ -490,7 +513,9 @@ namespace Astro {
                 doc.transform.MoveTo(doc.transform.localPosition.z + lift, 0.2f, Axis.Z, Space.Self).Ease(Curve.CubeIn).ForceOnCancel(),
                 doc.BodyRoot.MoveTo(doc.BodyRoot.localPosition.y - 0.1f, 0.2f, Axis.Y, Space.Self).Ease(Curve.CubeIn).ForceOnCancel()
             );
+
             // Flip it
+            PlayFlipSound(doc.GetComponent<DocumentRenderer>());
             yield return doc.BodyRoot.RotateTo(doc.BodyRoot.localRotation.y + angle, 0.3f, Axis.Y, Space.Self, AngleMode.Absolute).Ease(Curve.SineInOut).ForceOnCancel();
             
             // Put document back
@@ -503,5 +528,32 @@ namespace Astro {
 
         #endregion // routines
 
+        #region Sfx
+
+        static public void PlayLiftSound(DocumentRenderer doc) {
+            if (doc.Thickness == DocumentThickness.Thick) {
+                Sfx.Play("Oneshot.Document.Thick.Lift", doc.transform);
+            } else {
+                Sfx.Play("Oneshot.Document.Thin.Lift", doc.transform);
+            }
+        }
+
+        static public void PlayFlipSound(DocumentRenderer doc) {
+            if (doc.Thickness == DocumentThickness.Thick) {
+                Sfx.Play("Oneshot.Document.Thick.Flip", doc.transform);
+            } else {
+                Sfx.Play("Oneshot.Document.Thin.Flip", doc.transform);
+            }
+        }
+
+        static public void PlayDropSound(DocumentRenderer doc) {
+            if (doc.Thickness == DocumentThickness.Thick) {
+                Sfx.Play("Oneshot.Document.Thick.Drop", doc.transform);
+            } else {
+                Sfx.Play("Oneshot.Document.Thin.Drop", doc.transform);
+            }
+        }
+
+        #endregion // Sfx
     }
 }

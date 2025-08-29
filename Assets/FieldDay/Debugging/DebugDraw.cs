@@ -18,8 +18,6 @@ using System.Text;
 using System.Collections;
 using System.Collections.Generic;
 
-
-
 #if UNITY_EDITOR
 using UnityEditor;
 #endif // UNITY_EDITOR
@@ -91,6 +89,20 @@ namespace FieldDay.Debugging {
             public DebugTextStyle Style;
         }
 
+        private struct ImageRenderState {
+            public DrawParams Params;
+            public DrawState State;
+
+            public Vector3 Position;
+            public Vector2 Offset;
+            public bool WorldSpace;
+            public Texture Texture;
+            public Vector2 TextureSize;
+            public DebugString Text;
+            public TextAnchor Alignment;
+            public DebugTextStyle Style;
+        }
+
         [DefaultSorter(typeof(GroupedTextRenderState.Sorter))]
         private struct GroupedTextRenderState {
             public ulong Index;
@@ -123,6 +135,8 @@ namespace FieldDay.Debugging {
                 Buffer = null;
                 Length = constString.Length;
             }
+
+            static public readonly DebugString Empty = new DebugString(string.Empty);
         }
 
         private sealed class DebugStringBuffer {
@@ -221,7 +235,10 @@ namespace FieldDay.Debugging {
         [NonSerialized] private MeshData16<DebugVertexFormat> m_OverlayMeshData;
         [NonSerialized] private GUIStyle m_TextStylePlain;
         [NonSerialized] private GUIStyle m_TextStyleBox;
+        [NonSerialized] private GUIStyle m_ImageStylePlain;
+        [NonSerialized] private GUIStyle m_ImageStyleBox;
         [NonSerialized] private GUIContent m_TextContent;
+        [NonSerialized] private GUIContent m_ImageContent;
         [NonSerialized] private float m_SphereMeshDefaultRadius;
         [NonSerialized] private float m_CubeMeshDefaultSize;
         [NonSerialized] private MaterialPropertyBlock m_TempMaterialPropertyBlock;
@@ -230,9 +247,10 @@ namespace FieldDay.Debugging {
         static private RingBuffer<Vector3x2RenderState> s_ActiveBoxes = new RingBuffer<Vector3x2RenderState>();
         static private RingBuffer<SphereRenderState> s_ActiveSpheres = new RingBuffer<SphereRenderState>();
         static private RingBuffer<TextRenderState> s_ActiveTexts = new RingBuffer<TextRenderState>();
+        static private RingBuffer<ImageRenderState> s_ActiveImages = new RingBuffer<ImageRenderState>();
         static private RingBuffer<GroupedTextRenderState> s_ActiveLogTexts = new RingBuffer<GroupedTextRenderState>();
 
-        static private DebugStringBufferBuckets s_DebugStringPools = new DebugStringBufferBuckets(64, 16, 4);
+        static private DebugStringBufferBuckets s_DebugStringPools = new DebugStringBufferBuckets(32, 16, 4);
         static private readonly StringBuilder s_GroupedTextBuilder = new StringBuilder(2048);
 
         [NonSerialized] static private BitSet64 s_CategoryMask = new BitSet64();
@@ -277,7 +295,7 @@ namespace FieldDay.Debugging {
             }
 
 #if UNITY_EDITOR
-            SceneView.duringSceneGui += OnSceneGUI;            
+            SceneView.duringSceneGui += OnSceneGUI;
 #endif // UNITY_EDITOR
         }
 
@@ -355,6 +373,7 @@ namespace FieldDay.Debugging {
             if (mainCam) {
                 RenderText(deltaTime, s_ActiveTexts, mainCam, s_CategoryMask, !s_PauseAll);
                 RenderGroupedText(deltaTime, s_ActiveLogTexts, m_LogGroup, !s_PauseAll);
+                RenderImages(deltaTime, s_ActiveImages, mainCam, s_CategoryMask, !s_PauseAll);
             } else {
                 DecayText(deltaTime); 
             }
@@ -378,6 +397,7 @@ namespace FieldDay.Debugging {
             EnsureGUIResources();
             RenderText(0, s_ActiveTexts, view.camera, s_CategoryMask, !s_PauseAll);
             RenderGroupedText(0, s_ActiveLogTexts, m_LogGroup, !s_PauseAll);
+            RenderImages(0, s_ActiveImages, view.camera, s_CategoryMask, !s_PauseAll);
 
             Handles.EndGUI();
         }
@@ -411,7 +431,16 @@ namespace FieldDay.Debugging {
                 m_TextStyleBox.normal.background = Texture2D.whiteTexture;
                 m_TextStyleBox.padding = new RectOffset(8, 8, 4, 4);
 
+                m_ImageStylePlain = new GUIStyle(m_TextStylePlain);
+                m_ImageStylePlain.imagePosition = ImagePosition.ImageAbove;
+                
+                m_ImageStyleBox = new GUIStyle(m_ImageStylePlain);
+                m_ImageStyleBox.normal.background = Texture2D.whiteTexture;
+                m_ImageStyleBox.padding = new RectOffset(8, 8, 4, 4);
+                m_ImageStyleBox.margin = new RectOffset(0, 0, 4, 4);
+
                 m_TextContent = new GUIContent();
+                m_ImageContent = new GUIContent();
                 m_InitializedResources = true;
             }
         }
@@ -421,13 +450,13 @@ namespace FieldDay.Debugging {
         }
 
         static private DebugString AllocDebugString(string source) {
-            return new DebugString(source);
+            return !string.IsNullOrEmpty(source) ? new DebugString(source) : DebugString.Empty;
         }
 
         static private DebugString AllocDebugString(StringBuilder builder) {
             int len = builder.Length;
             if (len <= 0) {
-                return new DebugString(string.Empty);
+                return DebugString.Empty;
             }
 
             DebugStringBuffer buff = s_DebugStringPools.Alloc(len);
@@ -737,6 +766,113 @@ namespace FieldDay.Debugging {
             }
         }
 
+        private void RenderImages(float deltaTime, RingBuffer<ImageRenderState> buffer, Camera camera, BitSet64 mask, bool allowRendering) {
+            if (!allowRendering && deltaTime <= 0) {
+                return;
+            }
+
+            int screenW = Screen.width, screenH = Screen.height;
+            for (int i = buffer.Count - 1; i >= 0; i--) {
+                ref ImageRenderState state = ref buffer[i];
+
+                if (allowRendering && (state.Params.Category < 0 || mask.IsSet(state.Params.Category))) {
+                    Vector2 targetPoint;
+
+                    if (state.WorldSpace) {
+                        targetPoint = camera.WorldToScreenPoint(state.Position);
+                    } else {
+                        targetPoint = new Vector2(state.Position.x * screenW, state.Position.y * screenH);
+                    }
+
+                    targetPoint.y = screenH - targetPoint.y;
+                    targetPoint.x += state.Offset.x;
+                    targetPoint.y -= state.Offset.y;
+
+                    GUIStyle style;
+                    switch (state.Style) {
+                        case DebugTextStyle.BackgroundDark: {
+                            style = m_ImageStyleBox;
+                            GUI.backgroundColor = Color.black.WithAlpha(0.7f);
+                            break;
+                        }
+                        case DebugTextStyle.BackgroundDarkOpaque: {
+                            style = m_ImageStyleBox;
+                            GUI.backgroundColor = Color.black;
+                            break;
+                        }
+                        case DebugTextStyle.BackgroundLight: {
+                            style = m_ImageStyleBox;
+                            GUI.backgroundColor = Color.white.WithAlpha(0.7f);
+                            break;
+                        }
+                        case DebugTextStyle.BackgroundLightOpaque: {
+                            style = m_ImageStyleBox;
+                            GUI.backgroundColor = Color.white;
+                            break;
+                        }
+                        default: {
+                            style = m_ImageStylePlain;
+                            break;
+                        }
+                    }
+
+                    style.alignment = state.Alignment;
+                    style.fixedWidth = state.TextureSize.x;
+                    style.fixedHeight = state.TextureSize.y;
+
+                    m_ImageContent.image = state.Texture;
+                    m_ImageContent.text = state.Text.String;
+
+                    Vector2 size = style.CalcSize(m_ImageContent);
+
+                    switch (state.Alignment) {
+                        case TextAnchor.UpperCenter:
+                        case TextAnchor.MiddleCenter:
+                        case TextAnchor.LowerCenter: {
+                            targetPoint.x -= size.x / 2;
+                            break;
+                        }
+
+                        case TextAnchor.UpperRight:
+                        case TextAnchor.MiddleRight:
+                        case TextAnchor.LowerRight: {
+                            targetPoint.x -= size.x;
+                            break;
+                        }
+                    }
+
+                    switch (state.Alignment) {
+                        case TextAnchor.MiddleLeft:
+                        case TextAnchor.MiddleCenter:
+                        case TextAnchor.MiddleRight: {
+                            targetPoint.y -= size.y / 2;
+                            break;
+                        }
+
+                        case TextAnchor.LowerLeft:
+                        case TextAnchor.LowerCenter:
+                        case TextAnchor.LowerRight: {
+                            targetPoint.y -= size.y;
+                            break;
+                        }
+                    }
+
+                    GUI.contentColor = state.Params.Color;
+                    GUI.Label(new Rect((int)targetPoint.x, (int)targetPoint.y, (int)size.x, (int)size.y), m_ImageContent, style);
+                }
+
+                m_ImageContent.image = null;
+
+                if (deltaTime > 0) {
+                    state.State.Duration -= deltaTime;
+                    if (state.State.Duration <= 0) {
+                        TryFreeDebugString(state.Text);
+                        buffer.FastRemoveAt(i);
+                    }
+                }
+            }
+        }
+
         static private void DecayText(float deltaTime) {
             if (deltaTime <= 0) {
                 return;
@@ -744,6 +880,7 @@ namespace FieldDay.Debugging {
 
             DecayTextForBuffer(deltaTime, s_ActiveTexts);
             DecayTextForBuffer(deltaTime, s_ActiveLogTexts);
+            DecayTextForBuffer(deltaTime, s_ActiveImages);
         }
 
         static private void DecayTextForBuffer(float deltaTime, RingBuffer<TextRenderState> buffer) {
@@ -777,11 +914,32 @@ namespace FieldDay.Debugging {
             }
         }
 
+        static private void DecayTextForBuffer(float deltaTime, RingBuffer<ImageRenderState> buffer) {
+            bool updated = false;
+
+            for (int i = buffer.Count - 1; i >= 0; i--) {
+                ref ImageRenderState state = ref buffer[i];
+
+                state.State.Duration -= deltaTime;
+                if (state.State.Duration <= 0) {
+                    TryFreeDebugString(state.Text);
+                    buffer.FastRemoveAt(i);
+                    updated = true;
+                }
+            }
+
+            if (updated && buffer.Count > 1) {
+                buffer.Sort();
+            }
+        }
+
         #endregion // Rendering
 
 #endif // DEVELOPMENT
 
         #region Static API
+
+        #region Text
 
         /// <summary>
         /// Adds text, pinned to a world-space point, to the debug render queue.
@@ -977,6 +1135,186 @@ namespace FieldDay.Debugging {
 #endif // DEVELOPMENT && !SKIP_ONGUI
         }
 
+        #endregion // Text
+
+        #region Image
+
+        /// <summary>
+        /// Adds text, pinned to a world-space point, to the debug render queue.
+        /// </summary>
+        [Conditional("DEVELOPMENT"), Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
+        static public void AddWorldImage(Vector3 point, string text, Texture image, Color color, float duration = 0, TextAnchor alignment = TextAnchor.MiddleCenter, DebugTextStyle style = DebugTextStyle.Default, int category = -1) {
+#if DEVELOPMENT && !SKIP_ONGUI
+            ImageRenderState renderState = new ImageRenderState();
+            renderState.Params.Color = color;
+            renderState.Params.DepthTest = false;
+            renderState.Params.Category = (sbyte)category;
+            renderState.State.Duration = duration;
+            renderState.WorldSpace = true;
+            renderState.Texture = image;
+            renderState.Text = AllocDebugString(text);
+            renderState.Position = point;
+            renderState.Alignment = alignment;
+            renderState.Style = style;
+            s_ActiveImages.PushBack(renderState);
+#endif // DEVELOPMENT && !SKIP_ONGUI
+        }
+
+        /// <summary>
+        /// Adds text, pinned to a world-space point, to the debug render queue.
+        /// </summary>
+        [Conditional("DEVELOPMENT"), Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
+        static public void AddWorldImage(Vector3 point, StringBuilder text, Texture image, Color color, float duration = 0, TextAnchor alignment = TextAnchor.MiddleCenter, DebugTextStyle style = DebugTextStyle.Default, int category = -1) {
+#if DEVELOPMENT && !SKIP_ONGUI
+            ImageRenderState renderState = new ImageRenderState();
+            renderState.Params.Color = color;
+            renderState.Params.DepthTest = false;
+            renderState.Params.Category = (sbyte)category;
+            renderState.State.Duration = duration;
+            renderState.WorldSpace = true;
+            renderState.Texture = image;
+            renderState.Text = AllocDebugString(text);
+            renderState.Position = point;
+            renderState.Alignment = alignment;
+            renderState.Style = style;
+            s_ActiveImages.PushBack(renderState);
+#endif // DEVELOPMENT && !SKIP_ONGUI
+        }
+
+        /// <summary>
+        /// Adds an image, pinned to a world-space point, to the debug render queue.
+        /// </summary>
+        [Conditional("DEVELOPMENT"), Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
+        static public void AddWorldImage(Vector3 point, Vector2 offset, Texture image, string text, Color color, float duration = 0, TextAnchor alignment = TextAnchor.MiddleCenter, DebugTextStyle style = DebugTextStyle.Default, int category = -1) {
+#if DEVELOPMENT && !SKIP_ONGUI
+            ImageRenderState renderState = new ImageRenderState();
+            renderState.Params.Color = color;
+            renderState.Params.DepthTest = false;
+            renderState.Params.Category = (sbyte)category;
+            renderState.State.Duration = duration;
+            renderState.WorldSpace = true;
+            renderState.Texture = image;
+            renderState.Text = AllocDebugString(text);
+            renderState.Position = point;
+            renderState.Offset = offset;
+            renderState.Alignment = alignment;
+            renderState.Style = style;
+            s_ActiveImages.PushBack(renderState);
+#endif // DEVELOPMENT && !SKIP_ONGUI
+        }
+
+        /// <summary>
+        /// Adds an image, pinned to a world-space point, to the debug render queue.
+        /// </summary>
+        [Conditional("DEVELOPMENT"), Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
+        static public void AddWorldImage(Vector3 point, Vector2 offset, Texture image, StringBuilder text, Color color, float duration = 0, TextAnchor alignment = TextAnchor.MiddleCenter, DebugTextStyle style = DebugTextStyle.Default, int category = -1) {
+#if DEVELOPMENT && !SKIP_ONGUI
+            ImageRenderState renderState = new ImageRenderState();
+            renderState.Params.Color = color;
+            renderState.Params.DepthTest = false;
+            renderState.Params.Category = (sbyte)category;
+            renderState.State.Duration = duration;
+            renderState.WorldSpace = true;
+            renderState.Texture = image;
+            renderState.Text = AllocDebugString(text);
+            renderState.Position = point;
+            renderState.Offset = offset;
+            renderState.Alignment = alignment;
+            renderState.Style = style;
+            s_ActiveImages.PushBack(renderState);
+#endif // DEVELOPMENT && !SKIP_ONGUI
+        }
+
+        /// <summary>
+        /// Adds an image, pinned to a viewport point, to the debug render queue.
+        /// </summary>
+        [Conditional("DEVELOPMENT"), Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
+        static public void AddViewportImage(Vector2 viewport, Texture image, string text, Color color, float duration = 0, TextAnchor alignment = TextAnchor.MiddleCenter, DebugTextStyle style = DebugTextStyle.Default, int category = -1) {
+#if DEVELOPMENT && !SKIP_ONGUI
+            ImageRenderState renderState = new ImageRenderState();
+            renderState.Params.Color = color;
+            renderState.Params.DepthTest = false;
+            renderState.Params.Category = (sbyte)category;
+            renderState.State.Duration = duration;
+            renderState.WorldSpace = false;
+            renderState.Texture = image;
+            renderState.Text = AllocDebugString(text);
+            renderState.Position = viewport;
+            renderState.Alignment = alignment;
+            renderState.Style = style;
+            s_ActiveImages.PushBack(renderState);
+#endif // DEVELOPMENT && !SKIP_ONGUI
+        }
+
+        /// <summary>
+        /// Adds an image, pinned to a viewport point, to the debug render queue.
+        /// </summary>
+        [Conditional("DEVELOPMENT"), Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
+        static public void AddViewportImage(Vector2 viewport, Texture image, StringBuilder text, Color color, float duration = 0, TextAnchor alignment = TextAnchor.MiddleCenter, DebugTextStyle style = DebugTextStyle.Default, int category = -1) {
+#if DEVELOPMENT && !SKIP_ONGUI
+            ImageRenderState renderState = new ImageRenderState();
+            renderState.Params.Color = color;
+            renderState.Params.DepthTest = false;
+            renderState.Params.Category = (sbyte)category;
+            renderState.State.Duration = duration;
+            renderState.WorldSpace = false;
+            renderState.Texture = image;
+            renderState.Text = AllocDebugString(text);
+            renderState.Position = viewport;
+            renderState.Alignment = alignment;
+            renderState.Style = style;
+            s_ActiveImages.PushBack(renderState);
+#endif // DEVELOPMENT && !SKIP_ONGUI
+        }
+
+        /// <summary>
+        /// Adds an image, pinned to a viewport point, to the debug render queue.
+        /// </summary>
+        [Conditional("DEVELOPMENT"), Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
+        static public void AddViewportImage(Vector2 viewport, Vector2 offset, Texture image, string text, Color color, float duration = 0, TextAnchor alignment = TextAnchor.MiddleCenter, DebugTextStyle style = DebugTextStyle.Default, int category = -1) {
+#if DEVELOPMENT && !SKIP_ONGUI
+            ImageRenderState renderState = new ImageRenderState();
+            renderState.Params.Color = color;
+            renderState.Params.DepthTest = false;
+            renderState.Params.Category = (sbyte)category;
+            renderState.State.Duration = duration;
+            renderState.WorldSpace = false;
+            renderState.Texture = image;
+            renderState.Text = AllocDebugString(text);
+            renderState.Position = viewport;
+            renderState.Offset = offset;
+            renderState.Alignment = alignment;
+            renderState.Style = style;
+            s_ActiveImages.PushBack(renderState);
+#endif // DEVELOPMENT && !SKIP_ONGUI
+        }
+
+        /// <summary>
+        /// Adds an image, pinned to a viewport point, to the debug render queue.
+        /// </summary>
+        [Conditional("DEVELOPMENT"), Conditional("UNITY_EDITOR"), Conditional("DEVELOPMENT_BUILD")]
+        static public void AddViewportImage(Vector2 viewport, Vector2 offset, Texture image, StringBuilder text, Color color, float duration = 0, TextAnchor alignment = TextAnchor.MiddleCenter, DebugTextStyle style = DebugTextStyle.Default, int category = -1) {
+#if DEVELOPMENT && !SKIP_ONGUI
+            ImageRenderState renderState = new ImageRenderState();
+            renderState.Params.Color = color;
+            renderState.Params.DepthTest = false;
+            renderState.Params.Category = (sbyte)category;
+            renderState.State.Duration = duration;
+            renderState.WorldSpace = false;
+            renderState.Texture = image;
+            renderState.Text = AllocDebugString(text);
+            renderState.Position = viewport;
+            renderState.Offset = offset;
+            renderState.Alignment = alignment;
+            renderState.Style = style;
+            s_ActiveImages.PushBack(renderState);
+#endif // DEVELOPMENT && !SKIP_ONGUI
+        }
+
+        #endregion // Image
+
+        #region Bounds
+
         /// <summary>
         /// Adds an AABB to the debug render queue.
         /// </summary>
@@ -1060,6 +1398,10 @@ namespace FieldDay.Debugging {
             AddLine(corners[6], corners[7], color, lineWidth, duration, depthTest, category);
         }
 
+        #endregion // Bounds
+
+        #region Lines
+
         /// <summary>
         /// Adds a line to the debug render queue.
         /// </summary>
@@ -1077,6 +1419,10 @@ namespace FieldDay.Debugging {
             s_ActiveLines.PushBack(renderState);
 #endif // DEVELOPMENT
         }
+
+        #endregion // Lines
+
+        #region Sphere/Dot
 
         /// <summary>
         /// Adds a sphere to the debug render queue.
@@ -1113,6 +1459,8 @@ namespace FieldDay.Debugging {
             s_ActiveSpheres.PushBack(renderState);
 #endif // DEVELOPMENT
         }
+
+        #endregion // Sphere/Dot
 
         /// <summary>
         /// Enables the given debug drawing category.

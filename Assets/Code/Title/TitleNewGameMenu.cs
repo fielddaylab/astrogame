@@ -6,6 +6,7 @@ using BeauRoutine;
 using BeauUtil;
 using BeauUtil.UI;
 using FieldDay;
+using FieldDay.Debugging;
 using FieldDay.HID;
 using FieldDay.Scenes;
 using FieldDay.Scripting;
@@ -71,7 +72,13 @@ namespace Astro.Title {
 
         private void OnClickBegin() {
             AstroGame.SaveBuffer.Clear();
-            OGD.Player.ClaimId(m_PlayerCodeInput.text, null, HandleClaimNewIdSuccess, HandleClaimNewIdError);
+            if (Game.IsDevBuild && DebugInput.IsDown(KeyCode.LeftShift)) {
+                SaveUtility.SetDebugFlag(true);
+                HandleClaimNewIdSuccess();
+            } else {
+                SaveUtility.SetDebugFlag(false);
+                OGD.Player.ClaimId(m_PlayerCodeInput.text, null, HandleClaimNewIdSuccess, HandleClaimNewIdError);
+            }
         }
 
         public void NewGameBegin(bool ignoreSave = false) {

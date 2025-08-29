@@ -7,5 +7,9 @@ namespace FieldDay.HID {
     public class CursorType : NamedAsset {
         [Required] public Sprite DefaultImage;
         public Sprite HeldImage;
+
+        [Space]
+        public float DefaultScale = 1;
+        public float HeldScaleOverride = 0;
     }
 }

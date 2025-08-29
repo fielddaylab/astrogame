@@ -21,7 +21,6 @@ namespace Astro
 
         [SerializeField] private CanvasGroup m_Group = null;
         [SerializeField] private Image m_Icon = null;
-        [SerializeField] private TMP_Text m_Label = null;
 
         [Header("Animations")]
         [SerializeField] private Sprite m_SavingSprite;
@@ -81,7 +80,6 @@ namespace Astro
             m_DisplayTime = Time.realtimeSinceStartup;
 
             m_Icon.sprite = m_SavingSprite;
-            m_Label.SetText(Label_Saving);
             yield return m_Group.FadeTo(1, 0.1f);
         }
 
@@ -98,11 +96,8 @@ namespace Astro
                 yield return null;
 
             if (m_Success) {
-                m_Label.SetText(Label_SaveSuccess);
                 m_Icon.sprite = m_SuccessSprite;
-            }
-            else {
-                m_Label.SetText(Label_SaveError);
+            } else {
                 m_Icon.sprite = m_FailureSprite;
             }
 

@@ -6,6 +6,7 @@ using UnityEngine.UIElements;
 using FieldDay;
 using System;
 using BeauUtil.Debugger;
+using BeauUtil;
 
 namespace Astro {
 
@@ -23,6 +24,8 @@ namespace Astro {
 
         public LayerMask RequiredMask = LayerMasks.LabInteract_Mask;
 
+        private const int RaycastLayerMasks = Bits.All32 & ~LayerMasks.Tappable_Mask;
+
         public override Camera eventCamera { get { return eventCameraOverride; } }
 
         protected override void Start() {
@@ -35,7 +38,8 @@ namespace Astro {
 
         // Called by Unity when a Raycaster should raycast because it extends BaseRaycaster.
         public override void Raycast(PointerEventData eventData, List<RaycastResult> resultAppendList) {
-            if ((Find.State<InputState>().AppliedLayerMask & RequiredMask) == 0) {
+            var inputState = Find.State<InputState>();
+            if ((inputState.AppliedLayerMask & RequiredMask) == 0 || !inputState.Raycaster.enabled) {
                 return;
             }
 
@@ -63,11 +67,13 @@ namespace Astro {
 
             Ray ray = eventCameraOverride.ScreenPointToRay(copyEventData.position); // Mouse
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit)) {
+            if (Physics.Raycast(ray, out hit, 25, RaycastLayerMasks)) {
 
                 if (hit.collider.transform == screenTransform) {
+                    Vector2 hitCoord = hit.textureCoord;
+
                     // Figure out where the pointer would be in the second camera based on texture position or RenderTexture.
-                    Vector3 virtualPos = new Vector3(hit.textureCoord.x, hit.textureCoord.y);
+                    Vector3 virtualPos = new Vector3(hitCoord.x, hitCoord.y);
                     virtualPos.x *= screenCamera.targetTexture.width;
                     virtualPos.y *= screenCamera.targetTexture.height;
 

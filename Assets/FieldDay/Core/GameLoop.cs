@@ -269,12 +269,12 @@ namespace FieldDay {
                 Log.Msg("[GameLoop] Creating performance manager...");
                 Game.Perf = new PerformanceMgr();
 
-                Log.Msg("[GameLoop] Creating localization manager...");
-                // TODO: create localization manager
-                Loc.ConfigureDefaultLanguage(m_DefaultLanguage);
-
                 Log.Msg("[GameLoop] Creating asset manager...");
                 Game.Assets = new AssetMgr();
+
+                Log.Msg("[GameLoop] Creating localization manager...");
+                Game.Localization = new LocMgr();
+                Game.Localization.Initialize(m_DefaultLanguage);
 
                 Log.Msg("[GameLoop] Creating systems manager...");
                 Game.Systems = new SystemsMgr();
@@ -534,6 +534,10 @@ namespace FieldDay {
                 Game.Events.Clear();
                 Game.SetEventDispatcher(null);
             }
+
+            Log.Msg("[GameLoop] Shutting down localization manager...");
+            Game.Localization.Shutdown();
+            Game.Localization = null;
 
             Log.Msg("[GameLoop] Shutting down asset manager...");
             Game.Assets.Shutdown();

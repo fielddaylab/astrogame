@@ -161,6 +161,7 @@ $wait 1
 {@Astrid}	Well... She thinks I could write an astronomy column for them. And I could go to college there!	$[level4/Astrid/l4_a_21]
 {@Astrid}	I mean, first I'll finish these puzzles, but then--	$[level4/Astrid/l4_a_22]
 {@Dad}	Slow down, Astrid. What about this job? There is still so much work to be done for CERES.	$[level4/Dad/l4_d_06]
+$call PlayRadioAlert()
 {@Monitor}	Station 12, this is your third, and final, warning. Cease all personal communications, or we will terminate your connection. 	$[level4/monitor/l4_m_01]
 {@Astrid}	Friggin' Recovery Board... Okay, okay. Sorry. 	$[level4/Astrid/l4_a_23]
 {@Dad}	Uh... Bear, I just...	$[level4/Dad/l4_d_07]
@@ -233,7 +234,6 @@ $wait 4
 $call StopOpenMode()
 $call SetInputState(true)
 $call SetChannelActive(Unlocks_Active, true)
-$call SetChannelActive(Unlocks_Inactive, false)
 $set temp:radioChannelTuned = false
 $call SetStickyFirstPage(7)
 
@@ -264,7 +264,6 @@ $call LockMonitorFocus()
 $call MonitorUI->PlayRadioDownload(2)
 $call ConsoleCommandLine->PlayConsoleTextAndWait("UpgradeSystem")
 $call SetChannelActive(Unlocks_Active, false)
-$call SetChannelActive(Unlocks_Inactive, true)
 $call SetRadioFrequency(137)
 $call MonitorUI->ShowCERESLogo()
 $call MonitorUI->CERESLogoToCorner(0.5)
@@ -370,6 +369,7 @@ $goto .EndDay
 {@Dad}	The.. Draconids?	$[level4/Dad/l4_d_09]
 {@Astrid}	The Draconids are in two weeks. Everyone's going to panic! 	$[level4/Astrid/l4_a_35]
 {@Astrid}	It's too late to write to Jocelyn. I think–I think I need to go to the newspaper myself. 	$[level4/Astrid/l4_a_36]
+$call PlayRadioAlert()
 {@Monitor}	Station 12, Cease and desist all personal communications. 	$[level4/monitor/l4_m_02]
 {@Dad}	Ugh... the Recovery Board...	$[level4/Dad/l4_d_10]
 {@Dad}	But Astrid, this is crazy. You can't just run off to Chicago.	$[level4/Dad/l4_d_11]

@@ -11,6 +11,8 @@ using UnityEngine;
 namespace Astro.Radio {
     public sealed class RadioWaveformState : SharedStateComponent, IScenePreload {
         public Material WaveformMaterial;
+        public Material AlertMaterial;
+        public MeshRenderer WaveformRenderer;
 
         [Header("Noise")]
         public Color32 NoiseColor;
@@ -30,6 +32,9 @@ namespace Astro.Radio {
 
         [NonSerialized] public VoxWaveformTable VoxWaveformTable;
         [NonSerialized] public VoxWaveformTable RadioWaveformTable;
+
+        [NonSerialized] public Color LastVoiceColor;
+        [NonSerialized] public float LastVoiceCooldown;
 
         IEnumerator<WorkSlicer.Result?> IScenePreload.Preload() {
             CurrentScale = 0;
