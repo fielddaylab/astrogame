@@ -77,6 +77,7 @@ public static class GameEvents {
     public static readonly StringHash32 LocatorCloser = "locator-closer";
     public static readonly StringHash32 LocatorFurther = "locator-further";
     public static readonly StringHash32 FoundTelescopeView = "found-telescope-view";
+    public static readonly StringHash32 ConstellationIdAssigned = "constellation-id_assigned";
 }
 
 public static class ScriptEvents {

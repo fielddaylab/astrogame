@@ -133,7 +133,7 @@ namespace Astro {
                 TelescopeViewLogData logData = new TelescopeViewLogData();
                 logData.Constellation = config.NeutrinoEvent.Constellation;
                 logData.Goal = targetFoward;
-                AstroGame.Events.Dispatch(GameEvents.TelescopeViewAssigned, EvtArgs.Box(logData));
+                AstroGame.Events.Dispatch(GameEvents.ConstellationIdAssigned, EvtArgs.Box(logData));
             }
 
             ScriptUtility.Invoke("MovePlayerToMonitor");
@@ -158,6 +158,7 @@ namespace Astro {
             state.LookUpdatedThisFrame = true;
             state.OnLookUpdated.Invoke(state);
 
+            /*
             DayConfigAsset config = DayConfigUtil.GetConfigForState();
             if (config) {
                 TelescopeViewLogData logData = new TelescopeViewLogData();
@@ -168,6 +169,7 @@ namespace Astro {
                 }
                 AstroGame.Events.Dispatch(GameEvents.FoundTelescopeView, EvtArgs.Box(logData));
             }
+            */
 
             ScriptUtility.Invoke("MovePlayerToInstruments");
 

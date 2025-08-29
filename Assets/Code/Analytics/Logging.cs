@@ -2,6 +2,7 @@
 
 using BeauUtil;
 using BeauUtil.Debugger;
+using BeauUtil.Tags;
 using BeauUtil.Variants;
 using FieldDay;
 using FieldDay.Assets;
@@ -222,6 +223,7 @@ namespace Astro {
                 .Register<int>(GameEvents.LocatorCloser, LogLocatorCloser)
                 .Register<int>(GameEvents.LocatorFurther, LogLocatorFurther)
                 .Register<TelescopeViewLogData>(GameEvents.FoundTelescopeView, LogFoundTelescopeView)
+                .Register<TelescopeViewLogData>(GameEvents.ConstellationIdAssigned, LogConstellationIdAssigned)
                 ;
 
             // state update events
@@ -582,7 +584,6 @@ namespace Astro {
             m_Log.SubmitEvent();
         }
 
-
         //locator_closer/
         //* new_proximity
         private void LogLocatorCloser(int newProximity) {
@@ -615,11 +616,14 @@ namespace Astro {
         //* constellation : [star_id]
         //* points_needed
         //* identification_type
-        private void LogConstellationIdAssigned(ConstellationData constellation, int pointsNeeded, ClassificationTypeMask IdType) {
+        private void LogConstellationIdAssigned(TelescopeViewLogData logData) {
+            DayConfigAsset config = DayConfigUtil.GetConfigForState();
+
             m_Log.BeginEvent("constellation_identification_assigned");
-            m_Log.EventParam("constellation_id", constellation.Id);
-            //m_Log.EventParamJson("constellation", constellation.Stars);
-            // TODO: update with json
+            m_Log.EventParam("constellation_id", EnumLookup.ConstellationType[(int)logData.Constellation]);
+            m_Log.EventParamJson("constellation", logData.AppendStars(m_JsonBuilder).End());
+            m_Log.EventParam("points_needed", config.NumNeutrinoPoints.ToStringLookup());
+            m_Log.EventParam("identification_type", EnumLookup.FirstClassificationType(config.AcceptedIDSubmissions));
             m_Log.SubmitEvent();
         }
 
