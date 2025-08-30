@@ -12,6 +12,7 @@
 
 using System;
 using System.Collections.Generic;
+using BeauPools;
 using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay.Debugging;
@@ -824,6 +825,33 @@ namespace FieldDay.Rendering {
             DMInfo qualitySettings = new DMInfo("Quality Settings");
 
             info.AddSubmenu(qualitySettings);
+
+            DMInfo shaderAudit = new DMInfo("Shaders");
+
+            shaderAudit.AddButton("Find Unsupported Shaders", () => {
+                var allShaders = Resources.FindObjectsOfTypeAll<Shader>();
+                using(PooledStringBuilder psb = PooledStringBuilder.Create()) {
+                    int totalUnsupported = 0;
+                    foreach(var shader in allShaders) {
+                        if (!shader.isSupported) {
+                            totalUnsupported++;
+                            psb.Builder.Append("\nShader '").Append(shader.name).Append("' unsupported!");
+                        }
+                    }
+
+                    if (totalUnsupported == 0) {
+                        psb.Builder.Append("No unsupported shaders found!");
+                        DebugDraw.AddLogText(psb, Color.white, 4);
+                        Log.Msg(psb.Builder.ToString());
+                    } else {
+                        psb.Builder.Insert(0, string.Format("{0}/{1} shaders unsupported!", totalUnsupported, allShaders.Length));
+                        DebugDraw.AddLogText(psb, Color.red, 8);
+                        Log.Warn(psb.Builder.ToString());
+                    }
+                }
+            });
+
+            info.AddSubmenu(shaderAudit);
 
             return info;
         }

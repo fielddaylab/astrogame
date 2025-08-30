@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
+using BeauUtil.Debugger;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.Video;
@@ -144,9 +145,25 @@ namespace EasyAssetStreaming {
         /// <summary>
         /// Returns an enumerator of all loaded textures.
         /// </summary>
-        static public Dictionary<StreamingAssetHandle, Texture>.Enumerator AllTextures()
+        static public int AllTextures(ICollection<LiveAssetRecord<Texture>> textures)
         {
-            return Textures.TextureMap.GetEnumerator();
+            Assert.True(textures != null);
+
+            LiveAssetRecord<Texture> record;
+            int count = Textures.TextureMap.Count;
+            foreach(var textureEntry in Textures.TextureMap) {
+                StreamingAssetHandle handle = textureEntry.Key;
+                record.Asset = textureEntry.Value;
+                record.Address = handle.MetaInfo.Address;
+
+                var state = handle.StateInfo;
+                record.Status = state.Status;
+                record.Size = state.Size;
+
+                textures.Add(record);
+            }
+
+            return count;
         }
 
         #endregion // Public API
