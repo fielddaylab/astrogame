@@ -421,7 +421,7 @@ namespace FieldDay.Scripting {
                 lookup.EvalContext = GetEvalContext(actor, vars);
                 ScriptDBUtility.FindAllFunctions(DB, functionId, lookup, funcNodes);
                 foreach (var node in funcNodes) {
-                    Runtime.Plugin.Run(node, targetId, actor, vars, "Function Invokation", true);
+                    Runtime.Plugin.Run(node, targetId, actor, vars, "Function Invocation", true);
                 }
                 Log.Msg("[ScriptUtility] Invoked '{0}', {1} response(s)", functionId.ToDebugString(), funcNodes.Count.ToStringLookup());
             }

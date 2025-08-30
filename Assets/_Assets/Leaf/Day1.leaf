@@ -7,6 +7,8 @@ $call ToggleDeskPicture()
 $call SetInputState(false)
 $call StopPuzzleMode()
 $call StopOpenMode()
+$call IntroCutscene->PrepareCutscene()
+
 $call MonitorUI->PowerOff()
 $call SetRefGuidePagesLocked(true)
 $call SetRefPageActive("ConstellationPerseusCompleted", false)
@@ -21,12 +23,11 @@ $set temp:readyForUpgrade = false
 
 $call SetChannelActive(Unlocks_Active, false)
 $call SetChannelActive(IceCube, false)
-$call IntroCutscene->PrepareCutscene()
+$call ChapterTitles->PrepareTransition(true)
 $start Observatory.ResetSubtitlePosition
 $call SpawnDocument("ElijahIntro")
 $call SpawnDocument("Day1Cal")
 $call SetStickyFirstPage(7)
-$call ChapterTitles->PrepareTransition(true)
 
 :: OpeningCutscene
 @trigger SceneReady
