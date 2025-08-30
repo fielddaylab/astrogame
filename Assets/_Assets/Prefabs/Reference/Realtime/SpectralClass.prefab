@@ -5597,7 +5597,7 @@ GameObject:
   - component: {fileID: 7043321930638865366}
   - component: {fileID: 8184404385514454574}
   m_Layer: 0
-  m_Name: Temperature (1)
+  m_Name: Description
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5619,8 +5619,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 205, y: 0}
-  m_SizeDelta: {x: 300, y: 50}
+  m_AnchoredPosition: {x: 200, y: 0}
+  m_SizeDelta: {x: 310, y: 50}
   m_Pivot: {x: 0, y: 1}
 --- !u!23 &7043321930638865366
 MeshRenderer:
@@ -5684,8 +5684,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Stars are classified by their spectra, with some approximate colors and
-    temperatures.
+  m_text: Stars are classified by their spectral "fingerprints." Color and temperature
+    can be used to estimate spectral type.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7a86051f64033ff42ad70379be3bfebf, type: 2}
   m_sharedMaterial: {fileID: -3786839852601790091, guid: 7a86051f64033ff42ad70379be3bfebf, type: 2}
@@ -5722,7 +5722,7 @@ MonoBehaviour:
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
-  m_characterSpacing: 0
+  m_characterSpacing: -6
   m_wordSpacing: 0
   m_lineSpacing: -20
   m_lineSpacingMax: 0
