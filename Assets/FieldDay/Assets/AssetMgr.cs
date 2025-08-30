@@ -577,6 +577,7 @@ namespace FieldDay.Assets {
 #if DEVELOPMENT
 
         static private int s_StreamingTextureAuditIndex;
+        static private string[] s_TextureFormatEnums = Enum.GetNames(typeof(TextureFormat));
 
         private void DebugUpdate() {
             if (DebugFlags.IsFlagSet(DebuggingFlags.DisplayBasicStats)) {
@@ -647,6 +648,13 @@ namespace FieldDay.Assets {
 
                             psb.Builder.Append("] ");
                             Unsafe.FormatBytes(entry.Size, psb.Builder);
+
+                            Texture2D tex2d = entry.Asset as Texture2D;
+
+                            if (tex2d) {
+                                psb.Builder.Append(" ").Append(s_TextureFormatEnums[(int) tex2d.format]);
+                            }
+
                             psb.Builder.Append('\n').AppendNoAlloc(s_StreamingTextureAuditIndex + 1).Append('/').AppendNoAlloc(count).Append(" texture(s), use [ and ] to browse");
 
                             DebugDraw.AddViewportText(new Vector2(0, 1), new Vector2(300, -64f), psb, Color.white, 0, TextAnchor.UpperLeft, DebugTextStyle.BackgroundDark);

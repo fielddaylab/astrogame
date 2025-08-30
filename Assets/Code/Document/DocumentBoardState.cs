@@ -13,6 +13,10 @@ using FieldDay.Assets;
 using FieldDay.Scripting;
 using FieldDay.SharedState;
 using FieldDay.Audio;
+using BeauUtil.Debugger;
+using FieldDay.Debugging;
+using EasyAssetStreaming;
+using FieldDay.Scenes;
 
 namespace Astro {
     public sealed class DocumentBoardState : SharedStateComponent {
@@ -37,6 +41,10 @@ namespace Astro {
         public DocumentInteractable DraggablePlaced = null;
 
         public AssetPack DocumentAssets;
+
+        [Header("Streaming Materials")]
+        public Material AlphaStreamingMaterial;
+        public Material OpaqueStreamingMaterial;
 
         [NonSerialized] public List<DocumentRenderer> SpawnedDocuments = new List<DocumentRenderer>();
         [NonSerialized] public Dictionary<StringHash32, bool> DocumentCloseEnabledState = new Dictionary<StringHash32, bool>();
@@ -555,5 +563,31 @@ namespace Astro {
         }
 
         #endregion // Sfx
+
+        #region Debugging
+
+        [DebugMenuFactory]
+        static private DMInfo GenerateDebugMenu() {
+            DMInfo documents = new DMInfo("Documents");
+
+            documents.AddButton("Force Cutout Shader", () => {
+                DEBUG_ChangeAllDocumentStreamingRenderers(Find.State<DocumentBoardState>().AlphaStreamingMaterial);
+            }, () => SceneUtils.ActiveSceneIndex() == 4);
+            documents.AddButton("Force Opaque Material", () => {
+                DEBUG_ChangeAllDocumentStreamingRenderers(Find.State<DocumentBoardState>().OpaqueStreamingMaterial);
+            }, () => SceneUtils.ActiveSceneIndex() == 4);
+
+            return documents;
+        }
+
+        static private void DEBUG_ChangeAllDocumentStreamingRenderers(Material material) {
+            foreach(var documentRenderer in UnityEngine.Object.FindObjectsOfType<DocumentRenderer>(true)) {
+                foreach (var streaming in documentRenderer.GetComponentsInChildren<StreamingQuadTexture>(true)) {
+                    streaming.SharedMaterial = material;
+                }
+            }
+        }
+
+        #endregion // Debugging
     }
 }
