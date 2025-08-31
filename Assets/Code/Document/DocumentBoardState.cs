@@ -45,6 +45,7 @@ namespace Astro {
         [Header("Streaming Materials")]
         public Material AlphaStreamingMaterial;
         public Material OpaqueStreamingMaterial;
+        public Material[] DebuggingMaterials;
 
         [NonSerialized] public List<DocumentRenderer> SpawnedDocuments = new List<DocumentRenderer>();
         [NonSerialized] public Dictionary<StringHash32, bool> DocumentCloseEnabledState = new Dictionary<StringHash32, bool>();
@@ -570,11 +571,20 @@ namespace Astro {
         static private DMInfo GenerateDebugMenu() {
             DMInfo documents = new DMInfo("Documents");
 
-            documents.AddButton("Force Cutout Shader", () => {
-                DEBUG_ChangeAllDocumentStreamingRenderers(Find.State<DocumentBoardState>().AlphaStreamingMaterial);
+            documents.AddButton("Force Cutout Material", () => {
+                DEBUG_ChangeAllDocumentStreamingRenderers(Find.State<DocumentBoardState>().DebuggingMaterials[0]);
+            }, () => SceneUtils.ActiveSceneIndex() == 4);
+            documents.AddButton("Force Cutout Material (Transparent)", () => {
+                DEBUG_ChangeAllDocumentStreamingRenderers(Find.State<DocumentBoardState>().DebuggingMaterials[1]);
+            }, () => SceneUtils.ActiveSceneIndex() == 4);
+            documents.AddButton("Force Cutout Material (No Vert Color)", () => {
+                DEBUG_ChangeAllDocumentStreamingRenderers(Find.State<DocumentBoardState>().DebuggingMaterials[2]);
             }, () => SceneUtils.ActiveSceneIndex() == 4);
             documents.AddButton("Force Opaque Material", () => {
-                DEBUG_ChangeAllDocumentStreamingRenderers(Find.State<DocumentBoardState>().OpaqueStreamingMaterial);
+                DEBUG_ChangeAllDocumentStreamingRenderers(Find.State<DocumentBoardState>().DebuggingMaterials[3]);
+            }, () => SceneUtils.ActiveSceneIndex() == 4);
+            documents.AddButton("Force Opaque Material (No Vert Color)", () => {
+                DEBUG_ChangeAllDocumentStreamingRenderers(Find.State<DocumentBoardState>().DebuggingMaterials[4]);
             }, () => SceneUtils.ActiveSceneIndex() == 4);
 
             return documents;
