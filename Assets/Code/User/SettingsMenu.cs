@@ -2,6 +2,7 @@
 using BeauUtil;
 using FieldDay;
 using FieldDay.Components;
+using FieldDay.Rendering;
 using FieldDay.Scenes;
 using System.Collections.Generic;
 using UnityEngine.Events;
@@ -24,13 +25,17 @@ namespace Astro {
             MusicSlider.onValueChanged.RemoveAllListeners();
             SFXSlider.onValueChanged.RemoveAllListeners();
             VoiceSlider.onValueChanged.RemoveAllListeners();
+
+            Game.Rendering.OnFullscreenChanged.Deregister(OnFullscreenUpdated);
         }
 
         public void OnRegister() {
             UserSettingsState state = Find.State<UserSettingsState>();
 
-            DriftToggle.isOn = state.CameraDriftEnabled;
-            FullscreenToggle.isOn = state.FullscreenEnabled;
+            Game.Rendering.OnFullscreenChanged.Register(OnFullscreenUpdated);
+
+            DriftToggle.SetIsOnWithoutNotify(state.CameraDriftEnabled);
+            FullscreenToggle.SetIsOnWithoutNotify(ScreenUtility.GetFullscreen());
             UpdateCameraDrift(DriftToggle.isOn);
             UpdateFullscreen(FullscreenToggle.isOn);
             DriftToggle.onValueChanged.AddListener(UpdateCameraDrift);
@@ -66,6 +71,10 @@ namespace Astro {
 
         private void UpdateBusVolume(StringHash32 bus, float volume) {
             SettingsUtility.SetAudioBusVolume(Find.State<UserSettingsState>(), bus, volume);
+        }
+
+        private void OnFullscreenUpdated(bool fullscreen) {
+            FullscreenToggle.SetIsOnWithoutNotify(fullscreen);
         }
     }
 }

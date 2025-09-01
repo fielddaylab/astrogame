@@ -197,6 +197,7 @@ GameObject:
   - component: {fileID: 5945896607417790109}
   - component: {fileID: 3810144237016410639}
   - component: {fileID: 2986059122578493356}
+  - component: {fileID: 743119152811109121}
   m_Layer: 0
   m_Name: Systems
   m_TagString: Untagged
@@ -257,6 +258,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a301b83ed8760949a33f25aa8538453, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &743119152811109121
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6870059358619736227}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 810a35fb6d6a13f47b2c5a2e3134a906, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7324243388985158086
 GameObject:
   m_ObjectHideFlags: 0
@@ -269,6 +282,7 @@ GameObject:
   - component: {fileID: 5831811688468304652}
   - component: {fileID: 5930317564594674423}
   - component: {fileID: 6917610861100660683}
+  - component: {fileID: 8302780182482595778}
   m_Layer: 0
   m_Name: State
   m_TagString: Untagged
@@ -332,6 +346,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ServerURL: https://fieldday-web.wcer.wisc.edu/wsgi-bin/opengamedata.wsgi
+--- !u!114 &8302780182482595778
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7324243388985158086}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6c8299d58d432642aaf2d101eb03877, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  State: 0
+  Timer: 0
 --- !u!1 &7739068714915098981
 GameObject:
   m_ObjectHideFlags: 0

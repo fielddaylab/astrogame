@@ -47,13 +47,6 @@ namespace FieldDay.Scripting {
                 ScriptRuntimeState runtime = ScriptUtility.Runtime;
                 ScriptDatabase db = ScriptUtility.DB;
 
-                if (DebugInput.IsPressed(KeyCode.P) || DebugInput.IsPressed(MouseButton.Middle)) {
-                    ScriptThread cutsceneThread = runtime.Cutscene.GetThread<ScriptThread>();
-                    if (cutsceneThread != null) {
-                        cutsceneThread.SkipSingle();
-                    }
-                }
-
                 if (DebugFlags.IsFlagSet(ScriptDebugFlags.DisplayThreadStats)) {
                     psb.Builder.Append("Leaf Stats:\n   ")
                         .AppendNoAlloc(runtime.ActiveThreads.Count).Append(" active threads");

@@ -44,29 +44,29 @@ $call IntroSfx->Play()
 $wait 0.1
 $call IntroSfx2->Play()
 $wait 3
-{@Elijah} Astrid!.....Astrid?.... Where are you? 	$[epilogue/Elijah/end_e_01]
+{@Elijah}   Astrid!.....Astrid?.... Where are you? 	$[epilogue/Elijah/end_e_01]
 
 $call WaitForMovedToView("DocumentPuzzle")
 
 $wait 1
 
 $call BringDocToCam("Day6Astrid")
-{@Elijah} Whoa. $[epilogue/Elijah/end_e_02]
+{@Elijah}   Whoa. $[epilogue/Elijah/end_e_02]
 
 $wait 1
 $call FlipDoc("Day6Astrid")
 $wait 1
 
-{@Elijah} I'm invited to a watch party in Chicago? 	$[epilogue/Elijah/end_e_03]
+{@Elijah}   I'm invited to a watch party in Chicago? 	$[epilogue/Elijah/end_e_03]
 $wait 1
-{@Elijah} She left! No wonder she left. I should've left her the command code. What was I thinking? 	$[epilogue/Elijah/end_e_04]
+{@Elijah}   She left! No wonder she left. I should've left her the command code. What was I thinking? 	$[epilogue/Elijah/end_e_04]
 $wait 1
 
 $call ReturnDocToBoard("Day6Astrid")
 $wait 1
 
 $call WaitForMovedToView("Right")
-{@Elijah} Looks like I have a few minutes before her radio show comes on. Time to get this thing online, I guess.	$[epilogue/Elijah/end_e_05]
+{@Elijah}   Looks like I have a few minutes before her radio show comes on. Time to get this thing online, I guess.	$[epilogue/Elijah/end_e_05]
 
 $wait 0.1
 $call ComputerBootSound->Play()
@@ -101,52 +101,52 @@ $wait 1
 $call MonitorUI->ShowElement("LinkEstablished")
 $wait 1
 
-{@Dad} Station 12 come in... Astrid, are you there? I just received a downlink from the Gorynich satellite! I assume it was your doing? $[epilogue/Dad/end_d_01]
-{@Elijah} Hey, its just me. Astrid is... in Chicago right now. $[epilogue/Elijah/end_e_06]
-{@Dad} Oh, Elijah, I didn't realize... I guess I should be congratulating you then. $[epilogue/Dad/end_d_02]
-{@Dad} This is incredible. What amazing work. $[epilogue/Dad/end_d_03]
-{@Elijah} It was Astrid. She was the one who did all this. $[epilogue/Elijah/end_e_07]
-{@Dad} So.. she already left. $[epilogue/Dad/end_d_04]
-{@Elijah} Yeah, she is down there working with the paper- it sounds like she is going to be on the radio any minute. $[epilogue/Elijah/end_e_08]
-{@Elijah} She's going to get the word out. $[epilogue/Elijah/end_e_09]
-{@Dad} All this work we've been doing for the last couple of years, she just accomplished more than we ever could. $[epilogue/Dad/end_d_05]
-{@Dad} I wish I would have trusted her more. We didn't leave off on the best of terms... $[epilogue/Dad/end_d_06]
-{@Elijah} You guys will have a chance to catch up soon. This open communication network is going to be, super helpful. $[epilogue/Elijah/end_e_10]
-{@Elijah} Oh, the show is probably starting now. I'm going to switch over. $[epilogue/Elijah/end_e_11]
+{@Dad}      Station 12 come in... Astrid, are you there? I just received a downlink from the Gorynich satellite! I assume it was your doing? $[epilogue/Dad/end_d_01]
+{@Elijah}   Hey, its just me. Astrid is... in Chicago right now. $[epilogue/Elijah/end_e_06]
+{@Dad}      Oh, Elijah, I didn't realize... I guess I should be congratulating you then. $[epilogue/Dad/end_d_02]
+{@Dad}      This is incredible. What amazing work. $[epilogue/Dad/end_d_03]
+{@Elijah}   It was Astrid. She was the one who did all this. $[epilogue/Elijah/end_e_07]
+{@Dad}      So.. she already left. $[epilogue/Dad/end_d_04]
+{@Elijah}   Yeah, she is down there working with the paper- it sounds like she is going to be on the radio any minute. $[epilogue/Elijah/end_e_08]
+{@Elijah}   She's going to get the word out. $[epilogue/Elijah/end_e_09]
+{@Dad}      All this work we've been doing for the last couple of years, she just accomplished more than we ever could. $[epilogue/Dad/end_d_05]
+{@Dad}      I wish I would have trusted her more. We didn't leave off on the best of terms... $[epilogue/Dad/end_d_06]
+{@Elijah}   You guys will have a chance to catch up soon. This open communication network is going to be, super helpful. $[epilogue/Elijah/end_e_10]
+{@Elijah}   Oh, the show is probably starting now. I'm going to switch over. $[epilogue/Elijah/end_e_11]
 $call MonitorUI->HideElement("LinkEstablished")
 
 $call SetRadioDialLocked(false)
 $call SetRadioFrequency(600)
 $call SetRadioDialLocked(true)
 
-{@Jocelyn} ...And for our listeners up north, we've got word of two watch parties planned in Minnesota, and one more in Wisconsin, near Monroe County. $[epilogue/Jocelyn/end_j_01]
-{@Jocelyn} Now, for anyone who's just tuning in, our on-staff citizen astronomer will take it from here. $[epilogue/Jocelyn/end_j_02]
-{@Astrid} Thanks, Jocelyn. $[epilogue/Astrid/Unprocessed/end_a_01]
-{@Elijah} There she is... $[epilogue/Elijah/end_e_12]
+{@Jocelyn}  ...And for our listeners up north, we've got word of two watch parties planned in Minnesota, and one more in Wisconsin, near Monroe County. $[epilogue/Jocelyn/end_j_01]
+{@Jocelyn}  Now, for anyone who's just tuning in, our on-staff citizen astronomer will take it from here. $[epilogue/Jocelyn/end_j_02]
+{@Astrid}   Thanks, Jocelyn. $[epilogue/Astrid/Unprocessed/end_a_01]
+{@Elijah}   There she is... $[epilogue/Elijah/end_e_12]
 // {@Astrid} Fellow citizen astronomers: There are only three days til the Night of Ten Thousand Wishes, so tell your friends and neighbors. $[epilogue/Astrid/Unprocessed/end_a_02alt]
-{@Astrid} Fellow citizen astronomers: There are only three days til the meteor storm, so don't forget to talk to your friends and neighbors. $[epilogue/Astrid/Unprocessed/end_a_02]
-{@Astrid} We're seeing yard signs everywhere. Some really creative ones! $[epilogue/Astrid/Unprocessed/end_a_03]
-{@Astrid} Make sure to invite people to a watch party. This will be the biggest meteor storm in our lifetime. You don't want to sleep through it. 	$[epilogue/Astrid/Unprocessed/end_a_04]
-{@Jocelyn} I mean... thanks to you, Astrid, this is the biggest cultural event in two years. At this point you'd have to be living under a rock to miss it. $[epilogue/Jocelyn/end_j_03]
-{@Jocelyn} Now, lots of people are calling in and asking how to get the best view. Any advice? $[epilogue/Jocelyn/end_j_04]
-{@Astrid} It's pretty simple. Look for a spot away from city lights. That shouldn't be too hard these days.	$[epilogue/Astrid/Unprocessed/end_a_05]
-{@Astrid} See if you can find a clearing or a hilltop. And bring your wishes! $[epilogue/Astrid/Unprocessed/end_a_06]
-{@Jocelyn} Sounds like you're an expert. $[epilogue/Jocelyn/end_j_05]
-{@Astrid} Yeah, my boyfriend and I used to watch the Perseids together every year. $[epilogue/Astrid/Unprocessed/end_a_07]
-{@Jocelyn} Is he coming out to Chicago for the watch party?	$[epilogue/Jocelyn/end_j_06]
-{@Astrid} I'm not sure. We've both been a little busy lately. 	$[epilogue/Astrid/Unprocessed/end_a_08]
-{@Astrid} But wherever he is, I know he'll be watching it, too. 	$[epilogue/Astrid/Unprocessed/end_a_09]
-{@Astrid} We're going to see up to twenty thousand shooting stars every hour! $[epilogue/Astrid/Unprocessed/end_a_10]
-{@Jocelyn} Wow... That's a lot of wishes! $[epilogue/Jocelyn/end_j_07]
-{@Astrid} Exactly! The light show might bring up some bad memories, but this is no CME. It's just nature's fireworks. Space dust from a comet's trail burning up in the atmosphere. $[epilogue/Astrid/Unprocessed/end_a_11]
-{@Astrid} No one's seen anything like this since 1833. $[epilogue/Astrid/Unprocessed/end_a_12]
-{@Astrid} Back then, people had no idea what was happening. They thought the world was ending. 	$[epilogue/Astrid/Unprocessed/end_a_13]
-{@Jocelyn} I bet a lot of our listeners can relate to that feeling. $[epilogue/Jocelyn/end_j_08]
-{@Astrid} For sure. But the storm ended, and the world was still there. Everyone wrote down their stories to decide what it all meant. 	$[epilogue/Astrid/Unprocessed/end_a_14]
-{@Jocelyn} Thanks to you, we know what it means. $[epilogue/Jocelyn/end_j_09]
-{@Astrid} Well, I know about the science, but we all get to come up with the stories, and decide what this means together. My dad - an astronomer - he's taught me about the stars my whole life. My friend... well actually, my boyfriend, Elijah, knows everything there is about myths and the stories from the stars. $[epilogue/Astrid/Unprocessed/end_a_15]
-{@Jocelyn} Wow, that's cool. How did you figure all this out, about the meteor storm? $[epilogue/Jocelyn/end_j_10]
-{@Astrid} It started on my birthday, when I-- $[epilogue/Astrid/Unprocessed/end_a_16]
+{@Astrid}   Fellow citizen astronomers: There are only three days til the meteor storm, so don't forget to talk to your friends and neighbors. $[epilogue/Astrid/Unprocessed/end_a_02]
+{@Astrid}   We're seeing yard signs everywhere. Some really creative ones! $[epilogue/Astrid/Unprocessed/end_a_03]
+{@Astrid}   Make sure to invite people to a watch party. This will be the biggest meteor storm in our lifetime. You don't want to sleep through it. 	$[epilogue/Astrid/Unprocessed/end_a_04]
+{@Jocelyn}  I mean... thanks to you, Astrid, this is the biggest cultural event in two years. At this point you'd have to be living under a rock to miss it. $[epilogue/Jocelyn/end_j_03]
+{@Jocelyn}  Now, lots of people are calling in and asking how to get the best view. Any advice? $[epilogue/Jocelyn/end_j_04]
+{@Astrid}   It's pretty simple. Look for a spot away from city lights. That shouldn't be too hard these days.	$[epilogue/Astrid/Unprocessed/end_a_05]
+{@Astrid}   See if you can find a clearing or a hilltop. And bring your wishes! $[epilogue/Astrid/Unprocessed/end_a_06]
+{@Jocelyn}  Sounds like you're an expert. $[epilogue/Jocelyn/end_j_05]
+{@Astrid}   Yeah, my boyfriend and I used to watch the Perseids together every year. $[epilogue/Astrid/Unprocessed/end_a_07]
+{@Jocelyn}  Is he coming out to Chicago for the watch party?	$[epilogue/Jocelyn/end_j_06]
+{@Astrid}   I'm not sure. We've both been a little busy lately. 	$[epilogue/Astrid/Unprocessed/end_a_08]
+{@Astrid}   But wherever he is, I know he'll be watching it, too. 	$[epilogue/Astrid/Unprocessed/end_a_09]
+{@Astrid}   We're going to see up to twenty thousand shooting stars every hour! $[epilogue/Astrid/Unprocessed/end_a_10]
+{@Jocelyn}  Wow... That's a lot of wishes! $[epilogue/Jocelyn/end_j_07]
+{@Astrid}   Exactly! The light show might bring up some bad memories, but this is no CME. It's just nature's fireworks. Space dust from a comet's trail burning up in the atmosphere. $[epilogue/Astrid/Unprocessed/end_a_11]
+{@Astrid}   No one's seen anything like this since 1833. $[epilogue/Astrid/Unprocessed/end_a_12]
+{@Astrid}   Back then, people had no idea what was happening. They thought the world was ending. 	$[epilogue/Astrid/Unprocessed/end_a_13]
+{@Jocelyn}  I bet a lot of our listeners can relate to that feeling. $[epilogue/Jocelyn/end_j_08]
+{@Astrid}   For sure. But the storm ended, and the world was still there. Everyone wrote down their stories to decide what it all meant. 	$[epilogue/Astrid/Unprocessed/end_a_14]
+{@Jocelyn}  Thanks to you, we know what it means. $[epilogue/Jocelyn/end_j_09]
+{@Astrid}   Well, I know about the science, but we all get to come up with the stories, and decide what this means together. My dad - an astronomer - he's taught me about the stars my whole life. My friend... well actually, my boyfriend, Elijah, knows everything there is about myths and the stories from the stars. $[epilogue/Astrid/Unprocessed/end_a_15]
+{@Jocelyn}  Wow, that's cool. How did you figure all this out, about the meteor storm? $[epilogue/Jocelyn/end_j_10]
+{@Astrid}   It started on my birthday, when I-- $[epilogue/Astrid/Unprocessed/end_a_16]
 
 $call SetRadioDialLocked(false)
 $call SetRadioFrequency(100)
@@ -156,7 +156,7 @@ $wait 0.5
 $call WaitForMovedToView("DocumentPuzzle")
 $wait 1
 
-{@Elijah} Chicago... sounds good to me. $[epilogue/Elijah/end_e_13]
+{@Elijah}   Chicago... sounds good to me. $[epilogue/Elijah/end_e_13]
 $call WaitForMovedToView("DeskView")
 
 $call TransitionToScene("Credits", "HardCut")

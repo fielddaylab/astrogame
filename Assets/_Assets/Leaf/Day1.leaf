@@ -82,7 +82,7 @@ $endif
 @cutscene
 @once
 
-{@Astrid} You'll be back soon? Back from where? $[level1/Astrid/l1_a_01a]
+{@Astrid}   You'll be back soon? Back from where? $[level1/Astrid/l1_a_01a]
 $goto .PowerButtonHint
 
 :: PressedPowerButton
@@ -90,6 +90,7 @@ $goto .PowerButtonHint
 @when   actorId == "MonitorPower", !temp:pressedPowerButton
 @boostScore 100
 @interrupt
+@cutscene
 
 $set temp:pressedPowerButton = true
 $set temp:introRadioHint = false
@@ -134,7 +135,7 @@ $endif
 :: TuneToIceCubeIntro
 @trigger    RadioChannelListenStart
 @when       channelId == "IceCube"
-@priority   High
+@cutscene
 @boostScore 1000
 @interrupt
 @once
