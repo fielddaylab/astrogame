@@ -19,7 +19,7 @@ using EasyAssetStreaming;
 using FieldDay.Scenes;
 
 namespace Astro {
-    public sealed class DocumentBoardState : SharedStateComponent {
+    public sealed class DocumentBoardState : SharedStateComponent, IRegistrationCallbacks, ISceneLoadDependency {
         public bool EnableDocumentInteraction;
         [NonSerialized] public DocumentInteractable SelectedDocument;
         [NonSerialized] public Vector3 LastMousePos;
@@ -67,6 +67,18 @@ namespace Astro {
             Gizmos.matrix = Matrix4x4.TRS(position, rotation, scale);
             Gizmos.DrawWireCube(Vector3.zero, Vector3.one);
             Gizmos.matrix = oldMatrix;
+        }
+
+        void IRegistrationCallbacks.OnRegister() {
+            Game.Scenes.RegisterLoadDependency(this);
+        }
+
+        void IRegistrationCallbacks.OnDeregister() {
+            Game.Scenes.DeregisterLoadDependency(this);
+        }
+
+        bool ISceneLoadDependency.IsLoaded(SceneLoadPhase loadPhase) {
+            return DocumentLoadQueue.Count == 0;
         }
     }
 

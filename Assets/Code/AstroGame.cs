@@ -9,6 +9,7 @@ using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay;
 using FieldDay.Debugging;
+using FieldDay.Scenes;
 using FieldDay.Scripting;
 using FieldDay.SharedState;
 using FieldDay.UI.Animation;
@@ -122,6 +123,7 @@ namespace Astro {
         static private void OnBoot() {
             GameLoop.OnPreUpdate.Register(() => {
                 Physics.SyncTransforms();
+                Game.Scenes.RegisterLoadDependency(new ScriptPreloadDependency());
             });
 
             Scenes.OnMainSceneLateEnable.Register(() => {
@@ -136,6 +138,15 @@ namespace Astro {
             Scenes.OnMainSceneUnloaded.Register(() => {
                 Find.GuiModule<LoadingIcon>().Show();
             });
+        }
+
+        private class ScriptPreloadDependency : ISceneLoadDependency {
+            public bool IsLoaded(SceneLoadPhase loadPhase) {
+                if (loadPhase == SceneLoadPhase.BeforeReady) {
+                    return ScriptUtility.CurrentThreadCount == 0;
+                }
+                return true;
+            }
         }
     }
 }
