@@ -141,7 +141,7 @@ $set temp:docPuzzleSolved = false
 @cutscene
 @once
 
-{@Astrid} The Gornych satelite. This upgrade was pretty exciting. $[level4/Astrid/l4_a_10b]
+{@Astrid} The Gorynich satellite. This upgrade was pretty exciting. $[level4/Astrid/l4_a_10b]
 
 :: InspectNewspaperPostit
 @trigger    DocumentInspectStart
@@ -401,7 +401,7 @@ $call SetInputState(true)
 
 $wait 8 // For transition sequence
 
-{@Astrid} Null... I guess that means this star has no absolute magentude. $[level4/Astrid/l4_a_24g]
+{@Astrid} Null... I guess that means this star has no absolute magnitude. $[level4/Astrid/l4_a_24g]
 {@Astrid} And it looks like there is a star missing- or maybe I just can't see it. I wonder if that's a Brown Dwarf that I could see in infrared. $[level4/Astrid/l4_a_24h]
 $branch .PuzzleTimeoutHint
 
@@ -471,7 +471,7 @@ $call TapeDeck->SetTapeActive(true)
 {@Elijah}	Anyway... Um, if you're hearing this, you solved Draco. One of my favorites. 	$[level4/Elijah/l4_e_05]
 {@Elijah}	Hercules was supposed to steal a golden apple from the garden at the end of the world. It was one of his final tasks.	$[level4/Elijah/l4_e_06]
 {@Elijah}	The catch: the apples were guarded by a dragon. 	$[level4/Elijah/l4_e_07]
-{@Elijah}	There are so many dragons in folklore. Zmey Gorynich, in Slavic. Ladon, in Hercules' story. And about a million others.	$[level4/Elijah/l4_e_08]
+{@Elijah}	There are so many dragons in folklore. Zmei Gorynich, in Slavic. Ladon, in Hercules' story. And about a million others.	$[level4/Elijah/l4_e_08]
 {@Elijah}	I wonder what it says about us that all across the world, people tell each other stories about monsters... and the people who fight them. 	$[level4/Elijah/l4_e_09]
 {@Elijah}	Anyway. Ready for your surprise? 	$[level4/Elijah/l4_e_10]
 {@Elijah}	Run the program: "DRACO" then look up.	$[level4/Elijah/l4_e_11]
@@ -533,7 +533,7 @@ $call PlayOneshotRadioAlert()
 $call StopMusic(0)
 {@Monitor}	Station 12, your clearance has been revoked. 	$[level4/monitor/l4_m_03]
 {@Astrid} {vox-overlap -0.2} Whoa. Wait, just a second–	$[level4/Astrid/l4_a_39]
-{@Monitor}{vox-overlap -0.2} Your access is resistricted to incoming data only. 	$[level4/monitor/l4_m_04]
+{@Monitor}{vox-overlap -0.2} Your access is restricted to incoming data only. 	$[level4/monitor/l4_m_04]
 {@Astrid} Wait, I just need two more minutes!	$[level4/Astrid/l4_a_40]
 $wait 1
 {@Astrid} Hello?	$[level4/Astrid/l4_a_41]

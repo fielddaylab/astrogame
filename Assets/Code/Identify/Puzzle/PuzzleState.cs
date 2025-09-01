@@ -146,7 +146,7 @@ namespace Astro {
 
             MonitorUIElement off = monitorUI.GetElement("OffPanel");
 
-            yield return off.GetComponent<Image>().ColorTo(new Color(1f, 0.745f, 0.24f), 0.2f);
+            yield return off.GetComponent<Graphic>().ColorTo(new Color(1f, 0.745f, 0.24f), 0.2f);
 
             foreach (RectTransform child in display.PuzzleOverrideDisplays.GetComponentsInChildren<RectTransform>(true)) {
                 yield return new WaitForSeconds(0.2f);
@@ -160,7 +160,7 @@ namespace Astro {
                 child.gameObject.SetActive(false);
             }
 
-            off.GetComponent<Image>().color = Color.black;
+            off.GetComponent<Graphic>().color = Color.black;
             yield return monitorUI.HideElement("PuzzleMsg2");
             yield return monitorUI.HideElement("PuzzleMsg1");
             yield return monitorUI.HideElement("OffPanel");
@@ -206,7 +206,7 @@ namespace Astro {
 
             MonitorUIElement off = monitorUI.GetElement("OffPanel");
 
-            yield return off.GetComponent<Image>().ColorTo(new Color(1f, 0.745f, 0.24f), 0.2f);
+            yield return off.GetComponent<Graphic>().ColorTo(new Color(1f, 0.745f, 0.24f), 0.2f);
 
             foreach (RectTransform child in display.PuzzleOverrideDisplays.GetComponentsInChildren<RectTransform>(true)) {
                 yield return new WaitForSeconds(0.2f);
@@ -220,7 +220,7 @@ namespace Astro {
                 child.gameObject.SetActive(false);
             }
 
-            off.GetComponent<Image>().color = Color.black;
+            off.GetComponent<Graphic>().color = Color.black;
             yield return monitorUI.HideElement("PuzzleMsg");
             yield return monitorUI.HideElement("OffPanel");
 

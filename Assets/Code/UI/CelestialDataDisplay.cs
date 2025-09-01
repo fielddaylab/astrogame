@@ -146,7 +146,7 @@ namespace Astro {
             // Child 0 is the full point pip and Child 1 is the outline
             var PointPip = PointsRowTransform.GetChild(pointIndex);
 
-            Image FullPip = PointPip.GetChild(0).GetComponent<Image>();
+            Graphic FullPip = PointPip.GetChild(0).GetComponent<Graphic>();
             yield return Tween.Value(0f, 1f, (f) => { FullPip.SetAlpha(f); }, Mathf.Lerp, 0.3f);
         }
 
