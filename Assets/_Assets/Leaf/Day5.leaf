@@ -37,6 +37,8 @@ $call MonitorPower->Deactivate()
 $call ChapterTitles->PrepareTransition()
 $start Observatory.ResetSubtitlePosition
 
+//#region Spawn Documents
+
 :: BeginDay
 @trigger    SceneReady
 @boostScore 100
@@ -50,21 +52,34 @@ $call ChapterTitles->FinishTransition(1)
 $call SetInputState(false)
 $wait 1
 
-$call SpawnDocumentToCamera("Day5ElijahPostcard")
+$call SpawnDocumentToCamera("Day5Postcard")
 $call SetInputState(true)
-{@Astrid}	Elijah said I was like Perseus. But lately I feel more like Andromeda...	$[level5/Astrid/l5_a_01]
-{@Astrid}	I wish I could decide my own fate. Being Andromeda sucks. 	$[level5/Astrid/l5_a_03]
+{@Astrid} Elijah said I was like Perseus. But lately I feel more like Andromeda... $[level5/Astrid/l5_a_01]
+{@Astrid} I wish I could decide my own fate. Being Andromeda sucks. $[level5/Astrid/l5_a_03]
 
 :: SpawnPuzzleDocs1
 @trigger    DocumentInspectEnd
-@when   documentId == "Day5ElijahPostcard"
+@when   documentId == "Day5Postcard"
+@interrupt
+@cutscene
+@once
+
+$wait 1
+$call SpawnDocumentToCamera("Day5Letter")
+{@Astrid}	Oh my gosh, its happening for real! They just offered me a job at the paper! 	$[level5/Astrid/l5_a_05]
+{@Astrid}	Dad would say I should keep working with him at CERES. Aunt Martha would think I'm crazy. Elijah... I'm not sure...	$[level5/Astrid/l5_a_09]
+{@Astrid}	Then I can figure out this job thing. 	$[level5/Astrid/l5_a_12]
+
+:: SpawnPuzzleDocs1a
+@trigger    DocumentInspectEnd
+@when   documentId == "Day5Letter"
 @interrupt
 @cutscene
 @once
 
 $wait 1
 $call SpawnDocumentToCamera("NewspaperLetter")
-{@Astrid}	Oh my gosh, its happening for real! They just offered me a job at the paper! 	$[level5/Astrid/l5_a_05]
+{@Astrid}	Okay, I have all this information now. I just need to get it to them in time and the mail will take too long. 	$[level5/Astrid/l5_a_04]
 
 :: SpawnPuzzleDocs2
 @trigger    DocumentInspectEnd
@@ -73,21 +88,67 @@ $call SpawnDocumentToCamera("NewspaperLetter")
 @cutscene
 @once
 
-$call SpawnDocumentToCamera("Day5Letter")
-{@Astrid}	Dad would say I should keep working with him at CERES. Aunt Martha would think I'm crazy. Elijah... I'm not sure...	$[level5/Astrid/l5_a_09]
-{@Astrid}	Then I can figure out this job thing. 	$[level5/Astrid/l5_a_12]
-
 $wait 1
-:: BadLetter
+
+$call SpawnDocumentToCamera("RecoveryBoardLetter")
+{@Astrid}	Does this mean I can't work on the puzzle? No, it looks like I just have to do some more identification. Really? 	$[level5/Astrid/l5_a_13]
+
+//#endregion
+
+//#region Document Puzzle
+
+:: SpawnPuzzleQuestion
 @trigger    DocumentInspectEnd
-@when   documentId == "Day5Letter"
+@when   documentId == "RecoveryBoardLetter"
 @interrupt
+@priority High
 @cutscene
 @once
 
+$call SetInputState(false)
 $wait 1
-$call SpawnDocumentToCamera("RecoveryBoardLetter")
-{@Astrid}	Does this mean I can't work on the puzzle? No, it looks like I just have to do some more identification. Really? 	$[level5/Astrid/l5_a_13]
+$call SetInputState(true)
+$call SpawnDocumentToCamera("Day5Question")
+$call StartDocumentPuzzle("Day5DocumentPuzzle")
+$set temp:docPuzzleSolved = false
+
+{@Astrid}	Should I go to Chicago or stay here and hope the radio turns back on? 	$[level5/Astrid/l5_a_14]
+
+:: IncorrectDocumentResponse2
+@trigger    DocumentPuzzlePromptStart
+@when answerId == "NewspaperLetter", !temp:docPuzzleSolved
+@interrupt
+@boostScore 100
+
+$start .TooLateToSendLetter
+
+:: IncorrectDocumentResponse3
+@trigger    DocumentPuzzlePromptStart
+@when answerId == "Day5Letter", !temp:docPuzzleSolved
+@interrupt
+@boostScore 100
+
+$start .TooLateToSendLetter
+
+:: TooLateToSendLetter
+@who    Astrid
+
+{@Astrid} It's too late to send a letter. I either have to go to Chicago or get the radio working.	$[level5/Astrid/l5_a_16]
+
+:: IncorrectDocumentResponse4
+@trigger    DocumentPuzzlePromptStart
+@when answerId == "RecoveryBoardLetter", !temp:docPuzzleSolved
+@interrupt
+@boostScore 100
+
+{@Astrid} They just want me to stay home and not do anything. $[level5/Astrid/l5_a_18]
+
+:: IncorrectDocumentResponse
+@trigger    DocumentPuzzlePromptStart
+@when !temp:docPuzzleSolved, answerId != "RecoveryBoardLetter", answerId != "Day5Letter", answerId != "NewspaperLetter", answerId != "Puppet",
+@interrupt
+
+{@Astrid} This really isn't helping me choose. I'm still not sure if I should stay here or travel to Chicago... $[level5/Astrid/l5_a_15]
 
 :: InspectCalendar
 @trigger    DocumentInspectStart
@@ -95,7 +156,7 @@ $call SpawnDocumentToCamera("RecoveryBoardLetter")
 @cutscene
 @once
 
-{@Astrid}	There are only a few days before meteor storm!	$[level5/Astrid/l5_a_13c]
+{@Astrid} There are only a few days before meteor storm!	$[level5/Astrid/l5_a_13c]
 
 :: InspectPuppetSketch
 @trigger    DocumentInspectStart
@@ -103,7 +164,7 @@ $call SpawnDocumentToCamera("RecoveryBoardLetter")
 @cutscene
 @once
 
-{@Astrid}	Time for andromeda to cut her strings. 	$[level5/Astrid/l5_a_13b]
+{@Astrid} Time for andromeda to cut her strings. 	$[level5/Astrid/l5_a_13b]
 
 :: InspectDontPanic
 @trigger    DocumentInspectStart
@@ -111,18 +172,26 @@ $call SpawnDocumentToCamera("RecoveryBoardLetter")
 @cutscene
 @once
 
-{@Astrid}	I've got to get the word out about the meteor storm 	$[level5/Astrid/l5_a_13a]
+{@Astrid} I've got to get the word out about the meteor storm. $[level5/Astrid/l5_a_13a]
 
-:: StartDay
-@trigger    DocumentInspectEnd
-@when   documentId == "RecoveryBoardLetter"
+:: EndPuzzleSection
+@trigger    DocumentPuzzleSolved
 @interrupt
+@boostScore 1000
+@priority High
 @cutscene
-@priority   High
 @once
 
-$wait 1
+$set temp:docPuzzleSolved = true
 $call SetInputState(false)
+{@Astrid} I need to choose my own fate... Ok... I'm going to stay here and try to finish the puzzle to see if I can get that satellite unlocked. $[level5/Astrid/l5_a_17]
+$start .StartDay
+//#endregion
+
+//#region Open Identification
+:: StartDay
+
+$wait 1.5
 $call WaitForMovedToView("Right")
 {@Astrid} I don't have time for this, I need to be working on the Andromeda puzzle. $[level5/Astrid/l5_a_19]
 $call OpenRefGuidePage("ConstellationAndromeda")
@@ -135,7 +204,7 @@ $call ConsoleCommandLine->PlayConsoleTextAndWait("AccessDenied")
 $call MonitorUI->CERESLogoToWatching(0.5)
 $call ConsoleCommandLine->HideConsole()
 {@Astrid} I guess that letter was right... $[level5/Astrid/l5_a_21]
-{@Astrid} Oh, it looks like incoming data from CERES. $[level5/Astrid/l5_a_18]
+{@Astrid} Oh, it looks like incoming data from CERES. $[level5/Astrid/l5_a_21a]
 
 $call SetRefGuideActive(false)
 $call SetInputState(true)
@@ -178,6 +247,9 @@ $call ClearMonitorSelection()
 $call SetStickyFirstPage(-1)
 $goto .SetupPuzzleNav
 
+//#endregion
+
+//#region Hercules Puzzle 
 :: SetupPuzzleNav
 
 $start Observatory.PathToMonitor
@@ -196,7 +268,7 @@ $call SetInputState(true)
 $call SetInputState(false)
 $call WaitForMovedToView("Right")
 $call ClearMonitorSelection()
-// Dont remove this wait
+//! Dont remove this wait
 // We need it because something is messing with the input here 😭
 $wait 1
 $call StartPuzzleMode()
@@ -284,3 +356,5 @@ $call TapeDeck->SetTapeActive(false)
 
 $wait 0.5
 $call LoadNextDay()
+
+//#endregion

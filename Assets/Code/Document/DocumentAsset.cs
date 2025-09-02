@@ -33,13 +33,12 @@ namespace Astro {
 
         [HideInInspector]
         public StreamingDocumentVisual[] StreamingVisuals;
-        public bool UseCutoutMaterial;
+        public bool UseCutoutMaterial = false;
 
         public Vector3 DefaultPinnedPos;
         [HideInInspector] public Vector3 LastKnownPos;
         public Vector3 ZoomOffsetOverride;
 
-        public bool PreserveInArchive = true;
         public bool TriggersPrompter = true; // false for questions
 
         public bool DifInitPos = false;

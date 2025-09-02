@@ -26,7 +26,6 @@ namespace Astro {
         public Vector3 ZoomOffsetOverride;
 
         [HideInInspector] public DocumentInteractable Interactable;
-        [HideInInspector] public bool PreserveInArchive;
         [HideInInspector] public bool TriggersPrompter;
 
         [NonSerialized] public string BaseVisualAssetName;
