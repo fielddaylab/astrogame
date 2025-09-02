@@ -300,6 +300,7 @@ $set temp:finalPuzzleCompleted = false
 $wait 0.5
 $call SetRefGuideActive(false)
 $call ScriptFader->FadeOut()
+$call MonitorUI->PowerOff()
 $wait 1
 $call SatelliteDecoder->SetDecoderActive(true)
 $call SatelliteDecoder->SetDecoderHighlightActive(true)

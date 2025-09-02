@@ -54,11 +54,19 @@ $call ChapterTitles->FinishTransition(3)
 $call SetInputState(true)
 
 $call SpawnDocumentToCamera("Day2DadIcecubePostcard")
-$call EnableDocumentClose("Day2DadIcecubePostcard", true, true)
 
 {@Astrid}	Wow, that's Dad at IceCube!	$[level2/Astrid/l2_a_03]
+
+:: FlipHercules
+@trigger    DocumentInspectFlip
+@when   documentId == "Day2DadIcecubePostcard"
+@interrupt
+@cutscene
+@once
+
+$call EnableDocumentClose("Day2DadIcecubePostcard", true, true)
 {@Astrid}	I wonder if he ever feels weird about the southern lights, after everything that happened.	$[level2/Astrid/l2_a_04]
-{@Astrid}	I guess auroras don't usually come with a huge <b>coronal mass ejection</b>... but I think it might still freak me out. 	$[level2/Astrid/l2_a_05]
+{@Astrid}	I guess auroras don't usually come with a huge <b>coronal mass ejection</b>... but I think it might still freak me out. $[level2/Astrid/l2_a_05]
 
 :: SpawnPuzzleDocs1
 @trigger    DocumentInspectEnd
