@@ -222,7 +222,8 @@ $call StartNeutrinoNavigation()
 $call SetStickyFirstPage(4)
 $call StopNeutrinoNavigation()
 $call StartOpenMode()
-{@Astrid}	Woah, it is really quiet here without the CERES channel. 	$[level5/Astrid/l5_a_22]
+{@Astrid} Woah, it is really quiet here without the CERES channel. 	$[level5/Astrid/l5_a_22]
+{@Astrid} I'll have to find the luminosity of these stars in the Eridanus constellation. $[level5\Astrid\l5_a_22a]
 
 :: FinishOpenID
 @trigger    PointsUpdated
@@ -295,6 +296,7 @@ $call OpenRefGuidePage("ConstellationAndromedaCompleted")
 $call MoveToView("Right")
 $call StartFinalPuzzleMode()
 {@Astrid} Whoa... what's this? $[level5/Astrid/l5_a_27]
+$set temp:finalPuzzleCompleted = false
 $wait 0.5
 $call SetRefGuideActive(false)
 $call ScriptFader->FadeOut()
@@ -304,12 +306,23 @@ $call SatelliteDecoder->SetDecoderHighlightActive(true)
 $wait 1
 $call ScriptFader->FadeIn()
 
-{@Astrid}	Looks like I just need to put in the password. 	$[level5/Astrid/l5_a_28]
+{@Astrid} Looks like I just need to solve this combination lock. Looks like it will be a word of some kind. $[level5\Astrid\l5_a_28]
+{@Astrid} Its probably some Slovenian word since our Solvenian astronomer Slovoj created this. $[level5\Astrid\l5_a_28a]
 $call SetInputState(true)
 $call OpenRefGuidePage("ConstellationPerseusCompleted")
 
-{@Astrid} I wish Elijah was here to see this. $[level5/Astrid/l5_a_29]
-{@Astrid} Okay... here goes nothing. $[level5/Astrid/l5_a_30]
+{@Astrid} I wish Elijah was here to see this. $[level5\Astrid\l5_a_29]
+{@Astrid} Okay... here goes nothing. $[level5\Astrid\l5_a_30]
+
+$branch .DecoderHintTimeout
+
+:: .DecoderHintTimeout
+$wait 20
+
+$if !temp:finalPuzzleCompleted
+    {@Astrid} I should look at my constellation notes in the tools section of the reference guide. $[level5\Astrid\l5_a_30a]
+    $branch .DecoderHintTimeout
+$endif
 
 :: FirstInteractDecoder
 @trigger    OnDecoderInteract
@@ -322,8 +335,12 @@ $call SatelliteDecoder->SetDecoderHighlightActive(false)
 @once
 
 $call SetInputState(false)
-{@Astrid} I don't get it. The password is correct... but nothing's happening. $[level5/Astrid/l5_a_31]
-{@Astrid} I thought I was going to get a radio signal. $[level5/Astrid/l5_a_32]
+{@Astrid} "Zorya..." I wonder what that means? Someone's name...? $[level5\Astrid\l5_a_30b]
+$wait 1
+{@Astrid} I don't get it. The password is correct... but nothing's happening. $[level5\Astrid\l5_a_31]
+$call SetRadioFrequency(375)
+$call SetRadioFrequency(137)
+{@Astrid} The radio still doesn't work. $[level5\Astrid\l5_a_32]
 $call StopPuzzleMode()
 $call ClearMonitorSelection()
 
@@ -332,12 +349,12 @@ $call ConsoleCommandLine->PlayConsoleTextAndWait("PlayMessage")
 $call TapeDeck->SetTapeActive(true)
 {@Elijah} Astrid, you did it! You solved it! $[level5/Elijah/l5_e_01]
 {@Elijah} You are literally the smartest person I know. $[level5/Elijah/l5_e_02]
-{@Elijah} Now I just need to put in the final upgrade command when I get back. $[level5/Elijah/l5_e_03]
-{@Elijah} Then World's End will have access to everything! New radio channels, all the unencrypted data... $[level5/Elijah/l5_e_04]
 {@Elijah} It's so weird recording this, getting excited about something that hasn't happened yet... $[level5/Elijah/l5_e_05]
 {@Elijah} But I know it will. You're the stuff of Greek myth, remember? $[level5/Elijah/l5_e_06]
 {@Elijah} Hopefully, as you're listening to this, I'm already back home with you. Maybe we're listening to this together, and laughing at what a dork I am.	$[level5/Elijah/l5_e_07]
 {@Elijah} If not... I'll be there as soon as I can. I promise. $[level5/Elijah/l5_e_08]
+{@Elijah} Now I just need to put in the final upgrade command when I get back. $[level5/Elijah/l5_e_03]
+{@Elijah} Then World's End will have access to everything! New radio channels, all the unencrypted data... $[level5/Elijah/l5_e_04]
 {@Elijah} I can't wait to see you. Then we can figure out what's next. $[level5/Elijah/l5_e_09]
 $call ConsoleCommandLine->HideConsole()
 $call TapeDeck->SetTapeActive(false)
@@ -347,10 +364,10 @@ $call TapeDeck->SetTapeActive(false)
 {@Astrid} Why wouldn't you just tell me the upgrade command so I can do it myself? $[level5/Astrid/l5_a_35]
 {@Astrid} I needed this to work! Now how am I going to reach Jocelyn? $[level5/Astrid/l5_a_36]
 {@Astrid} Elijah might get back in time ... but he might not. $[level5/Astrid/l5_a_37]
-{@Astrid} I need to make a decision. $[level5/Astrid/l5_a_38]
-{@Astrid} I've waited so long to see Elijah again. $[level5/Astrid/l5_a_39]
-{@Astrid} But I need to tell people about the meteor storm... what it means. Get them excited, not afraid. $[level5/Astrid/l5_a_40]
-{@Astrid} I know what Dad would say, and Aunt Martha... but they're not here. $[level5/Astrid/l5_a_41]
+// {@Astrid} I need to make a decision. $[level5/Astrid/l5_a_38]
+// {@Astrid} I've waited so long to see Elijah again. $[level5/Astrid/l5_a_39]
+// {@Astrid} But I need to tell people about the meteor storm... what it means. Get them excited, not afraid. $[level5/Astrid/l5_a_40]
+// {@Astrid} I know what Dad would say, and Aunt Martha... but they're not here. $[level5/Astrid/l5_a_41]
 {@Astrid} I have to decide this for myself. $[level5/Astrid/l5_a_42]
 {@Astrid} .... Finally.	$[level5/Astrid/l5_a_43]
 
