@@ -66,7 +66,7 @@ $call SetInputState(true)
 $start .PowerButtonHint
 
 :: PowerButtonHint
-$wait 8
+$wait 12
 $if !temp:powerButtonHint, !temp:pressedPowerButton
     $call HintModals->SlideInFromRight("MonitorPower", 0.4)
     $set temp:powerButtonHint = true
@@ -178,9 +178,9 @@ $wait 1
 {@Dad}      ...I told you, he's not there. Astrid, is that you? 	$[level1/dad/l1_d_01]
 
 {@Astrid}	(*gasp*) Dad!? I—I can’t believe it. Are you still at the South Pole? Can you hear me? $[level1/Astrid/l1_a_07]
-{@Dad}	    Loud and clear. Well… not clear, exactly. But you know what I mean.	$[level1/dad/l1_d_02]
+{@Dad}	    Loud and clear. Well... not clear, exactly. But you know what I mean.	$[level1/dad/l1_d_02]
 {@Dad}	    It’s so good to hear your voice, Little Bear.	$[level1/dad/l1_d_03]
-{@Astrid}	Hold on. Why are you calling Elijah's radio? Do you know where he went? 	$[level1/Astrid/l1_a_08]
+{@Astrid}	Hold on, why are you calling Elijah's radio? Do you know where he went? 	$[level1/Astrid/l1_a_08]
 {@Dad}	    It’s sort of a long story.	$[level1/dad/l1_d_04]
 {@Dad}	    My team here at IceCube is working to rebuild the knowledge of the cosmos that was lost during the coronal mass ejection two years ago.	$[level1/dad/l1_d_05]
 {@Dad}	    We've joined up with a network of citizen astronomers around the world. We call it CERES. 	$[level1/dad/l1_d_06]
@@ -188,6 +188,7 @@ $wait 1
 {@Dad}	    Yeah, Elijah loved the name. I told him it was just an acronym, but I swear, everything I tell that kid goes in one ear and out the other. 	$[level1/dad/l1_d_07]
 {@Astrid}	So... where is he? 	$[level1/Astrid/l1_a_10]
 {@Dad}	    A few weeks ago, he reached out about some mysterious side project. He said he had to go out on the road. 	$[level1/dad/l1_d_08]
+{@Dad}	I think he called it... "Project Hercules."	$[level1/dad/l1_d_08a]
 {@Dad}	    I tried to stop him, but ... I mean, you know how he is.	$[level1/dad/l1_d_09]
 {@Astrid}	I don't get it. Why would he leave when he knew I was coming? 	$[level1/Astrid/l1_a_11]
 
@@ -195,7 +196,7 @@ $call PlayRadioAlert()
 {@Monitor}	All CERES transmissions must comply with authorized protocols, or we’ll be forced to revoke your clearance. 	$[level1/monitor/l1_m_01]
 {@Monitor}	Remember, communication is a privilege, not a right.	$[level1/monitor/l1_m_02]
 {@Astrid}	Uhhh, who was that?	$[level1/Astrid/l1_a_12]
-{@Dad}      Sorry, uh…“Station 12,” this channel doesn’t allow for… personal communications. 	$[level1/dad/l1_d_10]
+{@Dad}      Sorry, uh... “Station 12.” This channel doesn’t allow for... personal communications. 	$[level1/dad/l1_d_10]
 {@Dad}      The Recovery Board is strict about research-only radio bands. 	$[level1/dad/l1_d_11]
 {@Dad}      I’ll grant you entry-level access so you can help us. I should sign off now. More later.	$[level1/dad/l1_d_12]
 
@@ -320,7 +321,7 @@ $call SetInputState(true)
 $start .FirstStarHint
 
 :: FirstStarHint
-$wait 10
+$wait 12
 $if temp:waitingForNeutrinoStar
     {@Radio} Astrid, you still there? Select a possible neutrino source on your display. $[level1/radio_lady/l1_r_19]
     $branch .FirstStarHint
@@ -438,6 +439,7 @@ $set temp:waitingForFirstClassificationClick = false
 
 :: ValidKnowledgeSubmission
 @trigger    OnValidKnowledgeSubmission
+@when   IsRadioFrequencyAt(137)
 @cutscene
 @interrupt
 
@@ -450,6 +452,7 @@ $endif
 
 :: IncorrectSubmission
 @trigger    OnIncorrectOpenIdSubmission
+@when   IsRadioFrequencyAt(137)
 
 $if temp:waitingForFirstClassificationClick
     $call HintModals->Hide("SubmitRangeHint", 0.2)
@@ -464,6 +467,7 @@ $start Observatory.ResetSubtitlePosition
 
 :: FirstDupliacteSubmission
 @trigger    OnDuplicateOpenIdSubmission
+@when   IsRadioFrequencyAt(137)
 @boostScore 100
 @cutscene
 @once
@@ -529,7 +533,7 @@ $start .PostPoint
 @cutscene
 @once
 
-{@Astrid}	Nice! I'll try another one.	$[level1/Astrid/l1_a_16]
+{@Astrid} Nice! I'll try another one.	$[level1/Astrid/l1_a_16]
 $start .PostPoint
 
 :: PostPoint
@@ -612,9 +616,12 @@ $call SetRadioFrequency(137)
 $call MonitorUI->ShowCERESLogo()
 $call MonitorUI->CERESLogoToCorner(0.5)
 $wait 1
+{@Astrid} Well, that was... something... $[level1/Astrid/l1_a_18]
 $call SetInputState(true)
 
 $call ConsoleCommandLine->PlayConsoleText("Day1UpgradeSystem")
+$wait 1
+{@Astrid}	Starting at the bottom... clearance level one.	$[level1/Astrid/l1_a_19]
 
 $call SetInstrumentUnlocked(ColorInstrument, true)
 $call SetInstrumentUnlocked(TemperatureInstrument, true)
@@ -683,6 +690,8 @@ $call StartPuzzleNavigation()
 @once
 
 {@Astrid}	Ach, colder!	$[level1/Astrid/l1_a_29]
+
+// #region Puzzle Tutorial
 
 :: PuzzleNavigationComplete
 @trigger    PuzzleNavigationComplete
@@ -1124,15 +1133,17 @@ $if !local:row_3
 $else
     $set temp:CompletedMirfakRow = true
 $endif
+
+{@Astrid}	Ugh. That's not right. What did I miss? 	$[level1/Astrid/l1_a_66]
 $if !local:row_0
     $set temp:AlgolRowFilled = false
-    {@Astrid}	Ugh. That's not right. What did I miss? 	$[level1/Astrid/l1_a_66]
     $goto .HintForSecondRow
 $else
-    {@Astrid}	Ugh. That's not right. What did I miss? 	$[level1/Astrid/l1_a_66(1)]
     $set temp:CompletedAlgolRow = true
     $branch .PuzzleTimeoutHint
 $endif
+
+// #endregion
 
 :: PerseusPuzzleComplete
 @trigger    CorrectPuzzleSubmission

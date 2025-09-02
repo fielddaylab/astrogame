@@ -34,6 +34,8 @@ $call ChapterTitles->PrepareTransition()
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $call SetRadioDialLocked(true)
 
+//#region Spawn Documents
+
 :: BeginDay
 @trigger    SceneReady
 @boostScore 100
@@ -66,7 +68,7 @@ $call EnableDocumentClose("Day2DadIcecubePostcard", true, true)
 @once
 
 $call SetInputState(false)
-$call Wait(1)
+$wait 1
 $call SpawnDocumentToCamera("HerculesPostcard")
 $call SetInputState(true)
 $call PlayMusic("Music.StarlightStudent", 3)
@@ -81,6 +83,7 @@ $call PlayMusic("Music.StarlightStudent", 3)
 @once
 
 $call EnableDocumentClose("HerculesPostcard", true, true)
+$wait 1
 
 {@Astrid}	What? We're running out of time? What does that mean? 	$[level2/Astrid/l2_a_08]
 {@Astrid}	And why are you talking about the end of the world? 	$[level2/Astrid/l2_a_09]
@@ -95,12 +98,37 @@ $call EnableDocumentClose("HerculesPostcard", true, true)
 @once
 
 $call SetInputState(false)
-$call Wait(1)
+$wait 1
 $call SpawnDocumentToCamera("Day2Martha")
 $call SetInputState(true)
 
 {@Astrid}	I feel so guilty for leaving Aunt Martha to run the clinic by herself.	$[level2/Astrid/l2_a_11]
 {@Astrid}	But I can't go home yet. I finally get to do some real astronomy here. And what if Elijah comes back? 	$[level2/Astrid/l2_a_12]
+
+:: SpawnPuzzleDocs3
+@trigger    DocumentInspectEnd
+@when   documentId == "Day2Martha"
+@interrupt
+@boostScore 100
+@cutscene
+@once
+
+$call SetInputState(false)
+$wait 1
+$set temp:puzzleComplete = false
+{@Astrid}	I still have so many questions.	$[level2/Astrid/l2_a_14]
+$wait 0.5
+
+$call SpawnDocumentToCamera("Day2Question")
+$call StartDocumentPuzzle("Day2DocumentPuzzle")
+$set temp:docPuzzleSolved = false
+$call SetInputState(true)
+
+{@Astrid}	Where is Elijah? Is he okay? 	$[level2/Astrid/l2_a_15]
+
+// #endregion 
+
+//#region Document Puzzle
 
 :: InspectMiniMap
 @trigger    DocumentInspectStart
@@ -124,7 +152,7 @@ $call SetInputState(true)
 @cutscene
 @once
 
-{@Astrid}	I feel so guilty for leaving Aunt Martha and the clinic. 	$[level2/Astrid/l2_a_13b]
+{@Astrid}	I hope the clinic is still going well... 	$[level2/Astrid/l2_a_13b]
 
 :: InspectElijahHike
 @trigger    DocumentInspectStart
@@ -148,28 +176,7 @@ $call SetInputState(true)
 @cutscene
 @once
 
-{@Astrid} I'm a certified astronomer now! $[level2/Astrid/l2_a_13e]
-
-:: SpawnPuzzleDocs3
-@trigger    DocumentInspectEnd
-@when   documentId == "Day2Martha"
-@interrupt
-@boostScore 100
-@cutscene
-@once
-
-$call SetInputState(false)
-$wait 1
-$set temp:puzzleComplete = false
-{@Astrid}	I still have so many questions.	$[level2/Astrid/l2_a_14]
-$wait 0.5
-
-$call SpawnDocumentToCamera("Day2Question")
-$call StartDocumentPuzzle("Day2DocumentPuzzle")
-$set temp:docPuzzleSolved = false
-$call SetInputState(true)
-
-{@Astrid}	Where is Elijah? Is he okay? 	$[level2/Astrid/l2_a_15]
+{@Astrid} Clearance Level 1! I'm a certified "junior astronomer." $[level2/Astrid/l2_a_13e]
 
 :: Day2Question2DocumentInspectEnd
 @trigger    DocumentInspectEnd
@@ -228,15 +235,17 @@ $if !temp:puzzleComplete
     $wait 1
     $goto .StartNeutrinoNav
 $endif
+// #endregion
 
+//#region Open Identification
 :: StartNeutrinoNav
 @cutscene
 
 $call WaitForMovedToView("Right")
 {@Radio} CERES HQ to Station 12. $[level2/radio_lady/l2_r_01]
-{@Radio} IceCube is detecting a high-energy neutrino emission from the area of the Hydra Constellation. 	$[level2/radio_lady/l2_r_02]
+{@Radio} IceCube is detecting a high-energy neutrino emission from the area of the Hydra Constellation. $[level2/radio_lady/l2_r_02]
 $call SetInputState(true)
-{@Radio} Uploading area of interest.	$[level2/radio_lady/l2_r_03]
+{@Radio} Uploading area of interest. $[level2/radio_lady/l2_r_03]
 $goto .SetupNeutrinoNav
 
 :: SetupNeutrinoNav
@@ -265,7 +274,7 @@ $start .FirstStarHint
 :: FirstStarHint
 $wait 10
 $if temp:waitingForNeutrinoStar
-    {@Radio}	Astrid, you still there? Select a possible neutrino source on your display.	$[level1/radio_lady/l1_r_19]
+    {@Radio} Astrid, you still there? Select a possible neutrino source on your display. $[level1/radio_lady/l1_r_19]
     $branch .FirstStarHint
 $endif
 
@@ -304,9 +313,9 @@ $call LockMonitorFocus()
 $set temp:waitingForBlueFilter = false
 $call OpenRefGuidePage("SpectralClass")
 
-{@Radio}	Now you can use that temperature to look up the spectral type in your reference guide.	$[level2/radio_lady/l2_r_12]
-{@Radio}	These categories are fuzzy - don't worry if your star doesn't match exactly. You'll get clearance for more precise tools later.	$[level2/radio_lady/l2_r_13]
-{@Radio}	Look up the spectral type in your manual, and submit the data	$[level2/radio_lady/l2_r_14]
+{@Radio} Now you can use that temperature to look up the spectral type in your reference guide.	$[level2/radio_lady/l2_r_12]
+{@Radio} These categories are fuzzy - don't worry if your star doesn't match exactly. You'll get clearance for more precise tools later.	$[level2/radio_lady/l2_r_13]
+{@Radio} Look up the spectral type in your manual, and submit the data.	$[level2/radio_lady/l2_r_14]
 $set temp:waitingForFirstSubmission = true
 $start .WaitingForFirstSubmission
 
@@ -316,7 +325,6 @@ $if temp:waitingForFirstSubmission
     {@Astrid}	Stars are grouped by temperature—O, B, A, F, G, K, M. Hottest to coolest. I just need to pick one.	$[level2/Astrid/l2_a_21]
     $branch .WaitingForFirstSubmission
 $endif
-
 
 :: BlueFilterNOTSelected
 @trigger OnLabInteraction
@@ -328,7 +336,7 @@ $endif
 
 :: PointsUpdated
 @trigger    PointsUpdated
-@when   sciencePoints > 0
+@when   sciencePoints > 0, IsRadioFrequencyAt(137)
 @interrupt
 @boostScore 300
 @cutscene
@@ -371,6 +379,9 @@ $if !temp:radioChannelTuned
     $branch .UpgradeReminder
 $endif
 
+// #endregion
+
+//#region Upgrade
 :: ClearanceUpgradeTrigger
 @trigger    RadioChannelListenStart
 @when       channelId == "Unlocks_Active"
@@ -424,6 +435,9 @@ $wait 2
 $call StartPuzzleNavigation()
 $call SetInputState(true)
 
+// #endregion
+
+//#region Hercules Puzzle 
 :: PuzzleNavigationComplete
 @trigger    PuzzleNavigationComplete
 @cutscene
@@ -452,19 +466,19 @@ $call SetRefPageActive("ConstellationHerculesCompleted", true)
 $call OpenRefGuidePage("ConstellationHerculesCompleted")
 
 $call TapeDeck->SetTapeActive(true)
-{@Elijah}	Astrid. If you’re hearing this, it means you’ve solved Hercules!	$[level2/Elijah/l2_e_01]
-{@Elijah}	If we're on schedule, unencrypted satellite data should start streaming in shortly!	$[level2/Elijah/l2_e_02]
-{@Astrid}	Satellite? What satellite? 	$[level2/Astrid/l2_a_24]
-{@Elijah}	Soon CERES will be able to access data from before the Collapse!	$[level2/Elijah/l2_e_03]
-{@Elijah}	Not only that but it will act as a radio repeater and allow us to create an open communication network. 	$[level2/Elijah/l2_e_04]
-{@Elijah}	I've been trying to get the satellite online for <i>so</i> long.	$[level2/Elijah/l2_e_05]
-{@Elijah}	This astronomer, Slavoj, put this satellite up with this encryption. He wanted to make sure that only an astronomer could unlock it. 	$[level2/Elijah/l2_e_06]
-{@Elijah}	So these crazy puzzles were made by him. You have to prove yourself. If anyone can solve them, its you. 	$[level2/Elijah/l2_e_07]
-{@Elijah}	You'll love this. The satellite is named after a dragon from Slavic folklore. 	$[level2/Elijah/l2_e_08]
-{@Elijah}	I found the name in an old library book... Zmei Gorynich. Not sure if I'm saying that right.	$[level2/Elijah/l2_e_09]
-{@Elijah}	It's sort of poetic, I guess... a dragon guarding over the treasure. 	$[level2/Elijah/l2_e_10]
-{@Elijah}	Hercules had to fight a dragon, too... but I'm getting ahead of myself. 	$[level2/Elijah/l2_e_11]
-{@Elijah}	I hope you're okay Astrid. I miss you. $[level2/Elijah/l2_e_12]
+{@Elijah} Astrid. If you’re hearing this, it means you’ve solved Hercules! $[level2/Elijah/l2_e_01]
+{@Elijah} If we're on schedule, unencrypted satellite data should start streaming in shortly! $[level2/Elijah/l2_e_02]
+{@Astrid} Satellite? What satellite? $[level2/Astrid/l2_a_24]
+{@Elijah} Soon CERES will be able to access data from before the Collapse! $[level2/Elijah/l2_e_03]
+{@Elijah} Not only that but it will act as a radio repeater and allow us to create an open communication network. $[level2/Elijah/l2_e_04]
+{@Elijah} I've been trying to get the satellite online for <i>so</i> long.	$[level2/Elijah/l2_e_05]
+{@Elijah} This astronomer, Slavoj, put this satellite up with this encryption. He wanted to make sure that only an astronomer could unlock it. $[level2/Elijah/l2_e_06]
+{@Elijah} So these crazy puzzles were made by him. You have to prove yourself. If anyone can solve them, its you. $[level2/Elijah/l2_e_07]
+{@Elijah} You'll love this. The satellite is named after a dragon from Slavic folklore. $[level2/Elijah/l2_e_08]
+{@Elijah} I found the name in an old library book... Zmei Gorynich. Not sure if I'm saying that right.	$[level2/Elijah/l2_e_09]
+{@Elijah} It's sort of poetic, I guess... a dragon guarding over the treasure. 	$[level2/Elijah/l2_e_10]
+{@Elijah} Hercules had to fight a dragon, too... but I'm getting ahead of myself. $[level2/Elijah/l2_e_11]
+{@Elijah} I hope you're okay Astrid. I miss you. $[level2/Elijah/l2_e_12]
 $call ConsoleCommandLine->HideConsole()
 $call TapeDeck->SetTapeActive(false)
 
@@ -479,16 +493,15 @@ $goto .PuzzleNavigationComplete01
 @cutscene
 
 $wait 1
-{@Dad}	Station 12, this is CERES HQ. Nice work today. $[level2/Dad/l2_d_01]
-{@Astrid}	Dad, I'm so glad you called. I'm freaking out. I think I know what Elijah is working on!	$[level2/Astrid/l2_a_25]
+{@Dad} Station 12, this is CERES HQ. Nice work today. $[level2/Dad/l2_d_01]
+{@Astrid} Dad, I'm so glad you called. I'm freaking out. I think I know what Elijah is working on!	$[level2/Astrid/l2_a_25]
 {@Dad}	{vox-overlap -0.5} Whoa, Astrid, didn't you get my letter? This channel is—	$[level2/Dad/l2_d_02]
-
-{@Astrid}	I know, but just listen! Elijah said something about a satellite. It has data from before the Collapse!	$[level2/Astrid/l2_a_26]
-{@Dad}	Oh, Astrid. The Gorynich satellite is just a wild goose chase. 	$[level2/Dad/l2_d_03]
-{@Dad}	Or... a wild dragon chase, I guess. 	$[level2/Dad/l2_d_04]
-{@Astrid}	Wait a second. You knew about this? 	$[level2/Astrid/l2_a_27]
+{@Astrid} I know, but just listen! Elijah said something about a satellite. It has data from before the Collapse!	$[level2/Astrid/l2_a_26]
+{@Dad} Oh, Astrid. The Gorynich satellite is just a wild goose chase. 	$[level2/Dad/l2_d_03]
+{@Dad} Or... a wild dragon chase, I guess. $[level2/Dad/l2_d_04]
+{@Astrid} Wait a second. You knew about this? 	$[level2/Astrid/l2_a_27]
 {@Dad}	Look... it's only rumors. You know how Elijah gets caught up in those old stories. 	$[level2/Dad/l2_d_05]
-{@Astrid}	What stories? ...Dad, you have to tell me. 	$[level2/Astrid/l2_a_28]
+{@Astrid} What stories? ...Dad, you have to tell me. 	$[level2/Astrid/l2_a_28]
 {@Dad} Supposedly, there was a researcher from Slovenia who spent the last years of his life getting a satellite into orbit. $[level2/Dad/l2_d_06]
 {@Dad}	This guy was super paranoid, so he built the satellite with tons of extra shielding. There's a chance... a tiny, negligible chance... that it could've survived the Collapse. 	$[level2/Dad/l2_d_07]
 {@Dad}	But the satellite is locked. Encrypted with a 5-letter key.	$[level2/Dad/l2_d_08]
@@ -499,20 +512,22 @@ $wait 1
 {@Dad}	Astrid, the guy who built that satellite was... eccentric, to put it mildly. 	$[level2/Dad/l2_d_11]
 {@Dad}	Even if you solve all the puzzles, it probably won't work. 	$[level2/Dad/l2_d_12]
 {@Astrid}	Elijah thinks it'll work. 	$[level2/Astrid/l2_a_31]
-{@Dad}	Elijah is obsessed with this thing! It's not healthy. I don't—	$[level2/Dad/l2_d_13]
+{@Dad} {vox-overlap -0.1} Elijah is obsessed with this thing! It's not healthy. I don't— $[level2/Dad/l2_d_13]
 $call PlayRadioAlert()
-{@Monitor}	Station 12 and CERES HQ, you have been flagged non-compliant by the Recovery Board. You will lose access to this frequency upon any further violations.	$[level2/monitor/l2_m_01]
-{@Monitor}	I advise that you review communication protocols if you want to avoid termination. 	$[level2/monitor/l2_m_02]
+{@Monitor} Station 12 and CERES HQ, you have been flagged non-compliant by the Recovery Board. You will lose access to this frequency upon any further violations.	$[level2/monitor/l2_m_01]
+{@Monitor} I advise that you review communication protocols if you want to avoid termination. 	$[level2/monitor/l2_m_02]
 {@Astrid}	Whoa. Dad, are you there? 	$[level2/Astrid/l2_a_32]
 $wait 1
-{@Radio}	Station 12, we have a new cluster for you to investigate. 	$[level2/radio_lady/l2_r_17]
-{@Astrid}	Hang on, I was just talking to my dad... 	$[level2/Astrid/l2_a_33]
-{@Radio}	I'm taking over for now. Are you able to continue working? 	$[level2/radio_lady/l2_r_18]
+{@Radio} Station 12, we have a new cluster for you to investigate. $[level2/radio_lady/l2_r_17]
+{@Astrid} Hang on, I was just talking to my dad... 	$[level2/Astrid/l2_a_33]
+{@Radio} I'm taking over for now. Are you able to continue working? 	$[level2/radio_lady/l2_r_18]
 $call SetRefGuideActive(false)
-{@Astrid}	No, signing off for tonight. 	$[level2/Astrid/l2_a_34]
+{@Astrid} No, signing off for tonight. 	$[level2/Astrid/l2_a_34]
 
 $call StopMusic(1)
 $call SetRadioFrequency(100)
 $wait 1
 
 $call LoadNextDay()
+
+// #endregion
