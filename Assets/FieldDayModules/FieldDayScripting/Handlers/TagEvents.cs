@@ -7,11 +7,13 @@ namespace FieldDay.Scripting {
         static public readonly StringHash32 ConfigureVoxOverlap = "vox-overlap";
         static public readonly StringHash32 DispatchEvent = "dispatch-event";
         static public readonly StringHash32 SubtitleTimecodes = "subtitle-timecodes";
+        static public readonly StringHash32 OverrideCharName = "override-character-name";
 
         static internal void ConfigureParsers(CustomTagParserConfig parser, ILeafPlugin plugin) {
             LeafUtils.ConfigureDefaultParsers(parser, plugin, null);
 
             parser.AddEvent("vox-overlap", ConfigureVoxOverlap).WithFloatData(-0.2f);
+            parser.AddEvent("char-name", OverrideCharName).WithStringData();
             parser.AddEvent("srt", SubtitleTimecodes).WithFloatData();
             parser.AddEvent("dispatch-event", DispatchEvent).WithStringHashData();
 
@@ -23,6 +25,7 @@ namespace FieldDay.Scripting {
 
             handler.Register(ConfigureVoxOverlap, Event_VoxOverlap);
             handler.Register(DispatchEvent, Event_DispatchEvent);
+            handler.Register(OverrideCharName, Event_NoOp);
             handler.Register(LeafUtils.Events.Character, Event_NoOp);
             handler.Register(LeafUtils.Events.Pose, Event_NoOp);
             handler.Register(SubtitleTimecodes, Event_NoOp);

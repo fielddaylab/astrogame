@@ -18,10 +18,12 @@ namespace Astro {
 
         [Header("Display")]
         [SerializeField] private TMP_Text m_Text;
+        [SerializeField] private TMP_Text m_NameText;
         [SerializeField] private RoundedRectGraphic m_Background;
 
         [Header("Data")]
         [SerializeField] private ColorPalette2 m_DefaultColors;
+        [SerializeField] private float m_NameMargin;
 
         #endregion // Inspector
 
@@ -72,7 +74,7 @@ namespace Astro {
             }
         }
 
-        private void HandleDismissRequest(SubtitleDisplayData data) {
+        private void HandleDismissRequest(SubtitleDismissData data) {
             if (data.VoxHandle != m_CurrentDisplayData.VoxHandle) {
                 return;
             }
@@ -96,6 +98,7 @@ namespace Astro {
             float fontSize = m_DefaultFontSize;
             float cornerRadius = m_DefaultCornerRadius;
             Vector4 margin = m_DefaultMargin;
+            string characterName = data.CharacterNameOverride;
 
             if (style != null) {
                 if (style.OverrideColors) {
@@ -108,9 +111,22 @@ namespace Astro {
                 fontSize *= style.FontScale;
                 cornerRadius *= style.BackgroundCornerRadiusScale;
                 margin *= style.MarginScale;
+
+                if (string.IsNullOrEmpty(characterName)) {
+                    characterName = style.DisplayName;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(characterName)) {
+                margin.y += m_NameMargin;
+                m_NameText.gameObject.SetActive(true);
+                m_NameText.SetText(characterName);
+            } else {
+                m_NameText.gameObject.SetActive(false);
             }
 
             m_Text.color = palette.Content;
+            m_NameText.color = palette.Content;
             m_Background.SetColor(palette.Background);
             m_Text.font = font;
             m_Text.fontSize = fontSize;

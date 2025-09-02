@@ -34,7 +34,6 @@ $start Observatory.ResetSubtitlePosition
 :: BeginDay
 @trigger    SceneReady
 @boostScore 100
-@who    Astrid
 
 $call PlayMusic("Music.Dreams", 3)
 $call ChapterTitles->DisplayChapterTitles()
@@ -275,7 +274,7 @@ $call MonitorUI->HideElement("CeresMsg")
 $wait 1
 {@Radio}	Astrid, come in, are you there? $[level3/radio_lady/l3_r_13a]
 {@Astrid}	Hey! Yeah, I'm here. What happened?	$[level3/Astrid/l3_a_38b]
-{@Radio}	Well, long story, but it looks like the parallax module is working again and you will have access to historical data. $[level3/radio_lady/l3_r_13b]
+{@Radio}	Well, long story, but it looks like your station is receiving historical observations from a surviving satellite.  $[level3/radio_lady/l3_r_13b]
 {@Radio}	So.... You have been cleared to use the parallax module. $[level3/radio_lady/l3_r_13c]
 {@Radio}	This will allow you to measure parallax, so that you can determine the distance of stars from Earth.	$[level3/radio_lady/l3_r_13]
 {@Astrid}	Sick. Anything else? Like... maybe any data on a giant meteor storm later this year? 	$[level3/Astrid/l3_a_40]

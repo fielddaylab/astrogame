@@ -40,7 +40,6 @@ $start Observatory.ResetSubtitlePosition
 :: BeginDay
 @trigger    SceneReady
 @boostScore 100
-@who    Astrid
 
 $call ChapterTitles->DisplayChapterTitles()
 
@@ -168,8 +167,7 @@ $call MonitorUI->CERESLogoToCenter(0.5)
 $wait 1
 $call MonitorUI->HideCERESLogo()
 
-{@Astrid}	Okay, got it. 	$[level5/Astrid/l5_a_23]
-{@Astrid}	Now I can finally finish this encryption puzzle.	$[level5/Astrid/l5_a_24]
+{@Astrid}	Okay, got it. Now I can finally finish this encryption puzzle.	$[level5/Astrid/l5_a_23]
 {@Astrid}	This is it. Here goes nothing... $[level5/Astrid/l5_a_25]
 
 $wait 1

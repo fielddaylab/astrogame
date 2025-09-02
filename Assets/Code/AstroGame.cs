@@ -111,6 +111,8 @@ namespace Astro {
 
             Rendering.EnableAspectClamping(4, 3);
 
+            Game.Scenes.RegisterLoadDependency(new ScriptPreloadDependency());
+
             //GameLoop.OnDebugUpdate.Register(() => {
             //    using(var psb = PooledStringBuilder.Create()) {
             //        psb.Builder.Append("Frame #: ").AppendNoAlloc(Frame.Index);
@@ -123,7 +125,6 @@ namespace Astro {
         static private void OnBoot() {
             GameLoop.OnPreUpdate.Register(() => {
                 Physics.SyncTransforms();
-                Game.Scenes.RegisterLoadDependency(new ScriptPreloadDependency());
             });
 
             Scenes.OnMainSceneLateEnable.Register(() => {

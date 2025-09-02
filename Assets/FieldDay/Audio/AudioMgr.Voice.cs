@@ -510,6 +510,7 @@ namespace FieldDay.Audio {
         private unsafe void KillVoice(VoiceData voice) {
             if (voice.Components && voice.Components.Source) {
                 voice.Components.Source.Stop();
+                voice.Components.Source.clip = null;
                 UpdatePlayingInstanceCount(voice.Handle, voice.BusIndex, false);
             }
             voice.Components.PlayingHandle = default;

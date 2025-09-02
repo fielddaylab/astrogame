@@ -271,6 +271,14 @@ namespace FieldDay.Scripting {
             return evtData.Argument0.AsStringHash();
         }
 
+        /// <summary>
+        /// Returns the character name override embedded in the given line.
+        /// </summary>
+        static public StringSlice GetCharacterNameOverride(TagString tagString) {
+            tagString.TryFindEvent(TagEvents.OverrideCharName, out var evtData);
+            return evtData.StringArgument;
+        }
+
         #endregion // Tag Parsing
 
         #region Actors
