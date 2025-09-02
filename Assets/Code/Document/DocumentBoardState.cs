@@ -104,6 +104,11 @@ namespace Astro {
                 DisplayFullDocument(spawned, asset);
             }
 
+            Material streamingMaterial = asset.UseCutoutMaterial ? state.AlphaStreamingMaterial : state.OpaqueStreamingMaterial;
+            foreach(var quadTexture in spawned.StreamingTextures) {
+                quadTexture.SharedMaterial = streamingMaterial;
+            }
+
             PlayerProgressState progressState = Find.State<PlayerProgressState>();
 
             var localPos = asset.DefaultPinnedPos;

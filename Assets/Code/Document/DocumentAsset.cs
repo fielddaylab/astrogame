@@ -33,6 +33,7 @@ namespace Astro {
 
         [HideInInspector]
         public StreamingDocumentVisual[] StreamingVisuals;
+        public bool UseCutoutMaterial;
 
         public Vector3 DefaultPinnedPos;
         [HideInInspector] public Vector3 LastKnownPos;
