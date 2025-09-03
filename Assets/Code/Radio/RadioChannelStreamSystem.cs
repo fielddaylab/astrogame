@@ -8,6 +8,7 @@ using FieldDay.SharedState;
 using FieldDay.Systems;
 using FieldDay.Vox;
 using System;
+using UnityEditorInternal;
 using UnityEngine;
 
 namespace Astro.Radio {
@@ -16,7 +17,7 @@ namespace Astro.Radio {
             RadioChannel channel = m_StateB.ClosestChannel;
 
             if (m_StateA.LastKnownChannel != channel) {
-                if (m_StateB.StreamAudioHandle.IsValid) {
+                if (Sfx.IsActive(m_StateB.StreamAudioHandle)) {
                     RadioUtility.MakeVirtual(m_StateB.StreamEmitter, m_StateA.LastKnownChannel, m_StateA);
                     Sfx.Stop(m_StateB.StreamAudioHandle);
                     m_StateB.StreamAudioHandle = default;
