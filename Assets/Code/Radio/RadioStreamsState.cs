@@ -80,7 +80,7 @@ namespace Astro.Radio {
             RadioVirtualStream virt;
             virt.ChannelId = channel.AssetId;
             virt.Time = stream.time;
-            virt.Duration = stream.clip.length;
+            virt.Duration = channel.AudioClip.length;
             virt.Mode = channel.Mode;
 
             int idx = streams.VirtualStreams.FindIndex(FindVirtualStreamWithId, channel.AssetId);
