@@ -14,6 +14,7 @@ namespace Astro.Title {
         public SpriteRenderer Horizon;
         public float Delay;
         public float Duration;
+        public Light DirectionalLight;
 
         private void OnDestroy() {
             ScriptUtility.DeregisterAllSignalsForContext(this);
@@ -21,11 +22,16 @@ namespace Astro.Title {
 
         IEnumerator<WorkSlicer.Result?> IScenePreload.Preload() {
             ScriptUtility.RegisterForSignal("FadeOutHorizon", OnFadeOutHorizon);
+            ScriptUtility.RegisterForSignal("IncreaseLightIntensity", OnIncreaseLightIntensity);
             return null;
         }
 
         private void OnFadeOutHorizon() {
             Routine.Start(this, Horizon.FadeTo(0, Duration).DelayBy(Delay));
+        }
+
+        private void OnIncreaseLightIntensity() {
+            Routine.Start(this, DirectionalLight.IntensityTo(4.5f, 8f));
         }
     }
 }
