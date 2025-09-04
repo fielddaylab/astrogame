@@ -97,12 +97,16 @@ $call SetInputState(true)
 
 :: Day4ElijahPostcard
 @trigger    DocumentInspectFlip
-@when   documentId == "Day4Letter"
+@when   documentId == "Day4ElijahPostcard"
 @cutscene
+@priority High
+@interrupt
 @once
 
 $call SetInputState(true)
 $call EnableDocumentClose("Day4ElijahPostcard", true, true)
+$wait 1
+
 {@Astrid}	Yes! Only two more stations, and then Elijah can come home. 	$[level4/Astrid/l4_a_09]
 {@Astrid}	A surprise when I finish the Draco puzzle? That's so Elijah. 	$[level4/Astrid/l4_a_10]
 

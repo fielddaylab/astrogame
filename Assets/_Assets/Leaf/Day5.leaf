@@ -54,7 +54,7 @@ $wait 1
 
 $call SpawnDocumentToCamera("Day5Postcard")
 $call SetInputState(true)
-{@Astrid} Elijah said I was like Perseus. But lately I feel more like Andromeda... $[level5/Astrid/l5_a_01]
+{@Astrid} Elijah said I was like Perseus, but lately I feel more like Andromeda... $[level5/Astrid/l5_a_01]
 {@Astrid} I wish I could decide my own fate. Being Andromeda sucks. $[level5/Astrid/l5_a_03]
 
 :: SpawnPuzzleDocs1
@@ -143,9 +143,16 @@ $start .TooLateToSendLetter
 
 {@Astrid} They just want me to stay home and not do anything. $[level5/Astrid/l5_a_18]
 
+:: IncorrectDocumentResponse5
+@trigger    DocumentPuzzlePromptStart
+@when !temp:docPuzzleSolved, answerId == "DontPanic"
+@interrupt
+
+{@Astrid} I drew this. It won't help answer my question though. $[level1/Astrid/l1_a_g3]
+
 :: IncorrectDocumentResponse
 @trigger    DocumentPuzzlePromptStart
-@when !temp:docPuzzleSolved, answerId != "RecoveryBoardLetter", answerId != "Day5Letter", answerId != "NewspaperLetter", answerId != "Puppet",
+@when !temp:docPuzzleSolved, answerId != "RecoveryBoardLetter", answerId != "Day5Letter", answerId != "NewspaperLetter", answerId != "Puppet", answerId != "DontPanic"
 @interrupt
 
 {@Astrid} This really isn't helping me choose. I'm still not sure if I should stay here or travel to Chicago... $[level5/Astrid/l5_a_15]
