@@ -47,9 +47,9 @@ $call WaitForMovedToView("DocumentPuzzle")
 $call ChapterTitles->FadeOutBackground()
 $call ChapterTitles->FinishTransition(3)
 
-{@Astrid}	Yes! Finally, some mail. 	$[level2/Astrid/l2_a_01]
-{@Astrid}	So glad the post is working again... even if it does take forever to show up. 	$[level2/Astrid/l2_a_02]
-{@Astrid}	Never woulda thought I'd miss e-mail...	$[level2/Astrid/l2_a_02b]
+{@Astrid} Yes! Finally, some mail. 	$[level2/Astrid/l2_a_01]
+{@Astrid} So glad the post is working again... even if it does take forever to show up. 	$[level2/Astrid/l2_a_02]
+{@Astrid} Never woulda thought I'd miss e-mail...	$[level2/Astrid/l2_a_02b]
 
 $call SetInputState(true)
 
@@ -57,7 +57,7 @@ $call SpawnDocumentToCamera("Day2DadIcecubePostcard")
 
 {@Astrid}	Wow, that's Dad at IceCube!	$[level2/Astrid/l2_a_03]
 
-:: FlipHercules
+:: FlipDadPostcard
 @trigger    DocumentInspectFlip
 @when   documentId == "Day2DadIcecubePostcard"
 @interrupt
