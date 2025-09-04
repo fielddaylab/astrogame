@@ -272,7 +272,7 @@ $goto .BDHints
 @once
 
 {@Astrid} Huh, looks like this star has no spectrometer reading... $[level4/Astrid/l4_a_24d]
-{@Astrid} Must be too dim to even register. $[level4\Astrid\l4_a_24e]
+{@Astrid} Must be too dim to even register. $[level4/Astrid/l4_a_24e]
 
 :: OnDwarf2Selected
 @trigger    OnNeutrinoStarSelected
@@ -401,8 +401,8 @@ $call SetInputState(true)
 
 $wait 8 // waiting for transition sequence to finish
 
-{@Astrid} Null... I guess I can't measure the absolute magnitude. $[level4\Astrid\l4_a_24g]
-{@Astrid} One of the stars is missing... Maybe I can see it in another wavelength? 	$[level4\Astrid\l4_a_24h]
+{@Astrid} Null... I guess I can't measure the absolute magnitude. $[level4/Astrid/l4_a_24g]
+{@Astrid} One of the stars is missing... Maybe I can see it in another wavelength? $[level4/Astrid/l4_a_24h]
 $branch .PuzzleTimeoutHint
 
 :: WizeDataFilled
@@ -436,7 +436,8 @@ $endif
 $branch .PuzzleTimeoutHint
 
 :: PuzzleTimeoutHint
-$wait 10
+$wait 15
+
 $if !temp:WizeCompleted, GetFilterState() != 2, !temp:DracoPuzzleComplete
     {@Astrid} I should select the infrared filter. $[level4/Astrid/l4_a_24i]
     $branch .PuzzleTimeoutHint
@@ -511,6 +512,7 @@ $wait 1
 $call SetRadioFrequency(137)
 $call SetRadioDialLocked(true)
 $call MonitorUI->HideElement("CeresMsg")
+$start Observatory.PathToInstruments
 $call SetInputState(true)
 {@Dad}	Station 12, this is CERES HQ checking in–	$[level4/Dad/l4_d_08]
 {@Astrid} Dad! Listen, I figured it out. It's not going to be a Leonid meteor storm. It's the Draconids!	$[level4/Astrid/l4_a_34]
@@ -521,7 +523,7 @@ $call PlayRadioAlert()
 {@Monitor}	Station 12, Cease and desist all personal communications. 	$[level4/monitor/l4_m_02]
 {@Dad} Ugh... the Recovery Board...	$[level4/Dad/l4_d_10]
 {@Dad} But Astrid, this is crazy. You can't just run off to Chicago.	$[level4/Dad/l4_d_11]
-{@Dad} If you finish the last puzzle, Open comms will come online and you can get the word out that way.	$[level4/Dad/l4_d_12]
+{@Dad} If you finish the last puzzle, open comms will come online and you can get the word out that way.	$[level4/Dad/l4_d_12]
 {@Astrid}	What if it doesn't work? What if something goes wrong?	$[level4/Astrid/l4_a_37]
 {@Dad}	That's not your responsibility. You've done enough. Just wait for Elijah, let him handle it. 	$[level4/Dad/l4_d_13]
 {@Astrid}	Dad, I've already spent so much time waiting!	$[level4/Astrid/l4_a_38]

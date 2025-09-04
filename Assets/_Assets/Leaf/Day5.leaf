@@ -230,7 +230,7 @@ $call SetStickyFirstPage(4)
 $call StopNeutrinoNavigation()
 $call StartOpenMode()
 {@Astrid} Woah, it is really quiet here without the CERES channel. 	$[level5/Astrid/l5_a_22]
-{@Astrid} I'll have to find the luminosity of these stars in the Eridanus constellation. $[level5\Astrid\l5_a_22a]
+{@Astrid} I'll have to find the luminosity of these stars in the Eridanus constellation. $[level5/Astrid/l5_a_22a]
 
 :: FinishOpenID
 @trigger    PointsUpdated
@@ -314,13 +314,13 @@ $call SatelliteDecoder->SetDecoderHighlightActive(true)
 $wait 1
 $call ScriptFader->FadeIn()
 
-{@Astrid} Looks like I just need to solve this combination lock. Looks like it will be a word of some kind. $[level5\Astrid\l5_a_28]
-{@Astrid} Its probably some Slovenian word since our Solvenian astronomer Slovoj created this. $[level5\Astrid\l5_a_28a]
+{@Astrid} Looks like I just need to solve this combination lock. Looks like it will be a word of some kind. $[level5/Astrid/l5_a_28]
+{@Astrid} Its probably some Slovenian word since our Solvenian astronomer Slovoj created this. $[level5/Astrid/l5_a_28a]
 $call SetInputState(true)
 $call OpenRefGuidePage("ConstellationPerseusCompleted")
 
-{@Astrid} I wish Elijah was here to see this. $[level5\Astrid\l5_a_29]
-{@Astrid} Okay... here goes nothing. $[level5\Astrid\l5_a_30]
+{@Astrid} I wish Elijah was here to see this. $[level5/Astrid/l5_a_29]
+{@Astrid} Okay... here goes nothing. $[level5/Astrid/l5_a_30]
 
 $branch .DecoderHintTimeout
 
@@ -328,7 +328,7 @@ $branch .DecoderHintTimeout
 $wait 20
 
 $if !temp:finalPuzzleCompleted
-    {@Astrid} I should look at my constellation notes in the tools section of the reference guide. $[level5\Astrid\l5_a_30a]
+    {@Astrid} I should look at my constellation notes in the tools section of the reference guide. $[level5/Astrid/l5_a_30a]
     $branch .DecoderHintTimeout
 $endif
 
@@ -343,12 +343,12 @@ $call SatelliteDecoder->SetDecoderHighlightActive(false)
 @once
 
 $call SetInputState(false)
-{@Astrid} "Zorya..." I wonder what that means? Someone's name...? $[level5\Astrid\l5_a_30b]
+{@Astrid} "Zorya..." I wonder what that means? Someone's name...? $[level5/Astrid/l5_a_30b]
 $wait 1
-{@Astrid} I don't get it. The password is correct... but nothing's happening. $[level5\Astrid\l5_a_31]
+{@Astrid} I don't get it. The password is correct... but nothing's happening. $[level5/Astrid/l5_a_31]
 $call SetRadioFrequency(375)
 $call SetRadioFrequency(137)
-{@Astrid} The radio still doesn't work. $[level5\Astrid\l5_a_32]
+{@Astrid} The radio still doesn't work. $[level5/Astrid/l5_a_32]
 $call StopPuzzleMode()
 $call ClearMonitorSelection()
 
