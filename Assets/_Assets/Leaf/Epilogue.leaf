@@ -4,9 +4,9 @@
 @function   ScenePreload
 $call InitUpdateMasks()
 $call ToggleDeskPicture()
-$call SetInputState(false)
 $call StopPuzzleMode()
 $call StopOpenMode()
+$call SetInputState(false)
 $call MonitorUI->PowerOff()
 $call AstridVoxDefault->Deactivate()
 $call AstridVoxOverride->Activate()
@@ -44,7 +44,7 @@ $call IntroSfx->Play()
 $wait 0.1
 $call IntroSfx2->Play()
 $wait 3
-{@Elijah}   Astrid!.....Astrid?.... Where are you? 	$[epilogue/Elijah/end_e_01]
+{@Elijah}   Astrid!... Astrid?... Where are you? 	$[epilogue/Elijah/end_e_01]
 
 $call WaitForMovedToView("DocumentPuzzle")
 

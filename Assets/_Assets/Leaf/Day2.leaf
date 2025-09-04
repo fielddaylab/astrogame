@@ -28,6 +28,7 @@ $call SetRefPageActive("ConstellationLeoCompleted", false)
 $call SetRefPageActive("ConstellationDracoCompleted", false)
 $call SetRefPageActive("ConstellationAndromedaCompleted", false)
 $call SetChannelActive(Unlocks_Active, false)
+$call SetChannelActive(IceCube, false)
 $call SetRadioFrequency(137, true)
 $call MonitorPower->Deactivate()
 $call ChapterTitles->PrepareTransition()
@@ -46,6 +47,7 @@ $call SetInputState(false)
 $call WaitForMovedToView("DocumentPuzzle")
 $call ChapterTitles->FadeOutBackground()
 $call ChapterTitles->FinishTransition(3)
+$call PlayMusic("Music.StarlightStudent", 3)
 
 {@Astrid} Yes! Finally, some mail. 	$[level2/Astrid/l2_a_01]
 {@Astrid} So glad the post is working again... even if it does take forever to show up. 	$[level2/Astrid/l2_a_02]
@@ -65,6 +67,7 @@ $call SpawnDocumentToCamera("Day2DadIcecubePostcard")
 @once
 
 $call EnableDocumentClose("Day2DadIcecubePostcard", true, true)
+$wait 1
 {@Astrid}	I wonder if he ever feels weird about the southern lights, after everything that happened.	$[level2/Astrid/l2_a_04]
 {@Astrid}	I guess auroras don't usually come with a huge <b>coronal mass ejection</b>... but I think it might still freak me out. $[level2/Astrid/l2_a_05]
 
@@ -79,7 +82,6 @@ $call SetInputState(false)
 $wait 1
 $call SpawnDocumentToCamera("HerculesPostcard")
 $call SetInputState(true)
-$call PlayMusic("Music.StarlightStudent", 3)
 {@Astrid}	Elijah! Wow, this is cool. I guess he brought his art supplies with him. 	$[level2/Astrid/l2_a_06]
 {@Astrid}	Looks like the Hercules constellation. 	$[level2/Astrid/l2_a_07]
 
@@ -198,13 +200,19 @@ $set temp:DocOnboardHintVisible = true
 @trigger    DocumentPuzzlePromptStart
 @when   answerId == "Day2DadIcecubePostcard", !temp:docPuzzleSolved
 
-{@Astrid}	Elijah in Antarctica? Somehow I feel like Dad would've mentioned that... 	$[level2/Astrid/l2_a_18]
+{@Astrid} Elijah in Antarctica? Somehow I feel like Dad would've mentioned that... $[level2/Astrid/l2_a_18]
 
 :: IncorrectDocumentResponse2
 @trigger    DocumentPuzzlePromptStart
 @when   answerId == "Day2Martha", !temp:docPuzzleSolved
 
-{@Astrid}	Could he be working at Aunt Martha's clinic? No way... they'd drive each other crazy.  	$[level2/Astrid/l2_a_16]
+{@Astrid} Could he be working at Aunt Martha's clinic? No way... they'd drive each other crazy. $[level2/Astrid/l2_a_16]
+
+:: IncorrectDocumentResponse3
+@trigger    DocumentPuzzlePromptStart
+@when   answerId == "MarthaGuilt", !temp:docPuzzleSolved
+
+{@Astrid}	I drew this. It won't help answer my question though.	$[level1/Astrid/l1_a_g3]
 
 :: IncorrectDocumentResponse4
 @trigger    DocumentPuzzlePromptStart
@@ -226,8 +234,8 @@ $if temp:DocOnboardHintVisible
     $set temp:DocOnboardHintVisible = false
 $endif
 
-{@Astrid}	The 12 Labors of Hercules... 12 CERES stations... maybe this is a map of where he went! 	$[level2/Astrid/l2_a_13]
-{@Astrid}	That's it! Elijah is traveling to the CERES stations. He's getting them ready for... something.	$[level2/Astrid/l2_a_19]
+{@Astrid} The 12 Labors of Hercules... 12 CERES stations... maybe this is a map of where he went! $[level2/Astrid/l2_a_13]
+{@Astrid} That's it! Elijah is traveling to the CERES stations. He's getting them ready for... something. $[level2/Astrid/l2_a_19]
 $start .CorrectDocumentResponseSolved
 
 :: CorrectDocumentResponseSolved
@@ -249,6 +257,7 @@ $endif
 :: StartNeutrinoNav
 @cutscene
 
+$call SetChannelActive(IceCube, true)
 $call WaitForMovedToView("Right")
 {@Radio} CERES HQ to Station 12. $[level2/radio_lady/l2_r_01]
 {@Radio} IceCube is detecting a high-energy neutrino emission from the area of the Hydra Constellation. $[level2/radio_lady/l2_r_02]
@@ -291,6 +300,7 @@ $endif
 @when   temp:waitingForNeutrinoStar
 @cutscene
 @interrupt
+@cooldown 6
 
 $call ClearMonitorSelection()
 {@Radio}	Hmmm. That doesn't look a possible neutrino source. Look for objects highlighted in blue.	$[level1/radio_lady/l1_r_20]
@@ -339,6 +349,7 @@ $endif
 @when   actorId != "BlueFilter", temp:waitingForBlueFilter
 @interrupt
 @cutscene
+@cooldown 10
 
 {@Astrid}	The Blue wavelength filter is there on the monitor.	$[level1/Astrid/l1_a_48]
 

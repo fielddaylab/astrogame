@@ -1,15 +1,12 @@
+
+using System;
+
 using BeauUtil;
-using BeauUtil.Debugger;
-using BeauUWT;
-using EasyAssetStreaming;
 using FieldDay;
 using FieldDay.Audio;
 using FieldDay.Scenes;
 using FieldDay.SharedState;
 using Leaf.Runtime;
-using System;
-using System.Collections;
-using UnityEngine;
 
 namespace Astro.Audio {
     public sealed class MusicState : SharedStateComponent, IRegistrationCallbacks {
@@ -52,11 +49,11 @@ namespace Astro.Audio {
         }
     }
 
-
     static public class MusicUtility {
         [LeafMember("PlayMusic")]
         static public void PlayMusic(StringHash32 track, float fadeInTime = 0) {
             MusicState state = Find.State<MusicState>();
+            // Debug.LogFormat("[MusicState > PlayMusic] queueing track {0}", track.ToDebugString());
             state.Queued = new MusicState.QueuedTrack() {
                 TrackId = track,
                 FadeIn = fadeInTime

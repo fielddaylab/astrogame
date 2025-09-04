@@ -24,9 +24,10 @@ $call SetRefPageActive("ConstellationHercules", false)
 $call SetRefPageActive("ConstellationLeoCompleted", false)
 $call SetRefPageActive("ConstellationDracoCompleted", false)
 $call SetRefPageActive("ConstellationAndromedaCompleted", false)
+$call SetChannelActive(IceCube, false)
+$call SetChannelActive(Unlocks_Active, false)
 $call SetRadioFrequency(137, true)
 $call SetRadioDialLocked(true)
-$call SetChannelActive(Unlocks_Active, false)
 $call MonitorPower->Deactivate()
 $call ChapterTitles->PrepareTransition()
 $start Observatory.ResetSubtitlePosition
@@ -183,6 +184,7 @@ $set temp:docPuzzleSolved = false
 @cutscene
 @once
 
+$call SetChannelActive(IceCube, true)
 $set temp:docPuzzleSolved = true
 $call SetInputState(false)
 

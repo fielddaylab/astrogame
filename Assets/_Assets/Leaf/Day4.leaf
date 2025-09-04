@@ -30,6 +30,7 @@ $call SetRefPageActive("ConstellationHercules", false)
 $call SetRefPageActive("ConstellationLeo", false)
 $call SetRefPageActive("ConstellationDracoCompleted", false)
 $call SetRefPageActive("ConstellationAndromedaCompleted", false)
+$call SetChannelActive(IceCube, false)
 $call SetChannelActive(Unlocks_Active, false)
 $call SetRadioFrequency(137, true)
 $call SetRadioDialLocked(true)
@@ -188,6 +189,7 @@ $set temp:docPuzzleSolved = false
 
 $set temp:docPuzzleSolved = true
 $call SetInputState(false)
+$call SetChannelActive(IceCube, true)
 {@Astrid}	Elijah's right... I need to keep working on these puzzles. Once we unlock the satellite, we'll be able to figure out when the meteor storm is happening. 	$[level4/Astrid/l4_a_14]
 
 $wait 1
@@ -240,7 +242,7 @@ $set temp:thisIsASmallStar = false
 
 {@Radio} Some of these stars are outside the standard spectral types.	$[level4/radio_lady/l4_r_03]
 {@Radio} Brown Dwarfs so cold they barely glow- you'll only see them in infrared.	$[level4/radio_lady/l4_r_04]
-$start . nlockFromCeresChannel
+$start .UnlockFromCeresChannel
 {@Radio} Use your Spectrometer to identify them. $[level4/radio_lady/l4_r_05]
 
 ::UnlockFromCeresChannel

@@ -1,11 +1,6 @@
 
-using BeauUtil;
-using BeauUtil.Debugger;
-using FieldDay;
-using FieldDay.Debugging;
-using FieldDay.SharedState;
 using System;
-using UnityEngine;
+using FieldDay.SharedState;
 
 namespace Astro {
     public class PlayerPointsState : SharedStateComponent {
