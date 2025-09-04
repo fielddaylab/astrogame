@@ -90,7 +90,7 @@ $call EnableDocumentClose("DadUrsaPostcard", true, true)
 @once
 
 $call SetInputState(false)
-$call SpawnDocumentToCamera("DadUrsaPostcard")
+$call SpawnDocumentToCamera("Day4ElijahPostcard")
 $call SetInputState(true)
 
 {@Astrid}	Draco, the dragon constellation. I wonder if Elijah is trying to signal its time for the final puzzle...	$[level4/Astrid/l4_a_08]
@@ -112,7 +112,7 @@ $call EnableDocumentClose("Day4ElijahPostcard", true, true)
 
 :: SpawnPuzzleQuestion
 @trigger    DocumentInspectEnd
-@when   documentId == "DadUrsaPostcard"
+@when   documentId == "Day4ElijahPostcard"
 @interrupt
 @boostScore 1000
 @cutscene
