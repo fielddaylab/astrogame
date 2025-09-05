@@ -3,15 +3,16 @@
 #endif
 
 using System.Text;
+using UnityEngine;
+
 using BeauPools;
 using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay.Debugging;
-using FieldDay.HID;
 using FieldDay.Scenes;
 using FieldDay.Vox;
-using UnityEngine;
 
+#if DEVELOPMENT
 namespace FieldDay.Scripting {
     static public class ScriptDebugHooks {
         [DebugMenuFactory]
@@ -28,7 +29,6 @@ namespace FieldDay.Scripting {
             return menu;
         }
 
-#if DEVELOPMENT
         [InvokeOnBoot]
         static private void OnBoot() {
             GameLoop.OnDebugUpdate.Register(DebugUpdate);
@@ -109,7 +109,6 @@ namespace FieldDay.Scripting {
                 }
             }
         }
-#endif // DEVELOPMENT
 
         static public void DumpAllNamedActors() {
             StringBuilder sb = new StringBuilder(1024);
@@ -127,3 +126,4 @@ namespace FieldDay.Scripting {
         DisplayThreadDetails,
     }
 }
+#endif // DEVELOPMENT
