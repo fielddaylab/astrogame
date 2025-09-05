@@ -50,8 +50,9 @@ namespace FieldDay.Editor {
         /// </summary>
         static public void ApplyBuildConfig(string branchName, string configName, bool development, string defines, ManagedStrippingLevel codeStripping, bool forceLogs = false) {
             bool logging = forceLogs;
+            bool isBatch = InternalEditorUtility.inBatchMode || !InternalEditorUtility.isHumanControllingUs;
             if (!logging) {
-                if ((InternalEditorUtility.inBatchMode || !InternalEditorUtility.isHumanControllingUs)) {
+                if ((isBatch)) {
                     logging = true;
                 } else if (File.Exists(LibraryBuildConfigFile)) {
                     string lastApplied = File.ReadAllText(LibraryBuildConfigFile);
@@ -62,6 +63,11 @@ namespace FieldDay.Editor {
              
             if (logging) {
                 Debug.LogFormat("[BuildConfigurations] Source control branch is '{0}', applying build configuration '{1}'", branchName, configName);
+            }
+
+            if (!development && (isBatch || BuildPipeline.isBuildingPlayer)) {
+                defines = defines ?? string.Empty;
+                defines += ",IGNORE_UNITY_EDITOR";
             }
 
             PlayerSettings.SetManagedStrippingLevel(EditorUserBuildSettings.selectedBuildTargetGroup, codeStripping);

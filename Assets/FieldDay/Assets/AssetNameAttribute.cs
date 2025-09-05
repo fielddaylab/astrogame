@@ -40,7 +40,7 @@ namespace FieldDay.Assets {
             return currentHash ^ ((nextVal != null ? nextVal.GetHashCode() : 0) + (currentHash >> 2) + (currentHash << 5));
         }
 
-#if DEVELOPMENT
+#if UNITY_EDITOR 
         internal uint GetCacheKey() {
             if (m_CachedCacheKey == 0) {
                 unsafe {
@@ -52,7 +52,7 @@ namespace FieldDay.Assets {
         }
 
         private uint m_CachedCacheKey;
-#endif // DEVELOPMENT
+#endif // UNITY_EDITOR 
 
         public AssetNameAttribute(Type assetType, bool useDropdown = false) {
             if (assetType == null) {
