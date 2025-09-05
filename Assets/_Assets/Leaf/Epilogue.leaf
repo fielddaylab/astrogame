@@ -6,7 +6,9 @@ $call InitUpdateMasks()
 $call ToggleDeskPicture()
 $call StopPuzzleMode()
 $call StopOpenMode()
+$call LockMonitorFocus()
 $call SetInputState(false)
+$call InputPushPause()
 $call MonitorUI->PowerOff()
 $call AstridVoxDefault->Deactivate()
 $call AstridVoxOverride->Activate()
@@ -21,6 +23,7 @@ $call SetRefPageActive("ConstellationDraco", false)
 $call SetRefPageActive("ConstellationAndromeda", false)
 
 $call SetRadioFrequency(100, true)
+$call SatelliteDecoder->SetDecoderActive(true)
 
 $call TelescopeLook(155, -30)
 $set temp:powerButtonHint = false

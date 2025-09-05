@@ -241,8 +241,7 @@ namespace Astro {
         }
 
         [LeafMember("AlignCamToNeutrino")]
-        static private void LeafAlignCamToNeutrino()
-        {
+        static private void LeafAlignCamToNeutrino() {
             DayConfigAsset config = DayConfigUtil.GetConfigForState();
             if (!config) return;
             EqCoords target = config.NeutrinoEvent.NeutrinoCoordinates;
