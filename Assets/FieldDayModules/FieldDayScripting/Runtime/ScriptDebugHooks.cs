@@ -118,6 +118,7 @@ namespace FieldDay.Scripting {
             }
             Log.Msg(sb.ToString());
         }
+#endif // DEVELOPMENT
     }
 
     public enum ScriptDebugFlags {
@@ -125,5 +126,4 @@ namespace FieldDay.Scripting {
         DisplayThreadStats,
         DisplayThreadDetails,
     }
-#endif // DEVELOPMENT
 }
