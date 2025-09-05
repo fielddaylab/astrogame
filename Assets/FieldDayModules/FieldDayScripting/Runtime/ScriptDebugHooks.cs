@@ -12,9 +12,9 @@ using FieldDay.Debugging;
 using FieldDay.Scenes;
 using FieldDay.Vox;
 
-#if DEVELOPMENT
 namespace FieldDay.Scripting {
     static public class ScriptDebugHooks {
+#if DEVELOPMENT
         [DebugMenuFactory]
         static private DMInfo CreateDebugMenu() {
             DMInfo menu = new DMInfo("Scripting", 16);
@@ -125,5 +125,5 @@ namespace FieldDay.Scripting {
         DisplayThreadStats,
         DisplayThreadDetails,
     }
-}
 #endif // DEVELOPMENT
+}
