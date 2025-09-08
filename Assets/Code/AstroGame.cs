@@ -72,17 +72,17 @@ namespace Astro {
             return info;
         }
 
+#if DEVELOPMENT
         static private void RegisterDayLoadButton(DMInfo menu, StringHash32 dayId) {
             menu.AddButton("Load " + Find.NamedAsset<DayConfigAsset>(dayId).name, () => {
                 ScriptUtility.KillAllThreads();
                 ScriptTriggers.LoadDay(dayId);
                 MusicUtility.StopMusic();
 
-#if DEVELOPMENT
                 Find.State<PlayerProgressState>().LoadDebugScene = false;
-#endif // DEVELOPMENT
             });
         }
+#endif // DEVELOPMENT
 
 
         static private void RegisterDecoderLoadButton(DMInfo menu, StringHash32 dayId)

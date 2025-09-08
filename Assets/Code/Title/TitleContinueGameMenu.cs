@@ -69,13 +69,12 @@ namespace Astro.Title {
             MenuFade.Hide();
             CloseFade.Hide();
 
-            if (progressState.CompletedPrelude)
-            {
-                StringHash32 dayId = "Day" + (progressState.DayIndex + 1);
+            if (progressState.CompletedPrelude) {
+                StoryAsset levels = Find.GlobalAsset<StoryAsset>();
+                StringHash32 dayId = levels.Days[progressState.DayIndex];
 
                 Routine.Start(this, ContinueGameSequence(dayId)).ExecuteWhileDisabled();
-            }
-            else {
+            } else {
                 // move to prelude scene
                 Routine.Start(this, ContinueToPreludeSequence()).ExecuteWhileDisabled();
             }

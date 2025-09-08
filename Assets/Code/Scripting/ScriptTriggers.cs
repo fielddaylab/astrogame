@@ -83,7 +83,9 @@ namespace Astro {
 
             state.DayIndex += 1;
             DayConfigAsset day = Find.NamedAsset<DayConfigAsset>(story.Days[state.DayIndex]);
+#if DEVELOPMENT
             Log.Msg("[ScriptTriggers > LoadNextDay] Loading day '{0}'", day.name);
+#endif // DEVELOPMENT
 
             MusicUtility.StopMusic(1);
 
