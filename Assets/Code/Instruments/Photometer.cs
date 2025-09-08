@@ -89,9 +89,16 @@ namespace Astro {
 
             PlayerCelestialAssetKnowledgeFlags knownFlags = default;
 
+            bool IsVisibleInNewFilter = true;
+            if (focus != null) {
+                IsVisibleInNewFilter = (focus.TargetData.Visibility & visibility) != 0;
+            }
+
             switch (visibility) {
                 case CelestialObjectVisMask.Blue: {
                     DataUtility.Rewire(photometer.TransferPort, photometer.BlueSlot);
+                    if (!IsVisibleInNewFilter) break;
+
                     if (AttemptRevealSlot(focus, visibility, PlayerCelestialAssetKnowledgeFlags.HasReadBlueAppMag, photometer.BlueSlot, out knownFlags)) {
                         AttemptRevealDependentSlots(photometer, knownFlags);
                     }
@@ -99,11 +106,15 @@ namespace Astro {
                 }
                 case CelestialObjectVisMask.Infrared: {
                     DataUtility.Rewire(photometer.TransferPort, photometer.IRSlot);
+                    if (!IsVisibleInNewFilter) break;
+
                     AttemptRevealSlot(focus, visibility, PlayerCelestialAssetKnowledgeFlags.HasReadIRAppMag, photometer.IRSlot, out knownFlags);
                     break;
                 }
                 case CelestialObjectVisMask.Visible: {
                     DataUtility.Rewire(photometer.TransferPort, photometer.ApparentSlot);
+                    if (!IsVisibleInNewFilter) break;
+
                     if (AttemptRevealSlot(focus, visibility, PlayerCelestialAssetKnowledgeFlags.HasReadVisibleAppMag, photometer.ApparentSlot, out knownFlags)) {
                         DataUtility.RevealData(photometer.AbsoluteSlot);
                         AttemptRevealDependentSlots(photometer, knownFlags);
