@@ -67,8 +67,6 @@ $call SetInputState(true)
 $wait 1
 $call SpawnDocumentToCamera("Day5Letter")
 {@Astrid}	Oh my gosh, its happening for real! They just offered me a job at the paper! 	$[level5/Astrid/l5_a_05]
-{@Astrid}	Dad would say I should keep working with him at CERES. Aunt Martha would think I'm crazy. Elijah... I'm not sure...	$[level5/Astrid/l5_a_09]
-{@Astrid}	Then I can figure out this job thing. 	$[level5/Astrid/l5_a_12]
 
 :: SpawnPuzzleDocs1a
 @trigger    DocumentInspectEnd
@@ -343,6 +341,7 @@ $call SatelliteDecoder->SetDecoderHighlightActive(false)
 @trigger    OnDecoderSuccess
 @once
 
+$set temp:finalPuzzleCompleted = true
 $call SetInputState(false)
 {@Astrid} "Zorya..." I wonder what that means? Someone's name...? $[level5/Astrid/l5_a_30b]
 $wait 1
