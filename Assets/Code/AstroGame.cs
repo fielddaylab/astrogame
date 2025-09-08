@@ -48,6 +48,7 @@ namespace Astro {
 
             info.AddDivider();
 
+#if DEVELOPMENT
             foreach(var dayId in story.Days){
                 RegisterDayLoadButton(info, dayId);
             }
@@ -56,7 +57,6 @@ namespace Astro {
 
             RegisterDecoderLoadButton(info, "Day5");
 
-#if DEVELOPMENT
             if (story.DEBUG_SandboxDay) {
                 info.AddDivider();
                 info.AddButton("Load Sandbox", () => {
