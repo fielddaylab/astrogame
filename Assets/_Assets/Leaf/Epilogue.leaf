@@ -8,7 +8,7 @@ $call StopPuzzleMode()
 $call StopOpenMode()
 $call LockMonitorFocus()
 $call SetInputState(false)
-$call InputPushPause()
+// $call InputPushPause()
 $call MonitorUI->PowerOff()
 $call AstridVoxDefault->Deactivate()
 $call AstridVoxOverride->Activate()
@@ -136,7 +136,7 @@ $call SetRadioDialLocked(true)
 {@Jocelyn} I mean... thanks to you, Astrid, this is the biggest cultural event in two years. At this point you'd have to be living under a rock to miss it. $[epilogue/Jocelyn/end_j_03]
 {@Jocelyn} Now, lots of people are calling in and asking how to get the best view. Any advice? $[epilogue/Jocelyn/end_j_04]
 {@Astrid} It's pretty simple. Look for a spot away from city lights. That shouldn't be too hard these days.	$[epilogue/Astrid/Unprocessed/end_a_05]
-{@Astrid} See if you can find a clearing or a hilltop. And bring your wishes! $[epilogue/Astrid/Unprocessed/end_a_06]
+{@Astrid} See if you can find a clearing or a hilltop. $[epilogue/Astrid/Unprocessed/end_a_06]
 {@Jocelyn} Sounds like you're an expert. $[epilogue/Jocelyn/end_j_05]
 {@Astrid} Yeah, my boyfriend and I used to watch the Perseids together every year. $[epilogue/Astrid/Unprocessed/end_a_07]
 {@Jocelyn} Is he coming out to Chicago for the watch party?	$[epilogue/Jocelyn/end_j_06]
@@ -155,11 +155,12 @@ $call SetRadioDialLocked(true)
 {@Astrid} My dad - an astronomer - he's taught me about the stars my whole life.	$[epilogue/Astrid/Unprocessed/end_a_15a]
 {@Astrid} My boyfriend, Elijah, knows everything there is about myths and the stories from the stars. 	$[epilogue/Astrid/Unprocessed/end_a_15b]
 {@Jocelyn} Wow, that's cool. How did you figure all this out, about the meteor storm? 	$[epilogue/Jocelyn/end_j_10]
-{@Astrid} {vox-overlap 2} It started on my birthday, when I showed up at Elijah's place. I had to learn a lot of new things from scratch. Elijah works with the CERES network in order to map the stars....	$[epilogue/Astrid/Unprocessed/end_a_16]
+{@Astrid} {vox-overlap 2.5} It started on my birthday, when- $[epilogue/Astrid/Unprocessed/end_a_16]
 $call SetRadioFrequency(100)
-{@Elijah}   Chicago... sounds good to me. $[epilogue/Elijah/end_e_13]
-$wait 1
 $call MonitorPower->Activate()
+$wait 1
+{@Elijah} Chicago... sounds good to me. $[epilogue/Elijah/end_e_13]
+$wait 1
 
 $call WaitForMovedToView("DeskView")
 
