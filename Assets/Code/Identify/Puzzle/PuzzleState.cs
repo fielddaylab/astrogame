@@ -221,8 +221,9 @@ namespace Astro {
             }
 
             off.GetComponent<Graphic>().color = Color.black;
-            yield return monitorUI.HideElement("PuzzleMsg");
-            yield return monitorUI.HideElement("OffPanel");
+            yield return monitorUI.HideElement("PuzzleMsg2");
+            yield return monitorUI.HideElement("PuzzleMsg1");
+            // yield return monitorUI.HideElement("OffPanel");
 
             InputUtility.SetInputEnabled(Find.State<InputState>(), true);
             display.CellAnchorPos.gameObject.SetActive(true);

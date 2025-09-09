@@ -65,7 +65,7 @@ namespace Astro {
             state.BoarderGroup.gameObject.SetActive(true);
             state.Initialized = false;
 
-            NavigationCanvasUtil.InitNavProjectionSystem(state);
+            InitNavProjectionSystem(state);
         }
 
         public static void DisableConstellationNavUI() {

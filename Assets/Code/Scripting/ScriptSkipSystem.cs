@@ -9,7 +9,7 @@ namespace Astro {
     [SysUpdate(GameLoopPhase.UnscaledLateUpdate, 16, ~AstroGame.PauseUpdateMask)]
     public sealed class ScriptSkipSystem : SharedStateSystemBehaviour<ScriptSkipState> {
         public override void ProcessWork(float deltaTime) {
-            if (Game.Input.IsKeyDown(KeyCode.P) || Game.Input.IsKeyDown(KeyCode.Return) || Game.Input.IsKeyDown(KeyCode.M)) {
+            if (Game.Input.IsKeyDown(KeyCode.F) || Game.Input.IsKeyDown(KeyCode.Return) || Game.Input.IsKeyDown(KeyCode.M)) {
                 switch(m_State.State) {
                     case ScriptSkipState.KeyState.Unheld: {
                         m_State.State = ScriptSkipState.KeyState.Pressed;

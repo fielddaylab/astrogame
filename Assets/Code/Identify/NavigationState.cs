@@ -217,7 +217,7 @@ namespace Astro {
             yield return spaceCameraState.Camera.RootTransform.RotateQuaternionTo(targetQuat, 0.5f, Space.Self).Ease(Curve.Smooth).OnUpdate(OnCameraAutomaticallyRotated);
             spaceCameraState.OnLookUpdated.Invoke(spaceCameraState);
             yield return Routine.Combine(
-                Tween.Value(1f, 0.04f, (f) => { outline.alpha = f; }, Mathf.Lerp, 0.4f),
+                Tween.Value(1f, 0.005f, (f) => { outline.alpha = f; }, Mathf.Lerp, 0.4f),
                 Tween.Value(1f, 0.2f, (f) => { puzzleOutline.alpha = f; }, Mathf.Lerp, 0.4f),
                 Tween.Value(boarder.alpha, 0f, (f) => { boarder.alpha = f; }, Mathf.Lerp, 0.4f),
                 Tween.Color(navProjectionState.ConstellationEdgeColor, navProjectionState.NavigationCompleteColor, (c) => { UpdateEdgeGroupColor(navProjectionState.PuzzleOutlineGroup, c); }, 0.4f, ColorUpdate.FullColor)

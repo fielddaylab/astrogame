@@ -104,16 +104,18 @@ $call SetInputState(true)
 {@Astrid} It would be nice if we could all enjoy looking at the stars again. Martha was always telling me to stop stargazing. $[level3/Astrid/l3_a_09]
 
 :: SpawnCMEDrawing
-@trigger    DocumentInspectStart
-@when   documentId == "CMEDrawing"
+@trigger    DocumentInspectEnd
+@when   documentId == "Day3Dad"
+@interrupt
 @cutscene
 @once
 
+$call SpawnDocumentToCamera("CMEDrawing")
 {@Astrid}	Most solar flares don't affect the power grid, but we weren't prepared for a full-scale CME... 	$[level3/Astrid/l3_a_15a]
 
 :: SpawnPuzzleDocs3
 @trigger    DocumentInspectEnd
-@when   documentId == "Day3Dad"
+@when   documentId == "CMEDrawing"
 @interrupt
 @boostScore 100
 @cutscene

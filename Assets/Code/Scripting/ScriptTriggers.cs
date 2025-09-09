@@ -7,6 +7,7 @@ using FieldDay.HID;
 using FieldDay.Scenes;
 using FieldDay.Scripting;
 using Leaf.Runtime;
+using System.Collections;
 using UnityEngine;
 
 namespace Astro {
@@ -243,13 +244,13 @@ namespace Astro {
         }
 
         [LeafMember("AlignCamToNeutrino")]
-        static private void LeafAlignCamToNeutrino() {
+        static private IEnumerator LeafAlignCamToNeutrino() {
             DayConfigAsset config = DayConfigUtil.GetConfigForState();
-            if (!config) return;
+            if (!config) yield break;
             EqCoords target = config.NeutrinoEvent.NeutrinoCoordinates;
 
             var navState = Find.State<NavigationState>();
-            navState.ConstellationSnapRoutine.Replace(NavigationUtility.SnapAlignment(target));
+            yield return navState.ConstellationSnapRoutine.Replace(NavigationUtility.SnapAlignment(target));
         }
 
         [LeafMember("StartPuzzleNavigation")]

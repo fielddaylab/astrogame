@@ -276,17 +276,20 @@ $call StartNeutrinoNavigation()
 @cutscene
 @once
 
+
 $call StopNeutrinoNavigation()
+$call SetInputState(false)
 $call AlignCamToNeutrino()
+$call SetInputState(true)
 $call StartOpenMode()
 $set temp:waitingForNeutrinoStar = true
 $call SetStickyFirstPage(1)
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 650)
 
-{@Radio}	We need to identify the spectral types of these stars to inform our analysis. You should be able to get an approximate categorization using temperature.	$[level2/radio_lady/l2_r_04]
-{@Radio}	To calculate the temperature, you need to measure magnitude in Blue and Visible filters. 	$[level2/radio_lady/l2_r_05]
-{@Radio}	The color index will let us estimate the temperature.	$[level2/radio_lady/l2_r_06]
-{@Radio}	Start by selecting a star on your telescope monitor.	$[level2/radio_lady/l2_r_08]
+{@Radio} We need to identify the spectral types of these stars to inform our analysis. You should be able to get an approximate categorization using temperature.	$[level2/radio_lady/l2_r_04]
+{@Radio} To calculate the temperature, you need to measure magnitude in Blue and Visible filters. 	$[level2/radio_lady/l2_r_05]
+{@Radio} The color index will let us estimate the temperature.	$[level2/radio_lady/l2_r_06]
+{@Radio} Start by selecting a star on your telescope monitor.	$[level2/radio_lady/l2_r_08]
 $start .FirstStarHint
 
 :: FirstStarHint

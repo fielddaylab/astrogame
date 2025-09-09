@@ -200,12 +200,12 @@ $wait 1.5
 $call WaitForMovedToView("Right")
 {@Astrid} I don't have time for this, I need to be working on the Andromeda puzzle. $[level5/Astrid/l5_a_19]
 $call OpenRefGuidePage("ConstellationAndromeda")
-$wait 1
+$wait 2
 $call WaitForMovedToView("Monitor")
 $call ConsoleCommandLine->PlayConsoleTextAndWait("Day5ConsoleText")
 $call MonitorUI->ShowCERESLogo()
 $call ConsoleCommandLine->PlayConsoleTextAndWait("AccessDenied")
-{@Astrid} What's going on? I can't use the constellation finder.	$[level5/Astrid/l5_a_20]
+{@Astrid} What's going on? I can't use the constellation finder for Project Hercules.	$[level5/Astrid/l5_a_20]
 $call MonitorUI->CERESLogoToWatching(0.5)
 $call ConsoleCommandLine->HideConsole()
 {@Astrid} I guess that letter was right... $[level5/Astrid/l5_a_21]
@@ -226,7 +226,9 @@ $call StartNeutrinoNavigation()
 
 $call SetStickyFirstPage(4)
 $call StopNeutrinoNavigation()
+$call SetInputState(false)
 $call AlignCamToNeutrino()
+$call SetInputState(true)
 $call StartOpenMode()
 {@Astrid} Woah, it is really quiet here without the CERES channel. 	$[level5/Astrid/l5_a_22]
 {@Astrid} I'll have to find the luminosity of these stars in the Eridanus constellation. $[level5/Astrid/l5_a_22a]
@@ -306,11 +308,12 @@ $set temp:finalPuzzleCompleted = false
 $wait 0.5
 $call SetRefGuideActive(false)
 $call ScriptFader->FadeOut()
-$call MonitorUI->PowerOff()
+// $call MonitorUI->PowerOff()
 $wait 1
 $call SatelliteDecoder->SetDecoderActive(true)
 $call SatelliteDecoder->SetDecoderHighlightActive(true)
 $wait 1
+$call LockMonitorFocus()
 $call ScriptFader->FadeIn()
 
 {@Astrid} Looks like I just need to solve this combination lock. Looks like it will be a word of some kind. $[level5/Astrid/l5_a_28]
