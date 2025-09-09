@@ -1,5 +1,7 @@
 #basePath	Day2
 
+// #region Preload
+
 :: Preload
 @function   ScenePreload
 $call InitUpdateMasks()
@@ -34,6 +36,8 @@ $call MonitorPower->Deactivate()
 $call ChapterTitles->PrepareTransition()
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $call SetRadioDialLocked(true)
+
+// #endregion
 
 //#region Spawn Documents
 

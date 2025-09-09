@@ -33,6 +33,8 @@ $call SetStickyFirstPage(7)
 
 // #endregion
 
+// #region Intro
+
 :: OpeningCutscene
 @trigger SceneReady
 @cutscene
@@ -214,6 +216,8 @@ $call WaitForMovedToView("Monitor")
 
 {@Radio}	I'll help you get up and running. Start by moving your telescope.	$[level1/radio_lady/l1_r_06]
 $start .SetupTelescopeTutorial
+
+// #endregion
 
 // #region Neutrino Tutorial
 
@@ -542,6 +546,7 @@ $call UnlockMonitorFocus()
 
 // #endregion
 
+//#region Upgrade
 :: ClearanceUpgrade
 @trigger    PointsUpdated
 @when   openIDThresholdHit
@@ -619,7 +624,7 @@ $wait 1
 {@Astrid} Well, that was... something... $[level1/Astrid/l1_a_18]
 $call SetInputState(true)
 
-$call ConsoleCommandLine->PlayConsoleText("Day1UpgradeSystem")
+$call ConsoleCommandLine->PlayConsoleTextAndWait("Day1UpgradeSystem")
 $wait 1
 {@Astrid}	Starting at the bottom... clearance level one.	$[level1/Astrid/l1_a_19]
 
