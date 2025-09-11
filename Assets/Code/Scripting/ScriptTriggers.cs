@@ -1,5 +1,6 @@
 using Astro.Audio;
 using Astro.Save;
+using BeauRoutine;
 using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay;
@@ -131,11 +132,12 @@ namespace Astro {
             InputUtility.SetInputEnabled(state, enabled);
 
             if (enabled) {
+                Routine.Start(CameraRigUtility.SetLetterboxEnabled(false));
                 GameLoop.ResumeUpdates(AstroGame.InteractUpdateMask);
-            }
-            else {
+            } else {
                 GameLoop.SuspendUpdates(AstroGame.InteractUpdateMask);
                 CursorHint.Unlock(CursorHint.Current);
+                Routine.Start(CameraRigUtility.SetLetterboxEnabled());
             }
         }
 

@@ -1,12 +1,13 @@
 using System;
+using UnityEngine;
 using System.Collections;
-using BeauRoutine;
-using BeauRoutine.Splines;
+
 using BeauUtil;
 using FieldDay;
+using BeauRoutine;
+using BeauRoutine.Splines;
 using FieldDay.Components;
-using FieldDay.SharedState;
-using UnityEngine;
+using Leaf.Runtime;
 
 namespace Astro {
     public sealed class CameraRig : BatchedComponent, IRegistrationCallbacks {
@@ -15,6 +16,7 @@ namespace Astro {
         public Transform RootTransform;
         public Transform EffectsTransform;
         public Transform AttachmentsTransform;
+        public SpriteRenderer Letterbox;
 
         public Routine TransitionRoutine;
 
@@ -96,6 +98,22 @@ namespace Astro {
 
             rig.TransitionRoutine.Replace(rig, MoveRigTween(rig, state, newState, new TweenSettings(duration, curve)));
             return rig.TransitionRoutine.Wait();
+        }
+
+        [LeafMember("SetLetterbox")]
+        static public IEnumerator SetLetterboxEnabled(bool reveal = true) {
+            CameraRig rig = Find.State<ViewState>().Camera;
+            if (rig == null) yield break;
+
+            if (reveal && !rig.Letterbox.enabled) { // Reveal the letterbox
+                rig.Letterbox.enabled = true;
+                yield return rig.Letterbox.ColorTo(new Color(0f, 0f, 0f, 1f), 0.1f, ColorUpdate.FullColor).ForceOnCancel();
+            } else if (!reveal && rig.Letterbox.enabled) { // Hide the letterbox
+                yield return rig.Letterbox.ColorTo(new Color(0f, 0f, 0f, 0f), 0.1f, ColorUpdate.FullColor).ForceOnCancel();
+                rig.Letterbox.enabled = false;
+            } else {
+                yield return null;
+            }
         }
 
         /// <summary>

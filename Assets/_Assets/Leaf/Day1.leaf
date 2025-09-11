@@ -574,7 +574,7 @@ $start .UpgradeReminder
 
 :: IceCubeUpgradeReminder
 @trigger    RadioChannelListenStart
-@when       channelId == "IceCube", temp:introRadioChannelTuned, !temp:upgradeChannelTuned, temp:readyForUpgrade
+@when       channelId == "IceCube", IsRadioFrequencyAt(137), temp:introRadioChannelTuned, !temp:upgradeChannelTuned, temp:readyForUpgrade
 @priority   Medium
 @boostScore 1000
 @cutscene
