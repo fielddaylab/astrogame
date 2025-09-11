@@ -51,9 +51,11 @@ namespace Astro {
 
         protected override void OnEnable() {
             setMonitorInputActive = () => {
-                MonitorInputActive = true; };
+                MonitorInputActive = true;
+            };
             setMonitorInputInactive = () => {
-                MonitorInputActive = false; };
+                MonitorInputActive = false;
+            };
 
             DefaultStarSprite = m_DefaultStarSprite;
             DataSubmittedStarSprite = m_DataSubmittedStarSprite;
@@ -88,7 +90,10 @@ namespace Astro {
             Game.Events.Deregister(GameEvents.StopPuzzleNavigation, setMonitorInputActive);
             Game.Events.Deregister(GameEvents.LockMonitorFocus, setMonitorInputInactive);
             Game.Events.Deregister(GameEvents.UnlockMonitorFocus, setMonitorInputActive);
-
+        }
+ 
+        public enum DebuggingFlags {
+            DisplayGuessTrackerInfo
         }
     }
 

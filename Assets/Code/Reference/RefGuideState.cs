@@ -215,6 +215,8 @@ namespace Astro.Reference {
             }
 
             if (active) {
+                ScriptUtility.Invoke("MovePlayerToInstruments");
+                
                 if (guide.CurrentState == RefGuideInteractionState.Closed) {
                     guide.TransitionRoutine.Replace(guide, TransitionToOpen(guide, rig)).TryManuallyUpdate(0);
                     ScriptUtility.Trigger(ScriptEvents.OnRefGuideOpened);
