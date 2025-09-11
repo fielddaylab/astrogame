@@ -61,7 +61,6 @@ namespace Astro {
             navState.CurrentNavigationMode = NavigationMode.Constellation;
             navState.CameraDistanceFromTarget = -1;
 
-
             ScriptUtility.Invoke("MovePlayerToMonitor");
 
             WavelengthToggleState wavelengthState = Find.State<WavelengthToggleState>();

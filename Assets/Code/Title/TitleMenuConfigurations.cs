@@ -1,13 +1,13 @@
-using BeauRoutine;
-using BeauUtil;
+
+using UnityEngine;
+using System.Collections.Generic;
+
 using FieldDay;
+using BeauUtil;
+using BeauRoutine;
 using FieldDay.Scenes;
 using FieldDay.SharedState;
-using FieldDay.UI;
 using FieldDay.UI.Animation;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Astro.Title {
     public sealed class TitleMenuConfigurations : SharedStateComponent, IRegistrationCallbacks, IScenePreload {

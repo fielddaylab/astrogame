@@ -9,15 +9,17 @@ using Leaf.Runtime;
 using FieldDay.HID;
 using FieldDay.Scenes;
 using FieldDay.Scripting;
+using BeauUtil.Debugger;
 
 namespace Astro.Title {
     [RequireComponent(typeof(TitleBillboard))]
-    public sealed class TitleStarButton : ScriptActorComponent, IScenePreload {
+    public sealed class CreditsStarButton : ScriptActorComponent, IScenePreload {
         public Collider Clickable;
         public CursorHint Cursor;
-        public ViewLink Link;
         public ColorGroup FadeGroup;
         public ColorGroup GlowGroup;
+        public ViewLink Link;
+
         [HideInInspector] public TitleBillboard Billboarder;
 
         private Routine m_FadeRoutine;
@@ -36,10 +38,9 @@ namespace Astro.Title {
                     vars.Set("actorId", ScriptUtility.ActorId(this));
                     ScriptUtility.Trigger("StarClicked", vars);
                 }
+                RegisterViewLink();
 
-                if (Link) {
-                    ViewNavUtility.MoveByLink(Find.State<ViewState>(), Link);
-                }
+                LoadCredits();
             });
 
             Cursor.OnHover.Register(OnHover);
@@ -50,6 +51,13 @@ namespace Astro.Title {
             }
 
             return null;
+        }
+
+        private void LoadCredits(StringHash32 transitionType = default) {
+            SceneReference sceneRef = SceneUtils.GetSceneByName("Credits");
+            Game.Scenes.LoadMainScene(sceneRef, true, new MainSceneTransitionArgs() {
+                TransitionType = transitionType
+            });
         }
 
         private void OnHover(CursorHint hint, bool hovering) {
