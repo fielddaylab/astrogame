@@ -46,9 +46,9 @@ $call WaitForMovedToView("DocumentPuzzle")
 $call ChapterTitles->FadeOutBackground()
 $call ChapterTitles->FinishTransition(1)
 
-$call SetInputState(true)
 $wait 1
 $call SpawnDocumentToCamera("Day3ElijahPostcard")
+$call SetInputState(true)
 {@Astrid}	Elijah! Okay... at least I know he's still alive. 	$[level3/Astrid/l3_a_01]
 
 :: Day3ElijahPostcardFlavor

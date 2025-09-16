@@ -50,6 +50,7 @@ public class DocumentAssetEditor : Editor {
                 for (int i = 0; i < asset.Prefab.TextRegions.Length; i++) {
                     EditorGUILayout.LabelField(asset.Prefab.TextRegions[i].Text.gameObject.name);
                     EditorGUILayout.PropertyField(serializedObject.FindProperty("TextFields").GetArrayElementAtIndex(i));
+                    EditorGUILayout.PropertyField(serializedObject.FindProperty("LowResTextFields").GetArrayElementAtIndex(i));
                 }
                 serializedObject.ApplyModifiedProperties();
             }
