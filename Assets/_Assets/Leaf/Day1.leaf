@@ -643,7 +643,6 @@ $wait 0.1
 $call MonitorUI->CERESLogoToCenter(0.5)
 $wait 1
 $call MonitorUI->HideCERESLogo()
-$call SetRadioDialLocked(false)
 $wait 0.5
 
 $call SetRefGuideActive(false)
@@ -725,6 +724,7 @@ $goto .PostPuzzleNavigationComplete
 
 :: PostPuzzleNavigationComplete
 $wait 0.5
+$call SetRadioDialLocked(false)
 $call HintModals->SlideInFromRight("FirstPuzzleStar", 0.4)
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $branch .SelectAtikReminder

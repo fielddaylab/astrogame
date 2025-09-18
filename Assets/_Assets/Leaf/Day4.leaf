@@ -363,7 +363,6 @@ $wait 0.1
 $call MonitorUI->CERESLogoToCenter(0.5)
 $wait 1
 $call MonitorUI->HideCERESLogo()
-$call SetRadioDialLocked(false)
 $wait 0.5
 
 $call OpenRefGuidePage("ConstellationDraco")
@@ -389,6 +388,7 @@ $call SetInputState(true)
 
 $set temp:WizeCompleted = false
 $set temp:EltaninCompleted = false
+$call SetRadioDialLocked(false)
 $call SetInputState(false)
 {@Astrid} Oh, its the Draco puzzle! $[level4/Astrid/l4_a_24f]
 $call WaitForMovedToView("Right")

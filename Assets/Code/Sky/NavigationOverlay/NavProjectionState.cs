@@ -24,6 +24,8 @@ namespace Astro {
         public float DefaultEdgeAlpha = 1.0f;
         public RectTransform NavigationArrow;
 
+        public RectTransform PuzzleReticleGroup;
+
         public RectTransform OutlineGroup;
         public float NonCriticalPuzzleEdgeAlpha = 0.005f;
 
@@ -192,7 +194,7 @@ namespace Astro {
                 reticleRectTransform.SetRotation(Vector3.zero);
                 reticleRectTransform.SetPosition(Vector3.zero);
                 reticleRectTransform.SetScale(Vector3.one);
-                reticleRectTransform.SetParent(navProjectionState.PuzzleOutlineGroup.transform, false);
+                reticleRectTransform.SetParent(navProjectionState.PuzzleReticleGroup.transform, false);
 
                 FocusState focusState = Find.State<FocusState>();
                 float scaleFactor = Mathf.Clamp(Mathf.Pow(focusState.BaseScale, currAsset.ApparentMagnitude) - focusState.ScaleOffset, focusState.MinScale, focusState.MaxScale);
