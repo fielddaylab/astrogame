@@ -5,6 +5,12 @@ using TMPro;
 using UnityEngine;
 
 namespace Astro {
+    [Serializable]
+    public struct TextRegion {
+        public TMP_Text Text;
+        public Sprite LowResSprite;
+    }
+
     public enum DocumentCategory {
         Flavor,
         Reference,
@@ -30,6 +36,7 @@ namespace Astro {
 
         [TextArea(1, 64)]
         [SerializeField] public string[] TextFields;
+        [SerializeField] public Sprite[] LowResTextFields = new Sprite[0];
 
         [HideInInspector]
         public StreamingDocumentVisual[] StreamingVisuals;
@@ -75,8 +82,9 @@ namespace Astro {
             }
 
             // Ensure that the number of TextFields on this document matches the number of regions on the prefab
-            if (TextFields.Length != Prefab.TextRegions.Length) {
+            if (TextFields.Length != Prefab.TextRegions.Length || LowResTextFields.Length != Prefab.TextRegions.Length) {
                 Array.Resize(ref TextFields, Prefab.TextRegions.Length);
+                Array.Resize(ref LowResTextFields, Prefab.TextRegions.Length);
             }
 
             // Ensure that the number of StreamingVisuals on this document matches the number of streaming assets on the prefab
