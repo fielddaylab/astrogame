@@ -91,6 +91,10 @@ namespace Astro.Radio {
             }
         }
 
+        /// <summary>
+        /// Attempts to fetch the virtual channel data for playing to resume.
+        /// </summary>
+        /// <returns></returns>
         static public bool TryMakeReal(RadioChannel channel, RadioStreamsState streams, out RadioVirtualStream virtualStream) {
             int idx = streams.VirtualStreams.FindIndex(FindVirtualStreamWithId, channel.AssetId);
             if (idx >= 0) {

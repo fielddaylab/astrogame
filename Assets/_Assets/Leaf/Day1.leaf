@@ -560,6 +560,7 @@ $call SetRefGuideActive(false)
 $set temp:readyForUpgrade = true
 
 $call MonitorUI->ShowElement("CeresMsg")
+$call MonitorUI->ShowElement("UpgradeMsg")
 $wait 1
 $call StopOpenMode()
 {@Astrid} Looks like CERES is trying to contact me. I wonder what that's about...	$[level1/Astrid/l1_a_17]
@@ -593,6 +594,7 @@ $call SetChannelActive(IceCube, false)
 @once
 
 $call MonitorUI->HideElement("CeresMsg")
+$call MonitorUI->HideElement("UpgradeMsg")
 $call HintModals->Hide("RadioControls", 0.2)
 
 $set temp:upgradeChannelTuned = true
@@ -682,6 +684,7 @@ $call StartPuzzleNavigation()
 @once
 
 {@Astrid}	Ach, colder!	$[level1/Astrid/l1_a_29]
+// #endregion
 
 // #region Puzzle Tutorial
 
