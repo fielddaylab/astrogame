@@ -302,6 +302,7 @@ $wait 1
 $call SetRadioFrequency(137)
 $call MonitorUI->HideElement("CeresMsg")
 $wait 1
+$call SetRadioDialLocked(true)
 {@Radio} Astrid, come in, are you there? $[level3/radio_lady/l3_r_13a]
 {@Astrid} Hey! Yeah, I'm here. What happened?	$[level3/Astrid/l3_a_38b]
 {@Radio} Well, long story, but it looks like your station is receiving historical observations from a surviving satellite.  $[level3/radio_lady/l3_r_13b]
@@ -310,6 +311,7 @@ $wait 1
 {@Astrid} Sick. Anything else? Like... maybe any data on a giant meteor storm later this year? 	$[level3/Astrid/l3_a_40]
 {@Radio} I fail to understand how that's relevant. $[level3/radio_lady/l3_r_14]
 {@Astrid} Never mind. $[level3/Astrid/l3_a_41]
+#call SetRadioDialLocked(false)
 $call SetInputState(true)
 $wait 1
 $start .UpgradeReminder

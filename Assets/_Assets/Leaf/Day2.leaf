@@ -340,7 +340,6 @@ $set temp:waitingForBlueFilter = false
 $call OpenRefGuidePage("SpectralClass")
 
 {@Radio} Now you can use that temperature to look up the spectral type in your reference guide.	$[level2/radio_lady/l2_r_12]
-{@Radio} These categories are fuzzy - don't worry if your star doesn't match exactly. You'll get clearance for more precise tools later.	$[level2/radio_lady/l2_r_13]
 {@Radio} Look up the spectral type in your manual, and submit the data.	$[level2/radio_lady/l2_r_14]
 $set temp:waitingForFirstSubmission = true
 $start .WaitingForFirstSubmission

@@ -134,7 +134,7 @@ $else
     $call HintModals->Wiggle("CeresRadioHint")
 $endif
 $if !temp:introRadioChannelTuned
-    {@Astrid}	Okay... I need to tune the radio to 137 megahertz. 	$[level1/Astrid/l1_a_03]
+    // {@Astrid}	Okay... I need to tune the radio to 137 megahertz. 	$[level1/Astrid/l1_a_03]
     $loop
 $endif
 
@@ -587,16 +587,16 @@ $call SetRadioDialLocked(true)
 $call SetRadioDialLocked(false)
 $call SetChannelActive(IceCube, false)
 
-$start .UpgradeReminder
+// $start .UpgradeReminder
 
-:: UpgradeReminder
-$call SetInputState(true)
-$wait 10
-$if !temp:upgradeChannelTuned
-    $call HintModals->Wiggle("RadioControls")
-    {@Astrid}	I wonder if I can upgrade my rig. The upgrade channel should be in my reference guide	$[level1/Astrid/l1_a_g1]
-    $branch .UpgradeReminder
-$endif
+// :: UpgradeReminder
+// $call SetInputState(true)
+// $wait 10
+// $if !temp:upgradeChannelTuned
+//     $call HintModals->Wiggle("RadioControls")
+    // {@Astrid}	I wonder if I can upgrade my rig. The upgrade channel should be in my reference guide	$[level1/Astrid/l1_a_g1]
+//     $branch .UpgradeReminder
+// $endif
 
 :: ClearanceUpgradeTrigger
 @trigger    RadioChannelListenStart
@@ -735,6 +735,13 @@ $if temp:waitingForSelectAtik
     {@Astrid}	It looks like the star compass gives me readings when I select a star on the monitor. That helps.	$[level1/Astrid/l1_a_40]
     $goto .SelectAtikReminder
 $endif
+
+:: OnRandomPuzzleStarSelected
+@trigger OnStarSelected
+@boostScore 150
+@once
+
+$set temp:waitingForSelectAtik = false
 
 :: FirstPuzzleStarSelected
 @trigger   OnStarSelected
