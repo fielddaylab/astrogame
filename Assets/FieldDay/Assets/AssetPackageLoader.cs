@@ -13,6 +13,9 @@ namespace FieldDay.Assets {
 
         IEnumerator<WorkSlicer.Result?> IScenePreload.Preload() {
             foreach(var pack in m_Packs) {
+#if UNITY_EDITOR
+                AssetPack.ReadFromEditorDirectory(pack);
+#endif // UNITY_EDITOR
                 Game.Assets.LoadPackage(pack);
                 yield return null;
             }

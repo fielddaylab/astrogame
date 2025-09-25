@@ -9,10 +9,10 @@ using UnityEngine;
 namespace Astro.Audio {
     public sealed class ObservatorySoundscape : MonoBehaviour {
 
-        [AudioEventRef] public StringHash32 BaseHum;
+        [AudioEvent] public StringHash32 BaseHum;
 
         [Header("Oneshot")]
-        [AudioEventRef] public StringHash32[] RandomizedOneshots;
+        [AudioEvent] public StringHash32[] RandomizedOneshots;
         public float OneshotDelay;
         public float OneshotDelayRandom;
         public float OneshotPlaybackRadius = 20;

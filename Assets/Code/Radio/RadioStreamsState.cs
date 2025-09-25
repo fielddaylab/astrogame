@@ -16,8 +16,8 @@ using static BeauUtil.ColorGroup;
 
 namespace Astro.Radio {
     public sealed class RadioStreamsState : SharedStateComponent, IScenePreload, ISceneLoadDependency, IRegistrationCallbacks {
-        [AudioEventRef] public StringHash32 OneshotEvent;
-        [AudioEventRef] public StringHash32 LoopedEvent;
+        [AudioEvent] public StringHash32 OneshotEvent;
+        [AudioEvent] public StringHash32 LoopedEvent;
         public AudioClip FallbackClip;
 
         [NonSerialized] public BitSet32 DeactivatedChannels;

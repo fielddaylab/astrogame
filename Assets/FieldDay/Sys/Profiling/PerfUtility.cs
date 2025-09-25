@@ -4,6 +4,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using BeauUtil;
 using BeauUtil.Debugger;
@@ -20,10 +21,12 @@ namespace FieldDay.Perf {
             return framerate;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public float TargetFrameDurationMS() {
             return 1000f / TargetFramerate();
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         static public bool IsSecureContext() {
 #if UNITY_WEBGL && !UNITY_EDITOR
             return WebPerf_IsCrossOriginIsolated();

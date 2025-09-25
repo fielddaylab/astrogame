@@ -7,6 +7,7 @@ using BeauUtil.UI;
 using FieldDay;
 using FieldDay.HID;
 using FieldDay.Scenes;
+using FieldDay.UI;
 using FieldDay.UI.Animation;
 using TMPro;
 using Unity.Collections.LowLevel.Unsafe;
@@ -40,9 +41,9 @@ namespace Astro.Title {
             m_PlayerCodeInput.SetTextWithoutNotify(Game.SharedState.Get<UserSettingsState>().PlayerCode);
         }
 
-        private void OnClickContinue(PointerEventData pointerData) {
+        private void OnClickContinue() {
             Future f = SaveUtility.LoadFromServer(m_PlayerCodeInput.text);
-            f.OnComplete(() => { BeginContinueGame(pointerData); });
+            f.OnComplete(() => { BeginContinueGame(); });
             f.OnFail(HandleLoadError);
         }
 
@@ -56,7 +57,7 @@ namespace Astro.Title {
             ContinueButton.interactable = text.Length > 1;
         }
 
-        private void BeginContinueGame(PointerEventData pointerData)
+        private void BeginContinueGame()
         {
             if (AstroGame.SaveBuffer.HasSave) {
                 AstroGame.SaveBuffer.HandleChunks();

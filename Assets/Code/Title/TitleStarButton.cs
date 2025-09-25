@@ -9,6 +9,7 @@ using Leaf.Runtime;
 using FieldDay.HID;
 using FieldDay.Scenes;
 using FieldDay.Scripting;
+using FieldDay.UI;
 
 namespace Astro.Title {
     [RequireComponent(typeof(TitleBillboard))]

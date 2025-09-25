@@ -12,7 +12,7 @@ namespace FieldDay.Vox {
     [DisallowMultipleComponent]
     public class VoxEmitter : BatchedComponent, IEditorOnlyData, IRegistrationCallbacks {
         public SerializedHash32 CharacterId;
-        [AudioEventRef] public StringHash32 DefaultPlaybackEvent;
+        [AudioEvent] public StringHash32 DefaultPlaybackEvent;
         [Required] public AudioSource Player;
 
         [NonSerialized] internal VoxPriority PlayingPriority;

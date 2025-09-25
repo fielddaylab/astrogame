@@ -10,11 +10,11 @@ using UnityEngine;
 namespace Astro {
     public sealed class TelescopeRigAudio : SharedStateComponent {
         [Header("Dome")]
-        [AudioEventRef] public StringHash32 DomeRotationLoop;
+        [AudioEvent] public StringHash32 DomeRotationLoop;
         public Transform DomeRotationLoopLocation;
 
         [Header("Base")]
-        [AudioEventRef] public StringHash32 BaseRotationLoop;
+        [AudioEvent] public StringHash32 BaseRotationLoop;
         public Transform BaseRotationLoopLocation;
 
         [NonSerialized] public Vector2 LastKnownRotation;

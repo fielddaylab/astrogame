@@ -11,6 +11,7 @@ using UnityEngine.UI;
 namespace Astro {
     public class SettingsMenu : BatchedComponent, IRegistrationCallbacks {
         public Toggle DriftToggle;
+        public Toggle SubtitlesToggle;
         public Toggle FullscreenToggle;
         public Slider VolumeSlider;
         public Slider MusicSlider;
@@ -18,6 +19,7 @@ namespace Astro {
         public Slider VoiceSlider;
 
         public void OnDeregister() {
+            SubtitlesToggle.onValueChanged.RemoveAllListeners();
             DriftToggle.onValueChanged.RemoveAllListeners();
             FullscreenToggle.onValueChanged.RemoveAllListeners();
 
@@ -34,12 +36,14 @@ namespace Astro {
 
             Game.Rendering.OnFullscreenChanged.Register(OnFullscreenUpdated);
 
+            SubtitlesToggle.SetIsOnWithoutNotify(state.SubtitlesEnabled);
             DriftToggle.SetIsOnWithoutNotify(state.CameraDriftEnabled);
             FullscreenToggle.SetIsOnWithoutNotify(ScreenUtility.GetFullscreen());
             UpdateCameraDrift(DriftToggle.isOn);
             UpdateFullscreen(FullscreenToggle.isOn);
             DriftToggle.onValueChanged.AddListener(UpdateCameraDrift);
             FullscreenToggle.onValueChanged.AddListener(UpdateFullscreen);
+            SubtitlesToggle.onValueChanged.AddListener(UpdateSubtitles);
 
             VolumeSlider.onValueChanged.AddListener(UpdateVolume);
             MusicSlider.onValueChanged.AddListener((float vol) => UpdateBusVolume(SettingsUtility.MUSIC_BUS_ID, vol));
@@ -75,6 +79,10 @@ namespace Astro {
 
         private void OnFullscreenUpdated(bool fullscreen) {
             FullscreenToggle.SetIsOnWithoutNotify(fullscreen);
+        }
+
+        private void UpdateSubtitles(bool subtitlesEnabled) {
+            SettingsUtility.SetSubtitlesEnabled(Find.State<UserSettingsState>(), subtitlesEnabled);
         }
     }
 }

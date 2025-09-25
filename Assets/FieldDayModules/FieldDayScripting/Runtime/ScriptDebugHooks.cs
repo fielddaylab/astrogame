@@ -2,15 +2,14 @@
 #define DEVELOPMENT
 #endif
 
-using System.Text;
-using UnityEngine;
-
 using BeauPools;
 using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay.Debugging;
 using FieldDay.Scenes;
 using FieldDay.Vox;
+using System.Text;
+using UnityEngine;
 
 namespace FieldDay.Scripting {
     static public class ScriptDebugHooks {

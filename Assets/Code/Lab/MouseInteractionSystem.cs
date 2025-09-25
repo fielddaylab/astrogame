@@ -10,6 +10,7 @@ using FieldDay.Scripting;
 using BeauUtil;
 using FieldDay.Audio;
 using FieldDay.Debugging;
+using FieldDay.UI;
 
 namespace Astro {
     /// <summary>

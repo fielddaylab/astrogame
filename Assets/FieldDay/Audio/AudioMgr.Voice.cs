@@ -57,6 +57,8 @@ namespace FieldDay.Audio {
             public ushort FrameEnded;
             public short PositionSyncIndex;
             public short KillTweenIndex;
+            public int SampleLoopPoint;
+            public int SampleLoopLength;
             public FloatTweenIndices FloatTweens;
             public StreamedClip StreamingEntry;
 
@@ -329,6 +331,11 @@ namespace FieldDay.Audio {
 
                         if (voice.Components.Source.isPlaying) {
                             voice.FrameEnded = Frame.InvalidIndex;
+                            if (voice.Components.Source.loop && voice.SampleLoopLength > 0) {
+                                if (voice.Components.Source.timeSamples >= voice.SampleLoopPoint) {
+                                    voice.Components.Source.timeSamples -= voice.SampleLoopLength;
+                                }
+                            }
                         } else {
                             if (voice.Components.Source.loop) {
                                 voice.State = VoiceState.PlayRequested;
@@ -596,5 +603,17 @@ namespace FieldDay.Audio {
         }
 
         #endregion // Voice Component Pool
+
+        #region Helpers
+
+        /// <summary>
+        /// Returns if a clip can be seeked precisely.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static private bool CanSeekPrecisely(AudioClip clip) {
+            return clip.loadType != AudioClipLoadType.CompressedInMemory;
+        }
+
+        #endregion // Helpers
     }
 }

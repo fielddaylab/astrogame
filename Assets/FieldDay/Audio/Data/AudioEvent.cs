@@ -55,8 +55,8 @@ namespace FieldDay.Audio {
     /// <summary>
     /// Event reference attribute.
     /// </summary>
-    public class AudioEventRefAttribute : AssetNameAttribute {
-        public AudioEventRefAttribute() : base(typeof(AudioEvent), true) { }
+    public class AudioEventAttribute : AssetNameAttribute {
+        public AudioEventAttribute() : base(typeof(AudioEvent), true) { }
 
         protected internal override string Name(UnityEngine.Object obj) {
             return base.Name(obj).Replace('-', '/').Replace('.', '/');

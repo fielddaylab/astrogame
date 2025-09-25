@@ -23,14 +23,8 @@ namespace FieldDay.Editor {
 
         private class AssetImportHook : AssetPostprocessor {
             static private void OnPostprocessAllAssets(string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths) {
-                if (importedAssets.Length > 0 || movedAssets.Length > 0) {
-                    s_HashCache.InvalidateAll();
-                    s_ListCache.InvalidateAll();
-                }
-
-                if (deletedAssets.Length > 0) {
-                    s_ListCache.InvalidateAll();
-                }
+                s_HashCache.InvalidateAll();
+                s_ListCache.InvalidateAll();
             }
         }
 

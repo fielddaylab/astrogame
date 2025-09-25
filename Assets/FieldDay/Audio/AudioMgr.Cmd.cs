@@ -89,6 +89,11 @@ namespace FieldDay.Audio {
                         break;
                     }
 
+                    case AudioCommandType.SetLoop: {
+                        Cmd_SetLoop(cmd.SetLoop);
+                        break;
+                    }
+
                     default: {
                         Log.Error("[AudioMgr] Unknown audio command type '{0}'", cmd.Type);
                         break;
@@ -251,6 +256,13 @@ namespace FieldDay.Audio {
             VoiceData voice = FindVoiceForId(seekData.Handle);
             if (voice != null) {
                 voice.Components.Source.time = seekData.Position;
+            }
+        }
+
+        private unsafe void Cmd_SetLoop(SetLoopCommandData loopData) {
+            VoiceData voice = FindVoiceForId(loopData.Handle);
+            if (voice != null) {
+                voice.Components.Source.loop = loopData.Loop;
             }
         }
 

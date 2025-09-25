@@ -75,13 +75,24 @@ namespace FieldDay.UI {
             }
 
             // determine output
-            
-            Sprite icon = m_DefaultSprite;
+
+            Sprite defaultSprite = m_DefaultSprite;
+            Sprite hoverSprite = m_DefaultHoverSprite;
+
+            if (!hintIsInteractable) {
+                StringHash32 overrideType = CursorHint.DefaultCursor;
+                if (!overrideType.IsEmpty) {
+                    type = Find.NamedAsset<CursorType>(overrideType);
+                    defaultSprite = type.DefaultImage;
+                }
+            }
+
+            Sprite icon = defaultSprite;
             bool scaleDown = isButtonHeld;
 
             if (hintIsInteractable) {
                 if (type == null) {
-                    icon = m_DefaultHoverSprite;
+                    icon = hoverSprite;
                 } else {
                     if ((isButtonHeld || hintIsLocked) && type.HeldImage != null) {
                         scaleDown = type.HeldScaleOverride > 0;
@@ -110,7 +121,7 @@ namespace FieldDay.UI {
             }
 
             float scale;
-            if (hintIsInteractable && type) {
+            if (type) {
                 if (scaleDown) {
                     scale = type.HeldScaleOverride > 0 ? type.HeldScaleOverride : m_DefaultHeldScale * type.DefaultScale;
                 } else {

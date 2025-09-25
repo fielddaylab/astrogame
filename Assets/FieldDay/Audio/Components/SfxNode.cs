@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace FieldDay.Audio {
     public sealed class SfxNode : BatchedComponent, IRegistrationCallbacks {
-        [AudioEventRef] public StringHash32 EventId;
+        [AudioEvent] public StringHash32 EventId;
 
         [Header("Position")]
         public Transform Position;

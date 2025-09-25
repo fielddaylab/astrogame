@@ -486,6 +486,16 @@ namespace FieldDay.Audio {
             });
         }
 
+        static public void SetLooping(AudioHandle handle, bool loop) {
+            Game.Audio.QueueAudioCommand(new AudioCommand() {
+                Type = AudioCommandType.SetLoop,
+                SetLoop = new SetLoopCommandData() {
+                    Handle = handle.m_Id,
+                    Loop = loop
+                }
+            });
+        }
+
         #endregion // Properties
     }
 

@@ -19,7 +19,7 @@ namespace Astro {
         [SerializeField] public TMP_Text PointsDisplay;
 
         [Header("Sound Effects")]
-        [AudioEventRef] public StringHash32[] PipCountSounds;
+        [AudioEvent] public StringHash32[] PipCountSounds;
         public Transform SoundAnchor;
 
         [Header("Materials")]

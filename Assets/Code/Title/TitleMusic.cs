@@ -13,8 +13,8 @@ using UnityEngine;
 
 namespace Astro.Title {
     public sealed class TitleMusic : SharedStateComponent, IRegistrationCallbacks {
-        [AudioEventRef] public StringHash32 MusicEvent;
-        [AudioEventRef] public StringHash32 TensionSfx;
+        [AudioEvent] public StringHash32 MusicEvent;
+        [AudioEvent] public StringHash32 TensionSfx;
 
         public float FadeInDuration = 1;
         [NonSerialized] public AudioHandle TensionHandle;

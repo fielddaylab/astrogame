@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace FieldDay.UI {
+    [DisallowMultipleComponent]
     public sealed class RaycasterInputLayer : MonoBehaviour {
         public enum Mode {
             SetEnabled,
