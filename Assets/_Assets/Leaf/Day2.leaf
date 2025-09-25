@@ -280,14 +280,13 @@ $call StartNeutrinoNavigation()
 @cutscene
 @once
 
-
 $call StopNeutrinoNavigation()
 $call SetInputState(false)
 $call AlignCamToNeutrino()
 $call SetInputState(true)
 $call StartOpenMode()
 $set temp:waitingForNeutrinoStar = true
-$call SetStickyFirstPage(1)
+$call SetStickyFirstPage(2)
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 650)
 
 {@Radio} We need to identify the spectral types of these stars to inform our analysis. You should be able to get an approximate categorization using temperature.	$[level2/radio_lady/l2_r_04]
@@ -375,6 +374,9 @@ $call SetRefGuidePagesLocked(false)
 $call SetChannelActive(IceCube, false)
 
 {@Radio}	Nice job! You're getting the hang of this. 	$[level2/radio_lady/l2_r_15]
+// #endregion
+
+//#region Upgrade
 
 :: ClearanceUpgrade
 @trigger    PointsUpdated
@@ -387,6 +389,7 @@ $call SetChannelActive(IceCube, false)
 $call SetInputState(false)
 $call SetRefGuideActive(false)
 $wait 4
+$call MonitorUI->ShowElement("UpgradeMsg")
 
 $call StopOpenMode()
 $call SetInputState(true)
@@ -396,18 +399,6 @@ $call SetStickyFirstPage(7)
 
 {@Astrid}	I'll bet I am ready for a clearance upgrade. The CERES channels are in my reference guide	$[level2/Astrid/l2_a_22]
 
-$start .UpgradeReminder
-
-:: UpgradeReminder
-$wait 15
-$if !temp:radioChannelTuned
-    {@Astrid}	I'll bet I am ready for a clearance upgrade. The CERES channels are in my reference guide	$[level2/Astrid/l2_a_22(1)]
-    $branch .UpgradeReminder
-$endif
-
-// #endregion
-
-//#region Upgrade
 :: ClearanceUpgradeTrigger
 @trigger    RadioChannelListenStart
 @when       channelId == "Unlocks_Active"
@@ -415,6 +406,7 @@ $endif
 @cutscene
 @once
 
+$call MonitorUI->HideElement("UpgradeMsg")
 $set temp:radioChannelTuned = true
 $call SetRadioDialLocked(true)
 $call SetRadioFrequency(375, true)

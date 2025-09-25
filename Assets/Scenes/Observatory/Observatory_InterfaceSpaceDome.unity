@@ -945,6 +945,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6247121137728058213, guid: 6f9a5902b3dedf54080fa5f61ccb37d9, type: 3}
+      propertyPath: m_Alpha
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6331685578507674695, guid: 6f9a5902b3dedf54080fa5f61ccb37d9, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1045,6 +1049,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 7283002302052652495, guid: 6f9a5902b3dedf54080fa5f61ccb37d9, type: 3}
+      propertyPath: m_text
+      value: To upgrade, tune to 375mHz
+      objectReference: {fileID: 0}
     - target: {fileID: 7304655838501287749, guid: 6f9a5902b3dedf54080fa5f61ccb37d9, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1060,6 +1068,10 @@ PrefabInstance:
     - target: {fileID: 7304655838501287749, guid: 6f9a5902b3dedf54080fa5f61ccb37d9, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7351884392281658776, guid: 6f9a5902b3dedf54080fa5f61ccb37d9, type: 3}
+      propertyPath: m_text
+      value: TO UPGRADE TUNE TO 375
       objectReference: {fileID: 0}
     - target: {fileID: 7399116848249290976, guid: 6f9a5902b3dedf54080fa5f61ccb37d9, type: 3}
       propertyPath: m_Layer
@@ -1193,6 +1205,14 @@ PrefabInstance:
       propertyPath: GuessTrackerSubmittedSprites.Array.data[3]
       value: 
       objectReference: {fileID: 21300000, guid: 44daff4a229de0a4895fc1a03a7d60bf, type: 3}
+    - target: {fileID: 7820160219097818575, guid: 6f9a5902b3dedf54080fa5f61ccb37d9, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 71
+      objectReference: {fileID: 0}
+    - target: {fileID: 7820160219097818575, guid: 6f9a5902b3dedf54080fa5f61ccb37d9, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 276
+      objectReference: {fileID: 0}
     - target: {fileID: 7863099574215757104, guid: 6f9a5902b3dedf54080fa5f61ccb37d9, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
@@ -1208,6 +1228,14 @@ PrefabInstance:
     - target: {fileID: 8075110036847948499, guid: 6f9a5902b3dedf54080fa5f61ccb37d9, type: 3}
       propertyPath: m_Layer
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8106092743813495746, guid: 6f9a5902b3dedf54080fa5f61ccb37d9, type: 3}
+      propertyPath: m_Id.m_Source
+      value: UpgradeMsg
+      objectReference: {fileID: 0}
+    - target: {fileID: 8106092743813495746, guid: 6f9a5902b3dedf54080fa5f61ccb37d9, type: 3}
+      propertyPath: m_Id.m_HashValue
+      value: 3828820096
       objectReference: {fileID: 0}
     - target: {fileID: 8120671294304672060, guid: 6f9a5902b3dedf54080fa5f61ccb37d9, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -1337,12 +1365,46 @@ PrefabInstance:
       propertyPath: m_Name
       value: Puzzle Msg 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1542718023566295969, guid: 6f9a5902b3dedf54080fa5f61ccb37d9, type: 3}
     m_RemovedGameObjects:
     - {fileID: 5716793831646002387, guid: 6f9a5902b3dedf54080fa5f61ccb37d9, type: 3}
+    - {fileID: 8320757729180335227, guid: 6f9a5902b3dedf54080fa5f61ccb37d9, type: 3}
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 800822062316499798, guid: 6f9a5902b3dedf54080fa5f61ccb37d9, type: 3}
+      insertIndex: 2
+      addedObject: {fileID: 1036594229}
   m_SourcePrefab: {fileID: 100100000, guid: 6f9a5902b3dedf54080fa5f61ccb37d9, type: 3}
+--- !u!1 &1036594228 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 800822062316499798, guid: 6f9a5902b3dedf54080fa5f61ccb37d9, type: 3}
+  m_PrefabInstance: {fileID: 1036594227}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1036594229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1036594228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3cce1025f282c247b38ed00ee6ddc0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.21176471, g: 0.8392157, b: 0.8235294, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_CornerRadius: 15
+  m_Resolution: 0
+  m_Outline: 0
+  m_Thickness: 1
 --- !u!1 &1165780780
 GameObject:
   m_ObjectHideFlags: 0

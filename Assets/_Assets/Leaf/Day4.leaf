@@ -305,6 +305,7 @@ $endif
 $call SetInputState(false)
 $call SetRefGuideActive(false)
 $wait 4
+$call MonitorUI->ShowElement("UpgradeMsg")
 
 $call StopOpenMode()
 $call SetInputState(true)
@@ -314,14 +315,6 @@ $call SetStickyFirstPage(7)
 
 $call SetRadioDialLocked(false)
 {@Astrid}	I'll bet I am ready for a clearance upgrade. The CERES channels are in my reference guide	$[level2/Astrid/l2_a_22]
-$start .UpgradeReminder
-
-:: UpgradeReminder
-$wait 15
-$if !temp:radioChannelTuned
-    {@Astrid}	I'll bet I am ready for a clearance upgrade. The CERES channels are in my reference guide	$[level2/Astrid/l2_a_22(1)]
-    $branch .UpgradeReminder
-$endif
 
 //#endregion
 
@@ -334,6 +327,7 @@ $endif
 @cutscene
 @once
 
+$call MonitorUI->HideElement("UpgradeMsg")
 $set temp:radioChannelTuned = true
 $call SetRadioDialLocked(true)
 $call SetRadioFrequency(375, true)
