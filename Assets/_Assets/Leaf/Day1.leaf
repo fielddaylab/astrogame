@@ -570,8 +570,6 @@ $call SetStickyFirstPage(7)
 $call HintModals->SlideInFromRight("RadioControls", 0.4)
 $call SetInputState(true)
 
-$start .UpgradeReminder
-
 :: IceCubeUpgradeReminder
 @trigger    RadioChannelListenStart
 @when       channelId == "IceCube", IsRadioFrequencyAt(137), temp:introRadioChannelTuned, !temp:upgradeChannelTuned, temp:readyForUpgrade
@@ -586,17 +584,6 @@ $call SetRadioDialLocked(true)
 {@Radio} You’ll need to tune to 375 megahertz on your radio so we can unlock your equipment. $[level1/radio_lady/l1_r_34]
 $call SetRadioDialLocked(false)
 $call SetChannelActive(IceCube, false)
-
-// $start .UpgradeReminder
-
-// :: UpgradeReminder
-// $call SetInputState(true)
-// $wait 10
-// $if !temp:upgradeChannelTuned
-//     $call HintModals->Wiggle("RadioControls")
-    // {@Astrid}	I wonder if I can upgrade my rig. The upgrade channel should be in my reference guide	$[level1/Astrid/l1_a_g1]
-//     $branch .UpgradeReminder
-// $endif
 
 :: ClearanceUpgradeTrigger
 @trigger    RadioChannelListenStart

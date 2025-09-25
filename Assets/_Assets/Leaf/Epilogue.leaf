@@ -28,7 +28,6 @@ $call SatelliteDecoder->SetDecoderActive(true)
 $call TelescopeLook(155, -30)
 $set temp:powerButtonHint = false
 $set temp:pressedPowerButton = false
-$call SetChannelActive(Unlocks_Active, false)
 $call SetChannelActive(IceCube, false)
 $call PlayMusic("Music.Gently-Falling", 1)
 
