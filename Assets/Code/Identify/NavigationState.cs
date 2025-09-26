@@ -11,6 +11,7 @@ using BeauPools;
 using BeauUtil.UI;
 using FieldDay.Scripting;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 namespace Astro {
     public enum NavigationMode {
