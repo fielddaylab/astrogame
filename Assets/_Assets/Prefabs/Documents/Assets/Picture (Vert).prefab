@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 2724181979920763631}
   - component: {fileID: 2512402962644039817}
   - component: {fileID: 1479152696029571428}
-  - component: {fileID: 3657434454459647666}
   m_Layer: 7
   m_Name: Front Surface
   m_TagString: Untagged
@@ -132,27 +131,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PostcardImage: {fileID: 2512402962644039817}
---- !u!65 &3657434454459647666
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 356800111262153428}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 0}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &3668253397328366836
 GameObject:
   m_ObjectHideFlags: 0
@@ -162,9 +140,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3050592325656246774}
+  - component: {fileID: 4618320249578676808}
   - component: {fileID: 1241410773032443786}
   - component: {fileID: 3933275690395099700}
-  - component: {fileID: 4618320249578676808}
   m_Layer: 7
   m_Name: Click To Zoom Region
   m_TagString: Untagged
@@ -181,12 +159,33 @@ Transform:
   m_GameObject: {fileID: 3668253397328366836}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.35, z: 0.078999996}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: -0.23333333, z: -0.0009999946}
+  m_LocalScale: {x: 1, y: 0.66666675, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 8195915736693456021}
+  m_Father: {fileID: 7519080215297205149}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &4618320249578676808
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3668253397328366836}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1.5, z: 0.01}
+  m_Center: {x: 0, y: -0.4, z: 0}
 --- !u!114 &1241410773032443786
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -217,27 +216,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Document: {fileID: 5048261325816738630}
   PartType: 1
---- !u!65 &4618320249578676808
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3668253397328366836}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1.5, z: 0}
-  m_Center: {x: 0, y: -0.4, z: 0}
 --- !u!1 &6837664786097521902
 GameObject:
   m_ObjectHideFlags: 0
@@ -314,9 +292,9 @@ MonoBehaviour:
   m_ShowSizeRect: 0
   ZoomOffsetOverride: {x: -0.0040888004, y: 0.75, z: 2.1}
   Interactable: {fileID: 5048261325816738630}
-  PreserveInArchive: 0
   TriggersPrompter: 0
   AlwaysHighRes: 0
+  Thickness: 1
 --- !u!1 &7130632358580430516
 GameObject:
   m_ObjectHideFlags: 0
@@ -347,7 +325,6 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7519080215297205149}
-  - {fileID: 3050592325656246774}
   m_Father: {fileID: 992578185035690043}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7841899603595999871
@@ -381,6 +358,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5392735461319824111}
+  - {fileID: 3050592325656246774}
   m_Father: {fileID: 8195915736693456021}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!210 &2683414509733141177

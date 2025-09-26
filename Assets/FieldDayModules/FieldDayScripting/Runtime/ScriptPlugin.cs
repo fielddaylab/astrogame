@@ -347,7 +347,7 @@ namespace FieldDay.Scripting {
                     yield return null;
                 }
 
-                SubtitleUtility.RequestDismiss(fakeSubtitleData);
+                SubtitleUtility.RequestDismiss(new SubtitleDismissData(fakeSubtitleData));
             }
 
             yield return Routine.Command.BreakAndResume;

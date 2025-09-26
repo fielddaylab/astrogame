@@ -1,8 +1,8 @@
+using BeauRoutine;
 using BeauUtil;
 using BeauUtil.Debugger;
 using BeauUtil.UI;
 using FieldDay;
-using FieldDay.Assets;
 using FieldDay.Scripting;
 using FieldDay.SharedState;
 using System;
@@ -21,11 +21,21 @@ namespace Astro {
         public float EdgeInset = 38;
         [SerializeField] private float m_EdgeWidth = 10;
         public float EdgeWidth => m_EdgeWidth;
+        public float DefaultEdgeAlpha = 1.0f;
         public RectTransform NavigationArrow;
+
+        public RectTransform PuzzleReticleGroup;
+
         public RectTransform OutlineGroup;
+        public float NonCriticalPuzzleEdgeAlpha = 0.005f;
+
         public RectTransform PuzzleOutlineGroup;
+        public float CriticalPuzzleEdgeAlpha = 0.2f;
+
         public CanvasGroup BoarderGroup;
 
+        [Header("Sprites")]
+        public Sprite StarReticle;
         public Sprite NeutrinoReticleElbow;
         public Sprite ConstellationReticleElbow;
 
@@ -65,7 +75,7 @@ namespace Astro {
             state.BoarderGroup.gameObject.SetActive(true);
             state.Initialized = false;
 
-            NavigationCanvasUtil.InitNavProjectionSystem(state);
+            InitNavProjectionSystem(state);
         }
 
         public static void DisableConstellationNavUI() {
@@ -165,12 +175,49 @@ namespace Astro {
             && viewportPosition.z > 0;
         }
 
-        public static unsafe void InitNavProjectionSystem(NavProjectionState navState) {
-            var dome = Find.State<SkyDome>();
-            var focusPools = Find.State<FocusPools>();
+        public static void AddPuzzleReticles() {
+            NavProjectionState navProjectionState = Find.State<NavProjectionState>();
+            PuzzleState puzzleState = Find.State<PuzzleState>();
 
-            var puzzleState = Find.State<PuzzleState>();
-            var spaceCam = Find.State<SpaceCameraState>();
+            //Make a target reticle for each star
+            for (int i = 0; i < 4; i++) {
+                StringHash32 assetId = puzzleState.ActivePuzzle.Rows[i].Object;
+                CelestialAsset currAsset = Find.NamedAsset<CelestialAsset>(assetId);
+                UIFocus currFocus = FocusableUtility.GetFocusByData(assetId);
+
+                Type[] components = { typeof(RectTransform), typeof(Image) };
+                var reticle = new GameObject("PuzzleReticle", components);
+
+                // Set-up the target reticle transform
+                RectTransform reticleRectTransform = reticle.GetComponent<RectTransform>();
+                reticleRectTransform.anchorMin = reticleRectTransform.anchorMax = new Vector2(0, 0);
+                reticleRectTransform.SetRotation(Vector3.zero);
+                reticleRectTransform.SetPosition(Vector3.zero);
+                reticleRectTransform.SetScale(Vector3.one);
+                reticleRectTransform.SetParent(navProjectionState.PuzzleReticleGroup.transform, false);
+
+                FocusState focusState = Find.State<FocusState>();
+                float scaleFactor = Mathf.Clamp(Mathf.Pow(focusState.BaseScale, currAsset.ApparentMagnitude) - focusState.ScaleOffset, focusState.MinScale, focusState.MaxScale);
+
+                Vector3 center = Find.State<SkyDome>().Position;
+                Vector2 canvasSize = navProjectionState.OutlineGroup.rect.size;
+                Vector3 assetPostion = CelestialPositionerUtility.GetObjectPosition(center, currAsset.Coords.RightAscension, currAsset.Coords.Declination);
+
+                reticleRectTransform.SetAnchorPos(Find.State<SpaceCameraState>().Camera.Camera.WorldToViewportPoint(assetPostion) * canvasSize);
+                reticleRectTransform.sizeDelta = new Vector2(125f, 125f) * scaleFactor;
+
+                // Assign the target reticle sprite
+                reticle.GetComponent<Image>().sprite = navProjectionState.StarReticle;
+            }
+
+        }
+
+        public static unsafe void InitNavProjectionSystem(NavProjectionState navState) {
+            SkyDome dome = Find.State<SkyDome>();
+            FocusPools focusPools = Find.State<FocusPools>();
+
+            PuzzleState puzzleState = Find.State<PuzzleState>();
+            SpaceCameraState spaceCam = Find.State<SpaceCameraState>();
 
             if (!puzzleState.ActivePuzzle) return;
 
@@ -178,7 +225,7 @@ namespace Astro {
             Vector3 spaceCameraOriginalRot = spaceCam.Camera.RootTransform.localEulerAngles;
 
             // populate sky with celestial objects
-            var center = dome.Position;
+            Vector3 center = dome.Position;
 
             Camera spaceCamera = spaceCam.Camera.Camera;
 
@@ -203,8 +250,8 @@ namespace Astro {
             for (int i = 0; i < starCount; i++) {
                 StringHash32 assetId = puzzleState.ActivePuzzle.ConstellationStars[i];
                 starAssetIds[i] = assetId;
-
                 CelestialAsset currAsset = Find.NamedAsset<CelestialAsset>(assetId);
+
                 Vector3 assetPostion = CelestialPositionerUtility.GetObjectPosition(center, currAsset.Coords.RightAscension, currAsset.Coords.Declination);
 
                 starAnchors[i] = spaceCamera.WorldToViewportPoint(assetPostion) * canvasSize;
@@ -227,7 +274,7 @@ namespace Astro {
 #endif // UNITY_EDITOR
 
 
-                StringHash32[] puzzleStars = new StringHash32[ puzzleState.ActivePuzzle.Rows.Length ];
+                StringHash32[] puzzleStars = new StringHash32[puzzleState.ActivePuzzle.Rows.Length];
                 for (int j = 0; j < puzzleState.ActivePuzzle.Rows.Length; j++) {
                     puzzleStars[j] = puzzleState.ActivePuzzle.Rows[j].Object;
                 }
@@ -258,6 +305,8 @@ namespace Astro {
                 float angle = Vector2.SignedAngle(Vector2.up, vector);
                 connectionRect.localEulerAngles = new Vector3(0, 0, angle);
             }
+
+            navState.OutlineGroup.GetComponent<CanvasGroup>().alpha = navState.DefaultEdgeAlpha;
 
             // Okay now put that camera back where it came from, or so help me.
             WorldPositionUtility.ForceLocalRotation(spaceCam, spaceCameraOriginalRot);

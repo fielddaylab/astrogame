@@ -4,6 +4,7 @@ using BeauUtil.Debugger;
 using FieldDay;
 using FieldDay.Components;
 using FieldDay.HID;
+using FieldDay.UI;
 using UnityEngine;
 
 namespace Astro {

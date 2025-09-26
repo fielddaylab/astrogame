@@ -15,6 +15,7 @@ namespace Astro {
         public Color32 WaveformColor;
 
         [Header("Text")]
+        public string DisplayName;
         public TMP_FontAsset OverrideFont;
         public float FontScale = 1;
         public float MarginScale = 1;

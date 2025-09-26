@@ -1,6 +1,5 @@
-using Astro.Audio;
-using BeauUtil.Debugger;
 using FieldDay;
+using Astro.Audio;
 using FieldDay.Audio;
 using FieldDay.Systems;
 
@@ -14,12 +13,14 @@ namespace Astro {
                         m_State.MusicTrack = default;
                         m_State.CurrentTrackId = default;
                         m_State.CurrentState = MusicState.State.Stopped;
+                        // Debug.LogFormat("[MusicSystem > TryBeginQueuedTrack] calling from FadeOut.");
                         TryBeginQueuedTrack();
                     }
                     break;
                 }
 
                 case MusicState.State.Stopped: {
+                    // Debug.LogFormat("[MusicSystem > TryBeginQueuedTrack] calling from Stopped.");
                     TryBeginQueuedTrack();
                     break;
                 }
@@ -34,6 +35,7 @@ namespace Astro {
                             m_State.Queued = default;
                         } else {
                             Sfx.Stop(m_State.MusicTrack, m_State.Queued.FadeIn);
+                            // Debug.LogFormat("[MusicSystem > TryBeginQueuedTrack] calling from Playing.");
                             TryBeginQueuedTrack();
                         }
                     }
@@ -44,8 +46,10 @@ namespace Astro {
 
         private void TryBeginQueuedTrack() {
             if (m_State.Queued.TrackId.IsEmpty) {
+                // Debug.LogFormat("[MusicSystem > TryBeginQueuedTrack] track {0} was empty", m_State.Queued.TrackId.ToDebugString());
                 return;
             }
+            // Debug.LogFormat("[MusicSystem > TryBeginQueuedTrack] attempting to queue track {0}", m_State.Queued.TrackId);
 
             m_State.CurrentTrackId = m_State.Queued.TrackId;
             m_State.CurrentState = MusicState.State.Playing;

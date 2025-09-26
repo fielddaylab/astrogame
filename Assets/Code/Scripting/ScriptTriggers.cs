@@ -1,12 +1,15 @@
 using Astro.Audio;
 using Astro.Save;
+using BeauRoutine;
 using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay;
 using FieldDay.HID;
 using FieldDay.Scenes;
 using FieldDay.Scripting;
+using FieldDay.UI;
 using Leaf.Runtime;
+using System.Collections;
 using UnityEngine;
 
 namespace Astro {
@@ -86,7 +89,9 @@ namespace Astro {
 
             state.DayIndex += 1;
             DayConfigAsset day = Find.NamedAsset<DayConfigAsset>(story.Days[state.DayIndex]);
+#if DEVELOPMENT
             Log.Msg("[ScriptTriggers > LoadNextDay] Loading day '{0}'", day.name);
+#endif // DEVELOPMENT
 
             MusicUtility.StopMusic(1);
 
@@ -138,11 +143,12 @@ namespace Astro {
             InputUtility.SetInputEnabled(state, enabled);
 
             if (enabled) {
+                Routine.Start(CameraRigUtility.SetLetterboxEnabled(false));
                 GameLoop.ResumeUpdates(AstroGame.InteractUpdateMask);
-            }
-            else {
+            } else {
                 GameLoop.SuspendUpdates(AstroGame.InteractUpdateMask);
                 CursorHint.Unlock(CursorHint.Current);
+                Routine.Start(CameraRigUtility.SetLetterboxEnabled());
             }
         }
 
@@ -251,14 +257,13 @@ namespace Astro {
         }
 
         [LeafMember("AlignCamToNeutrino")]
-        static private void LeafAlignCamToNeutrino()
-        {
+        static private IEnumerator LeafAlignCamToNeutrino() {
             DayConfigAsset config = DayConfigUtil.GetConfigForState();
-            if (!config) return;
+            if (!config) yield break;
             EqCoords target = config.NeutrinoEvent.NeutrinoCoordinates;
 
             var navState = Find.State<NavigationState>();
-            navState.ConstellationSnapRoutine.Replace(NavigationUtility.SnapAlignment(target));
+            yield return navState.ConstellationSnapRoutine.Replace(NavigationUtility.SnapAlignment(target));
         }
 
         [LeafMember("StartPuzzleNavigation")]

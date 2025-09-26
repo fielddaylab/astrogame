@@ -169,7 +169,7 @@ namespace FieldDay.Debugging {
             if (s_TestState >= SmokeTestState.Running) {
                 s_DebugBuilder.Append("CURRENT TEST: ").Append(test.Name)
                     .Append("\nSTATE: ").Append(CachedSmokeTestStateStrings[(int) s_TestState]);
-                DebugDraw.AddViewportText(new Vector2(0.5f, 0), new Vector2(0, 16), s_DebugBuilder, Color.black, 0, TextAnchor.LowerCenter, DebugTextStyle.BackgroundDarkOpaque);
+                DebugDraw.AddViewportText(new Vector2(0.5f, 0), new Vector2(0, 16), s_DebugBuilder, Color.green, 0, TextAnchor.LowerCenter, DebugTextStyle.BackgroundDarkOpaque);
                 s_DebugBuilder.Clear();
             }
         }
@@ -309,7 +309,7 @@ namespace FieldDay.Debugging {
         static public void ScheduleTest(string testName) {
 #if FIELD_DAY_TESTS
             Assert.NotNull(testName);
-            int existingTestIdx = s_NamedSmokeTests.FindIndex((a, b) => a.Name.Equals(b, StringComparison.Ordinal), testName);
+            int existingTestIdx = s_NamedSmokeTests.FindIndex((a, b) => a.Name.Equals(b, StringComparison.OrdinalIgnoreCase), testName);
             Assert.True(existingTestIdx >= 0, "Smoke Test with name '{0}' not registered", testName);
             ScheduleTest(s_NamedSmokeTests[existingTestIdx]);
 #endif // FIELD_DAY_TESTS
@@ -322,7 +322,7 @@ namespace FieldDay.Debugging {
         static public void RegisterTest(in SmokeTestData testData) {
 #if FIELD_DAY_TESTS
             Assert.NotNull(testData.Name);
-            int existingTestIdx = s_NamedSmokeTests.FindIndex((a, b) => a.Name.Equals(b, StringComparison.Ordinal), testData.Name);
+            int existingTestIdx = s_NamedSmokeTests.FindIndex((a, b) => a.Name.Equals(b, StringComparison.OrdinalIgnoreCase), testData.Name);
             Assert.True(existingTestIdx < 0, "Smoke Test with name '{0}' already registered", testData.Name);
             s_NamedSmokeTests.PushBack(testData);
 #endif // FIELD_DAY_TESTS
@@ -344,6 +344,11 @@ namespace FieldDay.Debugging {
                 } else {
                     m.Invoke(null, Array.Empty<object>());
                 }
+            }
+
+            foreach(var named in s_NamedSmokeTests) {
+                string name = named.Name;
+                menu.AddButton(name, () => ScheduleTest(name));
             }
 
             return menu;

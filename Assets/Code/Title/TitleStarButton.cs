@@ -1,24 +1,25 @@
-using BeauRoutine;
-using BeauUtil;
+
+using UnityEngine;
+using System.Collections.Generic;
+
 using FieldDay;
-using FieldDay.Components;
+using BeauUtil;
+using BeauRoutine;
+using Leaf.Runtime;
 using FieldDay.HID;
 using FieldDay.Scenes;
 using FieldDay.Scripting;
-using FieldDay.UI.Animation;
-using Leaf.Runtime;
-using System;
-using System.Collections.Generic;
-using UnityEngine;
+using FieldDay.UI;
 
 namespace Astro.Title {
+    [RequireComponent(typeof(TitleBillboard))]
     public sealed class TitleStarButton : ScriptActorComponent, IScenePreload {
         public Collider Clickable;
         public CursorHint Cursor;
         public ViewLink Link;
         public ColorGroup FadeGroup;
         public ColorGroup GlowGroup;
-        public TitleBillboard Billboarder;
+        [HideInInspector] public TitleBillboard Billboarder;
 
         private Routine m_FadeRoutine;
         private Routine m_GlowRoutine;
@@ -29,6 +30,8 @@ namespace Astro.Title {
         }
 
         IEnumerator<WorkSlicer.Result?> IScenePreload.Preload() {
+            Billboarder = GetComponent<TitleBillboard>();
+
             Cursor.onClick.Register(() => {
                 using (TempVarTable vars = TempVarTable.Alloc()) {
                     vars.Set("actorId", ScriptUtility.ActorId(this));
@@ -50,13 +53,12 @@ namespace Astro.Title {
             return null;
         }
 
-        public void RegisterViewLink()
-        {
-            Link.OnActiveStateChanged.Register(OnActiveStateChanged);
-        }
-
         private void OnHover(CursorHint hint, bool hovering) {
             m_GlowRoutine.Replace(this, Tween.Float(GlowGroup.GetAlpha(), hovering ? 1 : 0, GlowGroup.SetAlpha, 0.2f));
+        }
+
+        public void RegisterViewLink() {
+            Link.OnActiveStateChanged.Register(OnActiveStateChanged);
         }
 
         public void OnActiveStateChanged() {

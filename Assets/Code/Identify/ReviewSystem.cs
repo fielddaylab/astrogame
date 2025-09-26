@@ -8,6 +8,8 @@ using FieldDay.Systems;
 using FieldDay.Audio;
 using System;
 using BeauRoutine;
+using BeauPools;
+using UnityEngine;
 
 namespace Astro {
     [SysUpdate(GameLoopPhase.Update, 0, AstroGame.AnySubmissionUpdateMask)]
@@ -124,6 +126,18 @@ namespace Astro {
                         table.Set(key, rowsCorrectness[r]);
                     }
                     ScriptUtility.Trigger(ScriptEvents.IncorrectPuzzleSubmission, table);
+
+                    if (DebugFlags.IsFlagSet(FocusState.DebuggingFlags.DisplayGuessTrackerInfo)) {
+                        using (PooledStringBuilder psb = PooledStringBuilder.Create()) {
+                            psb.Builder.Append("Current Tracker Set: [");
+                            foreach (var entry in puzzle.PuzzleEntryGuesses) {
+                                psb.Builder.Append(entry.TargetData.DisplayName);
+                            }
+                            psb.Builder.Append(']');
+
+                            DebugDraw.AddLogText(psb, Color.green);
+                        }
+                    }
                 }
 
                 ReviewUtility.ShowResultSprite(false, m_State);

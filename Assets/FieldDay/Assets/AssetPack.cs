@@ -1,6 +1,8 @@
 using System;
 using UnityEngine;
 using BeauUtil.Debugger;
+using BeauUtil;
+
 
 #if UNITY_EDITOR
 using ScriptableBake;
@@ -71,13 +73,30 @@ namespace FieldDay.Assets {
         /// Refreshes all assets for the given pack from the pack's editor directory.
         /// </summary>
         static public void ReadFromEditorDirectory(AssetPack pack) {
-            Baking.PrepareUndo(pack, "locating all assets in directory");
             string myDir = Baking.GetAssetDirectory(pack);
-            pack.m_GlobalAssets = Baking.FindAssets<GlobalAsset>(myDir);
-            pack.m_NamedAssets = Baking.FindAssets<NamedAsset>(myDir);
-            pack.m_LiteAssets = Baking.FindAssets<LiteAssetGroup>(myDir);
+            GlobalAsset[] global = Baking.FindAssets<GlobalAsset>(myDir);
+            NamedAsset[] named = Baking.FindAssets<NamedAsset>(myDir);
+            LiteAssetGroup[] lite = Baking.FindAssets<LiteAssetGroup>(myDir);
 
             Array.Sort(pack.m_NamedAssets, (a, b) => a.GetType().FullName.CompareTo(b.GetType().FullName));
+
+            bool isChanged = false;
+            if (!ArrayUtils.ContentEquals(pack.m_GlobalAssets, global)) {
+                isChanged = true;
+                pack.m_GlobalAssets = global;
+            }
+            if (!ArrayUtils.ContentEquals(pack.m_NamedAssets, named)) {
+                isChanged = true;
+                pack.m_NamedAssets = named;
+            }
+            if (!ArrayUtils.ContentEquals(pack.m_LiteAssets, lite)) {
+                isChanged = true;
+                pack.m_LiteAssets = lite;
+            }
+
+            if (isChanged) {
+                EditorUtility.SetDirty(pack);
+            }
         }
 
 #endif // UNITY_EDITOR

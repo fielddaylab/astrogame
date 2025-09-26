@@ -139,6 +139,7 @@ namespace FieldDay.Scripting {
                 SceneLocalTable.Clear();
             });
         }
+
         // TODO: Figure out why this needs to be called later in the scene loading process
         // when in WebGL. Also why LoadStaticAsync is broken
         private void InitialMethodCache() {
@@ -271,6 +272,14 @@ namespace FieldDay.Scripting {
             return evtData.Argument0.AsStringHash();
         }
 
+        /// <summary>
+        /// Returns the character name override embedded in the given line.
+        /// </summary>
+        static public StringSlice GetCharacterNameOverride(TagString tagString) {
+            tagString.TryFindEvent(TagEvents.OverrideCharName, out var evtData);
+            return evtData.StringArgument;
+        }
+
         #endregion // Tag Parsing
 
         #region Actors
@@ -400,16 +409,16 @@ namespace FieldDay.Scripting {
         #region Functions
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static public void Invoke(StringHash32 functionId, VariantTable vars = null) {
-            Invoke(functionId, default, null, vars);
+        static public int Invoke(StringHash32 functionId, VariantTable vars = null) {
+            return Invoke(functionId, default, null, vars);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        static public void Invoke(StringHash32 functionId, ILeafActor actor, VariantTable vars = null) {
-            Invoke(functionId, actor?.Id ?? StringHash32.Null, actor, vars);
+        static public int Invoke(StringHash32 functionId, ILeafActor actor, VariantTable vars = null) {
+            return Invoke(functionId, actor?.Id ?? StringHash32.Null, actor, vars);
         }
 
-        static public void Invoke(StringHash32 functionId, StringHash32 targetId, ILeafActor actor, VariantTable vars = null) {
+        static public int Invoke(StringHash32 functionId, StringHash32 targetId, ILeafActor actor, VariantTable vars = null) {
             using (PooledList<ScriptNode> funcNodes = PooledList<ScriptNode>.Create()) {
                 ScriptNodeLookupArgs lookup;
                 lookup.TargetId = targetId;
@@ -421,9 +430,10 @@ namespace FieldDay.Scripting {
                 lookup.EvalContext = GetEvalContext(actor, vars);
                 ScriptDBUtility.FindAllFunctions(DB, functionId, lookup, funcNodes);
                 foreach (var node in funcNodes) {
-                    Runtime.Plugin.Run(node, targetId, actor, vars, "Function Invokation", true);
+                    Runtime.Plugin.Run(node, targetId, actor, vars, "Function Invocation", true);
                 }
                 Log.Msg("[ScriptUtility] Invoked '{0}', {1} response(s)", functionId.ToDebugString(), funcNodes.Count.ToStringLookup());
+                return funcNodes.Count;
             }
         }
 
@@ -597,6 +607,14 @@ namespace FieldDay.Scripting {
         static public RingBuffer<LeafThreadHandle>.Enumerator CurrentThreads {
             [Il2CppSetOption(Option.NullChecks, false)]
             get { return Runtime.ActiveThreads.GetEnumerator(); }
+        }
+
+        /// <summary>
+        /// The current number of executing threads.
+        /// </summary>
+        static public int CurrentThreadCount {
+            [Il2CppSetOption(Option.NullChecks, false)]
+            get { return Runtime.ActiveThreads.Count; }
         }
 
         /// <summary>

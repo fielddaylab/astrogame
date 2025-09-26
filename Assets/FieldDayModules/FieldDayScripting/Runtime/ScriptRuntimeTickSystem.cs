@@ -3,7 +3,7 @@ using BeauUtil.Debugger;
 using FieldDay.Systems;
 
 namespace FieldDay.Scripting {
-    [SysUpdate(GameLoopPhase.LateUpdate, 10000, ScriptUtility.RuntimeUpdateMask)]
+    [SysUpdate(GameLoopPhase.LateUpdate, 10000, ScriptUtility.RuntimeUpdateMask, AllowExecutionDuringLoad = true)]
     internal sealed class ScriptRuntimeTickSystem : ISystem {
         public void Initialize() {
         }

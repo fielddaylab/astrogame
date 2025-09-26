@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace Astro {
     public class PuzzleDisplay : BatchedComponent {
+        // index of the cells is (numColumns * rowIndex) + collumnIndex
         public PuzzleCell[] Cells;
         public PuzzleHeader[] Headers;
         public PuzzleHeader Clues;

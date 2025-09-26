@@ -56,6 +56,7 @@ namespace Astro {
 
                     m_StateB.ConstellationSnapRoutine = Routine.Start(NavigationUtility.SnapAlignment(target))
                         .OnComplete(() => {
+                            NavigationCanvasUtil.AddPuzzleReticles();
                             Game.Events.Dispatch(GameEvents.PuzzleNavigationComplete); 
                             m_StateB.ConstellationSnapRoutine = Routine.Null;
                             });

@@ -120,6 +120,20 @@ namespace FieldDay.Rendering {
         }
 
         /// <summary>
+        /// Returns the size of the camera frustum at a given distance.
+        /// </summary>
+        static public Vector2 GetFrustumSize(Camera camera, float z) {
+            Vector2 size;
+            if (camera.orthographic) {
+                size.y = camera.orthographicSize * 2;
+            } else {
+                size.y = CameraHelper.HeightForDistanceAndFOV(z, camera.fieldOfView);
+            }
+            size.x = size.y * camera.aspect;
+            return size;
+        }
+
+        /// <summary>
         /// Renders the given camera to the given RenderTexture.
         /// </summary>
         static public void RenderToTexture(Camera camera, RenderTexture texture) {

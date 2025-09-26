@@ -102,9 +102,9 @@ namespace EasyAssetStreaming {
             public AssetLoadInfo[] LoadInfo;
             public AssetCallbackInfo[] CallbackInfo;
 
-            #if UNITY_EDITOR
+#if UNITY_EDITOR
             public AssetEditorInfo[] EditorInfo;
-            #endif // UNITY_EDITOR
+#endif // UNITY_EDITOR
 
             private Stack<List<AssetCallback>> m_CallbackListPool;
 
@@ -118,15 +118,15 @@ namespace EasyAssetStreaming {
                 LoadInfo = new AssetLoadInfo[DefaultLookupSize];
                 CallbackInfo = new AssetCallbackInfo[DefaultLookupSize];
 
-                #if UNITY_EDITOR
+#if UNITY_EDITOR
                 EditorInfo = new AssetEditorInfo[DefaultLookupSize];
-                #endif // UNITY_EDITOR
+#endif // UNITY_EDITOR
 
                 m_Slots = new AssetMetaSlot[DefaultLookupSize];
                 m_NextFreeSlot = -1;
                 m_SlotCount = 0;
 
-                for(int i = 0; i < DefaultLookupSize; i++) {
+                for (int i = 0; i < DefaultLookupSize; i++) {
                     m_Slots[i] = AssetMetaSlot.Default;
                 }
 
@@ -140,20 +140,20 @@ namespace EasyAssetStreaming {
                 m_SlotCount = 0;
                 m_NextFreeSlot = -1;
 
-                for(int i = 0; i < m_Slots.Length; i++) {
+                for (int i = 0; i < m_Slots.Length; i++) {
                     ref AssetMetaInfo metaInfo = ref MetaInfo[i];
                     ref AssetLoadInfo loadInfo = ref LoadInfo[i];
                     ref AssetStateInfo stateInfo = ref StateInfo[i];
                     ref AssetCallbackInfo callbackInfo = ref CallbackInfo[i];
 
-                    #if UNITY_EDITOR
+#if UNITY_EDITOR
                     EditorInfo[i] = default(AssetEditorInfo);
-                    #endif // UNITY_EDITOR
+#endif // UNITY_EDITOR
 
                     if (loadInfo.Loader != null) {
                         loadInfo.Loader.Dispose();
                         if (OnLoadResult != null) {
-                            InvokeLoadResult(new StreamingAssetHandle((uint) i, m_Slots[i].Generation), loadInfo.Loader, LoadResult.Cancelled);
+                            InvokeLoadResult(new StreamingAssetHandle((uint)i, m_Slots[i].Generation), loadInfo.Loader, LoadResult.Cancelled);
                         }
                     }
 
@@ -205,9 +205,9 @@ namespace EasyAssetStreaming {
             public StreamingAssetHandle AllocSlot(string address, StreamingAssetType type) {
                 int slotIdx;
                 if (m_NextFreeSlot >= 0) {
-                    slotIdx = (int) m_NextFreeSlot;
+                    slotIdx = (int)m_NextFreeSlot;
                 } else {
-                    slotIdx = (int) m_SlotCount++;
+                    slotIdx = (int)m_SlotCount++;
                     if (m_SlotCount >= m_Slots.Length) {
                         ExpandSlots(m_Slots.Length + 32);
                     }
@@ -216,11 +216,11 @@ namespace EasyAssetStreaming {
                 ref AssetMetaSlot slot = ref m_Slots[slotIdx];
                 m_NextFreeSlot = slot.Next;
                 slot.Next = -1;
-                slot.Generation = (byte) (slot.Generation < 255 ? slot.Generation + (byte) 1 : (byte) 1);
+                slot.Generation = (byte)(slot.Generation < 255 ? slot.Generation + (byte)1 : (byte)1);
                 slot.Alive = true;
 
-                var handle = new StreamingAssetHandle((uint) slotIdx, slot.Generation);
-                
+                var handle = new StreamingAssetHandle((uint)slotIdx, slot.Generation);
+
                 // meta info
                 ref AssetMetaInfo info = ref MetaInfo[slotIdx];
                 info.Address = address;
@@ -246,12 +246,12 @@ namespace EasyAssetStreaming {
                 if (!slot.Alive || slot.Generation != handle.Generation) {
                     return false;
                 }
-                
-                int idx = (int) handle.Index;
-                
+
+                int idx = (int)handle.Index;
+
                 slot.Alive = false;
                 slot.Next = m_NextFreeSlot;
-                m_NextFreeSlot = (short) idx;
+                m_NextFreeSlot = (short)idx;
 
                 ref AssetMetaInfo meta = ref MetaInfo[idx];
                 ref AssetStateInfo state = ref StateInfo[idx];
@@ -280,9 +280,9 @@ namespace EasyAssetStreaming {
                 state = default(AssetStateInfo);
                 load = default(AssetLoadInfo);
                 callbacks = default(AssetCallbackInfo);
-                #if UNITY_EDITOR
+#if UNITY_EDITOR
                 EditorInfo[idx] = default(AssetEditorInfo);
-                #endif // UNITY_EDITOR
+#endif // UNITY_EDITOR
 
                 return true;
             }
@@ -290,7 +290,7 @@ namespace EasyAssetStreaming {
             private void ExpandSlots(int newSize) {
                 int startIdx = m_Slots.Length;
                 Array.Resize(ref m_Slots, newSize);
-                for(int i = startIdx; i < newSize; i++) {
+                for (int i = startIdx; i < newSize; i++) {
                     m_Slots[i] = AssetMetaSlot.Default;
                 }
 
@@ -298,10 +298,10 @@ namespace EasyAssetStreaming {
                 Array.Resize(ref StateInfo, newSize);
                 Array.Resize(ref LoadInfo, newSize);
                 Array.Resize(ref CallbackInfo, newSize);
-                
-                #if UNITY_EDITOR
+
+#if UNITY_EDITOR
                 Array.Resize(ref EditorInfo, newSize);
-                #endif // UNITY_EDITOR
+#endif // UNITY_EDITOR
             }
 
             #endregion // Slot Allocation
@@ -320,12 +320,23 @@ namespace EasyAssetStreaming {
                 callbackList.Clear();
                 m_CallbackListPool.Push(callbackList);
             }
-        
+
             #endregion // Callback List
         }
 
+        /// <summary>
+        /// Record for a live asset.
+        /// Only returned when enumerating through all live assets.
+        /// </summary>
+        public struct LiveAssetRecord<T> where T : class {
+            public AssetStatus Status;
+            public long Size;
+            public string Address;
+            public T Asset;
+        }
+
         #endregion // Types
-    
+
         #region Storage
 
         static private AssetInfoCache s_Cache;

@@ -34,6 +34,7 @@ namespace FieldDay.Audio {
         SetBusConfigVolume,
         Seek,
         SetMixState,
+        SetLoop,
     }
 
     #endregion // Enums
@@ -193,6 +194,14 @@ namespace FieldDay.Audio {
         public bool UseDefaultEnvelope;
     }
 
+    /// <summary>
+    /// Data for SetLoop.
+    /// </summary>
+    internal struct SetLoopCommandData {
+        public UniqueId16 Handle;
+        public bool Loop;
+    }
+
     #endregion // Command Data
 
     [StructLayout(LayoutKind.Explicit)]
@@ -207,5 +216,6 @@ namespace FieldDay.Audio {
         [FieldOffset(4)] public ConfigVolumeChangeCommandData ConfigVolume;
         [FieldOffset(4)] public SeekCommandData Seek;
         [FieldOffset(4)] public SetMixStateData SetMixState;
+        [FieldOffset(4)] public SetLoopCommandData SetLoop;
     }
 }

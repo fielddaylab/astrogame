@@ -85,7 +85,8 @@ namespace FieldDay {
         private MemoryPoolConfiguration m_MemoryConfig = new MemoryPoolConfiguration() {
             MaterialCapacity = 16,
             MeshCapacity = 16,
-            UnmanagedBudgetMB = 2
+            UnmanagedBudgetMB = 2,
+            DoubleBufferedStringCapacityKB = 64
         };
 
         [SerializeField]
@@ -672,6 +673,7 @@ namespace FieldDay {
             }
 
             Game.Gui.ProcessUpdate();
+            Game.Gui.ProcessShortcuts();
 
             // flush event queue
             Game.Events.Flush();
@@ -791,11 +793,13 @@ namespace FieldDay {
                 Frame.UnscaledDeltaTime = Time.unscaledDeltaTime;
                 s_WasLoadingSceneAtFrameStart = Game.Scenes.IsMainLoading();
                 DequeueNextValues();
+
+                Game.Memory.SwapAllocationBuffers();
+                Game.Memory.UpdateGCMarkers(Frame.Index);
+
                 FlushQueue(s_FrameStartQueue);
 
                 FlushQueue(s_OnBootQueue);
-
-                Game.Memory.UpdateGCMarkers(Frame.Index);
 
                 Game.Input.BeginFrame();
 

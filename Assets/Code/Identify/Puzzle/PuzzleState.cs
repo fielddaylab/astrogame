@@ -1,18 +1,19 @@
 
-using BeauUtil;
 using BeauPools;
 using BeauRoutine;
+using BeauUtil;
 using FieldDay;
+using FieldDay.Audio;
+using FieldDay.HID;
 using FieldDay.SharedState;
 using Leaf.Runtime;
-using System.Text;
-using UnityEngine;
-using FieldDay.Audio;
-using System.Collections;
-using UnityEngine.UI;
-using FieldDay.HID;
-using System.Collections.Generic;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading;
+using UnityEngine;
+using UnityEngine.UI;
 
 namespace Astro {
     public sealed class PuzzleState : SharedStateComponent, IRegistrationCallbacks {
@@ -131,7 +132,6 @@ namespace Astro {
 
         public static void ActivateFinalPuzzle() {
             PuzzleDisplay display = Find.State<PuzzleState>().Display;
-
             InputUtility.SetInputEnabled(Find.State<InputState>(), false);
             display.OverrideRoutine.Replace(FinalPuzzleTransitionRoutine(display));
         }
@@ -139,11 +139,14 @@ namespace Astro {
         public static IEnumerator PuzzleTransitionRoutine(PuzzleDisplay display) {
             MonitorUIMgr monitorUI = MonitorUIMgr.Instance;
             yield return monitorUI.ShowElement("OffPanel");
-            yield return monitorUI.ShowElement("PuzzleMsg");
+            yield return monitorUI.ShowElement("PuzzleMsg1");
+            yield return new WaitForSeconds(0.2f);
+            yield return monitorUI.ShowElement("PuzzleMsg2");
+
 
             MonitorUIElement off = monitorUI.GetElement("OffPanel");
 
-            yield return off.GetComponent<Image>().ColorTo(new Color(1f, 0.745f, 0.24f), 0.2f);
+            yield return off.GetComponent<Graphic>().ColorTo(new Color(1f, 0.745f, 0.24f), 0.2f);
 
             foreach (RectTransform child in display.PuzzleOverrideDisplays.GetComponentsInChildren<RectTransform>(true)) {
                 yield return new WaitForSeconds(0.2f);
@@ -157,8 +160,9 @@ namespace Astro {
                 child.gameObject.SetActive(false);
             }
 
-            off.GetComponent<Image>().color = Color.black;
-            yield return monitorUI.HideElement("PuzzleMsg");
+            off.GetComponent<Graphic>().color = Color.black;
+            yield return monitorUI.HideElement("PuzzleMsg2");
+            yield return monitorUI.HideElement("PuzzleMsg1");
             yield return monitorUI.HideElement("OffPanel");
 
             GeneratePreExsistingTrackers();
@@ -196,11 +200,13 @@ namespace Astro {
         public static IEnumerator FinalPuzzleTransitionRoutine(PuzzleDisplay display) {
             MonitorUIMgr monitorUI = MonitorUIMgr.Instance;
             yield return monitorUI.ShowElement("OffPanel");
-            yield return monitorUI.ShowElement("PuzzleMsg");
+            yield return monitorUI.ShowElement("PuzzleMsg1");
+            yield return new WaitForSeconds(0.2f);
+            yield return monitorUI.ShowElement("PuzzleMsg2");
 
             MonitorUIElement off = monitorUI.GetElement("OffPanel");
 
-            yield return off.GetComponent<Image>().ColorTo(new Color(1f, 0.745f, 0.24f), 0.2f);
+            yield return off.GetComponent<Graphic>().ColorTo(new Color(1f, 0.745f, 0.24f), 0.2f);
 
             foreach (RectTransform child in display.PuzzleOverrideDisplays.GetComponentsInChildren<RectTransform>(true)) {
                 yield return new WaitForSeconds(0.2f);
@@ -214,9 +220,10 @@ namespace Astro {
                 child.gameObject.SetActive(false);
             }
 
-            off.GetComponent<Image>().color = Color.black;
-            yield return monitorUI.HideElement("PuzzleMsg");
-            yield return monitorUI.HideElement("OffPanel");
+            off.GetComponent<Graphic>().color = Color.black;
+            yield return monitorUI.HideElement("PuzzleMsg2");
+            yield return monitorUI.HideElement("PuzzleMsg1");
+            // yield return monitorUI.HideElement("OffPanel");
 
             InputUtility.SetInputEnabled(Find.State<InputState>(), true);
             display.CellAnchorPos.gameObject.SetActive(true);

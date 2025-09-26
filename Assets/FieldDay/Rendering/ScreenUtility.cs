@@ -55,6 +55,14 @@ namespace FieldDay.Rendering {
 #else
             return Screen.currentResolution;
 #endif // UNITY_EDITOR || UNITY_WEBGL
-            }
+        }
+
+        /// <summary>
+        /// Returns if the current screen is a high-dpi screen.
+        /// </summary>
+        static public bool IsHighDpi() {
+            // TODO: actually implement this
+            return Screen.height > 1200;
+        }
     }
 }

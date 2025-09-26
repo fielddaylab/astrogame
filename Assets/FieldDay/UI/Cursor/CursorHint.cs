@@ -4,9 +4,10 @@ using BeauUtil.Debugger;
 using BeauUtil.UI;
 using FieldDay.Assets;
 using UnityEngine;
+using FieldDay.HID;
 using UnityEngine.EventSystems;
 
-namespace FieldDay.HID {
+namespace FieldDay.UI {
     [DisallowMultipleComponent]
     public class CursorHint : PointerListener {
         #region Inspector
@@ -29,7 +30,7 @@ namespace FieldDay.HID {
             onPointerExit.AddListener(OnExit);
         }
 
-        protected virtual void OnDisable() {
+        protected override void OnDisable() {
             if (ReferenceEquals(this, s_Pointer)) {
                 s_Pointer = null;
             }
@@ -39,16 +40,18 @@ namespace FieldDay.HID {
             if (ReferenceEquals(this, s_Effective)) {
                 UpdateEffectiveCursor();
             }
+
+            base.OnDisable();
         }
 
-        private void OnEnter(PointerEventData evtData) {
+        private void OnEnter(EventData evtData) {
             if (!ReferenceEquals(this, s_Pointer)) {
                 s_Pointer = this;
                 UpdateEffectiveCursor();
             }
         }
 
-        private void OnExit(PointerEventData evtData) {
+        private void OnExit(EventData evtData) {
             if (ReferenceEquals(this, s_Pointer)) {
                 s_Pointer = null;
                 UpdateEffectiveCursor();
@@ -59,15 +62,32 @@ namespace FieldDay.HID {
 
         #region Current Tracking
 
+        static private StringHash32 s_DefaultOverride;
         static private CursorHint s_Pointer;
         static private CursorHint s_Locked;
         static private CursorHint s_Effective;
+
+        /// <summary>
+        /// The current cursor hint under the pointer.
+        /// This ignores the locked cursor hint.
+        /// </summary>
+        static public CursorHint Pointer {
+            get { return s_Pointer; }
+        }
         
         /// <summary>
         /// The currently active cursor hint.
         /// </summary>
         static public CursorHint Current {
             get { return s_Effective; }
+        }
+
+        /// <summary>
+        /// Default cursor type.
+        /// </summary>
+        static public StringHash32 DefaultCursor {
+            get { return s_DefaultOverride; }
+            set { s_DefaultOverride = value; }
         }
 
         static private void UpdateEffectiveCursor() {
@@ -85,7 +105,7 @@ namespace FieldDay.HID {
                     OnHoverStart.Invoke(desiredEffective);
                 }
 
-                Log.Msg("[CursorHint] Updated effective focus from '{0}' to '{1}'", prev, desiredEffective);
+                Log.Debug("[CursorHint] Updated effective focus from '{0}' to '{1}'", prev, desiredEffective);
             }
         }
 

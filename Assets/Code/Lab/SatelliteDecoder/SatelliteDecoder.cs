@@ -46,14 +46,12 @@ namespace Astro
         }
 
         [LeafMember("SetDecoderActive")]
-        public void LeafSetDecoderActive(bool active)
-        {
+        public void LeafSetDecoderActive(bool active) {
             SetDecoderActive(active);
         }
 
         [LeafMember("SetDecoderHighlightActive")]
-        public void LeafSetDecoderHighlightActive(bool active)
-        {
+        public void LeafSetDecoderHighlightActive(bool active) {
             SetDecoderHighlightActive(active);
         }
 

@@ -2,6 +2,7 @@
 using BeauUtil;
 using FieldDay;
 using FieldDay.Components;
+using FieldDay.Rendering;
 using FieldDay.Scenes;
 using System.Collections.Generic;
 using UnityEngine.Events;
@@ -10,6 +11,7 @@ using UnityEngine.UI;
 namespace Astro {
     public class SettingsMenu : BatchedComponent, IRegistrationCallbacks {
         public Toggle DriftToggle;
+        public Toggle SubtitlesToggle;
         public Toggle FullscreenToggle;
         public Slider VolumeSlider;
         public Slider MusicSlider;
@@ -17,6 +19,7 @@ namespace Astro {
         public Slider VoiceSlider;
 
         public void OnDeregister() {
+            SubtitlesToggle.onValueChanged.RemoveAllListeners();
             DriftToggle.onValueChanged.RemoveAllListeners();
             FullscreenToggle.onValueChanged.RemoveAllListeners();
 
@@ -24,17 +27,23 @@ namespace Astro {
             MusicSlider.onValueChanged.RemoveAllListeners();
             SFXSlider.onValueChanged.RemoveAllListeners();
             VoiceSlider.onValueChanged.RemoveAllListeners();
+
+            Game.Rendering.OnFullscreenChanged.Deregister(OnFullscreenUpdated);
         }
 
         public void OnRegister() {
             UserSettingsState state = Find.State<UserSettingsState>();
 
-            DriftToggle.isOn = state.CameraDriftEnabled;
-            FullscreenToggle.isOn = state.FullscreenEnabled;
+            Game.Rendering.OnFullscreenChanged.Register(OnFullscreenUpdated);
+
+            SubtitlesToggle.SetIsOnWithoutNotify(state.SubtitlesEnabled);
+            DriftToggle.SetIsOnWithoutNotify(state.CameraDriftEnabled);
+            FullscreenToggle.SetIsOnWithoutNotify(ScreenUtility.GetFullscreen());
             UpdateCameraDrift(DriftToggle.isOn);
             UpdateFullscreen(FullscreenToggle.isOn);
             DriftToggle.onValueChanged.AddListener(UpdateCameraDrift);
             FullscreenToggle.onValueChanged.AddListener(UpdateFullscreen);
+            SubtitlesToggle.onValueChanged.AddListener(UpdateSubtitles);
 
             VolumeSlider.onValueChanged.AddListener(UpdateVolume);
             MusicSlider.onValueChanged.AddListener((float vol) => UpdateBusVolume(SettingsUtility.MUSIC_BUS_ID, vol));
@@ -66,6 +75,14 @@ namespace Astro {
 
         private void UpdateBusVolume(StringHash32 bus, float volume) {
             SettingsUtility.SetAudioBusVolume(Find.State<UserSettingsState>(), bus, volume);
+        }
+
+        private void OnFullscreenUpdated(bool fullscreen) {
+            FullscreenToggle.SetIsOnWithoutNotify(fullscreen);
+        }
+
+        private void UpdateSubtitles(bool subtitlesEnabled) {
+            SettingsUtility.SetSubtitlesEnabled(Find.State<UserSettingsState>(), subtitlesEnabled);
         }
     }
 }

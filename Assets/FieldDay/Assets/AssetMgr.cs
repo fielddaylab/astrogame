@@ -577,6 +577,7 @@ namespace FieldDay.Assets {
 #if DEVELOPMENT
 
         static private int s_StreamingTextureAuditIndex;
+        static private string[] s_TextureFormatEnums = Enum.GetNames(typeof(TextureFormat));
 
         private void DebugUpdate() {
             if (DebugFlags.IsFlagSet(DebuggingFlags.DisplayBasicStats)) {
@@ -620,7 +621,47 @@ namespace FieldDay.Assets {
             }
 
             if (DebugFlags.IsFlagSet(DebuggingFlags.AuditStreamingTextures)) {
-                DebugDraw.AddViewportImage(new Vector2(0.5f, 0.5f), new Vector2(0, 64f), Texture2D.whiteTexture, "Hey it's a texture", Color.white, 0, TextAnchor.UpperLeft, DebugTextStyle.BackgroundDark);
+                using(var textures = PooledList<Streaming.LiveAssetRecord<Texture>>.Create()) {
+                    int count = Streaming.AllTextures(textures);
+                    if (count <= 0) {
+                        DebugDraw.AddViewportText(new Vector2(0, 1), new Vector2(300, -64f), "No streaming textures loaded", Color.white, 0, TextAnchor.UpperLeft, DebugTextStyle.BackgroundDark);
+                        s_StreamingTextureAuditIndex = 0;
+                    } else {
+                        if (DebugInput.IsPressed(KeyCode.LeftBracket)) {
+                            s_StreamingTextureAuditIndex = (s_StreamingTextureAuditIndex + count - 1) % count;
+                        }
+                        if (DebugInput.IsPressed(KeyCode.RightBracket)) {
+                            s_StreamingTextureAuditIndex = (s_StreamingTextureAuditIndex + 1) % count;
+                        }
+
+                        using (PooledStringBuilder psb = PooledStringBuilder.Create()) {
+                            var entry = textures[s_StreamingTextureAuditIndex];
+
+                            psb.Builder.Append(entry.Address).Append("\n[");
+                            if ((entry.Status & Streaming.AssetStatus.Error) != 0) {
+                                psb.Builder.Append("ERROR");
+                            } else if ((entry.Status & (Streaming.AssetStatus.Loading | Streaming.AssetStatus.PendingLoad)) != 0) {
+                                psb.Builder.Append("LOADING");
+                            } else {
+                                psb.Builder.Append("LOADED");
+                            }
+
+                            psb.Builder.Append("] ");
+                            Unsafe.FormatBytes(entry.Size, psb.Builder);
+
+                            Texture2D tex2d = entry.Asset as Texture2D;
+
+                            if (tex2d) {
+                                psb.Builder.Append(" ").Append(s_TextureFormatEnums[(int) tex2d.format]);
+                            }
+
+                            psb.Builder.Append('\n').AppendNoAlloc(s_StreamingTextureAuditIndex + 1).Append('/').AppendNoAlloc(count).Append(" texture(s), use [ and ] to browse");
+
+                            DebugDraw.AddViewportText(new Vector2(0, 1), new Vector2(300, -64f), psb, Color.white, 0, TextAnchor.UpperLeft, DebugTextStyle.BackgroundDark);
+                            DebugDraw.AddViewportImage(new Vector2(0, 1), new Vector2(300, -128f), entry.Asset, string.Empty, Color.white, 0, TextAnchor.UpperLeft, DebugTextStyle.BackgroundDark);
+                        }
+                    }
+                }
             }
         }
 

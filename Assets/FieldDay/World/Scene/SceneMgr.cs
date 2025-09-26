@@ -1006,7 +1006,7 @@ namespace FieldDay.Scenes {
             if (m_CurrentLoadOperation.Active) {
                 LoadSceneArgs args = m_CurrentLoadOperation.Args;
                 if (IsDoneLoading(m_CurrentLoadOperation.UnityOp, args, out Scene scene)) {
-                    Log.Msg("[SceneMgr] Additive load of '{0}' complete", args.ScenePath);
+                    Log.Msg("[SceneMgr] Additive load of '{0}' (build index {1}) complete", args.ScenePath, scene.buildIndex);
                     TrackScene(scene);
                     EnqueueSceneProcessors(scene, args);
                     m_CurrentLoadOperation.Clear();
@@ -1019,11 +1019,8 @@ namespace FieldDay.Scenes {
                 Scene currentScene = SafeGetSceneByPath(args.ScenePath);
                 if (!IsLoadingOrLoaded(currentScene)) {
                     Log.Msg("[SceneMgr] Starting additive load of '{0}'", args.ScenePath);
-#if UNITY_EDITOR
-                    m_CurrentLoadOperation.UnityOp = EditorSceneManager.LoadSceneAsyncInPlayMode(args.ScenePath, new LoadSceneParameters(LoadSceneMode.Additive));
-#else
+                    // NOTE: EditorSceneManager.LoadSceneAsyncInPlayMode will mess up buildIndex, that's why we aren't using it
                     m_CurrentLoadOperation.UnityOp = SceneManager.LoadSceneAsync(args.ScenePath, LoadSceneMode.Additive);
-#endif // UNITY_EDITOR
                 } else if (currentScene.isLoaded) {
                     Log.Msg("[SceneMgr] Scene '{0}' already loaded", args.ScenePath);
                     TryTrackScene(currentScene);
@@ -1148,7 +1145,7 @@ namespace FieldDay.Scenes {
                     // if the scene hasn't finished loading, then push this off until later
                     if (!args.Data.IsVisited(SceneDataExt.VisitFlags.Loaded)) {
                         m_CurrentUnloadOperation.Fill(args);
-                        UntrackScene(args.Data.Scene);
+                        //UntrackScene(args.Data.Scene);
                         Log.Msg("[SceneMgr] Unloading '{0}'", args.Data.Scene.path);
                         m_CurrentUnloadOperation.UnityOp = SceneManager.UnloadSceneAsync(args.Data.Scene, args.Options);
                         return true;
@@ -1344,7 +1341,7 @@ namespace FieldDay.Scenes {
             }
         }
 
-        #endregion // Operations
+#endregion // Operations
 
         #region Routines
 

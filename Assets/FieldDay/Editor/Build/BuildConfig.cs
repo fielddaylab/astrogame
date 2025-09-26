@@ -8,12 +8,15 @@ namespace FieldDay.Editor {
     [CreateAssetMenu(menuName = "Field Day/Build Configuration", order = -260)]
     public class BuildConfig : ScriptableObject {
         public string[] BranchNamePatterns;
-        public bool DevelopmentBuild;
-        public ManagedStrippingLevel StrippingLevel = ManagedStrippingLevel.Medium;
+        public int Order;
 
+        [Header("Settings")]
+        public bool DevelopmentBuild;
         [Multiline]
         public string CustomDefines;
 
-        public int Order;
+        [Header("Optimizations")]
+        public ManagedStrippingLevel StrippingLevel = ManagedStrippingLevel.Medium;
+        public BuildConfigurations.CodeOptimizationFlags OptimizationFlags;
     }
 }

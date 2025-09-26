@@ -1,5 +1,7 @@
 #basePath	Day1
 
+// #region Preload
+
 :: Preload
 @function   ScenePreload
 $call InitUpdateMasks()
@@ -7,6 +9,8 @@ $call ToggleDeskPicture()
 $call SetInputState(false)
 $call StopPuzzleMode()
 $call StopOpenMode()
+$call IntroCutscene->PrepareCutscene()
+
 $call MonitorUI->PowerOff()
 $call SetRefGuidePagesLocked(true)
 $call SetRefPageActive("ConstellationPerseusCompleted", false)
@@ -21,17 +25,19 @@ $set temp:readyForUpgrade = false
 
 $call SetChannelActive(Unlocks_Active, false)
 $call SetChannelActive(IceCube, false)
-$call IntroCutscene->PrepareCutscene()
+$call ChapterTitles->PrepareTransition(true)
 $start Observatory.ResetSubtitlePosition
 $call SpawnDocument("ElijahIntro")
 $call SpawnDocument("Day1Cal")
 $call SetStickyFirstPage(7)
-$call ChapterTitles->PrepareTransition(true)
+
+// #endregion
+
+// #region Intro
 
 :: OpeningCutscene
 @trigger SceneReady
 @cutscene
-@who    IntroCutscene
 
 $call PlayMusic("Music.Gently-Falling", 1)
 $wait 1
@@ -58,11 +64,11 @@ $call IntroSfx2->Play()
 $wait 3
 $call SetInputState(true)
 
-{@Astrid}	Whoa. This place has really changed. Elijah, where are you?	$[level1/Astrid/l1_a_01]
+{@Astrid}   Whoa. This place has really changed. Elijah, where are you?	$[level1/Astrid/l1_a_01]
 $start .PowerButtonHint
 
 :: PowerButtonHint
-$wait 8
+$wait 12
 $if !temp:powerButtonHint, !temp:pressedPowerButton
     $call HintModals->SlideInFromRight("MonitorPower", 0.4)
     $set temp:powerButtonHint = true
@@ -72,28 +78,31 @@ $endif
 
 $if !temp:pressedPowerButton
     {@Astrid}	I should power this thing up. Maybe it'll help me figure out where Elijah went. 	$[level1/Astrid/l1_a_02]
-    $branch .PowerButtonHint
+    $loop
 $endif
 
 :: InspectElijahBackSoon
 @trigger    DocumentInspectStart
-@when   documentId == "ElijahIntro"
+@when   documentId == "ElijahIntro", !temp:fakeCutscene
 @cutscene
 @once
 
-{@Astrid} You'll be back soon? Back from where? $[level1/Astrid/l1_a_01a]
+{@Astrid}   You'll be back soon? Back from where? $[level1/Astrid/l1_a_01a]
 $goto .PowerButtonHint
 
 :: PressedPowerButton
 @trigger OnLabInteraction
 @when   actorId == "MonitorPower", !temp:pressedPowerButton
 @boostScore 100
+@priority High
 @interrupt
+@cutscene
 
 $set temp:pressedPowerButton = true
 $set temp:introRadioHint = false
 $set temp:introRadioChannelTuned = false
 $wait 0.1
+$call ComputerBootSound->Play()
 $call MonitorPower->Deactivate()
 $if temp:powerButtonHint
     $set temp:powerButtonHint = false
@@ -125,18 +134,19 @@ $else
     $call HintModals->Wiggle("CeresRadioHint")
 $endif
 $if !temp:introRadioChannelTuned
-    {@Astrid}	Okay... I need to tune the radio to 137 megahertz. 	$[level1/Astrid/l1_a_03]
-    $branch .TuneRadioHint
+    // {@Astrid}	Okay... I need to tune the radio to 137 megahertz. 	$[level1/Astrid/l1_a_03]
+    $loop
 $endif
 
 :: TuneToIceCubeIntro
 @trigger    RadioChannelListenStart
 @when       channelId == "IceCube"
-@priority   High
+@priority High
 @boostScore 1000
 @interrupt
 @once
 
+$set temp:fakeCutscene = true
 $set temp:introRadioChannelTuned = true
 $call SetRadioFrequency(137, true)
 $call SetRadioDialLocked(true)
@@ -155,41 +165,42 @@ $call MonitorUI->HideElement("LinkEstablished")
 $call SetChannelActive(IceCube, true)
 
 $call WaitForMovedToView("Right")
-{@Radio} CERES HQ to Station 12. Elijah, do you copy? $[level1/radio_lady/l1_r_01]
-{@Radio} Please log in and provide status report. $[level1/radio_lady/l1_r_02]
-{@Astrid} Whoa, a radio signal! $[level1/Astrid/l1_a_04]
-{@Astrid} I thought radio channels were supposed to be super regulated. How does Elijah even have this? $[level1/Astrid/l1_a_05]
-{@Radio} Station 12, please log in and report.	$[level1/radio_lady/l1_r_03]
-{@Astrid} Ok, here goes. $[level1/Astrid/l1_a_06]
+{@Radio}    CERES HQ to Station 12. Elijah, do you copy? $[level1/radio_lady/l1_r_01]
+{@Radio}    Please log in and provide status report. $[level1/radio_lady/l1_r_02]
+{@Astrid}   Whoa, a radio signal! $[level1/Astrid/l1_a_04]
+{@Astrid}   I thought radio channels were supposed to be super regulated. How does Elijah even have this? $[level1/Astrid/l1_a_05]
+{@Radio}    Station 12, please log in and report.	$[level1/radio_lady/l1_r_03]
+{@Astrid}   Ok, here goes. $[level1/Astrid/l1_a_06]
 
 $start Observatory.PathToInstruments
 $wait 0.5
 $call ConsoleCommandLine->PlayConsoleText("AstridLogin")
 $wait 1
 
-{@Radio} ...I told you, he's not there. Astrid, is that you? 	$[level1/dad/l1_d_01]
+{@Dad}      ...I told you, he's not there. Astrid, is that you? 	$[level1/dad/l1_d_01]
 
 {@Astrid}	(*gasp*) Dad!? I—I can’t believe it. Are you still at the South Pole? Can you hear me? $[level1/Astrid/l1_a_07]
-{@Dad}	Loud and clear. Well… not clear, exactly. But you know what I mean.	$[level1/dad/l1_d_02]
-{@Dad}	It’s so good to hear your voice, Little Bear.	$[level1/dad/l1_d_03]
-{@Astrid}	Hold on. Why are you calling Elijah's radio? Do you know where he went? 	$[level1/Astrid/l1_a_08]
-{@Dad}	It’s sort of a long story.	$[level1/dad/l1_d_04]
-{@Dad}	My team here at IceCube is working to rebuild the knowledge of the cosmos that was lost during the coronal mass ejection two years ago.	$[level1/dad/l1_d_05]
-{@Dad}	We've joined up with a network of citizen astronomers around the world. We call it CERES. 	$[level1/dad/l1_d_06]
+{@Dad}	    Loud and clear. Well... not clear, exactly. But you know what I mean.	$[level1/dad/l1_d_02]
+{@Dad}	    It’s so good to hear your voice, Little Bear.	$[level1/dad/l1_d_03]
+{@Astrid}	Hold on, why are you calling Elijah's radio? Do you know where he went? 	$[level1/Astrid/l1_a_08]
+{@Dad}	    It’s sort of a long story.	$[level1/dad/l1_d_04]
+{@Dad}	    My team here at IceCube is working to rebuild the knowledge of the cosmos that was lost during the coronal mass ejection two years ago.	$[level1/dad/l1_d_05]
+{@Dad}	    We've joined up with a network of citizen astronomers around the world. We call it CERES. 	$[level1/dad/l1_d_06]
 {@Astrid}	Ceres... I think Elijah told me about her once. The Roman goddess of Earth and agriculture.	$[level1/Astrid/l1_a_09]
-{@Dad}	Yeah, Elijah loved the name. I told him it was just an acronym, but I swear, everything I tell that kid goes in one ear and out the other. 	$[level1/dad/l1_d_07]
+{@Dad}	    Yeah, Elijah loved the name. I told him it was just an acronym, but I swear, everything I tell that kid goes in one ear and out the other. 	$[level1/dad/l1_d_07]
 {@Astrid}	So... where is he? 	$[level1/Astrid/l1_a_10]
-{@Dad}	A few weeks ago, he reached out about some mysterious side project. He said he had to go out on the road. 	$[level1/dad/l1_d_08]
-{@Dad}	I tried to stop him, but ... I mean, you know how he is.	$[level1/dad/l1_d_09]
+{@Dad}	    A few weeks ago, he reached out about some mysterious side project. He said he had to go out on the road. 	$[level1/dad/l1_d_08]
+{@Dad}	I think he called it... "Project Hercules."	$[level1/dad/l1_d_08a]
+{@Dad}	    I tried to stop him, but ... I mean, you know how he is.	$[level1/dad/l1_d_09]
 {@Astrid}	I don't get it. Why would he leave when he knew I was coming? 	$[level1/Astrid/l1_a_11]
 
 $call PlayRadioAlert()
 {@Monitor}	All CERES transmissions must comply with authorized protocols, or we’ll be forced to revoke your clearance. 	$[level1/monitor/l1_m_01]
 {@Monitor}	Remember, communication is a privilege, not a right.	$[level1/monitor/l1_m_02]
 {@Astrid}	Uhhh, who was that?	$[level1/Astrid/l1_a_12]
-{@Dad}	 Sorry, uh…“Station 12,” this channel doesn’t allow for… personal communications. 	$[level1/dad/l1_d_10]
-{@Dad}	The Recovery Board is strict about research-only radio bands. 	$[level1/dad/l1_d_11]
-{@Dad}	I’ll grant you entry-level access so you can help us. I should sign off now. More later.	$[level1/dad/l1_d_12]
+{@Dad}      Sorry, uh... “Station 12.” This channel doesn’t allow for... personal communications. 	$[level1/dad/l1_d_10]
+{@Dad}      The Recovery Board is strict about research-only radio bands. 	$[level1/dad/l1_d_11]
+{@Dad}      I’ll grant you entry-level access so you can help us. I should sign off now. More later.	$[level1/dad/l1_d_12]
 
 $call SetInstrumentUnlocked(CoordinateInstrument, true)
 $call SetInstrumentUnlocked(PhotometerInstrument, true)
@@ -198,12 +209,17 @@ $wait 1
 {@Radio}	Training begins immediately. Please follow all directives.	$[level1/radio_lady/l1_r_05]
 {@Astrid}	Um, okay... Gosh, there are a lot of buttons here...	$[level1/Astrid/l1_a_13]
 
+$set temp:fakeCutscene = false
 $call MonitorUI->HideCERESLogo()
 $call MonitorUI->PowerOn()
 $call WaitForMovedToView("Monitor")
 
 {@Radio}	I'll help you get up and running. Start by moving your telescope.	$[level1/radio_lady/l1_r_06]
 $start .SetupTelescopeTutorial
+
+// #endregion
+
+// #region Neutrino Tutorial
 
 :: SetupTelescopeTutorial
 $call StartMonitorControls()
@@ -294,7 +310,7 @@ $call SetStickyFirstPage(0)
 $call SetRefGuidePagesLocked(false)
 
 {@Radio} Nice job! $[level1/radio_lady/l1_r_12]
-{@Radio} So, earlier this morning, the IceCube Neturino Observatory detected a high-energy neutrino coming from one of several possible stars in this location. $[level1/radio_lady/l1_r_13]
+{@Radio} So, earlier this morning, the IceCube Neutrino Observatory detected a high-energy neutrino coming from one of several possible stars in this location. $[level1/radio_lady/l1_r_13]
 {@Radio} You should see these stars highlighted on your display. $[level1/radio_lady/l1_r_14]
 {@Radio} You can learn more about the IceCube project in your reference guide. 	$[level1/radio_lady/l1_r_16]
 {@Radio} If you can ID them for us, we should be able to upgrade your access level.	$[level1/radio_lady/l1_r_17]
@@ -309,7 +325,7 @@ $call SetInputState(true)
 $start .FirstStarHint
 
 :: FirstStarHint
-$wait 10
+$wait 12
 $if temp:waitingForNeutrinoStar
     {@Radio} Astrid, you still there? Select a possible neutrino source on your display. $[level1/radio_lady/l1_r_19]
     $branch .FirstStarHint
@@ -427,6 +443,7 @@ $set temp:waitingForFirstClassificationClick = false
 
 :: ValidKnowledgeSubmission
 @trigger    OnValidKnowledgeSubmission
+@when   IsRadioFrequencyAt(137)
 @cutscene
 @interrupt
 
@@ -439,6 +456,7 @@ $endif
 
 :: IncorrectSubmission
 @trigger    OnIncorrectOpenIdSubmission
+@when   IsRadioFrequencyAt(137)
 
 $if temp:waitingForFirstClassificationClick
     $call HintModals->Hide("SubmitRangeHint", 0.2)
@@ -453,6 +471,7 @@ $start Observatory.ResetSubtitlePosition
 
 :: FirstDupliacteSubmission
 @trigger    OnDuplicateOpenIdSubmission
+@when   IsRadioFrequencyAt(137)
 @boostScore 100
 @cutscene
 @once
@@ -518,13 +537,16 @@ $start .PostPoint
 @cutscene
 @once
 
-{@Astrid}	Nice! I'll try another one.	$[level1/Astrid/l1_a_16]
+{@Astrid} Nice! I'll try another one.	$[level1/Astrid/l1_a_16]
 $start .PostPoint
 
 :: PostPoint
 $call SetRadioDialLocked(false)
 $call UnlockMonitorFocus()
 
+// #endregion
+
+//#region Upgrade
 :: ClearanceUpgrade
 @trigger    PointsUpdated
 @when   openIDThresholdHit
@@ -538,6 +560,7 @@ $call SetRefGuideActive(false)
 $set temp:readyForUpgrade = true
 
 $call MonitorUI->ShowElement("CeresMsg")
+$call MonitorUI->ShowElement("UpgradeMsg")
 $wait 1
 $call StopOpenMode()
 {@Astrid} Looks like CERES is trying to contact me. I wonder what that's about...	$[level1/Astrid/l1_a_17]
@@ -548,11 +571,9 @@ $call SetStickyFirstPage(7)
 $call HintModals->SlideInFromRight("RadioControls", 0.4)
 $call SetInputState(true)
 
-$start .UpgradeReminder
-
 :: IceCubeUpgradeReminder
 @trigger    RadioChannelListenStart
-@when       channelId == "IceCube", temp:introRadioChannelTuned, !temp:upgradeChannelTuned, temp:readyForUpgrade
+@when       channelId == "IceCube", IsRadioFrequencyAt(137), temp:introRadioChannelTuned, !temp:upgradeChannelTuned, temp:readyForUpgrade
 @priority   Medium
 @boostScore 1000
 @cutscene
@@ -565,17 +586,6 @@ $call SetRadioDialLocked(true)
 $call SetRadioDialLocked(false)
 $call SetChannelActive(IceCube, false)
 
-$start .UpgradeReminder
-
-:: UpgradeReminder
-$call SetInputState(true)
-$wait 10
-$if !temp:upgradeChannelTuned
-    $call HintModals->Wiggle("RadioControls")
-    {@Astrid}	I wonder if I can upgrade my rig. The upgrade channel should be in my reference guide	$[level1/Astrid/l1_a_g1]
-    $branch .UpgradeReminder
-$endif
-
 :: ClearanceUpgradeTrigger
 @trigger    RadioChannelListenStart
 @when       channelId == "Unlocks_Active"
@@ -584,6 +594,7 @@ $endif
 @once
 
 $call MonitorUI->HideElement("CeresMsg")
+$call MonitorUI->HideElement("UpgradeMsg")
 $call HintModals->Hide("RadioControls", 0.2)
 
 $set temp:upgradeChannelTuned = true
@@ -599,9 +610,13 @@ $call SetRadioFrequency(137)
 $call MonitorUI->ShowCERESLogo()
 $call MonitorUI->CERESLogoToCorner(0.5)
 $wait 1
+{@Astrid} Well, that was... something... $[level1/Astrid/l1_a_18]
 $call SetInputState(true)
 
-$call ConsoleCommandLine->PlayConsoleText("Day1UpgradeSystem")
+$call ConsoleCommandLine->PlayConsoleTextAndWait("Day1UpgradeSystem")
+$wait 1
+{@Astrid}	Starting at the bottom... clearance level one.	$[level1/Astrid/l1_a_19]
+$wait 1
 
 $call SetInstrumentUnlocked(ColorInstrument, true)
 $call SetInstrumentUnlocked(TemperatureInstrument, true)
@@ -610,14 +625,13 @@ $call OpenRefGuidePage("Colormeter")
 
 $wait 1.5
 {@Astrid} Clearance level 1... Color meter access granted. Please reference CERES Op. manual for more info. $[level1/Astrid/l1_a_20]
-{@Astrid} Congratuations on reaching clearance Level 1. Together we will map the stars for a greater tomorrow... $[level1/Astrid/l1_a_20a]
+{@Astrid} Congratulations on reaching clearance Level 1. Together we will map the stars for a greater tomorrow... $[level1/Astrid/l1_a_20a]
 
 $call ConsoleCommandLine->HideConsole()
 $wait 0.1
 $call MonitorUI->CERESLogoToCenter(0.5)
 $wait 1
 $call MonitorUI->HideCERESLogo()
-$call SetRadioDialLocked(false)
 $wait 0.5
 
 $call SetRefGuideActive(false)
@@ -670,6 +684,9 @@ $call StartPuzzleNavigation()
 @once
 
 {@Astrid}	Ach, colder!	$[level1/Astrid/l1_a_29]
+// #endregion
+
+// #region Puzzle Tutorial
 
 :: PuzzleNavigationComplete
 @trigger    PuzzleNavigationComplete
@@ -697,6 +714,7 @@ $goto .PostPuzzleNavigationComplete
 
 :: PostPuzzleNavigationComplete
 $wait 0.5
+$call SetRadioDialLocked(false)
 $call HintModals->SlideInFromRight("FirstPuzzleStar", 0.4)
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $branch .SelectAtikReminder
@@ -707,6 +725,13 @@ $if temp:waitingForSelectAtik
     {@Astrid}	It looks like the star compass gives me readings when I select a star on the monitor. That helps.	$[level1/Astrid/l1_a_40]
     $goto .SelectAtikReminder
 $endif
+
+:: OnRandomPuzzleStarSelected
+@trigger OnStarSelected
+@boostScore 150
+@once
+
+$set temp:waitingForSelectAtik = false
 
 :: FirstPuzzleStarSelected
 @trigger   OnStarSelected
@@ -734,12 +759,14 @@ $call HintModals->SlideInFromRight("AtikCell", 0.4)
 :: NotAtikAstrid
 @trigger    OnPuzzleCellSelected
 @when   cellId != "R1C3", temp:waitingForSelectAppMag
+@cooldown 10
 
 {@Astrid}	I need to select the apparent magnitude space for Atik on this grid...	$[level1/Astrid/l1_a_43]
 
 :: NotPuzzleCellAstrid
 @trigger    OnLabInteraction
 @when   cellId != "R1C3", actorId != "PhotometerLoadBtn", temp:waitingForSelectAppMag
+@cooldown 10
 
 $call HintModals->Wiggle("AtikCell")
 {@Astrid}	I think can enter the apparent magnitude for Atik in the puzzle cell beneath the monitor.	$[level1/Astrid/l1_a_42(1)]
@@ -774,6 +801,7 @@ $call HintModals->Hide("AtikCell", 0.2)
 @when   actorId != "PhotometerLoadBtn", actorId != "R1C3", temp:waitingForFillAppMag
 @interrupt
 @cutscene
+@cooldown 10
 
 {@Astrid}	Hmm, that’s not the photometer. 	$[level1/Astrid/l1_a_45]
 
@@ -822,6 +850,7 @@ $call IsolatePuzzleCell(1, 4)
 @when   actorId != "BlueFilter", cellId != "R1C4", temp:waitingForBlueFilter
 @interrupt
 @cutscene
+@cooldown 10
 
 {@Astrid}	The Blue wavelength filter is there on the monitor.	$[level1/Astrid/l1_a_48]
 
@@ -906,6 +935,7 @@ $call AddIsolatedSlot(Color)
 @when   temp:waitingForFillColor, actorId != "ColorIndexLoadBtn"
 @interrupt
 @cutscene
+@cooldown 10
 
 {@Astrid}	Where was the color index... oh yeah, to the right of the photometer.	$[level1/Astrid/l1_a_54]
 
@@ -955,6 +985,7 @@ $call UnlockMonitorFocus()
 @when   starName != "Algol", !temp:AlgolRowFilled, temp:AtikRowFilled
 @interrupt
 @cutscene
+@cooldown 15
 
 {@Astrid}	I should compare the blue magnitude of this star to the others in the cluster.	$[level1/Astrid/l1_a_60]
 
@@ -964,6 +995,7 @@ $call UnlockMonitorFocus()
 @boostScore 100
 @interrupt
 @cutscene
+@cooldown 15
 
 {@Astrid}	I’ve already submitted the data for this star.	$[level1/Astrid/l1_a_68]
 {@Astrid}	I think this is the second one... <i>Atik</i>.	$[level1/Astrid/l1_a_70]
@@ -1104,15 +1136,17 @@ $if !local:row_3
 $else
     $set temp:CompletedMirfakRow = true
 $endif
+
+{@Astrid}	Ugh. That's not right. What did I miss? 	$[level1/Astrid/l1_a_66]
 $if !local:row_0
     $set temp:AlgolRowFilled = false
-    {@Astrid}	Ugh. That's not right. What did I miss? 	$[level1/Astrid/l1_a_66]
     $goto .HintForSecondRow
 $else
-    {@Astrid}	Ugh. That's not right. What did I miss? 	$[level1/Astrid/l1_a_66(1)]
     $set temp:CompletedAlgolRow = true
     $branch .PuzzleTimeoutHint
 $endif
+
+// #endregion
 
 :: PerseusPuzzleComplete
 @trigger    CorrectPuzzleSubmission
@@ -1167,7 +1201,6 @@ $wait 1
 :: EndDay
 @trigger    CutsceneEnd
 @when cutsceneId == "EndDay2"
-@who    Radio
 
 $call StopMusic(1)
 $call LoadNextDay()

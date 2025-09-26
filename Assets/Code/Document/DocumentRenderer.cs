@@ -1,21 +1,15 @@
 using System;
-using EasyAssetStreaming;
-using FieldDay.Components;
 using TMPro;
 using UnityEngine;
+using EasyAssetStreaming;
+using FieldDay.Components;
 
 namespace Astro {
-    [Serializable]
-    public struct TextRegion {
-        public TMP_Text Text;
-        public Sprite LowResSprite;
-    }
-
     [RequireComponent(typeof(DocumentInteractable))]
     public sealed class DocumentRenderer : BatchedComponent {
         [Tooltip("A collection of TMP_Text areas for display which corrisponds to TextFields in DocumentAsset.")]
         public TextRegion[] TextRegions;
-        public GameObject LowResText;
+        public GameObject LowResTextPrefab;
 
         public DocumentRenderComponent[] RenderComponents;
         [NonSerialized] public StreamingQuadTexture[] StreamingTextures;
@@ -26,7 +20,6 @@ namespace Astro {
         public Vector3 ZoomOffsetOverride;
 
         [HideInInspector] public DocumentInteractable Interactable;
-        [HideInInspector] public bool PreserveInArchive;
         [HideInInspector] public bool TriggersPrompter;
 
         [NonSerialized] public string BaseVisualAssetName;
@@ -84,15 +77,15 @@ namespace Astro {
 
         public static void DisplayLowResDocument(DocumentRenderer renderer, DocumentAsset asset) {
             for (int i = 0; i < renderer.TextRegions.Length; i++) {
-                if (renderer.TextRegions[i].LowResSprite != null && renderer.TextRegions[i].Text.text.Length > 0) {
-                    GameObject lowResImage = GameObject.Instantiate(renderer.LowResText, renderer.TextRegions[i].Text.transform);
-                    SpriteRenderer lowResSpriteRender = lowResImage.GetComponent<SpriteRenderer>();
-                    lowResSpriteRender.sprite = renderer.TextRegions[i].LowResSprite;
-                    lowResSpriteRender.size = ((RectTransform) lowResImage.transform.parent).sizeDelta;
+                if (renderer.TextRegions[i].LowResSprite == null || renderer.TextRegions[i].Text.text.Length <= 0) continue;
+                
+                GameObject lowResImage = GameObject.Instantiate(renderer.LowResTextPrefab, renderer.TextRegions[i].Text.transform);
+                SpriteRenderer lowResSpriteRender = lowResImage.GetComponent<SpriteRenderer>();
+                lowResSpriteRender.sprite = asset.LowResTextFields[i];
+                lowResSpriteRender.size = ((RectTransform) lowResImage.transform.parent).sizeDelta;
 
-                    renderer.TextRegions[i].Text.gameObject.GetComponent<MeshRenderer>().enabled = false;
-                    lowResImage.GetComponent<SpriteRenderer>().enabled = true;
-                }
+                renderer.TextRegions[i].Text.gameObject.GetComponent<MeshRenderer>().enabled = false;
+                lowResImage.GetComponent<SpriteRenderer>().enabled = true;
             }
 
             for (int i = 0; i < renderer.RenderComponents.Length; i++) {

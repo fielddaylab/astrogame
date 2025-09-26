@@ -9,6 +9,7 @@ using BeauUtil;
 using BeauUtil.Debugger;
 using FieldDay;
 using FieldDay.Debugging;
+using FieldDay.Scenes;
 using FieldDay.Scripting;
 using FieldDay.SharedState;
 using FieldDay.UI.Animation;
@@ -47,6 +48,7 @@ namespace Astro {
 
             info.AddDivider();
 
+#if DEVELOPMENT
             foreach(var dayId in story.Days){
                 RegisterDayLoadButton(info, dayId);
             }
@@ -55,7 +57,6 @@ namespace Astro {
 
             RegisterDecoderLoadButton(info, "Day5");
 
-#if DEVELOPMENT
             if (story.DEBUG_SandboxDay) {
                 info.AddDivider();
                 info.AddButton("Load Sandbox", () => {
@@ -71,17 +72,17 @@ namespace Astro {
             return info;
         }
 
+#if DEVELOPMENT
         static private void RegisterDayLoadButton(DMInfo menu, StringHash32 dayId) {
             menu.AddButton("Load " + Find.NamedAsset<DayConfigAsset>(dayId).name, () => {
                 ScriptUtility.KillAllThreads();
                 ScriptTriggers.LoadDay(dayId);
                 MusicUtility.StopMusic();
 
-#if DEVELOPMENT
                 Find.State<PlayerProgressState>().LoadDebugScene = false;
-#endif // DEVELOPMENT
             });
         }
+#endif // DEVELOPMENT
 
 
         static private void RegisterDecoderLoadButton(DMInfo menu, StringHash32 dayId)
@@ -110,6 +111,8 @@ namespace Astro {
 
             Rendering.EnableAspectClamping(4, 3);
 
+            Game.Scenes.RegisterLoadDependency(new ScriptPreloadDependency());
+
             //GameLoop.OnDebugUpdate.Register(() => {
             //    using(var psb = PooledStringBuilder.Create()) {
             //        psb.Builder.Append("Frame #: ").AppendNoAlloc(Frame.Index);
@@ -136,6 +139,15 @@ namespace Astro {
             Scenes.OnMainSceneUnloaded.Register(() => {
                 Find.GuiModule<LoadingIcon>().Show();
             });
+        }
+
+        private class ScriptPreloadDependency : ISceneLoadDependency {
+            public bool IsLoaded(SceneLoadPhase loadPhase) {
+                if (loadPhase == SceneLoadPhase.BeforeReady) {
+                    return ScriptUtility.CurrentThreadCount == 0;
+                }
+                return true;
+            }
         }
     }
 }

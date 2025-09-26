@@ -9,7 +9,7 @@ using System.Collections;
 using UnityEngine;
 
 namespace Astro {
-    [SysUpdate(GameLoopPhase.Update, 1, AstroGame.DocumentUpdateMask)]
+    [SysUpdate(GameLoopPhase.Update, 1, AllowExecutionDuringLoad = true)]
     public class DocumentLoadSystem : SharedStateSystemBehaviour<DocumentBoardState> {
         public override bool HasWork() {
             return base.HasWork() && m_State.DocumentLoadQueue.Count > 0;

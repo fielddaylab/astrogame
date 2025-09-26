@@ -3,6 +3,7 @@ using BeauUtil.Debugger;
 using FieldDay;
 using FieldDay.Audio;
 using FieldDay.Localization;
+using FieldDay.Rendering;
 using FieldDay.SharedState;
 using FieldDay.Vox;
 using Leaf.Runtime;
@@ -15,11 +16,17 @@ namespace Astro.Radio {
         [Header("Controls")]
         public DialAdjustableInstrument Dial;
         public LabButton Power;
-        
+
         [Header("Audio Sources")]
         public AudioSource StreamEmitter;
         public AudioSource StaticEmitter;
         public AudioSource VoxStaticEmitter;
+
+        [Header("Locked Indicator")]
+        public MeshRenderer LockIndicatorLight;
+        [Tooltip("The material used on the locked indicator when locked, unlocked uses the default material")]
+        public Material LockedLightMaterial;
+        [NonSerialized] public Material UnlockedLightMaterial;
 
         [Header("Mixes")]
         [AudioMixStateRef] public StringHash32 MixId;
@@ -55,6 +62,10 @@ namespace Astro.Radio {
                 return true;
             };
         }
+
+        private void Awake() {
+            UnlockedLightMaterial = LockIndicatorLight.materials[1];
+        }
     }
 
     public enum RadioStaticMode {
@@ -67,7 +78,16 @@ namespace Astro.Radio {
     static public partial class RadioUtility {
         [LeafMember("SetRadioDialLocked")]
         static public void SetRadioLocked(bool locked) {
-            Find.State<RadioRig>().IsLocked = locked;
+            RadioRig rig = Find.State<RadioRig>();
+            rig.IsLocked = locked;
+            SetIndicatorLight(locked, rig);
+        }
+
+        static private void SetIndicatorLight(bool newState, RadioRig rigState = null) {
+            if (!rigState) rigState = Find.State<RadioRig>();
+
+            Material LightMat = newState ? rigState.LockedLightMaterial : rigState.UnlockedLightMaterial;
+            rigState.LockIndicatorLight.SetSharedMaterialAtIndex(1, LightMat);
         }
 
         [LeafMember("SetRadioFrequency")]

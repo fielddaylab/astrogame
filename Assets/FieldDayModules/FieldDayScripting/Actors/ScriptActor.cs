@@ -149,7 +149,7 @@ namespace FieldDay.Scripting {
 
 #if UNITY_EDITOR
         void IEditorOnlyData.ClearEditorData(bool isDevelopmentBuild) {
-            EditorOnlyData.Strip(ref m_Id);
+            // EditorOnlyData.Strip(ref m_Id);
             EditorOnlyData.Strip(ref m_ClassName);
         }
 #endif // UNITY_EDITOR

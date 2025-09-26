@@ -216,6 +216,8 @@ namespace FieldDay.Scripting {
 
             StopSkipping();
 
+            Log.Msg("[ScriptThread] Thread '{0}' killed", m_OriginalNodeId.ToDebugString());
+
             base.Reset();
 
             while(m_CutsceneDepth > 0) {

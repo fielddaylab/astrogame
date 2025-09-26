@@ -30,15 +30,12 @@ namespace FieldDay.Editor {
 
             BuildConfig config = BuildConfigurations.GetDesiredConfig(branch);
             if (config != null) {
-                BuildConfigurations.ApplyBuildConfig(branch, AssetDatabase.GetAssetPath(config), config.DevelopmentBuild, config.CustomDefines, config.StrippingLevel, true);
-            }
-
-            if (EditorUserBuildSettings.development) {
-                PlayerSettings.WebGL.exceptionSupport = WebGLExceptionSupport.FullWithStacktrace;
-                PlayerSettings.WebGL.debugSymbolMode = WebGLDebugSymbolMode.Embedded;
-            } else {
-                PlayerSettings.WebGL.exceptionSupport = WebGLExceptionSupport.ExplicitlyThrownExceptionsOnly;
-                PlayerSettings.WebGL.debugSymbolMode = WebGLDebugSymbolMode.Off;
+                BuildConfigurations.ConfigOptions options;
+                options.Development = config.DevelopmentBuild;
+                options.Defines = config.CustomDefines;
+                options.CodeStripping = config.StrippingLevel;
+                options.CodeOptimization = config.OptimizationFlags;
+                BuildConfigurations.ApplyBuildConfig(branch, AssetDatabase.GetAssetPath(config), options, true);
             }
 
             Debug.LogFormat("[AdjustSettingsBuildProcessor] Building branch '{0}', development mode {1}", branch, EditorUserBuildSettings.development);

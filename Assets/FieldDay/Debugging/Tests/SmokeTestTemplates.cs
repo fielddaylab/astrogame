@@ -20,7 +20,8 @@ namespace FieldDay.Debugging {
                 if (!includeMatch.Match(scene.Name)) {
                     continue;
                 }
-                if (excludeMatch.Match(scene.Name)) {
+
+                if (!excludeMatch.IsEmpty && excludeMatch.Match(scene.Name)) {
                     continue;
                 }
 

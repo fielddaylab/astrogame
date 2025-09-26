@@ -19,10 +19,12 @@ namespace Astro {
 
         [Header("Display")]
         [SerializeField] private TMP_Text m_Text;
+        [SerializeField] private TMP_Text m_NameText;
         [SerializeField] private RoundedRectGraphic m_Background;
 
         [Header("Data")]
         [SerializeField] private ColorPalette2 m_DefaultColors;
+        [SerializeField] private float m_NameMargin;
 
         #endregion // Inspector
 
@@ -32,10 +34,11 @@ namespace Astro {
         [NonSerialized] private Vector4 m_DefaultMargin;
 
         [NonSerialized] private SubtitleDisplayData m_CurrentDisplayData;
-        [NonSerialized] private VoxWaveform m_CurrentWaveform;
+        //[NonSerialized] private VoxWaveform m_CurrentWaveform;
         [NonSerialized] private bool m_UpdateRegistered;
 
         [NonSerialized] private SubtitleLogData m_CurrentDisplayLogData = default;
+        [NonSerialized] private bool m_SubtitlesEnabled = true;
 
         private Routine m_BounceAnim;
 
@@ -49,11 +52,15 @@ namespace Astro {
 
             SubtitleUtility.OnDisplayRequested.Register(HandleDisplayRequest);
             SubtitleUtility.OnDismissRequested.Register(HandleDismissRequest);
+
+            SettingsUtility.OnSubtitlesEnabledUpdated.Register(OnSubtitlesEnabledUpdated);
         }
 
         void IRegistrationCallbacks.OnDeregister() {
             SubtitleUtility.OnDisplayRequested.Deregister(HandleDisplayRequest);
             SubtitleUtility.OnDismissRequested.Deregister(HandleDismissRequest);
+
+            SettingsUtility.OnSubtitlesEnabledUpdated.Deregister(OnSubtitlesEnabledUpdated);
         }
 
         #endregion IRegistrationCallbacks
@@ -69,8 +76,8 @@ namespace Astro {
 
             AstroGame.Events.Dispatch(GameEvents.SubtitleDataChanged, EvtArgs.Box(m_CurrentDisplayLogData));
             AstroGame.Events.Dispatch(GameEvents.DialogueAudioStart);
-
-            if (data.Priority < m_CurrentDisplayData.Priority || string.IsNullOrEmpty(data.Subtitle.Data)) {
+            
+            if (!m_SubtitlesEnabled || data.Priority < m_CurrentDisplayData.Priority || string.IsNullOrEmpty(data.Subtitle.Data)) {
                 return;
             }
 
@@ -87,7 +94,7 @@ namespace Astro {
             }
         }
 
-        private void HandleDismissRequest(SubtitleDisplayData data) {
+        private void HandleDismissRequest(SubtitleDismissData data) {
             if (data.VoxHandle != m_CurrentDisplayData.VoxHandle) {
                 return;
             }
@@ -96,11 +103,20 @@ namespace Astro {
             AstroGame.Events.Dispatch(GameEvents.DialogueAudioEnd);
 
             m_CurrentDisplayData = default;
-            m_CurrentWaveform = default;
+            //m_CurrentWaveform = default;
 
             AstroGame.Events.Dispatch(GameEvents.SubtitleDataChanged, EvtArgs.Box(m_CurrentDisplayLogData));
-
             Hide(0.5f);
+        }
+
+        private void OnSubtitlesEnabledUpdated(bool updated) {
+            m_SubtitlesEnabled = updated;
+            if (!m_SubtitlesEnabled) {
+                if (m_CurrentDisplayData.VoxHandle.IsValid) {
+                    m_CurrentDisplayData = default;
+                    Hide();
+                }
+            }
         }
 
         #endregion // Handlers
@@ -117,6 +133,7 @@ namespace Astro {
             float fontSize = m_DefaultFontSize;
             float cornerRadius = m_DefaultCornerRadius;
             Vector4 margin = m_DefaultMargin;
+            string characterName = data.CharacterNameOverride;
 
             if (style != null) {
                 if (style.OverrideColors) {
@@ -129,17 +146,30 @@ namespace Astro {
                 fontSize *= style.FontScale;
                 cornerRadius *= style.BackgroundCornerRadiusScale;
                 margin *= style.MarginScale;
+
+                if (string.IsNullOrEmpty(characterName)) {
+                    characterName = style.DisplayName;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(characterName)) {
+                margin.y += m_NameMargin;
+                m_NameText.gameObject.SetActive(true);
+                m_NameText.SetText(characterName);
+            } else {
+                m_NameText.gameObject.SetActive(false);
             }
 
             m_Text.color = palette.Content;
+            m_NameText.color = palette.Content;
             m_Background.SetColor(palette.Background);
             m_Text.font = font;
             m_Text.fontSize = fontSize;
             m_Background.CornerRadius = cornerRadius;
             m_Text.margin = margin;
 
-            VoxWaveformTable table = Find.NamedAsset<VoxWaveformTable>("VoxTable");
-            table.TryFind(VoxUtility.GetLineCode(data.VoxHandle), out m_CurrentWaveform);
+            //VoxWaveformTable table = Find.NamedAsset<VoxWaveformTable>("VoxTable");
+            //table.TryFind(VoxUtility.GetLineCode(data.VoxHandle), out m_CurrentWaveform);
         }
 
         #region Animation

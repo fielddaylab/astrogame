@@ -20,9 +20,9 @@ namespace Astro {
         public bool AutoToggle;
 
         [Header("Sounds")]
-        [AudioEventRef] public StringHash32 ClickSfx;
-        [AudioEventRef] public StringHash32 ToggleSfx;
-        [AudioEventRef] public StringHash32 UntoggleSfx;
+        [AudioEvent] public StringHash32 ClickSfx;
+        [AudioEvent] public StringHash32 ToggleSfx;
+        [AudioEvent] public StringHash32 UntoggleSfx;
 
         [NonSerialized] public Collider Collider;
         [NonSerialized] public LabInteractable CachedInteractable;

@@ -22,6 +22,7 @@ $call SpawnDocument("Day5Cal")
 $call SpawnDocument("Level1")
 $call SpawnDocument("Level2")
 $call SpawnDocument("Satellite")
+$call SpawnDocument("Level4")
 $call SpawnDocument("RadioMonitor")
 $call SpawnDocument("Puppet")
 $call SpawnDocument("DontPanic")
@@ -36,10 +37,11 @@ $call MonitorPower->Deactivate()
 $call ChapterTitles->PrepareTransition()
 $start Observatory.ResetSubtitlePosition
 
+//#region Spawn Documents
+
 :: BeginDay
 @trigger    SceneReady
 @boostScore 100
-@who    Astrid
 
 $call ChapterTitles->DisplayChapterTitles()
 
@@ -50,21 +52,32 @@ $call ChapterTitles->FinishTransition(1)
 $call SetInputState(false)
 $wait 1
 
-$call SpawnDocumentToCamera("Day5ElijahPostcard")
+$call SpawnDocumentToCamera("Day5Postcard")
 $call SetInputState(true)
-{@Astrid}	Elijah said I was like Perseus. But lately I feel more like Andromeda...	$[level5/Astrid/l5_a_01]
-{@Astrid}	I wish I could decide my own fate. Being Andromeda sucks. 	$[level5/Astrid/l5_a_03]
+{@Astrid} Elijah said I was like Perseus, but lately I feel more like Andromeda... $[level5/Astrid/l5_a_01]
+{@Astrid} I wish I could decide my own fate. Being Andromeda sucks. $[level5/Astrid/l5_a_03]
 
 :: SpawnPuzzleDocs1
 @trigger    DocumentInspectEnd
-@when   documentId == "Day5ElijahPostcard"
+@when   documentId == "Day5Postcard"
+@interrupt
+@cutscene
+@once
+
+$wait 1
+$call SpawnDocumentToCamera("Day5Letter")
+{@Astrid}	Oh my gosh, its happening for real! They just offered me a job at the paper! 	$[level5/Astrid/l5_a_05]
+
+:: SpawnPuzzleDocs1a
+@trigger    DocumentInspectEnd
+@when   documentId == "Day5Letter"
 @interrupt
 @cutscene
 @once
 
 $wait 1
 $call SpawnDocumentToCamera("NewspaperLetter")
-{@Astrid}	Oh my gosh, its happening for real! They just offered me a job at the paper! 	$[level5/Astrid/l5_a_05]
+{@Astrid}	Okay, I have all this information now. I just need to get it to them in time and the mail will take too long. 	$[level5/Astrid/l5_a_04]
 
 :: SpawnPuzzleDocs2
 @trigger    DocumentInspectEnd
@@ -73,21 +86,74 @@ $call SpawnDocumentToCamera("NewspaperLetter")
 @cutscene
 @once
 
-$call SpawnDocumentToCamera("Day5Letter")
-{@Astrid}	Dad would say I should keep working with him at CERES. Aunt Martha would think I'm crazy. Elijah... I'm not sure...	$[level5/Astrid/l5_a_09]
-{@Astrid}	Then I can figure out this job thing. 	$[level5/Astrid/l5_a_12]
-
 $wait 1
-:: BadLetter
+
+$call SpawnDocumentToCamera("RecoveryBoardLetter")
+{@Astrid}	Does this mean I can't work on the puzzle? No, it looks like I just have to do some more identification. Really? 	$[level5/Astrid/l5_a_13]
+
+//#endregion
+
+//#region Document Puzzle
+
+:: SpawnPuzzleQuestion
 @trigger    DocumentInspectEnd
-@when   documentId == "Day5Letter"
+@when   documentId == "RecoveryBoardLetter"
 @interrupt
+@priority High
 @cutscene
 @once
 
+$call SetInputState(false)
 $wait 1
-$call SpawnDocumentToCamera("RecoveryBoardLetter")
-{@Astrid}	Does this mean I can't work on the puzzle? No, it looks like I just have to do some more identification. Really? 	$[level5/Astrid/l5_a_13]
+$call SetInputState(true)
+$call SpawnDocumentToCamera("Day5Question")
+$call StartDocumentPuzzle("Day5DocumentPuzzle")
+$set temp:docPuzzleSolved = false
+
+{@Astrid}	Should I go to Chicago or stay here and hope the radio turns back on? 	$[level5/Astrid/l5_a_14]
+
+:: IncorrectDocumentResponse2
+@trigger    DocumentPuzzlePromptStart
+@when answerId == "NewspaperLetter", !temp:docPuzzleSolved
+@interrupt
+@boostScore 100
+
+$start .TooLateToSendLetter
+
+:: IncorrectDocumentResponse3
+@trigger    DocumentPuzzlePromptStart
+@when answerId == "Day5Letter", !temp:docPuzzleSolved
+@interrupt
+@boostScore 100
+
+$start .TooLateToSendLetter
+
+:: TooLateToSendLetter
+@who    Astrid
+
+{@Astrid} It's too late to send a letter. I either have to go to Chicago or get the radio working.	$[level5/Astrid/l5_a_16]
+
+:: IncorrectDocumentResponse4
+@trigger    DocumentPuzzlePromptStart
+@when answerId == "RecoveryBoardLetter", !temp:docPuzzleSolved
+@interrupt
+@boostScore 100
+
+{@Astrid} They just want me to stay home and not do anything. $[level5/Astrid/l5_a_18]
+
+:: IncorrectDocumentResponse5
+@trigger    DocumentPuzzlePromptStart
+@when !temp:docPuzzleSolved, answerId == "DontPanic"
+@interrupt
+
+{@Astrid} I drew this. It won't help answer my question though. $[level1/Astrid/l1_a_g3]
+
+:: IncorrectDocumentResponse
+@trigger    DocumentPuzzlePromptStart
+@when !temp:docPuzzleSolved, answerId != "RecoveryBoardLetter", answerId != "Day5Letter", answerId != "NewspaperLetter", answerId != "Puppet", answerId != "DontPanic"
+@interrupt
+
+{@Astrid} This really isn't helping me choose. I'm still not sure if I should stay here or travel to Chicago... $[level5/Astrid/l5_a_15]
 
 :: InspectCalendar
 @trigger    DocumentInspectStart
@@ -95,7 +161,7 @@ $call SpawnDocumentToCamera("RecoveryBoardLetter")
 @cutscene
 @once
 
-{@Astrid}	There are only a few days before meteor storm!	$[level5/Astrid/l5_a_13c]
+{@Astrid} There are only a few days before meteor storm!	$[level5/Astrid/l5_a_13c]
 
 :: InspectPuppetSketch
 @trigger    DocumentInspectStart
@@ -103,7 +169,7 @@ $call SpawnDocumentToCamera("RecoveryBoardLetter")
 @cutscene
 @once
 
-{@Astrid}	Time for andromeda to cut her strings. 	$[level5/Astrid/l5_a_13b]
+{@Astrid} Time for andromeda to cut her strings. 	$[level5/Astrid/l5_a_13b]
 
 :: InspectDontPanic
 @trigger    DocumentInspectStart
@@ -111,31 +177,39 @@ $call SpawnDocumentToCamera("RecoveryBoardLetter")
 @cutscene
 @once
 
-{@Astrid}	I've got to get the word out about the meteor storm 	$[level5/Astrid/l5_a_13a]
+{@Astrid} I've got to get the word out about the meteor storm. $[level5/Astrid/l5_a_13a]
 
-:: StartDay
-@trigger    DocumentInspectEnd
-@when   documentId == "RecoveryBoardLetter"
+:: EndPuzzleSection
+@trigger    DocumentPuzzleSolved
 @interrupt
+@boostScore 1000
+@priority High
 @cutscene
-@priority   High
 @once
 
-$wait 1
+$set temp:docPuzzleSolved = true
 $call SetInputState(false)
+{@Astrid} I need to choose my own fate... Ok... I'm going to stay here and try to finish the puzzle to see if I can get that satellite unlocked. $[level5/Astrid/l5_a_17]
+$start .StartDay
+//#endregion
+
+//#region Open Identification
+:: StartDay
+
+$wait 1.5
 $call WaitForMovedToView("Right")
 {@Astrid} I don't have time for this, I need to be working on the Andromeda puzzle. $[level5/Astrid/l5_a_19]
 $call OpenRefGuidePage("ConstellationAndromeda")
-$wait 1
+$wait 2
 $call WaitForMovedToView("Monitor")
 $call ConsoleCommandLine->PlayConsoleTextAndWait("Day5ConsoleText")
 $call MonitorUI->ShowCERESLogo()
 $call ConsoleCommandLine->PlayConsoleTextAndWait("AccessDenied")
-{@Astrid} What's going on? I can't use the constellation finder.	$[level5/Astrid/l5_a_20]
+{@Astrid} What's going on? I can't use the constellation finder for Project Hercules.	$[level5/Astrid/l5_a_20]
 $call MonitorUI->CERESLogoToWatching(0.5)
 $call ConsoleCommandLine->HideConsole()
 {@Astrid} I guess that letter was right... $[level5/Astrid/l5_a_21]
-{@Astrid} Oh, it looks like incoming data from CERES. $[level5/Astrid/l5_a_18]
+{@Astrid} Oh, it looks like incoming data from CERES. $[level5/Astrid/l5_a_21a]
 
 $call SetRefGuideActive(false)
 $call SetInputState(true)
@@ -152,8 +226,12 @@ $call StartNeutrinoNavigation()
 
 $call SetStickyFirstPage(4)
 $call StopNeutrinoNavigation()
+$call SetInputState(false)
+$call AlignCamToNeutrino()
+$call SetInputState(true)
 $call StartOpenMode()
-{@Astrid}	Woah, it is really quiet here without the CERES channel. 	$[level5/Astrid/l5_a_22]
+{@Astrid} Woah, it is really quiet here without the CERES channel. 	$[level5/Astrid/l5_a_22]
+{@Astrid} I'll have to find the luminosity of these stars in the Eridanus constellation. $[level5/Astrid/l5_a_22a]
 
 :: FinishOpenID
 @trigger    PointsUpdated
@@ -167,8 +245,8 @@ $call MonitorUI->CERESLogoToCenter(0.5)
 $wait 1
 $call MonitorUI->HideCERESLogo()
 
-{@Astrid}	Okay, got it. 	$[level5/Astrid/l5_a_23]
-{@Astrid}	Now I can finally finish this encryption puzzle.	$[level5/Astrid/l5_a_24]
+
+{@Astrid}	Okay, got it. Now I can finally finish this encryption puzzle.	$[level5/Astrid/l5_a_23]
 {@Astrid}	This is it. Here goes nothing... $[level5/Astrid/l5_a_25]
 
 $wait 1
@@ -179,14 +257,20 @@ $call ClearMonitorSelection()
 $call SetStickyFirstPage(-1)
 $goto .SetupPuzzleNav
 
+//#endregion
+
+//#region Hercules Puzzle 
 :: SetupPuzzleNav
 
+$call SetRadioDialLocked(false)
 $start Observatory.PathToMonitor
 $call ClearMonitorSelection()
 $call ConsoleCommandLine->PlayConsoleTextAndWait("Day5ConsoleText")
 $call ConsoleCommandLine->HideConsole()
 $call SetRefGuideActive(false)
 $wait 1
+$call SetRadioFrequency(137)
+$call SetRadioDialLocked(true)
 $call StartPuzzleNavigation()
 $call SetInputState(true)
 
@@ -197,7 +281,7 @@ $call SetInputState(true)
 $call SetInputState(false)
 $call WaitForMovedToView("Right")
 $call ClearMonitorSelection()
-// Dont remove this wait
+//! Dont remove this wait
 // We need it because something is messing with the input here 😭
 $wait 1
 $call StartPuzzleMode()
@@ -224,21 +308,35 @@ $call OpenRefGuidePage("ConstellationAndromedaCompleted")
 $call MoveToView("Right")
 $call StartFinalPuzzleMode()
 {@Astrid} Whoa... what's this? $[level5/Astrid/l5_a_27]
+$set temp:finalPuzzleCompleted = false
 $wait 0.5
 $call SetRefGuideActive(false)
 $call ScriptFader->FadeOut()
+// $call MonitorUI->PowerOff()
 $wait 1
 $call SatelliteDecoder->SetDecoderActive(true)
 $call SatelliteDecoder->SetDecoderHighlightActive(true)
 $wait 1
+$call LockMonitorFocus()
 $call ScriptFader->FadeIn()
 
-{@Astrid}	Looks like I just need to put in the password. 	$[level5/Astrid/l5_a_28]
+{@Astrid} Looks like I just need to solve this combination lock. Looks like it will be a word of some kind. $[level5/Astrid/l5_a_28]
+{@Astrid} Its probably some Slovenian word since our Solvenian astronomer Slovoj created this. $[level5/Astrid/l5_a_28a]
 $call SetInputState(true)
 $call OpenRefGuidePage("ConstellationPerseusCompleted")
 
 {@Astrid} I wish Elijah was here to see this. $[level5/Astrid/l5_a_29]
 {@Astrid} Okay... here goes nothing. $[level5/Astrid/l5_a_30]
+
+$branch .DecoderHintTimeout
+
+:: .DecoderHintTimeout
+$wait 20
+
+$if !temp:finalPuzzleCompleted
+    {@Astrid} I should look at my constellation notes in the tools section of the reference guide. $[level5/Astrid/l5_a_30a]
+    $branch .DecoderHintTimeout
+$endif
 
 :: FirstInteractDecoder
 @trigger    OnDecoderInteract
@@ -250,9 +348,14 @@ $call SatelliteDecoder->SetDecoderHighlightActive(false)
 @trigger    OnDecoderSuccess
 @once
 
+$set temp:finalPuzzleCompleted = true
 $call SetInputState(false)
+{@Astrid} "Zorya..." I wonder what that means? Someone's name...? $[level5/Astrid/l5_a_30b]
+$wait 1
 {@Astrid} I don't get it. The password is correct... but nothing's happening. $[level5/Astrid/l5_a_31]
-{@Astrid} I thought I was going to get a radio signal. $[level5/Astrid/l5_a_32]
+$call SetRadioFrequency(375)
+$call SetRadioFrequency(137)
+{@Astrid} The radio still doesn't work. $[level5/Astrid/l5_a_32]
 $call StopPuzzleMode()
 $call ClearMonitorSelection()
 
@@ -261,12 +364,12 @@ $call ConsoleCommandLine->PlayConsoleTextAndWait("PlayMessage")
 $call TapeDeck->SetTapeActive(true)
 {@Elijah} Astrid, you did it! You solved it! $[level5/Elijah/l5_e_01]
 {@Elijah} You are literally the smartest person I know. $[level5/Elijah/l5_e_02]
-{@Elijah} Now I just need to put in the final upgrade command when I get back. $[level5/Elijah/l5_e_03]
-{@Elijah} Then World's End will have access to everything! New radio channels, all the unencrypted data... $[level5/Elijah/l5_e_04]
 {@Elijah} It's so weird recording this, getting excited about something that hasn't happened yet... $[level5/Elijah/l5_e_05]
 {@Elijah} But I know it will. You're the stuff of Greek myth, remember? $[level5/Elijah/l5_e_06]
 {@Elijah} Hopefully, as you're listening to this, I'm already back home with you. Maybe we're listening to this together, and laughing at what a dork I am.	$[level5/Elijah/l5_e_07]
 {@Elijah} If not... I'll be there as soon as I can. I promise. $[level5/Elijah/l5_e_08]
+{@Elijah} Now I just need to put in the final upgrade command when I get back. $[level5/Elijah/l5_e_03]
+{@Elijah} Then World's End will have access to everything! New radio channels, all the unencrypted data... $[level5/Elijah/l5_e_04]
 {@Elijah} I can't wait to see you. Then we can figure out what's next. $[level5/Elijah/l5_e_09]
 $call ConsoleCommandLine->HideConsole()
 $call TapeDeck->SetTapeActive(false)
@@ -276,12 +379,14 @@ $call TapeDeck->SetTapeActive(false)
 {@Astrid} Why wouldn't you just tell me the upgrade command so I can do it myself? $[level5/Astrid/l5_a_35]
 {@Astrid} I needed this to work! Now how am I going to reach Jocelyn? $[level5/Astrid/l5_a_36]
 {@Astrid} Elijah might get back in time ... but he might not. $[level5/Astrid/l5_a_37]
-{@Astrid} I need to make a decision. $[level5/Astrid/l5_a_38]
-{@Astrid} I've waited so long to see Elijah again. $[level5/Astrid/l5_a_39]
-{@Astrid} But I need to tell people about the meteor storm... what it means. Get them excited, not afraid. $[level5/Astrid/l5_a_40]
-{@Astrid} I know what Dad would say, and Aunt Martha... but they're not here. $[level5/Astrid/l5_a_41]
+// {@Astrid} I need to make a decision. $[level5/Astrid/l5_a_38]
+// {@Astrid} I've waited so long to see Elijah again. $[level5/Astrid/l5_a_39]
+// {@Astrid} But I need to tell people about the meteor storm... what it means. Get them excited, not afraid. $[level5/Astrid/l5_a_40]
+// {@Astrid} I know what Dad would say, and Aunt Martha... but they're not here. $[level5/Astrid/l5_a_41]
 {@Astrid} I have to decide this for myself. $[level5/Astrid/l5_a_42]
 {@Astrid} .... Finally.	$[level5/Astrid/l5_a_43]
 
 $wait 0.5
 $call LoadNextDay()
+
+//#endregion

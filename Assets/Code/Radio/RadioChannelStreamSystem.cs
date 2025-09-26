@@ -1,14 +1,13 @@
-using BeauUtil;
-using BeauUtil.Debugger;
-using EasyAssetStreaming;
-using FieldDay;
-using FieldDay.Audio;
-using FieldDay.Scripting;
-using FieldDay.SharedState;
-using FieldDay.Systems;
-using FieldDay.Vox;
 using System;
 using UnityEngine;
+
+using BeauUtil;
+using BeauUtil.Debugger;
+
+using FieldDay;
+using FieldDay.Audio;
+using FieldDay.Systems;
+using FieldDay.Scripting;
 
 namespace Astro.Radio {
     public sealed class RadioChannelStreamSystem : SharedStateSystemBehaviour<RadioStreamsState, RadioRig> {
@@ -16,7 +15,7 @@ namespace Astro.Radio {
             RadioChannel channel = m_StateB.ClosestChannel;
 
             if (m_StateA.LastKnownChannel != channel) {
-                if (m_StateB.StreamAudioHandle.IsValid) {
+                if (Sfx.IsActive(m_StateB.StreamAudioHandle)) {
                     RadioUtility.MakeVirtual(m_StateB.StreamEmitter, m_StateA.LastKnownChannel, m_StateA);
                     Sfx.Stop(m_StateB.StreamAudioHandle);
                     m_StateB.StreamAudioHandle = default;

@@ -44,7 +44,9 @@ namespace Astro {
             PlayerCodeDisplay.SetTextAndActive(PlayerPrefs.GetString("LatestPlayerCode", null));
         }
 
-        public void OnDeregister() { Button.onClick.RemoveListener(m_StartTogglePause); }
+        public void OnDeregister() {
+            Button.onClick.RemoveListener(m_StartTogglePause);
+        }
     }
 
     public static class PauseUtility {

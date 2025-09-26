@@ -2,6 +2,9 @@ using UnityEngine;
 using FieldDay.Systems;
 using FieldDay;
 using FieldDay.Scripting;
+using FieldDay.Debugging;
+using BeauPools;
+using System.Collections.Generic;
 
 namespace Astro {
     [SysUpdate(GameLoopPhase.Update, 1000, AstroGame.InstrumentUpdateMask)] // After RowSelectSystem
@@ -23,12 +26,44 @@ namespace Astro {
                     if (isCoordinateCell) {
                         int rowIndex = dataState.SelectedTarget.PuzzleRow;
                         UIFocus current = Find.State<FocusState>().CurrentFocus;
+
+                        // Ensure none of the otehr rows have this data
+                        for (int i = 0; i < puzzleState.PuzzleEntryGuesses.Length; i++) {
+                            if (puzzleState.PuzzleEntryGuesses[i] == null) continue;
+
+                            PuzzleUtility.ExtractCols(puzzleState.ActivePuzzle, out List<DataTypeMask> types, out int numCols);
+                            if (current == puzzleState.PuzzleEntryGuesses[i]) {
+                                int cellIndex = (numCols * i) + 1;
+                                PuzzleCell target = puzzleState.Display.Cells[cellIndex];
+                                // Found a match we need to clear now
+                                DataUtility.ClearData(target.DataSlot);
+                                FocusableUtility.UpdateFocusTrackerSprite(puzzleState.PuzzleEntryGuesses[i], null);
+                            }
+                        }
+
                         // clear any previous stars we put this guess tracker on
                         if (puzzleState.PuzzleEntryGuesses[rowIndex] != null) {
-                            FocusableUtility.UpdateFocusTrackerSprite(puzzleState.PuzzleEntryGuesses[rowIndex], null);   
+                            FocusableUtility.UpdateFocusTrackerSprite(puzzleState.PuzzleEntryGuesses[rowIndex], null);
                         }
                         FocusableUtility.UpdateFocusTrackerSprite(current, FocusState.GuessTrackerSprites[rowIndex]);
                         puzzleState.PuzzleEntryGuesses[rowIndex] = current;     
+                    }
+
+                    if (DebugFlags.IsFlagSet(FocusState.DebuggingFlags.DisplayGuessTrackerInfo)) {
+                        using (PooledStringBuilder psb = PooledStringBuilder.Create()) {
+                            psb.Builder.Append("Current Tracker Set: [");
+                            foreach (var entry in puzzleState.PuzzleEntryGuesses) {
+                                if (entry == null) {
+                                    psb.Builder.Append("X,");
+                                    continue;
+                                }
+                                psb.Builder.Append(entry.TargetData.DisplayName);
+                                psb.Builder.Append(",");
+                            }
+                            psb.Builder.Append(']');
+
+                            DebugDraw.AddLogText(psb, Color.yellow, 1000f);
+                        }
                     }
 
                     bool isRowComplete = true;

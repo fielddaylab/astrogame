@@ -13,9 +13,14 @@ using FieldDay.Assets;
 using FieldDay.Scripting;
 using FieldDay.SharedState;
 using FieldDay.Audio;
+using BeauUtil.Debugger;
+using FieldDay.Debugging;
+using EasyAssetStreaming;
+using FieldDay.Scenes;
+using FieldDay.UI;
 
 namespace Astro {
-    public sealed class DocumentBoardState : SharedStateComponent {
+    public sealed class DocumentBoardState : SharedStateComponent, IRegistrationCallbacks, ISceneLoadDependency {
         public bool EnableDocumentInteraction;
         [NonSerialized] public DocumentInteractable SelectedDocument;
         [NonSerialized] public Vector3 LastMousePos;
@@ -38,6 +43,11 @@ namespace Astro {
 
         public AssetPack DocumentAssets;
 
+        [Header("Streaming Materials")]
+        public Material AlphaStreamingMaterial;
+        public Material OpaqueStreamingMaterial;
+        public Material[] DebuggingMaterials;
+
         [NonSerialized] public List<DocumentRenderer> SpawnedDocuments = new List<DocumentRenderer>();
         [NonSerialized] public Dictionary<StringHash32, bool> DocumentCloseEnabledState = new Dictionary<StringHash32, bool>();
 
@@ -59,6 +69,18 @@ namespace Astro {
             Gizmos.DrawWireCube(Vector3.zero, Vector3.one);
             Gizmos.matrix = oldMatrix;
         }
+
+        void IRegistrationCallbacks.OnRegister() {
+            Game.Scenes.RegisterLoadDependency(this);
+        }
+
+        void IRegistrationCallbacks.OnDeregister() {
+            Game.Scenes.DeregisterLoadDependency(this);
+        }
+
+        bool ISceneLoadDependency.IsLoaded(SceneLoadPhase loadPhase) {
+            return DocumentLoadQueue.Count == 0;
+        }
     }
 
     public static partial class DocumentUtility {
@@ -70,7 +92,6 @@ namespace Astro {
             }
             DocumentRenderer spawned = GameObject.Instantiate(asset.Prefab, state.DocumentParent);
             spawned.Interactable.AssetName = id;
-            spawned.PreserveInArchive = asset.PreserveInArchive;
             spawned.TriggersPrompter = asset.TriggersPrompter;
             spawned.name = id.ToDebugString();
 
@@ -81,6 +102,11 @@ namespace Astro {
                 DisplayLowResDocument(spawned, asset);
             } else {
                 DisplayFullDocument(spawned, asset);
+            }
+
+            Material streamingMaterial = asset.UseCutoutMaterial ? state.AlphaStreamingMaterial : state.OpaqueStreamingMaterial;
+            foreach(var quadTexture in spawned.StreamingTextures) {
+                quadTexture.SharedMaterial = streamingMaterial;
             }
 
             PlayerProgressState progressState = Find.State<PlayerProgressState>();
@@ -555,5 +581,40 @@ namespace Astro {
         }
 
         #endregion // Sfx
+
+        #region Debugging
+
+        [DebugMenuFactory]
+        static private DMInfo GenerateDebugMenu() {
+            DMInfo documents = new DMInfo("Documents");
+
+            documents.AddButton("Force Cutout Material", () => {
+                DEBUG_ChangeAllDocumentStreamingRenderers(Find.State<DocumentBoardState>().DebuggingMaterials[0]);
+            }, () => SceneUtils.ActiveSceneIndex() == 4);
+            documents.AddButton("Force Cutout Material (Transparent)", () => {
+                DEBUG_ChangeAllDocumentStreamingRenderers(Find.State<DocumentBoardState>().DebuggingMaterials[1]);
+            }, () => SceneUtils.ActiveSceneIndex() == 4);
+            documents.AddButton("Force Cutout Material (No Vert Color)", () => {
+                DEBUG_ChangeAllDocumentStreamingRenderers(Find.State<DocumentBoardState>().DebuggingMaterials[2]);
+            }, () => SceneUtils.ActiveSceneIndex() == 4);
+            documents.AddButton("Force Opaque Material", () => {
+                DEBUG_ChangeAllDocumentStreamingRenderers(Find.State<DocumentBoardState>().DebuggingMaterials[3]);
+            }, () => SceneUtils.ActiveSceneIndex() == 4);
+            documents.AddButton("Force Opaque Material (No Vert Color)", () => {
+                DEBUG_ChangeAllDocumentStreamingRenderers(Find.State<DocumentBoardState>().DebuggingMaterials[4]);
+            }, () => SceneUtils.ActiveSceneIndex() == 4);
+
+            return documents;
+        }
+
+        static private void DEBUG_ChangeAllDocumentStreamingRenderers(Material material) {
+            foreach(var documentRenderer in UnityEngine.Object.FindObjectsOfType<DocumentRenderer>(true)) {
+                foreach (var streaming in documentRenderer.GetComponentsInChildren<StreamingQuadTexture>(true)) {
+                    streaming.SharedMaterial = material;
+                }
+            }
+        }
+
+        #endregion // Debugging
     }
 }
