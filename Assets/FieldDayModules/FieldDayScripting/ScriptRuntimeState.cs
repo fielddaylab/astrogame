@@ -139,6 +139,7 @@ namespace FieldDay.Scripting {
                 SceneLocalTable.Clear();
             });
         }
+
         // TODO: Figure out why this needs to be called later in the scene loading process
         // when in WebGL. Also why LoadStaticAsync is broken
         private void InitialMethodCache() {

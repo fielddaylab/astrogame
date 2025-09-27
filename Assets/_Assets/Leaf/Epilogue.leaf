@@ -28,7 +28,6 @@ $call SatelliteDecoder->SetDecoderActive(true)
 $call TelescopeLook(155, -30)
 $set temp:powerButtonHint = false
 $set temp:pressedPowerButton = false
-$call SetChannelActive(Unlocks_Active, false)
 $call SetChannelActive(IceCube, false)
 $call PlayMusic("Music.Gently-Falling", 1)
 
@@ -63,7 +62,7 @@ $wait 1
 {@Elijah} I'm invited to a watch party in Chicago? 	$[epilogue/Elijah/end_e_03]
 $wait 1
 {@Elijah} She left! No wonder she left. I should've left her the command code. What was I thinking? 	$[epilogue/Elijah/end_e_04]
-$wait 1
+$wait 6
 
 $call ReturnDocToBoard("Day6Astrid")
 $wait 1

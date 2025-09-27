@@ -134,7 +134,7 @@ $else
     $call HintModals->Wiggle("CeresRadioHint")
 $endif
 $if !temp:introRadioChannelTuned
-    {@Astrid}	Okay... I need to tune the radio to 137 megahertz. 	$[level1/Astrid/l1_a_03]
+    // {@Astrid}	Okay... I need to tune the radio to 137 megahertz. 	$[level1/Astrid/l1_a_03]
     $loop
 $endif
 
@@ -560,6 +560,7 @@ $call SetRefGuideActive(false)
 $set temp:readyForUpgrade = true
 
 $call MonitorUI->ShowElement("CeresMsg")
+$call MonitorUI->ShowElement("UpgradeMsg")
 $wait 1
 $call StopOpenMode()
 {@Astrid} Looks like CERES is trying to contact me. I wonder what that's about...	$[level1/Astrid/l1_a_17]
@@ -569,8 +570,6 @@ $call SetChannelActive(Unlocks_Active, true)
 $call SetStickyFirstPage(7)
 $call HintModals->SlideInFromRight("RadioControls", 0.4)
 $call SetInputState(true)
-
-$start .UpgradeReminder
 
 :: IceCubeUpgradeReminder
 @trigger    RadioChannelListenStart
@@ -587,17 +586,6 @@ $call SetRadioDialLocked(true)
 $call SetRadioDialLocked(false)
 $call SetChannelActive(IceCube, false)
 
-$start .UpgradeReminder
-
-:: UpgradeReminder
-$call SetInputState(true)
-$wait 10
-$if !temp:upgradeChannelTuned
-    $call HintModals->Wiggle("RadioControls")
-    {@Astrid}	I wonder if I can upgrade my rig. The upgrade channel should be in my reference guide	$[level1/Astrid/l1_a_g1]
-    $branch .UpgradeReminder
-$endif
-
 :: ClearanceUpgradeTrigger
 @trigger    RadioChannelListenStart
 @when       channelId == "Unlocks_Active"
@@ -606,6 +594,7 @@ $endif
 @once
 
 $call MonitorUI->HideElement("CeresMsg")
+$call MonitorUI->HideElement("UpgradeMsg")
 $call HintModals->Hide("RadioControls", 0.2)
 
 $set temp:upgradeChannelTuned = true
@@ -627,6 +616,7 @@ $call SetInputState(true)
 $call ConsoleCommandLine->PlayConsoleTextAndWait("Day1UpgradeSystem")
 $wait 1
 {@Astrid}	Starting at the bottom... clearance level one.	$[level1/Astrid/l1_a_19]
+$wait 1
 
 $call SetInstrumentUnlocked(ColorInstrument, true)
 $call SetInstrumentUnlocked(TemperatureInstrument, true)
@@ -642,7 +632,6 @@ $wait 0.1
 $call MonitorUI->CERESLogoToCenter(0.5)
 $wait 1
 $call MonitorUI->HideCERESLogo()
-$call SetRadioDialLocked(false)
 $wait 0.5
 
 $call SetRefGuideActive(false)
@@ -695,6 +684,7 @@ $call StartPuzzleNavigation()
 @once
 
 {@Astrid}	Ach, colder!	$[level1/Astrid/l1_a_29]
+// #endregion
 
 // #region Puzzle Tutorial
 
@@ -724,6 +714,7 @@ $goto .PostPuzzleNavigationComplete
 
 :: PostPuzzleNavigationComplete
 $wait 0.5
+$call SetRadioDialLocked(false)
 $call HintModals->SlideInFromRight("FirstPuzzleStar", 0.4)
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $branch .SelectAtikReminder
@@ -734,6 +725,13 @@ $if temp:waitingForSelectAtik
     {@Astrid}	It looks like the star compass gives me readings when I select a star on the monitor. That helps.	$[level1/Astrid/l1_a_40]
     $goto .SelectAtikReminder
 $endif
+
+:: OnRandomPuzzleStarSelected
+@trigger OnStarSelected
+@boostScore 150
+@once
+
+$set temp:waitingForSelectAtik = false
 
 :: FirstPuzzleStarSelected
 @trigger   OnStarSelected

@@ -617,6 +617,17 @@ namespace FieldDay.UI {
             }
         }
 
+        internal void ProcessShortcuts() {
+            bool isPaused = Game.Input.AreDevicesPaused() || Game.Input.AreRaycastsPaused();
+            if (!isPaused) {
+                foreach(var c in Find.Components<KeyboardShortcut>()) {
+                    if (Game.Input.IsKeyComboPressed(c.Modifiers, c.KeyCode)) {
+                        GuiCommands.TryClick(c.gameObject);
+                    }
+                }
+            }
+        }
+
         internal void ProcessUpdate() {
             for(int i = 0; i < m_UpdateCallbacks.Count; i++) {
                 m_UpdateCallbacks[i].OnGuiUpdate();

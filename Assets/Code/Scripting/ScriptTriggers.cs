@@ -7,6 +7,7 @@ using FieldDay;
 using FieldDay.HID;
 using FieldDay.Scenes;
 using FieldDay.Scripting;
+using FieldDay.UI;
 using Leaf.Runtime;
 using System.Collections;
 using UnityEngine;

@@ -767,6 +767,10 @@ namespace FieldDay.Rendering {
                         return "Always";
                     }
                 });
+
+                if ((idx % 4) == 0) {
+                    renderLayerMenu.AddDivider();
+                }
             }
 
             info.AddSubmenu(renderLayerMenu);

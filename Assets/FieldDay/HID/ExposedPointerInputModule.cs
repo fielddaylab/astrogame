@@ -14,11 +14,12 @@ namespace FieldDay.HID {
     /// Pointer input module, with the current event data exposed.
     /// </summary>
     public class ExposedPointerInputModule : StandaloneInputModule {
-        private TMP_InputField m_EditingText;
-        private PointerEventData m_MousePointerData;
-        private PointerEventData m_TouchPointerData;
-        private PointerInputMode m_Mode;
-        private bool m_Paused = true;
+        [NonSerialized] private TMP_InputField m_EditingText;
+        [NonSerialized] private PointerEventData m_MousePointerData;
+        [NonSerialized] private PointerEventData m_TouchPointerData;
+        [NonSerialized] private PointerInputMode m_Mode;
+        [NonSerialized] private bool m_Paused = true;
+        [NonSerialized] private Vector2 m_LastKnownMousePosition;
 
         /// <summary>
         /// Invoked when the input mode is changed.
@@ -122,6 +123,7 @@ namespace FieldDay.HID {
             base.Process();
 
             BaseInput cachedInput = input;
+            Vector2 newMousePos = input.mousePosition;
 
             if (m_Mode == PointerInputMode.Mouse) {
                 if (cachedInput.touchCount > 0 || !cachedInput.mousePresent) {
@@ -129,11 +131,13 @@ namespace FieldDay.HID {
                     OnModeChanged?.Invoke(m_Mode);
                 }
             } else {
-                if (cachedInput.GetMouseButtonDown(0) || cachedInput.GetMouseButtonDown(1) || cachedInput.GetMouseButtonDown(2)) {
+                if (newMousePos != m_LastKnownMousePosition || cachedInput.GetMouseButtonDown(0) || cachedInput.GetMouseButtonDown(1) || cachedInput.GetMouseButtonDown(2)) {
                     m_Mode = PointerInputMode.Mouse;
                     OnModeChanged?.Invoke(m_Mode);
                 }
             }
+
+            m_LastKnownMousePosition = newMousePos;
 
             TMP_InputField inputField = m_EditingText;
             if (!ReferenceEquals(inputField, null) && !inputField) {
@@ -166,6 +170,8 @@ namespace FieldDay.HID {
             } else {
                 m_Mode = PointerInputMode.Mouse;
             }
+
+            m_LastKnownMousePosition = Input.mousePosition;
         }
 
         public override void ActivateModule() {

@@ -4,6 +4,7 @@ using UnityEngine;
 using FieldDay;
 using FieldDay.HID;
 using FieldDay.SharedState;
+using FieldDay.UI;
 
 namespace Astro {
     public class LabInteractableState : SharedStateComponent {

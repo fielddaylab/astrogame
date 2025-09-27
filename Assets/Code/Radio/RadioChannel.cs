@@ -19,7 +19,7 @@ namespace Astro.Radio {
         [Header("Audio")]
         [StreamingAudioPath] public string AudioStream;
         public AudioClip AudioClip;
-        [AudioEventRef] public StringHash32 EventOverride;
+        [AudioEvent] public StringHash32 EventOverride;
         
         [NonSerialized] public StringHash32 WaveformKey;
     }

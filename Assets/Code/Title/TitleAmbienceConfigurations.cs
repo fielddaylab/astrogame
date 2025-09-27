@@ -12,14 +12,14 @@ using UnityEngine;
 
 namespace Astro.Title {
     public sealed class TitleAmbienceConfigurations : SharedStateComponent, IScenePreload, IRegistrationCallbacks {
-        [AudioEventRef] public StringHash32 BaseLayer;
+        [AudioEvent] public StringHash32 BaseLayer;
         public float TransitionDuration = 1;
 
         [Header("New Game")]
-        [AudioEventRef] public StringHash32 CityLayer;
+        [AudioEvent] public StringHash32 CityLayer;
 
         [Header("Continue Game")]
-        [AudioEventRef] public StringHash32[] ContinueRandom;
+        [AudioEvent] public StringHash32[] ContinueRandom;
 
         [NonSerialized] public AudioHandle BaseHandle;
         [NonSerialized] public AudioHandle CityHandle;

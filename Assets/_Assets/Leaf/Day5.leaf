@@ -245,6 +245,7 @@ $call MonitorUI->CERESLogoToCenter(0.5)
 $wait 1
 $call MonitorUI->HideCERESLogo()
 
+
 {@Astrid}	Okay, got it. Now I can finally finish this encryption puzzle.	$[level5/Astrid/l5_a_23]
 {@Astrid}	This is it. Here goes nothing... $[level5/Astrid/l5_a_25]
 
@@ -261,12 +262,15 @@ $goto .SetupPuzzleNav
 //#region Hercules Puzzle 
 :: SetupPuzzleNav
 
+$call SetRadioDialLocked(false)
 $start Observatory.PathToMonitor
 $call ClearMonitorSelection()
 $call ConsoleCommandLine->PlayConsoleTextAndWait("Day5ConsoleText")
 $call ConsoleCommandLine->HideConsole()
 $call SetRefGuideActive(false)
 $wait 1
+$call SetRadioFrequency(137)
+$call SetRadioDialLocked(true)
 $call StartPuzzleNavigation()
 $call SetInputState(true)
 

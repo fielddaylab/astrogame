@@ -17,4 +17,14 @@ namespace FieldDay.Scenes {
 
 #endif // UNITY_EDITOR
     }
+
+    /// <summary>
+    /// Marks a component type as only existing at edit time.
+    /// </summary>
+    public interface IEditModeOnly { }
+
+    /// <summary>
+    /// Marks a component type as only existing while in the editor.
+    /// </summary>
+    public interface IEditorOnly { }
 }

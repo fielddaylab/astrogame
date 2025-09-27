@@ -66,7 +66,7 @@ namespace FieldDay.Perf {
                         for (int i = 0; i < PhaseBuckets.MaxBuckets; i++) {
                             double microsecs = Profiling.TicksToMicrosecs(timingData.Duration[i]);
                             double percent = 100 * timingData.Duration[i] / (double)totalTicks;
-                            psb.Builder.Append("  ").Append(s_PhaseStrings[i]).Append(":\t").AppendNoAlloc(microsecs, 1).Append("μs\t")
+                            psb.Builder.Append("  ").Append(s_PhaseStrings[i]).Append(":\t").AppendNoAlloc(microsecs, 1).Append("us\t")
                                 .AppendNoAlloc(percent, 1).Append("%\n");
                         }
                         psb.Builder.Length -= 1;

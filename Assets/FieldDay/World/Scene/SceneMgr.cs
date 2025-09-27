@@ -1145,7 +1145,7 @@ namespace FieldDay.Scenes {
                     // if the scene hasn't finished loading, then push this off until later
                     if (!args.Data.IsVisited(SceneDataExt.VisitFlags.Loaded)) {
                         m_CurrentUnloadOperation.Fill(args);
-                        UntrackScene(args.Data.Scene);
+                        //UntrackScene(args.Data.Scene);
                         Log.Msg("[SceneMgr] Unloading '{0}'", args.Data.Scene.path);
                         m_CurrentUnloadOperation.UnityOp = SceneManager.UnloadSceneAsync(args.Data.Scene, args.Options);
                         return true;

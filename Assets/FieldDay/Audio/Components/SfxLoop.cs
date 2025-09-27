@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace FieldDay.Audio {
     public sealed class SfxLoop : BatchedComponent, IRegistrationCallbacks {
-        [AudioEventRef] public StringHash32 EventId;
+        [AudioEvent] public StringHash32 EventId;
         public float StopFadeDuration = 0;
 
         [NonSerialized] public AudioHandle Handle;

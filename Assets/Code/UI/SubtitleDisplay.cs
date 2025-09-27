@@ -33,8 +33,10 @@ namespace Astro {
         [NonSerialized] private Vector4 m_DefaultMargin;
 
         [NonSerialized] private SubtitleDisplayData m_CurrentDisplayData;
-        [NonSerialized] private VoxWaveform m_CurrentWaveform;
+        //[NonSerialized] private VoxWaveform m_CurrentWaveform;
         [NonSerialized] private bool m_UpdateRegistered;
+
+        [NonSerialized] private bool m_SubtitlesEnabled = true;
 
         private Routine m_BounceAnim;
 
@@ -48,11 +50,15 @@ namespace Astro {
 
             SubtitleUtility.OnDisplayRequested.Register(HandleDisplayRequest);
             SubtitleUtility.OnDismissRequested.Register(HandleDismissRequest);
+
+            SettingsUtility.OnSubtitlesEnabledUpdated.Register(OnSubtitlesEnabledUpdated);
         }
 
         void IRegistrationCallbacks.OnDeregister() {
             SubtitleUtility.OnDisplayRequested.Deregister(HandleDisplayRequest);
             SubtitleUtility.OnDismissRequested.Deregister(HandleDismissRequest);
+
+            SettingsUtility.OnSubtitlesEnabledUpdated.Deregister(OnSubtitlesEnabledUpdated);
         }
 
         #endregion IRegistrationCallbacks
@@ -60,7 +66,7 @@ namespace Astro {
         #region Handlers
 
         private void HandleDisplayRequest(SubtitleDisplayData data) {
-            if (data.Priority < m_CurrentDisplayData.Priority || string.IsNullOrEmpty(data.Subtitle.Data)) {
+            if (!m_SubtitlesEnabled || data.Priority < m_CurrentDisplayData.Priority || string.IsNullOrEmpty(data.Subtitle.Data)) {
                 return;
             }
 
@@ -80,8 +86,18 @@ namespace Astro {
             }
 
             m_CurrentDisplayData = default;
-            m_CurrentWaveform = default;
+            //m_CurrentWaveform = default;
             Hide(0.5f);
+        }
+
+        private void OnSubtitlesEnabledUpdated(bool updated) {
+            m_SubtitlesEnabled = updated;
+            if (!m_SubtitlesEnabled) {
+                if (m_CurrentDisplayData.VoxHandle.IsValid) {
+                    m_CurrentDisplayData = default;
+                    Hide();
+                }
+            }
         }
 
         #endregion // Handlers
@@ -133,8 +149,8 @@ namespace Astro {
             m_Background.CornerRadius = cornerRadius;
             m_Text.margin = margin;
 
-            VoxWaveformTable table = Find.NamedAsset<VoxWaveformTable>("VoxTable");
-            table.TryFind(VoxUtility.GetLineCode(data.VoxHandle), out m_CurrentWaveform);
+            //VoxWaveformTable table = Find.NamedAsset<VoxWaveformTable>("VoxTable");
+            //table.TryFind(VoxUtility.GetLineCode(data.VoxHandle), out m_CurrentWaveform);
         }
 
         #region Animation

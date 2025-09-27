@@ -17,6 +17,7 @@ using BeauUtil.Debugger;
 using FieldDay.Debugging;
 using EasyAssetStreaming;
 using FieldDay.Scenes;
+using FieldDay.UI;
 
 namespace Astro {
     public sealed class DocumentBoardState : SharedStateComponent, IRegistrationCallbacks, ISceneLoadDependency {

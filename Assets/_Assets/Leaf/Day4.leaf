@@ -93,7 +93,7 @@ $call SetInputState(false)
 $call SpawnDocumentToCamera("Day4ElijahPostcard")
 $call SetInputState(true)
 
-{@Astrid}	Draco, the dragon constellation. I wonder if Elijah is trying to signal its time for the final puzzle...	$[level4/Astrid/l4_a_08]
+// {@Astrid}	Draco, the dragon constellation. I wonder if Elijah is trying to signal its time for the final puzzle...	$[level4/Astrid/l4_a_08]
 
 :: Day4ElijahPostcard
 @trigger    DocumentInspectFlip
@@ -305,6 +305,7 @@ $endif
 $call SetInputState(false)
 $call SetRefGuideActive(false)
 $wait 4
+$call MonitorUI->ShowElement("UpgradeMsg")
 
 $call StopOpenMode()
 $call SetInputState(true)
@@ -314,14 +315,6 @@ $call SetStickyFirstPage(7)
 
 $call SetRadioDialLocked(false)
 {@Astrid}	I'll bet I am ready for a clearance upgrade. The CERES channels are in my reference guide	$[level2/Astrid/l2_a_22]
-$start .UpgradeReminder
-
-:: UpgradeReminder
-$wait 15
-$if !temp:radioChannelTuned
-    {@Astrid}	I'll bet I am ready for a clearance upgrade. The CERES channels are in my reference guide	$[level2/Astrid/l2_a_22(1)]
-    $branch .UpgradeReminder
-$endif
 
 //#endregion
 
@@ -334,6 +327,7 @@ $endif
 @cutscene
 @once
 
+$call MonitorUI->HideElement("UpgradeMsg")
 $set temp:radioChannelTuned = true
 $call SetRadioDialLocked(true)
 $call SetRadioFrequency(375, true)
@@ -363,7 +357,6 @@ $wait 0.1
 $call MonitorUI->CERESLogoToCenter(0.5)
 $wait 1
 $call MonitorUI->HideCERESLogo()
-$call SetRadioDialLocked(false)
 $wait 0.5
 
 $call OpenRefGuidePage("ConstellationDraco")
@@ -389,6 +382,7 @@ $call SetInputState(true)
 
 $set temp:WizeCompleted = false
 $set temp:EltaninCompleted = false
+$call SetRadioDialLocked(false)
 $call SetInputState(false)
 {@Astrid} Oh, its the Draco puzzle! $[level4/Astrid/l4_a_24f]
 $call WaitForMovedToView("Right")

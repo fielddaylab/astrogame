@@ -23,6 +23,7 @@ namespace Astro {
         [NonSerialized] public bool CameraDriftEnabled = true;
         [NonSerialized] public bool HighQualityMode;
         [NonSerialized] public bool FullscreenEnabled = false;
+        [NonSerialized] public bool SubtitlesEnabled = true;
 
         public void OnDeregister()
         {
@@ -68,6 +69,13 @@ namespace Astro {
                 SettingsUtility.SetAudioBusVolume(this, SettingsUtility.VO_BUS_ID, voVol);
             }
 
+            if (consts.Version >= 3) {
+                bool subtitlesEnabled = reader.Read<bool>();
+                SettingsUtility.SetSubtitlesEnabled(this, subtitlesEnabled);
+            } else {
+                SettingsUtility.SetSubtitlesEnabled(this, true);
+            }
+
             bool cameraDrift = reader.Read<bool>();
             SettingsUtility.SetCameraDrift(this, cameraDrift);
 
@@ -89,6 +97,8 @@ namespace Astro {
             writer.Write((bool)CameraDriftEnabled);
             writer.Write((bool)HighQualityMode);
             writer.Write((bool)FullscreenEnabled);
+
+            writer.Write((bool)SubtitlesEnabled);
         }
     }
 
@@ -96,6 +106,8 @@ namespace Astro {
         public static StringHash32 MUSIC_BUS_ID = "Music";
         public static StringHash32 SFX_BUS_ID = "Sfx";
         public static StringHash32 VO_BUS_ID = "VO";
+
+        static public readonly CastableEvent<bool> OnSubtitlesEnabledUpdated = new CastableEvent<bool>();
 
         public static void SetQualityMode(UserSettingsState state, bool mode) {
             state.HighQualityMode = mode;
@@ -133,6 +145,11 @@ namespace Astro {
             } else if (busId == VO_BUS_ID) {
                 state.VoiceVolume = set;
             }
+        }
+
+        public static void SetSubtitlesEnabled(UserSettingsState state, bool enabled) {
+            state.SubtitlesEnabled = enabled;
+            OnSubtitlesEnabledUpdated.Invoke(enabled);
         }
     }
 }

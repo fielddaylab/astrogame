@@ -40,7 +40,7 @@ namespace FieldDay.Assets {
             return currentHash ^ ((nextVal != null ? nextVal.GetHashCode() : 0) + (currentHash >> 2) + (currentHash << 5));
         }
 
-#if UNITY_EDITOR 
+#if UNITY_EDITOR
         internal uint GetCacheKey() {
             if (m_CachedCacheKey == 0) {
                 unsafe {
@@ -61,13 +61,13 @@ namespace FieldDay.Assets {
             AssetType = assetType;
             order = -10;
 
-#if DEVELOPMENT
+#if UNITY_EDITOR
             UseDropdown = useDropdown;
             if (!UseDropdown) {
                 UseDropdown = GetType().GetMethod("Predicate", BindingFlags.NonPublic | BindingFlags.Instance).DeclaringType != typeof(AssetNameAttribute);
                 UseDropdown |= GetType().GetMethod("Name", BindingFlags.NonPublic | BindingFlags.Instance).DeclaringType != typeof(AssetNameAttribute);
             }
-#endif // DEVELOPMENT
+#endif // UNITY_EDITOR
         }
     }
 }
