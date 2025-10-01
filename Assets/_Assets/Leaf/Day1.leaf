@@ -68,15 +68,17 @@ $call SetInputState(true)
 $start .PowerButtonHint
 
 :: PowerButtonHint
-$wait 12
+$wait 30
 $if !temp:powerButtonHint, !temp:pressedPowerButton
     $call HintModals->SlideInFromRight("MonitorPower", 0.4)
     $set temp:powerButtonHint = true
 $else
     $call HintModals->Wiggle("MonitorPower")
 $endif
+$wait 30
 
 $if !temp:pressedPowerButton
+    $call HintModals->Wiggle("MonitorPower")
     {@Astrid}	I should power this thing up. Maybe it'll help me figure out where Elijah went. 	$[level1/Astrid/l1_a_02]
     $loop
 $endif
@@ -948,6 +950,7 @@ $call AddIsolatedSlot(Color)
 @cutscene
 @once
 
+$call SetInputState(false)
 $set temp:waitingForFillColor = false
 $set temp:AtikRowFilled = true
 $call ReleaseIsolatedPuzzle()
@@ -961,6 +964,7 @@ $set temp:AlgolRowFilled = false
 $set temp:waitingForSelectAlgol = true
 $call HintModals->SlideInFromRight("BrightestBlue", 0.4)
 $call UnlockMonitorFocus()
+$call SetInputState(true)
 
 {@Astrid}	What else do the clues on the monitor say? Apparently Algol is the brightest star in Blue?	$[level1/Astrid/l1_a_58]
 {@Astrid}	Which of these stars is the brightest in blue?	$[level1/Astrid/l1_a_59]
@@ -1185,6 +1189,7 @@ $wait 0.5
 $call MonitorUI->ShowElement("CeresMsg")
 $wait 1
 $call SetRadioFrequency(137)
+$call SetRadioDialLocked(true)
 $call MonitorUI->HideElement("CeresMsg")
 $wait 1
 
