@@ -17,6 +17,7 @@ namespace FieldDay.Audio {
 
         [Header("Playback Parameters")]
         public FloatRange Volume = new FloatRange(1);
+        [Range(0, 2)] public float VolumeMultiplier = 1;
         public FloatRange Pitch = new FloatRange(1);
         public FloatRange Pan = new FloatRange(0);
         public FloatRange Delay = new FloatRange(0);

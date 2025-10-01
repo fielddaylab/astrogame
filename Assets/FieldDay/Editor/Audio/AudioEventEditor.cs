@@ -12,6 +12,7 @@ namespace FieldDay.Editor {
         private SerializedProperty m_PreloadSamplesProperty;
         
         private SerializedProperty m_VolumeProperty;
+        private SerializedProperty m_VolumeMultiplierProperty;
         private SerializedProperty m_PitchProperty;
         private SerializedProperty m_PanProperty;
         private SerializedProperty m_DelayProperty;
@@ -31,6 +32,7 @@ namespace FieldDay.Editor {
             m_PreloadSamplesProperty = serializedObject.FindProperty("PreloadSamples");
 
             m_VolumeProperty = serializedObject.FindProperty("Volume");
+            m_VolumeMultiplierProperty = serializedObject.FindProperty("VolumeMultiplier");
             m_PitchProperty = serializedObject.FindProperty("Pitch");
             m_PanProperty = serializedObject.FindProperty("Pan");
             m_DelayProperty = serializedObject.FindProperty("Delay");
@@ -55,6 +57,7 @@ namespace FieldDay.Editor {
             EditorGUILayout.PropertyField(m_PreloadSamplesProperty);
 
             EditorGUILayout.PropertyField(m_VolumeProperty);
+            EditorGUILayout.PropertyField(m_VolumeMultiplierProperty);
             EditorGUILayout.PropertyField(m_PitchProperty);
             EditorGUILayout.PropertyField(m_PanProperty);
             EditorGUILayout.PropertyField(m_DelayProperty);
