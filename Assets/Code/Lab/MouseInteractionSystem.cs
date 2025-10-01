@@ -23,6 +23,10 @@ namespace Astro {
         public override void ProcessWork(float deltaTime) {
             // on click, try cast ray for lab interactable
 
+            if (m_StateC.BlockAllInput) {
+                return;
+            }
+
             bool isCurrentlyDragging = m_StateA.CurrInteractable && m_StateA.CurrInteractable.IsDragging;
             isCurrentlyDragging |= m_StateB.SelectedDocument;
 

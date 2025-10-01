@@ -94,6 +94,11 @@ namespace FieldDay.Audio {
                         break;
                     }
 
+                    case AudioCommandType.SetUnloadFlag: {
+                        Cmd_SetUnloadFlag(cmd.SetUnloadFlag);
+                        break;
+                    }
+
                     default: {
                         Log.Error("[AudioMgr] Unknown audio command type '{0}'", cmd.Type);
                         break;
@@ -259,10 +264,27 @@ namespace FieldDay.Audio {
             }
         }
 
-        private unsafe void Cmd_SetLoop(SetLoopCommandData loopData) {
+        private unsafe void Cmd_SetLoop(SetInstanceBoolCommandData loopData) {
             VoiceData voice = FindVoiceForId(loopData.Handle);
             if (voice != null) {
-                voice.Components.Source.loop = loopData.Loop;
+                voice.Components.Source.loop = loopData.Value;
+            }
+        }
+
+        private unsafe void Cmd_SetUnloadFlag(SetInstanceBoolCommandData flagData) {
+            VoiceData voice = FindVoiceForId(flagData.Handle);
+            if (voice != null) {
+                if (flagData.Value) {
+                    voice.Flags |= AudioPlaybackFlags.EagerUnload;
+                    if (voice.StreamingEntry != null) {
+                        voice.Flags |= AudioPlaybackFlags.EagerUnload;
+                    }
+                } else {
+                    voice.Flags &= ~AudioPlaybackFlags.EagerUnload;
+                    if (voice.StreamingEntry != null) {
+                        voice.Flags &= ~AudioPlaybackFlags.EagerUnload;
+                    }
+                }
             }
         }
 
@@ -344,6 +366,10 @@ namespace FieldDay.Audio {
                     if (evt.RandomizeStartTime) {
                         cmd.Flags |= AudioPlaybackFlags.RandomizePlaybackStart;
                     }
+                }
+
+                if (evt.UnloadAfterPlayback) {
+                    cmd.Flags |= AudioPlaybackFlags.EagerUnload;
                 }
 
                 if (cmd.Tag.IsEmpty) {
@@ -442,6 +468,9 @@ namespace FieldDay.Audio {
             if (streamedClip != null) {
                 streamedClip.RefCount++;
                 Assert.True(streamedClip.RefCount != 0, "Too many references to streamed clip");
+                if ((cmd.Flags & AudioPlaybackFlags.EagerUnload) != 0) {
+                    streamedClip.Flags |= StreamedClipFlags.EagerUnload;
+                }
             }
 
 #if UNITY_EDITOR

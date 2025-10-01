@@ -15,7 +15,7 @@ namespace Astro {
             ViewState state = Find.State<ViewState>();
             InputState input = Find.State<InputState>();
 
-            if (state.ActiveTransitionRoutine || !state.ActiveNode) {
+            if (state.ActiveTransitionRoutine || !state.ActiveNode || input.BlockAllInput) {
                 return;
             }
 

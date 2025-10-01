@@ -43,7 +43,7 @@ namespace Astro.Radio {
                 m_StateA.LastVoiceCooldown -= deltaTime;
                 m_StateA.CurrentColor = m_StateA.LastVoiceColor;
                 m_StateA.CurrentScale = 0;
-                m_StateA.CurrentLerp = 1;
+                m_StateA.CurrentLerp = 0;
                 wasPlayingVox = true;
             }
 

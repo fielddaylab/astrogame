@@ -8,6 +8,7 @@ $call StopPuzzleMode()
 $call StopOpenMode()
 $call LockMonitorFocus()
 $call SetInputState(false)
+$call ActivateEndGameInput()
 // $call InputPushPause()
 $call MonitorUI->PowerOff()
 $call AstridVoxDefault->Deactivate()
@@ -95,7 +96,7 @@ $call MonitorUI->CERESLogoToCenter(0.5)
 $call ConsoleCommandLine->PlayConsoleText("ElijahFinalCommand")
 $wait 8.5
 
-{@Elijah} "a pox upon thee" Recovery Board! $[epilogue/Elijah/end_e_05a]
+{@Elijah} "A pox upon thee" Recovery Board! $[epilogue/Elijah/end_e_05a]
 $call MonitorUI->HideCERESLogo()
 
 $wait 1
@@ -122,6 +123,7 @@ $call MonitorUI->HideElement("LinkEstablished")
 
 $call SetRadioFrequency(600)
 
+$call StopMusic(15)
 {@Jocelyn}  ...And for our listeners up north, we've got word of two watch parties planned in Minnesota, and one more in Wisconsin, near Monroe County. $[epilogue/Jocelyn/end_j_01]
 {@Jocelyn}  Now, for anyone who's just tuning in, our on-staff citizen astronomer will take it from here. $[epilogue/Jocelyn/end_j_02]
 {@Astrid} Thanks, Jocelyn. $[epilogue/Astrid/Unprocessed/end_a_01]
@@ -144,6 +146,7 @@ $call SetRadioFrequency(600)
 {@Astrid} Exactly! The light show might bring up some bad memories, but this is no CME. It's just nature's fireworks. Space dust from a comet's trail burning up in the atmosphere. $[epilogue/Astrid/Unprocessed/end_a_11]
 {@Astrid} No one's seen anything like this since 1833. $[epilogue/Astrid/Unprocessed/end_a_12]
 {@Astrid} Back then, people had no idea what was happening. They thought the world was ending. 	$[epilogue/Astrid/Unprocessed/end_a_13]
+$call PlayMusic("Music.CreditsMemories", 1)
 {@Jocelyn} I bet a lot of our listeners can relate to that feeling. $[epilogue/Jocelyn/end_j_08]
 {@Astrid} For sure. But the storm ended, and the world was still there. Everyone wrote down their stories to decide what it all meant. 	$[epilogue/Astrid/Unprocessed/end_a_14]
 {@Jocelyn} Thanks to you, we know what it means. $[epilogue/Jocelyn/end_j_09]
@@ -153,6 +156,7 @@ $call SetRadioFrequency(600)
 {@Astrid} My boyfriend, Elijah, knows everything there is about myths and the stories from the stars. 	$[epilogue/Astrid/Unprocessed/end_a_15b]
 {@Jocelyn} Wow, that's cool. How did you figure all this out, about the meteor storm? 	$[epilogue/Jocelyn/end_j_10]
 {@Astrid} {vox-overlap 2.5} It started on my birthday, when- $[epilogue/Astrid/Unprocessed/end_a_16]
+$call KillAllVox()
 $call SetRadioFrequency(100)
 $call MonitorPower->Activate()
 $wait 1

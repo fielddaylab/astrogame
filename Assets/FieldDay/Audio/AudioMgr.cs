@@ -247,8 +247,12 @@ namespace FieldDay.Audio {
                     foreach (var voice in m_ActiveVoices) {
                         psb.Builder.Append("\n   ").Append(voice.DebugName);
                         AudioSource src = voice.Components.Source;
-                        psb.Builder.Append(" (").AppendNoAlloc(src.time, 2).Append('/')
-                            .AppendNoAlloc(src.clip.length, 2);
+                        psb.Builder.Append(" (");
+                        if (src.clip) {
+                            psb.Builder.AppendNoAlloc(src.time, 2).Append('/').AppendNoAlloc(src.clip.length, 2);
+                        } else {
+                            psb.Builder.Append("???");
+                        }
                         if (src.loop) {
                             psb.Builder.Append('L');
                         }
@@ -318,7 +322,7 @@ namespace FieldDay.Audio {
                         } else if ((clip.Flags & StreamedClipFlags.Loading) != 0) {
                             psb.Builder.Append("LOADING...");
                         } else {
-                            psb.Builder.Append("WAITING");
+                            psb.Builder.Append("UNLOADED");
                         }
                     }
 
@@ -370,6 +374,7 @@ namespace FieldDay.Audio {
             if (evt.CachedStreamedClipKey != 0) {
                 StreamedClip streamedClip = GetOrCreateStreamedClip(evt.CachedStreamedClipKey, evt.Stream, FileLocation.Streaming);
 
+                streamedClip.EventCount++;
                 streamedClip.RefCount++;
                 Assert.True(streamedClip.RefCount != 0, "Too many references to streamed clip");
 
@@ -395,7 +400,9 @@ namespace FieldDay.Audio {
             if (evt.CachedStreamedClipKey != 0) {
                 StreamedClip clip = GetStreamedClip(evt.CachedStreamedClipKey);
                 Assert.True(clip.RefCount > 0);
+                Assert.True(clip.EventCount > 0);
                 clip.RefCount--;
+                clip.EventCount--;
             }
         }
 
@@ -512,10 +519,26 @@ namespace FieldDay.Audio {
             if (!eventId.IsEmpty) {
                 AudioEvent evt = Find.NamedAsset<AudioEvent>(eventId);
                 if (evt.CachedStreamedClipKey != 0) {
-                    LoadStreamed(GetStreamedClip(evt.CachedStreamedClipKey), FileLoadPriority.High);
+                    StreamedClip streamedClip = GetStreamedClip(evt.CachedStreamedClipKey);
+                    LoadStreamed(streamedClip, FileLoadPriority.High);
                 } else {
                     foreach(var sample in evt.Samples) {
                         m_PreloadQueue.PushBack(sample);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Queues clips from an AudioEvent to be unloaded.
+        /// </summary>
+        public void QueueUnload(StringHash32 eventId) {
+            if (!eventId.IsEmpty) {
+                AudioEvent evt = Find.NamedAsset<AudioEvent>(eventId);
+                if (evt.CachedStreamedClipKey != 0) {
+                    StreamedClip streamedClip = GetStreamedClip(evt.CachedStreamedClipKey);
+                    if (streamedClip != null) {
+                        streamedClip.Flags |= StreamedClipFlags.EagerUnload;
                     }
                 }
             }

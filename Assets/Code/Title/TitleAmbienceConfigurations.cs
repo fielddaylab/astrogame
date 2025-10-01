@@ -30,6 +30,8 @@ namespace Astro.Title {
         }
 
         void IRegistrationCallbacks.OnDeregister() {
+            Sfx.Stop(BaseHandle);
+            Sfx.Stop(CityHandle);
             Game.Events.DeregisterAllForContext(this);
         }
 
