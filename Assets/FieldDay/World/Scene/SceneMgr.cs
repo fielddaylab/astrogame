@@ -224,6 +224,7 @@ namespace FieldDay.Scenes {
 
             SceneHelper.IgnoreSceneByName("*_PERSISTENT");
             SceneHelper.IgnoreSceneByName("*_LAYER");
+            SceneHelper.IgnoreSceneByName("*_AUX");
             SceneHelper.IgnoreSceneByName("Boot");
         }
 
@@ -1535,7 +1536,7 @@ namespace FieldDay.Scenes {
 
                 if (args.Type == SceneType.Main) {
                     OnMainSceneLateEnable.Invoke();
-                    Game.Events.Dispatch(SceneUtils.Events.Ready);
+                    Game.Events.Dispatch(SceneUtils.Events.LateEnable);
                 }
 
                 // one more check for dependencies
