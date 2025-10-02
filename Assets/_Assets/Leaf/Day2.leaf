@@ -37,6 +37,8 @@ $call ChapterTitles->PrepareTransition()
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $call SetRadioDialLocked(true)
 
+$call PreloadMusic("Music.StarlightStudent")
+
 // #endregion
 
 //#region Spawn Documents
@@ -475,7 +477,7 @@ $call SetRadioDialLocked(false)
 $call SetStickyFirstPage(-1)
 $call ClearMonitorSelection()
 $call StopPuzzleMode()
-$call SetInputState(false)
+// $call SetInputState(false)
 $call ConsoleCommandLine->PlayConsoleTextAndWait("PlayMessage")
 $wait 2
 $call SetRefPageActive("ConstellationHercules", false)
@@ -503,6 +505,7 @@ $wait 1
 $call MonitorUI->ShowElement("CeresMsg")
 $wait 1
 $call SetRadioFrequency(137)
+$call SetRadioDialLocked(true)
 $call MonitorUI->HideElement("CeresMsg")
 $goto .PuzzleNavigationComplete01
 

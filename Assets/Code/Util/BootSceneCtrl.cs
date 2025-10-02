@@ -4,23 +4,29 @@ using BeauUtil;
 using FieldDay;
 using FieldDay.Assets;
 using FieldDay.Audio;
+using FieldDay.Scenes;
 using FieldDay.UI.Animation;
 using NativeUtils;
 using UnityEngine;
 
 namespace Astro {
-    public sealed class BootSceneCtrl : MonoBehaviour {
+    public sealed class BootSceneCtrl : SceneController {
         public AudioSource AudioSource;
         public SceneReference NextScene;
         public FadeGroup LoadingGroup;
         public FadeGroup PromptGroup;
-        
-        private void Awake() {
-            Game.Scenes.QueueOnLoad(() => {
-                NativeInput.OnMouseDown += OnNativeClick;
-                LoadingGroup.Hide();
-                PromptGroup.Show();
-            });
+        public UnityEngine.Object[] UnloadAssets;
+
+        protected override void OnSceneReady() {
+            NativeInput.OnMouseDown += OnNativeClick;
+            LoadingGroup.Hide();
+            PromptGroup.Show();
+        }
+
+        protected override void OnSceneUnload() {
+            foreach(var obj in UnloadAssets) {
+                AssetUtility.DestroyAsset(obj);
+            }
         }
 
         private void OnNativeClick(float normX, float normY) {

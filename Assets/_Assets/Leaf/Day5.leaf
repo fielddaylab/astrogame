@@ -37,6 +37,8 @@ $call MonitorPower->Deactivate()
 $call ChapterTitles->PrepareTransition()
 $start Observatory.ResetSubtitlePosition
 
+$call PreloadMusic("Music.StarDome")
+
 //#region Spawn Documents
 
 :: BeginDay
@@ -44,6 +46,7 @@ $start Observatory.ResetSubtitlePosition
 @boostScore 100
 
 $call ChapterTitles->DisplayChapterTitles()
+$call PreloadMusic("Music.StarDome")
 
 $call WaitForMovedToView("DocumentPuzzle")
 $call ChapterTitles->FadeOutBackground()
@@ -384,6 +387,7 @@ $call TapeDeck->SetTapeActive(false)
 // {@Astrid} But I need to tell people about the meteor storm... what it means. Get them excited, not afraid. $[level5/Astrid/l5_a_40]
 // {@Astrid} I know what Dad would say, and Aunt Martha... but they're not here. $[level5/Astrid/l5_a_41]
 {@Astrid} I have to decide this for myself. $[level5/Astrid/l5_a_42]
+$call StopMusic(1)
 {@Astrid} .... Finally.	$[level5/Astrid/l5_a_43]
 
 $wait 0.5

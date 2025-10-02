@@ -10,6 +10,7 @@ using FieldDay.UI;
 using FieldDay.Scenes;
 using FieldDay.Scripting;
 using BeauUtil.Debugger;
+using Astro.Audio;
 
 namespace Astro.Title {
     [RequireComponent(typeof(TitleBillboard))]
@@ -54,6 +55,7 @@ namespace Astro.Title {
         }
 
         private void LoadCredits(StringHash32 transitionType = default) {
+            MusicUtility.StopMusic(1);
             SceneReference sceneRef = SceneUtils.GetSceneByName("Credits");
             Game.Scenes.LoadMainScene(sceneRef, true, new MainSceneTransitionArgs() {
                 TransitionType = transitionType

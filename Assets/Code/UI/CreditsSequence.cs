@@ -5,6 +5,7 @@ using EasyAssetStreaming;
 using FieldDay;
 using FieldDay.Debugging;
 using FieldDay.HID;
+using FieldDay.Perf;
 using FieldDay.Scenes;
 using ScriptableBake;
 using System;
@@ -17,6 +18,8 @@ namespace Astro {
     [PreloadOrder(-10000)]
     public sealed class CreditsSequence : MonoBehaviour, IScenePreload, IBaked {
         public StreamingQuadTexture SkyRenderer;
+        [HideInInspector] public float SkyPositionOffset;
+        public float SkyParallax;
 
         [Header("Positions")]
         public float StartY;
@@ -49,16 +52,27 @@ namespace Astro {
 
         private void Awake() {
             Game.Scenes.QueueOnLoad(OnSceneStart);
+            Game.Scenes.QueueOnUnload(OnSceneUnload);
 
             CloseButton.onClick.AddListener(OnCloseButtonClicked);
         }
 
         private void OnSceneStart() {
+            GameLoop.SetTargetFramerate(60);
             if (!m_IsFastMode) {
                 m_SequenceRoutine = Routine.Start(this, MainRoutine());
             } else {
                 m_SequenceRoutine = Routine.Start(this, FastRoutine());
             }
+
+            MusicState music = Find.State<MusicState>();
+            if (m_IsFastMode || music.CurrentTrackId.IsEmpty) {
+                MusicUtility.PlayMusic("Music.CreditsMemories", 2);
+            }
+        }
+
+        private void OnSceneUnload() {
+            GameLoop.SetTargetFramerate(30);
         }
 
         private IEnumerator MoveRoutine() {
@@ -68,17 +82,19 @@ namespace Astro {
         private IEnumerator MainRoutine() {
             yield return 2;
             m_MoveRoutine = Routine.Start(this, MoveRoutine());
-
-            yield return 25;
+            yield return 3;
+            yield return Tween.ZeroToOne((f) => StarsRenderer.Alpha = f, 10);
+            yield return 15;
             yield return Tween.OneToZero((f) => StarsRenderer.Alpha = f, 5);
 
             StarsRenderer.gameObject.SetActive(false);
             SkyRenderer.gameObject.SetActive(false);
 
             yield return m_MoveRoutine;
-            yield return 4;
-
+            yield return 2;
             MusicUtility.StopMusic(2);
+            yield return 1;
+
             Game.Scenes.LoadMainScene(MainScene);
         }
 
@@ -90,10 +106,11 @@ namespace Astro {
 
             yield return m_MoveRoutine;
             yield return 1;
+            MusicUtility.StopMusic(2);
+            yield return 1;
 
             CloseButton.interactable = false;
 
-            MusicUtility.StopMusic(2);
             Game.Scenes.LoadMainScene(MainScene);
         }
 
@@ -101,8 +118,10 @@ namespace Astro {
             CameraTransform.localPosition = new Vector3(0, y, -10);
 
             float starsY = StarsPositionOffset + (y - StartY) * StarsParallax;
+            float skyY = SkyPositionOffset + (y - StartY) * SkyParallax;
 
             StarsRenderer.transform.localPosition = new Vector3(0, starsY, 5);
+            SkyRenderer.transform.localPosition = new Vector3(0, skyY, -4);
         }
 
         private void SetCameraLerpedY(float f) {
@@ -124,9 +143,16 @@ namespace Astro {
 #endif // UNITY_EDITOR
             m_IsFastMode = useFast;
 
+            bool requiresMusic = useFast;
+            MusicState music = Find.State<MusicState>();
+            if (music.CurrentTrackId.IsEmpty) {
+                requiresMusic = true;
+            }
+
             if (!useFast) {
                 StarsRenderer.Path = StarsTexture;
                 SkyRenderer.Path = SkyTexture;
+                StarsRenderer.Alpha = 0;
                 StarsRenderer.gameObject.SetActive(true);
                 SkyRenderer.gameObject.SetActive(true);
                 CloseButton.gameObject.SetActive(false);
@@ -138,6 +164,10 @@ namespace Astro {
                 StartY = FastStartY;
             }
 
+            if (requiresMusic) {
+                Game.Audio.QueuePreload("Music.CreditsMemories");
+            }
+
             SetCameraY(StartY);
             return null;
         }
@@ -147,6 +177,7 @@ namespace Astro {
         int IBaked.Order => -10;
         bool IBaked.Bake(BakeFlags flags, BakeContext context) {
             StarsPositionOffset = StarsRenderer.transform.localPosition.y;
+            SkyPositionOffset = SkyRenderer.transform.localPosition.y;
             SkyTexture = SkyRenderer.Path;
             StarsTexture = StarsRenderer.Path;
             StarsRenderer.gameObject.SetActive(false);

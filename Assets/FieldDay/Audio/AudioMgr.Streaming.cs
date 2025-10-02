@@ -31,6 +31,7 @@ namespace FieldDay.Audio {
             public uint Id;
 
             public ushort RefCount;
+            public ushort EventCount;
             public StreamedClipFlags Flags;
             public FileLocation Location;
 
@@ -44,6 +45,7 @@ namespace FieldDay.Audio {
             Loaded = 0x02,
             Error = 0x04,
             IsLocalizedPath = 0x08,
+            EagerUnload = 0x10,
 
             LoadingStateMask = Loading | Loaded | Error
         }
@@ -88,6 +90,12 @@ namespace FieldDay.Audio {
                     FreeStreamedClip(clip);
                     m_ActiveStreamedClips.FastRemoveAt(i);
                     return;
+                } else if ((clip.Flags & StreamedClipFlags.EagerUnload) != 0) {
+                    int activeInstances = clip.RefCount - clip.EventCount;
+                    if (activeInstances == 0) {
+                        UnloadStreamed(clip);
+                        clip.Flags &= ~StreamedClipFlags.EagerUnload;
+                    }
                 }
             }
         }

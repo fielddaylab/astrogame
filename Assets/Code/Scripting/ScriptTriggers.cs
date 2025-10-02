@@ -313,5 +313,10 @@ namespace Astro {
                 DocumentUtility.UpdateEnabledDocParts(docAsset.Interactable, DocumentBoardState.BoardActiveFunctions); 
             }
         }
+
+        [LeafMember("ActivateEndGameInput")]
+        static private void LeafActivateEndGameInput() {
+            Find.State<InputState>().BlockAllInput = true;
+        }
     }
 }

@@ -25,11 +25,6 @@ namespace FieldDay.Files {
     public sealed class FilePrefetcher {
         #region Types
 
-        [Serializable]
-        private struct PrefetchEntry {
-            //public 
-        }
-
         #endregion // Types
     }
 }

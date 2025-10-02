@@ -10,11 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dc4a12e31f72d6040a99115010bf0fe7, type: 3}
-  m_Name: Music.Memories
+  m_Name: Music.CreditsMemories
   m_EditorClassIdentifier: 
   Samples: []
   Stream: Music/all you have are memories.mp3
-  PreloadSamples: 0
+  PreloadSamples: 1
+  UnloadAfterPlayback: 1
+  VolumeMultiplier: 1
   Volume:
     Base: 0.5
     ModifierMin: 0
@@ -28,7 +30,7 @@ MonoBehaviour:
     ModifierMin: 0
     ModifierMax: 0
   Delay:
-    Base: 0
+    Base: 1
     ModifierMin: 0
     ModifierMax: 0
   Loop: 1

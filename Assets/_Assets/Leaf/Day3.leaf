@@ -32,6 +32,8 @@ $call MonitorPower->Deactivate()
 $call ChapterTitles->PrepareTransition()
 $start Observatory.ResetSubtitlePosition
 
+$call PreloadMusic("Music.Dreams")
+
 //#region Spawn Documents
 
 :: BeginDay
@@ -188,7 +190,7 @@ $set temp:docPuzzleSolved = false
 
 $call SetChannelActive(IceCube, true)
 $set temp:docPuzzleSolved = true
-$call SetInputState(false)
+// $call SetInputState(false)
 
 {@Astrid} I guess... Elijah thinks this is supposed to happen again? Another Leonid storm? 	$[level3/Astrid/l3_a_12]
 {@Astrid} This would totally freak people out. But the Leonids aren't until November. Plenty of time to get the word out. Why is he so stressed? $[level3/Astrid/l3_a_14]
@@ -252,18 +254,22 @@ $call SetInputState(true)
 @cutscene
 @once
 
+$call LockMonitorFocus()
 $call SetStickyFirstPage(1)
 $call StopNeutrinoNavigation()
 $call AlignCamToNeutrino()
 $call StartOpenMode()
-$call SetInputState(false)
 {@Radio}	The star's spectra is like its fingerprint. Each star has unique color, temperature, and elements. 	$[level3/radio_lady/l3_r_03]
 {@Radio}	Using the spectrometer gives us detailed information about what elements are in a star. 	$[level3/radio_lady/l3_r_04]
+$call SetInputState(false)
 $call ConsoleCommandLine->PlayConsoleTextAndWait("LoadHistData")
 $wait 1
 {@Radio} Whoa. $[level3/radio_lady/l3_r_05]
 $wait 1
 {@Radio} What is all this? $[level3/radio_lady/l3_r_06]
+$call SetInputState(true)
+$call LockMonitorFocus()
+$wait 1
 {@Astrid} Hey, um, are you still talking to me? $[level3/Astrid/l3_a_35]
 {@Radio} Please stand by. $[level3/radio_lady/l3_r_07]
 {@Radio} This is... this is incredible! Are you seeing this? $[level3/radio_lady/l3_r_08]
@@ -277,7 +283,7 @@ $call ConsoleCommandLine->HideConsole()
 {@Radio} ...yeah come check this out... $[level3/radio_lady/l3_r_11b]
 $call SetRadioDialLocked(false)
 $call SetChannelActive(IceCube, false)
-$call SetInputState(true)
+$call UnlockMonitorFocus()
 
 //#endregion
 
@@ -437,7 +443,7 @@ $call OpenRefGuidePage("HistoricalData")
 @once
 
 $call StopPuzzleMode()
-$call SetInputState(false)
+// $call SetInputState(false)
 $call ClearMonitorSelection()
 $call ConsoleCommandLine->PlayConsoleTextAndWait("PlayMessage")
 $call SetRefPageActive("ConstellationLeo", false)

@@ -68,5 +68,10 @@ namespace Astro.Audio {
                 state.CurrentState = MusicState.State.FadeOut;
             }
         }
+
+        [LeafMember("PreloadMusic")]
+        static public void PreloadMusic(StringHash32 track) {
+            Game.Audio.QueuePreload(track);
+        }
     } 
 }
