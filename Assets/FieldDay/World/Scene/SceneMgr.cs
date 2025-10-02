@@ -1484,9 +1484,9 @@ namespace FieldDay.Scenes {
                 m_AssetUnloadLock--;
                 yield return AssetUtility.UnloadUnused();
 
-                Log.Trace("[SceneMgr] Unloading unused streaming assets...");
+                Log.Trace("[SceneMgr] Unloading unused streaming assets (pass 1)...");
 
-                Streaming.UnloadUnusedAsync();
+                Streaming.UnloadUnusedAsync(30);
                 Game.Rendering.TetrahedralizeLightProbes();
 
                 if (args.Type == SceneType.Main) {
@@ -1540,6 +1540,10 @@ namespace FieldDay.Scenes {
                 }
 
                 // one more check for dependencies
+
+                Log.Trace("[SceneMgr] Unloading unused streaming assets (pass 2)...");
+
+                Streaming.UnloadUnusedAsync();
 
                 Log.Trace("[SceneMgr] Waiting for remaining dependencies...");
 
