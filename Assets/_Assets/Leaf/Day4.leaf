@@ -448,13 +448,13 @@ $wait 20
 
 $if !temp:WizeCompleted, GetFilterState() != 2, !temp:DracoPuzzleComplete
     {@Astrid} I should select the infrared filter. $[level4/Astrid/l4_a_24i]
-    $branch .PuzzleTimeoutHint
+    $loop
 $elseif !temp:WizeCompleted, !temp:DracoPuzzleComplete
     {@Astrid} Ok, so WISE is spectral type T. That means it's a Brown Dwarf. $[level4/Astrid/l4_a_24j]
-    $branch .PuzzleTimeoutHint
+    $loop
 $elseif !temp:EltaninCompleted, !temp:DracoPuzzleComplete
     {@Astrid} So, Eltanin has no hydrogen... I should use my spectrometer. $[level4/Astrid/l4_a_24k]
-    $branch .PuzzleTimeoutHint
+    $loop
 $endif
 
 :: DracoPuzzleComplete

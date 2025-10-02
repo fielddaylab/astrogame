@@ -354,7 +354,7 @@ $wait 20
 
 $if !temp:finalPuzzleCompleted
     {@Astrid} I should look at my constellation notes in the tools section of the reference guide. $[level5/Astrid/l5_a_30a]
-    $branch .DecoderHintTimeout
+    $loop
 $endif
 
 :: FirstInteractDecoder

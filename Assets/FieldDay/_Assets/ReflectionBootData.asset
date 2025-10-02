@@ -58,8 +58,6 @@ MonoBehaviour:
     Assemblies:
     - AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
       TypeCount: 2
-    - AssemblyName: FieldDay.Scripting, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-      TypeCount: 1
     Types:
     - TypeName: Astro.AstroGame
       Self: 0
@@ -69,16 +67,10 @@ MonoBehaviour:
       Self: 0
       MemberCount: 1
       OverloadCount: 0
-    - TypeName: FieldDay.Scripting.ScriptDebugHooks
-      Self: 0
-      MemberCount: 1
-      OverloadCount: 0
     Members:
     - MemberName: OnBoot
       Type: 8
     - MemberName: Init
-      Type: 8
-    - MemberName: OnBoot
       Type: 8
     OverloadedMethods: []
     TypeReferences: []
@@ -92,172 +84,26 @@ MonoBehaviour:
     OverloadedMethods: []
     TypeReferences: []
   DebugMenu:
-    AttributeTypeName: FieldDay.Debugging.DebugMenuFactoryAttribute
-    LookupFlags: 58
+    AttributeTypeName: 
+    LookupFlags: 0
     LookupInherit: 0
-    Assemblies:
-    - AssemblyName: Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-      TypeCount: 9
-    - AssemblyName: FieldDay.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-      TypeCount: 1
-    - AssemblyName: FieldDay.Scripting, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-      TypeCount: 1
-    Types:
-    - TypeName: Astro.AstroGame
-      Self: 0
-      MemberCount: 1
-      OverloadCount: 0
-    - TypeName: Astro.DocumentUtility
-      Self: 0
-      MemberCount: 1
-      OverloadCount: 0
-    - TypeName: Astro.NavigationUtility
-      Self: 0
-      MemberCount: 3
-      OverloadCount: 0
-    - TypeName: Astro.ReviewUtility
-      Self: 0
-      MemberCount: 1
-      OverloadCount: 0
-    - TypeName: Astro.ReviewSystem
-      Self: 0
-      MemberCount: 2
-      OverloadCount: 0
-    - TypeName: Astro.InputUtility
-      Self: 0
-      MemberCount: 1
-      OverloadCount: 0
-    - TypeName: Astro.InstrumentInventoryUtility
-      Self: 0
-      MemberCount: 1
-      OverloadCount: 0
-    - TypeName: Astro.RenderAtlasUpdateSystem
-      Self: 0
-      MemberCount: 1
-      OverloadCount: 0
-    - TypeName: Astro.Save.SaveUtility
-      Self: 0
-      MemberCount: 1
-      OverloadCount: 0
-    - TypeName: FieldDay.Data.ConfigVar
-      Self: 0
-      MemberCount: 1
-      OverloadCount: 0
-    - TypeName: FieldDay.Scripting.ScriptDebugHooks
-      Self: 0
-      MemberCount: 1
-      OverloadCount: 0
-    Members:
-    - MemberName: LoadLevel
-      Type: 8
-    - MemberName: GenerateDebugMenu
-      Type: 8
-    - MemberName: DebugNeutrinoNav
-      Type: 8
-    - MemberName: DebugOpenId
-      Type: 8
-    - MemberName: DebugPuzzleNav
-      Type: 8
-    - MemberName: PointsMenu
-      Type: 8
-    - MemberName: SubmitCorrectPuzzleSolution
-      Type: 8
-    - MemberName: SpawnPuzzle
-      Type: 8
-    - MemberName: DebugNeutrinoNav
-      Type: 8
-    - MemberName: CreateDebugMenu
-      Type: 8
-    - MemberName: DebugMenu
-      Type: 8
-    - MemberName: SaveDebugMenu
-      Type: 8
-    - MemberName: DebugMenuFactory
-      Type: 8
-    - MemberName: CreateDebugMenu
-      Type: 8
+    Assemblies: []
+    Types: []
+    Members: []
     OverloadedMethods: []
     TypeReferences: []
   EngineMenu:
-    AttributeTypeName: FieldDay.Debugging.EngineMenuFactoryAttribute
-    LookupFlags: 58
+    AttributeTypeName: 
+    LookupFlags: 0
     LookupInherit: 0
-    Assemblies:
-    - AssemblyName: FieldDay.Core, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-      TypeCount: 11
-    Types:
-    - TypeName: FieldDay.Scenes.SceneMgr
-      Self: 0
-      MemberCount: 1
-      OverloadCount: 0
-    - TypeName: FieldDay.Perf.PerformanceMgr
-      Self: 0
-      MemberCount: 1
-      OverloadCount: 0
-    - TypeName: FieldDay.Memory.MemoryMgr
-      Self: 0
-      MemberCount: 1
-      OverloadCount: 0
-    - TypeName: FieldDay.Files.FileSystem
-      Self: 0
-      MemberCount: 1
-      OverloadCount: 0
-    - TypeName: FieldDay.Rendering.RenderMgr
-      Self: 0
-      MemberCount: 1
-      OverloadCount: 0
-    - TypeName: FieldDay.Systems.SystemsMgr
-      Self: 0
-      MemberCount: 1
-      OverloadCount: 0
-    - TypeName: FieldDay.Debugging.CrashHandler
-      Self: 0
-      MemberCount: 1
-      OverloadCount: 0
-    - TypeName: FieldDay.Debugging.DebugDraw
-      Self: 0
-      MemberCount: 1
-      OverloadCount: 0
-    - TypeName: FieldDay.Debugging.SmokeTestMgr
-      Self: 0
-      MemberCount: 1
-      OverloadCount: 0
-    - TypeName: FieldDay.Audio.AudioMgr
-      Self: 0
-      MemberCount: 1
-      OverloadCount: 0
-    - TypeName: FieldDay.Assets.AssetMgr
-      Self: 0
-      MemberCount: 1
-      OverloadCount: 0
-    Members:
-    - MemberName: CreateDebugMenu
-      Type: 8
-    - MemberName: CreateDebugInfo
-      Type: 8
-    - MemberName: CreateDebugMenu
-      Type: 8
-    - MemberName: CreateFileDebugMenu
-      Type: 8
-    - MemberName: CreateRenderDebugMenu
-      Type: 8
-    - MemberName: CreateSystemsDebugMenu
-      Type: 8
-    - MemberName: CreateDebugMenu
-      Type: 8
-    - MemberName: CreateDrawingEngineMenu
-      Type: 8
-    - MemberName: CreateDebugMenu
-      Type: 8
-    - MemberName: CreateAudioDebugMenu
-      Type: 8
-    - MemberName: CreateDebugMenu
-      Type: 8
+    Assemblies: []
+    Types: []
+    Members: []
     OverloadedMethods: []
     TypeReferences: []
   QuickMenu:
-    AttributeTypeName: FieldDay.Debugging.QuickMenuFactoryAttribute
-    LookupFlags: 58
+    AttributeTypeName: 
+    LookupFlags: 0
     LookupInherit: 0
     Assemblies: []
     Types: []

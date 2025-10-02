@@ -312,7 +312,7 @@ $start .FirstStarHint
 $wait 10
 $if temp:waitingForNeutrinoStar
     {@Radio} Astrid, you still there? Select a possible neutrino source on your display. $[level1/radio_lady/l1_r_19]
-    $branch .FirstStarHint
+    $loop
 $endif
 
 :: OnNonNeutrinoStarSelected
@@ -360,7 +360,7 @@ $start .WaitingForFirstSubmission
 $wait 15
 $if temp:waitingForFirstSubmission
     {@Astrid}	Stars are grouped by temperature—O, B, A, F, G, K, M. Hottest to coolest. I just need to pick one.	$[level2/Astrid/l2_a_21]
-    $branch .WaitingForFirstSubmission
+    $loop
 $endif
 
 :: BlueFilterNOTSelected

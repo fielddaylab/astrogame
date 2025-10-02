@@ -241,7 +241,7 @@ $wait 10
 $if !temp:introMoveTheTelescope
     $call HintModals->Wiggle("TelescopeControls")
     {@Radio}	See if you can move your telescope.	$[level1/radio_lady/l1_r_07]
-    $branch .MoveTelescopeReminder
+    $loop
 $endif
 
 :: MoveYourTelescope
@@ -335,7 +335,7 @@ $start .FirstStarHint
 $wait 12
 $if temp:waitingForNeutrinoStar
     {@Radio} Astrid, you still there? Select a possible neutrino source on your display. $[level1/radio_lady/l1_r_19]
-    $branch .FirstStarHint
+    $loop
 $endif
 
 :: OnStarSelected
@@ -387,7 +387,7 @@ $if !temp:firstSubmission
     $call HintModals->SlideInFromRight("SubmitRangeHint", 0.2)
     $set temp:waitingForFirstClassificationClick = true
 
-    $branch .IntroFirstSubmissionTimeout
+    $loop
 $endif
 
 :: OnRefGuideOpened
@@ -425,7 +425,7 @@ $start .OpenManualHint
 $wait 10
 $if temp:waitingForManualOpen
     {@Radio} Have you found Elijah's operator manual? $[level1/radio_lady/l1_r_23]
-    $branch .OpenManualHint
+    $loop
 $endif
 
 :: PlayerLeavesNeutrinoTask2
@@ -1085,11 +1085,11 @@ $branch .PuzzleTimeoutHint
 $wait 30
 $if !temp:readyToSubmit, !temp:MenkibRowFilled
     {@Astrid}	Let’s see. I know Menkib is NOT the brightest in visible. Which of my remaining stars does that match?	$[level1/Astrid/l1_a_73]
-    $branch .PuzzleTimeoutHint
+    $loop
 $elseif !temp:readyToSubmit, !temp:MirfakRowFilled
     {@Astrid}	Let’s see. I know Mirfak is cooler than Atik. And the hotter the star, the bluer it is—just like a flame.	$[level1/Astrid/l1_a_74]
     {@Astrid}	I should check if either of these stars are colder than the star in row two.	$[level1/Astrid/l1_a_75]
-    $branch .PuzzleTimeoutHint
+    $loop
 $endif
 
 :: MirfakDataFilled

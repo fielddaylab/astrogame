@@ -11,8 +11,10 @@ using FieldDay.UI;
 using Leaf.Runtime;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 namespace Astro {
+    [Preserve]
     public static class ScriptTriggers {
         [InvokeOnBoot]
         static public void Init() {
@@ -127,8 +129,8 @@ namespace Astro {
             });
         }
 
-        [LeafMember("SetInputState")]
-        static private void LeafSetInputState(bool enabled) {
+        [LeafMember("SetInputState"), Preserve]
+        static public void LeafSetInputState(bool enabled) {
             var state = Find.State<InputState>();
             InputUtility.SetInputEnabled(state, enabled);
 
@@ -142,8 +144,8 @@ namespace Astro {
             }
         }
 
-        [LeafMember("StartPuzzleMode")]
-        static private void LeafStartPuzzleMode() {
+        [LeafMember("StartPuzzleMode"), Preserve]
+        static public void LeafStartPuzzleMode() {
             Game.Events.Dispatch(GameEvents.StartPuzzleMode);
             GameLoop.ResumeUpdates(AstroGame.MonitorControlsUpdateMask);
             GameLoop.ResumeUpdates(AstroGame.PuzzleSubmissionUpdateMask);
@@ -152,8 +154,8 @@ namespace Astro {
             SlotHighlightUtility.SetInstrumentButtonsDimmed(Find.State<InstrumentInventoryState>(), false);
         }
 
-        [LeafMember("StartFinalPuzzleMode")]
-        static private void LeafStartFinalPuzzle() {
+        [LeafMember("StartFinalPuzzleMode"), Preserve]
+        static public void LeafStartFinalPuzzle() {
             Game.Events.Dispatch(GameEvents.StartFinalPuzzle);
             GameLoop.ResumeUpdates(AstroGame.MonitorControlsUpdateMask);
             GameLoop.ResumeUpdates(AstroGame.PuzzleSubmissionUpdateMask);
@@ -161,8 +163,8 @@ namespace Astro {
             GameLoop.ResumeUpdates(AstroGame.InstrumentUpdateMask); 
         }
 
-        [LeafMember("StopPuzzleMode")]
-        static private void LeafStopPuzzleMode() {
+        [LeafMember("StopPuzzleMode"), Preserve]
+        static public void LeafStopPuzzleMode() {
             Game.Events.Dispatch(GameEvents.StopPuzzleMode);
 
             GameLoop.SuspendUpdates(AstroGame.MonitorControlsUpdateMask);
@@ -173,31 +175,31 @@ namespace Astro {
             GameLoop.SuspendUpdates(AstroGame.InstrumentUpdateMask);
         }
 
-        [LeafMember("StartMonitorControls")]
-        static private void LeafStartMonitorControls() {
+        [LeafMember("StartMonitorControls"), Preserve]
+        static public void LeafStartMonitorControls() {
             GameLoop.ResumeUpdates(AstroGame.MonitorControlsUpdateMask);
         }
 
-        [LeafMember("StopMonitorControls")]
-        static private void LeafStopMonitorControls()
+        [LeafMember("StopMonitorControls"), Preserve]
+        static public void LeafStopMonitorControls()
         {
             GameLoop.SuspendUpdates(AstroGame.MonitorControlsUpdateMask);
         }
 
-        [LeafMember("LockMonitorFocus")]
-        static private void LeafLockMonitorFocus()
+        [LeafMember("LockMonitorFocus"), Preserve]
+        static public void LeafLockMonitorFocus()
         {
             Game.Events.Dispatch(GameEvents.LockMonitorFocus);
         }
 
-        [LeafMember("UnlockMonitorFocus")]
-        static private void LeafUnlockMonitorFocus()
+        [LeafMember("UnlockMonitorFocus"), Preserve]
+        static public void LeafUnlockMonitorFocus()
         {
             Game.Events.Dispatch(GameEvents.UnlockMonitorFocus);
         }
 
-        [LeafMember("StartOpenMode")]
-        static private void LeafStartOpenMode() {
+        [LeafMember("StartOpenMode"), Preserve]
+        static public void LeafStartOpenMode() {
             Game.Events.Dispatch(GameEvents.StartOpenMode);
 
             GameLoop.ResumeUpdates(AstroGame.MonitorControlsUpdateMask);
@@ -207,13 +209,13 @@ namespace Astro {
             SlotHighlightUtility.SetInstrumentButtonsDimmed(Find.State<InstrumentInventoryState>(), true);
         }
 
-        [LeafMember("UpdateOpenIdSubmissions")]
-        static private void LeafUpdateOpenIdSubmissions() {
+        [LeafMember("UpdateOpenIdSubmissions"), Preserve]
+        static public void LeafUpdateOpenIdSubmissions() {
             Game.Events.Dispatch(GameEvents.UpdateOpenIdSubmission);
         }
 
-        [LeafMember("StopOpenMode")]
-        static private void LeafStopOpenMode() {
+        [LeafMember("StopOpenMode"), Preserve]
+        static public void LeafStopOpenMode() {
             Game.Events.Dispatch(GameEvents.StopOpenMode);
 
             GameLoop.SuspendUpdates(AstroGame.MonitorControlsUpdateMask);
@@ -229,8 +231,8 @@ namespace Astro {
             ViewNavUtility.MoveToNode(viewState, targetNode);
         }
 
-        [LeafMember("StartNeutrinoNavigation")]
-        static private void LeafStartNeutrinoNavigation() {
+        [LeafMember("StartNeutrinoNavigation"), Preserve]
+        static public void LeafStartNeutrinoNavigation() {
             // whenever we start neutrino nav we should insure there is nothing highlighted and no data displayed
             LeafClearMonitorSelection();
 
@@ -239,15 +241,15 @@ namespace Astro {
             GameLoop.ResumeUpdates(AstroGame.MonitorControlsUpdateMask);
         }
 
-        [LeafMember("StopNeutrinoNavigation")]
-        static private void LeafStopNeutrinoNavigation() {
+        [LeafMember("StopNeutrinoNavigation"), Preserve]
+        static public void LeafStopNeutrinoNavigation() {
             Game.Events.Dispatch(GameEvents.StopNeutrinoNavigation);
 
             GameLoop.SuspendUpdates(AstroGame.MonitorControlsUpdateMask);
         }
 
-        [LeafMember("AlignCamToNeutrino")]
-        static private IEnumerator LeafAlignCamToNeutrino() {
+        [LeafMember("AlignCamToNeutrino"), Preserve]
+        static public IEnumerator LeafAlignCamToNeutrino() {
             DayConfigAsset config = DayConfigUtil.GetConfigForState();
             if (!config) yield break;
             EqCoords target = config.NeutrinoEvent.NeutrinoCoordinates;
@@ -256,8 +258,8 @@ namespace Astro {
             yield return navState.ConstellationSnapRoutine.Replace(NavigationUtility.SnapAlignment(target));
         }
 
-        [LeafMember("StartPuzzleNavigation")]
-        static private void LeafStartPuzzleNavigation() {
+        [LeafMember("StartPuzzleNavigation"), Preserve]
+        static public void LeafStartPuzzleNavigation() {
             Game.Events.Dispatch(GameEvents.StartPuzzleNavigation);
 
             GameLoop.ResumeUpdates(AstroGame.MonitorControlsUpdateMask);
@@ -268,15 +270,15 @@ namespace Astro {
         //     Game.Events.Dispatch(GameEvents.StopPuzzleNavigation);
         // }
 
-        [LeafMember("ClearMonitorSelection")]
-        static private void LeafClearMonitorSelection() {
+        [LeafMember("ClearMonitorSelection"), Preserve]
+        static public void LeafClearMonitorSelection() {
             Game.Events.Dispatch(GameEvents.MonitorEmptySpaceClicked);
             GameLoop.ResumeUpdates(AstroGame.InteractUpdateMask);
             GameLoop.ResumeUpdates(AstroGame.MonitorControlsUpdateMask);
         }
 
-        [LeafMember("InitUpdateMasks")]
-        static private void LeafInitUpdateMasks() {
+        [LeafMember("InitUpdateMasks"), Preserve]
+        static public void LeafInitUpdateMasks() {
             GameLoop.SuspendUpdates(AstroGame.InteractUpdateMask);
             GameLoop.SuspendUpdates(AstroGame.OpenSubmissionUpdateMask);
             GameLoop.SuspendUpdates(AstroGame.PuzzleSubmissionUpdateMask);
@@ -286,15 +288,15 @@ namespace Astro {
             GameLoop.SuspendUpdates(AstroGame.MonitorControlsUpdateMask);
         }
 
-        [LeafMember("ToggleDeskPicture")]
-        static private void LeafToggleDeskPicture() {
+        [LeafMember("ToggleDeskPicture"), Preserve]
+        static public void LeafToggleDeskPicture() {
             BackgroundState bgState = Find.State<BackgroundState>();
             bgState.DeskPicture.SetActive(!bgState.DeskPicture.activeSelf)
             ;
         }
 
-        [LeafMember("EnableDocumentClose")]
-        static private void LeafEnableDocumentClose(StringHash32 assetId, bool value, bool updateNow = false) {
+        [LeafMember("EnableDocumentClose"), Preserve]
+        static public void LeafEnableDocumentClose(StringHash32 assetId, bool value, bool updateNow = false) {
             DocumentBoardState boardState = Find.State<DocumentBoardState>();
 
             boardState.DocumentCloseEnabledState[assetId] = value;
@@ -314,8 +316,8 @@ namespace Astro {
             }
         }
 
-        [LeafMember("ActivateEndGameInput")]
-        static private void LeafActivateEndGameInput() {
+        [LeafMember("ActivateEndGameInput"), Preserve]
+        static public void LeafActivateEndGameInput() {
             Find.State<InputState>().BlockAllInput = true;
         }
     }
