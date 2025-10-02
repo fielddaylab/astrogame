@@ -83,7 +83,7 @@ namespace Astro {
             } else if (rgs.SelectedMaterials != 0){
                 console.PlayMaterials(rgs.SelectedMaterials);
             }
-
+            AstroGame.Events.Dispatch(GameEvents.SubmittedStarChanged);
             AstroGame.Events.Dispatch(GameEvents.ClickSubmitStarId);
 
             return true;

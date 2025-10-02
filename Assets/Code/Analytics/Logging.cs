@@ -1202,9 +1202,25 @@ namespace Astro {
             "URSA_MAJOR", "ANDROMEDA", "DRACO", "ERIDANUS", "HERCULES", "HYDRA", "LEO", "ORION", "PERSEUS", "TAURUS"
         };
         public static string FirstClassificationType(ClassificationTypeMask type) {
+            if ((type & ClassificationTypeMask.Photometer) != 0) {
+                return ClassificationType[0];
+            } else if ((type & ClassificationTypeMask.ColorMeter) != 0) {
+                return ClassificationType[1];
+            } else if ((type & ClassificationTypeMask.Spectrometer) != 0) {
+                return ClassificationType[2];
+            } else if ((type & ClassificationTypeMask.Historical) != 0) {
+                return ClassificationType[3];
+            } else if ((type & ClassificationTypeMask.Infrared) != 0) {
+                return ClassificationType[4];
+            } else if ((type & ClassificationTypeMask.Luminosity) != 0) {
+                return ClassificationType[5];
+            }
+
+            /* buggy
             foreach (var bit in Bits.Enumerate(type)) {
                 return ClassificationType[(int)bit];
             }
+            */
             return "NONE";
         }
 
