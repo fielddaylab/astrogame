@@ -12,6 +12,7 @@ namespace Astro {
         public SceneReference Scene;
         public SceneReference AuxScene;
         public LeafAsset[] Scripts;
+        public TextAsset PreloadManifest;
 
         [Header("Sky")]
         public HmsCoords SkyRotationOffset;

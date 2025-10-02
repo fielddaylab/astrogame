@@ -40,7 +40,7 @@ namespace Astro {
             }
 
             if (texture.EndsWith("webm", StringComparison.OrdinalIgnoreCase)) {
-                // TODO: video
+                AstroPrefetch.Video(texture);
             } else {
                 StreamingHandles.PushBack(Streaming.Texture(texture));
             }

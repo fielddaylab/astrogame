@@ -384,14 +384,41 @@ namespace FieldDay.Files {
                 s_PathBuilder.Append(path);
             }
 
-            SanitizePath(path);
+            SanitizePath(s_PathBuilder);
             Loc.Path(s_PathBuilder);
             MakeLocationSpecific(s_PathBuilder, location);
 
-            if (!IsUrl(path)) {
+            if (!IsUrl(s_PathBuilder)) {
                 MakeFileUrl(s_PathBuilder);
             }
             return s_PathBuilder.Flush();
+        }
+
+        /// <summary>
+        /// Resolves a path to a url for the given storage location.
+        /// </summary>
+        static public void ResolvePathToUrl(StringBuilder path, FileLocation location) {
+            s_PathBuilder.Clear();
+            Assert.True(path.Length > 0, "Cannot provide empty path");
+            s_PathBuilder.Append(path);
+            path.Clear();
+
+            bool firstCharIsSlash = s_PathBuilder[0] == '/' || s_PathBuilder[0] == '\\';
+            if (firstCharIsSlash) {
+                path.Append(s_PathBuilder, 1, s_PathBuilder.Length - 1);
+            } else {
+                path.Append(s_PathBuilder);
+            }
+
+            s_PathBuilder.Clear();
+
+            SanitizePath(path);
+            Loc.Path(path);
+            MakeLocationSpecific(path, location);
+
+            if (!IsUrl(path)) {
+                MakeFileUrl(path);
+            }
         }
 
         static private void MakeLocationSpecific(StringBuilder path, FileLocation location) {

@@ -27,6 +27,10 @@ namespace Astro {
                 m_LoadHandles[i] = ScriptDBUtility.Load(config.Scripts[i]);
             }
 
+            if (config.PreloadManifest != null) {
+                return AstroPrefetch.ManifestAsync(config.PreloadManifest);
+            }
+
             return null;
         }
 
