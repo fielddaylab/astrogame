@@ -140,5 +140,39 @@ namespace Astro {
             psb.Builder.TrimEnd(new[] {',', ' '});
             return psb.Builder.ToString();
         }
+
+        public static JsonBuilder Append(SpectrographMaterialMask mask, JsonBuilder json) {
+            if ((mask & SpectrographMaterialMask.Hydrogen) != 0) {
+               json.Field("Material", "H");
+            }
+            if ((mask & SpectrographMaterialMask.Helium) != 0) {
+                json.Field("Material", "He");
+            }
+            if ((mask & SpectrographMaterialMask.Carbon) != 0) {
+                json.Field("Material", "C");
+            }
+            if ((mask & SpectrographMaterialMask.Iron) != 0) {
+                json.Field("Material", "Fe");
+            }
+            if ((mask & SpectrographMaterialMask.Calcium) != 0) {
+                json.Field("Material", "Ca");
+            }
+            if ((mask & SpectrographMaterialMask.Sodium) != 0) {
+                json.Field("Material", "Na");
+            }
+            if ((mask & SpectrographMaterialMask.Magnesium) != 0) {
+                json.Field("Material", "Mg");
+            }
+            if ((mask & SpectrographMaterialMask.Oxygen) != 0) {
+                json.Field("Material", "O");
+            }
+            if ((mask & SpectrographMaterialMask.Titanium) != 0) {
+                json.Field("Material", "Ti");
+            }
+            if ((mask & SpectrographMaterialMask.Lithium) != 0) {
+                json.Field("Material", "Li");
+            }
+            return json;
+        }
     }
 }

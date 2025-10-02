@@ -78,6 +78,15 @@ public static class GameEvents {
     public static readonly StringHash32 LocatorFurther = "locator-further";
     public static readonly StringHash32 FoundTelescopeView = "found-telescope-view";
     public static readonly StringHash32 ConstellationIdAssigned = "constellation-id_assigned";
+    public static readonly StringHash32 RefGuideControlPageChanged = "ref-guide-control-page-changed";
+    public static readonly StringHash32 ClickRefGuideOpened = "click-ref-guide-opened";
+    public static readonly StringHash32 ClickRefGuideClosed = "click-ref-guide-closed";
+    public static readonly StringHash32 RefGuideZoomed = "ref-guide-zoomed";
+    public static readonly StringHash32 RefGuideUnzoomed = "ref-guide-unzoomed";
+    public static readonly StringHash32 SelectRefGuideTab = "select-ref-guide-tab"; // string LabelText
+    public static readonly StringHash32 TurnRefGuidePage = "turn-ref-guide-page"; // bool isLeft
+    public static readonly StringHash32 SelectClassification = "select-classification"; // ClassificationLogData
+    public static readonly StringHash32 ToggleSpectralElement = "toggle-spectral-element"; // bool toggledOn
 }
 
 public static class ScriptEvents {

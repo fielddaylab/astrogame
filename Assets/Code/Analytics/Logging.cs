@@ -1,5 +1,6 @@
 
 
+using Astro.Reference;
 using BeauUtil;
 using BeauUtil.Debugger;
 using BeauUtil.Tags;
@@ -224,12 +225,21 @@ namespace Astro {
                 .Register<int>(GameEvents.LocatorFurther, LogLocatorFurther)
                 .Register<TelescopeViewLogData>(GameEvents.FoundTelescopeView, LogFoundTelescopeView)
                 .Register<TelescopeViewLogData>(GameEvents.ConstellationIdAssigned, LogConstellationIdAssigned)
+                .Register(GameEvents.ClickRefGuideOpened, LogClickOpenRefGuide)
+                .Register(GameEvents.ClickRefGuideClosed, LogClickDismissRefGuide)
+                .Register(GameEvents.RefGuideZoomed, LogZoomReferenceGuide)
+                .Register(GameEvents.RefGuideUnzoomed, LogUnzoomReferenceGuide)
+                .Register<string>(GameEvents.SelectRefGuideTab, LogSelectRefGuideTab)
+                .Register<bool>(GameEvents.TurnRefGuidePage, LogTurnRefGuidePage)
+                .Register<ClassificationLogData>(GameEvents.SelectClassification, LogSelectClassification)
+                .Register<bool>(GameEvents.ToggleSpectralElement, LogToggleSpectralElement)
                 ;
 
             // state update events
             AstroGame.Events
                 .Register<SubtitleLogData>(GameEvents.SubtitleDataChanged, HandleSubtitleDataChanged)
                 .Register<HintLogData>(GameEvents.HintChanged, HandleHintChanged)
+                .Register<StringHash32>(GameEvents.RefGuideControlPageChanged, HandleRefGuideControlPageChanged)
                 ;
 
         }
@@ -239,8 +249,15 @@ namespace Astro {
 
         [NonSerialized] private SubtitleLogData m_LastKnownSubtitleData = default;
         [NonSerialized] private HintLogData m_LastKnownHint = default;
+        [NonSerialized] private StringHash32 m_LastKnownControlPageId = default;
+        [NonSerialized] private string m_LastKnownControlPageName = default;
 
         private string m_TempStr;
+
+        private static string LEFT = "LEFT";
+        private static string RIGHT = "RIGHT";
+        private static string ON = "ON";
+        private static string OFF = "OFF";
 
         #endregion // Logging Variables
 
@@ -254,6 +271,11 @@ namespace Astro {
         private void HandleHintChanged(HintLogData data)
         {
             m_LastKnownHint = data;
+        }
+
+        private void HandleRefGuideControlPageChanged(StringHash32 id) {
+            m_LastKnownControlPageId = id;
+            m_LastKnownControlPageName = Find.NamedAsset<ReferencePageAsset>(m_LastKnownControlPageId).name;
         }
 
         #endregion // State Handlers
@@ -629,73 +651,76 @@ namespace Astro {
 
         //click_open_reference_guide/
         //* page_id
-        private void LogClickOpenRefGuide(int pageId) {
+        private void LogClickOpenRefGuide() {
             m_Log.BeginEvent("click_open_reference_guide");
-            m_Log.EventParam("page_id", pageId);
+            m_Log.EventParam("page_id", m_LastKnownControlPageName);
             m_Log.SubmitEvent();
         }
 
         //click_dismiss_reference_guide/
         //* page_id
-        private void LogClickDismissRefGuide(int pageId) {
+        private void LogClickDismissRefGuide() {
             m_Log.BeginEvent("click_dismiss_reference_guide");
-            m_Log.EventParam("page_id", pageId);
+            m_Log.EventParam("page_id", m_LastKnownControlPageName);
             m_Log.SubmitEvent();
         }
 
         //zoom_reference_guide/
         //* page_id
-        private void LogZoomReferenceGuide(int pageId) {
+        private void LogZoomReferenceGuide() {
             m_Log.BeginEvent("zoom_reference_guide");
-            m_Log.EventParam("page_id", pageId);
+            m_Log.EventParam("page_id", m_LastKnownControlPageName);
             m_Log.SubmitEvent();
         }
 
         //unzoom_refence_guide/
         //* page_id
-        private void LogUnzoomReferenceGuide(int pageId) {
+        private void LogUnzoomReferenceGuide() {
             m_Log.BeginEvent("unzoom_reference_guide");
-            m_Log.EventParam("page_id", pageId);
+            m_Log.EventParam("page_id", m_LastKnownControlPageName);
             m_Log.SubmitEvent();
         }
 
         //select_reference_guide_tab/
         //* tab_name
         //* new_page_id
-        private void LogSelectRefGuideTab(string tabName, int newPageId) {
-            m_Log.BeginEvent("unzoom_reference_guide");
+        private void LogSelectRefGuideTab(string tabName) {
+            m_Log.BeginEvent("select_reference_guide_tab");
             m_Log.EventParam("tab_name", tabName);
-            m_Log.EventParam("new_page_id", newPageId);
+            m_Log.EventParam("new_page_id", m_LastKnownControlPageName);
             m_Log.SubmitEvent();
         }
 
         //turn_reference_page/
         //* direction : left | right
         //* new_page_id
-        private void LogTurnRefGuidePage(bool isLeft, int newPageId) {
+        private void LogTurnRefGuidePage(bool isLeft) {
             m_Log.BeginEvent("turn_reference_page");
-            m_Log.EventParam("direction", isLeft ? "LEFT" : "RIGHT");
-            m_Log.EventParam("new_page_id", newPageId);
+            m_Log.EventParam("direction", isLeft ? LEFT : RIGHT);
+            m_Log.EventParam("new_page_id", m_LastKnownControlPageName);
             m_Log.SubmitEvent();
         }
 
         //select_classification
         //* category : identification_category
         //* classification: Union[the specific category enums]
-        private void LogSelectClassification(ClassificationTypeMask type, string classification) {
+        private void LogSelectClassification(ClassificationLogData data) {
             m_Log.BeginEvent("select_classification");
-            m_Log.EventParam("category", EnumLookup.FirstClassificationType(type));
-            m_Log.EventParam("classification", classification);
+            m_Log.EventParam("category", EnumLookup.FirstClassificationType(data.Type));
+            m_Log.EventParam("classification", data.Label);
             m_Log.SubmitEvent();
         }
 
         //toggle_spectral_element
         //* toggle : ON | OFF
         //* new_spectral_selection: List[element ID]
-        private void LogToggleSpectralElement(bool toggle, SpectrographMaterialMask mask) {
+        private void LogToggleSpectralElement(bool toggle) {
+            var rgs = Find.State<RefGuideState>();
+            m_JsonBuilder.Clear();
+
             m_Log.BeginEvent("toggle_spectral_element");
-            m_Log.EventParam("toggle", toggle ? "ON" : "OFF");
-            m_Log.EventParam("new_spectral_selection", SpectrographUtility.ToSymbolsString(mask)); // TODO: make JSON elements list
+            m_Log.EventParam("toggle", toggle ? ON : OFF);
+            m_Log.EventParamJson("new_spectral_selection", SpectrographUtility.Append(rgs.SelectedMaterials, m_JsonBuilder).End());
             m_Log.SubmitEvent();
         }
 
@@ -1182,9 +1207,12 @@ namespace Astro {
 
         public readonly JsonBuilder AppendStars(JsonBuilder json)
         {
-            foreach (var star in Stars) {
-                json.Field("star_id", star);
+            if (Stars != null) {
+                foreach (var star in Stars) {
+                    json.Field("star_id", star);
+                }
             }
+
             return json;
         }
     }
@@ -1285,6 +1313,12 @@ namespace Astro {
     {
         public string Id;
         public string Content;
+    }
+
+    [Serializable]
+    public struct ClassificationLogData {
+        public ClassificationTypeMask Type;
+        public string Label;
     }
 
     #endregion //Data Structs

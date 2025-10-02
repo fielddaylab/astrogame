@@ -46,6 +46,8 @@ namespace Astro.Reference {
 
         [NonSerialized] public ViewNode OwnedNode;
 
+        [NonSerialized] public ClassificationLogData ClassificationLogData = default;
+
         #region Registration
 
         private Action m_EnableSubmission;
@@ -146,6 +148,7 @@ namespace Astro.Reference {
                     if (state.AllowPageChanges) {
                         PlayBookSound("Oneshot.RefGuide.TurnPage");
                         LoadPage(control.GetComponentInParent<RefGuideBookmark>().Page, state);
+                        AstroGame.Events.Dispatch(GameEvents.SelectRefGuideTab, control.GetComponentInParent<RefGuideBookmark>().LabelText.text);
                     }
                     break;
                 }
@@ -196,11 +199,11 @@ namespace Astro.Reference {
             }
 
             if (guide.CurrentState == RefGuideInteractionState.Closed) {
-                guide.TransitionRoutine.Replace(guide, TransitionToOpen(guide, rig)).TryManuallyUpdate(0);
+                guide.TransitionRoutine.Replace(guide, TransitionToOpen(guide, rig, true)).TryManuallyUpdate(0);
                 // check if we are overriding the top page
                 ScriptUtility.Trigger(ScriptEvents.OnRefGuideOpened);
             } else {
-                guide.TransitionRoutine.Replace(guide, TransitionToClose(guide, rig)).TryManuallyUpdate(0);
+                guide.TransitionRoutine.Replace(guide, TransitionToClose(guide, rig, true)).TryManuallyUpdate(0);
                 ScriptUtility.Trigger(ScriptEvents.OnRefGuideClosed);
             }
         }
@@ -218,12 +221,12 @@ namespace Astro.Reference {
                 ScriptUtility.Invoke("MovePlayerToInstruments");
                 
                 if (guide.CurrentState == RefGuideInteractionState.Closed) {
-                    guide.TransitionRoutine.Replace(guide, TransitionToOpen(guide, rig)).TryManuallyUpdate(0);
+                    guide.TransitionRoutine.Replace(guide, TransitionToOpen(guide, rig, false)).TryManuallyUpdate(0);
                     ScriptUtility.Trigger(ScriptEvents.OnRefGuideOpened);
                 }
             } else {
                 if (guide.CurrentState == RefGuideInteractionState.Open || guide.CurrentState == RefGuideInteractionState.Zoomed) {
-                    guide.TransitionRoutine.Replace(guide, TransitionToClose(guide, rig)).TryManuallyUpdate(0);
+                    guide.TransitionRoutine.Replace(guide, TransitionToClose(guide, rig, false)).TryManuallyUpdate(0);
                     ScriptUtility.Trigger(ScriptEvents.OnRefGuideClosed);
                 }
             }
@@ -250,6 +253,8 @@ namespace Astro.Reference {
 
             rig.ZoomPosition.GetPositionAndRotation(out var p, out var r);
 
+            AstroGame.Events.Dispatch(GameEvents.RefGuideZoomed);
+
             yield return Routine.Combine(rig.RootTransform.MoveTo(p, 0.4f).Ease(Curve.CubeInOut), rig.RootTransform.RotateQuaternionTo(r, 0.4f).Ease(Curve.CubeInOut));
             SetControlIconActive(3, false);
             SetControlIconActive(4, true);
@@ -266,6 +271,8 @@ namespace Astro.Reference {
 
             rig.OpenPosition.GetPositionAndRotation(out var p, out var r);
 
+            AstroGame.Events.Dispatch(GameEvents.RefGuideUnzoomed);
+
             yield return Routine.Combine(rig.RootTransform.MoveTo(p, 0.4f).Ease(Curve.CubeInOut), rig.RootTransform.RotateQuaternionTo(r, 0.4f).Ease(Curve.CubeInOut));
             
             PopulateReferenceColliders(state.CurrentPage, rig);
@@ -280,7 +287,7 @@ namespace Astro.Reference {
 
         }
 
-        static private IEnumerator TransitionToOpen(RefGuideState state, RefGuideRig rig) {
+        static private IEnumerator TransitionToOpen(RefGuideState state, RefGuideRig rig, bool fromClick) {
             state.CurrentState = RefGuideInteractionState.Transitioning;
             SetGuideInteraction(rig, RefGuideInteractionState.Transitioning);
 
@@ -320,11 +327,17 @@ namespace Astro.Reference {
             SetControlIconActive(4, false);
 
             SetGuideInteraction(rig, RefGuideInteractionState.Open);
+            if (fromClick) {
+                AstroGame.Events.Dispatch(GameEvents.ClickRefGuideOpened);
+            }
             yield return rig.RootTransform.MoveTo(rig.OpenPosition.position, 0.12f).Ease(Curve.Smooth);
             state.CurrentState = RefGuideInteractionState.Open;
         }
 
-        static private IEnumerator TransitionToClose(RefGuideState state, RefGuideRig rig) {
+        static private IEnumerator TransitionToClose(RefGuideState state, RefGuideRig rig, bool fromClick) {
+            if (fromClick) {
+                AstroGame.Events.Dispatch(GameEvents.ClickRefGuideClosed);
+            }
             state.CurrentState = RefGuideInteractionState.Transitioning;
             // clear data
             rig.transform.SetParent(null, true);
@@ -400,6 +413,7 @@ namespace Astro.Reference {
             PopulateContents(rig.Contents, newPage);
             PopulateReferenceColliders(newPage, rig);
             RefGuideControlPage ctrlPage = Array.Find(rig.ControlPages, p => p.PageId.Equals(newPage.AssetId));
+            AstroGame.Events.Dispatch(GameEvents.RefGuideControlPageChanged, newPage.AssetId);
             RefreshSelectedControls(rig, ctrlPage);
             //AdjustAllBookmarkPositions(rig, rgs.CurrentPageNum, rgs.PageList.Pages.Count - 1);
         }
@@ -413,6 +427,7 @@ namespace Astro.Reference {
             }
             PlayBookSound("Oneshot.RefGuide.TurnPage");
             LoadPage(pageIdx, rgs);
+            AstroGame.Events.Dispatch(GameEvents.TurnRefGuidePage, false);
         }
 
         public static void LoadPreviousPage(RefGuideState rgs) {
@@ -424,6 +439,7 @@ namespace Astro.Reference {
             }
             PlayBookSound("Oneshot.RefGuide.TurnPage");
             LoadPage(pageIdx, rgs);
+            AstroGame.Events.Dispatch(GameEvents.TurnRefGuidePage, true);
         }
 
         #endregion // Page Loading
@@ -519,6 +535,10 @@ namespace Astro.Reference {
 
             RefGuideControlPage page = Array.Find(rig.ControlPages, p => Array.IndexOf(p.Regions, region) != -1);
 
+            rgs.ClassificationLogData.Type = region.Classification.Type;
+            rgs.ClassificationLogData.Label = region.Classification.Label;
+            AstroGame.Events.Dispatch(GameEvents.SelectClassification, EvtArgs.Box(rgs.ClassificationLogData));
+
             RefreshSelectedControls(rig, page);
             //TryEnableIDSubmit(Find.State<FocusState>().CurrentFocus != null);
         }
@@ -544,10 +564,13 @@ namespace Astro.Reference {
 
             Game.Events.Dispatch(GameEvents.ClassificationClicked);
 
+            bool toggledOn = false;
+
             if (rgs.SelectedMaterials.HasFlag(region.Material)) {
                 rgs.SelectedMaterials &= ~region.Material;
             } else {
                 rgs.SelectedMaterials |= region.Material;
+                toggledOn = true;
             }
 
             // temporarily clear selections per page
@@ -576,6 +599,7 @@ namespace Astro.Reference {
             }
 
             RefreshSelectedControls(rig, page);
+            AstroGame.Events.Dispatch(GameEvents.ToggleSpectralElement, toggledOn);
         }
 
         private static void RefreshSelectedControls(RefGuideRig rig, RefGuideControlPage page) {

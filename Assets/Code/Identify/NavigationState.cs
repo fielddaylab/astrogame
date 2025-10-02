@@ -70,6 +70,11 @@ namespace Astro {
                 TelescopeViewLogData logData = new TelescopeViewLogData();
                 logData.Constellation = puzzleState.ActivePuzzle.Constellation;
                 logData.Goal = targetFoward;
+                logData.Stars = new List<string>();
+                foreach (var assetId in puzzleState.ActivePuzzle.ConstellationStars) {
+                    var asset = Find.NamedAsset<CelestialAsset>(assetId);
+                    logData.Stars.Add(asset.DisplayName);
+                }
                 AstroGame.Events.Dispatch(GameEvents.TelescopeViewAssigned, EvtArgs.Box(logData));
             }
 
@@ -97,8 +102,12 @@ namespace Astro {
 
             PuzzleState puzzleState = Find.State<PuzzleState>();
             if (puzzleState.ActivePuzzle) {
+                var target = puzzleState.ActivePuzzle.PuzzleCoordinates;
+
+                Vector3 targetFoward = WorldPositionUtility.GetLookVector(target);
                 TelescopeViewLogData logData = new TelescopeViewLogData();
                 logData.Constellation = puzzleState.ActivePuzzle.Constellation;
+                logData.Goal = targetFoward;
                 logData.Stars = new List<string>();
                 foreach (var assetId in puzzleState.ActivePuzzle.ConstellationStars) {
                     var asset = Find.NamedAsset<CelestialAsset>(assetId);
@@ -108,7 +117,7 @@ namespace Astro {
             }
 
             ScriptUtility.Invoke("MovePlayerToInstruments");
-            //ViewNavUtility.LeafMoveToNode("Right");
+            //ViewNavUtility.LeafMoveToNode("Right");z
 
             WavelengthToggleState wavelengthState = Find.State<WavelengthToggleState>();
             wavelengthState.AllowChanges = true;
@@ -132,6 +141,10 @@ namespace Astro {
                 TelescopeViewLogData logData = new TelescopeViewLogData();
                 logData.Constellation = config.NeutrinoEvent.Constellation;
                 logData.Goal = targetFoward;
+                logData.Stars = new List<string>();
+                foreach (var asset in config.NeutrinoEvent.RelevantObjects) {
+                    logData.Stars.Add(asset.DisplayName);
+                }
                 AstroGame.Events.Dispatch(GameEvents.ConstellationIdAssigned, EvtArgs.Box(logData));
             }
 
