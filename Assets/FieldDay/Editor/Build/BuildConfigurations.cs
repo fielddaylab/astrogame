@@ -83,7 +83,9 @@ namespace FieldDay.Editor {
 
             if (!options.Development && (isBatch || BuildPipeline.isBuildingPlayer)) {
                 options.Defines = options.Defines ?? string.Empty;
-                options.Defines += ",IGNORE_UNITY_EDITOR";
+                if (!options.Defines.Contains("IGNORE_UNITY_EDITOR")) {
+                    options.Defines += ",IGNORE_UNITY_EDITOR";
+                }
             }
 
             EditorUserBuildSettings.development = options.Development;

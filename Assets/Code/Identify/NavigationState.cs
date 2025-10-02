@@ -61,6 +61,8 @@ namespace Astro {
             navState.CurrentNavigationMode = NavigationMode.Constellation;
             navState.CameraDistanceFromTarget = -1;
 
+            UnityEngine.Debug.Log("puzzle nav start");
+            
             ScriptUtility.Invoke("MovePlayerToMonitor");
 
             WavelengthToggleState wavelengthState = Find.State<WavelengthToggleState>();
@@ -83,6 +85,8 @@ namespace Astro {
             navState.ReadoutDirty = false;
             ReviewModuleUtility.ResetReview();
 
+            UnityEngine.Debug.Log("puzzle nav stopped");
+
             ScriptUtility.Invoke("MovePlayerToInstruments");
             //ViewNavUtility.LeafMoveToNode("Right");
 
@@ -98,6 +102,8 @@ namespace Astro {
             navState.CurrentNavigationMode = NavigationMode.Neutrino;
             navState.CameraDistanceFromTarget = -1;
             navState.ResultShown = false;
+
+            UnityEngine.Debug.Log("neutrino nav start");
 
             ScriptUtility.Invoke("MovePlayerToMonitor");
             //ViewNavUtility.LeafMoveToNode("Monitor");
@@ -120,6 +126,8 @@ namespace Astro {
 
             state.LookUpdatedThisFrame = true;
             state.OnLookUpdated.Invoke(state);
+
+            UnityEngine.Debug.Log("neutrino nav stopped");
 
             ScriptUtility.Invoke("MovePlayerToInstruments");
 
