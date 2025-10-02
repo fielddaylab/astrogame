@@ -37,6 +37,8 @@ $call SetRadioDialLocked(true)
 $call MonitorPower->Deactivate()
 $call ChapterTitles->PrepareTransition()
 
+$call PreloadMusic("Music.Moonthought")
+
 //#region Spawn Documents
 
 :: BeginDay
@@ -535,6 +537,7 @@ $wait 1
 $wait 1
 {@Astrid} Dad? $[level4/Astrid/l4_a_42]
 
+$call StopMusic(3)
 $wait 3
 $call LoadNextDay()
 

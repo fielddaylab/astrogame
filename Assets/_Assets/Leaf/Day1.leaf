@@ -19,6 +19,8 @@ $call SetRefPageActive("ConstellationLeoCompleted", false)
 $call SetRefPageActive("ConstellationDracoCompleted", false)
 $call SetRefPageActive("ConstellationAndromedaCompleted", false)
 
+$call PreloadMusic("Music.Gently-Falling")
+
 $call SetRadioFrequency(100, true)
 
 $set temp:readyForUpgrade = false
