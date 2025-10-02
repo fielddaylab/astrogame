@@ -18,6 +18,19 @@ $call SetInstrumentUnlocked(HistoricalDataModeToggle, true)
 $call SetDomeGlow(false)
 $call StopPuzzleMode()
 $call StopOpenMode()
+$call PreloadDocument("Day5Cal")
+$call PreloadDocument("Level1")
+$call PreloadDocument("Level2")
+$call PreloadDocument("Satellite")
+$call PreloadDocument("Level4")
+$call PreloadDocument("RadioMonitor")
+$call PreloadDocument("Puppet")
+$call PreloadDocument("DontPanic")
+$call PreloadDocument("Day5Postcard")
+$call PreloadDocument("Day5Letter")
+$call PreloadDocument("NewspaperLetter")
+$call PreloadDocument("RecoveryBoardLetter")
+$call PreloadDocument("Day5Question")
 $call SpawnDocument("Day5Cal")
 $call SpawnDocument("Level1")
 $call SpawnDocument("Level2")
@@ -37,7 +50,8 @@ $call MonitorPower->Deactivate()
 $call ChapterTitles->PrepareTransition()
 $start Observatory.ResetSubtitlePosition
 
-$call PreloadMusic("Music.StarDome")
+$call PreloadMusic("Music.Moonthought")
+$call PreloadMusic("Music.Dreams")
 
 //#region Spawn Documents
 
@@ -46,7 +60,7 @@ $call PreloadMusic("Music.StarDome")
 @boostScore 100
 
 $call ChapterTitles->DisplayChapterTitles()
-$call PreloadMusic("Music.StarDome")
+$call PlayMusic("Music.Moonthought", 3)
 
 $call WaitForMovedToView("DocumentPuzzle")
 $call ChapterTitles->FadeOutBackground()
@@ -310,6 +324,7 @@ $call OpenRefGuidePage("ConstellationAndromedaCompleted")
 {@Astrid}	Yes!! I did it!	$[level5/Astrid/l5_a_26]
 $call MoveToView("Right")
 $call StartFinalPuzzleMode()
+$call StopMusic(3)
 {@Astrid} Whoa... what's this? $[level5/Astrid/l5_a_27]
 $set temp:finalPuzzleCompleted = false
 $wait 0.5
@@ -320,11 +335,12 @@ $wait 1
 $call SatelliteDecoder->SetDecoderActive(true)
 $call SatelliteDecoder->SetDecoderHighlightActive(true)
 $wait 1
+$call PlayMusic("Music.Dreams", 3)
 $call LockMonitorFocus()
 $call ScriptFader->FadeIn()
 
 {@Astrid} Looks like I just need to solve this combination lock. Looks like it will be a word of some kind. $[level5/Astrid/l5_a_28]
-{@Astrid} Its probably some Slovenian word since our Solvenian astronomer Slovoj created this. $[level5/Astrid/l5_a_28a]
+{@Astrid} Its probably some Slovenian word since our Slovenian astronomer Slavoj created this. $[level5/Astrid/l5_a_28a]
 $call SetInputState(true)
 $call OpenRefGuidePage("ConstellationPerseusCompleted")
 

@@ -11,6 +11,9 @@ $call StopPuzzleMode()
 $call StopOpenMode()
 $call IntroCutscene->PrepareCutscene()
 
+$call PreloadDocument("ElijahIntro")
+$call PreloadDocument("Day1Cal")
+
 $call MonitorUI->PowerOff()
 $call SetRefGuidePagesLocked(true)
 $call SetRefPageActive("ConstellationPerseusCompleted", false)
