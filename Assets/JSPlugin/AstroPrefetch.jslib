@@ -21,7 +21,7 @@ var AstroPrefetchLib = {
 
         element.onload = loaded;
         element.onerror = errored;
-        document.body.appendChild(element);
+        document.head.appendChild(element);
     },
 
     AstroPrefetch_Video__deps: ["$ap_Preload"],
