@@ -12,6 +12,7 @@ using FieldDay.Vox;
 using OGD;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 namespace Astro {
@@ -233,6 +234,13 @@ namespace Astro {
                 .Register<bool>(GameEvents.TurnRefGuidePage, LogTurnRefGuidePage)
                 .Register<ClassificationLogData>(GameEvents.SelectClassification, LogSelectClassification)
                 .Register<bool>(GameEvents.ToggleSpectralElement, LogToggleSpectralElement)
+                .Register(GameEvents.ClickSubmitStarId, LogClickSubmitStarId)
+                .Register(GameEvents.ValidOpenIdSubmission, LogValidOpenId)
+                .Register(GameEvents.UnacceptedOpenIdSubmission, LogUnacceptedOpenId)
+                .Register(GameEvents.ValidKnowledgeSubmission, LogUnacceptedOpenId)
+                .Register(GameEvents.DuplicateOpenIdSubmission, LogStarIdRejected)
+                .Register(GameEvents.IncorrectOpenIdSubmission, LogStarIdRejected)
+                .Register(GameEvents.InvalidOpenIdSubmission, LogStarIdRejected)
                 ;
 
             // state update events
@@ -240,6 +248,7 @@ namespace Astro {
                 .Register<SubtitleLogData>(GameEvents.SubtitleDataChanged, HandleSubtitleDataChanged)
                 .Register<HintLogData>(GameEvents.HintChanged, HandleHintChanged)
                 .Register<StringHash32>(GameEvents.RefGuideControlPageChanged, HandleRefGuideControlPageChanged)
+                .Register(GameEvents.SubmittedStarChanged, HandleSubmittedStarChanged)
                 ;
 
         }
@@ -251,6 +260,9 @@ namespace Astro {
         [NonSerialized] private HintLogData m_LastKnownHint = default;
         [NonSerialized] private StringHash32 m_LastKnownControlPageId = default;
         [NonSerialized] private string m_LastKnownControlPageName = default;
+
+        [NonSerialized] private CelestialAsset m_LastKnownSubmittedStarAsset = default;
+        [NonSerialized] private ReviewSubmissionClassification m_LastKnownRefSubmissionClassification = default;
 
         private string m_TempStr;
 
@@ -276,6 +288,13 @@ namespace Astro {
         private void HandleRefGuideControlPageChanged(StringHash32 id) {
             m_LastKnownControlPageId = id;
             m_LastKnownControlPageName = Find.NamedAsset<ReferencePageAsset>(m_LastKnownControlPageId).name;
+        }
+
+        private void HandleSubmittedStarChanged() {
+            RefGuideState rgs = Find.State<RefGuideState>();
+            ReviewState pps = Find.State<ReviewState>();
+            m_LastKnownSubmittedStarAsset = Find.NamedAsset<CelestialAsset>(pps.Identification.AssetId);
+            m_LastKnownRefSubmissionClassification = pps.Identification;
         }
 
         #endregion // State Handlers
@@ -728,22 +747,45 @@ namespace Astro {
         //* star_id
         //* category
         //* classification : str | List[element ID]
-        private void LogClickSubmitStarId (string starId, ClassificationTypeMask type, string classification) {
+        private void LogClickSubmitStarId () {
+            var rgs = Find.State<RefGuideState>();
+            StringBuilder classificationStrBuilder = new StringBuilder();
+
+            if (!m_LastKnownRefSubmissionClassification.Classification.IsEmpty) {
+                var refClassification = Find.NamedAsset<ReferenceClassification>(m_LastKnownRefSubmissionClassification.Classification);
+                classificationStrBuilder.Append(refClassification.Label);
+            } else if (m_LastKnownRefSubmissionClassification.Materials != 0) {
+                classificationStrBuilder.Append(SpectrographUtility.Append(m_LastKnownRefSubmissionClassification.Materials, m_JsonBuilder).End().ToString());
+                m_JsonBuilder.Clear();
+            }
+
             m_Log.BeginEvent("click_submit_star_identification");
-            m_Log.EventParam("star_id", starId);
-            m_Log.EventParam("category", EnumLookup.FirstClassificationType(type));
-            m_Log.EventParam("classification", classification);
+            m_Log.EventParam("star_id", m_LastKnownSubmittedStarAsset.DisplayName);
+            m_Log.EventParam("category", EnumLookup.FirstClassificationType(rgs.SelectedRefClassification.Type));
+            m_Log.EventParam("classification", classificationStrBuilder.ToString());
             m_Log.SubmitEvent();
+        }
+
+        // Wrapper for StarIdAccepted event
+        private void LogValidOpenId() {
+            LogStarIdAccepted(true);
+        }
+
+        // Wrapper for StarIdAccepted event
+        private void LogUnacceptedOpenId() {
+            LogStarIdAccepted(false);
         }
 
         //star_identification_accepted
         //* star_id
         //* category
         //* earned_point
-        private void LogStarIdAccepted(string starId, ClassificationTypeMask type, bool scoredPoint) {
-            m_Log.BeginEvent("click_submit_star_identification");
-            m_Log.EventParam("star_id", starId);
-            m_Log.EventParam("category", EnumLookup.FirstClassificationType(type));
+        private void LogStarIdAccepted(bool scoredPoint) {
+            var rgs = Find.State<RefGuideState>();
+
+            m_Log.BeginEvent("star_identification_accepted");
+            m_Log.EventParam("star_id", m_LastKnownSubmittedStarAsset.DisplayName);
+            m_Log.EventParam("category", EnumLookup.FirstClassificationType(rgs.SelectedRefClassification.Type));
             m_Log.EventParam("earned_point", scoredPoint);
             m_Log.SubmitEvent();
         }
@@ -753,12 +795,44 @@ namespace Astro {
         //* category
         //* classification : str | List[element ID]
         //* correct_classification
-        private void LogStarIdRejected(string starId, ClassificationTypeMask type, string classification, string correctClassification) {
+        private void LogStarIdRejected() {
+            var rgs = Find.State<RefGuideState>();
+            StringBuilder submittedClassificationStrBuilder = new StringBuilder();
+            StringBuilder correctClassificationStrBuilder = new StringBuilder();
+
+            var refClassification = Find.NamedAsset<ReferenceClassification>(m_LastKnownRefSubmissionClassification.Classification);
+
+            // get string of submitted classification
+            if (!m_LastKnownRefSubmissionClassification.Classification.IsEmpty) {
+                submittedClassificationStrBuilder.Append(refClassification.Label);
+            } else if (m_LastKnownRefSubmissionClassification.Materials != 0) {
+                submittedClassificationStrBuilder.Append(SpectrographUtility.Append(m_LastKnownRefSubmissionClassification.Materials, m_JsonBuilder).End().ToString());
+                m_JsonBuilder.Clear();
+            }
+
+            // get string of correct classification
+            if (!m_LastKnownRefSubmissionClassification.Classification.IsEmpty) {
+                if (refClassification != null) {
+                    for (int i = 0; i < m_LastKnownSubmittedStarAsset.ClassIds.Length; i++) {
+                        if ((Find.NamedAsset<ReferenceClassification>(m_LastKnownSubmittedStarAsset.ClassIds[i]).Type
+                            & refClassification.Type) != 0) {
+                            // found what the classification should have been
+                            correctClassificationStrBuilder.Append(Find.NamedAsset<ReferenceClassification>(m_LastKnownSubmittedStarAsset.ClassIds[i]).Label);
+                            break;
+                        }
+                    }
+                }
+            }
+            else if (m_LastKnownSubmittedStarAsset.Spectrograph != 0) {
+                correctClassificationStrBuilder.Append(SpectrographUtility.Append(m_LastKnownSubmittedStarAsset.Spectrograph, m_JsonBuilder).End().ToString());
+                m_JsonBuilder.Clear();
+            }
+
             m_Log.BeginEvent("star_identification_rejected");
-            m_Log.EventParam("star_id", starId);
-            m_Log.EventParam("category", EnumLookup.FirstClassificationType(type));
-            m_Log.EventParam("classification", classification);
-            m_Log.EventParam("correct_classification", correctClassification);
+            m_Log.EventParam("star_id", m_LastKnownSubmittedStarAsset.DisplayName);
+            m_Log.EventParam("category", EnumLookup.FirstClassificationType(rgs.SelectedRefClassification.Type));
+            m_Log.EventParam("classification", submittedClassificationStrBuilder.ToString());
+            m_Log.EventParam("correct_classification", correctClassificationStrBuilder.ToString());
             m_Log.SubmitEvent();
         }
 

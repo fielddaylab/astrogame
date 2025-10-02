@@ -87,6 +87,8 @@ public static class GameEvents {
     public static readonly StringHash32 TurnRefGuidePage = "turn-ref-guide-page"; // bool isLeft
     public static readonly StringHash32 SelectClassification = "select-classification"; // ClassificationLogData
     public static readonly StringHash32 ToggleSpectralElement = "toggle-spectral-element"; // bool toggledOn
+    public static readonly StringHash32 ClickSubmitStarId = "click-submit-star-id";
+    public static readonly StringHash32 SubmittedStarChanged = "submitted-star-changed";
 }
 
 public static class ScriptEvents {

@@ -187,8 +187,8 @@ namespace Astro {
                     break;
                 }
                 case ReviewResult.CorrectNotAccepted: {
-                        Game.Events.Dispatch(GameEvents.UnacceptedOpenIdSubmission);
-                        break;
+                    Game.Events.Dispatch(GameEvents.UnacceptedOpenIdSubmission);
+                    break;
                 }
                 case ReviewResult.Duplicate: {
                     Game.Events.Dispatch(GameEvents.DuplicateOpenIdSubmission);
