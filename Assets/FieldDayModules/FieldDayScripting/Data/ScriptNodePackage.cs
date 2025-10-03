@@ -74,7 +74,7 @@ namespace FieldDay.Scripting {
         }
 
         internal bool WasFromSource(LeafAsset asset) {
-            return m_Active == asset;
+            return m_Asset == asset;
         }
 
         private void HandleHotReload(LeafAsset asset, HotReloadAssetRemapArgs<LeafAsset> remapArgs, HotReloadOperation op) {

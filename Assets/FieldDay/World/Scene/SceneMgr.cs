@@ -366,7 +366,10 @@ namespace FieldDay.Scenes {
             return m_UnloadQueue.Count > 0 || m_CurrentUnloadOperation.Active || IsLoadQueued(SceneType.Main);
         }
 
-        internal bool IsSafeToUnloadAssets() {
+        /// <summary>
+        /// Returns if it is safe to unload any assets.
+        /// </summary>
+        public bool IsSafeToUnloadAssets() {
             return m_AssetUnloadLock == 0 && !IsLoadQueued(SceneType.Main) && m_LoadQueue.Count == 0 && !m_CurrentLoadOperation.Active
                 && m_PreloadQueue.Count == 0 && !m_CurrentPreloadOperation.Active
                 && m_UnloadQueue.Count == 0 && !m_CurrentUnloadOperation.Active;
