@@ -693,7 +693,7 @@ $call StartPuzzleNavigation()
 {@Astrid}	Ach, colder!	$[level1/Astrid/l1_a_29]
 // #endregion
 
-// #region Puzzle Tutorial
+// #region Puzzle Tutorial - Row 1
 
 :: PuzzleNavigationComplete
 @trigger    PuzzleNavigationComplete
@@ -703,8 +703,10 @@ $call StartPuzzleNavigation()
 @once
 
 {@Astrid}	(*sigh*) Happy birthday to me.	$[level1/Astrid/l1_a_32]
+$call LockMonitorFocus()
 $call StartPuzzleMode()
 $call UnlockMonitorFocus()
+$set temp:completedFirstRowTutorial = false
 $set temp:waitingForSelectAtik = true
 $wait 0.3
 {@Astrid}	Whoa... what's happening? Did I break something??	$[level1/Astrid/l1_a_33]
@@ -717,6 +719,7 @@ $wait 2
 {@Astrid}	Do I finally get to do some astronomy by myself? This is wild. 	$[level1/Astrid/l1_a_37]
 {@Astrid}	I've been so busy helping Aunt Martha. I hope I remember how to do this. 	$[level1/Astrid/l1_a_38]
 {@Astrid}	Okay, you got this Astrid. Start with what I know—the coordinates for Atik. 	$[level1/Astrid/l1_a_39]
+$set temp:hintToClickOnMonitor = true
 $goto .PostPuzzleNavigationComplete
 
 :: PostPuzzleNavigationComplete
@@ -728,7 +731,7 @@ $branch .SelectAtikReminder
 
 :: SelectAtikReminder
 $wait 10
-$if temp:waitingForSelectAtik
+$if temp:hintToClickOnMonitor
     {@Astrid}	It looks like the star compass gives me readings when I select a star on the monitor. That helps.	$[level1/Astrid/l1_a_40]
     $goto .SelectAtikReminder
 $endif
@@ -738,16 +741,18 @@ $endif
 @boostScore 150
 @once
 
-$set temp:waitingForSelectAtik = false
+$set temp:hintToClickOnMonitor = false
 
 :: FirstPuzzleStarSelected
 @trigger   OnStarSelected
 @when   starName == "Atik", temp:waitingForSelectAtik
-@boostScore 200
+@boostScore 2000
+@priority High
 @interrupt
 @cutscene
 @once
 
+$set temp:hintToClickOnMonitor = false
 $call SubtitleController->SetSubtitlePosition(0.5, 1, 0, -140)
 $call LockMonitorFocus()
 $set temp:waitingForSelectAppMag = true
@@ -955,6 +960,7 @@ $call AddIsolatedSlot(Color)
 @cutscene
 @once
 
+$set temp:completedFirstRowTutorial = true
 $call SetInputState(false)
 $set temp:waitingForFillColor = false
 $set temp:AtikRowFilled = true
@@ -963,6 +969,10 @@ $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 
 {@Astrid}	Okay, now it’s just process of elimination. I’m pretty sure Atik is the star on the second row of this grid.	$[level1/Astrid/l1_a_57]
 $goto .HintForSecondRow
+
+// #endregion Puzzle Tutorial - Row 1
+
+// #region Puzzle Tutorial - Next 3 Rows
 
 :: HintForSecondRow
 $set temp:AlgolRowFilled = false
@@ -976,7 +986,7 @@ $call SetInputState(true)
 
 :: SecondPuzzleStarSelected
 @trigger   OnStarSelected
-@when   starName == "Algol", !temp:AlgolRowFilled, temp:AtikRowFilled
+@when   starName == "Algol", !temp:AlgolRowFilled, temp:AtikRowFilled, temp:completedFirstRowTutorial
 @boostScore 100
 @interrupt
 @cutscene
@@ -991,7 +1001,7 @@ $call UnlockMonitorFocus()
 
 :: NotSecondPuzzleStarSelected
 @trigger   OnStarSelected
-@when   starName != "Algol", !temp:AlgolRowFilled, temp:AtikRowFilled
+@when   starName != "Algol", !temp:AlgolRowFilled, temp:AtikRowFilled, temp:completedFirstRowTutorial
 @interrupt
 @cutscene
 @cooldown 15
@@ -1000,7 +1010,7 @@ $call UnlockMonitorFocus()
 
 :: AtikSelectedPostFilled
 @trigger   OnStarSelected
-@when   starName == "Atik", temp:AtikRowFilled, temp:AtikRowFilled
+@when   starName == "Atik", temp:AtikRowFilled, temp:AtikRowFilled, temp:completedFirstRowTutorial
 @boostScore 100
 @interrupt
 @cutscene
@@ -1015,7 +1025,7 @@ $endif
 
 :: AlgolSelectedPostComplete
 @trigger   OnStarSelected
-@when   starName == "Algol", temp:CompletedAlgolRow, temp:AtikRowFilled
+@when   starName == "Algol", temp:CompletedAlgolRow, temp:AtikRowFilled, temp:completedFirstRowTutorial
 @boostScore 100
 @interrupt
 @cutscene
@@ -1025,7 +1035,7 @@ $endif
 
 :: MenkibSelectedPostComplete
 @trigger   OnStarSelected
-@when   starName == "Menkib", temp:CompletedMenkibRow, temp:AtikRowFilled
+@when   starName == "Menkib", temp:CompletedMenkibRow, temp:AtikRowFilled, temp:completedFirstRowTutorial
 @boostScore 100
 @interrupt
 @cutscene
@@ -1035,7 +1045,7 @@ $endif
 
 :: MirfakSelectedPostComplete
 @trigger   OnStarSelected
-@when   starName == "Mirfak", temp:CompletedMirfakRow, temp:AtikRowFilled
+@when   starName == "Mirfak", temp:CompletedMirfakRow, temp:AtikRowFilled, temp:completedFirstRowTutorial
 @boostScore 100
 @interrupt
 @cutscene
@@ -1045,7 +1055,7 @@ $endif
 
 :: AlgolDataFilled
 @trigger    OnPuzzleRowFilled
-@when   rowId == 0, temp:AtikRowFilled
+@when   rowId == 0, temp:AtikRowFilled, temp:completedFirstRowTutorial
 @boostScore 1000
 @priority High
 @interrupt
@@ -1071,7 +1081,7 @@ $branch .PuzzleTimeoutHint
 
 :: AlgolDataFilled2
 @trigger    OnPuzzleRowFilled
-@when   rowId == 0, temp:AtikRowFilled
+@when   rowId == 0, temp:AtikRowFilled, temp:completedFirstRowTutorial
 @interrupt
 @cutscene
 
@@ -1157,6 +1167,7 @@ $endif
 
 // #endregion
 
+// #region EOD
 :: PerseusPuzzleComplete
 @trigger    CorrectPuzzleSubmission
 @when   puzzleName == "Perseus"
@@ -1214,3 +1225,5 @@ $wait 1
 
 $call StopMusic(1)
 $call LoadNextDay()
+
+// #endregion
