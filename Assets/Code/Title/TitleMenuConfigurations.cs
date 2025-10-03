@@ -8,6 +8,7 @@ using BeauRoutine;
 using FieldDay.Scenes;
 using FieldDay.SharedState;
 using FieldDay.UI.Animation;
+using TMPro;
 
 namespace Astro.Title {
     public sealed class TitleMenuConfigurations : SharedStateComponent, IRegistrationCallbacks, IScenePreload {
@@ -17,6 +18,7 @@ namespace Astro.Title {
         public FadeGroup InProgressGroup;
         public FadeGroup BackGroup;
         public FadeGroup OptionsGroup;
+        public TMP_Text BuildText;
 
         [Header("Loading")]
         public SceneReference UnloadScene;
@@ -38,6 +40,14 @@ namespace Astro.Title {
             yield return null;
             BackGroup.SetVisibleNow(false);
             yield return null;
+
+            if (BuildText) {
+                if (BuildInfo.IsAvailable()) {
+                    BuildText.SetText(string.Format("Build {0} ({1})", BuildInfo.BundleVersion(), BuildInfo.Id()));
+                } else {
+                    BuildText.gameObject.SetActive(false);
+                }
+            }
 
             AstroGame.Events.Register<ViewNode>(ViewNavUtility.Events.NodeExited, OnNodeExited)
                 .Register<ViewNode>(ViewNavUtility.Events.NodeLoaded, OnNodeLoading)

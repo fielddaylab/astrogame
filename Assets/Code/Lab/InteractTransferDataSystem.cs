@@ -30,9 +30,14 @@ namespace Astro {
                         // Ensure none of the other rows have this data
                         for (int i = 0; i < puzzleState.PuzzleEntryGuesses.Length; i++) {
                             if (puzzleState.PuzzleEntryGuesses[i] == null) continue;
+                            bool ifPrepopulatedCell = (puzzleState.ActivePuzzle.Rows[i].ProvidedProperties & DataTypeMask.Coordinates) != 0;
 
                             PuzzleUtility.ExtractCols(puzzleState.ActivePuzzle, out List<DataTypeMask> types, out int numCols);
                             if (current == puzzleState.PuzzleEntryGuesses[i]) {
+                                if (ifPrepopulatedCell) {
+                                    continue;
+                                }
+
                                 int cellIndex = (numCols * i) + 1;
                                 PuzzleCell target = puzzleState.Display.Cells[cellIndex];
                                 // Found a match we need to clear now
