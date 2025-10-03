@@ -256,6 +256,7 @@ namespace Astro {
                 .Register<string>(GameEvents.RadioSecretFound, LogRadioSecretFound)
                 .Register(GameEvents.TelescopeStencilDisplayed, LogTelescopeStencilDisplayed)
                 .Register(GameEvents.AfterPuzzleModeStart, LogLogicPuzzleStart)
+                .Register(GameEvents.StopPuzzleMode, LogLogicPuzzleComplete)
                 ;
 
             // state update events
@@ -981,7 +982,7 @@ namespace Astro {
 
         //logic_puzzle_complete
         //* puzzle_id
-        private void LogLogicPuzzleComplete(string puzzleId) {
+        private void LogLogicPuzzleComplete() {
             PuzzleState puzzleState = Find.State<PuzzleState>();
 
             m_Log.BeginEvent("logic_puzzle_complete");
@@ -991,25 +992,25 @@ namespace Astro {
 
         //click_tool_load
         //* tool_name
-        //* star_id
+        //* star_id // currently selected star
         //* value
         private void LogClickToolLoad(PacketTransferData data) {
             m_Log.BeginEvent("click_tool_load");
-            m_Log.EventParam("tool_name", EnumLookup.InstrumentType[(int)data.ToolId]);
+            m_Log.EventParam("tool_name", EnumLookup.InstrumentType[(int)data.ToolId]); // don't have instruments tied to data slots
             m_Log.EventParam("star_id", data.StarId);
-            m_Log.EventParam("value", data.Value.ToString());
+            m_Log.EventParam("value", data.Value.ToString()); // don't have a consistent formatting
             m_Log.SubmitEvent();
         }
 
         //select_puzzle_cell
         //* tool_name
-        //* star_id
+        //* star_id // star in cell slot
         //* value : Optional[float | str]
         private void LogSelectPuzzleCell(PacketTransferData data) {
             m_Log.BeginEvent("select_puzzle_cell");
-            m_Log.EventParam("tool_name", EnumLookup.InstrumentType[(int)data.ToolId]);
-            m_Log.EventParam("star_id", data.StarId);
-            m_Log.EventParam("value", data.Value.ToString());
+            m_Log.EventParam("tool_name", EnumLookup.InstrumentType[(int)data.ToolId]); // don't have instruments tied to data slots
+            m_Log.EventParam("star_id", data.StarId); // don't have stars tied to cell slots (TODO: store row id for each cell, store star per row)
+            m_Log.EventParam("value", data.Value.ToString()); // don't have consistent formatting
             m_Log.SubmitEvent();
         }
 
@@ -1020,9 +1021,9 @@ namespace Astro {
         //* source_star
         private void LogTransferValueToCell(PacketTransferData data) {
             m_Log.BeginEvent("transfer_value_to_cell");
-            m_Log.EventParam("tool_name", EnumLookup.InstrumentType[(int)data.ToolId]);
-            m_Log.EventParam("star_id", data.StarId);
-            m_Log.EventParam("value", data.Value.ToString());
+            m_Log.EventParam("tool_name", EnumLookup.InstrumentType[(int)data.ToolId]); // don't have instruments tied to data slots
+            m_Log.EventParam("star_id", data.StarId); // don't have stars tied to cell slots (TODO: store row id for each cell, store star per row)
+            m_Log.EventParam("value", data.Value.ToString()); // don't have consistent formatting
             m_Log.EventParam("source_star", data.StarId);
             m_Log.SubmitEvent();
         }
