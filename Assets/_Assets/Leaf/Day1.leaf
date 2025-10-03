@@ -11,6 +11,9 @@ $call StopPuzzleMode()
 $call StopOpenMode()
 $call IntroCutscene->PrepareCutscene()
 
+$call PreloadDocument("ElijahIntro")
+$call PreloadDocument("Day1Cal")
+
 $call MonitorUI->PowerOff()
 $call SetRefGuidePagesLocked(true)
 $call SetRefPageActive("ConstellationPerseusCompleted", false)
@@ -18,6 +21,8 @@ $call SetRefPageActive("ConstellationHerculesCompleted", false)
 $call SetRefPageActive("ConstellationLeoCompleted", false)
 $call SetRefPageActive("ConstellationDracoCompleted", false)
 $call SetRefPageActive("ConstellationAndromedaCompleted", false)
+
+$call PreloadMusic("Music.Gently-Falling")
 
 $call SetRadioFrequency(100, true)
 
@@ -68,15 +73,17 @@ $call SetInputState(true)
 $start .PowerButtonHint
 
 :: PowerButtonHint
-$wait 12
+$wait 30
 $if !temp:powerButtonHint, !temp:pressedPowerButton
     $call HintModals->SlideInFromRight("MonitorPower", 0.4)
     $set temp:powerButtonHint = true
 $else
     $call HintModals->Wiggle("MonitorPower")
 $endif
+$wait 30
 
 $if !temp:pressedPowerButton
+    $call HintModals->Wiggle("MonitorPower")
     {@Astrid}	I should power this thing up. Maybe it'll help me figure out where Elijah went. 	$[level1/Astrid/l1_a_02]
     $loop
 $endif
@@ -234,7 +241,7 @@ $wait 10
 $if !temp:introMoveTheTelescope
     $call HintModals->Wiggle("TelescopeControls")
     {@Radio}	See if you can move your telescope.	$[level1/radio_lady/l1_r_07]
-    $branch .MoveTelescopeReminder
+    $loop
 $endif
 
 :: MoveYourTelescope
@@ -328,7 +335,7 @@ $start .FirstStarHint
 $wait 12
 $if temp:waitingForNeutrinoStar
     {@Radio} Astrid, you still there? Select a possible neutrino source on your display. $[level1/radio_lady/l1_r_19]
-    $branch .FirstStarHint
+    $loop
 $endif
 
 :: OnStarSelected
@@ -380,7 +387,7 @@ $if !temp:firstSubmission
     $call HintModals->SlideInFromRight("SubmitRangeHint", 0.2)
     $set temp:waitingForFirstClassificationClick = true
 
-    $branch .IntroFirstSubmissionTimeout
+    $loop
 $endif
 
 :: OnRefGuideOpened
@@ -418,7 +425,7 @@ $start .OpenManualHint
 $wait 10
 $if temp:waitingForManualOpen
     {@Radio} Have you found Elijah's operator manual? $[level1/radio_lady/l1_r_23]
-    $branch .OpenManualHint
+    $loop
 $endif
 
 :: PlayerLeavesNeutrinoTask2
@@ -948,6 +955,7 @@ $call AddIsolatedSlot(Color)
 @cutscene
 @once
 
+$call SetInputState(false)
 $set temp:waitingForFillColor = false
 $set temp:AtikRowFilled = true
 $call ReleaseIsolatedPuzzle()
@@ -961,6 +969,7 @@ $set temp:AlgolRowFilled = false
 $set temp:waitingForSelectAlgol = true
 $call HintModals->SlideInFromRight("BrightestBlue", 0.4)
 $call UnlockMonitorFocus()
+$call SetInputState(true)
 
 {@Astrid}	What else do the clues on the monitor say? Apparently Algol is the brightest star in Blue?	$[level1/Astrid/l1_a_58]
 {@Astrid}	Which of these stars is the brightest in blue?	$[level1/Astrid/l1_a_59]
@@ -1076,11 +1085,11 @@ $branch .PuzzleTimeoutHint
 $wait 30
 $if !temp:readyToSubmit, !temp:MenkibRowFilled
     {@Astrid}	Let’s see. I know Menkib is NOT the brightest in visible. Which of my remaining stars does that match?	$[level1/Astrid/l1_a_73]
-    $branch .PuzzleTimeoutHint
+    $loop
 $elseif !temp:readyToSubmit, !temp:MirfakRowFilled
     {@Astrid}	Let’s see. I know Mirfak is cooler than Atik. And the hotter the star, the bluer it is—just like a flame.	$[level1/Astrid/l1_a_74]
     {@Astrid}	I should check if either of these stars are colder than the star in row two.	$[level1/Astrid/l1_a_75]
-    $branch .PuzzleTimeoutHint
+    $loop
 $endif
 
 :: MirfakDataFilled
@@ -1185,6 +1194,7 @@ $wait 0.5
 $call MonitorUI->ShowElement("CeresMsg")
 $wait 1
 $call SetRadioFrequency(137)
+$call SetRadioDialLocked(true)
 $call MonitorUI->HideElement("CeresMsg")
 $wait 1
 

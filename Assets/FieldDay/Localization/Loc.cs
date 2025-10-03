@@ -263,6 +263,62 @@ namespace FieldDay.Localization {
             return changed;
         }
 
+        /// <summary>
+        /// Localizes a file path. This replaces instances of
+        /// the default language's two-letter code with the current language.
+        /// Specifically, the formats /en/, en/, and .en
+        /// </summary>
+        static public unsafe bool Path(char* path, int pathLength) {
+            Assert.NotNull(path);
+
+            if (s_CurrentLang == s_DefaultLang) {
+                return false;
+            }
+
+            int pathLen = pathLength;
+            if (pathLen < 3) {
+                return false;
+            }
+
+            s_DefaultLang.ToChars(out char checkA, out char checkB);
+            s_CurrentLang.ToChars(out char newA, out char newB);
+
+            bool changed = false;
+            int idx = 0;
+
+            if (path[0] == checkA && path[1] == checkB && path[2] == '/') {
+                path[0] = newA;
+                path[1] = newB;
+                changed = true;
+                idx += 3;
+            }
+
+            for (; idx < pathLen - 2; idx++) {
+                char c = path[idx];
+                if (c == '/' && idx + 3 < pathLen && path[idx + 3] == '/') {
+                    // two character path
+                    if (path[idx + 1] == checkA && path[idx + 2] == checkB) {
+                        path[idx + 1] = newA;
+                        path[idx + 2] = newB;
+                        changed = true;
+                    }
+                    idx += 3;
+                } else if (c == '.') {
+                    if ((idx + 2 == pathLen) || ((idx + 3) < pathLen && path[idx + 3] == '.')) {
+                        // two character extension
+                        if (path[idx + 1] == checkA && path[idx + 2] == checkB) {
+                            path[idx + 1] = newA;
+                            path[idx + 2] = newB;
+                            changed = true;
+                        }
+                        idx += 3;
+                    }
+                }
+            }
+
+            return changed;
+        }
+
         #endregion // File Paths
     }
 }

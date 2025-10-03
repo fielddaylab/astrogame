@@ -39,11 +39,15 @@ namespace Astro.Radio {
                 }
             }
 
+            if (!wasPlayingVox && m_StateB.Dial.CurrentValue == 100) {
+                m_StateA.LastVoiceCooldown = 0;
+            }
+
             if (!wasPlayingVox && m_StateA.LastVoiceCooldown > 0) {
                 m_StateA.LastVoiceCooldown -= deltaTime;
                 m_StateA.CurrentColor = m_StateA.LastVoiceColor;
-                m_StateA.CurrentScale = 0;
-                m_StateA.CurrentLerp = 1;
+                m_StateA.CurrentScale = m_StateA.VoiceScale = 0;
+                m_StateA.CurrentLerp = 0;
                 wasPlayingVox = true;
             }
 

@@ -515,8 +515,10 @@ namespace FieldDay.Audio {
         }
 
         private unsafe void KillVoice(VoiceData voice) {
+            AudioClip clip = null;
             if (voice.Components && voice.Components.Source) {
                 voice.Components.Source.Stop();
+                clip = voice.Components.Source.clip;
                 voice.Components.Source.clip = null;
                 UpdatePlayingInstanceCount(voice.Handle, voice.BusIndex, false);
             }
@@ -541,6 +543,8 @@ namespace FieldDay.Audio {
                 Assert.True(voice.StreamingEntry.RefCount > 0);
                 voice.StreamingEntry.RefCount--;
                 voice.StreamingEntry = null;
+            } else if (clip != null && (voice.Flags & AudioPlaybackFlags.EagerUnload) != 0) {
+                clip.UnloadAudioData();
             }
 
             voice.Components = null;

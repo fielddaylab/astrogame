@@ -95,6 +95,9 @@ namespace FieldDay.Scripting {
 
             foreach(var package in db.RegisteredPackages) {
                 if (package.WasFromSource(asset)) {
+                    if (db.UnloadQueue.FastRemove(package.m_LoadId)) {
+                        Log.Msg("[ScriptDBUtility] Cancelled unload of {0}", package.Name());
+                    }
                     return package.m_LoadId;
                 }
             }

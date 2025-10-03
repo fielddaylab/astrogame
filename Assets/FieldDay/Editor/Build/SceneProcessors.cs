@@ -154,7 +154,7 @@ namespace FieldDay.Editor {
     /// Generates the SceneDataExt object.
     /// </summary>
     public class GenerateSceneDataExtProcessor : IProcessSceneWithReport {
-        public int callbackOrder { get { return 30; } }
+        public int callbackOrder { get { return 31; } }
 
         public void OnProcessScene(Scene scene, BuildReport report) {
             if (PlayModeDelayedSceneProcessor.IsQueued()) {

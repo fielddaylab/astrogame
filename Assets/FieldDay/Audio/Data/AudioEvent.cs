@@ -13,9 +13,13 @@ namespace FieldDay.Audio {
     public sealed class AudioEvent : NamedAsset, IRegistrationCallbacks {
         public AudioClip[] Samples = Array.Empty<AudioClip>();
         [StreamingAudioPath] public string Stream;
+
+        [Header("Loading Parameters")]
         public bool PreloadSamples = true;
+        public bool UnloadAfterPlayback = false;
 
         [Header("Playback Parameters")]
+        [Range(0, 2)] public float VolumeMultiplier = 1;
         public FloatRange Volume = new FloatRange(1);
         public FloatRange Pitch = new FloatRange(1);
         public FloatRange Pan = new FloatRange(0);
@@ -41,7 +45,7 @@ namespace FieldDay.Audio {
         /// Returns if this is a valid event.
         /// </summary>
         public bool IsValid() {
-            return Samples.Length > 0;
+            return Samples.Length > 0 || !string.IsNullOrEmpty(Stream);
         }
 
         void IRegistrationCallbacks.OnDeregister() {
@@ -50,7 +54,7 @@ namespace FieldDay.Audio {
         void IRegistrationCallbacks.OnRegister() {
             CachedId = name;
         }
-    }
+}
 
     /// <summary>
     /// Event reference attribute.

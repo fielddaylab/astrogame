@@ -12,6 +12,7 @@ namespace Astro {
     public class InputState : SharedStateComponent, IRegistrationCallbacks {
         public bool InputEnabled = true;
         public PhysicsRaycaster Raycaster;
+        public bool BlockAllInput = false;
 
         [NonSerialized] public int DesiredLayerMask;
         [NonSerialized] public int LayerMaskFilter = Bits.All32;
@@ -49,6 +50,8 @@ namespace Astro {
             bool changed = Ref.Replace(ref state.InputEnabled, enabled);
             SpaceCameraUtility.SetCameraInputEnabled(enabled);
             if (!changed) return;
+
+            state.Raycaster.enabled = state.InputEnabled;
 
             if (enabled) {
                 Log.Msg("[InputState > SetInputEnabled] ResumeRaycasts");

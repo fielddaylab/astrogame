@@ -108,6 +108,7 @@ namespace Astro {
             PlayerProgressState progress = new PlayerProgressState();
             SharedState.Register(progress);
 
+            Application.backgroundLoadingPriority = ThreadPriority.Low;
 
             Rendering.EnableAspectClamping(4, 3);
 

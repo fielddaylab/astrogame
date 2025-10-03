@@ -70,6 +70,8 @@ namespace Astro.Title {
             MenuFade.Hide();
             CloseFade.Hide();
 
+            GameLoop.ResumeUpdates(AstroGame.PauseUpdateMask);
+
             if (progressState.CompletedPrelude) {
                 StoryAsset levels = Find.GlobalAsset<StoryAsset>();
                 StringHash32 dayId = levels.Days[progressState.DayIndex];

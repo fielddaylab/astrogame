@@ -106,6 +106,10 @@ namespace Astro {
             }
             m_StateB.ReadoutDirty = true;
 
+            if (m_StateB.ResultShown) {
+                return;
+            }
+
             // Scripting Events
             int newPips = module.PipsRevealed;
             if (prevPips > newPips) {

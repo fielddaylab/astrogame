@@ -10,7 +10,9 @@ namespace Astro {
     [CreateAssetMenu(menuName = "AstroGame/Day Config")] 
     public sealed class DayConfigAsset : NamedAsset {
         public SceneReference Scene;
+        public SceneReference AuxScene;
         public LeafAsset[] Scripts;
+        public TextAsset PreloadManifest;
 
         [Header("Sky")]
         public HmsCoords SkyRotationOffset;

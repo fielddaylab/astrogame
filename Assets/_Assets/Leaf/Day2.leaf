@@ -15,6 +15,17 @@ $call SetInstrumentUnlocked(VisibleWavelength, true)
 $call SetInstrumentUnlocked(BlueWavelength, true)
 $call SetInstrumentUnlocked(ColorInstrument, true)
 $call SetInstrumentUnlocked(TemperatureInstrument, true)
+$call PreloadDocument("Day2Cal")
+$call PreloadDocument("MarthaGuilt")
+$call PreloadDocument("ElijahHike")
+$call PreloadDocument("Cutoff")
+$call PreloadDocument("Level1")
+$call PreloadDocument("MiniLabors")
+$call PreloadDocument("Day2DadIcecubePostcard")
+$call PreloadDocument("HerculesPostcard")
+$call PreloadDocument("Day2Martha")
+$call PreloadDocument("Day2Question")
+
 $call SpawnDocument("Day2Cal")
 $call SpawnDocument("MarthaGuilt")
 $call SpawnDocument("ElijahHike")
@@ -36,6 +47,8 @@ $call MonitorPower->Deactivate()
 $call ChapterTitles->PrepareTransition()
 $call SubtitleController->SetSubtitlePosition(0.5, 0, 0, 40)
 $call SetRadioDialLocked(true)
+
+$call PreloadMusic("Music.StarlightStudent")
 
 // #endregion
 
@@ -299,7 +312,7 @@ $start .FirstStarHint
 $wait 10
 $if temp:waitingForNeutrinoStar
     {@Radio} Astrid, you still there? Select a possible neutrino source on your display. $[level1/radio_lady/l1_r_19]
-    $branch .FirstStarHint
+    $loop
 $endif
 
 :: OnNonNeutrinoStarSelected
@@ -347,7 +360,7 @@ $start .WaitingForFirstSubmission
 $wait 15
 $if temp:waitingForFirstSubmission
     {@Astrid}	Stars are grouped by temperature—O, B, A, F, G, K, M. Hottest to coolest. I just need to pick one.	$[level2/Astrid/l2_a_21]
-    $branch .WaitingForFirstSubmission
+    $loop
 $endif
 
 :: BlueFilterNOTSelected
@@ -475,7 +488,7 @@ $call SetRadioDialLocked(false)
 $call SetStickyFirstPage(-1)
 $call ClearMonitorSelection()
 $call StopPuzzleMode()
-$call SetInputState(false)
+// $call SetInputState(false)
 $call ConsoleCommandLine->PlayConsoleTextAndWait("PlayMessage")
 $wait 2
 $call SetRefPageActive("ConstellationHercules", false)
@@ -503,6 +516,7 @@ $wait 1
 $call MonitorUI->ShowElement("CeresMsg")
 $wait 1
 $call SetRadioFrequency(137)
+$call SetRadioDialLocked(true)
 $call MonitorUI->HideElement("CeresMsg")
 $goto .PuzzleNavigationComplete01
 

@@ -133,5 +133,12 @@ namespace Astro.Radio {
             display.WaveformRenderer.sharedMaterial = display.AlertMaterial;
             display.WaveformRenderer.sharedMaterial = display.WaveformMaterial;
         }
+
+        [LeafMember("KillAllVox")]
+        static private void LeafKillAllRadioVox() {
+            foreach(var emitter in Find.Components<VoxEmitter>()) {
+                emitter.Player.Stop();
+            }
+        }
     }
 }

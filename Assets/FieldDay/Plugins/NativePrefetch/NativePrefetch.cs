@@ -1,4 +1,4 @@
-#if (!UNITY_EDITOR && UNITY_WEBGL)
+#if !(!UNITY_EDITOR && UNITY_WEBGL)
 #define USE_JSLIB
 #endif // !UNITY_EDITOR && UNITY_WEBGL
 
@@ -11,24 +11,26 @@ namespace NativeUtils {
 #if USE_JSLIB
 
         [DllImport("__Internal")]
-        static private extern void NativePrefetch_Start(string url, int resourceType, int identifier);
+        static private unsafe extern void NativePrefetch_LoadResource(char* url, int resourceType, int priority, int identifier, int group);
 
         [DllImport("__Internal")]
-        static private extern bool NativePrefetch_IsLoaded(int identifier);
+        static private extern bool NativePrefetch_IsResourceLoaded(int identifier);
 
         [DllImport("__Internal")]
-        static private extern bool NativePrefetch_Cancel(int identifier);
+        static private extern bool NativePrefetch_IsGroupLoaded(int group);
 
-#else
+        [DllImport("__Internal")]
+        static private extern bool NativePrefetch_CancelResource(int identifier);
 
-        static private readonly HashSet<int> s_DebugPrefetchedURLS = new HashSet<int>();
+        [DllImport("__Internal")]
+        static private extern bool NativePrefetch_CancelGroup(int group);
 
 #endif // USE_JSLIB
 
         /// <summary>
         /// Type of resource
         /// </summary>
-        public enum ResourceType {
+        public enum ResourceType : byte {
             Unknown,
             Audio,
             Image,
@@ -36,9 +38,18 @@ namespace NativeUtils {
         }
 
         /// <summary>
+        /// Loading priority.
+        /// </summary>
+        public enum ResourcePriority : byte {
+            Auto,
+            Low,
+            High
+        }
+
+        /// <summary>
         /// Prefetchs the resource with the given url.
         /// </summary>
-        static public bool Prefetch(string url, ResourceType resourceType, int identifier) {
+        static public bool LoadResource(string url, ResourceType resourceType, ResourcePriority priority, int identifier, int group) {
             if (url == null || !url.Contains("://")) {
                 Console.Error.WriteLine("[NativePrefetch] Cannot prefetch invalid url '{0}'", url);
                 return false;
@@ -50,10 +61,36 @@ namespace NativeUtils {
             }
 
 #if USE_JSLIB
-            NativePrefetch_Start(url, (int) resourceType, identifier);
-#else
-            Console.Out.WriteLine("[NativePrefetch] Requested prefetch of '{0}' of type {1} (id {2})", url, resourceType, identifier);
-            s_DebugPrefetchedURLS.Add(identifier);
+            unsafe {
+                fixed (char* stringPtr = url) {
+                    NativePrefetch_LoadResource(stringPtr, (int)resourceType, (int)priority, identifier, group);
+                }
+            }
+#endif // USE_JSLIB
+
+            return true;
+        }
+
+        /// <summary>
+        /// Prefetchs the resource with the given url.
+        /// </summary>
+        static public unsafe bool LoadResource(char* url, int urlLength, ResourceType resourceType, ResourcePriority priority, int identifier, int group) {
+            if (url == null ) {
+                Console.Error.WriteLine("[NativePrefetch] Cannot prefetch invalid url ''");
+                return false;
+            }
+            if (urlLength < 4) {
+                Console.Error.WriteLine("[NativePrefetch] Cannot prefetch invalid url '{0}'", new string(url, 0, urlLength));
+                return false;
+            }
+
+            if (identifier == 0) {
+                Console.Error.WriteLine("[NativePrefetch] Cannot prefetch invalid identifier");
+                return false;
+            }
+
+#if USE_JSLIB
+            NativePrefetch_LoadResource(url, (int)resourceType, (int)priority, identifier, group);
 #endif // USE_JSLIB
 
             return true;
@@ -62,33 +99,54 @@ namespace NativeUtils {
         /// <summary>
         /// Returns if the resource with the given identifier has been prefetched.
         /// </summary>
-        static public bool IsLoaded(int identifier) {
+        static public bool IsResourceLoaded(int identifier) {
             if (identifier == 0) {
                 Console.Error.WriteLine("[NativePrefetch] Cannot prefetch invalid identifier");
                 return false;
             }
 
 #if USE_JSLIB
-            return NativePrefetch_IsLoaded(identifier);
+            return NativePrefetch_IsResourceLoaded(identifier);
 #else
-            return s_DebugPrefetchedURLS.Contains(identifier);
+            return true;
+#endif // USE_JSLIB
+        }
+
+        /// <summary>
+        /// Returns if all resources within the given group has been prefetched.
+        /// </summary>
+        static public bool IsGroupLoaded(int group) {
+#if USE_JSLIB
+            return NativePrefetch_IsGroupLoaded(group);
+#else
+            return true;
 #endif // USE_JSLIB
         }
 
         /// <summary>
         /// Cancels any prefetch of the resource with the given identifier.
         /// </summary>
-        static public bool Cancel(int identifier) {
+        static public bool CancelResource(int identifier) {
             if (identifier == 0) {
-                Console.Error.WriteLine("[NativePrefetch] Cannot prefetch invalid identifier");
+                Console.Error.WriteLine("[NativePrefetch] Cannot cancel the prefetch of an invalid identifier");
                 return false;
             }
 
 #if USE_JSLIB
-            return NativePrefetch_Cancel(identifier);
+            return NativePrefetch_CancelResource(identifier);
 #else
-            Console.Out.WriteLine("[NativePrefetch] Requested cancel prefetch of resource id {0}", identifier);
-            return s_DebugPrefetchedURLS.Remove(identifier);
+            return true;
+#endif // USE_JSLIB
+        }
+
+        /// <summary>
+        /// Cancels any prefetch of resources with the given group.
+        /// </summary>
+        static public bool CancelGroup(int group) {
+#if USE_JSLIB
+            return NativePrefetch_CancelGroup(group);
+#else
+            return true;
 #endif // USE_JSLIB
         }
     }

@@ -24,7 +24,9 @@ namespace FieldDay.Scripting {
                 return;
             }
 
-            UnloadScripts(ScriptUtility.DB);
+            if (Game.Scenes.IsSafeToUnloadAssets()) {
+                UnloadScripts(ScriptUtility.DB);
+            }
         }
 
         static private bool HandleCurrentLoad(ScriptDatabase db) {
@@ -81,6 +83,7 @@ namespace FieldDay.Scripting {
                 }
 
                 ScriptDBUtility.DeregisterPackage(db, package);
+                Log.Msg("[ScriptLoadingSystem] Unloading script '{0}'...", package.Name());
                 package.Clear();
                 db.UnloadQueue.FastRemoveAt(i);
                 db.HandleGenerator.Free(loadId);

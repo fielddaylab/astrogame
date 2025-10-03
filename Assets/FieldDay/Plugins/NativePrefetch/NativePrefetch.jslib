@@ -1,14 +1,45 @@
+/**
+ * @typedef ResourceGroup
+ * @type {Object}
+ * @property {number} assetCount
+ * @property {number} loading
+ * @property {number} loaded
+ * @property {number} error
+ */
+
+/**
+ * @typedef ResourceInfo
+ * @type {Object}
+ * @property {HTMLLinkElement | HTMLAudioElement} htmlElement
+ * @property {number} identifier
+ * @property {string} sourceUrl
+ * @property {number} group
+ * @property {0 | 1 | 2} state
+ */
+
 var NativePrefetchLib = {
-
     $NPCache: {
-        /**
-         * @type {Map<number, HTMLLinkElement | HTMLAudioElement>}
-        */
-        prefetchLinkMap: null,
+        // MAP
 
         /**
-         * @type {string[]}
+         * @type {Map<number, ResourceInfo>}
          */
+        assetMap: null,
+
+        /**
+         * @type {Map<number, ResourceGroup>}
+         */
+        groupMap: null,
+
+        // SETTINGS
+
+        /**
+         * Array of audio formats to attempt to load.
+         */
+        audioFormatTypes: [],
+
+        // CONSTANTS
+
         resourceTypeStrings: [
             "fetch",
             "audio",
@@ -16,164 +47,289 @@ var NativePrefetchLib = {
             "video"
         ],
 
-        /**
-         * @type {Set<number>}
-         */
-        prefetchLinksLoaded: null,
+        fetchPriorityStrings: [
+            "auto",
+            "low",
+            "high"
+        ],
 
-        /**
-         * @type {string}
-         */
-        prefetchCrossOriginSetting: "anonymous",
-
-        /**
-         * 
-         */
-        Initialize: function() {
-            if (!NPCache.prefetchLinkMap) {
-                NPCache.prefetchLinkMap = new Map();
-            }
-            if (!NPCache.prefetchLinksLoaded) {
-                NPCache.prefetchLinksLoaded = new Set();
-            }
-        },
-
-        /**
-         * 
-         * @param {string} url 
-         * @param {number} identifier
-         */
-        NativePrefetchOnLoad: function(url, identifier) {
-            if (!NPCache.prefetchLinkMap.has(identifier)) {
-                return;
-            }
-
-            NPCache.prefetchLinksLoaded.add(identifier);
-        },
-
-        /**
-         * 
-         * @param {string} url 
-         * @param {number} identifier
-         */
-        NativePrefetchOnError: function(url, identifier) {
-            if (!NPCache.prefetchLinkMap.has(identifier)) {
-                return;
-            }
-
-            NPCache.prefetchLinksLoaded.add(identifier);
-            console.error("[NativePrefetch] Error when loading", url);
-        },
-
-        /**
-         * @param {string} path 
-         * @param {string} ext
-         * @return {string}
-         */
-        ChangeExtension: function(path, ext) {
-            const idx = path.lastIndexOf(".");
-            if (idx >= 0) {
-                return path.substring(0, idx) + ext;
-            } else {
-                return path + ext;
-            }
-        }
+        crossOriginSetting: "anonymous",
     },
 
     /**
-     * Begins prefetching from the given url.
-     * @param {string} url 
-     * @param {number} resourceType
-     * @param {number} identifier
+     * Changes the extension of a path.
+     * @param {string} path
+     * @param {string} ext 
+     * @returns {string}
      */
-    NativePrefetch_Start__sig: 'viii',
-    NativePrefetch_Start: function(url, resourceType, identifier) {
-        NPCache.Initialize();
+    $npChangeExtension: function (path, ext) {
+        const idx = path.lastIndexOf(".");
+        if (idx >= 0) {
+            return path.substring(0, idx) + ext;
+        } else {
+            return path + ext;
+        }
+    },
 
-        /** @type {string} */
-        var urlStr = Pointer_stringify(url);
+    $npInitialize: function () {
+        if (NPCache.assetMap == null) {
+            NPCache.assetMap = new Map();
+        }
 
-        if (!NPCache.prefetchLinkMap.has(urlStr)) {
-            var prefetchElement;
-            if (resourceType == 1) { // audio loads via audio
-                prefetchElement = new Audio();
+        if (NPCache.groupMap == null) {
+            NPCache.groupMap = new Map();
+        }
+    },
 
-                var oggSource = document.createElement("source");
-                oggSource.src = NPCache.ChangeExtension(urlStr, ".ogg");
-                oggSource.type = "audio/ogg";
-
-                var mp3Source = document.createElement("source");
-                mp3Source.src = NPCache.ChangeExtension(urlStr, ".mp3");
-                mp3Source.type = "audio/mpeg";
-                
-                prefetchElement.appendChild(oggSource);
-                prefetchElement.appendChild(mp3Source);
-
-                prefetchElement.autoplay = false;
-                prefetchElement.crossOrigin = NPCache.prefetchCrossOriginSetting;
-                prefetchElement.load();
-            } else { // everything else loads via link
-                prefetchElement = document.createElement("link");
-                prefetchElement.href = urlStr;
-                prefetchElement.rel = "prefetch";
-                prefetchElement.as = NPCache.resourceTypeStrings[resourceType | 0];
-                prefetchElement.crossOrigin = NPCache.prefetchCrossOriginSetting;
-            }
-
-            prefetchElement._url = urlStr;
-
-            NPCache.prefetchLinkMap.set(number, prefetchElement);
-            document.body.appendChild(prefetchElement);
-
-            if (resourceType != 1) {
-                prefetchElement.onload = function() {
-                    NPCache.NativePrefetchOnLoad(urlStr, identifier);
-                };
-                prefetchElement.onerror = function() {
-                    NPCache.NativePrefetchOnError(urlStr, identifier);
+    $npOnLoad__deps: ['$npGetGroup'],
+    $npOnLoad: function (info) {
+        /** @type {ResourceInfo} */ const infoObj = info;
+        if (infoObj.state != 1) {
+            /** @type {ResourceGroup} */ const group = npGetGroup(info.group);
+            if (group) {
+                if (infoObj.state == 0) {
+                    group.loading--;
+                } else if (infoObj.state == 2) {
+                    group.error--;
                 }
             }
-
-            console.log("[NativePrefetch] Beginning prefetch of", urlStr);
-        }
-    },
-
-    /**
-     * Returns if the resource for the given identifier is prefetched.
-     * @param {number} identifier
-     */
-    NativePrefetch_IsLoaded__sig: 'ii',
-    NativePrefetch_IsLoaded: function(identifier) {
-        
-        if (NPCache.prefetchLinkMap && NPCache.prefetchLinkMap.has(identifier)) {
-            var prefetchElement = NPCache.prefetchLinkMap.get(identifier);
-            if (prefetchElement instanceof HTMLAudioElement) {
-                return prefetchElement.readyState == 4;
-            } else if (prefetchElement instanceof HTMLLinkElement) {
-                return NPCache.prefetchLinksLoaded.has(identifier);
-            } else {
-                return false;
+            infoObj.state = 1;
+            const element = infoObj.htmlElement;
+            if (element) {
+                element.onload = element.onerror = null;
+                element.remove();
+                infoObj.htmlElement = null;
             }
-        } else {
-            return false;
+        }
+    },
+
+    $npOnError__deps: ['$npGetGroup'],
+    $npOnError: function (info) {
+        /** @type {ResourceInfo} */ const infoObj = info;
+        if (infoObj.state != 2) {
+            /** @type {ResourceGroup} */ const group = npGetGroup(info.group);
+            if (group) {
+                if (infoObj.state == 0) {
+                    group.loading--;
+                } else if (infoObj.state == 1) {
+                    group.loaded--;
+                }
+            }
+            infoObj.state = 2;
         }
     },
 
     /**
-     * Cancels the prefetch for resource of the given identifier.
+     * Returns an asset group with the given identifier.
      * @param {number} identifier
+     * @param {boolean} create
+     * @returns {ResourceGroup}
      */
-    NativePrefetch_Cancel__sig: 'ii',
-    NativePrefetch_Cancel: function (identifier) {
-        if (NPCache.prefetchLinkMap && NPCache.prefetchLinkMap.has(identifier)) {
-            var prefetchElement = NPCache.prefetchLinkMap.get(identifier);
-            prefetchElement.onload = null;
-            prefetchElement.onerror = null;
-            prefetchElement.parentElement.removeChild(prefetchElement);
-            NPCache.prefetchLinkMap.delete(urlStr);
-            NPCache.prefetchLinksLoaded.delete(urlStr);
+    $npGetGroup: function (identifier, create) {
+        /**
+         * @type {Map<number, ResourceGroup>}
+         */
+        const map = NPCache.groupMap;
+        var group = map.get(identifier);
+        if (!group && create) {
+            group = {
+                assetCount: 0,
+                loading: 0,
+                loaded: 0,
+                error: 0
+            };
+            map.set(identifier, group);
+        }
+        return group;
+    },
 
-            console.log("[NativePrefetch] Canceling prefetch of", prefetchElement._url);
+    /**
+     * 
+     * @param {string} url
+     * @param {number} type
+     * @param {number} priority
+     * @param {number} identifier
+     * @param {number} group
+     * @returns {ResourceInfo}
+     */
+    $npCreateResource__deps: ['$npChangeExtension', '$npOnLoad', '$npOnError'],
+    $npCreateResource: function (url, type, priority, identifier, group) {
+        var element, isAudioElement;
+        if (type == 1 && NPCache.audioFormatTypes.length > 0) {
+            isAudioElement = true;
+
+            element = new Audio();
+            for (let i = 0; i < NPCache.audioFormatTypes.length; i++) {
+                const format = NPCache.audioFormatTypes[i];
+                const formatSource = document.createElement("source");
+                formatSource.src = npChangeExtension(url, format.extension);
+                formatSource.type = format.type;
+
+                element.appendChild(formatSource);
+            }
+
+            element.autoplay = false;
+        } else {
+            isAudioElement = false;
+
+            element = document.createElement("link");
+            element.href = url;
+            element.rel = "prefetch";
+            element.as = NPCache.resourceTypeStrings[type | 0];
+            element.fetchPriority = NPCache.fetchPriorityStrings[priority | 0];
+        }
+        element.crossOrigin = NPCache.crossOriginSetting;
+
+        /** @type {ResourceInfo} */
+        const elementInfo = {
+            htmlElement: element,
+            sourceUrl: url,
+            identifier: identifier,
+            group: group,
+            state: 0
+        };
+
+        element.onload = () => {
+            npOnLoad(elementInfo);
+        };
+        element.onerror = () => {
+            npOnError(elementInfo);
+        };
+
+        if (isAudioElement) {
+            element.load();
+        }
+
+        document.head.appendChild(element);
+        NPCache.assetMap.set(identifier, elementInfo);
+
+        return elementInfo;
+    },
+
+    NativePrefetch_LoadResource__deps: ['$npCreateResource', '$npInitialize', '$npGetGroup'],
+    NativePrefetch_LoadResource__sig: 'viiiii',
+    NativePrefetch_LoadResource: function (url, type, priority, identifier, group) {
+        npInitialize();
+
+        /**
+         * @type {Map<number, ResourceInfo>}
+         */
+        const elementMap = NPCache.assetMap;
+
+        const urlString = UTF8ToString(url);
+
+        if (!elementMap.has(identifier)) {
+            /** @type {ResourceInfo} */
+            const element = npCreateResource(urlString, type, priority, identifier, group);
+            /** @type {ResourceGroup} */
+            const groupInfo = npGetGroup(group, true);
+
+            groupInfo.assetCount++;
+            groupInfo.loading++;
+
+            console.log("[NativePrefetch] Prefetching", urlString, "in group", group);
+        }
+    },
+
+    NativePrefetch_IsResourceLoaded__sig: 'ii',
+    NativePrefetch_IsResourceLoaded: function (identifier) {
+        /**
+         * @type {Map<number, ResourceInfo>}
+         */
+        const elementMap = NPCache.assetMap;
+        if (elementMap) {
+            var elementInfo;
+            if (elementInfo = elementMap.get(identifier)) {
+                return elementInfo.state == 1;
+            }
+        }
+        return false;
+    },
+
+    NativePrefetch_IsGroupLoaded__sig: 'ii',
+    NativePrefetch_IsGroupLoaded: function (group) {
+        /**
+         * @type {Map<number, ResourceGroup>}
+        */
+        const groupMap = NPCache.groupMap;
+        if (groupMap) {
+            var groupInfo;
+            if (groupInfo = groupMap.get(group)) {
+                return groupInfo.loading == 0;
+            }
+        }
+        return false;
+    },
+
+    NativePrefetch_CancelResource__deps: ['$npInitialize', '$npGetGroup'],
+    NativePrefetch_CancelResource__sig: 'ii',
+    NativePrefetch_CancelResource: function (identifier) {
+        npInitialize();
+
+        /** @type {ResourceInfo} */
+        const elementInfo = NPCache.assetMap.get(identifier);
+        if (elementInfo) {
+            /** @type {ResourceGroup} */
+            const group = npGetGroup(elementInfo.group);
+            if (group) {
+                group.assetCount--;
+                switch (elementInfo.state) {
+                    case 0: {
+                        group.loading--;
+                        break;
+                    }
+                    case 1: {
+                        group.loaded--;
+                        break;
+                    }
+                    case 1: {
+                        group.error--;
+                        break;
+                    }
+                }
+            }
+            const element = elementInfo.htmlElement;
+            if (element) {
+                element.onload = element.onerror = null;
+                element.remove();
+                elementInfo.htmlElement = null;
+
+                console.log("[NativePrefetch] Cancelling prefetch of", elementInfo.sourceUrl);
+            }
+
+            NPCache.assetMap.delete(identifier);
+            return true;
+        }
+
+        return false;
+    },
+
+    NativePrefetch_CancelGroup__sig: 'ii',
+    NativePrefetch_CancelGroup: function (group) {
+        /** @type {Map<number, ResourceGroup>}*/
+        const groupMap = NPCache.groupMap;
+        /** @type {Map<number, ResourceInfo>}*/
+        const assetMap = NPCache.assetMap;
+
+        if (groupMap && groupMap.has(group)) {
+            groupMap.delete(group);
+
+            console.log("[NativePrefetch] Cancelling prefetch group", group);
+
+            assetMap.forEach((elementInfo, identifier, map) => {
+                if (elementInfo.group == group) {
+                    const element = elementInfo.htmlElement;
+                    if (element) {
+                        element.onload = element.onerror = null;
+                        element.remove();
+                        elementInfo.htmlElement = null;
+
+                        console.log("[NativePrefetch] Cancelling prefetch of", elementInfo.sourceUrl);
+                    }
+                    map.delete(identifier);
+                }
+            });
+
             return true;
         }
 

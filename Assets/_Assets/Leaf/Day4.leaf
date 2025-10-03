@@ -5,6 +5,16 @@
 
 $call InitUpdateMasks()
 $call ToggleDeskPicture()
+$call PreloadDocument("Day4Cal")
+$call PreloadDocument("Level1")
+$call PreloadDocument("Level2")
+$call PreloadDocument("Satellite")
+$call PreloadDocument("Panic")
+$call PreloadDocument("Seriously")
+$call PreloadDocument("Day4Letter")
+$call PreloadDocument("DadUrsaPostcard")
+$call PreloadDocument("Day4ElijahPostcard")
+$call PreloadDocument("Day4Question")
 $call SpawnDocument("Day4Cal")
 $call SpawnDocument("Level1")
 $call SpawnDocument("Level2")
@@ -36,6 +46,8 @@ $call SetRadioFrequency(137, true)
 $call SetRadioDialLocked(true)
 $call MonitorPower->Deactivate()
 $call ChapterTitles->PrepareTransition()
+
+$call PreloadMusic("Music.Moonthought")
 
 //#region Spawn Documents
 
@@ -436,13 +448,13 @@ $wait 20
 
 $if !temp:WizeCompleted, GetFilterState() != 2, !temp:DracoPuzzleComplete
     {@Astrid} I should select the infrared filter. $[level4/Astrid/l4_a_24i]
-    $branch .PuzzleTimeoutHint
+    $loop
 $elseif !temp:WizeCompleted, !temp:DracoPuzzleComplete
     {@Astrid} Ok, so WISE is spectral type T. That means it's a Brown Dwarf. $[level4/Astrid/l4_a_24j]
-    $branch .PuzzleTimeoutHint
+    $loop
 $elseif !temp:EltaninCompleted, !temp:DracoPuzzleComplete
     {@Astrid} So, Eltanin has no hydrogen... I should use my spectrometer. $[level4/Astrid/l4_a_24k]
-    $branch .PuzzleTimeoutHint
+    $loop
 $endif
 
 :: DracoPuzzleComplete
@@ -535,6 +547,7 @@ $wait 1
 $wait 1
 {@Astrid} Dad? $[level4/Astrid/l4_a_42]
 
+$call StopMusic(3)
 $wait 3
 $call LoadNextDay()
 

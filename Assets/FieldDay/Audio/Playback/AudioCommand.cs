@@ -12,7 +12,8 @@ namespace FieldDay.Audio {
         Loop = 0x01,
         UseProvidedSource = 0x02,
         RandomizePlaybackStart = 0x04,
-        SecondaryClipOverride = 0x08
+        SecondaryClipOverride = 0x08,
+        EagerUnload = 0x10,
     }
 
     /// <summary>
@@ -35,6 +36,7 @@ namespace FieldDay.Audio {
         Seek,
         SetMixState,
         SetLoop,
+        SetUnloadFlag,
     }
 
     #endregion // Enums
@@ -197,9 +199,9 @@ namespace FieldDay.Audio {
     /// <summary>
     /// Data for SetLoop.
     /// </summary>
-    internal struct SetLoopCommandData {
+    internal struct SetInstanceBoolCommandData {
         public UniqueId16 Handle;
-        public bool Loop;
+        public bool Value;
     }
 
     #endregion // Command Data
@@ -216,6 +218,7 @@ namespace FieldDay.Audio {
         [FieldOffset(4)] public ConfigVolumeChangeCommandData ConfigVolume;
         [FieldOffset(4)] public SeekCommandData Seek;
         [FieldOffset(4)] public SetMixStateData SetMixState;
-        [FieldOffset(4)] public SetLoopCommandData SetLoop;
+        [FieldOffset(4)] public SetInstanceBoolCommandData SetLoop;
+        [FieldOffset(4)] public SetInstanceBoolCommandData SetUnloadFlag;
     }
 }

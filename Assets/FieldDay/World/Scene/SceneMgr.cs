@@ -224,6 +224,7 @@ namespace FieldDay.Scenes {
 
             SceneHelper.IgnoreSceneByName("*_PERSISTENT");
             SceneHelper.IgnoreSceneByName("*_LAYER");
+            SceneHelper.IgnoreSceneByName("*_AUX");
             SceneHelper.IgnoreSceneByName("Boot");
         }
 
@@ -365,7 +366,10 @@ namespace FieldDay.Scenes {
             return m_UnloadQueue.Count > 0 || m_CurrentUnloadOperation.Active || IsLoadQueued(SceneType.Main);
         }
 
-        internal bool IsSafeToUnloadAssets() {
+        /// <summary>
+        /// Returns if it is safe to unload any assets.
+        /// </summary>
+        public bool IsSafeToUnloadAssets() {
             return m_AssetUnloadLock == 0 && !IsLoadQueued(SceneType.Main) && m_LoadQueue.Count == 0 && !m_CurrentLoadOperation.Active
                 && m_PreloadQueue.Count == 0 && !m_CurrentPreloadOperation.Active
                 && m_UnloadQueue.Count == 0 && !m_CurrentUnloadOperation.Active;
@@ -1483,9 +1487,9 @@ namespace FieldDay.Scenes {
                 m_AssetUnloadLock--;
                 yield return AssetUtility.UnloadUnused();
 
-                Log.Trace("[SceneMgr] Unloading unused streaming assets...");
+                Log.Trace("[SceneMgr] Unloading unused streaming assets (pass 1)...");
 
-                Streaming.UnloadUnusedAsync();
+                Streaming.UnloadUnusedAsync(30);
                 Game.Rendering.TetrahedralizeLightProbes();
 
                 if (args.Type == SceneType.Main) {
@@ -1535,10 +1539,14 @@ namespace FieldDay.Scenes {
 
                 if (args.Type == SceneType.Main) {
                     OnMainSceneLateEnable.Invoke();
-                    Game.Events.Dispatch(SceneUtils.Events.Ready);
+                    Game.Events.Dispatch(SceneUtils.Events.LateEnable);
                 }
 
                 // one more check for dependencies
+
+                Log.Trace("[SceneMgr] Unloading unused streaming assets (pass 2)...");
+
+                Streaming.UnloadUnusedAsync();
 
                 Log.Trace("[SceneMgr] Waiting for remaining dependencies...");
 
