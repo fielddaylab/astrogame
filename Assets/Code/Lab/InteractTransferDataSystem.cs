@@ -27,7 +27,7 @@ namespace Astro {
                         int rowIndex = dataState.SelectedTarget.PuzzleRow;
                         UIFocus current = Find.State<FocusState>().CurrentFocus;
 
-                        // Ensure none of the otehr rows have this data
+                        // Ensure none of the other rows have this data
                         for (int i = 0; i < puzzleState.PuzzleEntryGuesses.Length; i++) {
                             if (puzzleState.PuzzleEntryGuesses[i] == null) continue;
 
@@ -38,6 +38,7 @@ namespace Astro {
                                 // Found a match we need to clear now
                                 DataUtility.ClearData(target.DataSlot);
                                 FocusableUtility.UpdateFocusTrackerSprite(puzzleState.PuzzleEntryGuesses[i], null);
+                                puzzleState.PuzzleEntryGuesses[i] = null;
                             }
                         }
 
