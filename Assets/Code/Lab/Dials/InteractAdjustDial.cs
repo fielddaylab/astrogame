@@ -21,6 +21,8 @@ namespace Astro {
         [NonSerialized] public float ConstrainedValDelta = 0;
 
         [NonSerialized] public bool ValChanged = false;
+        [NonSerialized] public bool InteractEnded = false;
+        [NonSerialized] public bool InteractReceived = false;
 
         [Header("Objects")]
         public Transform DialRoot;

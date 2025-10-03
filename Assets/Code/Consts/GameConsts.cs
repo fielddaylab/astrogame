@@ -89,6 +89,11 @@ public static class GameEvents {
     public static readonly StringHash32 ToggleSpectralElement = "toggle-spectral-element"; // bool toggledOn
     public static readonly StringHash32 ClickSubmitStarId = "click-submit-star-id";
     public static readonly StringHash32 SubmittedStarChanged = "submitted-star-changed";
+    public static readonly StringHash32 PointsUpdated = "points-updated"; // int pointsEarned
+    public static readonly StringHash32 StartAdjustRadio = "start-adjust-radio"; // int start frequency
+    public static readonly StringHash32 EndAdjustRadio = "end-adjust-radio"; // int end frequency
+    public static readonly StringHash32 RadioSecretFound = "radio-secret-found"; // msgId
+    public static readonly StringHash32 TelescopeStencilDisplayed = "telescope-stencil-displayed";
 }
 
 public static class ScriptEvents {

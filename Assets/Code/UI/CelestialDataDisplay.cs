@@ -148,6 +148,8 @@ namespace Astro {
 
             Graphic FullPip = PointPip.GetChild(0).GetComponent<Graphic>();
             yield return Tween.Value(0f, 1f, (f) => { FullPip.SetAlpha(f); }, Mathf.Lerp, 0.3f);
+
+            AstroGame.Events.Dispatch(GameEvents.PointsUpdated, pointIndex + 1);
         }
 
         private Action clearDataDisplay;

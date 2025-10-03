@@ -8,6 +8,8 @@ namespace Astro {
         public override void ProcessWorkForComponent(InteractAdjustDial component, float deltaTime) {
             component.ValChanged = false;
             component.ConstrainedValDelta = 0;
+            component.InteractEnded = false;
+            component.InteractReceived = false;
         }
     }
 }

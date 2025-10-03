@@ -1,5 +1,6 @@
 
 
+using Astro.Radio;
 using Astro.Reference;
 using BeauUtil;
 using BeauUtil.Debugger;
@@ -171,6 +172,13 @@ namespace Astro {
             OGDLog.SchedulingConfig sched = OGDLog.SchedulingConfig.Default;
             sched.FlushDelay = 2;
             m_Log.ConfigureScheduling(sched);
+
+            InitVars();
+        }
+
+        private void InitVars() {
+            m_WorkingStarList.Stars = new List<string>();
+            m_WorkingStarEdgeList.Edges = new List<Tuple<string, string>>();
         }
 
         private void SetAnalyticsUserCode(string userCode) {
@@ -241,6 +249,11 @@ namespace Astro {
                 .Register(GameEvents.DuplicateOpenIdSubmission, LogStarIdRejected)
                 .Register(GameEvents.IncorrectOpenIdSubmission, LogStarIdRejected)
                 .Register(GameEvents.InvalidOpenIdSubmission, LogStarIdRejected)
+                .Register<int>(GameEvents.PointsUpdated, LogPointsNeededDisplayed)
+                .Register(GameEvents.StartAdjustRadio, LogStartRadioAdjust)
+                .Register<int>(GameEvents.EndAdjustRadio, LogEndRadioAdjust)
+                .Register<string>(GameEvents.RadioSecretFound, LogRadioSecretFound)
+                .Register(GameEvents.TelescopeStencilDisplayed, LogTelescopeStencilDisplayed)
                 ;
 
             // state update events
@@ -265,6 +278,8 @@ namespace Astro {
         [NonSerialized] private ReviewSubmissionClassification m_LastKnownRefSubmissionClassification = default;
 
         private string m_TempStr;
+        private StarList m_WorkingStarList = new StarList();
+        private StarEdgeList m_WorkingStarEdgeList = new StarEdgeList();
 
         private static string LEFT = "LEFT";
         private static string RIGHT = "RIGHT";
@@ -839,18 +854,22 @@ namespace Astro {
         //points_needed_displayed
         //* points_needed
         //* points_earned
-        private void LogPointsNeededDisplayed (int ptsNeeded, int ptsEarned) {
+        private void LogPointsNeededDisplayed (int ptsEarned) {
+            DayConfigAsset config = DayConfigUtil.GetConfigForState();
+
             m_Log.BeginEvent("points_needed_displayed");
-            m_Log.EventParam("points_needed", ptsNeeded);
+            m_Log.EventParam("points_needed", config.NumNeutrinoPoints);
             m_Log.EventParam("points_earned", ptsEarned);
             m_Log.SubmitEvent();
         }
 
         //start_radio_adjust
         //* radio_frequency
-        private void LogStartRadioAdjust(int freq) {
+        private void LogStartRadioAdjust() {
+            RadioRig rig = Find.State<RadioRig>();
+
             m_Log.BeginEvent("start_radio_adjust");
-            m_Log.EventParam("radio_frequency", freq);
+            m_Log.EventParam("radio_frequency", rig.LastKnownFrequency);
             m_Log.SubmitEvent();
         }
 
@@ -865,10 +884,12 @@ namespace Astro {
         //radio_secret_found
         //* message_id
         //* radio_frequency
-        private void LogRadioSecretFound(string msgId, int freq) {
+        private void LogRadioSecretFound(string msgId) {
+            RadioRig rig = Find.State<RadioRig>();
+
             m_Log.BeginEvent("radio_secret_found");
             m_Log.EventParam("message_id", msgId);
-            m_Log.EventParam("radio_frequency", freq);
+            m_Log.EventParam("radio_frequency", rig.LastKnownFrequency);
             m_Log.SubmitEvent();
         }
 
@@ -876,12 +897,28 @@ namespace Astro {
         //* constellation_id
         //* constellation : List[star_id]
         //* connected_stars : List[Pair[star_id]]
-        private void LogTelescopeStencilDisplayed(ConstellationData constellation, List<Tuple<string, string>> StarPairs) {
+        private void LogTelescopeStencilDisplayed() {
+            PuzzleState puzzleState = Find.State<PuzzleState>();
+
+            m_WorkingStarList.Stars.Clear();
+            for (int i = 0; i < puzzleState.ActivePuzzle.ConstellationStars.Length; i++) {
+                m_WorkingStarList.Stars.Add(Find.NamedAsset<CelestialAsset>(puzzleState.ActivePuzzle.ConstellationStars[i]).DisplayName);
+            }
+
+            m_WorkingStarEdgeList.Edges.Clear();
+            for (int i = 0; i < puzzleState.ActivePuzzle.Edges.Length; i++) {
+                m_WorkingStarEdgeList.Edges.Add(
+                    new Tuple<string, string>(
+                        Find.NamedAsset<CelestialAsset>(puzzleState.ActivePuzzle.Edges[i].Object1).DisplayName,
+                        Find.NamedAsset<CelestialAsset>(puzzleState.ActivePuzzle.Edges[i].Object2).DisplayName
+                        )
+                    );
+            }
+
             m_Log.BeginEvent("telescope_stencil_displayed");
-            m_Log.EventParam("constellation_id", constellation.Id);
-            //m_Log.EventParamJson("constellation", constellation.Stars);
-            //m_Log.EventParamJson("connected_stars", StarPairs)
-            // TODO: update with json
+            m_Log.EventParam("constellation_id", EnumLookup.ConstellationType[(int)puzzleState.ActivePuzzle.Constellation]);
+            m_Log.EventParamJson("constellation", m_WorkingStarList.AppendStars(m_JsonBuilder).End());
+            m_Log.EventParamJson("connected_stars", m_WorkingStarEdgeList.AppendEdges(m_JsonBuilder).End());
             m_Log.SubmitEvent();
         }
 
@@ -1300,6 +1337,39 @@ namespace Astro {
             if (Stars != null) {
                 foreach (var star in Stars) {
                     json.Field("star_id", star);
+                }
+            }
+
+            return json;
+        }
+    }
+
+    [Serializable]
+    public struct StarList {
+        public List<string> Stars;
+
+        public readonly JsonBuilder AppendStars(JsonBuilder json) {
+            if (Stars != null) {
+                foreach (var star in Stars) {
+                    json.Field("star_id", star);
+                }
+            }
+
+            return json;
+        }
+    }
+
+    [Serializable]
+    public struct StarEdgeList {
+        public List<Tuple<string, string>> Edges;
+
+        public readonly JsonBuilder AppendEdges(JsonBuilder json) {
+            if (Edges != null) {
+                foreach (var edge in Edges) {
+                    json.BeginObject("pair");
+                    json.Field("edgeA", edge.Item1);
+                    json.Field("edgeB", edge.Item2);
+                    json.EndObject();
                 }
             }
 

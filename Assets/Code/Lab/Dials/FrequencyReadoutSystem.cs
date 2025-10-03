@@ -11,6 +11,10 @@ namespace Astro {
         public override void ProcessWorkForComponent(DialAdjustableInstrument primary, float deltaTime) {
             base.ProcessWorkForComponent(primary, deltaTime);
 
+            if (primary.Source.InteractReceived) {
+                AstroGame.Events.Dispatch(GameEvents.StartAdjustRadio, primary.CurrentValue);
+            }
+
             if (!primary.Source.ValChanged) {
                 primary.Updated = false;
                 return;
@@ -30,6 +34,10 @@ namespace Astro {
 
                 primary.Readout.SetText(psb);
                 primary.Updated = true;
+
+                if (primary.Source.InteractEnded) {
+                    AstroGame.Events.Dispatch(GameEvents.EndAdjustRadio, primary.CurrentValue);
+                }
             }
         }
     }

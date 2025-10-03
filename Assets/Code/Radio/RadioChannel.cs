@@ -22,6 +22,7 @@ namespace Astro.Radio {
         [AudioEvent] public StringHash32 EventOverride;
         
         [NonSerialized] public StringHash32 WaveformKey;
+        public bool IsSecret; // flag for events
     }
 
     public enum RadioChannelMode {

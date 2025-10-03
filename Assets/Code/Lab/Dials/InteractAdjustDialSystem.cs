@@ -5,6 +5,9 @@ namespace Astro {
     [SysUpdate(GameLoopPhase.Update, 10)] // After MouseInteractionSystem
     public class InteractAdjustDialSystem : ComponentSystemBehaviour<InteractAdjustDial, LabInteractable> {
         public override void ProcessWorkForComponent(InteractAdjustDial primary, LabInteractable secondary, float deltaTime) {
+            if (secondary.InteractReceived) {
+                primary.InteractReceived = true;
+            }
             if (secondary.InteractEnded) {
                 primary.BaseVal = primary.CurrConstrainedVal;
             }
@@ -18,6 +21,10 @@ namespace Astro {
                 DialUtility.TryAdjustDial(primary, delta.x);
             } else {
                 LabInteractableUtility.ReleaseCurrentInteractable();
+            }
+
+            if (secondary.InteractEnded) {
+                primary.InteractEnded = true;
             }
         }
     }

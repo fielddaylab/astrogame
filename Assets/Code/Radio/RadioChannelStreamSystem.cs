@@ -32,6 +32,7 @@ namespace Astro.Radio {
                     }
 
                     if (clip != null) {
+                        AstroGame.Events.Dispatch(GameEvents.RadioSecretFound, clip.name);
                         StringHash32 eventId = channel.EventOverride;
                         if (eventId.IsEmpty) {
                             eventId = channel.Mode == RadioChannelMode.OneShot ? m_StateA.OneshotEvent: m_StateA.LoopedEvent;

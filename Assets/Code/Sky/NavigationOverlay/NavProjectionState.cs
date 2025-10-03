@@ -76,6 +76,7 @@ namespace Astro {
             state.Initialized = false;
 
             InitNavProjectionSystem(state);
+            AstroGame.Events.Dispatch(GameEvents.TelescopeStencilDisplayed);
         }
 
         public static void DisableConstellationNavUI() {
