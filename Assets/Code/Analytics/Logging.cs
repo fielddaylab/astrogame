@@ -276,6 +276,7 @@ namespace Astro {
         [NonSerialized] private HintLogData m_LastKnownHint = default;
         [NonSerialized] private StringHash32 m_LastKnownControlPageId = default;
         [NonSerialized] private string m_LastKnownControlPageName = default;
+        [NonSerialized] private StarLogData m_LastKnownMonitorSelectedStar = default;
 
         [NonSerialized] private CelestialAsset m_LastKnownSubmittedStarAsset = default;
         [NonSerialized] private ReviewSubmissionClassification m_LastKnownRefSubmissionClassification = default;
@@ -532,6 +533,7 @@ namespace Astro {
         //    * category
         private void LogClickSelectStar(StarLogData star)
         {
+            m_LastKnownMonitorSelectedStar = star;
             StarKnownData knownData = new StarKnownData();
             knownData.Data = new List<StarKnownDataItem>();
             var asset = Find.NamedAsset<CelestialAsset>(star.AssetID);
@@ -997,7 +999,7 @@ namespace Astro {
         private void LogClickToolLoad(PacketTransferData data) {
             m_Log.BeginEvent("click_tool_load");
             m_Log.EventParam("tool_name", EnumLookup.InstrumentType[(int)data.ToolId]); // don't have instruments tied to data slots
-            m_Log.EventParam("star_id", data.StarId);
+            m_Log.EventParam("star_id", m_LastKnownMonitorSelectedStar.Name);
             m_Log.EventParam("value", data.Value.ToString()); // don't have a consistent formatting
             m_Log.SubmitEvent();
         }
@@ -1024,7 +1026,7 @@ namespace Astro {
             m_Log.EventParam("tool_name", EnumLookup.InstrumentType[(int)data.ToolId]); // don't have instruments tied to data slots
             m_Log.EventParam("star_id", data.StarId); // don't have stars tied to cell slots (TODO: store row id for each cell, store star per row)
             m_Log.EventParam("value", data.Value.ToString()); // don't have consistent formatting
-            m_Log.EventParam("source_star", data.StarId);
+            m_Log.EventParam("source_star", m_LastKnownMonitorSelectedStar.Name);
             m_Log.SubmitEvent();
         }
 
@@ -1032,17 +1034,21 @@ namespace Astro {
         //* puzzle_id
         //* puzzle_contents
         private void LogClickSubmitPuzzle(PuzzleData puzzle) {
+            PuzzleState puzzleState = Find.State<PuzzleState>();
+
             m_Log.BeginEvent("click_submit_puzzle");
-            m_Log.EventParam("puzzle_id", puzzle.Id);
+            m_Log.EventParam("puzzle_id", puzzleState.ActivePuzzle.DisplayName);
             // m_Log.EventParamJson("puzzle_contents", puzzle.Rows); // TODO: json array of structs
             m_Log.SubmitEvent();
         }
 
         //logic_puzzle_accepted
         //* puzzle_id
-        private void LogLogicPuzzleAccepted(string puzzleId) {
+        private void LogLogicPuzzleAccepted() {
+            PuzzleState puzzleState = Find.State<PuzzleState>();
+
             m_Log.BeginEvent("logic_puzzle_accepted");
-            m_Log.EventParam("puzzle_id", puzzleId);
+            m_Log.EventParam("puzzle_id", puzzleState.ActivePuzzle.DisplayName);
             m_Log.SubmitEvent();
         }
 
@@ -1050,10 +1056,12 @@ namespace Astro {
         //* puzzle_id
         //* incorrect_stars : List[star_id]
         //* new_puzzle_contents
-        private void LogLogicPuzzleRejected(string puzzleId, string[] wrongStars, PuzzleRowData[] contents) {
+        private void LogLogicPuzzleRejected(string[] wrongStars, PuzzleRowData[] contents) {
+            PuzzleState puzzleState = Find.State<PuzzleState>();
+
             m_Log.BeginEvent("logic_puzzle_rejected");
-            m_Log.EventParam("puzzle_id", puzzleId);
-            m_Log.EventParam("incorrect_stars", puzzleId);
+            m_Log.EventParam("puzzle_id", puzzleState.ActivePuzzle.DisplayName);
+            m_Log.EventParam("incorrect_stars", wrongStars.ToString());
             // m_Log.EventParamJson("new_puzzle_contents", contents); // TODO: json array of structs
             m_Log.SubmitEvent();
         }
