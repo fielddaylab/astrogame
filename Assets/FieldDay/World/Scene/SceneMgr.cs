@@ -1589,6 +1589,10 @@ namespace FieldDay.Scenes {
         #region Dependencies
 
         private bool AreDependenciesAndStreamingLoaded(SceneLoadPhase phase) {
+            if (BuildInfo.IsLoading()) {
+                return false;
+            }
+
             for (int i = 0; i < m_Dependencies.Count; i++) {
                 if (!m_Dependencies[i].IsLoaded(phase)) {
                     return false;
@@ -1617,6 +1621,10 @@ namespace FieldDay.Scenes {
         /// Returns if all load dependencies loaded.
         /// </summary>
         public bool AreLoadDependenciesLoaded(SceneLoadPhase phase = SceneLoadPhase.Any) {
+            if (BuildInfo.IsLoading()) {
+                return false;
+            }
+
             for (int i = 0; i < m_Dependencies.Count; i++) {
                 if (!m_Dependencies[i].IsLoaded(phase)) {
                     return false;
