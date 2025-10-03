@@ -167,6 +167,8 @@ namespace Astro {
                 GameLoop.ResumeUpdates(AstroGame.PuzzleSubmissionUpdateMask);
                 GameLoop.ResumeUpdates(AstroGame.OpenSubmissionUpdateMask);
                 GameLoop.ResumeUpdates(AstroGame.InstrumentUpdateMask);
+
+                Game.Events.Dispatch(GameEvents.AfterPuzzleModeStart);
             });
             return info;
         }

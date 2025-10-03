@@ -17,6 +17,7 @@ public static class GameEvents {
     public static readonly StringHash32 ClassificationClicked = "classification-clicked";
     public static readonly StringHash32 StopOpenMode = "stop-open-mode";
     public static readonly StringHash32 StartPuzzleMode = "start-puzzle-mode";
+    public static readonly StringHash32 AfterPuzzleModeStart = "after-puzzle-mode-start";
     public static readonly StringHash32 StopPuzzleMode = "stop-puzzle-mode";
     public static readonly StringHash32 StartNeutrinoNavigation = "start-navigation-mode";
     public static readonly StringHash32 NeutrinoNavigationComplete = "neutrino-navigation-complete";

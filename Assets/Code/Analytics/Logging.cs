@@ -177,8 +177,9 @@ namespace Astro {
         }
 
         private void InitVars() {
-            m_WorkingStarList.Stars = new List<string>();
+            m_WorkingStrList.Items = new List<string>();
             m_WorkingStarEdgeList.Edges = new List<Tuple<string, string>>();
+            m_WorkingPuzzleContentsData.Contents = new List<PuzzleRowProvidedLogData>();
         }
 
         private void SetAnalyticsUserCode(string userCode) {
@@ -254,6 +255,7 @@ namespace Astro {
                 .Register<int>(GameEvents.EndAdjustRadio, LogEndRadioAdjust)
                 .Register<string>(GameEvents.RadioSecretFound, LogRadioSecretFound)
                 .Register(GameEvents.TelescopeStencilDisplayed, LogTelescopeStencilDisplayed)
+                .Register(GameEvents.AfterPuzzleModeStart, LogLogicPuzzleStart)
                 ;
 
             // state update events
@@ -278,8 +280,9 @@ namespace Astro {
         [NonSerialized] private ReviewSubmissionClassification m_LastKnownRefSubmissionClassification = default;
 
         private string m_TempStr;
-        private StarList m_WorkingStarList = new StarList();
+        private StringList m_WorkingStrList = new StringList();
         private StarEdgeList m_WorkingStarEdgeList = new StarEdgeList();
+        private PuzzleContentsLogData m_WorkingPuzzleContentsData = new PuzzleContentsLogData();
 
         private static string LEFT = "LEFT";
         private static string RIGHT = "RIGHT";
@@ -900,9 +903,10 @@ namespace Astro {
         private void LogTelescopeStencilDisplayed() {
             PuzzleState puzzleState = Find.State<PuzzleState>();
 
-            m_WorkingStarList.Stars.Clear();
+            m_WorkingStrList.Items.Clear();
+            m_WorkingStrList.FieldId = "star_id";
             for (int i = 0; i < puzzleState.ActivePuzzle.ConstellationStars.Length; i++) {
-                m_WorkingStarList.Stars.Add(Find.NamedAsset<CelestialAsset>(puzzleState.ActivePuzzle.ConstellationStars[i]).DisplayName);
+                m_WorkingStrList.Items.Add(Find.NamedAsset<CelestialAsset>(puzzleState.ActivePuzzle.ConstellationStars[i]).DisplayName);
             }
 
             m_WorkingStarEdgeList.Edges.Clear();
@@ -917,7 +921,7 @@ namespace Astro {
 
             m_Log.BeginEvent("telescope_stencil_displayed");
             m_Log.EventParam("constellation_id", EnumLookup.ConstellationType[(int)puzzleState.ActivePuzzle.Constellation]);
-            m_Log.EventParamJson("constellation", m_WorkingStarList.AppendStars(m_JsonBuilder).End());
+            m_Log.EventParamJson("constellation", m_WorkingStrList.AppendItems(m_JsonBuilder).End());
             m_Log.EventParamJson("connected_stars", m_WorkingStarEdgeList.AppendEdges(m_JsonBuilder).End());
             m_Log.SubmitEvent();
         }
@@ -931,19 +935,57 @@ namespace Astro {
         //    * value
         //    * is_filled
         //    * color/app mag/blue/ir
-        private void LogLogicPuzzleStart(PuzzleData puzzle) {
+        private void LogLogicPuzzleStart() {
+            PuzzleState puzzleState = Find.State<PuzzleState>();
+            if (puzzleState.QueuedPuzzle == null) { return; }
+
+            m_WorkingStrList.Items.Clear();
+            m_WorkingStrList.FieldId = "clue";
+            for (int i = 0; i < puzzleState.QueuedPuzzle.ClueText.Length; i++) {
+                m_WorkingStrList.Items.Add(puzzleState.QueuedPuzzle.ClueText[i]);
+            }
+
+            m_WorkingPuzzleContentsData.Contents.Clear();
+            for (int r = 0; r < puzzleState.QueuedPuzzle.Rows.Length; r++) {
+                var rowData = new PuzzleRowProvidedLogData();
+                if ((puzzleState.QueuedPuzzle.Rows[r].ProvidedProperties & DataTypeMask.Name) != 0) {
+                    CelestialAsset asset = Find.NamedAsset<CelestialAsset>(puzzleState.QueuedPuzzle.Rows[r].Object);
+                    rowData.Name = asset.DisplayName;
+                }
+                if ((puzzleState.QueuedPuzzle.Rows[r].ProvidedProperties & DataTypeMask.Coordinates) != 0) {
+                    CelestialAsset asset = Find.NamedAsset<CelestialAsset>(puzzleState.QueuedPuzzle.Rows[r].Object);
+                    asset.Coords.Declination.Sanitize();
+                    asset.Coords.RightAscension.Sanitize();
+                    StringBuilder sb = new StringBuilder();
+                    asset.Coords.RightAscension.ToString(sb);
+                    sb.Append(",\n");
+                    asset.Coords.Declination.ToString(sb);
+                    rowData.Coords = sb.ToString();
+                }
+
+                m_WorkingPuzzleContentsData.Contents.Add(rowData);
+            }
+
             m_Log.BeginEvent("logic_puzzle_start");
-            //m_Log.EventParamJson("puzzle_info", clues); //TODO: json array
-            m_Log.EventParam("puzzle_id", puzzle.Id);
-            //m_Log.EventParamJson("puzzle_contents", puzzle.Rows); //TODO: json array of structs
+            m_Log.EventParamJson("puzzle_info", m_WorkingStrList.AppendItems(m_JsonBuilder).End());
+
+            m_WorkingStrList.Items.Clear();
+            m_WorkingStrList.FieldId = "property";
+            EnumLookup.GatherDataTypes(ref m_WorkingStrList.Items, puzzleState.QueuedPuzzle.RequiredProperties);
+
+            m_Log.EventParam("puzzle_id", puzzleState.QueuedPuzzle.DisplayName);
+            m_Log.EventParamJson("puzzle_contents", m_WorkingPuzzleContentsData.AppendContents(m_JsonBuilder).End());
+            m_Log.EventParamJson("puzzle_properties", m_WorkingStrList.AppendItems(m_JsonBuilder).End());
             m_Log.SubmitEvent();
         }
 
         //logic_puzzle_complete
         //* puzzle_id
         private void LogLogicPuzzleComplete(string puzzleId) {
+            PuzzleState puzzleState = Find.State<PuzzleState>();
+
             m_Log.BeginEvent("logic_puzzle_complete");
-            m_Log.EventParam("puzzle_id", puzzleId);
+            m_Log.EventParam("puzzle_id", puzzleState.ActivePuzzle.DisplayName);
             m_Log.SubmitEvent();
         }
 
@@ -1235,6 +1277,11 @@ namespace Astro {
         public static readonly string[] ClassificationType = new string[] {
             "BRIGHTNESS", "SPECTRAL_TYPE", "ELEMENTS", "HISTORICAL", "SPECTRAL_TYPE_DWARF", "LUMINOSITY"
         };
+        public static readonly string[] DataType = new string[] {
+            "NAME", "COORDINATES", "COLOR", "APPARENT_MAGNITUDE", "ABSOLUTE_MAGNITUDE", "MATERIAL_SPECTRUM",
+            "TEMPERATURE", "DISTANCE", "HISTORICAL_COORDINATES", "HISTORICAL_APPARENT_MAGNITUDE",
+            "BLUE_MAGNITUDE", "INFRARED_MAGNITUDE", "HISTORICAL_COLOR", "COLOR_INDEX"
+        };
         public static readonly string[] ConstellationType = new string[] {
             "URSA_MAJOR", "ANDROMEDA", "DRACO", "ERIDANUS", "HERCULES", "HYDRA", "LEO", "ORION", "PERSEUS", "TAURUS"
         };
@@ -1259,6 +1306,55 @@ namespace Astro {
             }
             */
             return "NONE";
+        }
+
+        public static void GatherDataTypes(ref List<string> workList, DataTypeMask type) {
+            if (workList == null) {
+                workList = new List<string>();
+            }
+
+            if ((type & DataTypeMask.Name) != 0) {
+                workList.Add(DataType[0]);
+            }
+            if ((type & DataTypeMask.Coordinates) != 0) {
+                workList.Add(DataType[1]);
+            }
+            if ((type & DataTypeMask.Color) != 0) {
+                workList.Add(DataType[2]);
+            }
+            if ((type & DataTypeMask.ApparentMagnitude) != 0) {
+                workList.Add(DataType[3]);
+            }
+            if ((type & DataTypeMask.AbsoluteMagnitude) != 0) {
+                workList.Add(DataType[4]);
+            }
+            if ((type & DataTypeMask.MaterialSpectrum) != 0) {
+                workList.Add(DataType[5]);
+            }
+            if ((type & DataTypeMask.Temperature) != 0) {
+                workList.Add(DataType[6]);
+            }
+            if ((type & DataTypeMask.Distance) != 0) {
+                workList.Add(DataType[7]);
+            }
+            if ((type & DataTypeMask.Historical_Coordinates) != 0) {
+                workList.Add(DataType[8]);
+            }
+            if ((type & DataTypeMask.Historical_ApparentMagnitude) != 0) {
+                workList.Add(DataType[9]);
+            }
+            if ((type & DataTypeMask.BlueMagnitude) != 0) {
+                workList.Add(DataType[10]);
+            }
+            if ((type & DataTypeMask.InfraredMagnitude) != 0) {
+                workList.Add(DataType[11]);
+            }
+            if ((type & DataTypeMask.Historical_Color) != 0) {
+                workList.Add(DataType[12]);
+            }
+            if ((type & DataTypeMask.ColorIndex) != 0) {
+                workList.Add(DataType[13]);
+            }
         }
 
         // Bits.Enumerate(flags): indices of all the flags. for each, convert the index back to a string
@@ -1345,13 +1441,14 @@ namespace Astro {
     }
 
     [Serializable]
-    public struct StarList {
-        public List<string> Stars;
+    public struct StringList {
+        public List<string> Items;
+        public string FieldId;
 
-        public readonly JsonBuilder AppendStars(JsonBuilder json) {
-            if (Stars != null) {
-                foreach (var star in Stars) {
-                    json.Field("star_id", star);
+        public readonly JsonBuilder AppendItems(JsonBuilder json) {
+            if (Items != null) {
+                foreach (var item in Items) {
+                    json.Field(FieldId, item);
                 }
             }
 
@@ -1369,6 +1466,36 @@ namespace Astro {
                     json.BeginObject("pair");
                     json.Field("edgeA", edge.Item1);
                     json.Field("edgeB", edge.Item2);
+                    json.EndObject();
+                }
+            }
+
+            return json;
+        }
+    }
+
+    [Serializable]
+    public struct PuzzleRowProvidedLogData {
+        public string Name;
+        public string Coords;
+
+        public readonly JsonBuilder Append(JsonBuilder json) {
+            json.Field("name", Name);
+            json.Field("coords", Coords);
+
+            return json;
+        }
+    }
+
+    [Serializable]
+    public struct PuzzleContentsLogData {
+        public List<PuzzleRowProvidedLogData> Contents;
+
+        public readonly JsonBuilder AppendContents(JsonBuilder json) {
+            if (Contents != null) {
+                foreach (var row in Contents) {
+                    json.BeginObject("row");
+                    row.Append(json);
                     json.EndObject();
                 }
             }

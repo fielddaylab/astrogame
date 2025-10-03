@@ -162,6 +162,7 @@ namespace Astro {
             GameLoop.ResumeUpdates(AstroGame.AnySubmissionUpdateMask);
             GameLoop.ResumeUpdates(AstroGame.InstrumentUpdateMask);
             SlotHighlightUtility.SetInstrumentButtonsDimmed(Find.State<InstrumentInventoryState>(), false);
+            Game.Events.Dispatch(GameEvents.AfterPuzzleModeStart);
         }
 
         [LeafMember("StartFinalPuzzleMode"), Preserve]
