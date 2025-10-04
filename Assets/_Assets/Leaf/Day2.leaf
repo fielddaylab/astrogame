@@ -440,7 +440,7 @@ $call ConsoleCommandLine->PlayConsoleText("Day2UpgradeSystem")
 $call SetInstrumentUnlocked(SpectrometerInstrument, true)
 $wait 1
 $call OpenRefGuidePage("Spectrometer")
-$wait 11 // wait for the console text to finish
+$wait 11 // wait for the console upgrade text to finish
 
 $call ConsoleCommandLine->HideConsole()
 $wait 0.1
@@ -452,7 +452,7 @@ $wait 0.5
 $call OpenRefGuidePage("ConstellationHercules")
 $wait 1
 
-{@Astrid}	Hmm, Hercules. Just like Elijah's postcard. 	$[level2/Astrid/l2_a_23]
+{@Astrid} Hmm, Hercules. Just like Elijah's postcard. $[level2/Astrid/l2_a_23]
 $wait 1
 $goto .SetupPuzzleNav
 

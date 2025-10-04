@@ -46,6 +46,7 @@ $call SetRefPageActive("ConstellationDraco", false)
 $call SetRefPageActive("ConstellationAndromedaCompleted", false)
 $call SetChannelActive(IceCube, false)
 $call SetRadioFrequency(137, true)
+$set temp:finalPuzzleStarted = false
 $call MonitorPower->Deactivate()
 $call ChapterTitles->PrepareTransition()
 $start Observatory.ResetSubtitlePosition
@@ -316,6 +317,8 @@ $branch .SatelliteDecodeBegin
 
 :: SatelliteDecodeBegin
 @trigger    BeginDecoderSequence
+
+$set temp:finalPuzzleStarted = true
 $call SetInputState(false)
 $call SetRefPageActive("ConstellationAndromeda", false)
 $call SetRefPageActive("ConstellationAndromedaCompleted", true)
@@ -327,6 +330,7 @@ $call StartFinalPuzzleMode()
 $call StopMusic(3)
 {@Astrid} Whoa... what's this? $[level5/Astrid/l5_a_27]
 $set temp:finalPuzzleCompleted = false
+$set temp:finalPuzzleHint = false
 $wait 0.5
 $call SetRefGuideActive(false)
 $call ScriptFader->FadeOut()
@@ -349,10 +353,26 @@ $call OpenRefGuidePage("ConstellationPerseusCompleted")
 
 $branch .DecoderHintTimeout
 
+:: DecoderRefGuideClosed
+@trigger    OnRefGuideClosed
+@priority   High
+@interrupt
+@when   temp:finalPuzzleStarted, !temp:finalPuzzleCompleted
+
+$set temp:finalPuzzleHint = true
+
+:: DecoderRefGuideOpen
+@trigger    OnRefGuideClosed
+@priority   High
+@interrupt
+@when   temp:finalPuzzleStarted, !temp:finalPuzzleCompleted
+
+$set temp:finalPuzzleHint = false
+
 :: .DecoderHintTimeout
 $wait 20
 
-$if !temp:finalPuzzleCompleted
+$if temp:finalPuzzleHint
     {@Astrid} I should look at my constellation notes in the tools section of the reference guide. $[level5/Astrid/l5_a_30a]
     $loop
 $endif
