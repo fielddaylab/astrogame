@@ -321,6 +321,7 @@ $call SetRadioDialLocked(true)
 {@Radio} Astrid, come in, are you there? $[level3/radio_lady/l3_r_13a]
 {@Astrid} Hey! Yeah, I'm here. What happened?	$[level3/Astrid/l3_a_38b]
 {@Radio} Well, long story, but it looks like your station is receiving historical observations from a surviving satellite.  $[level3/radio_lady/l3_r_13b]
+$call OpenRefGuidePage("HistoricalData")
 {@Radio} So... you have been cleared to use the parallax module. $[level3/radio_lady/l3_r_13c]
 {@Radio} This will allow you to measure <b>parallax</b>, so that you can determine the distance of stars from Earth.	$[level3/radio_lady/l3_r_13]
 {@Astrid} Sick. Anything else? Like... maybe any data on a giant meteor storm later this year? 	$[level3/Astrid/l3_a_40]
@@ -362,10 +363,11 @@ $wait 1
 $call SetInputState(true)
 
 $call ConsoleCommandLine->PlayConsoleText("Day3UpgradeSystem")
-$call OpenRefGuidePage("HistoricalData")
-
 $call SetInstrumentUnlocked(InfraredWavelength, true)
 $call SetInstrumentUnlocked(HistoricalDataInstrument, true)
+$wait 1
+$call OpenRefGuidePage("HistoricalData")
+$wait 11 // wait for the console upgrade text to finish
 
 $call ConsoleCommandLine->HideConsole()
 $wait 0.1

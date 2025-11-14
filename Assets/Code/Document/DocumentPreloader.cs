@@ -5,6 +5,7 @@ using FieldDay;
 using FieldDay.SharedState;
 using Leaf.Runtime;
 using System;
+using UnityEngine;
 
 namespace Astro {
     public sealed class DocumentPreloader : SharedStateComponent {

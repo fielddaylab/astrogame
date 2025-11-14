@@ -717,6 +717,16 @@ namespace FieldDay.Rendering {
             VisualizeEntireScreen
         }
 
+        static private float s_ScreenshotScale = 4;
+
+        /// <summary>
+        /// Scale of all screenshots.
+        /// </summary>
+        static public float ScreenshotScale {
+            get { return s_ScreenshotScale; }
+            set { s_ScreenshotScale = Mathf.Clamp(s_ScreenshotScale, 1, 8); }
+        }
+
 #if DEVELOPMENT
 
         [EngineMenuFactory]
@@ -856,6 +866,12 @@ namespace FieldDay.Rendering {
             });
 
             info.AddSubmenu(shaderAudit);
+
+            DMInfo screenshots = new DMInfo("Screenshots");
+
+            screenshots.AddSlider("Resolution Scale", () => s_ScreenshotScale, (v) => s_ScreenshotScale = v, 1, 8, 0.5f, (f) => string.Format("{0:0.0}x", f));
+
+            info.AddSubmenu(screenshots);
 
             return info;
         }

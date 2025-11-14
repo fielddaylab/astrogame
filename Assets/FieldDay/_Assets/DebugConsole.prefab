@@ -497,7 +497,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 312.01, y: 192.01}
+  m_SizeDelta: {x: 312.01, y: 208.01}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2731158911717826441
 MonoBehaviour:
@@ -585,8 +585,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 156.005, y: -96.005}
-  m_SizeDelta: {x: 312.01, y: 192.01}
+  m_AnchoredPosition: {x: 156.005, y: -104.005}
+  m_SizeDelta: {x: 312.01, y: 208.01}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6155091773275689617
 CanvasRenderer:
@@ -618,8 +618,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "[P/MMB]\tSkip current cutscene line/VO\n\n[Shift +]\n[+]\tIncrease game
     speed x2\n[-]\tDecrease game speed x2\n[0]\tReset game speed\n[9]\tStep one frame
-    and pause\n[C]\tToggle freecam\n\n[Ctrl + Shift +]\n[F8/L]\tToggle debug geometry
-    and ui\n[F9/BKSP]\tGenerate debug dump file"
+    and pause\n[C]\tToggle freecam\n[Enter]\tTake screenshot\n\n[Ctrl + Shift +]\n[F8/L]\tToggle
+    debug geometry and ui\n[F9/BKSP]\tGenerate debug dump file"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4d7666ee207a5ae4fa390331a56dc126, type: 2}
   m_sharedMaterial: {fileID: 2884982905993258549, guid: 4d7666ee207a5ae4fa390331a56dc126, type: 2}
@@ -1379,6 +1379,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a3ee03a5fada3942b82c53c377b7113, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6327550933867679993 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4697618310385283251, guid: 5650266d42f118f49955154be9b773a9, type: 3}
+  m_PrefabInstance: {fileID: 1656956302716133450}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2083700632403306130}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7e4303b9a6760c478212de2de9a89a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &6402981698535678573 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5630982862828634663, guid: 5650266d42f118f49955154be9b773a9, type: 3}
@@ -1672,6 +1683,15 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5379806690338830053, guid: 7980326f9b25cdd4ea19b25fdceed3cf, type: 3}
       insertIndex: -1
       addedObject: {fileID: 652087473860880939}
+    - targetCorrespondingSourceObject: {fileID: 5379806690338830053, guid: 7980326f9b25cdd4ea19b25fdceed3cf, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4549873326258150014}
+    - targetCorrespondingSourceObject: {fileID: 5379806690338830053, guid: 7980326f9b25cdd4ea19b25fdceed3cf, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7815292960830032751}
+    - targetCorrespondingSourceObject: {fileID: 5379806690338830053, guid: 7980326f9b25cdd4ea19b25fdceed3cf, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8464395523208139163}
     - targetCorrespondingSourceObject: {fileID: 4129866505210384346, guid: 7980326f9b25cdd4ea19b25fdceed3cf, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7434150139310960008}
@@ -1713,6 +1733,64 @@ MonoBehaviour:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &4549873326258150014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2854406757600522226}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cfefc0c42079f74cb2e74439ce50c1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UniqueID: 1a7fd533-1fb0-4db4-ba77-3614e338bb86
+  m_WakeUpChildren: 1
+--- !u!114 &7815292960830032751
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2854406757600522226}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 665b47c00f5562942aa91af84badcbd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_MoveSpeed: 5
+  m_RotateSpeed: 5
+  m_ResetCameraPositionEveryFrame: 1
+--- !u!114 &8464395523208139163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2854406757600522226}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8fdb9f91acb5384e8ff455fcbb3cbfa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Canvas: {fileID: 3462019693457050598}
+  m_ToggleKey: 96
+  m_MinimalGroup: {fileID: 7405062506632213586}
+  m_TimeDisplay: {fileID: 4276681840141961395}
+  m_InputBlocker: {fileID: 652087473860880939}
+  m_KeyboardReferenceGroup: {fileID: 3490311510138546704}
+  m_DebugCamera: {fileID: 7815292960830032751}
+  m_DebugCameraReference: {fileID: 2872880198493926577}
+  m_DebugMenus: {fileID: 6327550933867679993}
+  m_DebugMenuInput: {fileID: 6520429127270186323}
+  m_QuickMenu: {fileID: 0}
+  m_QuickMenuInput: {fileID: 0}
+--- !u!223 &3462019693457050598 stripped
+Canvas:
+  m_CorrespondingSourceObject: {fileID: 6719259513892934385, guid: 7980326f9b25cdd4ea19b25fdceed3cf, type: 3}
+  m_PrefabInstance: {fileID: 7868925980619479319}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &3901607808977061293 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6562098552122465466, guid: 7980326f9b25cdd4ea19b25fdceed3cf, type: 3}
@@ -1758,3 +1836,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b05a086a82db36947972a0b383ab3f56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!225 &7405062506632213586 stripped
+CanvasGroup:
+  m_CorrespondingSourceObject: {fileID: 860217633760013637, guid: 7980326f9b25cdd4ea19b25fdceed3cf, type: 3}
+  m_PrefabInstance: {fileID: 7868925980619479319}
+  m_PrefabAsset: {fileID: 0}

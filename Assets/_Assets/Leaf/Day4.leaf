@@ -1,5 +1,6 @@
 #basePath	Day4
 
+// #region Preload
 :: Preload
 @function   ScenePreload
 
@@ -48,6 +49,8 @@ $call MonitorPower->Deactivate()
 $call ChapterTitles->PrepareTransition()
 
 $call PreloadMusic("Music.Moonthought")
+
+//#endregion
 
 //#region Spawn Documents
 
@@ -357,12 +360,11 @@ $wait 1
 $call SetInputState(true)
 
 $call ConsoleCommandLine->PlayConsoleText("Day4UpgradeSystem")
-$wait 1
-{@Astrid} With the historical data upgrade, I should able to use the parallax transfer module to calculate absolute magnitude. $[level4/Astrid/l4_a_24ea]
-$call OpenRefGuidePage("ParallaxDataTransfer")
-$wait 9 // wait for the console text to finish
-
 $call SetInstrumentUnlocked(HistoricalDataModeToggle, true)
+$wait 1
+$call OpenRefGuidePage("ParallaxDataTransfer")
+{@Astrid} With the historical data upgrade, I should able to use the parallax transfer module to calculate absolute magnitude. $[level4/Astrid/l4_a_24ea]
+$wait 9 // wait for the console text to finish
 
 $call ConsoleCommandLine->HideConsole()
 $wait 0.1
