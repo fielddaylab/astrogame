@@ -125,5 +125,40 @@ namespace Astro {
                 }
             }
         }
+
+        static public InstrumentTypeMask GetInstrumentTypeFromDataMask(DataTypeMask dataMask) {
+
+            switch (dataMask) {
+                case DataTypeMask.Name:
+                    return InstrumentTypeMask.NONE;
+                case DataTypeMask.Coordinates:
+                    return InstrumentTypeMask.COORDINATES;
+                case DataTypeMask.Color:
+                    return InstrumentTypeMask.COLOR_METER;
+                case DataTypeMask.ApparentMagnitude:
+                    return InstrumentTypeMask.PHOTOMETER;
+                case DataTypeMask.AbsoluteMagnitude:
+                    return InstrumentTypeMask.PHOTOMETER;
+                case DataTypeMask.MaterialSpectrum:
+                    return InstrumentTypeMask.SPECTROMETER;
+                case DataTypeMask.Temperature:
+                    return InstrumentTypeMask.TEMPERATURE_METER;
+                case DataTypeMask.Distance:
+                    return InstrumentTypeMask.PARALLAX;
+                case DataTypeMask.Historical_Coordinates:
+                    return InstrumentTypeMask.PARALLAX;
+                case DataTypeMask.Historical_ApparentMagnitude:
+                    return InstrumentTypeMask.PARALLAX;
+                case DataTypeMask.BlueMagnitude:
+                    return InstrumentTypeMask.PHOTOMETER;
+                case DataTypeMask.InfraredMagnitude:
+                    return InstrumentTypeMask.PHOTOMETER;
+                case DataTypeMask.Historical_Color:
+                case DataTypeMask.ColorIndex:
+                    return InstrumentTypeMask.COLOR_METER;
+                default:
+                    return InstrumentTypeMask.NONE;
+            }
+        }
     }
 }

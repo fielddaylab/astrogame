@@ -5,11 +5,14 @@ using FieldDay;
 using FieldDay.Systems;
 using BeauRoutine;
 using FieldDay.Scripting;
+using System.Text;
 
 namespace Astro
 {
     [SysUpdate(GameLoopPhase.Update, 500, AstroGame.AnySubmissionUpdateMask)] // After Interactable Select System
     public class InteractSelectSlotSystem : ComponentSystemBehaviour<InteractSelectSlot, LabInteractable> {
+        private static PacketTransferData m_WorkingPacketTransferData = new PacketTransferData();
+        private static StringBuilder m_WorkingStringBuilder = new StringBuilder();
 
         public override bool HasWork() {
             return base.HasWork() && (Find.State<ViewState>().ActiveNode?.AllowSlotSelection ?? false);
@@ -18,6 +21,30 @@ namespace Astro
         public override void ProcessWorkForComponent(InteractSelectSlot primary, LabInteractable secondary, float deltaTime)
         {
             if (!secondary.InteractReceived) { return; }
+
+            if (primary.DataSlot != null && primary.DataSlot.IsSource && primary.DataSlot.Displays.Length > 0) {
+                m_WorkingStringBuilder.Clear();
+                // Assemble Analytics data
+                // m_WorkingPacketTransferData.StarId
+                m_WorkingPacketTransferData.ToolId = DataUtility.GetInstrumentTypeFromDataMask(primary.DataSlot.Type);
+                
+                if (primary.DataSlot.CurrentData.IsValid) {
+                    if (DataUtility.TryFormatForDefaultOutput(primary.DataSlot.CurrentData, primary.DataSlot.Displays[0].Formatting, m_WorkingStringBuilder)) {
+                        m_WorkingPacketTransferData.ValueStr = m_WorkingStringBuilder.ToString();
+                    }
+                }
+                else {
+                    string nullTxt = primary.DataSlot.Displays[0].NullText;
+                    if (string.IsNullOrEmpty(nullTxt)) {
+                        nullTxt = DataUtility.EMPTY_OUTPUT;
+                    }
+                    m_WorkingStringBuilder.Append(nullTxt);
+                }
+                m_WorkingPacketTransferData.ValueStr = m_WorkingStringBuilder.ToString();
+
+                AstroGame.Events.Dispatch(GameEvents.ClickToolLoad, EvtArgs.Box(m_WorkingPacketTransferData));
+            }
+
             if (!primary.DataSlot.IsActive || primary.DataSlot.IsHidingData) { return; }
 
             var transferState = Find.State<DataTransferState>();

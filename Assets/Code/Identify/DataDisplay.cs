@@ -46,7 +46,7 @@ namespace Astro {
     }
 
     static public partial class DataUtility {
-        static readonly string EMPTY_OUTPUT = "[Null]";
+        static readonly public string EMPTY_OUTPUT = "[Null]";
         /// <summary>
         /// Populates a data display.
         /// </summary>
@@ -109,7 +109,7 @@ namespace Astro {
             }
         }
 
-        static private bool TryFormatForDefaultOutput(DataPacket packet, DataFormattingFlags flags, StringBuilder sb) {
+        static public bool TryFormatForDefaultOutput(DataPacket packet, DataFormattingFlags flags, StringBuilder sb) {
             bool noUnit = (flags & DataFormattingFlags.NoUnit) != 0;
             bool shorten = !noUnit && (flags & DataFormattingFlags.Shorten) != 0;
             switch (packet.Type) {

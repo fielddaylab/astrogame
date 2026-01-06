@@ -257,6 +257,7 @@ namespace Astro {
                 .Register(GameEvents.TelescopeStencilDisplayed, LogTelescopeStencilDisplayed)
                 .Register(GameEvents.AfterPuzzleModeStart, LogLogicPuzzleStart)
                 .Register(GameEvents.StopPuzzleMode, LogLogicPuzzleComplete)
+                .Register<PacketTransferData>(GameEvents.ClickToolLoad, LogClickToolLoad)
                 ;
 
             // state update events
@@ -279,7 +280,8 @@ namespace Astro {
         [NonSerialized] private StarLogData m_LastKnownMonitorSelectedStar = default;
 
         [NonSerialized] private CelestialAsset m_LastKnownSubmittedStarAsset = default;
-        [NonSerialized] private ReviewSubmissionClassification m_LastKnownRefSubmissionClassification = default;
+        [NonSerialized] private ReviewSubmissionClassification m_LastKnownReviewSubmissionClassification = default;
+        [NonSerialized] private ReferenceClassification m_LastKnownSubmittedRefClassification = default;
 
         private string m_TempStr;
         private StringList m_WorkingStrList = new StringList();
@@ -314,7 +316,8 @@ namespace Astro {
             RefGuideState rgs = Find.State<RefGuideState>();
             ReviewState pps = Find.State<ReviewState>();
             m_LastKnownSubmittedStarAsset = Find.NamedAsset<CelestialAsset>(pps.Identification.AssetId);
-            m_LastKnownRefSubmissionClassification = pps.Identification;
+            m_LastKnownReviewSubmissionClassification = pps.Identification;
+            m_LastKnownSubmittedRefClassification = rgs.SelectedRefClassification;
         }
 
         #endregion // State Handlers
@@ -772,11 +775,11 @@ namespace Astro {
             var rgs = Find.State<RefGuideState>();
             StringBuilder classificationStrBuilder = new StringBuilder();
 
-            if (!m_LastKnownRefSubmissionClassification.Classification.IsEmpty) {
-                var refClassification = Find.NamedAsset<ReferenceClassification>(m_LastKnownRefSubmissionClassification.Classification);
+            if (!m_LastKnownReviewSubmissionClassification.Classification.IsEmpty) {
+                var refClassification = Find.NamedAsset<ReferenceClassification>(m_LastKnownReviewSubmissionClassification.Classification);
                 classificationStrBuilder.Append(refClassification.Label);
-            } else if (m_LastKnownRefSubmissionClassification.Materials != 0) {
-                classificationStrBuilder.Append(SpectrographUtility.Append(m_LastKnownRefSubmissionClassification.Materials, m_JsonBuilder).End().ToString());
+            } else if (m_LastKnownReviewSubmissionClassification.Materials != 0) {
+                classificationStrBuilder.Append(SpectrographUtility.Append(m_LastKnownReviewSubmissionClassification.Materials, m_JsonBuilder).End().ToString());
                 m_JsonBuilder.Clear();
             }
 
@@ -806,7 +809,7 @@ namespace Astro {
 
             m_Log.BeginEvent("star_identification_accepted");
             m_Log.EventParam("star_id", m_LastKnownSubmittedStarAsset.DisplayName);
-            m_Log.EventParam("category", EnumLookup.FirstClassificationType(rgs.SelectedRefClassification.Type));
+            m_Log.EventParam("category", EnumLookup.FirstClassificationType(m_LastKnownSubmittedRefClassification.Type));
             m_Log.EventParam("earned_point", scoredPoint);
             m_Log.SubmitEvent();
         }
@@ -821,18 +824,18 @@ namespace Astro {
             StringBuilder submittedClassificationStrBuilder = new StringBuilder();
             StringBuilder correctClassificationStrBuilder = new StringBuilder();
 
-            var refClassification = Find.NamedAsset<ReferenceClassification>(m_LastKnownRefSubmissionClassification.Classification);
+            var refClassification = Find.NamedAsset<ReferenceClassification>(m_LastKnownReviewSubmissionClassification.Classification);
 
             // get string of submitted classification
-            if (!m_LastKnownRefSubmissionClassification.Classification.IsEmpty) {
+            if (!m_LastKnownReviewSubmissionClassification.Classification.IsEmpty) {
                 submittedClassificationStrBuilder.Append(refClassification.Label);
-            } else if (m_LastKnownRefSubmissionClassification.Materials != 0) {
-                submittedClassificationStrBuilder.Append(SpectrographUtility.Append(m_LastKnownRefSubmissionClassification.Materials, m_JsonBuilder).End().ToString());
+            } else if (m_LastKnownReviewSubmissionClassification.Materials != 0) {
+                submittedClassificationStrBuilder.Append(SpectrographUtility.Append(m_LastKnownReviewSubmissionClassification.Materials, m_JsonBuilder).End().ToString());
                 m_JsonBuilder.Clear();
             }
 
             // get string of correct classification
-            if (!m_LastKnownRefSubmissionClassification.Classification.IsEmpty) {
+            if (!m_LastKnownReviewSubmissionClassification.Classification.IsEmpty) {
                 if (refClassification != null) {
                     for (int i = 0; i < m_LastKnownSubmittedStarAsset.ClassIds.Length; i++) {
                         if ((Find.NamedAsset<ReferenceClassification>(m_LastKnownSubmittedStarAsset.ClassIds[i]).Type
@@ -986,6 +989,7 @@ namespace Astro {
         //* puzzle_id
         private void LogLogicPuzzleComplete() {
             PuzzleState puzzleState = Find.State<PuzzleState>();
+            if (puzzleState.ActivePuzzle == null) { return; }
 
             m_Log.BeginEvent("logic_puzzle_complete");
             m_Log.EventParam("puzzle_id", puzzleState.ActivePuzzle.DisplayName);
@@ -998,9 +1002,9 @@ namespace Astro {
         //* value
         private void LogClickToolLoad(PacketTransferData data) {
             m_Log.BeginEvent("click_tool_load");
-            m_Log.EventParam("tool_name", EnumLookup.InstrumentType[(int)data.ToolId]); // don't have instruments tied to data slots
+            m_Log.EventParam("tool_name", EnumLookup.InstrumentType[(int)data.ToolId]);
             m_Log.EventParam("star_id", m_LastKnownMonitorSelectedStar.Name);
-            m_Log.EventParam("value", data.Value.ToString()); // don't have a consistent formatting
+            m_Log.EventParam("value", data.ValueStr);
             m_Log.SubmitEvent();
         }
 
@@ -1012,7 +1016,7 @@ namespace Astro {
             m_Log.BeginEvent("select_puzzle_cell");
             m_Log.EventParam("tool_name", EnumLookup.InstrumentType[(int)data.ToolId]); // don't have instruments tied to data slots
             m_Log.EventParam("star_id", data.StarId); // don't have stars tied to cell slots (TODO: store row id for each cell, store star per row)
-            m_Log.EventParam("value", data.Value.ToString()); // don't have consistent formatting
+            m_Log.EventParam("value", data.ValueStr); // don't have consistent formatting
             m_Log.SubmitEvent();
         }
 
@@ -1025,7 +1029,7 @@ namespace Astro {
             m_Log.BeginEvent("transfer_value_to_cell");
             m_Log.EventParam("tool_name", EnumLookup.InstrumentType[(int)data.ToolId]); // don't have instruments tied to data slots
             m_Log.EventParam("star_id", data.StarId); // don't have stars tied to cell slots (TODO: store row id for each cell, store star per row)
-            m_Log.EventParam("value", data.Value.ToString()); // don't have consistent formatting
+            m_Log.EventParam("value", data.ValueStr); // don't have consistent formatting
             m_Log.EventParam("source_star", m_LastKnownMonitorSelectedStar.Name);
             m_Log.SubmitEvent();
         }
@@ -1254,15 +1258,16 @@ namespace Astro {
         ABSOLUTE = 0x8
     }
 
-    [Flags]
     public enum InstrumentTypeMask {
         /// Be sure to update EnumLookup if this is updated!
-        PHOTOMETER = 0x01, 
-        COLOR_METER = 0x02, 
-        TEMPERATURE_METER = 0x04, 
-        SPECTROMETER = 0x08,
-        PARALLAX = 0x10, 
-        DECODER = 0x20
+        PHOTOMETER,
+        COLOR_METER,
+        TEMPERATURE_METER,
+        SPECTROMETER,
+        PARALLAX,
+        DECODER,
+        COORDINATES,
+        NONE,
     }
 
     public enum MagnitudeMode {
@@ -1278,7 +1283,7 @@ namespace Astro {
             "VISIBLE", "BLUE", "INFRARED", "ABSOLUTE"
         };
         public static readonly string[] InstrumentType = new string[] {
-            "PHOTOMETER", "COLOR_METER", "TEMPERATURE_METER", "SPECTROMETER", "PARALLAX", "DECODER"
+            "PHOTOMETER", "COLOR_METER", "TEMPERATURE_METER", "SPECTROMETER", "PARALLAX", "DECODER", "COORDINATES", "NONE"
         };
         public static readonly string[] MagnitudeMode = new string[] {
             "ABSOLUTE", "RELATIVE"
@@ -1586,7 +1591,7 @@ namespace Astro {
     public struct PacketTransferData {
         public string StarId;
         public InstrumentTypeMask ToolId;
-        public Variant Value;
+        public string ValueStr;
     }
 
     [Serializable]

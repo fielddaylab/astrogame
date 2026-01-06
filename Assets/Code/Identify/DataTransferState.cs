@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using FieldDay;
 using FieldDay.Components;
 using FieldDay.SharedState;
@@ -11,6 +12,7 @@ namespace Astro {
         public bool SourceUpdated = false;
 
         private Action m_ClearSelectedSource;
+
 
         public void OnRegister() {
             m_ClearSelectedSource = () => {

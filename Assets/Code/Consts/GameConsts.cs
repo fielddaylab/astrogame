@@ -95,6 +95,7 @@ public static class GameEvents {
     public static readonly StringHash32 EndAdjustRadio = "end-adjust-radio"; // int end frequency
     public static readonly StringHash32 RadioSecretFound = "radio-secret-found"; // msgId
     public static readonly StringHash32 TelescopeStencilDisplayed = "telescope-stencil-displayed";
+    public static readonly StringHash32 ClickToolLoad = "click-tool-load"; // PacketTransferData
 }
 
 public static class ScriptEvents {
