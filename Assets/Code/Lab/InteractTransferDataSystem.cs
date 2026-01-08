@@ -21,6 +21,14 @@ namespace Astro {
                     var puzzleState = Find.State<PuzzleState>();
                     PuzzleUtility.CheckEnableSubmit(puzzleState);
 
+                    // Log Analytics TransferValueToCell
+                    // check if target is puzzle cell
+                    if (dataState.SelectedTarget.PuzzleRow != -1) {
+                        // lookup star by row
+                        CelestialAsset asset = Find.NamedAsset<CelestialAsset>(puzzleState.ActivePuzzle.Rows[dataState.SelectedTarget.PuzzleRow].Object);
+                        PacketTransferDataUtility.DispatchEvent(dataState.SelectedTarget, GameEvents.TransferValueToCell, asset.DisplayName);
+                    }
+
                     bool isCoordinateCell = dataState.SelectedTarget.PuzzleCol == 1;
 
                     if (isCoordinateCell) {

@@ -154,7 +154,7 @@ namespace Astro {
             m_Debug = true;
 #endif // DEVELOPMENT
 
-            m_Log = new OGDLog(CreateOGDConsts(), new OGDLog.MemoryConfig(2048, Unsafe.KiB * 64, 256));
+            m_Log = new OGDLog(CreateOGDConsts(), new OGDLog.MemoryConfig(2048 * 2, Unsafe.KiB * 64, 256));
 
             if (!string.IsNullOrEmpty(m_Firebase.ApiKey)) {
                 m_Log.UseFirebase(m_Firebase);
@@ -258,6 +258,8 @@ namespace Astro {
                 .Register(GameEvents.AfterPuzzleModeStart, LogLogicPuzzleStart)
                 .Register(GameEvents.StopPuzzleMode, LogLogicPuzzleComplete)
                 .Register<PacketTransferData>(GameEvents.ClickToolLoad, LogClickToolLoad)
+                .Register<PacketTransferData>(GameEvents.SelectPuzzleCell, LogSelectPuzzleCell)
+                .Register<PacketTransferData>(GameEvents.TransferValueToCell, LogTransferValueToCell)
                 ;
 
             // state update events
@@ -1014,22 +1016,22 @@ namespace Astro {
         //* value : Optional[float | str]
         private void LogSelectPuzzleCell(PacketTransferData data) {
             m_Log.BeginEvent("select_puzzle_cell");
-            m_Log.EventParam("tool_name", EnumLookup.InstrumentType[(int)data.ToolId]); // don't have instruments tied to data slots
-            m_Log.EventParam("star_id", data.StarId); // don't have stars tied to cell slots (TODO: store row id for each cell, store star per row)
-            m_Log.EventParam("value", data.ValueStr); // don't have consistent formatting
+            m_Log.EventParam("tool_name", EnumLookup.InstrumentType[(int)data.ToolId]);
+            m_Log.EventParam("star_id", data.StarId);
+            m_Log.EventParam("value", data.ValueStr);
             m_Log.SubmitEvent();
         }
 
         //transfer_value_to_cell
         //* tool_name
-        //* star_id // TODO: disambiguate. is this star_id the id of the row that the data was transferred into?
+        //* star_id
         //* value
         //* source_star
         private void LogTransferValueToCell(PacketTransferData data) {
             m_Log.BeginEvent("transfer_value_to_cell");
-            m_Log.EventParam("tool_name", EnumLookup.InstrumentType[(int)data.ToolId]); // don't have instruments tied to data slots
-            m_Log.EventParam("star_id", data.StarId); // don't have stars tied to cell slots (TODO: store row id for each cell, store star per row)
-            m_Log.EventParam("value", data.ValueStr); // don't have consistent formatting
+            m_Log.EventParam("tool_name", EnumLookup.InstrumentType[(int)data.ToolId]);
+            m_Log.EventParam("star_id", data.StarId);
+            m_Log.EventParam("value", data.ValueStr);
             m_Log.EventParam("source_star", m_LastKnownMonitorSelectedStar.Name);
             m_Log.SubmitEvent();
         }

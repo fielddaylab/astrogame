@@ -53,6 +53,16 @@ namespace Astro {
         static public void AssignSelectedTarget(DataTransferState state, DataSlot target) {
             state.SelectedTarget = target;
             state.SourceUpdated = true;
+
+            // check if target is puzzle cell
+            if (target.PuzzleRow != -1) {
+                // Assemble Analytics data
+                var puzzleState = Find.State<PuzzleState>();
+                // lookup star by row
+                CelestialAsset asset = Find.NamedAsset<CelestialAsset>(puzzleState.ActivePuzzle.Rows[target.PuzzleRow].Object);
+
+                PacketTransferDataUtility.DispatchEvent(target, GameEvents.SelectPuzzleCell, asset.DisplayName);
+            }
         }
 
         static public void ClearSelections(DataTransferState state) {

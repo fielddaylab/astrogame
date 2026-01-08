@@ -96,6 +96,8 @@ public static class GameEvents {
     public static readonly StringHash32 RadioSecretFound = "radio-secret-found"; // msgId
     public static readonly StringHash32 TelescopeStencilDisplayed = "telescope-stencil-displayed";
     public static readonly StringHash32 ClickToolLoad = "click-tool-load"; // PacketTransferData
+    public static readonly StringHash32 SelectPuzzleCell = "select-puzzle-cell"; // PacketTransferData
+    public static readonly StringHash32 TransferValueToCell = "transfer-value-to-cell"; // PacketTransferData
 }
 
 public static class ScriptEvents {
