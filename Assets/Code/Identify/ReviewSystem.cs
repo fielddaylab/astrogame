@@ -10,10 +10,13 @@ using System;
 using BeauRoutine;
 using BeauPools;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace Astro {
     [SysUpdate(GameLoopPhase.Update, 0, AstroGame.AnySubmissionUpdateMask)]
     public class ReviewSystem : SharedStateSystemBehaviour<ReviewState> {
+        private static List<string> m_WorkingStrList = new List<string>();
+
         public override bool HasWork() {
             return base.HasWork() && (m_State.CurrentSubmission != 0);
         }
@@ -96,6 +99,8 @@ namespace Astro {
                     }
                 }
 
+                AstroGame.Events.Dispatch(GameEvents.LogicPuzzleAccepted);
+
                 ReviewUtility.OnCorrectPuzzleSubmission.Invoke(puzzle.ActivePuzzle.DisplayName);
                 puzzle.PuzzleCorrectSubmissionRoutine.Replace(ReviewUtility.PuzzleCorrectSubmissionRoutine(m_State.ReviewModule, m_State, 2));
 
@@ -143,6 +148,17 @@ namespace Astro {
                 ReviewUtility.ShowResultSprite(false, m_State);
                 Log.Msg("[SubmitPuzzleSystem] Puzzle INCORRECT! D:");
                 PuzzleUtility.ClearRows(puzzle, rowsCorrectness);
+
+                m_WorkingStrList.Clear();
+                for (int r = 0; r < puzzle.ActivePuzzle.Rows.Length; r++) {
+                    StringHash32 assetId = puzzle.ActivePuzzle.Rows[r].Object;
+
+                    if (!rowsCorrectness[r]) {
+                        m_WorkingStrList.Add(Find.NamedAsset<CelestialAsset>(assetId).DisplayName);
+                    }
+                }
+                AstroGame.Events.Dispatch(GameEvents.LogicPuzzleRejected, EvtArgs.Ref(m_WorkingStrList));
+                m_WorkingStrList.Clear();
             }
         }
 

@@ -53,6 +53,9 @@ namespace Astro {
                 reviewState.CurrentSubmission = ReviewSubmissionType.Puzzle;
                 btn.PuzzleLoadingCollider.SetActive(true);
                 Routine.Start(btn.SetButtonActive(false));
+
+                AstroGame.Events.Dispatch(GameEvents.ClickSubmitPuzzle);
+
                 return true;
             }
             return false;

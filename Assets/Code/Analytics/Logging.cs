@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 namespace Astro {
 
@@ -260,6 +261,9 @@ namespace Astro {
                 .Register<PacketTransferData>(GameEvents.ClickToolLoad, LogClickToolLoad)
                 .Register<PacketTransferData>(GameEvents.SelectPuzzleCell, LogSelectPuzzleCell)
                 .Register<PacketTransferData>(GameEvents.TransferValueToCell, LogTransferValueToCell)
+                .Register(GameEvents.ClickSubmitPuzzle, LogClickSubmitPuzzle)
+                .Register(GameEvents.LogicPuzzleAccepted, LogLogicPuzzleAccepted)
+                .Register<List<string>>(GameEvents.LogicPuzzleRejected, LogLogicPuzzleRejected)
                 ;
 
             // state update events
@@ -289,6 +293,7 @@ namespace Astro {
         private StringList m_WorkingStrList = new StringList();
         private StarEdgeList m_WorkingStarEdgeList = new StarEdgeList();
         private PuzzleContentsLogData m_WorkingPuzzleContentsData = new PuzzleContentsLogData();
+        private StringBuilder m_WorkingStringBuilder = new StringBuilder();
 
         private static string LEFT = "LEFT";
         private static string RIGHT = "RIGHT";
@@ -579,7 +584,9 @@ namespace Astro {
             m_JsonBuilder.Clear();
             m_Log.BeginEvent("click_select_star");
             m_Log.EventParamJson("star_data", star.Append(m_JsonBuilder).End());
+            m_JsonBuilder.Clear();
             m_Log.EventParamJson("known_data", knownData.Append(m_JsonBuilder).End());
+            m_JsonBuilder.Clear();
             m_Log.SubmitEvent();
         }
 
@@ -635,6 +642,7 @@ namespace Astro {
             m_Log.BeginEvent("turn_telescope");
             m_Log.EventParam("direction", dir);
             m_Log.EventParamJson("new_orientation", orientation.Append(m_JsonBuilder).End());
+            m_JsonBuilder.Clear();
             m_Log.SubmitEvent();
 
             UpdateTelescopeOrientation(orientation);
@@ -675,6 +683,7 @@ namespace Astro {
             m_Log.BeginEvent("found_telescope_view");
             m_Log.EventParam("constellation_id", EnumLookup.ConstellationType[(int)logData.Constellation]);
             m_Log.EventParamJson("constellation", logData.AppendStars(m_JsonBuilder).End());
+            m_JsonBuilder.Clear();
             m_Log.SubmitEvent();
         }
 
@@ -688,7 +697,9 @@ namespace Astro {
 
             m_Log.BeginEvent("constellation_identification_assigned");
             m_Log.EventParam("constellation_id", EnumLookup.ConstellationType[(int)logData.Constellation]);
+            m_JsonBuilder.Clear();
             m_Log.EventParamJson("constellation", logData.AppendStars(m_JsonBuilder).End());
+            m_JsonBuilder.Clear();
             m_Log.EventParam("points_needed", config.NumNeutrinoPoints.ToStringLookup());
             m_Log.EventParam("identification_type", EnumLookup.FirstClassificationType(config.AcceptedIDSubmissions));
             m_Log.SubmitEvent();
@@ -766,6 +777,7 @@ namespace Astro {
             m_Log.BeginEvent("toggle_spectral_element");
             m_Log.EventParam("toggle", toggle ? ON : OFF);
             m_Log.EventParamJson("new_spectral_selection", SpectrographUtility.Append(rgs.SelectedMaterials, m_JsonBuilder).End());
+            m_JsonBuilder.Clear();
             m_Log.SubmitEvent();
         }
 
@@ -775,21 +787,24 @@ namespace Astro {
         //* classification : str | List[element ID]
         private void LogClickSubmitStarId () {
             var rgs = Find.State<RefGuideState>();
-            StringBuilder classificationStrBuilder = new StringBuilder();
+            m_WorkingStringBuilder.Clear();
 
             if (!m_LastKnownReviewSubmissionClassification.Classification.IsEmpty) {
                 var refClassification = Find.NamedAsset<ReferenceClassification>(m_LastKnownReviewSubmissionClassification.Classification);
-                classificationStrBuilder.Append(refClassification.Label);
+                m_WorkingStringBuilder.Append(refClassification.Label);
             } else if (m_LastKnownReviewSubmissionClassification.Materials != 0) {
-                classificationStrBuilder.Append(SpectrographUtility.Append(m_LastKnownReviewSubmissionClassification.Materials, m_JsonBuilder).End().ToString());
+            m_JsonBuilder.Clear();
+                m_WorkingStringBuilder.Append(SpectrographUtility.Append(m_LastKnownReviewSubmissionClassification.Materials, m_JsonBuilder).End().ToString());
                 m_JsonBuilder.Clear();
             }
 
             m_Log.BeginEvent("click_submit_star_identification");
             m_Log.EventParam("star_id", m_LastKnownSubmittedStarAsset.DisplayName);
             m_Log.EventParam("category", EnumLookup.FirstClassificationType(rgs.SelectedRefClassification.Type));
-            m_Log.EventParam("classification", classificationStrBuilder.ToString());
+            m_Log.EventParam("classification", m_WorkingStringBuilder.ToString());
             m_Log.SubmitEvent();
+
+            m_WorkingStringBuilder.Clear();
         }
 
         // Wrapper for StarIdAccepted event
@@ -832,6 +847,7 @@ namespace Astro {
             if (!m_LastKnownReviewSubmissionClassification.Classification.IsEmpty) {
                 submittedClassificationStrBuilder.Append(refClassification.Label);
             } else if (m_LastKnownReviewSubmissionClassification.Materials != 0) {
+                m_JsonBuilder.Clear();
                 submittedClassificationStrBuilder.Append(SpectrographUtility.Append(m_LastKnownReviewSubmissionClassification.Materials, m_JsonBuilder).End().ToString());
                 m_JsonBuilder.Clear();
             }
@@ -850,6 +866,7 @@ namespace Astro {
                 }
             }
             else if (m_LastKnownSubmittedStarAsset.Spectrograph != 0) {
+                m_JsonBuilder.Clear();
                 correctClassificationStrBuilder.Append(SpectrographUtility.Append(m_LastKnownSubmittedStarAsset.Spectrograph, m_JsonBuilder).End().ToString());
                 m_JsonBuilder.Clear();
             }
@@ -927,10 +944,13 @@ namespace Astro {
                     );
             }
 
+            m_JsonBuilder.Clear();
             m_Log.BeginEvent("telescope_stencil_displayed");
             m_Log.EventParam("constellation_id", EnumLookup.ConstellationType[(int)puzzleState.ActivePuzzle.Constellation]);
             m_Log.EventParamJson("constellation", m_WorkingStrList.AppendItems(m_JsonBuilder).End());
+            m_JsonBuilder.Clear();
             m_Log.EventParamJson("connected_stars", m_WorkingStarEdgeList.AppendEdges(m_JsonBuilder).End());
+            m_JsonBuilder.Clear();
             m_Log.SubmitEvent();
         }
 
@@ -964,26 +984,32 @@ namespace Astro {
                     CelestialAsset asset = Find.NamedAsset<CelestialAsset>(puzzleState.QueuedPuzzle.Rows[r].Object);
                     asset.Coords.Declination.Sanitize();
                     asset.Coords.RightAscension.Sanitize();
-                    StringBuilder sb = new StringBuilder();
-                    asset.Coords.RightAscension.ToString(sb);
-                    sb.Append(",\n");
-                    asset.Coords.Declination.ToString(sb);
-                    rowData.Coords = sb.ToString();
+                    m_WorkingStringBuilder.Clear();
+                    asset.Coords.RightAscension.ToString(m_WorkingStringBuilder);
+                    m_WorkingStringBuilder.Append(",\n");
+                    asset.Coords.Declination.ToString(m_WorkingStringBuilder);
+                    rowData.Coords = m_WorkingStringBuilder.ToString();
+                    m_WorkingStringBuilder.Clear();
                 }
 
                 m_WorkingPuzzleContentsData.Contents.Add(rowData);
             }
 
+            m_JsonBuilder.Clear();
             m_Log.BeginEvent("logic_puzzle_start");
             m_Log.EventParamJson("puzzle_info", m_WorkingStrList.AppendItems(m_JsonBuilder).End());
+            m_JsonBuilder.Clear();
 
             m_WorkingStrList.Items.Clear();
             m_WorkingStrList.FieldId = "property";
             EnumLookup.GatherDataTypes(ref m_WorkingStrList.Items, puzzleState.QueuedPuzzle.RequiredProperties);
 
             m_Log.EventParam("puzzle_id", puzzleState.QueuedPuzzle.DisplayName);
+            m_JsonBuilder.Clear();
             m_Log.EventParamJson("puzzle_contents", m_WorkingPuzzleContentsData.AppendContents(m_JsonBuilder).End());
+            m_JsonBuilder.Clear();
             m_Log.EventParamJson("puzzle_properties", m_WorkingStrList.AppendItems(m_JsonBuilder).End());
+            m_JsonBuilder.Clear();
             m_Log.SubmitEvent();
         }
 
@@ -1039,12 +1065,37 @@ namespace Astro {
         //click_submit_puzzle
         //* puzzle_id
         //* puzzle_contents
-        private void LogClickSubmitPuzzle(PuzzleData puzzle) {
+        private void LogClickSubmitPuzzle() {
             PuzzleState puzzleState = Find.State<PuzzleState>();
+            if (puzzleState.ActivePuzzle == null) { return; }
+
+            m_WorkingPuzzleContentsData.Contents.Clear();
+            for (int r = 0; r < puzzleState.ActivePuzzle.Rows.Length; r++) {
+                var rowData = new PuzzleRowProvidedLogData();
+                if ((puzzleState.ActivePuzzle.Rows[r].ProvidedProperties & DataTypeMask.Name) != 0) {
+                    CelestialAsset asset = Find.NamedAsset<CelestialAsset>(puzzleState.ActivePuzzle.Rows[r].Object);
+                    rowData.Name = asset.DisplayName;
+                }
+                if ((puzzleState.ActivePuzzle.Rows[r].ProvidedProperties & DataTypeMask.Coordinates) != 0) {
+                    CelestialAsset asset = Find.NamedAsset<CelestialAsset>(puzzleState.ActivePuzzle.Rows[r].Object);
+                    asset.Coords.Declination.Sanitize();
+                    asset.Coords.RightAscension.Sanitize();
+                    m_WorkingStringBuilder.Clear();
+                    asset.Coords.RightAscension.ToString(m_WorkingStringBuilder);
+                    m_WorkingStringBuilder.Append(",\n");
+                    asset.Coords.Declination.ToString(m_WorkingStringBuilder);
+                    rowData.Coords = m_WorkingStringBuilder.ToString();
+                    m_WorkingStringBuilder.Clear();
+                }
+
+                m_WorkingPuzzleContentsData.Contents.Add(rowData);
+            }
 
             m_Log.BeginEvent("click_submit_puzzle");
             m_Log.EventParam("puzzle_id", puzzleState.ActivePuzzle.DisplayName);
-            // m_Log.EventParamJson("puzzle_contents", puzzle.Rows); // TODO: json array of structs
+            m_JsonBuilder.Clear();
+            m_Log.EventParamJson("puzzle_contents", m_WorkingPuzzleContentsData.AppendContents(m_JsonBuilder).End());
+            m_JsonBuilder.Clear();
             m_Log.SubmitEvent();
         }
 
@@ -1062,13 +1113,49 @@ namespace Astro {
         //* puzzle_id
         //* incorrect_stars : List[star_id]
         //* new_puzzle_contents
-        private void LogLogicPuzzleRejected(string[] wrongStars, PuzzleRowData[] contents) {
+        private void LogLogicPuzzleRejected(List<string> incorrectRows) {
             PuzzleState puzzleState = Find.State<PuzzleState>();
+
+            if (puzzleState.ActivePuzzle == null) { return; }
+
+            // wrong stars
+            m_WorkingStrList.Items.Clear();
+            m_WorkingStrList.FieldId = "star_id";
+
+            for (int r = 0; r < incorrectRows.Count; r++) {
+                m_WorkingStrList.Items.Add(incorrectRows[r]);
+            }
+
+            // new contents
+            m_WorkingPuzzleContentsData.Contents.Clear();
+            for (int r = 0; r < puzzleState.ActivePuzzle.Rows.Length; r++) {
+                var rowData = new PuzzleRowProvidedLogData();
+                if ((puzzleState.ActivePuzzle.Rows[r].ProvidedProperties & DataTypeMask.Name) != 0) {
+                    CelestialAsset asset = Find.NamedAsset<CelestialAsset>(puzzleState.ActivePuzzle.Rows[r].Object);
+                    rowData.Name = asset.DisplayName;
+                }
+                if ((puzzleState.ActivePuzzle.Rows[r].ProvidedProperties & DataTypeMask.Coordinates) != 0) {
+                    CelestialAsset asset = Find.NamedAsset<CelestialAsset>(puzzleState.ActivePuzzle.Rows[r].Object);
+                    asset.Coords.Declination.Sanitize();
+                    asset.Coords.RightAscension.Sanitize();
+                    m_WorkingStringBuilder.Clear();
+                    asset.Coords.RightAscension.ToString(m_WorkingStringBuilder);
+                    m_WorkingStringBuilder.Append(",\n");
+                    asset.Coords.Declination.ToString(m_WorkingStringBuilder);
+                    rowData.Coords = m_WorkingStringBuilder.ToString();
+                    m_WorkingStringBuilder.Clear();
+                }
+
+                m_WorkingPuzzleContentsData.Contents.Add(rowData);
+            }
 
             m_Log.BeginEvent("logic_puzzle_rejected");
             m_Log.EventParam("puzzle_id", puzzleState.ActivePuzzle.DisplayName);
-            m_Log.EventParam("incorrect_stars", wrongStars.ToString());
-            // m_Log.EventParamJson("new_puzzle_contents", contents); // TODO: json array of structs
+            m_JsonBuilder.Clear();
+            m_Log.EventParam("incorrect_stars", m_WorkingStrList.AppendItems(m_JsonBuilder).End());
+            m_JsonBuilder.Clear();
+            m_Log.EventParamJson("new_puzzle_contents", m_WorkingPuzzleContentsData.AppendContents(m_JsonBuilder).End());
+            m_JsonBuilder.Clear();
             m_Log.SubmitEvent();
         }
 

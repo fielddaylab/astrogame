@@ -98,6 +98,9 @@ public static class GameEvents {
     public static readonly StringHash32 ClickToolLoad = "click-tool-load"; // PacketTransferData
     public static readonly StringHash32 SelectPuzzleCell = "select-puzzle-cell"; // PacketTransferData
     public static readonly StringHash32 TransferValueToCell = "transfer-value-to-cell"; // PacketTransferData
+    public static readonly StringHash32 ClickSubmitPuzzle = "click-submit-puzzle";
+    public static readonly StringHash32 LogicPuzzleAccepted = "logic-puzzle-accepted";
+    public static readonly StringHash32 LogicPuzzleRejected = "logic-puzzle-rejected"; // List<string>
 }
 
 public static class ScriptEvents {
