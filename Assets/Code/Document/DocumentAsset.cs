@@ -33,6 +33,8 @@ namespace Astro {
         // TODO: Replace with a compressed prefab layout
         public DocumentRenderer Prefab;
         [HideInInspector] public DocumentInteractable Interactable = null;
+        public bool IsStickyNote;
+
 
         [TextArea(1, 64)]
         [SerializeField] public string[] TextFields;

@@ -267,6 +267,12 @@ namespace Astro {
                 .Register<bool>(GameEvents.DocFlipped, LogClickDocumentFlip)
                 .Register(GameEvents.DocDismissed, LogClickDismissDocument)
                 .Register(GameEvents.DocViewed, LogClickViewDocument)
+                .Register(GameEvents.NewPostitReceived, LogPostitReceived)
+                .Register(GameEvents.PostitDismissed, LogClickDismissPostit)
+                .Register(GameEvents.GrabPostit, LogGrabPostit)
+                .Register<StringPair>(GameEvents.PlacePostit, LogPlacePostit)
+                .Register(GameEvents.PostitMatchAccepted, LogPostitMatchAccepted)
+                .Register(GameEvents.PostitMatchRejected, LogPostitMatchRejected)
                 ;
 
             // state update events
@@ -276,6 +282,7 @@ namespace Astro {
                 .Register<StringHash32>(GameEvents.RefGuideControlPageChanged, HandleRefGuideControlPageChanged)
                 .Register(GameEvents.SubmittedStarChanged, HandleSubmittedStarChanged)
                 .Register<string>(GameEvents.ActiveDocChanged, HandleActiveDocChanged)
+                .Register<string>(GameEvents.LatestMovedDocChanged, HandleLatestMovedDocChanged)
                 ;
 
         }
@@ -294,6 +301,8 @@ namespace Astro {
         [NonSerialized] private ReferenceClassification m_LastKnownSubmittedRefClassification = default;
         
         [NonSerialized] private string m_LastKnownDocTitle = default;
+        [NonSerialized] private string m_LastKnownMovedDoc = default;
+        [NonSerialized] private StringPair m_LastKnownPostitTargetPair = default;
 
         private string m_TempStr;
         private StringList m_WorkingStrList = new StringList();
@@ -335,6 +344,10 @@ namespace Astro {
 
         private void HandleActiveDocChanged(string docTitle) {
             m_LastKnownDocTitle = docTitle;
+        }
+
+        private void HandleLatestMovedDocChanged(string docTitle) {
+            m_LastKnownMovedDoc = docTitle;
         }
 
         #endregion // State Handlers
@@ -1213,26 +1226,26 @@ namespace Astro {
         //postit_recieved
         //* postit_id
         //* text_content
-        private void LogPostitReceived(DocumentData doc) {
+        private void LogPostitReceived() {
             m_Log.BeginEvent("postit_received");
-            m_Log.EventParam("postit_id", doc.Title);
-            m_Log.EventParam("text_content", doc.Contents);
+            m_Log.EventParam("postit_id", m_LastKnownDocTitle);
+            // m_Log.EventParam("text_content", doc.Contents);
             m_Log.SubmitEvent();
         }
 
         //click_dismiss_postit
         //* postit_id
-        private void LogClickDismissPostit(string docId) {
+        private void LogClickDismissPostit() {
             m_Log.BeginEvent("click_dismiss_postit");
-            m_Log.EventParam("postit_id", docId);
+            m_Log.EventParam("postit_id", m_LastKnownDocTitle);
             m_Log.SubmitEvent();
         }
 
         //grab_post_it
         //* postit_id
-        private void LogGrabPostit(string docId) {
+        private void LogGrabPostit() {
             m_Log.BeginEvent("grab_post_it");
-            m_Log.EventParam("postit_id", docId);
+            m_Log.EventParam("postit_id", m_LastKnownMovedDoc);
             m_Log.SubmitEvent();
         }
 
@@ -1240,19 +1253,24 @@ namespace Astro {
         //* postit_id
         //* target_id : DocumentID | BOARD
         //* correct_target : DocumentID
-        private void LogGrabPostit(string docId, string targetId, string correctTarget) {
+        private void LogPlacePostit(StringPair pair) {
+            m_LastKnownPostitTargetPair = pair;
+            if (m_LastKnownPostitTargetPair.SecondStr == default) {
+                m_LastKnownPostitTargetPair.SecondStr = "BOARD";
+            }
+
             m_Log.BeginEvent("place_post_it");
-            m_Log.EventParam("postit_id", docId);
-            m_Log.EventParam("target_id", targetId);
-            m_Log.EventParam("correct_target", correctTarget);
+            m_Log.EventParam("postit_id", m_LastKnownMovedDoc);
+            m_Log.EventParam("target_id", m_LastKnownPostitTargetPair.FirstStr);
+            m_Log.EventParam("correct_target", m_LastKnownPostitTargetPair.SecondStr);
             m_Log.SubmitEvent();
         }
 
         //post_it_match_accepted
         //* postit_id
-        private void LogPostitMatchAccepted(string docId) {
+        private void LogPostitMatchAccepted() {
             m_Log.BeginEvent("post_it_match_accepted");
-            m_Log.EventParam("postit_id", docId);
+            m_Log.EventParam("postit_id", m_LastKnownMovedDoc);
             m_Log.SubmitEvent();
         }
 
@@ -1260,11 +1278,11 @@ namespace Astro {
         //* postit_id
         //* target_id : DocumentID | BOARD
         //* correct_target : DocumentID
-        private void LogPostitMatchRejected(string docId, string targetId, string correctTarget) {
+        private void LogPostitMatchRejected() {
             m_Log.BeginEvent("post_it_match_rejected");
-            m_Log.EventParam("postit_id", docId);
-            m_Log.EventParam("target_id", targetId);
-            m_Log.EventParam("correct_target", correctTarget);
+            m_Log.EventParam("postit_id", m_LastKnownMovedDoc);
+            m_Log.EventParam("target_id", m_LastKnownPostitTargetPair.FirstStr);
+            m_Log.EventParam("correct_target", m_LastKnownPostitTargetPair.SecondStr);
             m_Log.SubmitEvent();
         }
 
@@ -1475,6 +1493,7 @@ namespace Astro {
     #endregion // Enum Lookup
 
     #region Data Structs
+
     [Serializable]
     public struct StarLogData {
         public string Name;
@@ -1719,6 +1738,12 @@ namespace Astro {
     public struct ClassificationLogData {
         public ClassificationTypeMask Type;
         public string Label;
+    }
+
+    [Serializable]
+    public struct StringPair {
+        public string FirstStr;
+        public string SecondStr;
     }
 
     #endregion //Data Structs

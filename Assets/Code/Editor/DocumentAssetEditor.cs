@@ -39,6 +39,7 @@ public class DocumentAssetEditor : Editor {
         EditorGUILayout.PropertyField(serializedObject.FindProperty("Font")); 
         EditorGUILayout.PropertyField(serializedObject.FindProperty("TriggersPrompter")); 
         EditorGUILayout.PropertyField(serializedObject.FindProperty("UseCutoutMaterial")); 
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("IsStickyNote"));
         serializedObject.ApplyModifiedProperties();
 
         EditorGUILayout.Space();

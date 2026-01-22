@@ -57,6 +57,10 @@ namespace Astro {
                 // Check if all puzzle questions are correct
                 if (DocumentUtility.IsDocPuzzleCorrect(puzzleState)) {
                     ScriptUtility.Trigger(ScriptEvents.DocumentPuzzleSolved);
+                    AstroGame.Events.Dispatch(GameEvents.PostitMatchAccepted);
+                }
+                else {
+                    AstroGame.Events.Dispatch(GameEvents.PostitMatchRejected);
                 }
             }
             else if (boardState.DraggablePlacedThisFrame) {

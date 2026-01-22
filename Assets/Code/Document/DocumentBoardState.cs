@@ -104,7 +104,12 @@ namespace Astro {
                 DisplayFullDocument(spawned, asset);
             }
             AstroGame.Events.Dispatch(GameEvents.ActiveDocChanged, asset.name);
-            AstroGame.Events.Dispatch(GameEvents.NewDocReceived);
+            if (asset.IsStickyNote) {
+                AstroGame.Events.Dispatch(GameEvents.NewPostitReceived);
+            }
+            else {
+                AstroGame.Events.Dispatch(GameEvents.NewDocReceived);
+            }
 
             Material streamingMaterial = asset.UseCutoutMaterial ? state.AlphaStreamingMaterial : state.OpaqueStreamingMaterial;
             foreach(var quadTexture in spawned.StreamingTextures) {
@@ -279,7 +284,7 @@ namespace Astro {
             }
             if (newDoc != null && state.SelectedDocument != newDoc) {
                 state.SelectedDocument = newDoc;
-                state.SpawnDocumentToCamera.Replace(ToggleDocHover(state.SelectedDocument.transform, state.DocHoverOffset)); // 
+                state.SpawnDocumentToCamera.Replace(ToggleDocHover(state.SelectedDocument.transform, state.DocHoverOffset));
                 state.SelectedDocument.IsDragging = true;
                 CursorHint.TryLock(partHint);
             } else {
@@ -295,6 +300,17 @@ namespace Astro {
             //check if we are currently over a puzzle doc
             DocumentRenderer hoverDoc = Find.State<DocumentPuzzleState>().CurrHoverDoc;
             if (hoverDoc != null && hoverDoc.TriggersPrompter) SetDocumentHighlight(hoverDoc, DocumentPuzzleState.DocHighlightColor);
+
+            if (newDoc == null) {
+                // AstroGame.Events.Dispatch(GameEvents.LatestMovedDocChanged, string.Empty);
+            }
+            else {
+                var asset = Find.NamedAsset<DocumentAsset>(state.SelectedDocument.AssetName);
+                AstroGame.Events.Dispatch(GameEvents.LatestMovedDocChanged, asset.name);
+                if (asset.IsStickyNote) {
+                    AstroGame.Events.Dispatch(GameEvents.GrabPostit);
+                }
+            }
         }
 
         public static void DeselectDocument(DocumentBoardState state) {
@@ -379,8 +395,14 @@ namespace Astro {
                 ScriptUtility.Trigger(ScriptEvents.DocumentInspectEnd, table);
             }
 
+            DocumentAsset asset = Find.NamedAsset<DocumentAsset>(doc.AssetName);
+            if (asset.IsStickyNote) {
+                AstroGame.Events.Dispatch(GameEvents.PostitDismissed);
+            } else {
+                AstroGame.Events.Dispatch(GameEvents.DocDismissed);
+            }
+
             AstroGame.Events.Dispatch(GameEvents.ActiveDocChanged, string.Empty);
-            AstroGame.Events.Dispatch(GameEvents.DocDismissed);
 
             yield return null;
         }

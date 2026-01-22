@@ -106,6 +106,13 @@ public static class GameEvents {
     public static readonly StringHash32 DocFlipped = "doc-flipped";
     public static readonly StringHash32 DocDismissed = "doc-dismissed";
     public static readonly StringHash32 DocViewed = "doc-viewed";
+    public static readonly StringHash32 NewPostitReceived = "new-postit-received";
+    public static readonly StringHash32 PostitDismissed = "Postit-dismissed"; // string
+    public static readonly StringHash32 LatestMovedDocChanged = "latest-moveed-doc-changed"; // string
+    public static readonly StringHash32 GrabPostit = "grab-postit";
+    public static readonly StringHash32 PlacePostit = "place-postit"; // StringPair
+    public static readonly StringHash32 PostitMatchAccepted = "postit-match-accepted";
+    public static readonly StringHash32 PostitMatchRejected = "postit-match-rejected";
 }
 
 public static class ScriptEvents {

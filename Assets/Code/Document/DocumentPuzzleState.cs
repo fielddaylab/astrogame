@@ -18,7 +18,7 @@ namespace Astro {
         [SerializeField] public static Color32 DocHighlightColor;
 
         public Dictionary<StringHash32, StringHash32> CurrSolutionPairs = new Dictionary<StringHash32, StringHash32>();
-
+        
         public enum DebuggingFlags {
             DisplayDocumentHoverInfo
         }
@@ -29,6 +29,8 @@ namespace Astro {
     }
 
     public static partial class DocumentUtility {
+        private static StringPair m_WorkingStringPair = new StringPair();
+
         #region Leaf
 
         [LeafMember("StartDocumentPuzzle")]
@@ -106,6 +108,15 @@ namespace Astro {
             } else {
                 puzzleState.CurrSolutionPairs[questionId] = answerId;
             }
+
+            if (answerId == StringHash32.Null) {
+                m_WorkingStringPair.FirstStr = default;
+            }
+            else {
+                m_WorkingStringPair.FirstStr = Find.NamedAsset<DocumentAsset>(answerId).name;
+            }
+            m_WorkingStringPair.SecondStr = Find.NamedAsset<DocumentAsset>(GetAnswerId(puzzleState, questionId)).name;
+            AstroGame.Events.Dispatch(GameEvents.PlacePostit, EvtArgs.Box<StringPair>(m_WorkingStringPair));
         }
 
         public static bool IsDocPuzzleCorrect(DocumentPuzzleState puzzleState) {
@@ -119,6 +130,17 @@ namespace Astro {
                 }
             }
             return true;
+        }
+
+        public static StringHash32 GetAnswerId(DocumentPuzzleState puzzleState, StringHash32 questionId) {
+            foreach (var pair in puzzleState.CurrPuzzle.SolutionPairs) {
+                if (!pair.Question.AssetId.Equals(questionId)) {
+                    continue;
+                } else {
+                    return pair.Answer.AssetId;
+                }
+            }
+            return default;
         }
 
         public static void SetDocumentHighlight(DocumentRenderer doc, Color color) {
