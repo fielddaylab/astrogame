@@ -273,6 +273,8 @@ namespace Astro {
                 .Register<StringPair>(GameEvents.PlacePostit, LogPlacePostit)
                 .Register(GameEvents.PostitMatchAccepted, LogPostitMatchAccepted)
                 .Register(GameEvents.PostitMatchRejected, LogPostitMatchRejected)
+                .Register(GameEvents.ToggleMagMode, LogToggleMagMode)
+                .Register(GameEvents.SwitchPlayerView, LogSwitchPlayerView)
                 ;
 
             // state update events
@@ -283,6 +285,7 @@ namespace Astro {
                 .Register(GameEvents.SubmittedStarChanged, HandleSubmittedStarChanged)
                 .Register<string>(GameEvents.ActiveDocChanged, HandleActiveDocChanged)
                 .Register<string>(GameEvents.LatestMovedDocChanged, HandleLatestMovedDocChanged)
+                .Register<ViewNode>(GameEvents.ViewChanged, HandleViewChanged)
                 ;
 
         }
@@ -303,6 +306,8 @@ namespace Astro {
         [NonSerialized] private string m_LastKnownDocTitle = default;
         [NonSerialized] private string m_LastKnownMovedDoc = default;
         [NonSerialized] private StringPair m_LastKnownPostitTargetPair = default;
+
+        [NonSerialized] private string m_LastKnownViewNodeName = default;
 
         private string m_TempStr;
         private StringList m_WorkingStrList = new StringList();
@@ -348,6 +353,11 @@ namespace Astro {
 
         private void HandleLatestMovedDocChanged(string docTitle) {
             m_LastKnownMovedDoc = docTitle;
+        }
+
+        private void HandleViewChanged(ViewNode node) {
+            if (node.IsTitle) { return; }
+            m_LastKnownViewNodeName = node.name.ToUpper();
         }
 
         #endregion // State Handlers
@@ -1288,17 +1298,21 @@ namespace Astro {
 
         //toggle_magnitude_mode:
         //* new_mode : ABSOLUTE | RELATIVE
-        private void LogToggleMagMode(bool modeIsAbsolute) {
+        private void LogToggleMagMode() {
+            HistoricalDataState hds = Find.State<HistoricalDataState>();
+
             m_Log.BeginEvent("toggle_magnitude_mode");
-            m_Log.EventParam("new_mode", modeIsAbsolute ? "ABSOLUTE" : "RELATIVE");
+            m_Log.EventParam("new_mode", hds.SendingAbsMag ? "ABSOLUTE" : "RELATIVE");
             m_Log.SubmitEvent();
         }
 
         //switch_player_view:
-        //* view_id : DOCUMENTS | INSTRUMENTS | MAP | FREE
-        private void LogSwitchPlayerView(string viewId) {
+        //* view_id
+        private void LogSwitchPlayerView() {
+            if (m_LastKnownViewNodeName == default) { return; }
+
             m_Log.BeginEvent("switch_player_view");
-            m_Log.EventParam("view_id", viewId);
+            m_Log.EventParam("view_id", m_LastKnownViewNodeName);
             m_Log.SubmitEvent();
         }
 

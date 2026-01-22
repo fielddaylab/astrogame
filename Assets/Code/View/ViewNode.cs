@@ -8,6 +8,7 @@ using UnityEngine;
 namespace Astro {
     public sealed class ViewNode : BatchedComponent, IRegistrationCallbacks {
         public SerializedHash32 Id;
+        public bool IsTitle = false;
 
         [Header("Camera")]
         public CameraPose Camera;
@@ -57,6 +58,8 @@ namespace Astro {
             if (invokeCallbacks) {
                 node.OnEnter.Invoke(node);
                 AstroGame.Events.Dispatch(Events.NodeEntered, EvtArgs.Ref(node));
+                AstroGame.Events.Dispatch(GameEvents.ViewChanged, EvtArgs.Ref(node));
+                AstroGame.Events.Dispatch(GameEvents.SwitchPlayerView);
             }
 
             InputUtility.SetClickableMaskFilter(Find.State<InputState>(), node.InputFilter);

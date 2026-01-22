@@ -112,6 +112,7 @@ namespace Astro {
         public static void ToggleInstrumentMode() {
             HistoricalDataState hds = Find.State<HistoricalDataState>();
             SetInstrumentMode(!hds.SendingAbsMag, hds, false, true);
+            AstroGame.Events.Dispatch(GameEvents.ToggleMagMode);
         }
 
         public static void SetInstrumentMode(bool absMag, HistoricalDataState hds, bool force, bool playSfx) {

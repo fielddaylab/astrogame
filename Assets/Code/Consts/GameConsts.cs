@@ -113,6 +113,9 @@ public static class GameEvents {
     public static readonly StringHash32 PlacePostit = "place-postit"; // StringPair
     public static readonly StringHash32 PostitMatchAccepted = "postit-match-accepted";
     public static readonly StringHash32 PostitMatchRejected = "postit-match-rejected";
+    public static readonly StringHash32 ToggleMagMode = "toggle-mag-mode";
+    public static readonly StringHash32 ViewChanged = "view-changed"; // ViewNode
+    public static readonly StringHash32 SwitchPlayerView = "switch-palyer-view";
 }
 
 public static class ScriptEvents {

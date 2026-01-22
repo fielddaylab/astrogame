@@ -187,6 +187,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   InputEnabled: 1
   Raycaster: {fileID: 105690770}
+  BlockAllInput: 0
 --- !u!114 &52218590
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -691,6 +692,7 @@ MonoBehaviour:
   Id:
     m_Source: NewForward
     m_HashValue: 3400504670
+  IsTitle: 1
   Camera: {fileID: 548575017}
   Group:
     GameObjects: []
@@ -899,6 +901,7 @@ MonoBehaviour:
   Id:
     m_Source: Options
     m_HashValue: 893259077
+  IsTitle: 1
   Camera: {fileID: 622260637}
   Group:
     GameObjects: []
@@ -1562,6 +1565,7 @@ MonoBehaviour:
   Id:
     m_Source: New
     m_HashValue: 2334404017
+  IsTitle: 1
   Camera: {fileID: 1370253202}
   Group:
     GameObjects: []
@@ -1707,6 +1711,7 @@ MonoBehaviour:
   Id:
     m_Source: Continue
     m_HashValue: 2873349732
+  IsTitle: 1
   Camera: {fileID: 1473377519}
   Group:
     GameObjects: []
@@ -1787,6 +1792,7 @@ MonoBehaviour:
   Id:
     m_Source: Title
     m_HashValue: 617902505
+  IsTitle: 1
   Camera: {fileID: 1490941776}
   Group:
     GameObjects: []
@@ -1949,6 +1955,7 @@ MonoBehaviour:
   Id:
     m_Source: Boot
     m_HashValue: 930363637
+  IsTitle: 1
   Camera: {fileID: 1582848964}
   Group:
     GameObjects: []
@@ -2361,6 +2368,22 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4764623405494122071, guid: d32beb25e0561e749b5fe5b38b9f74de, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764623405494122071, guid: d32beb25e0561e749b5fe5b38b9f74de, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764623405494122071, guid: d32beb25e0561e749b5fe5b38b9f74de, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764623405494122071, guid: d32beb25e0561e749b5fe5b38b9f74de, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5681630901031504204, guid: d32beb25e0561e749b5fe5b38b9f74de, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -2531,6 +2554,7 @@ MonoBehaviour:
   Id:
     m_Source: ContinueForward
     m_HashValue: 1252798089
+  IsTitle: 1
   Camera: {fileID: 2081416950}
   Group:
     GameObjects: []
@@ -2574,6 +2598,7 @@ MonoBehaviour:
   RootTransform: {fileID: 2137912170}
   EffectsTransform: {fileID: 105690765}
   AttachmentsTransform: {fileID: 0}
+  Letterbox: {fileID: 0}
 --- !u!4 &2137912170
 Transform:
   m_ObjectHideFlags: 0
