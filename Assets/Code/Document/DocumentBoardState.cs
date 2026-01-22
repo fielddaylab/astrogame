@@ -103,6 +103,8 @@ namespace Astro {
             } else {
                 DisplayFullDocument(spawned, asset);
             }
+            AstroGame.Events.Dispatch(GameEvents.ActiveDocChanged, asset.name);
+            AstroGame.Events.Dispatch(GameEvents.NewDocReceived);
 
             Material streamingMaterial = asset.UseCutoutMaterial ? state.AlphaStreamingMaterial : state.OpaqueStreamingMaterial;
             foreach(var quadTexture in spawned.StreamingTextures) {
@@ -166,7 +168,7 @@ namespace Astro {
             spawned.transform.SetParent(Game.Rendering.PrimaryCamera.transform, true);
             spawned.transform.localPosition = Vector3.zero;
             // Move to zoomed view
-            ToggleZoomDoc(spawned.Interactable, state);
+            ToggleZoomDoc(spawned.Interactable, false, state);
             SetDocumentInteractionEnabled(true);
 
             yield return null;
@@ -251,7 +253,7 @@ namespace Astro {
                         break;
                     }
                 case DocPartFunction.Zoom: {
-                        ToggleZoomDoc(docPart.Document, state);
+                        ToggleZoomDoc(docPart.Document, true, state);
                         break;
                     }
                 case DocPartFunction.Close: {
@@ -299,7 +301,7 @@ namespace Astro {
             StartMoveDoc(null, null, state);
         }
 
-        public static void ToggleZoomDoc(DocumentInteractable doc, DocumentBoardState state = null) {
+        public static void ToggleZoomDoc(DocumentInteractable doc, bool userInitiated, DocumentBoardState state = null) {
             if (doc == null) return;
             if (state == null) state = Find.State<DocumentBoardState>();
 
@@ -312,7 +314,7 @@ namespace Astro {
                 state.DocumentReturnToBoard.Replace(ReturnDocToBoard(doc, state));
             } else {
                 // Bring doc to camera
-                state.DocumentBringToCam.Replace(BringDocToCam(doc, state));
+                state.DocumentBringToCam.Replace(BringDocToCam(doc, state, userInitiated));
             }
 
             state.InteractedThisFrame = true;
@@ -354,7 +356,7 @@ namespace Astro {
             if (pin != null) pin.gameObject.SetActive(true);
 
             // Always show the starting face of the documents
-            if (doc.Flipped) FlipDoc(doc, state);
+            if (doc.Flipped) FlipDoc(doc, false, state);
 
             SetInteractionLayer(state.DocZoomed, LayerMasks.DocumentInteract_Index);
 
@@ -377,6 +379,9 @@ namespace Astro {
                 ScriptUtility.Trigger(ScriptEvents.DocumentInspectEnd, table);
             }
 
+            AstroGame.Events.Dispatch(GameEvents.ActiveDocChanged, string.Empty);
+            AstroGame.Events.Dispatch(GameEvents.DocDismissed);
+
             yield return null;
         }
 
@@ -387,10 +392,10 @@ namespace Astro {
 
             if (doc == null) Debug.LogWarningFormat("[DocumentBoardState > BringDocToCam] failed to find document {0}", docId.ToDebugString());
 
-            state.DocumentBringToCam.Replace(BringDocToCam(doc.Interactable, state)); 
+            state.DocumentBringToCam.Replace(BringDocToCam(doc.Interactable, state, false)); 
         }
 
-        private static IEnumerator BringDocToCam(DocumentInteractable doc, DocumentBoardState state) {
+        private static IEnumerator BringDocToCam(DocumentInteractable doc, DocumentBoardState state, bool userInitiated) {
             // only allow one document at the camera at once
             if (state.DocZoomed != null) {
                 state.DocumentReturnToBoard.Replace(ReturnDocToBoard(state.DocZoomed, state));
@@ -434,6 +439,11 @@ namespace Astro {
             // disallow selecting other documents while this loads
             InputUtility.SetClickableMaskTopLayer(Find.State<InputState>());
 
+            AstroGame.Events.Dispatch(GameEvents.ActiveDocChanged, asset.name);
+            if (userInitiated) {
+                AstroGame.Events.Dispatch(GameEvents.DocViewed);
+            }
+
             yield return null;
         }
 
@@ -449,7 +459,7 @@ namespace Astro {
         }
 
         public static void CancelZoom(DocumentBoardState state) {
-            state.SpawnDocumentToCamera.OnComplete(() => ToggleZoomDoc(state.DocZoomed, state));
+            state.SpawnDocumentToCamera.OnComplete(() => ToggleZoomDoc(state.DocZoomed, true, state));
         }
 
         [LeafMember("FlipDoc")]
@@ -462,7 +472,7 @@ namespace Astro {
             FlipDoc(doc.Interactable, state);
         }
 
-        public static void FlipDoc(DocumentInteractable doc, DocumentBoardState state = null) {
+        public static void FlipDoc(DocumentInteractable doc, bool userInitiated, DocumentBoardState state = null) {
             if (state == null) {
                 state = Find.State<DocumentBoardState>();
             }
@@ -472,6 +482,11 @@ namespace Astro {
             doc.Flipped = !doc.Flipped;
             float angle = doc.Flipped ? 180 : 0;
             float lift = state.DocZoomed ? 0.5f : -0.5f;
+
+            bool toFront = !doc.Flipped;
+            if (userInitiated) {
+                AstroGame.Events.Dispatch(GameEvents.DocFlipped, toFront);
+            }
 
             state.SpawnDocumentToCamera.Replace(DocRotateY(doc, lift, angle));
             state.SpawnDocumentToCamera.OnStop(() => {

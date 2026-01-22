@@ -101,6 +101,11 @@ public static class GameEvents {
     public static readonly StringHash32 ClickSubmitPuzzle = "click-submit-puzzle";
     public static readonly StringHash32 LogicPuzzleAccepted = "logic-puzzle-accepted";
     public static readonly StringHash32 LogicPuzzleRejected = "logic-puzzle-rejected"; // List<string>
+    public static readonly StringHash32 ActiveDocChanged = "active-doc-changed";
+    public static readonly StringHash32 NewDocReceived = "new-doc-received";
+    public static readonly StringHash32 DocFlipped = "doc-flipped";
+    public static readonly StringHash32 DocDismissed = "doc-dismissed";
+    public static readonly StringHash32 DocViewed = "doc-viewed";
 }
 
 public static class ScriptEvents {

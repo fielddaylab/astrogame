@@ -15,7 +15,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI;
 
 namespace Astro {
 
@@ -264,6 +263,10 @@ namespace Astro {
                 .Register(GameEvents.ClickSubmitPuzzle, LogClickSubmitPuzzle)
                 .Register(GameEvents.LogicPuzzleAccepted, LogLogicPuzzleAccepted)
                 .Register<List<string>>(GameEvents.LogicPuzzleRejected, LogLogicPuzzleRejected)
+                .Register(GameEvents.NewDocReceived, LogNewDocReceived)
+                .Register<bool>(GameEvents.DocFlipped, LogClickDocumentFlip)
+                .Register(GameEvents.DocDismissed, LogClickDismissDocument)
+                .Register(GameEvents.DocViewed, LogClickViewDocument)
                 ;
 
             // state update events
@@ -272,6 +275,7 @@ namespace Astro {
                 .Register<HintLogData>(GameEvents.HintChanged, HandleHintChanged)
                 .Register<StringHash32>(GameEvents.RefGuideControlPageChanged, HandleRefGuideControlPageChanged)
                 .Register(GameEvents.SubmittedStarChanged, HandleSubmittedStarChanged)
+                .Register<string>(GameEvents.ActiveDocChanged, HandleActiveDocChanged)
                 ;
 
         }
@@ -288,6 +292,8 @@ namespace Astro {
         [NonSerialized] private CelestialAsset m_LastKnownSubmittedStarAsset = default;
         [NonSerialized] private ReviewSubmissionClassification m_LastKnownReviewSubmissionClassification = default;
         [NonSerialized] private ReferenceClassification m_LastKnownSubmittedRefClassification = default;
+        
+        [NonSerialized] private string m_LastKnownDocTitle = default;
 
         private string m_TempStr;
         private StringList m_WorkingStrList = new StringList();
@@ -325,6 +331,10 @@ namespace Astro {
             m_LastKnownSubmittedStarAsset = Find.NamedAsset<CelestialAsset>(pps.Identification.AssetId);
             m_LastKnownReviewSubmissionClassification = pps.Identification;
             m_LastKnownSubmittedRefClassification = rgs.SelectedRefClassification;
+        }
+
+        private void HandleActiveDocChanged(string docTitle) {
+            m_LastKnownDocTitle = docTitle;
         }
 
         #endregion // State Handlers
@@ -1162,10 +1172,10 @@ namespace Astro {
         //new_document_received
         //* document_id
         //* text_content
-        private void LogNewDocReceived(DocumentData doc) {
+        private void LogNewDocReceived() {
             m_Log.BeginEvent("new_document_received");
-            m_Log.EventParam("document_id", doc.Title);
-            m_Log.EventParam("text_content", doc.Contents);
+            m_Log.EventParam("document_id", m_LastKnownDocTitle);
+            // m_Log.EventParam("text_content", doc.Contents);
             m_Log.SubmitEvent();
         }
 
@@ -1173,18 +1183,18 @@ namespace Astro {
         //* document_id
         //* to_side : FRONT | BACK
         //* text_content
-        private void LogClickDocumentFlip(DocumentData doc, bool toFront) {
+        private void LogClickDocumentFlip(bool toFront) {
             m_Log.BeginEvent("click_document_flip");
-            m_Log.EventParam("document_id", doc.Title);
+            m_Log.EventParam("document_id", m_LastKnownDocTitle);
             m_Log.EventParam("to_side", toFront ? "FRONT" : "BACK");
-            m_Log.EventParam("text_content", doc.Contents);
+            // m_Log.EventParam("text_content", doc.Contents);
             m_Log.SubmitEvent();
         }
 
         //click_dismiss_document
         private void LogClickDismissDocument() {
             m_Log.BeginEvent("click_dismiss_document");
-            //m_Log.EventParam("document_id", docId); // would this be useful?
+            // m_Log.EventParam("document_id", docId); // would this be useful?
             m_Log.SubmitEvent();
         }
 
@@ -1192,10 +1202,10 @@ namespace Astro {
         //click_view_document
         //* document_id
         //* text_content
-        private void LogClickViewDocument(DocumentData doc) {
+        private void LogClickViewDocument() {
             m_Log.BeginEvent("new_document_received");
-            m_Log.EventParam("document_id", doc.Title);
-            m_Log.EventParam("text_content", doc.Contents);
+            m_Log.EventParam("document_id", m_LastKnownDocTitle);
+            // m_Log.EventParam("text_content", doc.Contents);
             m_Log.SubmitEvent();
         }
 

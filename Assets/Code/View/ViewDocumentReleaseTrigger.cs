@@ -30,7 +30,7 @@ namespace Astro
             }
             if (docState && docState.DocZoomed)
             {
-                DocumentUtility.ToggleZoomDoc(docState.DocZoomed, docState);
+                DocumentUtility.ToggleZoomDoc(docState.DocZoomed, true, docState);
             }
         }
     }

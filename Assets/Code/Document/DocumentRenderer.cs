@@ -73,6 +73,8 @@ namespace Astro {
             else if (asset.ZoomOffsetOverride != default) {
                 renderer.ZoomOffsetOverride = asset.ZoomOffsetOverride;
             }
+
+            AstroGame.Events.Dispatch(GameEvents.ActiveDocChanged, asset.name);
         }
 
         public static void DisplayLowResDocument(DocumentRenderer renderer, DocumentAsset asset) {
