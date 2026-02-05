@@ -41,8 +41,8 @@ namespace Astro {
         private List<string> m_UnlockedFilters = new List<string>(); // list of filter_type: name for each filter
         private TelescopeOrientationData m_TelescopeOrientation; // quaternion? TODO: check in with Luke about expected format
         private int m_LocatorProximity;
-        private WavelengthTypeMask m_WavelengthFilter;
-        private bool m_MagnitudeModeIsApparent;
+        private CelestialObjectVisMask m_WavelengthFilter;
+        private bool m_MagnitudeModeIsAbsolute;
         private int m_PointsNeeded;
         private int m_PointsEarned;
         private StarLogData m_SelectedStar;
@@ -69,8 +69,8 @@ namespace Astro {
                 .Item(m_TelescopeOrientation.Y)
                 .Item(m_TelescopeOrientation.Z);
             m_JsonBuilder.Field("locator_proximity", m_LocatorProximity);
-            m_JsonBuilder.Field("wavelength_filter", EnumLookup.WavelengthType[(int)m_WavelengthFilter]);
-            m_JsonBuilder.Field("magnitude_mode", m_MagnitudeModeIsApparent ? "APPARENT" : "ABSOLUTE");
+            m_JsonBuilder.Field("wavelength_filter", EnumLookup.FirstWavelengthType(m_WavelengthFilter));
+            m_JsonBuilder.Field("magnitude_mode", m_MagnitudeModeIsAbsolute ? "ABSOLUTE" : "APPARENT");
             m_JsonBuilder.Field("points_needed", m_PointsNeeded);
             m_JsonBuilder.Field("points_earned", m_PointsEarned);
             m_JsonBuilder.BeginObject("selected_star");
@@ -112,13 +112,13 @@ namespace Astro {
             SubmitGameState();
         }
 
-        private void UpdateCurrentFilter(WavelengthTypeMask currentFilter) {
+        private void UpdateCurrentFilter(CelestialObjectVisMask currentFilter) {
             m_WavelengthFilter = currentFilter;
             SubmitGameState();
         }
 
-        private void UpdateMagnitudeMode(bool magIsApparent) {
-            m_MagnitudeModeIsApparent = magIsApparent;
+        private void UpdateMagnitudeMode(bool magIsAbsolute) {
+            m_MagnitudeModeIsAbsolute = magIsAbsolute;
             SubmitGameState();
         }
 
@@ -334,6 +334,8 @@ namespace Astro {
                 .Register<string>(GameEvents.LatestMovedDocChanged, HandleLatestMovedDocChanged)
                 .Register<ViewNode>(GameEvents.ViewChanged, HandleViewChanged)
                 .Register(GameEvents.MonitorEmptySpaceClicked, HandleMonitorEmptySpaceClicked)
+                .Register(GameEvents.StopOpenMode, HandleStopOpenMode)
+                .Register<CelestialObjectVisMask>(GameEvents.MonitorSwitchedFilter, HandleFilterSwitched)
                 ;
 
         }
@@ -410,6 +412,15 @@ namespace Astro {
 
         private void HandleMonitorEmptySpaceClicked() {
             UpdateSelectedStar(default);
+        }
+
+        private void HandleStopOpenMode() {
+            UpdatePointsNeeded(-1);
+            UpdatePointsEarned(-1);
+        }
+
+        private void HandleFilterSwitched(CelestialObjectVisMask filter) {
+            UpdateCurrentFilter(filter);
         }
 
         #endregion // State Handlers
@@ -752,6 +763,8 @@ namespace Astro {
             m_Log.BeginEvent("locator_closer");
             m_Log.EventParam("new_proximity", newProximity);
             m_Log.SubmitEvent();
+
+            UpdateLocatorProximity(newProximity);
         }
 
         //locator_further/
@@ -760,6 +773,8 @@ namespace Astro {
             m_Log.BeginEvent("locator_further");
             m_Log.EventParam("new_proximity", newProximity);
             m_Log.SubmitEvent();
+
+            UpdateLocatorProximity(newProximity);
         }
 
         //found_telescope_view/
@@ -976,6 +991,9 @@ namespace Astro {
             m_Log.EventParam("points_needed", config.NumNeutrinoPoints);
             m_Log.EventParam("points_earned", ptsEarned);
             m_Log.SubmitEvent();
+
+            UpdatePointsNeeded(config.NumNeutrinoPoints);
+            UpdatePointsEarned(ptsEarned);
         }
 
         //start_radio_adjust
@@ -1362,6 +1380,8 @@ namespace Astro {
             m_Log.BeginEvent("toggle_magnitude_mode");
             m_Log.EventParam("new_mode", hds.SendingAbsMag ? "ABSOLUTE" : "RELATIVE");
             m_Log.SubmitEvent();
+
+            UpdateMagnitudeMode(hds.SendingAbsMag);
         }
 
         //switch_player_view:
@@ -1469,7 +1489,7 @@ namespace Astro {
     #region Enum Lookup
     public static class EnumLookup {
         public static readonly string[] WavelengthType = new string[] {
-            "VISIBLE", "BLUE", "INFRARED", "ABSOLUTE"
+            "VISIBLE", "BLUE", "INFRARED"
         };
         public static readonly string[] InstrumentType = new string[] {
             "PHOTOMETER", "COLOR_METER", "TEMPERATURE_METER", "SPECTROMETER", "PARALLAX", "DECODER", "COORDINATES", "NONE"
@@ -1508,6 +1528,17 @@ namespace Astro {
                 return ClassificationType[(int)bit];
             }
             */
+            return "NONE";
+        }
+
+        public static string FirstWavelengthType(CelestialObjectVisMask type) {
+            if ((type & CelestialObjectVisMask.Visible) != 0) {
+                return WavelengthType[0];
+            } else if ((type & CelestialObjectVisMask.Blue) != 0) {
+                return WavelengthType[1];
+            } else if ((type & CelestialObjectVisMask.Infrared) != 0) {
+                return WavelengthType[2];
+            }
             return "NONE";
         }
 
