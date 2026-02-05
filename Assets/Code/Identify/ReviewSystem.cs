@@ -99,6 +99,7 @@ namespace Astro {
                     }
                 }
 
+                AstroGame.Events.Dispatch(GameEvents.LogicPuzzleModeComplete);
                 AstroGame.Events.Dispatch(GameEvents.LogicPuzzleAccepted);
 
                 ReviewUtility.OnCorrectPuzzleSubmission.Invoke(puzzle.ActivePuzzle.DisplayName);

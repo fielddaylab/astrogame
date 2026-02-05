@@ -136,6 +136,11 @@ namespace Astro {
 
             AstroGame.Events.Dispatch(GameEvents.OnStarSelected, EvtArgs.Ref(state.CurrentFocus));
 
+            if (focus != null) {
+                focus.StarLog.IsHighlighted = focus.HasHighlight;
+                AstroGame.Events.Dispatch(GameEvents.StarClicked, EvtArgs.Box(focus.StarLog));
+            }
+
             // clear reference guide selections
             var rgs = Find.State<RefGuideState>();
             ReferenceUtility.ClearControls(rgs);

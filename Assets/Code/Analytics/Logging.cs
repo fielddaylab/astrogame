@@ -4,10 +4,7 @@ using Astro.Radio;
 using Astro.Reference;
 using BeauUtil;
 using BeauUtil.Debugger;
-using BeauUtil.Tags;
-using BeauUtil.Variants;
 using FieldDay;
-using FieldDay.Assets;
 using FieldDay.Scripting;
 using FieldDay.Vox;
 using OGD;
@@ -49,7 +46,7 @@ namespace Astro {
         private int m_PointsNeeded;
         private int m_PointsEarned;
         private StarLogData m_SelectedStar;
-        private PuzzleData m_LogicPuzzle;
+        private PuzzleAsset m_LogicPuzzle = default;
 
 
         private void SubmitGameState() {
@@ -77,11 +74,11 @@ namespace Astro {
             m_JsonBuilder.Field("points_needed", m_PointsNeeded);
             m_JsonBuilder.Field("points_earned", m_PointsEarned);
             m_JsonBuilder.BeginObject("selected_star");
-            // TODO: star object
+            m_SelectedStar.Append(m_JsonBuilder);
             m_JsonBuilder.EndObject();
-            m_JsonBuilder.BeginArray("logic_puzzle");
-            // TODO: all logic puzzle rows
-            m_JsonBuilder.EndArray();
+            m_JsonBuilder.BeginObject("logic_puzzle");
+            AppendLogicPuzzle(m_JsonBuilder);
+            m_JsonBuilder.EndObject();
 
             m_Log.GameState(m_JsonBuilder.End());
         }
@@ -136,13 +133,63 @@ namespace Astro {
         }
 
         private void UpdateSelectedStar(StarLogData star) {
+            if (!m_SelectedStar.IsValid && !star.IsValid) { return; }
             m_SelectedStar = star;
             SubmitGameState();
         }
 
-        private void UpdateCurrentPuzzle(PuzzleData puzzle) {
+        private void UpdateCurrentPuzzle(PuzzleAsset puzzle) {
             m_LogicPuzzle = puzzle;
             SubmitGameState();
+        }
+
+        private void AppendLogicPuzzle(JsonBuilder json) {
+            if (m_LogicPuzzle == null) { return; }
+
+            m_WorkingStrList.Items.Clear();
+            m_WorkingStrList.FieldId = "clue";
+            for (int i = 0; i < m_LogicPuzzle.ClueText.Length; i++) {
+                m_WorkingStrList.Items.Add(m_LogicPuzzle.ClueText[i]);
+            }
+
+            m_WorkingPuzzleContentsData.Contents.Clear();
+            for (int r = 0; r < m_LogicPuzzle.Rows.Length; r++) {
+                var rowData = new PuzzleRowProvidedLogData();
+                if ((m_LogicPuzzle.Rows[r].ProvidedProperties & DataTypeMask.Name) != 0) {
+                    CelestialAsset asset = Find.NamedAsset<CelestialAsset>(m_LogicPuzzle.Rows[r].Object);
+                    rowData.Name = asset.DisplayName;
+                }
+                if ((m_LogicPuzzle.Rows[r].ProvidedProperties & DataTypeMask.Coordinates) != 0) {
+                    CelestialAsset asset = Find.NamedAsset<CelestialAsset>(m_LogicPuzzle.Rows[r].Object);
+                    asset.Coords.Declination.Sanitize();
+                    asset.Coords.RightAscension.Sanitize();
+                    m_WorkingStringBuilder.Clear();
+                    asset.Coords.RightAscension.ToString(m_WorkingStringBuilder);
+                    m_WorkingStringBuilder.Append(",\n");
+                    asset.Coords.Declination.ToString(m_WorkingStringBuilder);
+                    rowData.Coords = m_WorkingStringBuilder.ToString();
+                    m_WorkingStringBuilder.Clear();
+                }
+
+                m_WorkingPuzzleContentsData.Contents.Add(rowData);
+            }
+
+            json.BeginObject("puzzle_info");
+            m_WorkingStrList.AppendItems(json);
+            json.EndObject();
+            // m_Log.EventParamJson("puzzle_info", m_WorkingStrList.AppendItems(m_JsonBuilder).End());
+
+            m_WorkingStrList.Items.Clear();
+            m_WorkingStrList.FieldId = "property";
+            EnumLookup.GatherDataTypes(ref m_WorkingStrList.Items, m_LogicPuzzle.RequiredProperties);
+
+            json.Field("puzzle_id", m_LogicPuzzle.DisplayName);
+            json.BeginObject("puzzle_contents");
+            m_WorkingPuzzleContentsData.AppendContents(json);
+            json.EndObject();
+            json.BeginArray("puzzle_properties");
+            m_WorkingStrList.AppendItemsNoField(json);
+            json.EndArray();
         }
 
         #endregion // Game State
@@ -256,7 +303,7 @@ namespace Astro {
                 .Register<string>(GameEvents.RadioSecretFound, LogRadioSecretFound)
                 .Register(GameEvents.TelescopeStencilDisplayed, LogTelescopeStencilDisplayed)
                 .Register(GameEvents.AfterPuzzleModeStart, LogLogicPuzzleStart)
-                .Register(GameEvents.StopPuzzleMode, LogLogicPuzzleComplete)
+                .Register(GameEvents.LogicPuzzleModeComplete, LogLogicPuzzleComplete)
                 .Register<PacketTransferData>(GameEvents.ClickToolLoad, LogClickToolLoad)
                 .Register<PacketTransferData>(GameEvents.SelectPuzzleCell, LogSelectPuzzleCell)
                 .Register<PacketTransferData>(GameEvents.TransferValueToCell, LogTransferValueToCell)
@@ -286,6 +333,7 @@ namespace Astro {
                 .Register<string>(GameEvents.ActiveDocChanged, HandleActiveDocChanged)
                 .Register<string>(GameEvents.LatestMovedDocChanged, HandleLatestMovedDocChanged)
                 .Register<ViewNode>(GameEvents.ViewChanged, HandleViewChanged)
+                .Register(GameEvents.MonitorEmptySpaceClicked, HandleMonitorEmptySpaceClicked)
                 ;
 
         }
@@ -358,6 +406,10 @@ namespace Astro {
         private void HandleViewChanged(ViewNode node) {
             if (node.IsTitle) { return; }
             m_LastKnownViewNodeName = node.name.ToUpper();
+        }
+
+        private void HandleMonitorEmptySpaceClicked() {
+            UpdateSelectedStar(default);
         }
 
         #endregion // State Handlers
@@ -621,6 +673,8 @@ namespace Astro {
             m_Log.EventParamJson("known_data", knownData.Append(m_JsonBuilder).End());
             m_JsonBuilder.Clear();
             m_Log.SubmitEvent();
+
+            UpdateSelectedStar(star);
         }
 
         //tool_unlocked/
@@ -998,23 +1052,23 @@ namespace Astro {
         //    * color/app mag/blue/ir
         private void LogLogicPuzzleStart() {
             PuzzleState puzzleState = Find.State<PuzzleState>();
-            if (puzzleState.QueuedPuzzle == null) { return; }
+            if (puzzleState.ActivePuzzle == null) { return; }
 
             m_WorkingStrList.Items.Clear();
             m_WorkingStrList.FieldId = "clue";
-            for (int i = 0; i < puzzleState.QueuedPuzzle.ClueText.Length; i++) {
-                m_WorkingStrList.Items.Add(puzzleState.QueuedPuzzle.ClueText[i]);
+            for (int i = 0; i < puzzleState.ActivePuzzle.ClueText.Length; i++) {
+                m_WorkingStrList.Items.Add(puzzleState.ActivePuzzle.ClueText[i]);
             }
 
             m_WorkingPuzzleContentsData.Contents.Clear();
-            for (int r = 0; r < puzzleState.QueuedPuzzle.Rows.Length; r++) {
+            for (int r = 0; r < puzzleState.ActivePuzzle.Rows.Length; r++) {
                 var rowData = new PuzzleRowProvidedLogData();
-                if ((puzzleState.QueuedPuzzle.Rows[r].ProvidedProperties & DataTypeMask.Name) != 0) {
-                    CelestialAsset asset = Find.NamedAsset<CelestialAsset>(puzzleState.QueuedPuzzle.Rows[r].Object);
+                if ((puzzleState.ActivePuzzle.Rows[r].ProvidedProperties & DataTypeMask.Name) != 0) {
+                    CelestialAsset asset = Find.NamedAsset<CelestialAsset>(puzzleState.ActivePuzzle.Rows[r].Object);
                     rowData.Name = asset.DisplayName;
                 }
-                if ((puzzleState.QueuedPuzzle.Rows[r].ProvidedProperties & DataTypeMask.Coordinates) != 0) {
-                    CelestialAsset asset = Find.NamedAsset<CelestialAsset>(puzzleState.QueuedPuzzle.Rows[r].Object);
+                if ((puzzleState.ActivePuzzle.Rows[r].ProvidedProperties & DataTypeMask.Coordinates) != 0) {
+                    CelestialAsset asset = Find.NamedAsset<CelestialAsset>(puzzleState.ActivePuzzle.Rows[r].Object);
                     asset.Coords.Declination.Sanitize();
                     asset.Coords.RightAscension.Sanitize();
                     m_WorkingStringBuilder.Clear();
@@ -1035,15 +1089,17 @@ namespace Astro {
 
             m_WorkingStrList.Items.Clear();
             m_WorkingStrList.FieldId = "property";
-            EnumLookup.GatherDataTypes(ref m_WorkingStrList.Items, puzzleState.QueuedPuzzle.RequiredProperties);
+            EnumLookup.GatherDataTypes(ref m_WorkingStrList.Items, puzzleState.ActivePuzzle.RequiredProperties);
 
-            m_Log.EventParam("puzzle_id", puzzleState.QueuedPuzzle.DisplayName);
+            m_Log.EventParam("puzzle_id", puzzleState.ActivePuzzle.DisplayName);
             m_JsonBuilder.Clear();
             m_Log.EventParamJson("puzzle_contents", m_WorkingPuzzleContentsData.AppendContents(m_JsonBuilder).End());
             m_JsonBuilder.Clear();
-            m_Log.EventParamJson("puzzle_properties", m_WorkingStrList.AppendItems(m_JsonBuilder).End());
+            m_Log.EventParam("puzzle_properties", m_WorkingStrList.AppendItemsNoField(m_JsonBuilder).End());
             m_JsonBuilder.Clear();
             m_Log.SubmitEvent();
+
+            UpdateCurrentPuzzle(puzzleState.ActivePuzzle);
         }
 
         //logic_puzzle_complete
@@ -1055,6 +1111,8 @@ namespace Astro {
             m_Log.BeginEvent("logic_puzzle_complete");
             m_Log.EventParam("puzzle_id", puzzleState.ActivePuzzle.DisplayName);
             m_Log.SubmitEvent();
+
+            UpdateCurrentPuzzle(null);
         }
 
         //click_tool_load
@@ -1524,8 +1582,14 @@ namespace Astro {
 
         public StringHash32 AssetID;
 
+        public bool IsValid;
+
         public readonly JsonBuilder Append(JsonBuilder json)
         {
+            if (!IsValid) {
+                return json;
+            }
+
             json.Field("star_id", Name);
             json.BeginObject("coordinates");
             Coordinates.Append(json).EndObject();
@@ -1595,6 +1659,16 @@ namespace Astro {
             if (Items != null) {
                 foreach (var item in Items) {
                     json.Field(FieldId, item);
+                }
+            }
+
+            return json;
+        }
+
+        public readonly JsonBuilder AppendItemsNoField(JsonBuilder json) {
+            if (Items != null) {
+                foreach (var item in Items) {
+                    json.Item(item);
                 }
             }
 

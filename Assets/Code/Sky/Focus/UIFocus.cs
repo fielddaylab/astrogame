@@ -52,9 +52,6 @@ namespace Astro {
 
         private void OnClicked() {
             FocusableUtility.SetCurrentFocus(Find.State<FocusState>(), this);
-
-            StarLog.IsHighlighted = HasHighlight;
-            AstroGame.Events.Dispatch(GameEvents.StarClicked, EvtArgs.Box(StarLog));
         }
     }
 
@@ -93,6 +90,7 @@ namespace Astro {
             focus.StarLog.InfraredMagnitude = focus.TargetData.ApparentIRMagnitude;
             focus.StarLog.AbsoluteMagnitude = focus.TargetData.AbsoluteMagnitude;
             focus.StarLog.Elements = focus.TargetData.Spectrograph;
+            focus.StarLog.IsValid = true;
 
             float scaleFactor = Mathf.Clamp(Mathf.Pow(state.BaseScale, asset.ApparentMagnitude) - state.ScaleOffset, state.MinScale, state.MaxScale);
             focus.Root.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
