@@ -81,6 +81,7 @@ namespace Astro {
 
         public static void DisableConstellationNavUI() {
             NavProjectionState state = Find.State<NavProjectionState>();
+            if (state == null) { return; }
 
             state.BoarderGroup.gameObject.SetActive(false);
             state.OutlineGroup.gameObject.SetActive(false);

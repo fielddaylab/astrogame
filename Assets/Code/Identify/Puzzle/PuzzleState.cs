@@ -110,6 +110,8 @@ namespace Astro {
         public static void DeactivatePuzzlePanel() {
             PuzzleDisplay display = Find.State<PuzzleState>().Display;
 
+            if (display == null) { return; }
+
             foreach (RectTransform child in display.PuzzleOverrideDisplays.GetComponentsInChildren<RectTransform>()) {
                 child.gameObject.SetActive(false);
             }

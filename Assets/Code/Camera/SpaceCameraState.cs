@@ -96,6 +96,8 @@ namespace Astro {
 
         public static void OnStopPuzzleMode() {
             SpaceCameraState spaceCameraState = Find.State<SpaceCameraState>();
+            if (spaceCameraState == null) { return; }
+
             spaceCameraState.ZoomInputLocked = false;
         }
 
