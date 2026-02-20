@@ -23,6 +23,7 @@ namespace Astro {
 
         public override void ProcessWork(float deltaTime) {
             if (m_State.ReviewTimer.Advance(deltaTime)) {
+                Debug.Log("ReviewSystem] Reviewing submission " + m_State.CurrentSubmission.ToString());
                 ReviewSubmission();
                 m_State.ReviewCooldown.Paused = false;
                 return;
