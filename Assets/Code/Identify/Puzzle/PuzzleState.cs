@@ -60,9 +60,9 @@ namespace Astro {
         }
 
         public void OnDeregister() {
-            Game.Events?.Deregister(GameEvents.StartPuzzleMode, PuzzleUtility.DeactivatePuzzlePanel);
+            Game.Events?.Deregister(GameEvents.StartPuzzleMode, PuzzleUtility.ActivatePuzzlePanel);
             Game.Events?.Deregister(GameEvents.StartFinalPuzzle, PuzzleUtility.ActivateFinalPuzzle);
-            Game.Events?.Deregister(GameEvents.StopPuzzleMode, PuzzleUtility.ActivatePuzzlePanel);
+            Game.Events?.Deregister(GameEvents.StopPuzzleMode, PuzzleUtility.DeactivatePuzzlePanel);
         }
 
         private void Awake() {
@@ -109,7 +109,6 @@ namespace Astro {
 
         public static void DeactivatePuzzlePanel() {
             PuzzleDisplay display = Find.State<PuzzleState>().Display;
-
             if (display == null) { return; }
 
             foreach (RectTransform child in display.PuzzleOverrideDisplays.GetComponentsInChildren<RectTransform>()) {
@@ -127,6 +126,7 @@ namespace Astro {
 
         public static void ActivatePuzzlePanel() {
             PuzzleDisplay display = Find.State<PuzzleState>().Display;
+            if (display == null) { return; }
 
             InputUtility.SetInputEnabled(Find.State<InputState>(), false);
             display.OverrideRoutine.Replace(PuzzleTransitionRoutine(display));
