@@ -1124,7 +1124,7 @@ namespace Astro {
         //* puzzle_id
         private void LogLogicPuzzleComplete() {
             PuzzleState puzzleState = Find.State<PuzzleState>();
-            if (puzzleState.ActivePuzzle == null) { return; }
+            if (puzzleState == null || puzzleState.ActivePuzzle == null) { return; }
 
             m_Log.BeginEvent("logic_puzzle_complete");
             m_Log.EventParam("puzzle_id", puzzleState.ActivePuzzle.DisplayName);
