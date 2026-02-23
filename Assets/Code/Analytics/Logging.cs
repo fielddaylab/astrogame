@@ -900,9 +900,17 @@ namespace Astro {
                 m_JsonBuilder.Clear();
             }
 
+            string category;
+            if (rgs.SelectedRefClassification != null) {
+                category = EnumLookup.FirstClassificationType(rgs.SelectedRefClassification.Type);
+            }
+            else {
+                category = EnumLookup.FirstClassificationType(ClassificationTypeMask.Spectrometer);
+            }
+
             m_Log.BeginEvent("click_submit_star_identification");
             m_Log.EventParam("star_id", m_LastKnownSubmittedStarAsset.DisplayName);
-            m_Log.EventParam("category", EnumLookup.FirstClassificationType(rgs.SelectedRefClassification.Type));
+            m_Log.EventParam("category", category);
             m_Log.EventParam("classification", m_WorkingStringBuilder.ToString());
             m_Log.SubmitEvent();
 
@@ -926,9 +934,16 @@ namespace Astro {
         private void LogStarIdAccepted(bool scoredPoint) {
             var rgs = Find.State<RefGuideState>();
 
+            string category;
+            if (rgs.SelectedRefClassification != null) {
+                category = EnumLookup.FirstClassificationType(rgs.SelectedRefClassification.Type);
+            } else {
+                category = EnumLookup.FirstClassificationType(ClassificationTypeMask.Spectrometer);
+            }
+
             m_Log.BeginEvent("star_identification_accepted");
             m_Log.EventParam("star_id", m_LastKnownSubmittedStarAsset.DisplayName);
-            m_Log.EventParam("category", EnumLookup.FirstClassificationType(m_LastKnownSubmittedRefClassification.Type));
+            m_Log.EventParam("category", category);
             m_Log.EventParam("earned_point", scoredPoint);
             m_Log.SubmitEvent();
         }
@@ -943,10 +958,10 @@ namespace Astro {
             StringBuilder submittedClassificationStrBuilder = new StringBuilder();
             StringBuilder correctClassificationStrBuilder = new StringBuilder();
 
-            var refClassification = Find.NamedAsset<ReferenceClassification>(m_LastKnownReviewSubmissionClassification.Classification);
 
             // get string of submitted classification
             if (!m_LastKnownReviewSubmissionClassification.Classification.IsEmpty) {
+                var refClassification = Find.NamedAsset<ReferenceClassification>(m_LastKnownReviewSubmissionClassification.Classification);
                 submittedClassificationStrBuilder.Append(refClassification.Label);
             } else if (m_LastKnownReviewSubmissionClassification.Materials != 0) {
                 m_JsonBuilder.Clear();
@@ -955,27 +970,37 @@ namespace Astro {
             }
 
             // get string of correct classification
+            bool foundClassification = false;
             if (!m_LastKnownReviewSubmissionClassification.Classification.IsEmpty) {
+                var refClassification = Find.NamedAsset<ReferenceClassification>(m_LastKnownReviewSubmissionClassification.Classification);
                 if (refClassification != null) {
                     for (int i = 0; i < m_LastKnownSubmittedStarAsset.ClassIds.Length; i++) {
                         if ((Find.NamedAsset<ReferenceClassification>(m_LastKnownSubmittedStarAsset.ClassIds[i]).Type
                             & refClassification.Type) != 0) {
                             // found what the classification should have been
                             correctClassificationStrBuilder.Append(Find.NamedAsset<ReferenceClassification>(m_LastKnownSubmittedStarAsset.ClassIds[i]).Label);
+                            foundClassification = true;
                             break;
                         }
                     }
                 }
             }
-            else if (m_LastKnownSubmittedStarAsset.Spectrograph != 0) {
+            if (!foundClassification && m_LastKnownSubmittedStarAsset.Spectrograph != 0) {
                 m_JsonBuilder.Clear();
                 correctClassificationStrBuilder.Append(SpectrographUtility.Append(m_LastKnownSubmittedStarAsset.Spectrograph, m_JsonBuilder).End().ToString());
                 m_JsonBuilder.Clear();
             }
 
+            string category;
+            if (rgs.SelectedRefClassification != null) {
+                category = EnumLookup.FirstClassificationType(rgs.SelectedRefClassification.Type);
+            } else {
+                category = EnumLookup.FirstClassificationType(ClassificationTypeMask.Spectrometer);
+            }
+
             m_Log.BeginEvent("star_identification_rejected");
             m_Log.EventParam("star_id", m_LastKnownSubmittedStarAsset.DisplayName);
-            m_Log.EventParam("category", EnumLookup.FirstClassificationType(rgs.SelectedRefClassification.Type));
+            m_Log.EventParam("category", category);
             m_Log.EventParam("classification", submittedClassificationStrBuilder.ToString());
             m_Log.EventParam("correct_classification", correctClassificationStrBuilder.ToString());
             m_Log.SubmitEvent();
