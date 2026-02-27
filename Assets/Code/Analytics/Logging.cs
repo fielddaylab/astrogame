@@ -888,28 +888,48 @@ namespace Astro {
         //* category
         //* classification : str | List[element ID]
         private void LogClickSubmitStarId () {
+            Debug.Log("[Logging] [LogClickSubmitStarId] reached chunk 0");
             var rgs = Find.State<RefGuideState>();
+            Debug.Log("[Logging] [LogClickSubmitStarId] reached chunk 1");
             m_WorkingStringBuilder.Clear();
+            Debug.Log("[Logging] [LogClickSubmitStarId] reached chunk 2");
+            if (m_LastKnownReviewSubmissionClassification.Classification != null) {
+                Debug.Log("[Logging] [LogClickSubmitStarId] reached chunk 3.1");
+            }
+            else {
+                Debug.Log("[Logging] [LogClickSubmitStarId] reached chunk 3.2");
+            }
 
-            if (!m_LastKnownReviewSubmissionClassification.Classification.IsEmpty) {
+            if (m_LastKnownReviewSubmissionClassification.Classification != null && !m_LastKnownReviewSubmissionClassification.Classification.IsEmpty) {
+                Debug.Log("[Logging] [LogClickSubmitStarId] reached chunk 4.1");
                 var refClassification = Find.NamedAsset<ReferenceClassification>(m_LastKnownReviewSubmissionClassification.Classification);
+                Debug.Log("[Logging] [LogClickSubmitStarId] reached chunk 5.1");
                 m_WorkingStringBuilder.Append(refClassification.Label);
+                Debug.Log("[Logging] [LogClickSubmitStarId] reached chunk 6.1");
             } else if (m_LastKnownReviewSubmissionClassification.Materials != 0) {
-            m_JsonBuilder.Clear();
+                Debug.Log("[Logging] [LogClickSubmitStarId] reached chunk 4.2");
+                m_JsonBuilder.Clear();
+                Debug.Log("[Logging] [LogClickSubmitStarId] reached chunk 5.2");
                 m_WorkingStringBuilder.Append(SpectrographUtility.Append(m_LastKnownReviewSubmissionClassification.Materials, m_JsonBuilder).End().ToString());
+                Debug.Log("[Logging] [LogClickSubmitStarId] reached chunk 6.2");
                 m_JsonBuilder.Clear();
             }
 
             string category;
+            Debug.Log("[Logging] [LogClickSubmitStarId] reached chunk 7");
             if (rgs.SelectedRefClassification != null) {
+                Debug.Log("[Logging] [LogClickSubmitStarId] reached chunk 8.1");
                 category = EnumLookup.FirstClassificationType(rgs.SelectedRefClassification.Type);
             }
             else {
+                Debug.Log("[Logging] [LogClickSubmitStarId] reached chunk 8.2");
                 category = EnumLookup.FirstClassificationType(ClassificationTypeMask.Spectrometer);
             }
+            Debug.Log("[Logging] [LogClickSubmitStarId] reached chunk 9");
 
             m_Log.BeginEvent("click_submit_star_identification");
             m_Log.EventParam("star_id", m_LastKnownSubmittedStarAsset.DisplayName);
+            Debug.Log("[Logging] [LogClickSubmitStarId] reached chunk 10");
             m_Log.EventParam("category", category);
             m_Log.EventParam("classification", m_WorkingStringBuilder.ToString());
             m_Log.SubmitEvent();
