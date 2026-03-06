@@ -92,7 +92,7 @@ namespace Astro {
 
             writer.Write((float)MusicVolume);
             writer.Write((float)SFXVolume);
-            writer.Write((float)MusicVolume);
+            writer.Write((float)VoiceVolume);
 
             writer.Write((bool)CameraDriftEnabled);
             writer.Write((bool)HighQualityMode);
